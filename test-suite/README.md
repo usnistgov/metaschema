@@ -1,0 +1,1 @@
+A test suite that is capable of testing any given implementation of the Metaschema toolchain.
