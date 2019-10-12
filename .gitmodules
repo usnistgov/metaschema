@@ -1,0 +1,4 @@
+[submodule "website/themes/uswds"]
+	path = website/themes/uswds
+	url = git@github.com:usnistgov/hugo-uswds.git
+	branch = master
