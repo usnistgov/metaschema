@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:metaschema-datatypes-dateTime="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
+           xmlns:oscal-prose="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
+           version="1.0-milestone1">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Metaschema Unit Test: datatypes-dateTime</m:schema-name>
+         <m:schema-version>1.0-milestone1</m:schema-version>
+         <m:short-name>metaschema-datatypes-dateTime</m:short-name>
+         <m:root>parent</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="parent" m:root="yes">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>parent</m:formal-name>
+            <m:description>parent assembly</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>parent</b>: parent assembly</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="metaschema-datatypes-dateTime:field-datetime"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+            <xs:element ref="metaschema-datatypes-dateTime:child"
+                        minOccurs="0"
+                        maxOccurs="unbounded"/>
+         </xs:sequence>
+         <xs:attribute name="flag-datetime"
+                       use="required"
+                       type="metaschema-datatypes-dateTime:dateTime-with-timezone">
+            <xs:annotation>
+               <xs:appinfo>
+                  <m:formal-name>Date and Time Flag</m:formal-name>
+                  <m:description>datetime flag</m:description>
+               </xs:appinfo>
+               <xs:documentation>
+                  <b>Date and Time Flag</b>: datetime flag</xs:documentation>
+            </xs:annotation>
+         </xs:attribute>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="child">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>child</m:formal-name>
+            <m:description>child assembly</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>child</b>: child assembly</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="metaschema-datatypes-dateTime:field-datetime"
+                        minOccurs="1"
+                        maxOccurs="1"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="field-datetime">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Date and Time</m:formal-name>
+            <m:description>With time zone</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Date and Time</b>: With time zone</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:simpleContent>
+            <xs:extension base="metaschema-datatypes-dateTime:dateTime-with-timezone"/>
+         </xs:simpleContent>
+      </xs:complexType>
+   </xs:element>
+   <xs:simpleType name="dateTime-with-timezone">
+      <xs:annotation>
+         <xs:documentation>The xs:dateTime with a required timezone.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:dateTime">
+         <xs:pattern value=".+T.+(Z|[+-].+)"/>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>
