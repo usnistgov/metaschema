@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="20.1">
     <meta>
-        <filters directoryPatterns="" filePatterns="metaschema-testing.xpr" positiveFilePatterns="*_metaschema*" showHiddenFiles="false"/>
+        <filters directoryPatterns="" filePatterns="metaschema-testing.xpr" positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
             <serialized version="20.1" xml:space="preserve">
                 <serializableOrderedMap>
@@ -10,11 +10,11 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>../test-suite/schema-generation/datatypes/datatypes-date_metaschema.xml</String>
+                                    <String>../test-suite/schema-generation/allowed-values/allowed-values-basic_metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>Produce XSD from '_metaschema' Metaschema</String>
+                                        <String>Produce XSD from test suite '_metaschema' Metaschema</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -33,7 +33,7 @@
                                     <null/>
                                 </field>
                                 <field name="name">
-                                    <String>Produce XSD from '_metaschema' Metaschema</String>
+                                    <String>Produce XSD from test suite '_metaschema' Metaschema</String>
                                 </field>
                                 <field name="baseURL">
                                     <String></String>
