@@ -1,7 +1,8 @@
 #!/bin/bash
 
 my_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-source "$my_dir/common-environment.sh"
+SCRIPT_INCLUDE_DIR="$my_dir"
+source "$SCRIPT_INCLUDE_DIR/common-environment.sh"
 
 if [[ -z "$SAXON_HOME" ]]; then
     if [[ -z "$SAXON_VERSION" ]]; then
