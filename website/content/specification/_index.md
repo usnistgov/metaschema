@@ -23,3 +23,53 @@ These Metaschema capabilities, which can be applied to any information domain, s
 We hope and expect that developers' experience with different approaches will inform further efforts to unify and consolidate a coherent Metaschema-based information modeling framework.
 
 This specification provides a basis for the development of interoperable toolchains supporting the generative capabilities of the Metaschema framework, and as a reference for information modelers producing Metaschema-based information models.
+
+## Metaschema organization
+
+
+### Modularity
+
+A single metaschema may be defined in multiple modules. A single top-level module defines the starting point(s) for the metaschema, and may optionally import other metaschemas to include their definitions.
+
+A "composition" step rewrites a set of Metaschema modules into a single metaschema document model for further processing, using rules as follows.
+
+### Composition rules
+
+The definition for a field, flag or assembly consists of a datatype binding (in the cases of flags and fields), flag assignment (in the case of fields and assemblies) and model definition (assemblies only), along with documentation (formal name and description along with optional remarks) and optionally, examples (to be presented in documentation).
+
+#### Order of definition
+
+Definitions in a metaschema may occur in any order without affecting the schemas defined by the metaschema. However, order of definition does affect which definitions are actually used. When more than one conflicting definition appears, the last definition to be given in the metaschema inputs, reading in document order, is the one that takes effect. It overrides all earlier definitions given for the same construct (another flag, field or assembly with the same name).
+
+Since all imports happen before all top-level definitions, the last top-level definition is the one that takes effect.
+
+The only exception to this is when multiple definitions of fields or flags are given, within the context of assembly model definitions. In these cases, no override occurs (even by definitions of constructs with the same name) and the local definition takes effect for that flag or field within that (assembly) context.
+
+#### Only definitions that are used are included
+
+Additionally, a metaschema designates one of its assemblies as the nominal root. Only objects are included whose definitions are referenced by the model for the root, or by models of  assemblies included directly or indirectly in the root. Consequently, a composed metaschema will have no "orphan" definitions for constructs that are never (actually referenced).
+
+This means that when a metaschema is included as a module in another metaschema, only those assemblies, fields and flags qill be included that are actually be referenced, directly or by way of intermediate assemblies, in the calling metaschema's models, as composed.
+
+## Definitions of data constructs
+
+The Metaschema language supports three different types of data contructs. These are designed to map to objects in an object-oriented system, or to elements in an XML- or markup-based system.
+
+### Assembly definitions
+
+**Assemblies** are objects, which may be represented as properties on other objects (or as elements appearing in other elements). Their contents are defined and constrained by their models, which dictate which other types of assemblies, fields and flags can appear as properties (or, in XML, as elements and attributes) on a given assembly type.
+
+### Field definitions
+
+**Fields** are like assemblies, except instead of models, they have nominal values conforming to the requirements of a (string-based) datatype. Such a value, for the field itself, is distinct from and additional to the values given for flags on the field.
+
+If a field is defined without an explicit datatype assigned, the type can be assumed to be "string".
+
+### Flag definitions
+
+### Cardinality and grouping
+
+Frequently there will be need for multiple assemblies or fields of a given type, to appear together. To support this,  assemblies and fields may be defined as appearing in groups.
+
+
+## Example metaschema walkthrough
