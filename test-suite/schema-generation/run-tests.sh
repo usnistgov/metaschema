@@ -1,17 +1,20 @@
 #!/bin/bash
 
-if [[ -z "$OSCALDIR" ]]; then
-    DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-    source "$DIR/../../ci-cd/include/common-environment.sh"
-fi
-source "$OSCALDIR/build/ci-cd/include/init-validate-json.sh"
-source "$OSCALDIR/build/ci-cd/include/schematron-init.sh"
+my_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+SCRIPT_DIR="$(realpath "$my_dir/../../scripts")"
+unit_test_dir="$my_dir"
+source "${SCRIPT_DIR}/include/common-environment.sh"
+source "${SCRIPT_DIR}/include/init-validate-json.sh"
+source "${SCRIPT_DIR}/include/schematron-init.sh"
 
 # configuration
-UNIT_TESTS_DIR="$OSCALDIR/build/metaschema/unit-testing"
-METASCHEMA_LIB_DIR="$OSCALDIR/build/metaschema/lib"
-METASCHEMA_SCHEMA="$METASCHEMA_LIB_DIR/metaschema.xsd"
-METASCHEMA_SCHEMATRON="$METASCHEMA_LIB_DIR/metaschema-check.sch"
+METASCHEMA_ROOT_DIR="$(realpath "${SCRIPT_DIR}/..")"
+UNIT_TESTS_DIR="$unit_test_dir"
+METASCHEMA_LIB_DIR="$(realpath "${METASCHEMA_ROOT_DIR}/toolchains/oscal-m2/lib")"
+METASCHEMA_SCHEMA="${METASCHEMA_LIB_DIR}/metaschema.xsd"
+METASCHEMA_SCHEMATRON="${METASCHEMA_LIB_DIR}/metaschema-check.sch"
+JSON_SCHEMA_SCHEMA="${METASCHEMA_ROOT_DIR}/support/schema/json-schema-schema.json"
+XML_SCHEMA_SCHEMA="${METASCHEMA_ROOT_DIR}/support/schema/XMLSchema.xsd"
 DEBUG="false"
 
 # Option defaults
@@ -88,6 +91,149 @@ if [ -z "${SCRATCH_DIR+x}" ]; then
   fi
 fi
 
+validate() {
+  local schema="$1"; shift
+  local instance="$1"; shift
+  local format="$1"; shift
+
+  case "$format" in
+    json)
+      result=$(validate_json "$schema" "$instance")
+      cmd_exitcode=$?
+      ;;
+    xml)
+      result=$(xmllint --noout --schema "$schema" "$instance" 2>&1)
+      cmd_exitcode=$?
+      ;;
+    *)
+      echo -e "${P_ERROR}Validation not supported for format '$format' for instance '$instance'.${P_END}"
+      return 1;
+  esac
+  if [ $cmd_exitcode -ne 0 ]; then
+    echo -e "${P_ERROR}${result}${P_END}"
+  fi
+  return $cmd_exitcode;
+}
+
+generate_and_validate_schema() {
+  local unit_test_collection_dir="$1"; shift
+  local unit_test_path_prefix="$1"; shift
+  local metaschema="$1"; shift
+  local schema_output="$1"; shift
+  local format="$1"; shift
+
+  metaschema_relative=$(realpath --relative-to="$unit_test_collection_dir" "$metaschema")
+
+  if [ "$VERBOSE" = "true" ]; then
+    echo -e "  ${P_INFO}Generating ${format^^} schema for '${P_END}${metaschema_relative}${P_INFO}' as '${P_END}$schema${P_INFO}'.${P_END}"
+  fi
+
+  result=$("${SCRIPT_DIR}/generate-schema.sh" --${format} "$metaschema" "$schema_output" 2>&1)
+  cmd_exitcode=$?
+  if [ $cmd_exitcode -ne 0 ]; then
+    echo -e "  ${P_ERROR}Failed to generate ${format^^} schema for '${P_END}${metaschema_relative}${P_ERROR}'.${P_END}"
+    echo -e "${P_ERROR}${result}${P_END}"
+    return 1;
+  fi
+
+  case ${format} in
+    xml)
+      validating_schema="$XML_SCHEMA_SCHEMA"
+      ;;
+    json)
+      validating_schema="$JSON_SCHEMA_SCHEMA"
+      ;;
+  esac
+
+  result=$(validate "$validating_schema" "$schema_output" "$format" 2>&1)
+  cmd_exitcode=$?
+  if [ $cmd_exitcode -ne 0 ]; then
+    echo -e "  ${P_ERROR}Failed to validate generated ${format^^} schema '${P_END}$schema_output${P_ERROR}'.${P_END}"
+    echo -e "${P_ERROR}${result}${P_END}"
+    return 2;
+  fi
+  echo -e "  ${P_OK}Generated valid ${format^^} schema for '${P_END}${metaschema_relative}${P_OK}' as '${P_END}$schema_output${P_OK}'.${P_END}"
+
+  # diff the generated JSON schema with the expected JSON schema
+  case ${format} in
+    xml)
+      expected_schema="${unit_test_path_prefix}_xml-schema.xsd"
+      diff_tool="diff"
+      ;;
+    json)
+      expected_schema="${unit_test_path_prefix}_json-schema.json"
+      diff_tool="json-diff"
+      ;;
+  esac
+  expected_schema_relative=$(realpath --relative-to="$unit_test_collection_dir" "$expected_schema")
+
+  # Only perform this check if an expected schema exists
+  if [ -f "$expected_schema" ]; then
+    diff=$("$diff_tool" "$expected_schema" "$schema_output")
+    cmd_exitcode=$?
+    if [ $cmd_exitcode -ne 0 ]; then
+      echo -e "  ${P_ERROR}Generated ${format^^} schema '${P_END}${schema_output}${P_ERROR}' doesn't match expected schema '${P_END}${expected_schema_relative}${P_ERROR}'.${P_END}"
+      echo -e "${P_ERROR}${diff}${P_END}"
+      return 3;
+    else
+      echo -e "  ${P_OK}Generated ${format^^} schema matches expected schema '${P_END}${expected_schema_relative}${P_OK}'.${P_END}"
+    fi
+  fi
+  return 0;
+}
+
+run_test_instances() {
+  local unit_test_collection_dir="$1"; shift
+  local unit_test_collection_name="$1"; shift
+  local unit_test_name="$1"; shift
+  local schema="$1"; shift
+  local format="$1"; shift
+
+  exitcode=0
+  while IFS= read -d $'\0' -r test_instance ; do
+    test_instance_file=$(basename -- "$test_instance")
+    test_instance_name="${test_instance_file/${unit_test_collection_name}-${unit_test_name}_test_/}"
+    shopt -s extglob
+    test_instance_name="${test_instance_name%%.@(xml|json)}"
+    shopt -u extglob
+    condition="${test_instance_name##*_}"
+    test_instance_name="${test_instance_name%_*}"
+
+    if [ "$VERBOSE" = "true" ]; then
+      echo -e "  ${P_INFO}Evaluating test instance:${P_END} ${test_instance_name} = ${condition}"
+    fi
+
+    result=$(validate "$schema" "$test_instance" "$format" 2>&1)
+    cmd_exitcode=$?
+
+    case "$condition" in
+      PASS)
+        if [ $cmd_exitcode -ne 0 ]; then
+          echo -e "  ${P_ERROR}${format^^} test instance '${P_END}${test_instance_name}${P_ERROR}' failed. Expected PASS.${P_END}"
+          echo -e "${P_ERROR}${result}${P_END}"
+          exitcode=1
+        else
+          echo -e "  ${P_OK}${format^^} test instance '${P_END}${test_instance_name}${P_OK}' passed.${P_END}"
+        fi
+        ;;
+      FAIL)
+        if [ $cmd_exitcode -eq 0 ]; then
+          echo -e "  ${P_ERROR}${format^^} test instance '${P_END}${test_instance_name}${P_ERROR}' passed. Expected FAIL.${P_END}"
+          echo -e "${P_ERROR}${result}${P_END}"
+          exitcode=1
+        else
+          echo -e "  ${P_OK}${format^^} test instance '${P_END}${test_instance_name}${P_OK}' passed.${P_END}"
+        fi
+        ;;
+      *)
+        echo -e "${P_ERROR}Unsupported condition '$condition' for test instance '$test_instance_name'.${P_END}"
+        exitcode=1
+        ;;
+    esac
+  done < <(find "$unit_test_collection_dir" -maxdepth 1 -name "${unit_test_collection_name}-${unit_test_name}_test_*.${format}" -type f -print0)
+  return $exitcode;
+}
+
 echo -e ""
 echo -e "${P_INFO}Running Unit Tests${P_END}"
 echo -e "${P_INFO}==================${P_END}"
@@ -155,116 +301,78 @@ do
       echo -e "${P_ERROR}${result}${P_END}"
       exitcode=1
       continue
-    else
-      if [ "$VERBOSE" = "true" ]; then
-        echo -e "  ${P_OK}Metaschema '${P_END}${metaschema_relative}${P_OK}' is XML Schema valid.${P_END}"
-      fi
+    fi
 
-      svrl_result="${unit_test_scratch_dir_prefix}.svrl"
-      result=$(validate_with_schematron "$compiled_schematron" "$metaschema" "$svrl_result" 2>&1)
-      cmd_exitcode=$?
-      if [ $cmd_exitcode -ne 0 ]; then
-          if [ -f "${unit_test_path_prefix}_validation-schematron-FAIL" ]; then
-            if [ "$VERBOSE" = "true" ]; then
-              echo -e "  ${P_OK}Metaschema '${P_END}${metaschema_relative}${P_OK}' was expected to fail the schematron checks.${P_END}"
-            fi
-            continue;
-          else
-            echo -e "  ${P_ERROR}Metaschema '${P_END}${metaschema_relative}${P_ERROR}' did not pass the schematron checks.${P_END}"
-            echo -e "${P_ERROR}${result}${P_END}"
-            exitcode=1
-            continue;
+    if [ "$VERBOSE" = "true" ]; then
+      echo -e "  ${P_OK}Metaschema '${P_END}${metaschema_relative}${P_OK}' is XML Schema valid.${P_END}"
+    fi
+
+    svrl_result="${unit_test_scratch_dir_prefix}.svrl"
+    result=$(validate_with_schematron "$compiled_schematron" "$metaschema" "$svrl_result" 2>&1)
+    cmd_exitcode=$?
+    if [ $cmd_exitcode -ne 0 ]; then
+        if [ -f "${unit_test_path_prefix}_validation-schematron-FAIL" ]; then
+          if [ "$VERBOSE" = "true" ]; then
+            echo -e "  ${P_OK}Metaschema '${P_END}${metaschema_relative}${P_OK}' was expected to fail the schematron checks.${P_END}"
           fi
-      fi
+          continue;
+        else
+          echo -e "  ${P_ERROR}Metaschema '${P_END}${metaschema_relative}${P_ERROR}' did not pass the schematron checks.${P_END}"
+          echo -e "${P_ERROR}${result}${P_END}"
+          exitcode=1
+          continue;
+        fi
+    fi
 
+    json_schema_valid=true
+    if [ "$DEBUG" == "true" ]; then
+      # skip this step and use the expected schema as the schema
+      json_schema="${unit_test_path_prefix}_json-schema.json"
+    else
       # Now generate the JSON schema
-      transform="$OSCALDIR/build/metaschema/json/produce-json-schema.xsl"
-      schema="${unit_test_scratch_dir_prefix}_generated-json-schema.json"
-
-      if [ "$VERBOSE" = "true" ]; then
-        echo -e "  ${P_INFO}Generating JSON schema for '${P_END}${metaschema_relative}${P_INFO}' as '${P_END}$schema${P_INFO}'.${P_END}"
-      fi
-      result=$(xsl_transform "$transform" "$metaschema" "$schema" 2>&1)
+      json_schema="${unit_test_scratch_dir_prefix}_generated-json-schema.json"
+      generate_and_validate_schema "$unit_test_collection_dir" "$unit_test_path_prefix" "$metaschema" "$json_schema" "json"
       cmd_exitcode=$?
       if [ $cmd_exitcode -ne 0 ]; then
-        echo -e "  ${P_ERROR}Failed to generate JSON schema for '${P_END}${metaschema_relative}${P_ERROR}'.${P_END}"
-        echo -e "${P_ERROR}${result}${P_END}"
+        json_schema_valid=false
         exitcode=1
         continue;
-      fi
-      result=$(validate_json "$OSCALDIR/build/ci-cd/support/json-schema-schema.json" "$schema" 2>&1)
-      cmd_exitcode=$?
-      if [ $cmd_exitcode -ne 0 ]; then
-        echo -e "  ${P_ERROR}Failed to validate generated JSON schema '${P_END}$schema${P_ERROR}'.${P_END}"
-        echo -e "${P_ERROR}${result}${P_END}"
-        exitcode=1
-        continue;
-      else
-        echo -e "  ${P_OK}Generated valid JSON schema for '${P_END}${metaschema_relative}${P_OK}' as '${P_END}$schema${P_OK}'.${P_END}"
       fi
     fi
 
-    # diff the generated JSON schema with the expected JSON schema
-    expected_schema="${unit_test_path_prefix}_json-schema.json"
-    expected_schema_relative=$(realpath --relative-to="$unit_test_collection_dir" "$expected_schema")
-    # Only perform this check if an expected schema exists
-    if [ -f "$expected_schema" ]; then
-      if [ "$DEBUG" == "true" ]; then
-        # skip this step and use the expected schema as the schema
-        schema="$expected_schema"
-      else
-        diff=$(json-diff "$expected_schema" "$schema")
-        cmd_exitcode=$?
-        if [ $cmd_exitcode -ne 0 ]; then
-          echo -e "  ${P_ERROR}Generated JSON schema '${P_END}${schema}${P_ERROR}' doesn't match expected schema '${P_END}${expected_schema_relative}${P_ERROR}'.${P_END}"
-          echo -e "${P_ERROR}${diff}${P_END}"
-          exitcode=1
-          continue;
-        else
-          echo -e "  ${P_OK}Generated JSON schema matches expected schema '${P_END}${expected_schema_relative}${P_OK}'.${P_END}"
-        fi
+    xml_schema_valid=true
+    if [ "$DEBUG" == "true" ]; then
+      # skip this step and use the expected schema as the schema
+      xml_schema="${unit_test_path_prefix}_json-schema.json"
+    else
+      # Now generate the XML schema
+      xml_schema="${unit_test_scratch_dir_prefix}_generated-xml-schema.xsd"
+      generate_and_validate_schema "$unit_test_collection_dir" "$unit_test_path_prefix" "$metaschema" "$xml_schema" "xml"
+      cmd_exitcode=$?
+      if [ $cmd_exitcode -ne 0 ]; then
+        xml_schema_valid=false
+        exitcode=1
+        continue;
       fi
     fi
 
     # now run test instances
-    while IFS= read -d $'\0' -r test_instance ; do
-      test_instance_file=$(basename -- "$test_instance")
-      test_instance_name="${test_instance_file/${unit_test_collection_name}-${unit_test_name}_test_/}"
-      test_instance_name="${test_instance_name%%.json}"
-      condition="${test_instance_name##*_}"
-      test_instance_name="${test_instance_name%_*}"
-
-      if [ "$VERBOSE" = "true" ]; then
-        echo -e "  ${P_INFO}Evaluating test instance:${P_END} ${test_instance_name} = ${condition}"
-      fi
-
-      result=$(validate_json "$schema" "$test_instance")
+    if [ "$json_schema_valid" = "true" ]; then
+      run_test_instances "$unit_test_collection_dir" "$unit_test_collection_name" "$unit_test_name" "$json_schema" "json"
       cmd_exitcode=$?
-      case "$condition" in
-        PASS)
-          if [ $cmd_exitcode -ne 0 ]; then
-            echo -e "  ${P_ERROR}Test instance '${P_END}${test_instance_name}${P_ERROR}' failed. Expected PASS.${P_END}"
-            echo -e "${P_ERROR}${result}${P_END}"
-            exitcode=1
-          else
-            echo -e "  ${P_OK}Test instance '${P_END}${test_instance_name}${P_OK}' passed.${P_END}"
-          fi
-          ;;
-        FAIL)
-          if [ $cmd_exitcode -eq 0 ]; then
-            echo -e "  ${P_ERROR}Test instance '${P_END}${test_instance_name}${P_ERROR}' failed. Expected FAIL.${P_END}"
-            echo -e "${P_ERROR}${result}${P_END}"
-            exitcode=1
-          else
-            echo -e "  ${P_OK}Test instance '${P_END}${test_instance_name}${P_OK}' passed.${P_END}"
-          fi
-          ;;
-        *)
-          echo -e "${P_ERROR}Unsupported condition '$condition' for test instance '$test_instance_name'.${P_END}"
-          exitcode=1
-          ;;
-      esac
-    done < <(find "$unit_test_collection_dir" -maxdepth 1 -name "${unit_test_collection_name}-${unit_test_name}_test_*.json" -type f -print0)
+      if [ $cmd_exitcode -ne 0 ]; then
+        exitcode=1
+      fi
+    fi
+
+    if [ "$xml_schema_valid" = "true" ]; then
+      run_test_instances "$unit_test_collection_dir" "$unit_test_collection_name" "$unit_test_name" "$xml_schema" "xml"
+      cmd_exitcode=$?
+      if [ $cmd_exitcode -ne 0 ]; then
+        exitcode=1
+      fi
+    fi
+
   done < <(find "$unit_test_collection_dir" -maxdepth 1 -name "*_metaschema.xml" -type f -print0)
 done
 
