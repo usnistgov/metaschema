@@ -56,4 +56,5 @@
         "format" : "uri-reference" } },
     "properties" : 
     { "parent" : 
-      { "$ref" : "#/definitions/parent" } } }
+      { "$ref" : "#/definitions/parent" } },
+  "required": [ "parent" ] }
