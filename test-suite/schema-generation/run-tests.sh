@@ -281,8 +281,7 @@ do
   while IFS= read -d $'\0' -r metaschema ; do
     metaschema_file="$(basename -- "$metaschema")"
     unit_test_name="${metaschema_file/_metaschema.xml/}"
-    unit_test_name="${unit_test_name/${unit_test_collection_name}-/}"
-    unit_test_path_prefix="$unit_test_collection_dir/${unit_test_collection_name}-${unit_test_name}"
+    unit_test_path_prefix="$unit_test_collection_dir/${unit_test_name}"
 
     echo -e "${P_INFO}Processing unit test:${P_END} ${unit_test_name}"
 
@@ -331,6 +330,7 @@ do
     else
       # Now generate the JSON schema
       json_schema="${unit_test_scratch_dir_prefix}_generated-json-schema.json"
+      
       generate_and_validate_schema "$unit_test_collection_dir" "$unit_test_path_prefix" "$metaschema" "$json_schema" "json"
       cmd_exitcode=$?
       if [ $cmd_exitcode -ne 0 ]; then
