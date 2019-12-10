@@ -29,5 +29,6 @@
   },
   "properties": {
     "parent": {"$ref": "#/definitions/parent"}
-  }
+  },
+  "required": [ "parent" ]
 }
