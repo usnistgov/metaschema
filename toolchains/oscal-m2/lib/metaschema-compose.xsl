@@ -3,8 +3,9 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    exclude-result-prefixes="xs math m"
+    exclude-result-prefixes="xs math m xsi"
     version="3.0">
     
 <!-- 
@@ -62,12 +63,13 @@
     <xsl:template match="comment() | processing-instruction()" mode="acquire"/>
     
     <xsl:template match="METASCHEMA" mode="acquire">
-        <xsl:copy>
-            <xsl:copy-of select="@*"/>
+        <xsl:copy copy-namespaces="no">
+            <xsl:copy-of select="@* except @xsi:*"/>
             <xsl:attribute name="module" select="document-uri(/)"/>
             <xsl:apply-templates mode="#current"/>
         </xsl:copy>
     </xsl:template>
+    
     
     <!-- quitting traversal by cloning branch -->
     <xsl:template match="define-field | define-flag | define-assembly" mode="acquire">
