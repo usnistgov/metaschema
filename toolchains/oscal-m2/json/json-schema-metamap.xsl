@@ -300,7 +300,28 @@
             </map>
         </xsl:if>
     </xsl:template>
-
+    
+    <xsl:template match="define-field[@collapsible='yes']" mode="properties">
+        <xsl:apply-templates mode="declaration" select="flag"/>
+        <xsl:variable name="this-key" as="xs:string?">
+            <xsl:apply-templates select="." mode="value-key"/>
+        </xsl:variable>
+        <xsl:if test="matches($this-key, '\S')">
+            <map key="{$this-key}">
+                <array key="anyOf">
+                    <map><string key="type">string</string></map>
+                    <map>
+                        <string key="type">array</string>
+                        <map key="items">
+                            <string key="type">string</string>
+                        </map>
+                        <number key="minItems">2</number>
+                    </map>
+                </array>
+            </map>
+        </xsl:if>
+    </xsl:template>
+    
     <!--A flag declared as a key or value key gets no declaration since it
     will not show up in the JSON as a separate property -->
     
