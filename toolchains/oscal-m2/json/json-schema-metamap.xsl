@@ -62,6 +62,9 @@
                 <string key="$ref">#/definitions/{ @root }</string>
             </map>
         </map>
+            <array key="required">
+                <string>{ @root }</string>
+            </array>
         <!--<map key="propertyNames">
                 <array key="enum">
                     <string>
