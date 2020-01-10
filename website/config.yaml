@@ -18,7 +18,7 @@ pygmentsUseClasses: true
 params:
   header:
     project_shortname: "Metaschema"
-    project_name: "Metaschema Schema Generation Framework"
+    project_name: "Metaschema Information Modeling Framework"
   custom_css:
   contentRepoPath: https://github.com/usnistgov/metaschema/tree/master/docs/content
   searchAffiliate: oscal
