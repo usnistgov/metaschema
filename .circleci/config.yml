@@ -75,11 +75,11 @@ commands:
             fi
 executors:
   java-executor:
-    docker: # run the java jobs with Docker
+    docker: # run the java jobs
       - image: circleci/openjdk:11-jdk-node-browsers
     <<: *common_environment
   ruby-node-executor:
-    docker: # run the ruby jobs with Docker
+    docker: # run the ruby jobs
       - image: circleci/ruby:2.6.5-node-browsers
     <<: *common_environment
 jobs: # a collection of
