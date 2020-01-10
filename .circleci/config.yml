@@ -1,0 +1,194 @@
+version: 2.1 # use CircleCI 2.1
+references:
+  common_environment: &common_environment
+    environment:
+      REPO_DIR: git-repo
+      REPO_WEBSITE_DIR: git-repo/website
+      BUILD_DIR: build_artifacts
+      TERM: xterm
+      BUNDLER_VERSION: 2.0.2
+      HUGO_VERSION: 0.58.3
+    working_directory: ~/working
+  attach_build_workspace: &attach_build_workspace
+    attach_workspace:
+        at: build_artifacts
+  checkout: &checkout
+    checkout:
+      path: git-repo
+  checkout-submodules: &checkout-submodules
+    run:
+      name: Checkout Submodules
+      command: |
+        cd "$REPO_DIR"
+        git submodule sync --recursive
+        git submodule update --recursive --init
+  publish_artifacts: &publish_artifacts
+    store_artifacts:
+      path: build_artifacts
+  restore_gem_cache: &restore_gem_cache
+    restore_cache:
+      keys:
+        - gem-cache-v10-{{ arch }}-{{ checksum "git-repo/website/Gemfile.lock" }}
+        - gem-cache-v10-{{ arch }}-
+  save_gem_cache: &save_gem_cache
+    save_cache:
+      key: gem-cache-v10-{{ arch }}-{{ checksum "git-repo/website/Gemfile.lock" }}
+      paths:
+        - git-repo/website/vendor/bundle
+commands:
+  install-hugo:
+    description: "Install Hugo"
+    steps:
+      - run:
+          name: Get Hugo
+          command: |
+            wget "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb"
+      - run:
+          name: Install Hugo
+          command: |
+            sudo apt-get install "./hugo_extended_${HUGO_VERSION}_Linux-64bit.deb"
+  install-markdown-link-check:
+    description: "Install markdown-link-check"
+    steps:
+      - run:
+          name: Get markdown-link-check
+          command: |
+            sudo npm install -g markdown-link-check
+  install-bundler:
+    description: "Install bundler and html-proofer"
+    steps:
+      - run:
+          name: Install with Bundler
+          command: |
+            cd "$REPO_WEBSITE_DIR"
+            gem update --system
+            gem install bundler
+            bundle install --path vendor/bundle --jobs=4 --retry=3 && bundle clean
+  check-skip-build:
+    steps:
+      - run:
+          name: Check if job should be skipped
+          command: |
+            if [[ -f "$BUILD_DIR/.skipbuild" ]]; then
+              echo "Skipping job."
+              circleci step halt
+            fi
+executors:
+  java-executor:
+    docker: # run the java jobs with Docker
+      - image: circleci/openjdk:11-jdk-node-browsers
+    <<: *common_environment
+  ruby-node-executor:
+    docker: # run the ruby jobs with Docker
+      - image: circleci/ruby:2.6.5-node-browsers
+    <<: *common_environment
+jobs: # a collection of
+  job-ci-skip-check:
+    executor: java-executor
+    steps:
+      - checkout
+      - run:
+          name: Check if skip build
+          command: |
+            mkdir -p "$BUILD_DIR/state"
+            COMMIT_MSG=$(git log --format=oneline -n 1 $CIRCLE_SHA1)
+            if [[ $COMMIT_MSG == *"[ci deploy skip]"* ]]; then
+              echo "[ci deploy skip] detected. Stopping."
+              echo "branch: $CIRCLE_BRANCH" > "$BUILD_DIR/.skipbuild"
+            else
+              echo "branch: $CIRCLE_BRANCH" > "$BUILD_DIR/.runbuild"
+            fi
+      - persist_to_workspace:
+          root: build_artifacts
+          paths:
+            - .runbuild
+            - .skipbuild
+  job-validate-markdown:
+    executor: java-executor
+    steps:
+      - *checkout
+      - *attach_build_workspace
+      - check-skip-build
+      - install-markdown-link-check
+      - run:
+          name: Validate repo Markdown content instances
+          command: |
+            # this command will filter out any docs Markdown files, which are checked in a different job
+            find "$REPO_DIR" -path "${REPO_WEBSITE_DIR}" -prune -o -name \*.md -print0 | xargs -0 -n1 markdown-link-check -q -c "$REPO_DIR/.markdown-link-check/config.json"
+  job-validate-site-content:
+    executor: ruby-node-executor
+    steps:
+      - *checkout
+      - *checkout-submodules
+      - *attach_build_workspace
+      - check-skip-build
+      - *restore_gem_cache
+      - install-bundler
+      - install-hugo
+      - run:
+          name: Build and Validate Hugo site
+          command: |
+            cd "${REPO_WEBSITE_DIR}"
+            hugo -v --debug --minify
+            bundle exec htmlproofer --allow-hash-href --disable-external  public/ --url-swap "\/metaschema\/:/"  --assume-extension --log-level :debug
+      - *save_gem_cache
+      - *publish_artifacts
+  job-build-and-deploy-website:
+    executor: ruby-node-executor
+    steps:
+      - *checkout
+      - *checkout-submodules
+      - *attach_build_workspace
+      - check-skip-build
+      - *restore_gem_cache
+      - install-bundler
+      - install-hugo
+      - run:
+          name: Build Site with Hugo
+          command: |
+            # cp -vr "$BUILD_DIR"/* "$REPO_DIR"
+            cd "$REPO_WEBSITE_DIR"
+            hugo -v --debug --minify
+            mkdir -p public/.circleci
+            # copy the circleci config
+            cp ../.circleci/config.yml public/.circleci/config.yml
+            touch public/.nojekyll
+      - *save_gem_cache
+      - run:
+          name: Run deploy script
+          command: |
+            cd "$REPO_WEBSITE_DIR"
+            git config user.name "Deployment Bot"
+            bash ./deploy.sh --push-only -v -m "Deploying website [ci deploy skip]"
+      - *publish_artifacts
+workflows:
+  version: 2
+  build:
+    jobs:
+      - job-ci-skip-check:
+          filters:
+            tags:
+              ignore: /.*/
+      - job-validate-markdown:
+          requires:
+            - job-ci-skip-check
+          filters:
+            branches:
+              ignore:
+                - master
+                - nist-pages
+      - job-validate-site-content:
+          requires:
+            - job-ci-skip-check
+          filters:
+            branches:
+              # only from PRs
+              ignore:
+                - master
+                - nist-pages
+      - job-build-and-deploy-website:
+          requires:
+            - job-ci-skip-check
+          filters:
+            branches:
+              only: master
