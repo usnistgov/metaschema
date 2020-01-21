@@ -39,7 +39,15 @@
       </div>
    </xsl:template>
 
+   <xsl:template match="/" mode="debug">
+      <xsl:copy-of select="$surrogate-tree"/>
+      <div class="OM-map">
+            <xsl:apply-templates select="$surrogate-tree/*" mode="html-render"/>
+      </div>
+   </xsl:template>
+   
    <xsl:template match="/">
+      <!--<xsl:copy-of select="$surrogate-tree"/>-->
       <div class="OM-map">
          <xsl:variable name="html-basic">
             <xsl:apply-templates select="$surrogate-tree/*" mode="html-render"/>
@@ -47,7 +55,7 @@
          <xsl:apply-templates select="$html-basic" mode="elaborate"/>
       </div>
    </xsl:template>
-
+   
    <xsl:template mode="html-render" match="@m:*"/>
 
    <xsl:template mode="html-render" match="m:flag[(@name)= ../@json-key-flag]"/>
@@ -121,7 +129,7 @@
          <p>
             <span class="OM-view_switcher"/>
             <a class="OM-name" href="{ $path-to-docs }#{ $model-label}_{ @name }">
-               <xsl:value-of select="@name"/>
+               <xsl:value-of select="(@group-name,@name)[1]"/>
             </a>
             <xsl:text>: </xsl:text>
             <xsl:call-template name="cardinality-note"/>
@@ -159,8 +167,6 @@
          </p>
       </div>
    </xsl:template>
-
-
 
    <!--<xsl:template match="m:field[@as-type='markup-multiline'][not(@wrap-xml='yes')]" mode="html-render">
       <p class="OM-entry"><a href="../../schemas/oscal-prose"><i>Prose contents (paragraphs, lists, headers and tables)</i></a></p>
@@ -206,7 +212,7 @@
             <xsl:value-of select="@name"/>
             <xsl:text>}}: </xsl:text>
          </span>
-         <xsl:apply-templates select="." mode="contents-inline"/>
+         <xsl:apply-templates select=".." mode="contents-inline"/>
          <xsl:call-template name="cardinality-note"/>
          <xsl:if test="not(position() eq last())"><span class="OM-lit">,</span></xsl:if>
       </p>
@@ -283,33 +289,39 @@
    <xsl:template mode="contents-inline" match="*">
       <xsl:apply-templates select="." mode="datatype"/>
    </xsl:template>
-
-
+   
    <xsl:template mode="value" match="m:assembly"/>
 
+   <xsl:template priority="2" match="*[exists(@json-value-flag)]" mode="value-key"/>
+   
    <xsl:template match="*" mode="value">
       <p class="OM-entry">
-         <span class="OM-name">STRVALUE: </span>
+         <span class="OM-name">
+            <xsl:apply-templates select="." mode="value-key"/>
+            <xsl:text>: </xsl:text>
+         </span>
          <xsl:apply-templates select="." mode="datatype"/>
          <span class="OM-cardinality"> [0 or 1]</span>
-
          <xsl:if test="m:flag[not(@name=../(json-key | json-value-key)/@flag-name)]"><span class="OM-lit">,</span></xsl:if>
       </p>
    </xsl:template>
 
-   <xsl:template match="*[@as-type='markup-line']" mode="value">
-      <p class="OM-entry">
-         <span class="OM-name">RICHTEXT: </span>
-         <xsl:apply-templates select="." mode="datatype"/>
-         <span class="OM-cardinality"> [0 or 1]</span>
-         <xsl:if test="m:flag[not((@name | @ref) = ../(json-key | json-value-key)/@flag-name)]">
-            <span class="OM-lit">,</span>
-         </xsl:if>
-      </p>
+   <xsl:template match="*" mode="value-key">STRVALUE</xsl:template>
+   
+   <xsl:template match="*[@as-type='markup-line']" mode="value-key">RICHTEXT</xsl:template>
+   
+   <xsl:template priority="2" match="*[exists(@json-value-key)]" mode="value-key">
+      <xsl:value-of select="@json-value-key"/>  
    </xsl:template>
+   
+   <!--<xsl:template priority="3" match="*[exists(@json-value-flag)]" mode="value-key">
+      <xsl:text>{{</xsl:text>
+      <xsl:value-of select="@json-value-flag"/>
+      <xsl:text>}}</xsl:text>
+   </xsl:template>-->
+   
 
-
-   <xsl:template match="*[@json-value-flag=m:flag/@name]" mode="value datatype"/>
+   <xsl:template match="*[@json-value-flag=m:flag/@name]" mode="value"/>
 
    <xsl:template match="*" mode="datatype">
       <span class="OM-emph">string</span>
