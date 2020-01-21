@@ -17,7 +17,7 @@
    <xsl:variable name="metaschema-code" select="/*/short-name || '-xml'"/>
 
    <xsl:variable name="datatype-page" as="xs:string">../../datatypes</xsl:variable>
-   
+
    <xsl:strip-space elements="*"/>
 
    <xsl:preserve-space elements="p li pre i b em strong a code q"/>
@@ -40,13 +40,14 @@
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="description"/>
          <xsl:apply-templates select="." mode="representation-in-xml"/>
+         <xsl:apply-templates select="allowed-values"/>
          <xsl:for-each-group select="key('references',@name)/parent::*" group-by="true()">
             <p><xsl:text>This attribute appears on: </xsl:text>
-               <xsl:for-each select="current-group()">
+               <xsl:for-each-group select="current-group()" group-by="(@ref|@name)">
                   <xsl:if test="position() gt 1 and last() ne 2">, </xsl:if>
                   <xsl:if test="position() gt 1 and position() eq last()"> and </xsl:if>
                   <xsl:apply-templates select="." mode="link-here"/>
-               </xsl:for-each>.</p>
+               </xsl:for-each-group>.</p>
          </xsl:for-each-group>
          <xsl:call-template name="remarks-group"/>
          <xsl:call-template name="report-module"/>
@@ -58,6 +59,7 @@
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="formal-name | description"/>
          <xsl:apply-templates mode="representation-in-xml" select="."/>
+         <xsl:apply-templates select="allowed-values"/>
          <xsl:call-template name="appears-in"/>
          <xsl:if test="exists(flag)">
             <xsl:variable name="modal">
@@ -214,15 +216,15 @@
 
    <xsl:template match="example">
       <xsl:variable name="example-no" select="'example' || count(.|preceding-sibling::example)"/>
-      <div class="example">
+      <div class="example usa-accordion">
          <h3>
-            <button aria-expanded="true"
+            <button class="usa-accordion__button" aria-expanded="true"
                aria-controls="{ ../@name }_{$example-no}_xml">
                <xsl:text>Example</xsl:text>
                <xsl:for-each select="description">: <xsl:apply-templates/></xsl:for-each>
             </button>
          </h3>
-         <div id="{ ../@name }_{ $example-no }_xml" class="example-content">
+         <div id="{ ../@name }_{ $example-no }_xml" class="example-content usa-accordion__content usa-prose">
             <xsl:apply-templates select="remarks"/>
             <pre>
                <!-- 'doe' span can be wiped in post-process, but permits disabling output escaping -->
@@ -327,7 +329,7 @@
       <xsl:apply-templates select="key('definitions',@ref)" mode="#current"/>
    </xsl:template>
 
-   
+
    <xsl:template mode="metaschema-type" match="flag | define-flag | define-field">
       <xsl:variable name="given-type" select="(@as-type, key('definitions',@ref)/@as-type,'string')[1]"/>
       <xsl:text> </xsl:text>
