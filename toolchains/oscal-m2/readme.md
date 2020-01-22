@@ -1,23 +1,12 @@
 # OSCAL Metaschema
 
-OSCAL supports XML and JSON-oriented schema validation technologies including XSD and JSON Schema (v7), for the various OSCAL formats now including catalog, profile and others to come (for other uses at higher layers). These and related artifacts are produced and coordinated using a Metaschema vocabulary (and processing) we are developing.
+This subtree of the repository contains the original XSLT-based implementation of the Mwtaschema framework's schema, converter, and documentation generation capabilities.
 
-Current features of the Metaschema:
+This Metaschema implementation supports:
 
 - XSD and JSON Schema production, coordinated from a unified source
 - Documentation (embedded and [web-based](https://pages.nist.gov/OSCAL/docs/schemas/))
 - Automated conversion scripts (XSLT transformations) for converting between XML and JSON format(s) conformant to the given metaschema
-
-To see an example of a Metaschema, check out the [OSCAL Catalog Metaschema](../../src/metaschema/oscal_catalog_metaschema.xml) in its current form.
-
-In [that directory](../../src/metaschema) you will also find some [Metaschema documentation](../../src/metaschema/readme.md) and an [XSLT](../../src/metaschema/metaschema-browser.xsl) for displaying metaschemas in the browser.
-
-The subdirectories under this directory include transformations that create further tooling in the form of schema files (XSD, JSON Schema, Schematron) or XSLT results; when run, these transformations should typically produce those outputs in relevant (other directories), such as:
-
-- [XML schema](../../xml/schema)
-- [JSON schema](../../json/schema)
-- Conversion scripts for translating OSCAL content to [XML](../../xml/convert) and [JSON](../../json/convert)
-- JSON and XML model documentation provided on the [OSCAL website](https://pages.nist.gov/OSCAL/docs/schemas/)
 
 The [lib](lib) subdirectory contains the libraries and transformation specifications (stylesheets) providing for these data transformations.
 
