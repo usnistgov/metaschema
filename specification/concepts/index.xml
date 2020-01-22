@@ -6,4 +6,4 @@ The information structure used to represent a managed object within a given meta
 An assembly does not have an associated value.
 An assembly may reference or directly define zero or more flags.
 An Assembly has a model consisting of references to zero or more assemblies or flags.
-Data Model (DM) A data model, abbreviated as DM, is defined as follows:</description></item></channel></rss>
+Data Model A data model, abbreviated as DM, is defined as follows:</description></item></channel></rss>

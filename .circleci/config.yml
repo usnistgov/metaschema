@@ -114,7 +114,7 @@ jobs: # a collection of
           name: Validate repo Markdown content instances
           command: |
             # this command will filter out any docs Markdown files, which are checked in a different job
-            find "$REPO_DIR" -path "${REPO_WEBSITE_DIR}" -prune -o -name \*.md -print0 | xargs -0 -n1 markdown-link-check -q -c "$REPO_DIR/.markdown-link-check/config.json"
+            find "$REPO_DIR" -path "${REPO_WEBSITE_DIR}" -prune -o -name \*.md -print0 | xargs -0 -n1 markdown-link-check -q -c "$REPO_DIR/scripts/config/.markdown-link-check/config.json"
   job-validate-site-content:
     executor: ruby-node-executor
     steps:
