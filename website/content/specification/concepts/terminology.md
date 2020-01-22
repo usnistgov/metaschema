@@ -17,7 +17,7 @@ An assembly may reference or directly define zero or more [*flags*](#flag).
 
 An Assembly has a model consisting of references to zero or more [*assemblies*](#assembly) or [*flags*](#flag).
 
-## Data Model (DM)
+## Data Model
 
 A *data model*, abbreviated as DM, is defined as follows:
 
