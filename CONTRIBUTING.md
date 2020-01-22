@@ -42,7 +42,6 @@ This repository consists of the following directories and files pertaining to th
 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md): This file contains a code of conduct for all project contributors.
 - [CONTRIBUTING.md](CONTRIBUTING.md): This file is for potential contributors to the project. It provides basic information on the project, describes the main ways people can make contributions, explains how to report issues, and lists pointers to additional sources of information. It also has instructions on establishing a development environment for contributing to the project and using GitHub project cards to track development sprints.
 - [LICENSE.md](LICENSE.md): This file contains license information for the files in this GitHub repository.
-- [USERS.md](USERS.md): This file explains which types of users are most likely to benefit from use of this project and its artifacts.
 
 ## Contributing to a Development Sprint
 
