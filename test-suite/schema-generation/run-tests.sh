@@ -1,26 +1,20 @@
 #!/bin/bash
 
-my_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-SCRIPT_DIR="$(realpath "$my_dir/../../scripts")"
-unit_test_dir="$my_dir"
-source "${SCRIPT_DIR}/include/common-environment.sh"
-source "${SCRIPT_DIR}/include/init-validate-json.sh"
-source "${SCRIPT_DIR}/include/schematron-init.sh"
+
+if [ -z ${OSCAL_SCRIPT_INIT+x} ]; then
+  source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/../../scripts/include/common-environment.sh"
+fi
+
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/../../scripts/include/init-schema-generation.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/../../scripts/include/init-schematron.sh"
 
 # configuration
-METASCHEMA_ROOT_DIR="$(realpath "${SCRIPT_DIR}/..")"
-UNIT_TESTS_DIR="$unit_test_dir"
-METASCHEMA_LIB_DIR="$(realpath "${METASCHEMA_ROOT_DIR}/toolchains/oscal-m2/lib")"
-METASCHEMA_SCHEMA="${METASCHEMA_LIB_DIR}/metaschema.xsd"
-METASCHEMA_SCHEMATRON="${METASCHEMA_LIB_DIR}/metaschema-check.sch"
-JSON_SCHEMA_SCHEMA="${METASCHEMA_ROOT_DIR}/support/schema/json-schema-schema.json"
-XML_SCHEMA_SCHEMA="${METASCHEMA_ROOT_DIR}/support/schema/XMLSchema.xsd"
+UNIT_TESTS_DIR=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../test-suite/schema-generation")
+METASCHEMA_SCHEMA=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/oscal-m2/lib/metaschema.xsd")
 DEBUG="false"
 
 # Option defaults
 KEEP_TEMP_SCRATCH_DIR=false
-VERBOSE=false
-HELP=false
 
 usage() {                                      # Function: Print a help message.
   cat << EOF
@@ -91,30 +85,6 @@ if [ -z "${SCRATCH_DIR+x}" ]; then
   fi
 fi
 
-validate() {
-  local schema="$1"; shift
-  local instance="$1"; shift
-  local format="$1"; shift
-
-  case "$format" in
-    json)
-      result=$(validate_json "$schema" "$instance")
-      cmd_exitcode=$?
-      ;;
-    xml)
-      result=$(xmllint --noout --schema "$schema" "$instance" 2>&1)
-      cmd_exitcode=$?
-      ;;
-    *)
-      echo -e "${P_ERROR}Validation not supported for format '$format' for instance '$instance'.${P_END}"
-      return 1;
-  esac
-  if [ $cmd_exitcode -ne 0 ]; then
-    echo -e "${P_ERROR}${result}${P_END}"
-  fi
-  return $cmd_exitcode;
-}
-
 generate_and_validate_schema() {
   local unit_test_collection_dir="$1"; shift
   local unit_test_path_prefix="$1"; shift
@@ -122,34 +92,29 @@ generate_and_validate_schema() {
   local schema_output="$1"; shift
   local format="$1"; shift
 
-  metaschema_relative=$(realpath --relative-to="$unit_test_collection_dir" "$metaschema")
+  metaschema_relative=$(get_rel_path "$unit_test_collection_dir" "$metaschema")
 
   if [ "$VERBOSE" = "true" ]; then
-    echo -e "  ${P_INFO}Generating ${format^^} schema for '${P_END}${metaschema_relative}${P_INFO}' as '${P_END}$schema${P_INFO}'.${P_END}"
+    echo -e "  ${P_INFO}Generating ${format^^} schema for '${P_END}${metaschema_relative}${P_INFO}' as '${P_END}$schema_output${P_INFO}'.${P_END}"
   fi
 
-  result=$("${SCRIPT_DIR}/generate-schema.sh" --${format} "$metaschema" "$schema_output" 2>&1)
+  result=$(generate_schema "$format" "$metaschema" "$schema_output")
   cmd_exitcode=$?
+  if [ -n "$result" ]; then
+    >&2 echo -e "${result}"
+  fi
   if [ $cmd_exitcode -ne 0 ]; then
-    echo -e "  ${P_ERROR}Failed to generate ${format^^} schema for '${P_END}${metaschema_relative}${P_ERROR}'.${P_END}"
-    echo -e "${P_ERROR}${result}${P_END}"
-    return 1;
+    >&2 echo -e "  ${P_ERROR}Failed to generate ${format^^} schema for '${P_END}${metaschema_relative}${P_ERROR}'.${P_END}"
+    return 1
   fi
 
-  case ${format} in
-    xml)
-      validating_schema="$XML_SCHEMA_SCHEMA"
-      ;;
-    json)
-      validating_schema="$JSON_SCHEMA_SCHEMA"
-      ;;
-  esac
-
-  result=$(validate "$validating_schema" "$schema_output" "$format" 2>&1)
+  result=$(validate_schema "$format" "$schema_output")
   cmd_exitcode=$?
   if [ $cmd_exitcode -ne 0 ]; then
-    echo -e "  ${P_ERROR}Failed to validate generated ${format^^} schema '${P_END}$schema_output${P_ERROR}'.${P_END}"
-    echo -e "${P_ERROR}${result}${P_END}"
+    if [ -n "$result" ]; then
+      >&2 echo -e "${result}"
+    fi
+    >&2 echo -e "  ${P_ERROR}Failed to validate generated ${format^^} schema '${P_END}$schema_output${P_ERROR}'.${P_END}"
     return 2;
   fi
   echo -e "  ${P_OK}Generated valid ${format^^} schema for '${P_END}${metaschema_relative}${P_OK}' as '${P_END}$schema_output${P_OK}'.${P_END}"
@@ -165,7 +130,7 @@ generate_and_validate_schema() {
       diff_tool="json-diff"
       ;;
   esac
-  expected_schema_relative=$(realpath --relative-to="$unit_test_collection_dir" "$expected_schema")
+  expected_schema_relative=$(get_rel_path "$unit_test_collection_dir" "$expected_schema")
 
   # Only perform this check if an expected schema exists
   if [ -f "$expected_schema" ]; then
@@ -242,43 +207,54 @@ if [ "$VERBOSE" = "true" ]; then
   echo -e "${P_INFO}Using scratch directory:${P_END} ${SCRATCH_DIR}"
 fi
 
+# compile the schematron
+metaschema_lib=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/oscal-m2/lib")
+schematron="$metaschema_lib/metaschema-check.sch"
+compiled_schematron="${SCRATCH_DIR}/metaschema-schematron-compiled.xsl"
+
+build_schematron "$schematron" "$compiled_schematron"
+cmd_exitcode=$?
+if [ $cmd_exitcode -ne 0 ]; then
+  echo -e "${P_ERROR}Compilation of Schematron '${P_END}${schematron}${P_ERROR}' failed.${P_END}"
+  exit 1
+fi
+# the following is needed by the compiled template
+cp "${metaschema_lib}/metaschema-compose.xsl" "${SCRATCH_DIR}"
+cp "${metaschema_lib}/oscal-datatypes-check.xsl" "${SCRATCH_DIR}"
+
 test_dirs=()
 if [ -n "$1" ]; then
     test_dirs+=("$1")
 else
-    while IFS= read -r -d $'\0'; do
-        test_dirs+=("$REPLY")
-    done < <(find "$UNIT_TESTS_DIR" -mindepth 1 -maxdepth 1 -type d -print0)
+  while read -r -d $'\0' dir; do
+    test_dirs+=("$dir")
+  done < <(find "$UNIT_TESTS_DIR" -mindepth 1 -maxdepth 1 -type d -print0)
 fi
 
-if [ "$VERBOSE" = "true" ]; then
-  echo -e "${P_INFO}Executing tests in '${P_END}${test_dirs[@]}${P_INFO}'.${P_END}"
+if [ "$VERBOSE" == "true" ]; then
+  echo -e "${P_INFO}Executing tests in:${P_END}"
+  for test_dir in ${test_dirs[@]}; do
+    echo -e "  ${test_dir}"
+  done
 fi
-
-# compile the schematron
-compiled_schematron="${SCRATCH_DIR}/metaschema-check-schematron-compiled.xsl"
-build_schematron "$METASCHEMA_SCHEMATRON" "$compiled_schematron"
-cmd_exitcode=$?
-if [ $cmd_exitcode -ne 0 ]; then
-  echo -e "${P_ERROR}Compilation of Schematron '${P_END}${METASCHEMA_SCHEMATRON}${P_ERROR}' failed.${P_END}"
-  exit 1
-fi
-# the following is needed by the compiled template
-cp "${METASCHEMA_LIB_DIR}/metaschema-compose.xsl" "${SCRATCH_DIR}"
-cp "${METASCHEMA_LIB_DIR}/oscal-datatypes-check.xsl" "${SCRATCH_DIR}"
 
 exitcode=0
 for unit_test_collection_dir in "${test_dirs[@]}"
 do
   # get absolute and relative paths of the unit test collection
-  unit_test_collection_dir=$(realpath "$unit_test_collection_dir")
+  unit_test_collection_dir=$(get_abs_path "$unit_test_collection_dir")
   unit_test_collection_name=$(basename -- "$unit_test_collection_dir")
   echo -e "${P_INFO}Processing unit test collection:${P_END} ${unit_test_collection_name}"
+
+  metaschema_units=()
+  while read -r -d $'\0' unit; do
+    metaschema_units+=("$unit")
+  done < <(find "$unit_test_collection_dir" -maxdepth 1 -name "*_metaschema.xml" -type f -print0)
 
   unit_test_collection_scratch_dir="$SCRATCH_DIR/$unit_test_collection_name"
   mkdir -p "$unit_test_collection_scratch_dir"
 
-  while IFS= read -d $'\0' -r metaschema ; do
+  for metaschema in ${metaschema_units[@]}; do
     metaschema_file="$(basename -- "$metaschema")"
     unit_test_name="${metaschema_file/_metaschema.xml/}"
     unit_test_path_prefix="$unit_test_collection_dir/${unit_test_name}"
@@ -293,7 +269,7 @@ do
     if [ "$VERBOSE" = "true" ]; then
       echo -e "  ${P_INFO}Validating Metaschema:${P_END} ${metaschema_relative}"
     fi
-    result=$(xmllint --nowarning --noout --schema "$METASCHEMA_SCHEMA" "$metaschema" 2>&1)
+    result=$(validate_xml "$METASCHEMA_SCHEMA" "$metaschema" 2>&1)
     cmd_exitcode=$?
     if [ $cmd_exitcode -ne 0 ]; then
       echo -e "  ${P_ERROR}Metaschema '${P_END}${metaschema_relative}${P_ERROR}' is not XML Schema valid.${P_END}"
@@ -373,7 +349,7 @@ do
       fi
     fi
 
-  done < <(find "$unit_test_collection_dir" -maxdepth 1 -name "*_metaschema.xml" -type f -print0)
+  done
 done
 
 exit $exitcode
