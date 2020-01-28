@@ -1,19 +1,24 @@
 #!/bin/bash
 
-my_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-SCRIPT_INCLUDE_DIR="$my_dir"
-source "$SCRIPT_INCLUDE_DIR/common-environment.sh"
+init_saxon() {
 
-if [[ -z "$SAXON_HOME" ]]; then
-    if [[ -z "$SAXON_VERSION" ]]; then
-        echo -e "${P_ERROR}SAXON_VERSION is not set or is empty.${P_END} ${P_INFO}Please set SAXON_VERSION to indicate the library version or SAXON_HOME to point to the location of the Saxon library.${P_END}"
-    fi
-    SAXON_HOME=~/.m2/repository/net/sf/saxon/Saxon-HE/$SAXON_VERSION
-fi
+  if [ -z ${METASCHEMA_SCRIPT_INIT+x} ]; then
+    source "${my_dir}/common-environment.sh"
+  fi
+
+  if [[ -z "$SAXON_HOME" ]]; then
+      if [[ -z "$SAXON_VERSION" ]]; then
+          echo -e "${P_ERROR}SAXON_VERSION is not set or is empty.${P_END} ${P_INFO}Please set SAXON_VERSION to indicate the library version or SAXON_HOME to point to the location of the Saxon library.${P_END}"
+      fi
+      SAXON_HOME=~/.m2/repository/net/sf/saxon/Saxon-HE/$SAXON_VERSION
+  fi
+}
 
 # ( set -o posix ; set )
 
 xsl_transform() {
+    init_saxon
+
     local stylesheet="$1"; shift
     local source_file="$1"; shift
     local output_file="$1"; shift
@@ -39,3 +44,5 @@ xsl_transform() {
     fi
     return 0
 }
+
+
