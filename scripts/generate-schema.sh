@@ -4,10 +4,10 @@ if [ -z ${OSCAL_SCRIPT_INIT+x} ]; then
   source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/include/common-environment.sh"
 fi
 
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/include/init-validate-content.sh"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/include/init-schema-generation.sh"
 
 # Option defaults
-GENERATE_SCHEMA_DEFAULT="json"
+GENERATE_SCHEMA_FORMAT_DEFAULT="json"
 VALIDATE_SCHEMA_DEFAULT=false
 
 usage() {                                      # Function: Print a help message.
@@ -25,7 +25,7 @@ Usage: $0 [options] metaschema_file [generated_schema_file]
 EOF
 }
 
-GENERATE_SCHEMA="${GENERATE_SCHEMA_DEFAULT}"
+GENERATE_SCHEMA_FORMAT="${GENERATE_SCHEMA_FORMAT_DEFAULT}"
 VALIDATE_SCHEMA=${VALIDATE_SCHEMA_DEFAULT}
 
 OPTS=`getopt -o w:vh --long working-dir:,cache-dir:,provider-dir:,validate,help,xml,json -n "$0" -- "$@"`
@@ -49,10 +49,10 @@ while [ $# -gt 0 ]; do
       shift # past path
       ;;
     --xml)
-      GENERATE_SCHEMA="xml"
+      GENERATE_SCHEMA_FORMAT="xml"
       ;;
     --json)
-      GENERATE_SCHEMA="json"
+      GENERATE_SCHEMA_FORMAT="json"
       ;;
     --validate)
       VALIDATE_SCHEMA=true
@@ -103,43 +103,31 @@ mkdir -p "$(dirname "$WORKING_DIR")"
 METASCHEMA_RELATIVE_PATH=$(get_rel_path "${WORKING_DIR}" "${METASCHEMA}")
 
 if [ "$VERBOSE" == "true" ]; then
-  echo -e "${P_INFO}Generating ${GENERATE_SCHEMA^^} schema for metaschema:${P_END} ${METASCHEMA_RELATIVE_PATH}"
+  echo -e "${P_INFO}Generating ${GENERATE_SCHEMA_FORMAT^^} schema for metaschema:${P_END} ${METASCHEMA_RELATIVE_PATH}"
 fi
 
-result=$("generate_${GENERATE_SCHEMA}_schema" "$METASCHEMA" "$GENERATED_SCHEMA")
+result=$(generate_schema "$GENERATE_SCHEMA_FORMAT" "$METASCHEMA" "$GENERATED_SCHEMA")
 cmd_exitcode=$?
-echo -ne "${result}"
-if [ $cmd_exitcode -eq 0 ]; then
-  if [ "$VERBOSE" = "true" ]; then
-    echo -e "${P_OK}Generation of ${GENERATE_SCHEMA^^} schema passed for '${P_END}${METASCHEMA}${P_OK}'.${P_END}"
-  fi
+if [ -n "$result" ]; then
+  >&2 echo -e "${result}"
+fi
+if [ $cmd_exitcode -ne 0 ]; then
+  >&2 echo -e "${P_ERROR}Generation of ${GENERATE_SCHEMA_FORMAT^^} schema failed for '${P_END}${METASCHEMA}${P_ERROR}'.${P_END}"
+  exit 3
 fi
 
 if [ "$VALIDATE_SCHEMA" == "true" ]; then
-  # validate generated schema
-  case ${GENERATE_SCHEMA} in
-  xml)
-    result=$(validate_xml "${METASCHEMA_SCRIPT_DIR}/../support/schema/XMLSchema.xsd" "$GENERATED_SCHEMA")
-    cmd_exitcode=$?
-    ;;
-  json)
-    result=$(validate_json "${METASCHEMA_SCRIPT_DIR}/../support/schema/json-schema-schema.json" "$GENERATED_SCHEMA")
-    cmd_exitcode=$?
-    ;;
-  *)
-    echo -e "${P_WARN}${GENERATE_SCHEMA^^} schema validation not supported for '${P_END}${GENERATED_SCHEMA}${P_WARN}'.${P_END}"
-    cmd_exitcode=0
-    ;;
-  esac
-
+  result=$(validate_schema "$GENERATE_SCHEMA_FORMAT" "$GENERATED_SCHEMA")
+  cmd_exitcode=$?
+  if [ -n "$result" ]; then
+    >&2 echo -e "${result}"
+  fi
   if [ $cmd_exitcode -ne 0 ]; then
     echo -e "${P_ERROR}Schema validation failed for '${P_END}${GENERATED_SCHEMA}${P_ERROR}'.${P_END}"
     echo -e "${P_ERROR}${result}${P_END}"
     exitcode=1
   else
-    if [ "$VERBOSE" == "true" ]; then
-      echo -e "${P_OK}Schema validation passed for '${P_END}${GENERATED_SCHEMA}${P_OK}'.${P_END}"
-    else
+    if [ "$VERBOSE" != "true" ]; then
       echo -e "${P_OK}Schema generation complete for '${P_END}${METASCHEMA}${P_OK}' as '${P_END}${GENERATED_SCHEMA}${P_OK}', which is valid.${P_END}"
     fi
   fi
