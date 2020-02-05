@@ -44,7 +44,7 @@
             <xsl:namespace name="m">http://csrc.nist.gov/ns/oscal/1.0/md-convertor</xsl:namespace>
             <XSLT:output indent="yes" method="xml"/>
             
-            <xsl:comment expand-text="true"> OSCAL { @root } conversion stylesheet supports JSON->XML conversion </xsl:comment>
+            <xsl:comment expand-text="true"> OSCAL { @root} conversion stylesheet supports JSON->XML conversion </xsl:comment>
             
             <XSLT:param name="target-ns" as="xs:string?" select="'{$composed-metaschema/METASCHEMA/namespace/normalize-space(.)}'"/>
             <!--<XSLT:param name="target-ns" as="xs:string?" select="'{namespace/normalize-space(.)}'"/>-->
@@ -73,7 +73,7 @@
      <!-- local flag definitions (given in field or assembly definitions) do require templates --> 
      <xsl:template match="flag[@name]" mode="make-template" expand-text="true">
         <!-- Making a template to match a flag in context of its parent -->
-        <xsl:comment> *** Handling flag "{ ../@name}/@{ @name }" *** </xsl:comment>
+        <xsl:comment> 000 Handling flag "{ ../@name}/@{ @name }" 000 </xsl:comment>
         
         <xsl:variable name="match-step" expand-text="yes" as="xs:string">*[@key='{@name}']</xsl:variable>
         <xsl:variable name="match-patterns" as="xs:string*">
@@ -82,7 +82,7 @@
                 <xsl:value-of>
                     <xsl:text>*[@key='{@name}']/{$match-step}</xsl:text>
                     <xsl:for-each select="$group-names">
-                        <xsl:text> | *[@key='{ . }']/{$match-step}</xsl:text>
+                        <!--<xsl:text> | *[@key='{ . }']/{$match-step}</xsl:text>-->
                         <xsl:text> | *[@key='{ . }']/*/{$match-step}</xsl:text>
                     </xsl:for-each>
                 </xsl:value-of>
@@ -91,7 +91,7 @@
          <xsl:comment> suppressing when matched in json2xml traversal</xsl:comment>
          <XSLT:template match="{string-join($match-patterns,' | ')}" priority="7" mode="json2xml"/>
          
-        <XSLT:template priority="3" match="{string-join($match-patterns,' | ')}" mode="as-attribute">
+        <XSLT:template priority="8" match="{string-join($match-patterns,' | ')}" mode="as-attribute">
             <XSLT:attribute name="{@name}">
                 <XSLT:apply-templates mode="#current"/>
             </XSLT:attribute>
@@ -100,7 +100,7 @@
     
     <xsl:template match="define-flag" expand-text="true">
         <!-- Flags won't be producing elements in the regular traversal -->
-        <xsl:comment> *** Handling flag @{ @name } *** </xsl:comment>
+        <xsl:comment> 000 Handling flag @{ @name } 000 </xsl:comment>
         <xsl:variable name="flag-name" select="@name"/>
         <XSLT:template match="*[@key='{@name}']" priority="6" mode="json2xml"/>
         
@@ -178,7 +178,7 @@
     <xsl:template match="define-field[@as-type='markup-multiline']">
         <xsl:variable name="group-names" select="distinct-values(key('references-by-name',@name)/group-as/@name)"/>
         <xsl:variable name="single-match" as="xs:string" expand-text="true">*[@key='{@name}']</xsl:variable>
-        <xsl:variable name="group-matches" as="xs:string*" select="$group-names ! ('*[@key=''' || . || ''']  | *[@key=''' || . || ''']/*')"/>
+        <xsl:variable name="group-matches" as="xs:string*" select="$group-names ! ('*[@key=''' || . || ''']  | array[@key=''' || . || ''']/*')"/>
         <xsl:variable name="field-match" select="string-join(($single-match,$group-matches),' | ')"/>
         
         <xsl:comment expand-text="yes">{ $field-match }</xsl:comment>
@@ -207,12 +207,16 @@
         
         <xsl:variable name="group-names" select="distinct-values(key('references-by-name',@name)/group-as/@name)"/>
         <xsl:variable name="single-match" as="xs:string" expand-text="true">*[@key='{@name}']</xsl:variable>
-        <xsl:variable name="group-matches" as="xs:string*" select="$group-names ! ('*[@key=''' || . || ''']  | *[@key=''' || . || ''']/*')"/>
+        <!--<xsl:variable name="group-matches" as="xs:string*" select="$group-names ! ('*[@key=''' || . || ''']  | array[@key=''' || . || ''']/*')"/>-->
+        <xsl:variable name="group-matches" as="xs:string*" select="$group-names ! ('*[@key=''' || . || ''']/*')"/>
         <xsl:variable name="root-match" as="xs:string?" select="if (@name=../@root) then '/map[empty(@key)]' else ()"/>
         <xsl:variable name="field-match" select="string-join(($single-match,$group-matches,$root-match),' | ')"/>
         
-
-        <xsl:comment> *** Handling field "{ @name }" *** </xsl:comment>
+        <!--<xsl:variable name="field-match" as="xs:string">*[@key='{@name}']{
+            @group-as/(' | *[@key=''' || . || '''] | array[@key=''' || . || ''']/*') }{
+            if (@name=../@root) then ' | /map[empty(@key)]' else ()}</xsl:variable>-->
+        <xsl:comment> 000 Handling field "{ @name }" 000 </xsl:comment>
+        <xsl:comment> 000 NB - template matching 'array' overrides this one 000 </xsl:comment>
         <!--<xsl:variable name="callers" select="key('definitions-by-fields',@name,$composed-metaschema)"/>-->
         <!--<xsl:comment expand-text="yes">{ $callers/(@name, @group-as) }</xsl:comment>-->
         <!--<xsl:variable name="full-field-match">
@@ -227,49 +231,29 @@
         <!--<xsl:comment expand-text="yes">{ $full-field-match }</xsl:comment>-->
         <xsl:comment expand-text="yes">{ $field-match }</xsl:comment>
         
-        <xsl:comment> *** NB - template matching 'array' overrides this one *** </xsl:comment>
-        <XSLT:template match="{$field-match}" priority="5" mode="json2xml">
+        <XSLT:template match="{$field-match}" priority="7" mode="json2xml">
             <XSLT:element name="{@name}" namespace="{$target-namespace}">
-                <XSLT:apply-templates select="*" mode="as-attribute"/>
                 <xsl:for-each select="json-key">
-                    <xsl:comment>Flag '{ @flag-name }' is the key on an assembly or field (map) with a json-key.</xsl:comment>
-                    <XSLT:attribute name="{@flag-name}" select="@key"/>
+                    <XSLT:attribute name="{@flag-name}" select="../@key"/>
                 </xsl:for-each>
-                <!--<xsl:for-each select="json-value-key[matches(@flag-name,'\S')]">
-                    <xsl:comment>The current key becomes flag '{ @flag-name }'</xsl:comment>
-                    <XSLT:attribute name="{@flag-name}" select="(self::map/@key, parent::array/@key)[1]"/>
-                </xsl:for-each>-->
+                <XSLT:apply-templates select="*" mode="as-attribute"/>
                 <xsl:apply-templates select="." mode="field-text"/>
             </XSLT:element>
         </XSLT:template>
         
         
+        <!-- A template to place the key value on an attribute      -->
         <xsl:for-each select="child::json-key">
-            <!-- A template to place the key value on an attribute      -->
             <XSLT:template priority="2" match="({ $field-match})/string[@key='{@flag-name}']" mode="as-attribute">
                 <XSLT:attribute name="{@flag-name}">
                     <XSLT:apply-templates mode="#current"/>
                 </XSLT:attribute>
             </XSLT:template>
-            
-            <xsl:comment> To supervene template priority="5" matching "{ $field-match }" in the case of an object grouped
-            in a map, by virtue of json-key assignments to flags on that object... </xsl:comment>
-            <XSLT:template match="map[@key=({string-join($group-names ! ('''' || . || ''''),' ')})]"
-                mode="json2xml" priority="6">
-                <XSLT:apply-templates mode="#current"/>
-            </XSLT:template>
-            
-            
         </xsl:for-each>
         
         <!-- BUT - we want to prevent the value field (indicated by value key) from appearing as
         an attribute (in this context only) -->
         <xsl:for-each select="json-value-key[empty(@flag-name)]">
-            
-            <!--<XSLT:template priority="7" match="*[@key='information-type-id']/string[@key='id'] | *[@key='information-type-ids']/*/string[@key='id']" mode="json2xml">
-                <xsl:apply-templates mode="#current"/>
-            </XSLT:template>-->
-            
             <XSLT:template
                 match="({$field-match})/string[@key='{.}']"
                 mode="as-attribute"/>
@@ -292,7 +276,7 @@
             
 <!-- First a template to override any other templates matching objects of whatever name, where here the
             key name of the property represents the json-value-key value, not a flag name -->
-            <XSLT:template priority="6"
+            <XSLT:template priority="8"
                 match="({$field-match})/string[not(@key=({string-join($reserved-names ! ('''' || . || ''''),',')}))]"
                 mode="json2xml">
                 <XSLT:apply-templates/>
@@ -407,8 +391,8 @@
         
         <xsl:variable name="full-match" as="xs:string" select="string-join(($single-match,$group-matches,$root-match),' | ')"/>
         
-        <xsl:comment expand-text="true"> *** Handling assembly "{ @name }" *** </xsl:comment>
-        <xsl:comment> *** NB - template matching 'array' overrides this one *** </xsl:comment>
+        <xsl:comment> 000 Handling assembly "{ @name }" 000 </xsl:comment>
+        <xsl:comment> 000 NB - template matching 'array' overrides this one 000 </xsl:comment>
         <xsl:variable name="assembly-construction">
             <XSLT:element name="{@name}" namespace="{$target-namespace}">
                 <xsl:for-each select="child::json-key">

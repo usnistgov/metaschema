@@ -307,6 +307,9 @@
                 <XSLT:with-param name="key">
                     <xsl:value-of select="@ref"/>
                 </XSLT:with-param>
+                <xsl:if test="not(@in-xml='UNWRAPPED')">
+                    <XSLT:with-param name="wrapped" select="true()"/>
+                </xsl:if>
             </XSLT:call-template>
         </XSLT:for-each>
     </xsl:template>
@@ -398,9 +401,10 @@
 
         <XSLT:template name="prose">
             <XSLT:param name="key" select="'{ $markdown-blocks-label }'"/>
+            <XSLT:param name="wrapped" select="false()"/>
             <XSLT:variable name="blocks"
                 select="p | ul | ol | pre | h1 | h2 | h3 | h4 | h5 | h6 | table"/>
-            <XSLT:if test="exists($blocks)">
+            <XSLT:if test="exists($blocks) or $wrapped">
                 <XSLT:variable name="string-sequence" as="element()*">
                     <XSLT:apply-templates mode="md" select="$blocks"/>
                 </XSLT:variable>
