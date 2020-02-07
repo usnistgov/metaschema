@@ -2,7 +2,7 @@
 ## Overall goals
 
 Stable implementation - runs without having to revisit
-Easy to use - complexities are hidden from the casual user but available to the expert
+Easy to use - complexities are hidden from the casual user but traceable/verifiable by the expert
 Well documented = both Metaschema spec and this toolkit
 Support deployment as a library of functionalities over formats defined by an arbitrary metaschema
 
@@ -10,13 +10,19 @@ Support deployment as a library of functionalities over formats defined by an ar
 
 * write spec (Github project wiki?)
 * implement as pipeline with debug traceability
-* XSD/RNC for both pre and post composition metaschema? (post is subset of pre)
+* XSD/RNG for both pre and post composition metaschema? (post is subset of pre)
+* Schematron for pre-composition metaschema
+
+deploy as pipeline w/ no micropipelining
+  unit test stages (XSpec)
+  XProc for debugging, XSLT wrapper for deployment
 
 result of composition is:
   single standalone file instance
   including all samples as literals not callouts
   all field and flag definitions are collapsed and localized
-  all assembly definitions are exposed as entry points with nominal root marked
+  all assembly definitions are exposed as entry points
+    all fields and flags definitions are localized
 
 ## Implement Metaschema exploder
 
