@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../toolchains/xslt-proto-v04/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/css" href="../../toolchains/xslt-proto-v04/lib/metaschema-author.css"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-proto-v04/lib/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" root="group">
+    <schema-name>OSCAL Resource Manifest (Experimental)</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>oscal-resource-manifest</short-name>
+    <namespace>http://csrc.nist.gov/metaschema/ns/resource-manifest-experimental</namespace>
+    
+    <define-assembly name="group">
+        <formal-name>Resource Group</formal-name>
+        <description>A group of resources. Can nest. Can support resetting the reference base.</description>
+        <flag name="base" as-type="uri-reference">
+            <formal-name>Base URI</formal-name>
+            <description>Nominal reference URI from which relative URIs are determined. As a relative URI, this is resolved relative to any ancestor <code>base</code> flags, resolved with the base URI of the manifest itself as the ultimate base ".". Any base may be defined either relatively to bases above it, or as an absolute URI (URL) on the Internet.</description>
+        </flag>
+        <model>
+            <assembly ref="work"  max-occurs="unbounded">
+                <group-as name="works"/>
+            </assembly>
+            <assembly ref="group" max-occurs="unbounded">
+                <group-as name="groups"/>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="work">
+        <formal-name>Work</formal-name>
+        <description>An abstract resource, considered as a generalized "work" (FRBR). A work is capable of multiple different representations. A manifest provides a mapping from works to expressions and instance of that work.</description>
+        <flag name="id">
+            <formal-name>Identifier</formal-name>
+            <description>A unique id or key for reference across the system of documents described by this manifest.</description>
+        </flag>
+        <model>
+            <field ref="title"/>
+            <field ref="validate" max-occurs="unbounded">
+                <group-as name="abstract-validations"/>
+            </field>
+            <assembly ref="item" max-occurs="unbounded">
+                <group-as name="items"/>
+            </assembly>
+            <assembly ref="mirror" max-occurs="unbounded">
+                <group-as name="mirrors"/>
+            </assembly>           
+        </model>
+    </define-assembly>
+    
+    <define-field name="title">
+        <formal-name>Title</formal-name>
+        <description>A name for the work.</description>
+    </define-field>
+    
+    <define-field name="validate" as-type="empty">
+        <formal-name>Abstract validation</formal-name>
+        <description>Points to an abstract rule set, by means of a reference to a work in the manifest.</description>
+        <flag name="rules">
+            <formal-name>Abstract rule set</formal-name>
+        <description>Should resolve to a <code>work</code> elsewhere in the manifest, whereby technology-appropriate mappings may be made.</description>
+        </flag>
+    </define-field>
+    
+    <define-assembly name="item">
+        <formal-name>Item</formal-name>
+        <description>A particular instantiation or retrievable (actionable) representation of a work. The form the item takes is relative to the item.</description>
+        <flag name="format">
+            <formal-name>Format</formal-name>
+            <description>The nominal format of the item.</description>
+            <allowed-values>
+                <enum value="xml">XML</enum>
+                <enum value="json">JSON</enum>
+            </allowed-values>
+        </flag>
+        <flag ref="href"/>
+        <model>
+            <field ref="valid" max-occurs="unbounded">
+                <group-as name="validations"/>
+            </field>
+        </model>
+    </define-assembly>
+    
+    <define-flag name="href" as-type="uri-reference">
+            <formal-name>Hypertext reference</formal-name>
+            <description>A relative URI, resolved with reference to base (ancestry).</description>        
+    </define-flag>
+    
+    <define-field name="valid">
+        <formal-name>(Actual) validations</formal-name>
+        <description>In contrast to abstract validations, these are actual executable validation operations. As such, a validation may also imply or warrant further (processing) semantics. (tbd)</description>
+        <flag name="timestamp" as-type="dateTime-with-timezone">
+            <formal-name>Time Stamp</formal-name>
+            <description>When a validation is represented as having been performed. Should not be a date in the future.</description>
+        </flag>
+        <flag ref="href"/>
+    </define-field>
+    <define-assembly name="mirror">
+        <formal-name>Mirror</formal-name>
+        <description>A subgrouping of items found relative to a new base.</description>
+        <flag ref="base"/>
+        <model>
+            <assembly ref="item" max-occurs="unbounded">
+                <group-as name="items"/>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-flag name="base" as-type="uri-reference">
+        <formal-name>Base (URI)</formal-name>
+        <description>A definition or redefinition of a URI base from which file traversal is executed. As a relative URI,
+        this should be resolved in relation to the actual calculated base of the context.</description>
+    </define-flag>
+</METASCHEMA>
