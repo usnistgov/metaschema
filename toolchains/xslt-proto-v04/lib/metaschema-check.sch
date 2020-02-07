@@ -9,6 +9,7 @@
 <!--
 # extra-schema constraints:
 #  prose may not appear twice among siblings i.e. count(prose) is never gt 1
+     XXX change to unwrapped markup-multiline fields
 #  @ref may not be repeated among siblings
 #  same w/ @group-as
 #  likewise @ref may not equal any @group-as
@@ -32,7 +33,8 @@
     
     <xsl:key name="definition-by-name" match="define-flag | define-field | define-assembly" use="@name"/>-->
     
-    <xsl:import href="older/metaschema-compose.xsl"/>
+    <!-- XXX When it's ready, change this to updated compose! this is v1 version. -->
+    <xsl:import href="../../oscal-m2/lib/metaschema-compose.xsl"/>
         
 <!--  grouping name can't be the same as the name
       group-as is present whenever not(@max-occurs = 1) -->
