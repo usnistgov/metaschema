@@ -119,7 +119,7 @@ generate_and_validate_schema() {
   fi
   echo -e "  ${P_OK}Generated valid ${format^^} schema for '${P_END}${metaschema_relative}${P_OK}' as '${P_END}$schema_output${P_OK}'.${P_END}"
 
-  # diff the generated JSON schema with the expected JSON schema
+  # diff the generated schema with the expected schema
   case ${format} in
     xml)
       expected_schema="${unit_test_path_prefix}_xml-schema.xsd"
