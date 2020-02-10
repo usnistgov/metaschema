@@ -320,7 +320,11 @@
                 <array key="{ group-as/@name }">
                     <!-- copying @m:in-json to condition handling
                          in the next 'rectify' mode -->
-                    <xsl:copy-of select="group-as/@in-json"/>
+                    <xsl:for-each select="group-as/@in-json">
+                        <xsl:attribute name="m:in-json" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+                            <xsl:value-of select="."/>
+                        </xsl:attribute>
+                    </xsl:for-each>
                     <xsl:next-match/>
                     <!--<XSLT:apply-templates select="{@ref}" mode="#current"/>-->
                 </array>
