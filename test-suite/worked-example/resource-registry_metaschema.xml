@@ -13,7 +13,7 @@
 
     <define-assembly name="group">
         <formal-name>Resource Group</formal-name>
-        <description>A group of resources, organized by work. Can nest. Can support resetting the reference base.</description>
+        <description>A group of resources, organized as works, each of which may have several representations or embodiments. Groups can appear within groups for categorization of their works. A group may be designated with its own retrieval path (absolute or relative to its containing group or registry), to be used as a basis for retrieval of items (works) from within the group.</description>
         <flag name="base" as-type="uri-reference">
             <formal-name>Base URI</formal-name>
             <description>Nominal reference URI from which relative URIs are determined. As a relative URI, this is resolved relative to any ancestor <code>base</code> flags, resolved with the base URI of the manifest itself as the ultimate base ".". Any base may be defined either relatively to bases above it, or as an absolute URI (URL) on the Internet.</description>
@@ -30,7 +30,7 @@
     
     <define-assembly name="work">
         <formal-name>Work</formal-name>
-        <description>An abstract resource, considered as a generalized "work" (FRBR). A work is capable of multiple different representations. A manifest provides a mapping from works to expressions and instance of that work.</description>
+        <description>An abstract resource, considered as a generalized "work" (FRBR). A work is capable of multiple different representations. A resource registry provides a mapping from works to expressions and instances of that work, represented as items.</description>
         <flag name="id">
             <formal-name>Identifier</formal-name>
             <description>A unique id or key for reference across the system of documents described by this manifest.</description>
