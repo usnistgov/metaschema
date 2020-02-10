@@ -26,7 +26,7 @@
     
     <sch:let name="home" value="/m:METASCHEMA"/>
     
-    <sch:let name="prose-names" value="document('../xml/oscal-prose-module.xsd')/*/xs:element/@name"/>
+    <sch:let name="prose-names" value="document('oscal-prose-module.xsd')/*/xs:element/@name"/>
     
     <!--<xsl:include href="oscal-datatypes-check.xsl"/>-->
     <!--<xsl:variable name="root-name" select="/METASCHEMA/@root/string(.)"/>
@@ -36,6 +36,9 @@
     <!-- XXX When it's ready, change this to updated compose! this is v1 version. -->
     <xsl:import href="../../oscal-m2/lib/metaschema-compose.xsl"/>
         
+    <!--<xsl:variable name="compleat" select="/"/>
+    <xsl:variable name="composed-metaschema" select="/"/>-->
+    
 <!--  grouping name can't be the same as the name
       group-as is present whenever not(@max-occurs = 1) -->
     <sch:pattern>
