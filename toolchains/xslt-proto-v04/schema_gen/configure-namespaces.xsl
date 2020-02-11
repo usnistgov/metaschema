@@ -14,9 +14,9 @@
     <!-- Including XSD namespace for post process -->
     <xsl:strip-space elements="METASCHEMA define-assembly define-field define-flag model choice allowed-values remarks xs:*"/>
     
-    <xsl:variable name="target-namespace" select="string(/METASCHEMA/namespace)"/>
+    <xsl:variable name="target-namespace" select="string(/xs:schema/@targetNamespace)"/>
     
-    <xsl:variable name="declaration-prefix" select="string(/METASCHEMA/short-name)"/>
+    <xsl:variable name="declaration-prefix" select="string(/*/xs:annotation/xs:appinfo/short-name)"/>
     
     <xsl:param name="debug" select="'no'"/>
     

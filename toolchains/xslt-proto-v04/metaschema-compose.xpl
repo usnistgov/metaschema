@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
-  xmlns:oscal="http://csrc.nist.gov/ns/oscal/1.0"
-  type="oscal:profile-resolve-and-display" name="profile-resolve-and-display">
+  xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
+  type="metaschema:metaschema-compose" name="metaschema-compose">
   
   
   <p:input port="source" primary="true"/>
