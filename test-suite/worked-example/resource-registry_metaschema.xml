@@ -7,7 +7,7 @@
     <schema-name>OSCAL Resource Registry (Experimental)</schema-name>
     <schema-version>1.0</schema-version>
     <short-name>oscal-resource-manifest</short-name>
-    <namespace>http://csrc.nist.gov/metaschema/ns/resource-manifest-experimental</namespace>
+    <namespace>http://csrc.nist.gov/metaschema/ns/resource-registry-experimental</namespace>
     
     <import href="valid-markers_metaschema.xml"/>
 
