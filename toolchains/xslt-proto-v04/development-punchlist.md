@@ -3,7 +3,9 @@
 - Resource Registry Schema (Worked example)
   - see metaschema/test-suite/worked-example
   - [x] Metaschema
-  - [ ] XProc for XSD, JSON Schema
+  - [x] XProc for XSD
+  - [ ] Abstract Model Map
+  - [ ] JSON Schema
   - [ ] XProc for docs production
       - [ ] main docs including in- and out-of-line samples
       - [ ] model maps

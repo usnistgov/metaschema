@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<group xmlns="http://csrc.nist.gov/metaschema/ns/resource-manifest-experimental"
+<group xmlns="http://csrc.nist.gov/metaschema/ns/resource-registry-experimental"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/resource-manifest-experimental file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/resource-registry_xml-schema.xsd">
+    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/resource-registry-experimental file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/resource-registry_xml-schema.xsd">
     <work id="nist-sp800-53-controls-rev4">
         <title>NIST SP80-53 (rev 4) Control Catalog</title>
         <item format="xml" href=""><valid href="x.xsd">xyz</valid></item>

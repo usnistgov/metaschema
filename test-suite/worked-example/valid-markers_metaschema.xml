@@ -28,7 +28,7 @@
         </flag>
     </define-field>
     
-    <define-field name="valid">
+    <define-field name="valid" as-type="empty">
         <formal-name>(Actual) validations</formal-name>
         <description>In contrast to abstract validations, these are actual executable validation operations. As such, a validation may also imply or warrant further (processing) semantics. (tbd)</description>
         <flag name="timestamp" as-type="dateTime-with-timezone">
