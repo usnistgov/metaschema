@@ -37,6 +37,8 @@
         <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-reduce.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
+        <nm:transform version="3.0">schema_gen/make-metaschema-xsd.xsl</nm:transform>
+        <nm:transform version="3.0">schema_gen/configure-namespaces.xsl</nm:transform>
     </xsl:variable>
     
 </xsl:stylesheet>

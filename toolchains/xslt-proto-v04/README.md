@@ -20,6 +20,7 @@ Metaschema composition is ordinarily the first step in any metaschema processing
 
 The same processes are implemented in XSLT so they can be run in an XSLT processor standalone, without XProc support.
 
+These may lag behind the (more experimental) XProc versions, unless there is expressed demand for them. 
 
 ### Compose metaschema
 
