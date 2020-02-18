@@ -24,11 +24,8 @@
          - emit runtime messages with each transformation, and
          - retain nm:ERROR and nm:WARNING messages in results. -->
     
-    <xsl:param name="trace" as="xs:string">off</xsl:param>
-
-    <xsl:variable name="louder" select="$trace = 'on'"/>
-
     <xsl:variable name="home" select="/"/>
+    <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
 
     <xsl:import href="lib/metaschema-metaprocess.xsl"/>
     

@@ -14,10 +14,13 @@
   <p:output port="_1_collected" primary="false">
     <p:pipe port="result" step="collect"/>
   </p:output>
-  <p:output port="_2_reduced" primary="false">
-    <p:pipe port="result" step="reduce"/>
+  <p:output port="_2_reduced1" primary="false">
+    <p:pipe port="result" step="reduce1"/>
   </p:output>
-  <p:output port="_3_digested" primary="false">
+  <p:output port="_3_reduced2" primary="false">
+    <p:pipe port="result" step="reduce2"/>
+  </p:output>
+  <p:output port="_4_digested" primary="false">
     <p:pipe port="result" step="digest"/>
   </p:output>
   <p:output port="final" primary="true">
@@ -25,8 +28,9 @@
   </p:output>
   
   <p:serialization port="_1_collected" indent="true"  method="xml"/>
-  <p:serialization port="_2_reduced"   indent="true"  method="xml"/>
-  <p:serialization port="_3_digested"  indent="true"  method="xml"/>
+  <p:serialization port="_2_reduced1"   indent="true"  method="xml"/>
+  <p:serialization port="_3_reduced2"   indent="true"  method="xml"/>
+  <p:serialization port="_4_digested"  indent="true"  method="xml"/>
   <p:serialization port="final"        indent="true"  method="xml"/>
   
   <p:identity name="input"/>
@@ -37,9 +41,15 @@
     </p:input>
   </p:xslt>
   
-  <p:xslt name="reduce">
+  <p:xslt name="reduce1">
     <p:input port="stylesheet">
-      <p:document href="compose/metaschema-reduce.xsl"/>
+      <p:document href="compose/metaschema-reduce1.xsl"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:xslt name="reduce2">
+    <p:input port="stylesheet">
+      <p:document href="compose/metaschema-reduce2.xsl"/>
     </p:input>
   </p:xslt>
   
