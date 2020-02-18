@@ -16,7 +16,7 @@
 #  @ref always resolves (to some /*/*/@name)
 -->
 
-    <xsl:key name="definition-by-name" match="m:define-assembly | m:define-field | m:define-flag" use="@name"/>
+    <xsl:key name="global-definition-by-name" match="m:METASCHEMA/m:define-assembly | m:METASCHEMA/m:define-field | m:METASCHEMA/m:define-flag" use="@name"/>
     <xsl:key name="invocation-by-ref" match="m:assembly[exists(@ref)] | m:field[exists(@ref)] | m:flag[exists(@ref)]" use="@ref"/>
     <xsl:key name="flags-by-name" match="m:define-flag | m:flag[@name]" use="@name"/>
     
@@ -31,10 +31,10 @@
     <!--<xsl:include href="oscal-datatypes-check.xsl"/>-->
     <!--<xsl:variable name="root-name" select="/METASCHEMA/@root/string(.)"/>
     
-    <xsl:key name="definition-by-name" match="define-flag | define-field | define-assembly" use="@name"/>-->
+    <xsl:key name="global-definition-by-name" match="define-flag | define-field | define-assembly" use="@name"/>-->
     
     <!-- XXX When it's ready, change this to updated compose! this is v1 version. -->
-    <xsl:import href="../../oscal-m2/lib/metaschema-compose.xsl"/>
+    <xsl:import href="metaschema-compose-m2-mod.xsl"/>
         
     <!--<xsl:variable name="compleat" select="/"/>
     <xsl:variable name="composed-metaschema" select="/"/>-->
@@ -44,34 +44,25 @@
     <sch:pattern>
         <sch:rule context="m:define-assembly | m:define-field | m:define-flag">
             <!-- $compleat assembles all definitions from all modules (in metaschema-compose.xsl)  -->
-            <sch:let name="contenders" value="key('definition-by-name',@name,$compleat)"/>
-            <sch:assert role="warning" test="count( $contenders ) = 1">Definition for '<sch:value-of select="@name"/>' is not unique in this metaschema;  cf <xsl:value-of select="$contenders/../@module" separator=", "/>.</sch:assert>
+            <sch:let name="contenders" value="key('global-definition-by-name',@name,$compleat)"/>
+            <sch:assert role="warning" test="empty(parent::METASCHEMA) or count( $contenders ) = 1">Definition for '<sch:value-of select="@name"/>' is not unique in this metaschema;  cf <xsl:value-of select="$contenders/../@module" separator=", "/>.</sch:assert>
             <sch:assert test="exists(m:formal-name)">formal-name missing from <sch:name/></sch:assert>
             <sch:assert test="exists(m:description)">description missing from <sch:name/></sch:assert>
             <sch:assert test="empty(self::m:define-assembly) or exists(m:model)">model missing from <sch:name/></sch:assert>
-            <sch:assert test="not(@as-type='boolean') or empty(m:flag)">Property defined as boolean may not have flags.</sch:assert>
+            <!--<sch:assert test="not(@as-type='boolean') or empty(m:flag)">Property defined as boolean may not have flags.</sch:assert>-->
             <sch:assert test="not(key('invocation-by-ref',@name)/m:group-as/@in-json='BY_KEY') or exists(m:json-key)"><sch:value-of select="substring-after(local-name(),
             'define-')"/> is assigned a json key, but no 'json-key' is given</sch:assert>
-            <sch:report test="@name=('RICHTEXT','STRVALUE','PROSE')">Names "STRVALUE", "RICHTEXT" or "PROSE" (reserved names)</sch:report>
+            <sch:report test="@name=('RICHTEXT','STRVALUE','PROSE')">Names "STRVALUE", "RICHTEXT" or "PROSE" are reserved.</sch:report>
         </sch:rule>
 
         <sch:rule context="m:json-key">
-            <!--<sch:let name="decl" value="key('definition-by-name',@ref,$composed-metaschema)"/>
-            <sch:assert test="exists(@name|@ref)">Flag declaration must have 'name' or 'ref'</sch:assert>
-            <sch:assert test="count(@name|@ref) eq 1">Flag declaration may be by name or reference, not both (remove @name or @ref)</sch:assert>
-            <sch:assert test="count(../*[(@name|@ref) = current()/(@name|@ref)]) eq 1">Only one flag (or key) may be named 
-                <sch:value-of select="@name"/>
-            </sch:assert>
-            <sch:assert test="empty(@ref) or exists($decl)" role="warning">No definition found for '<sch:value-of select="@name"/>' <sch:name/></sch:assert>
-            <sch:assert test="empty(@ref) or empty($decl) or empty(@datatype) or (@datatype = $decl/@datatype)" role="warning">Flag data type doesn't match: the definition has '<sch:value-of select="$decl/@datatype"/>'</sch:assert>-->
-            <!--<sch:report test="@name=('RICHTEXT','STRVALUE','PROSE')">Key should not be named "STRVALUE", "RICHTEXT" or "PROSE" (reserved names)</sch:report>-->
-            <sch:assert test="@flag-name = ../m:flag/(@name | @ref)">JSON key indicates no flag on this <sch:value-of select="substring-after(local-name(..),'define-')"/>
+            <sch:assert test="@flag-name = (../m:flag/@ref|../m:define-flag/@name)">JSON key indicates no flag on this <sch:value-of select="substring-after(local-name(..),'define-')"/>
             <xsl:if test="exists(../m:flag)">Should be (one of) <xsl:value-of select="../m:flag/(@name|@ref)" separator=", "/></xsl:if></sch:assert>
         </sch:rule>
         
         <sch:rule context="m:json-value-key">
             <sch:report test="exists(@flag-name) and matches(.,'\S')">JSON value key may be set to a value or a flag's value, but not both.</sch:report>
-            <sch:assert test="empty(@flag-name) or @flag-name=../m:flag/(@name|@ref)">flag '<sch:value-of select="@flag-name"/>' not found for JSON value key</sch:assert>
+            <sch:assert test="empty(@flag-name) or @flag-name = (../m:flag/@ref|../m:define-flag/@name)">flag '<sch:value-of select="@flag-name"/>' not found for JSON value key</sch:assert>
         </sch:rule>
         
         <sch:rule context="m:allowed-values/m:enum">
@@ -82,27 +73,29 @@
         </sch:rule>
 
         <sch:rule context="m:flag">
-            <sch:let name="decl" value="key('definition-by-name',@ref,$composed-metaschema)"/>
-            <sch:assert test="exists(@name|@ref)">Flag declaration must have 'name' or 'ref'</sch:assert>
+            <sch:let name="decl" value="key('global-definition-by-name',@ref,$composed-metaschema)"/>
+            <!--<sch:assert test="exists(@name|@ref)">Flag declaration must have 'name' or 'ref'</sch:assert>
             <sch:assert test="count(@name|@ref) eq 1">Flag declaration may be by name or reference, not both (remove @name or @ref)</sch:assert>
-            <sch:assert test="exists(@name) or (exists(@ref) and not(exists(@as-type)))">A flag referencing an existing declaration must not specify a data type</sch:assert>
+            <sch:assert test="exists(@name) or (exists(@ref) and not(exists(@as-type)))">A flag referencing an existing declaration must not specify a data type</sch:assert>-->
             
-            <sch:assert test="not((@name|@ref)=../m:json-value-key/@flag-name) or @required='yes'">A flag declared as a value key must be required (@required='yes')</sch:assert>
-            <sch:assert test="count(../*[(@name|@ref) = current()/(@name|@ref)]) eq 1">Only one flag may be named 
-                <sch:value-of select="(@name|@ref)"/></sch:assert>
-            <sch:assert test="empty(@ref) or exists($decl)" role="warning">No definition found for '<sch:value-of select="@ref"/>' <sch:value-of select="local-name()"/></sch:assert>
+            <sch:assert test="not(@ref=../m:json-value-key/@flag-name) or @required='yes'">A flag declared as a value key must be required (@required='yes')</sch:assert>
+            <sch:assert test="count(../*[@ref = current()/@ref]) eq 1">Only one flag may be named 
+                <sch:value-of select="@ref"/></sch:assert>
+            <sch:assert test="empty(@ref) or exists($decl)" role="warning">(<sch:value-of select="count($decl)"/> )No definition found for '<sch:value-of select="@ref"/>' <sch:name/></sch:assert>
             <sch:assert test="empty(@ref) or empty($decl) or empty(@datatype) or (@datatype = $decl/@datatype)" role="warning">Flag data type doesn't match: the definition has '<sch:value-of select="$decl/@datatype"/>'</sch:assert>
-            <sch:report test="@name=('RICHTEXT','STRVALUE','PROSE')">Flag should not be named "STRVALUE", "RICHTEXT" or "PROSE" (reserved names)</sch:report>
         <!--    <sch:report test="@as-type != key('flags-by-name',@name,$composed-metaschema)/@as-type">Flag is declared with datatype '<sch:value-of select="@as-type"/>' while other flags with that name show datatype
                 <sch:value-of select="string-join(((key('flags-by-name',@name) except .)/@as-type ! ('''' || . || '''')),', ')"/></sch:report>
         -->
         </sch:rule>
         
+        <sch:rule context="m:model">
+            <sch:assert test="empty(@ref) or exists(key('global-definition-by-name',@ref,$composed-metaschema)/self::m:define-assembly)">No global assembly definition is found for model reference <sch:value-of select="@ref"/></sch:assert>
+        </sch:rule>
         <!-- 'choice' is not subjected to rules for other elements inside 'model' -->
         <sch:rule context="m:choice"/>
 
         <sch:rule context="m:field | m:assembly">
-            <sch:let name="decl" value="key('definition-by-name',@ref,$composed-metaschema)"/>
+            <sch:let name="decl" value="key('global-definition-by-name',@ref,$composed-metaschema)"/>
             <sch:assert test="exists($decl)">No definition found for '<sch:value-of select="@ref"/>' <sch:value-of select="local-name()"/></sch:assert>
             <sch:assert test="empty($decl) or (m:group-as/@in-json='BY_KEY') or empty($decl/m:json-key)">Target definition for { @ref} designates a json key, so
             the invocation should have group-as/@in-json='BY_KEY'</sch:assert>
@@ -117,12 +110,12 @@
             <sch:assert test="$decl/@as-type='markup-multiline' or not(@in-xml='UNWRAPPED')">Only 'markup-multiline' fields may be unwrapped in XML.</sch:assert>
             <sch:report test="(@in-xml='UNWRAPPED') and (@max-occurs!='1')">An 'unwrapped' field must have a max occurrence of 1</sch:report>
             <sch:report test="key('invocation-by-ref',@ref)/@in-xml != key('invocation-by-ref',@ref)/@in-xml">All fields '<sch:value-of select="@ref"/>" should have @in-xml set the same.</sch:report>
-            <sch:assert test="not(@in-xml='UNWRAPPED') or not($decl/@as-type='markup-multiline') or not(preceding-sibling::*[@in-xml='UNWRAPPED']/key('definition-by-name',@ref)/@as-type='markup-multiline')">Only one field may be marked
+            <sch:assert test="not(@in-xml='UNWRAPPED') or not($decl/@as-type='markup-multiline') or not(preceding-sibling::*[@in-xml='UNWRAPPED']/key('global-definition-by-name',@ref)/@as-type='markup-multiline')">Only one field may be marked
             as 'markup-multiline' (without xml wrapping) within a model.</sch:assert>
         </sch:rule>
 
         <sch:rule context="m:group-as">
-            <sch:let name="decl" value="key('definition-by-name',../@ref,$composed-metaschema)"/>
+            <sch:let name="decl" value="key('global-definition-by-name',../@ref,$composed-metaschema)"/>
             <sch:let name="name" value="@name"/>
             <sch:assert test="count(../../*/(. | m:group-as)[(@name|@ref) = $name]) eq 1">Name clash on '<sch:value-of select="@name"/>'</sch:assert>
             <sch:report test="../@max-occurs/number() = 1">"group-as" should not be given when max-occurs is 1.</sch:report>
@@ -145,7 +138,6 @@
 
     <sch:pattern>
         <sch:rule context="/m:METASCHEMA">
-            <sch:assert test="@root=*/@name">METASCHEMA/@root should be one of <sch:value-of select="string-join(*/@name,', ')"/></sch:assert>
             <sch:assert test="exists(m:schema-version)" role="warning">Metaschema schema version must be set for any top-level metaschema</sch:assert>
         </sch:rule>
         <sch:rule context="/m:METASCHEMA/m:title"/>
@@ -156,18 +148,19 @@
         </sch:rule>
        
         <sch:rule context="m:define-assembly">
-            <sch:assert role="warning" test="@name = ($composed-metaschema//m:assembly/@ref | /m:METASCHEMA/@root)">Definition for assembly '<sch:value-of select="@name"/>' is not used.</sch:assert>
+            <sch:assert role="warning" test="parent::m:model or matches(m:root-name,'^\i\c*') or (@name = $composed-metaschema//(m:assembly|m:model)/@ref)">Definition for assembly '<sch:value-of select="@name"/>' is not used.</sch:assert>
+            <sch:assert test="parent::m:METASCHEMA or matches(m:group-as/@name,'\S') or number(@max-occurs)=1">Unless @max-occurs is 1, a group name must be given with a local assembly definition.</sch:assert>
             <!--FIX:<sch:assert test="empty(@group-as) or count($composed-metaschema//*[@group-as=current()/@group-as]) eq 1">Group name (@group-as) assignment is not unique to this assembly definition</sch:assert>-->
             <!--FIX:<sch:report test="$composed-metaschema//*/@name = current()/@group-as">Group name (@group-as) assignment clashes with a name in this metaschema</sch:report>-->
         </sch:rule>
         <sch:rule context="m:define-field">
-            <sch:assert role="warning" test="@name = $composed-metaschema//m:field/@ref">Definition for field '<sch:value-of select="@name"/>' is not used.</sch:assert>
+            <sch:assert role="warning" test="empty(parent::m:METASCHEMA) or @name = $composed-metaschema//m:field/@ref">Global definition for field '<sch:value-of select="@name"/>' is not used.</sch:assert>
 <!--            <sch:assert role="info" test="not(@as-type='markup-multiline') or (@unwrap-xml='no') or empty(m:flag)">Multiline markup fields must have no flags, unless unwrap-xml='yes' - use an assembly with an unwrapped multiline field</sch:assert>
 -->            <!--FIX:<sch:assert test="empty(@group-as) or count($composed-metaschema//*[@group-as=current()/@group-as]) eq 1">Group name (@group-as) assignment is not unique to this field definition</sch:assert>-->
             <!--FIX:<sch:report test="$composed-metaschema//*/@name = current()/@group-as">Group name (@group-as) assignment clashes with a name in this metaschema</sch:report>-->
         </sch:rule>
         <sch:rule context="m:define-flag">
-            <sch:assert role="warning" test="@name = $composed-metaschema//m:flag/@ref">Definition for flag '<sch:value-of select="@name"/>' is not used.</sch:assert>
+            <sch:assert role="warning" test="empty(parent::m:METASCHEMA) or @name = $composed-metaschema//m:flag/@ref">Global definition for flag '<sch:value-of select="@name"/>' is not used.</sch:assert>
         </sch:rule>
         <sch:rule context="m:assembly[exists(@ref)]">
             <sch:assert test="@ref = $composed-metaschema/m:METASCHEMA/m:define-assembly/@name">Assembly '<xsl:value-of select="@ref"/>' invocation does not point to an assembly definition.
@@ -181,20 +174,10 @@
             <sch:report test="@ref = $composed-metaschema/m:METASCHEMA/m:define-assembly/@name">'<sch:value-of select="@ref"/>' is an assembly, not a field.</sch:report>
             <sch:report test="@ref = $composed-metaschema/m:METASCHEMA/m:define-flag/@name">'<sch:value-of select="@ref"/>' is a flag, not an assembly.</sch:report>
         </sch:rule>
+        
         <sch:rule context="m:flag[exists(@ref)]">
-            <!--<sch:assert test="empty(@name)">Flag with 'ref' may not also have 'name'.</sch:assert>-->
-            <!-- TODO: make the following work for overriding allowed-values -->
-            <sch:assert test="@ref = $composed-metaschema/m:METASCHEMA/m:define-flag/@name or parent::m:field/@ref or parent::m:assembly/@ref">Flag invocation '<xsl:value-of select="@ref"/>' does not point to a flag definition. 
-                <xsl:value-of select="m:sort($composed-metaschema/m:METASCHEMA/m:define-flag/@name)" separator=", "/></sch:assert>
-            <!-- TODO: make the following work for overriding allowed-values -->
             <sch:report test="@ref = $composed-metaschema/m:METASCHEMA/m:define-field/@name">'<sch:value-of select="@name"/>' is a field, not a flag.</sch:report>
             <sch:report test="@ref = $composed-metaschema/m:METASCHEMA/m:define-assembly/@name">'<sch:value-of select="@name"/>' is an assembly, not a flag.</sch:report>
-        </sch:rule>
-        <!-- The following rule is preempted by the last one and should fire only for flag[exists(@name)]
-             since @name or @flag is required (tested by a rule above) -->
-        <sch:rule context="m:flag">
-            <sch:assert test="exists(child::m:formal-name)">Named flag expects a 'formal-name'</sch:assert>
-            <sch:assert test="exists(child::m:description)">Named flag expects a 'description'</sch:assert>
         </sch:rule>
     </sch:pattern>
 
