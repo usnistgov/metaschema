@@ -4,9 +4,21 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="#all">
+    
     <!-- Entry point traps the root node of the source and passes it down the chain of transformation references -->
     
+    <!-- Utility XSLT supporting pipelining. -->
+    
+    <xsl:param name="trace" as="xs:string">off</xsl:param>
+    
+    <xsl:variable name="louder" select="$trace = 'on'"/>
+    
     <xsl:variable name="transformation-sequence" select="()"/>
+    
+    <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
+    
+    
+    
     <xsl:template match="/">
         <xsl:param name="source" select="." as="document-node()"/>
         <!-- Each element inside $transformation-sequence is processed in turn.
@@ -42,7 +54,7 @@
         <xsl:variable name="runtime" as="map(xs:string, item())">
             <xsl:map>
                 <xsl:map-entry key="'xslt-version'"        select="xs:decimal($xslt-spec/@version)"/>
-                <xsl:map-entry key="'stylesheet-location'" select="string($xslt-spec)"/>
+                <xsl:map-entry key="'stylesheet-location'" select=" resolve-uri(string($xslt-spec),$xslt-base)"/>
                 <xsl:map-entry key="'source-node'"         select="$sourcedoc"/>
                 <xsl:map-entry key="'stylesheet-params'"   select="$runtime-params"/>
             </xsl:map>

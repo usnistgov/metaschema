@@ -8,34 +8,27 @@
   <p:input port="source" primary="true"/>
   <p:input port="parameters" kind="parameter"/>
   
-  <p:output port="_0_main-module" primary="false">
+  <p:output port="a.echo-input" primary="false">
     <p:pipe port="result" step="input"/>
   </p:output>
-  <p:output port="_1_composed" primary="false">
+  <p:output port="b.composed" primary="false">
     <p:pipe port="result" step="composed"/>
   </p:output>
-  <!--<p:output port="_2_reduced" primary="false">
-    <p:pipe port="result" step="reduce"/>
-  </p:output>
-  <p:output port="_3_digested" primary="false">
-    <p:pipe port="result" step="digest"/>
-  </p:output>-->
-  <p:output port="_4_XSD-pre" primary="false">
+  <p:output port="c1.XSD-pre" primary="false">
     <p:pipe port="result" step="make-xsd"/>
   </p:output>
-  <p:output port="_5_XSD" primary="false">
+  <p:output port="c2.XSD" primary="false">
     <p:pipe port="result" step="rewire-xsd"/>
   </p:output>
-  <p:output port="final" primary="true">
+  <p:output port="f.final" primary="true">
     <p:pipe port="result" step="final"/>
   </p:output>
   
-  <p:serialization port="_1_composed" indent="true"  method="xml"/>
-  <!--<p:serialization port="_2_reduced"   indent="true"  method="xml"/>
-  <p:serialization port="_3_digested"  indent="true"  method="xml"/>-->
-  <p:serialization port="_4_XSD-pre"  indent="true"  method="xml"/>
-  <p:serialization port="_5_XSD"  indent="true"  method="xml"/>
-  <p:serialization port="final"        indent="true"  method="xml"/>
+  <p:serialization port="a.echo-input" indent="true"  method="xml"/>
+  <p:serialization port="b.composed"   indent="true"  method="xml"/>
+  <p:serialization port="c1.XSD-pre"   indent="true"  method="xml"/>
+  <p:serialization port="c2.XSD"       indent="true"  method="xml"/>
+  <p:serialization port="f.final"      indent="true"  method="xml" omit-xml-declaration="false"/>
   
   <p:import href="metaschema-compose.xpl"/>
   

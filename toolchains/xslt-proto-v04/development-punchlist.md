@@ -4,6 +4,7 @@
   - see metaschema/test-suite/worked-example
   - [x] Metaschema
   - [x] XProc for XSD
+  - [ ] Refactor XSD to new design
   - [ ] Abstract Model Map
   - [ ] JSON Schema
   - [ ] XProc for docs production
@@ -16,6 +17,7 @@
     - XML
     - JSON
       - exercise json-key, json-value-key features
+      - test: json-key constraints on assemblies at the root? (xslt mode 'uniqueness-constraint')
 
 - Feature list
   - survey Metaschema XSD, Schematron
