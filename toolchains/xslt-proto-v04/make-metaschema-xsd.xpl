@@ -14,10 +14,10 @@
   <p:output port="b.composed" primary="false">
     <p:pipe port="result" step="composed"/>
   </p:output>
-  <p:output port="c1.XSD-pre" primary="false">
+  <p:output port="c0.pre-XSD" primary="false">
     <p:pipe port="result" step="make-xsd"/>
   </p:output>
-  <p:output port="c2.XSD" primary="false">
+  <p:output port="c1.XSD" primary="false">
     <p:pipe port="result" step="rewire-xsd"/>
   </p:output>
   <p:output port="f.final" primary="true">
@@ -26,8 +26,8 @@
   
   <p:serialization port="a.echo-input" indent="true"  method="xml"/>
   <p:serialization port="b.composed"   indent="true"  method="xml"/>
-  <p:serialization port="c1.XSD-pre"   indent="true"  method="xml"/>
-  <p:serialization port="c2.XSD"       indent="true"  method="xml"/>
+  <p:serialization port="c0.pre-XSD"   indent="true"  method="xml"/>
+  <p:serialization port="c1.XSD"       indent="true"  method="xml"/>
   <p:serialization port="f.final"      indent="true"  method="xml" omit-xml-declaration="false"/>
   
   <p:import href="metaschema-compose.xpl"/>
