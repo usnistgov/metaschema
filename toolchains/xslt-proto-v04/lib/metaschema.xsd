@@ -303,7 +303,6 @@
       <xs:sequence>
         <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
         <xs:element minOccurs="0" ref="m:group-as"/>
-        <xs:element minOccurs="0" ref="m:flag"/>
         <xs:element minOccurs="0" ref="m:remarks"/>
       </xs:sequence>
       <xs:attribute name="ref" use="required" type="xs:NCName"/>
@@ -420,10 +419,8 @@
   
   <xs:element name="flag">
     <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" ref="m:formal-name"/>
-        <xs:element minOccurs="0" ref="m:description"/>
-        <xs:element minOccurs="0" ref="m:remarks"/>
+      <xs:sequence>        
+        <xs:element name="use-name" minOccurs="0" type="xs:NCName"/>
         <xs:element name="constraint" minOccurs="0" maxOccurs="unbounded" type="m:constraint"/>
       </xs:sequence>
       <xs:attribute name="as-type" type="m:simple-datatypes"/>

@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
             root="group"
             module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/resource-registry_metaschema.xml">
    <schema-name>OSCAL Resource Registry (Experimental)</schema-name>
    <schema-version>1.0</schema-version>
-   <short-name>oscal-resource-manifest</short-name>
-   <namespace>http://csrc.nist.gov/metaschema/ns/resource-manifest-experimental</namespace>
+   <short-name>oscal-resource-registry</short-name>
+   <namespace>http://csrc.nist.gov/metaschema/ns/resource-registry-experimental</namespace>
    <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/valid-markers_metaschema.xml"
                  name="validate"
                  as-type="empty">
@@ -17,7 +16,8 @@
         </flag>
    </define-field>
    <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/valid-markers_metaschema.xml"
-                 name="valid">
+                 name="valid"
+                 as-type="empty">
       <formal-name>(Actual) validations</formal-name>
       <description>In contrast to abstract validations, these are actual executable validation operations. As such, a validation may also imply or warrant further (processing) semantics. (tbd)</description>
       <flag name="timestamp" as-type="dateTime-with-timezone">
@@ -89,7 +89,7 @@
         </flag>
       <flag as-type="uri-reference" ref="href"/>
       <model>
-         <field ref="valid" max-occurs="unbounded">
+         <field as-type="empty" ref="valid" max-occurs="unbounded">
                 <group-as name="validations"/>
             </field>
       </model>
