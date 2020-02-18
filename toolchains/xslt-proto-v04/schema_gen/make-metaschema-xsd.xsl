@@ -5,7 +5,7 @@
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     exclude-result-prefixes="xs math m"
-    version="2.0"
+    version="3.0"
     
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
@@ -19,54 +19,42 @@
 
     <xsl:output indent="yes"/>
 
-<!-- Including XSD namespace for post process -->
-    <xsl:strip-space elements="METASCHEMA define-assembly define-field define-flag model choice allowed-values remarks xs:*"/>
+    <xsl:strip-space elements="METASCHEMA define-assembly define-field define-flag model choice allowed-values remarks"/>
     
     <xsl:variable name="target-namespace" select="string(/METASCHEMA/namespace)"/>
     
     <xsl:variable name="declaration-prefix" select="string(/METASCHEMA/short-name)"/>
     
-    <xsl:variable name="root-name" select="/METASCHEMA/@root/string(.)"/>
+    <xsl:key name="global-assembly-by-name" match="/METASCHEMA/define-assembly" use="@name"/>
+    <xsl:key name="global-field-by-name"    match="/METASCHEMA/define-field"    use="@name"/>
+    <xsl:key name="global-flag-by-name"     match="/METASCHEMA/define-flag"     use="@name"/>
     
-    <xsl:key name="definition-by-name" match="define-flag | define-field | define-assembly"
-        use="@name"/>
-
-    <!-- Produces $composed-metaschema -->
-    <xsl:import href="../lib/metaschema-compose.xsl"/>
+    <xsl:variable name="metaschema" select="/"/>
     
     <!-- Produces intermediate results, w/o namespace alignment -->
     <!-- entry template -->
     
     <xsl:param name="debug" select="'no'"/>
     
-    <!--<xsl:template match="/">
-        <xsl:apply-templates select="/METASCHEMA"/>
-    </xsl:template>-->
-    
-    <xsl:template match="/">
-             <xsl:call-template name="build-schema"/>
-        
-    </xsl:template>
-
     <!--MAIN ACTION HERE -->
     
-    <xsl:template name="build-schema">
+    <xsl:template match="/" name="build-schema">
         <xs:schema elementFormDefault="qualified" targetNamespace="{ $target-namespace }">
-            <xsl:for-each select="$composed-metaschema/METASCHEMA/schema-version">
+            <xsl:namespace name="m">http://csrc.nist.gov/ns/oscal/metaschema/1.0</xsl:namespace>
+            <xsl:namespace name="{$declaration-prefix}" select="$target-namespace"/>
+            <xsl:for-each select="$metaschema/METASCHEMA/schema-version">
                 <xsl:attribute name="version" select="normalize-space(.)"/>
             </xsl:for-each>
             <xs:annotation>
                 <xs:appinfo>
-                    <xsl:apply-templates select="$composed-metaschema/METASCHEMA/*" mode="header-documentation"/>
-                    <m:root>
-                        <xsl:value-of select="/METASCHEMA/@root"/>
-                    </m:root>
+                    <xsl:apply-templates select="$metaschema/METASCHEMA/*"
+                        mode="top-level-docs"/>
                 </xs:appinfo>
             </xs:annotation>
-            <xsl:apply-templates select="$composed-metaschema/METASCHEMA/*"/>
+            <xsl:apply-templates select="$metaschema/METASCHEMA/*"/>
             
-            <xsl:if test="$composed-metaschema//@as-type = ('markup-line', 'markup-multiline')">
-                <xsl:if test="$composed-metaschema//@as-type = 'markup-multiline'">
+            <xsl:if test="$metaschema//@as-type = ('markup-line', 'markup-multiline')">
+                <xsl:if test="$metaschema//@as-type = 'markup-multiline'">
                     <xs:group name="PROSE">
                         <xs:choice>
                             <xs:element ref="oscal-prose:h1"/>
@@ -85,7 +73,7 @@
                 </xsl:if>
                 <xsl:apply-templates mode="acquire-prose" select="document('../lib/oscal-prose-module.xsd')"/>
             </xsl:if>
-            <xsl:variable name="all-types" select="$composed-metaschema//@as-type"/>
+            <xsl:variable name="all-types" select="$metaschema//@as-type"/>
             
             <xsl:copy-of select="$types-library/xs:simpleType[@name = $all-types]"/>
         </xs:schema>
@@ -95,25 +83,75 @@
     
     <xsl:template match="namespace"/>
         
-    <xsl:template mode="header-documentation" match="*"/>
+    <xsl:template mode="top-level-docs" match="*"/>
     
-    <xsl:template mode="header-documentation" match="/METASCHEMA/schema-name | /METASCHEMA/short-name |
+    <xsl:template mode="top-level-docs" match="/METASCHEMA/schema-name | /METASCHEMA/short-name |
         /METASCHEMA/schema-version | /METASCHEMA/remarks">
-        <xsl:copy-of select="."/>
+        <xsl:apply-templates mode="copy" select="."/>
+    </xsl:template>
+    
+    <xsl:template mode="top-level-docs" match="/METASCHEMA/define-assembly[exists(root-name)]">
+        <xsl:for-each select="root-name">
+            <m:root>
+                <xsl:apply-templates/>
+            </m:root>
+        </xsl:for-each>
     </xsl:template>
     
     <xsl:template match="/METASCHEMA/schema-name | /METASCHEMA/short-name |
         /METASCHEMA/schema-version | /METASCHEMA/remarks"/>
     
+    <xsl:template match="define-assembly">
+        <xsl:variable name="whose" select="."/>
+        
+        <xsl:for-each select="child::root-name">
+            <xs:element name="{.}" type="{$declaration-prefix}:{../@name}-ASSEMBLY"/>
+        </xsl:for-each>
+        
+        <xs:complexType>
+            <xsl:if test="parent::METASCHEMA">
+                <xsl:attribute name="name" expand-text="true">{@name}-ASSEMBLY</xsl:attribute>
+            </xsl:if>
+            <xsl:apply-templates select="." mode="annotated"/>
+            <xsl:apply-templates select="model"/>
+            <xsl:apply-templates select="flag | define-flag"/>
+        </xs:complexType>
+            <!-- producing xs:unique to govern attributes that will be promoted to keys -->
+            <!-- this works over and above XSD type validation e.g. ID -->
+        <xsl:for-each select="model//*[group-as/@in-json='BY_KEY'][not(group-as/@in-xml='GROUPED')]">
+                <xsl:apply-templates select="key('global-assembly-by-name',@ref)/json-key" mode="uniqueness-constraint">
+                    <xsl:with-param name="whose" select="$whose"/>
+                </xsl:apply-templates>
+            </xsl:for-each>
+    </xsl:template>
+    
+    <xsl:template match="model//define-assembly">
+        <xsl:variable name="whose" select="."/>
+        <xsl:variable name="gi" select="(use-name,@name)[1]"/>
+        
+        <xs:element name="{$gi}">
+            <xsl:next-match/>
+            <!--<xsl:apply-templates select="." mode="annotated"/>-->
+            <!--<xs:complexType>
+                <xsl:apply-templates select="model"/>
+                <xsl:apply-templates select="flag"/>
+            </xs:complexType>-->
+            <!-- producing xs:unique to govern attributes that will be promoted to keys -->
+            <!-- this works over and above XSD type validation e.g. ID -->
+            
+        </xs:element>
+    </xsl:template>
+    
+    
 <!-- Produces an element for markup-line and markup-multiline -->
     
     <xsl:template match="define-field">
-        <xs:element name="{@name }">
+        <xs:complexType name="{@name }-FIELD">
             <xsl:apply-templates select="." mode="annotated"/>
             <xsl:variable name="datatype">
                 <xsl:choose>
-                    <xsl:when test="exists(allowed-values)">
-                        <xsl:value-of select="concat(@name,'-enumeration')"/>
+                    <xsl:when test="exists(constraint/allowed-values)">
+                        <xsl:value-of select="concat(@name,'-FIELD-VALUE-ENUMERATION')"/>
                     </xsl:when>
                     <xsl:when test="exists(@as-type)">
                         <xsl:value-of select="@as-type"/>
@@ -121,7 +159,6 @@
                     <xsl:otherwise>string</xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
-            <xs:complexType>
                 <xs:simpleContent>
                     <xs:extension base="xs:string">
                         <!-- replace @base with correct base for type -->
@@ -131,37 +168,14 @@
                         </xsl:call-template>
                         <xsl:apply-templates select="flag"/>
                     </xs:extension>
-                    <!--<xs:restriction base="xs:string">
-                        <!-\- overriding @base when a nominal type is given -\->
-                        <xsl:apply-templates select="allowed-values"/>
-                    </xs:restriction>-->
                 </xs:simpleContent>
-                           
-            </xs:complexType>
-        </xs:element>
-        <xsl:apply-templates select="allowed-values">
-            <xsl:with-param name="simpletype-name" select="@name || '-enumeration'"/>
+         
+        </xs:complexType>
+        <xsl:apply-templates select="constraint/allowed-values">
+            <xsl:with-param name="simpletype-name" select="@name || '-FIELD-VALUE-ENUMERATION'"/>
         </xsl:apply-templates>
-        <!--<xsl:if test="exists(allowed-values)">
-            <xs:simpleType name="{@name}-enumeration">
-                <xs:restriction base="xs:string">
-                    <xsl:apply-templates select="allowed-values/*"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xsl:if>-->
     </xsl:template>
 
-    <!--<xsl:template priority="3" match="define-field[exists(@as-type)]">
-        <xs:element name="{@name }">
-            <xsl:call-template name="assign-type">
-                <xsl:with-param name="datatype" select="$type"/>
-            </xsl:call-template>
-            <xsl:apply-templates select="." mode="annotated"/>
-            <xsl:apply-templates select="allowed-values">
-                <xsl:with-param name="datatype" select="@as-type"/>
-            </xsl:apply-templates>
-        </xs:element>
-    </xsl:template>-->
     <xsl:template priority="5" match="define-field[@as-type='empty']">
         <xs:element name="{@name }">
             <xsl:apply-templates select="." mode="annotated"/>
@@ -193,27 +207,8 @@
     
     <xsl:template priority="6" match="define-field[@as-type='markup-multiline'][not(@in-xml='WITH_WRAPPER')]"/>
     
-    <xsl:template match="define-assembly">
-        <xsl:variable name="whose" select="."/>
-        <xs:element name="{@name}">
-            <xsl:if test="@name = /*/@root">
-                <xsl:attribute name="m:root" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">yes</xsl:attribute>
-            </xsl:if>
-            <xsl:apply-templates select="." mode="annotated"/>
-            <xs:complexType>
-                <xsl:apply-templates select="model"/>
-                <xsl:apply-templates select="flag"/>
-            </xs:complexType>
-            <!-- producing xs:unique to govern attributes that will be promoted to keys -->
-            <!-- this works over and above XSD type validation e.g. ID -->
-            <xsl:for-each select="model//*[group-as/@in-json='BY_KEY'][not(group-as/@in-xml='GROUPED')]">
-                <xsl:apply-templates select="key('definition-by-name',@ref)/json-key" mode="uniqueness-constraint">
-                        <xsl:with-param name="whose" select="$whose"/>
-                </xsl:apply-templates>
-            </xsl:for-each>
-        </xs:element>
-    </xsl:template>
-    
+
+
     <xsl:template match="json-key" mode="uniqueness-constraint">
         <xsl:param name="whose"/>
         <xs:unique name="{ $whose/@name}-{ ../@name }-keys">
@@ -234,10 +229,10 @@
 
     <xsl:template mode="annotated" match="*"/>
     
-    <xsl:template match="define-flag | define-field | define-assembly | flag[exists(formal-name| description)]" mode="annotated">
+    <xsl:template match="define-flag | define-field | define-assembly" mode="annotated">
         <xs:annotation>
             <xs:appinfo>
-                <xsl:copy-of select="formal-name, description"/>
+                <xsl:apply-templates select="formal-name, description" mode="copy"/>
             </xs:appinfo>
             <xs:documentation>
                 <xsl:apply-templates select="formal-name, description"/>
@@ -256,14 +251,38 @@
         </xs:sequence>
     </xsl:template>
     
+    <xsl:template priority="10" match="model[exists(@ref)]">
+        <xsl:apply-templates select="key('global-assembly-by-name',@ref)/model"/>
+    </xsl:template>
+    
     <xsl:template match="choice">
         <xs:choice>
             <xsl:apply-templates/>
         </xs:choice>
     </xsl:template>
 
-    <xsl:template match="field | assembly">
-        <xs:element ref="{$declaration-prefix}:{@ref}"
+    <xsl:template match="field">
+        <xsl:variable name="decl" select="key('global-field-by-name',@ref)"/>
+        <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
+        <xsl:call-template name="declare-element-as-type">
+            <xsl:with-param name="gi" select="$gi"/>
+            <xsl:with-param name="type" select="$declaration-prefix || ':' || @ref || '-FIELD'"></xsl:with-param>
+        </xsl:call-template>
+    </xsl:template>
+    
+    <xsl:template match="assembly">
+        <xsl:variable name="decl" select="key('global-assembly-by-name',@ref)"/>
+        <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
+        <xsl:call-template name="declare-element-as-type">
+            <xsl:with-param name="gi" select="$gi"/>
+            <xsl:with-param name="type" select="$declaration-prefix || ':' || @ref || '-ASSEMBLY'"></xsl:with-param>
+        </xsl:call-template>
+    </xsl:template>
+    
+    <xsl:template name="declare-element-as-type">
+        <xsl:param name="gi"/>
+        <xsl:param name="type" select="@ref"/>
+        <xs:element name="{$gi}" type="{$type}"
             minOccurs="{ if (exists(@min-occurs)) then @min-occurs else 0 }"
             maxOccurs="{ if (exists(@max-occurs)) then @max-occurs else 1 }"/>
     </xsl:template>
@@ -272,7 +291,7 @@
         <xs:element name="{group-as/@name}"
             minOccurs="{ if (@min-occurs != '0') then 1 else 0 }"
             maxOccurs="1">
-            <xsl:variable name="decl" select="key('definition-by-name',@ref)"/>
+            <xsl:variable name="decl" select="key('global-field-by-name',@ref)"/>
             <xsl:apply-templates select="$decl" mode="annotated"/>
             <xs:complexType>
                 <xs:sequence>
@@ -287,26 +306,53 @@
     
     <!-- TODO XXX switch default behavior ...   -->
     <!-- No wrapper, just prose elements -->
-    <xsl:template match="field[@in-xml='UNWRAPPED'][key('definition-by-name',@ref)/@as-type='markup-multiline']">
+    <xsl:template match="field[@in-xml='UNWRAPPED'][key('global-field-by-name',@ref)/@as-type='markup-multiline']">
         <xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>
     </xsl:template>
     
     <!-- With wrapper -->
-    <xsl:template match="field[not(@in-xml='UNWRAPPED')][key('definition-by-name',@ref)/@as-type='markup-multiline']">
+    <xsl:template match="field[not(@in-xml='UNWRAPPED')][key('global-field-by-name',@ref)/@as-type='markup-multiline']">
         <xs:element name="{@ref}"
             minOccurs="{ if (exists(@min-occurs)) then @min-occurs else 0 }"
             maxOccurs="{ if (exists(@max-occurs)) then @max-occurs else 1 }">
-          <xsl:apply-templates select="key('definition-by-name',@ref)" mode="annotated"/>
+            <xsl:apply-templates select="key('global-field-by-name',@ref)" mode="annotated"/>
             <xs:complexType>
               <xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>
             </xs:complexType>
         </xs:element>
     </xsl:template>
     
+    
     <xsl:template match="flag">
-        <xsl:variable name="datatype" select="(@as-type,key('definition-by-name',@ref)/@as-type,'string')[1]"/>
-        <xsl:variable name="value-list" select="(allowed-values,key('definition-by-name',@ref)/allowed-values)[1]"/>
+        <xsl:variable name="decl" select="key('global-flag-by-name',@ref)"/>
+        <xsl:variable name="datatype" select="(@as-type,$decl/@as-type,'string')[1]"/>
+        <xsl:variable name="value-list" select="(constraint/allowed-values,key('global-flag-by-name',@ref)/constraint/allowed-values)[1]"/>
+        <xs:attribute name="{@ref}">
+            
+            <xsl:if test="(@required='yes') or (@name=(../json-key/@flag-name,../json-value-key/@flag-name))">
+                <xsl:attribute name="use">required</xsl:attribute>
+            </xsl:if>
+            <!-- annotate as datatype or string unless an exclusive value-list is given -->
+            <xsl:if test="empty($value-list)">
+                <!-- overriding string datatype on attribute -->
+                <xsl:call-template name="assign-datatype">
+                    <xsl:with-param name="datatype" select="$datatype"/>
+                </xsl:call-template>
+            </xsl:if>
+            <xsl:apply-templates select="$decl" mode="annotated"/>
+            
+            <xsl:apply-templates select="$value-list">
+                <xsl:with-param name="datatype" select="$datatype"/>
+            </xsl:apply-templates>
+        </xs:attribute>
+    </xsl:template>
+    
+    
+    <xsl:template match="model//define-flag">
+        <xsl:variable name="datatype" select="(@as-type,key('global-flag-by-name',@ref)/@as-type,'string')[1]"/>
+        <xsl:variable name="value-list" select="(constraint/allowed-values,key('global-flag-by-name',@ref)/constraint/allowed-values)[1]"/>
         <xs:attribute name="{ (@name,@ref)[1] }">
+            <xsl:apply-templates select="." mode="annotated"/>
             <xsl:if test="(@required='yes') or (@name=(../json-key/@flag-name,../json-value-key/@flag-name))">
                 <xsl:attribute name="use">required</xsl:attribute>
             </xsl:if>
@@ -318,7 +364,7 @@
                 </xsl:call-template>
             </xsl:if>
             
-            <xsl:apply-templates select=".[exists(@name)] | key('definition-by-name',@ref)" mode="annotated"/>
+            <xsl:apply-templates select=".[exists(@name)] | key('global-flag-by-name',@ref)" mode="annotated"/>
             <xsl:apply-templates select="$value-list">
                 <xsl:with-param name="datatype" select="$datatype"/>
             </xsl:apply-templates>
@@ -412,6 +458,21 @@
     <!-- dropping top level (placeholder) 'prose' element declaration and its complexType -->
     <xsl:template match="xs:schema/xs:element[@name='prose'] | xs:schema/xs:complexType[@name='prose']" mode="acquire-prose"/>
     
+    <xsl:mode name="copy" on-no-match="shallow-copy"/>
     
-        
+    <xsl:template match="m:*" mode="copy">
+        <xsl:element name="m:{local-name(.)}" namespace="{namespace-uri(.)}">
+            <xsl:apply-templates mode="#current"/>
+        </xsl:element>
+    </xsl:template>
+
+    <!-- copying contents of remarks we pull them out into no-namespace -->
+    <xsl:template mode="copy" match="remarks//*">
+        <xsl:element name="{local-name()}">
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates mode="#current"/>
+        </xsl:element>
+    </xsl:template>
+    
+    
 </xsl:stylesheet>

@@ -3,21 +3,22 @@
 <?xml-stylesheet type="text/css" href="../../toolchains/xslt-proto-v04/lib/metaschema-author.css"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-proto-v04/lib/metaschema.xsd"
- xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" root="group">
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>OSCAL Resource Registry (Experimental)</schema-name>
     <schema-version>1.0</schema-version>
-    <short-name>oscal-resource-manifest</short-name>
+    <short-name>oscal-resource-registry</short-name>
     <namespace>http://csrc.nist.gov/metaschema/ns/resource-registry-experimental</namespace>
     
     <import href="valid-markers_metaschema.xml"/>
 
     <define-assembly name="group">
         <formal-name>Resource Group</formal-name>
+        <root-name>group</root-name>
         <description>A group of resources, organized as works, each of which may have several representations or embodiments. Groups can appear within groups for categorization of their works. A group may be designated with its own retrieval path (absolute or relative to its containing group or registry), to be used as a basis for retrieval of items (works) from within the group.</description>
-        <flag name="base" as-type="uri-reference">
+        <define-flag name="base" as-type="uri-reference">
             <formal-name>Base URI</formal-name>
             <description>Nominal reference URI from which relative URIs are determined. As a relative URI, this is resolved relative to any ancestor <code>base</code> flags, resolved with the base URI of the manifest itself as the ultimate base ".". Any base may be defined either relatively to bases above it, or as an absolute URI (URL) on the Internet.</description>
-        </flag>
+        </define-flag>
         <model>
             <assembly ref="work"  max-occurs="unbounded">
                 <group-as name="works"/>
@@ -28,13 +29,19 @@
         </model>
     </define-assembly>
     
+    <define-assembly name="dummy">
+        <model>
+            <field ref="title"/>
+        </model>
+    </define-assembly>
+    
     <define-assembly name="work">
         <formal-name>Work</formal-name>
         <description>An abstract resource, considered as a generalized "work" (FRBR). A work is capable of multiple different representations. A resource registry provides a mapping from works to expressions and instances of that work, represented as items.</description>
-        <flag name="id">
+        <define-flag name="id">
             <formal-name>Identifier</formal-name>
             <description>A unique id or key for reference across the system of documents described by this manifest.</description>
-        </flag>
+        </define-flag>
         <model>
             <field ref="title"/>
             <field ref="validate" max-occurs="unbounded">
@@ -57,15 +64,17 @@
     <define-assembly name="item">
         <formal-name>Item</formal-name>
         <description>A particular instantiation or retrievable (actionable) representation of a work. The form the item takes is relative to the item.</description>
-        <flag name="format">
+        <flag ref="href"/>
+        <define-flag name="format">
             <formal-name>Format</formal-name>
             <description>The nominal format of the item.</description>
+            <constraint>
             <allowed-values>
                 <enum value="xml">XML</enum>
                 <enum value="json">JSON</enum>
             </allowed-values>
-        </flag>
-        <flag ref="href"/>
+            </constraint>
+        </define-flag>
         <model>
             <field ref="valid" max-occurs="unbounded">
                 <group-as name="validations"/>
