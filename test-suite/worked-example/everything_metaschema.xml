@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../toolchains/xslt-proto-v04/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/css" href="../../toolchains/xslt-proto-v04/lib/metaschema-author.css"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>NIST Metaschema Everything</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>everything</short-name>
+    <namespace>http://csrc.nist.gov/metaschema/ns/everything</namespace>
+   
+   <remarks>
+       <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
+   </remarks>
+    
+   <define-assembly name="anything">
+       <formal-name>Any Thing</formal-name>
+       <description>Any old thing.</description>
+       <root-name>ANYTHING</root-name>
+       <flag ref="todays-date"/>
+       <model>
+           <assembly ref="everything" min-occurs="0">
+               <use-name>everything</use-name>
+           </assembly>
+       </model>
+   </define-assembly>
+    
+    <define-flag name="todays-date" as-type="date">
+        <formal-name>Today's Date</formal-name>
+        <description>Not before yesterday.</description>
+    </define-flag>
+    
+    <define-assembly name="everything">
+        <formal-name>Every Thing</formal-name>
+        <description>Nothing left out.</description>
+        <root-name>EVERYTHING</root-name>
+        <use-name>everything</use-name>
+        <flag ref="todays-date"/>
+        <!--<define-flag name="required-integer" as-type="integer" required="yes">
+            <formal-name>Required Integer</formal-name>
+            <description>An integer.</description>
+        </define-flag>-->
+        
+        <model>
+            <field ref="one-string"/>
+            <!--<define-assembly name="local-assembly" min-occurs="1" max-occurs="5">
+                <formal-name>Local Assembly</formal-name>
+                <description>Declared Locally</description>
+                <use-name>LOCAL</use-name>
+                <group-as name="local-assembliese"/>
+                <flag ref="todays-date"/>
+                <define-flag name="required-integer" as-type="integer" required="yes">
+                    <formal-name>Required Integer</formal-name>
+                    <description>An integer.</description>
+                </define-flag>
+                <model ref="local-assembly"/>
+            </define-assembly>-->
+            <!--<define-field name="custom-field">
+                <formal-name>Custom</formal-name>
+                <description>Something special</description>
+                <flag ref="required-ncname" required="yes"/>
+                <define-flag name="some" required="yes">
+                    <formal-name>Some Flag</formal-name>
+                    <description>A, or B</description>
+                    <constraint>
+                        <allowed-values>
+                            <enum value="a">A</enum>
+                            <enum value="b">B</enum>
+                        </allowed-values>
+                    </constraint>
+                </define-flag>
+            </define-field>
+            <define-field name="another" max-occurs="unbounded">
+                <formal-name>Another field</formal-name>
+                <description>Something special</description>
+                <group-as name="more-fields" in-xml="GROUPED"/>
+                <flag ref="required-ncname" required="yes"/>
+                    
+                
+                <define-flag name="some" required="yes">
+                    <formal-name>Some Flag</formal-name>
+                    <description>A, or B</description>
+                    <constraint>
+                        <allowed-values>
+                            <enum value="a">A</enum>
+                            <enum value="b">B</enum>
+                        </allowed-values>
+                    </constraint>
+                </define-flag>
+            </define-field>-->
+            <assembly ref="everything" max-occurs="3">
+                <use-name>everything</use-name>
+                <group-as name="everythings"/>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="local-assembly">
+        <formal-name>Local Assembly</formal-name>
+        <description>Declared Locally</description>
+        <use-name>LOCAL</use-name>
+        <model>
+            <assembly ref="everything"/>
+        </model>
+    </define-assembly>
+    
+    <define-field name="one-string">
+        <formal-name>One String</formal-name>
+        <description>Not more than one.</description>
+        <flag ref="todays-date"/>
+        <constraint>
+            <allowed-values>
+                <enum value="Alpha"/>
+                <enum value="Beta"/>
+                <enum value="Gamma"/>
+            </allowed-values>
+        </constraint>
+    </define-field>
+
+    <define-flag name="required-ncname" as-type="NCName">
+        <!--(declared a string by default)-->
+        <formal-name>Required NCName</formal-name>
+        <description>A no-colon name.</description>
+    </define-flag>
+    
+    <!--<define-field name="custom-field">
+        <formal-name>Customized Field</formal-name>
+        <description>A declaration that can be overridden locally.</description>
+        <flag name="a-flag">
+            <formal-name>Dummy Flag</formal-name>
+            <description>dummy flag for aggregation.</description>
+        </flag>
+        <allowed-values allow-other="yes">
+            <enum value="1000">thousand</enum>
+        </allowed-values>
+    </define-field>-->
+    
+</METASCHEMA>

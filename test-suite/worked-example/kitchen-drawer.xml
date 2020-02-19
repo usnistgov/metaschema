@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ANYTHING xmlns="http://csrc.nist.gov/metaschema/ns/everything"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/everything file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything.xsd">
+    
+    <!-- XSD conversion punchlist
+
+Feature set
+  Global definitions with references
+    x Assembly
+      x root
+      x referenced
+    x Field (string)
+    x Flag
+      x global definition
+        x define-field/flag/@ref
+        x define-assembly/flag/@ref
+  Local definitions
+    x define-assembly (in assembly/model),
+    x define-field (in assembly/model)
+    x define-flag (in define-assembly, define-field)
+    x model/define-assembly/flag/@ref
+    x model/define-field/flag/@ref
+  x group-as - WRAPPED and not
+  Constraints
+    define-field, model/define-field, define-flag, model/define-flag
+    local constraints overriding global constraints
+  Data types
+    Survey and test
+    Test markup line and multiline
+    FACTOR OUT AND ABSTRACT
+    Including markup-multiline w/ and w/o wrapping
+  Inline documentation
+  Customization features
+    x XML wrapping (group-as feature)
+    Markup multiline wrapping (design?)
+    @use-name (element type masking)
+    
+  SCHEMATRON:
+  Test for overloading names (assembly and field siblings, group-as names, use-name values)
+-->
+    
+    <everything>
+        <one-string>Alpha</one-string>
+      
+      <LOCAL required-integer="3"/>
+      <custom-field required-ncname="a1776">custom field</custom-field>
+        <everything todays-date="2020-02-20">
+          
+          <LOCAL todays-date="2020-01-31" required-integer="101"></LOCAL>
+          <custom-field required-ncname="xyz">custom field</custom-field>
+          <more-fields>
+            <another required-ncname="x">y</another>
+            <another required-ncname="NCNAME">SOMETHING</another>
+          </more-fields>
+          
+        </everything>
+    </everything>
+</ANYTHING>
