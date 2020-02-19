@@ -4,17 +4,17 @@ Description: "Discussion of the core Metaschema concepts"
 weight: 10
 ---
 
-An instance of a Metaschema, called a [*metaschema definition*](terminology/#metaschema-definition), defines an [*information model*](terminology/#information-model) for an aspect of given [*domain*](terminology/#domain) in a format-neutral form. A metaschema definition contains a collection of definitions for [*managed objects*](terminology/#managed-object) consisting of semanticly well-defined data structures. Metaschema definitions contain documentation about the meaning (semantics) and use of a given managed object.
+An instance of a Metaschema, called a [*metaschema definition*](terminology/#metaschema-definition), defines an [*information model*](terminology/#information-model) for an aspect of given [*domain*](terminology/#domain) in a format-neutral form. A metaschema definition contains a collection of definitions for [*managed objects*](terminology/#managed-object) consisting of semantically well-defined data structures. Metaschema definitions contain documentation about the meaning (semantics) and use of a given managed object.
 
-A metaschema can be used to generate a schema for a corresponding [*data model*](terminology/#data-model), which is a representation of an *information model* in a format specific serializable form (e.g., XML, JSON, YAML) expressed as XSD and JSON Schema. These generated schema can be used to validate that data is conformant to the asscoiated format, and thus conformant to the information model defined by the Metaschema.
+A metaschema can be used to generate a schema for a corresponding [*data model*](terminology/#data-model), which is a representation of an *information model* in a format-specific serializable form (e.g., XML, JSON, YAML) expressed as an XML or JSON Schema. These generated schemas can be used to confirm (*validate*) that data to be processed by the system is encoded recognizably (consistent with the format defined by the respective schema), and thus represents information consistent with the information model defined by the Metaschema.
 
 Metaschemas are used to generate other model-related artifacts based on the metaschema description. These artifacts include:
 
-- Conversion utilities that can convert content instances between the XML and JSON formats derived from a given metaschema defintion, ensuring the resulting content is schema valid; 
+- Conversion utilities that can convert content instances between the XML and JSON formats derived from a given metaschema defintion, ensuring the resulting content is schema-valid and model-identical to its input (the conversion is lossless); 
 - XML and JSON model documentation for use on a website (i.e. the [OSCAL website](https://pages.nist.gov/OSCAL/documentation/schema/).
 - Programing language APIs used for parsing data conformat to a given data model into a set of language-specific objects, and also writing data in language-specific objects out to one of the supported data model formats.
 
-Use of metaschema definitions provides a sustainable means to maintain seamless and consistent support for multiple models and multiple associated formats for each model by avoiding the need to maintain each format individually. Content can also be kept up-to-date in multiple formats using generated content converters, and can be validated using generated schema. Adding support for new formats (e.g., YAML) can accomplished by extending the Metaschema tooling to produce schema and converters for other formats.
+Use of metaschema definitions provides a sustainable means to maintain seamless and consistent support for multiple models and multiple associated formats for each model, avoiding the need to maintain each format individually. Content can also be kept up-to-date in multiple formats using generated content converters, and can be validated using generated schemas, ensuring consistency of data models across disparate systems. Adding support for new formats (e.g., YAML) can accomplished by extending the Metaschema tooling to produce schema and converters for other formats.
 
 ## Metaschema Architecture
 
