@@ -32,9 +32,7 @@
     
     <xsl:template match="*" mode="wire-ns">
         <xsl:copy copy-namespaces="no"> 
-            <xsl:namespace name="m">http://csrc.nist.gov/ns/oscal/metaschema/1.0</xsl:namespace>
-            <xsl:namespace name="{$declaration-prefix}" select="$target-namespace"/>
-            <xsl:namespace name="oscal-prose" select="$target-namespace"/>
+            <xsl:call-template name="namespace-fixup"/>
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates mode="#current"/>
         </xsl:copy>
@@ -42,12 +40,16 @@
     
     <xsl:template match="m:*" mode="wire-ns" xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
         <xsl:element name="m:{local-name()}">
-            <xsl:namespace name="m">http://csrc.nist.gov/ns/oscal/metaschema/1.0</xsl:namespace>
-            <xsl:namespace name="{$declaration-prefix}" select="$target-namespace"/>
-            <xsl:namespace name="oscal-prose" select="$target-namespace"/>
+            <xsl:call-template name="namespace-fixup"/>
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates mode="#current"/>
         </xsl:element>
+    </xsl:template>
+
+    <xsl:template name="namespace-fixup">
+        <xsl:namespace name="m">http://csrc.nist.gov/ns/oscal/metaschema/1.0</xsl:namespace>
+        <xsl:namespace name="{$declaration-prefix}" select="$target-namespace"/>
+        <xsl:namespace name="oscal-prose" select="$target-namespace"/>
     </xsl:template>
     
     <xsl:template match="xs:documentation//text() | m:*//text()" mode="wire-ns">
