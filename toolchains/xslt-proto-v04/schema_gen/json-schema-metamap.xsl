@@ -46,9 +46,9 @@
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
             <string key="$id">{ $composed-metaschema/METASCHEMA/namespace }-schema.json</string>
             <xsl:for-each select="schema-name">
-              <string key="$comment">{ . }: JSON Schema</string>
+                <string key="$comment">{ . }: JSON Schema</string>
             </xsl:for-each>
-            
+
             <xsl:apply-templates select="schema-version"/>
             <string key="type">object</string>
             <map key="definitions">
@@ -57,22 +57,18 @@
                 <!--<map key="prose">
                     <xsl:call-template name="string-or-array-of-strings"/>
                 </map>-->
-            </map>           
-        <map key="properties">
-            <!--<xsl:apply-templates mode="properties"/>-->
-            <map key="{@root}">
-                <string key="$ref">#/definitions/{ @root }</string>
             </map>
-        </map>
-            <array key="required">
-                <string>{ @root }</string>
-            </array>
-        <!--<map key="propertyNames">
-                <array key="enum">
-                    <string>
-                        <xsl:apply-templates mode="property-names"/></string>
-                </array>
-            </map>-->
+            <map key="properties">
+                <!--<xsl:apply-templates mode="properties"/>-->
+                <xsl:for-each select="define-assembly[exists(root-name)]">
+                    <map key="{root-name}">
+                        <string key="$ref">#/definitions/{ @name }</string>
+                    </map>
+                </xsl:for-each>
+            </map>
+            <number key="minProperties">1</number>
+            <number key="maxProperties">1</number>
+            <boolean key="additionalProperties">false</boolean>
         </map>
     </xsl:template>
     
@@ -277,7 +273,7 @@
     <xsl:template match="assembly | field | flag | define-field | define-assembly | define-flag" priority="2" mode="property-name">
         <string>
             <!--<xsl:value-of select="key('definition-by-name',@ref)/(@group-as,@name)[1]"/>-->
-            <xsl:value-of select="(group-as/@name,root-name,use-name,@name,@ref)[1]"/>
+            <xsl:value-of select="(group-as/@name,child::root-name,child::use-name,@name,@ref)[1]"/>
         </string>
     </xsl:template>
     
@@ -364,12 +360,20 @@
     </xsl:template>
     
     <xsl:template match="allowed-values/enum">
-        <!-- since the JSON must show enumerated values consistent with the base type notation -->
+        <!-- since the JSON must show enumerated values consistent with the base type notation,
+             we determine the nominal type of the node and map it to 'number', 'string' or 'boolean' whichever is best. -->
         <xsl:variable name="type-declaration">
-            <xsl:apply-templates select="../.." mode="object-type"/>
+            <xsl:apply-templates select="../parent::constraint/.." mode="object-type"/>
         </xsl:variable>
-        <xsl:variable name="base-type" select="$type-declaration/*[@key='type'] ! (if (. = 'integer') then 'number' else .)"/>
-        <xsl:element namespace="http://www.w3.org/2005/xpath-functions" name="{$base-type}">
+        <xsl:variable name="nominal-type">
+            <xsl:choose>
+                <xsl:when test="$type-declaration/*[@key='type']='integer'">number</xsl:when>
+                <xsl:when test="$type-declaration/*[@key='type']='boolean'">boolean</xsl:when>
+                <xsl:otherwise>string</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <!--<xsl:copy-of select="$type-declaration"/>-->
+        <xsl:element namespace="http://www.w3.org/2005/xpath-functions" name="{$nominal-type}">
             <xsl:apply-templates select="@value"/>
         </xsl:element>
     </xsl:template>
@@ -439,12 +443,12 @@
                 <map>
                     <string key="type">array</string>
                     <xsl:if test="@max-occurs != 'unbounded'">
-                        <string key="maxItems">{ @max-occurs }</string>
+                        <number key="maxItems">{ @max-occurs }</number>
                     </xsl:if>
+                    <number key="minItems">2</number>
                     <map key="items">
                         <string key="$ref">#/definitions/{ @ref }</string>
                     </map>
-                    <number key="minItems">2</number>
                 </map>
             </array>
         </map>
@@ -469,7 +473,7 @@
     <xsl:template name="string-or-array-of-strings">
         <array key="oneOf">
             <map>
-            <string key="type">string</string>
+              <string key="type">string</string>
             </map>
             <map>
             <string key="type">array</string>

@@ -13,7 +13,7 @@
     
     -->
 
-    <xsl:output method="xml" indent="yes"/>
+    <xsl:output method="text" indent="yes"/>
 
     <!-- Turning $trace to 'on' will
          - emit runtime messages with each transformation, and
@@ -21,7 +21,7 @@
     
     <xsl:param name="trace" as="xs:string">off</xsl:param>
     <xsl:variable name="louder" select="$trace = 'on'"/>
-    
+
     <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
     
     <xsl:import href="lib/metaschema-metaprocess.xsl"/>
@@ -32,8 +32,8 @@
         <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
-        <nm:transform version="3.0">schema_gen/make-metaschema-xsd.xsl</nm:transform>
-        <nm:transform version="3.0">schema_gen/configure-namespaces.xsl</nm:transform>
+        <nm:transform version="3.0">schema_gen/json-schema-metamap.xsl</nm:transform>
+        <!--<nm:transform version="3.0">schema_gen/serialize-json-schema.xsl</nm:transform>-->
     </xsl:variable>
     
 </xsl:stylesheet>

@@ -26,7 +26,7 @@
     
     <xsl:mode name="acquire" on-no-match="shallow-copy"/>
     
-    <xsl:template match="comment() | processing-instruction()" mode="acquire"/>
+    <xsl:template match="comment() | processing-instruction()" mode="#all"/>
     
     <xsl:template match="METASCHEMA" mode="acquire">
         <xsl:copy>
@@ -36,11 +36,6 @@
         </xsl:copy>
     </xsl:template>
   
-    <!-- quitting traversal by cloning branch -->
-    <xsl:template match="define-field | define-flag | define-assembly" mode="acquire">
-        <xsl:copy-of select="."/>
-    </xsl:template>
-    
     <xsl:template match="import" mode="acquire">
         <xsl:param name="so-far" tunnel="yes" required="yes"/>
         <xsl:variable name="uri" select="resolve-uri(@href,document-uri(/))"/>
