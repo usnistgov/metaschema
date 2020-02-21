@@ -56,6 +56,7 @@
         <model>
             <field ref="title"/>
             <field ref="prose" in-xml="UNWRAPPED"/>
+            <assembly ref="zabaglione"/>
         </model>
     </define-assembly>
     
@@ -67,9 +68,7 @@
     <define-field name="prose" as-type="markup-multiline">
         <formal-name>Prose</formal-name>
         <description>A placeholder for prose in an explicit model.</description>
-        <define-flag name="boo">
-            <formal-name>Boo</formal-name><description>hoo</description>
-        </define-flag>
+        
     </define-field>
     
     <define-assembly name="everything">
@@ -108,6 +107,7 @@
         </model>
     </define-assembly>
     
+    <define-field name="one-string"></define-field>
     <define-field name="one-string">
         <formal-name>One String</formal-name>
         <description>Not more than one.</description>

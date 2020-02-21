@@ -43,23 +43,14 @@
             <sch:report role="warning" test="document-uri(/) = resolve-uri(@href,document-uri(/))">Schema can't import itself</sch:report>
             <sch:assert test="exists(document(@href)/m:METASCHEMA)">Can't find a metaschema at <sch:value-of select="@href"/></sch:assert>
         </sch:rule>        
-        
-        <sch:rule context="m:define-assembly | m:define-field | m:define-flag">
-            <sch:assert role="warning" test="exists(m:formal-name)">formal-name missing from <sch:name/></sch:assert>
-            <sch:assert role="warning" test="exists(m:description)">description missing from <sch:name/></sch:assert>
-            <sch:assert role="warning" test="empty(self::m:define-assembly) or exists(m:model)">model missing from <sch:name/></sch:assert>
-        </sch:rule>
-        
-        <sch:rule context="m:p | m:li | m:pre">
-            <sch:assert test="matches(.,'\S')">Empty <name/> (is likely to distort rendition)</sch:assert>
-        </sch:rule>
-    </sch:pattern>
+        </sch:pattern>
+    
     
     <sch:pattern id="definitions-and-name-clashes">
         <sch:rule context="m:flag | m:field | m:assembly">
             <sch:let name="aka" value="nm:identifiers(.)"/>
             <sch:let name="def" value="nm:definition-for-reference(.)"/>
-            <sch:assert test="exists($def)"><sch:name/> has no definition.</sch:assert>
+            <sch:assert test="exists($def)">No definition is given for <sch:name/> '<sch:value-of select="@ref"/>'.</sch:assert>
             <sch:assert test="exists($aka) or empty($def)"><sch:name/> has no name defined</sch:assert>
             <sch:let name="siblings" value="(../m:flag | ../m:model//m:field | ../m:model//m:assembly) except ."/>
             <sch:let name="rivals" value="$siblings[nm:identifiers(.) = $aka]"/>
@@ -139,25 +130,19 @@
             <sch:assert test="m:datatype-validate(@value,../../@as-type)">Value '<sch:value-of select="@value"/>' is not a valid token of type <sch:value-of select="../../@as-type"/></sch:assert>
         </sch:rule>
     </sch:pattern>
-    
-    <sch:pattern>
-       
-        <sch:rule context="m:assembly[exists(@ref)]">
-            <!-- XYZ <sch:report test="@ref = $composed-metaschema/m:METASCHEMA/m:define-field/@name">'<sch:value-of select="@ref"/>' is a field, not an assembly.</sch:report>-->
-            <!-- XYZ <sch:report test="@ref = $composed-metaschema/m:METASCHEMA/m:define-flag/@name">'<sch:value-of select="@ref"/>' is a flag, not an assembly.</sch:report>-->
-        </sch:rule>
-        <sch:rule context="m:field[exists(@ref)]">
-            <!-- XYZ <sch:report test="@ref = $composed-metaschema/m:METASCHEMA/m:define-assembly/@name">'<sch:value-of select="@ref"/>' is an assembly, not a field.</sch:report>-->
-            <!-- XYZ <sch:report test="@ref = $composed-metaschema/m:METASCHEMA/m:define-flag/@name">'<sch:value-of select="@ref"/>' is a flag, not an assembly.</sch:report>-->
+    <sch:pattern id="schema-docs">
+        <sch:rule context="m:define-assembly | m:define-field | m:define-flag">
+            <sch:assert role="warning" test="exists(m:formal-name)">Formal name missing from <sch:name/></sch:assert>
+            <sch:assert role="warning" test="exists(m:description)">Short description missing from <sch:name/></sch:assert>
+            <sch:assert role="warning" test="empty(self::m:define-assembly) or exists(m:model)">model missing from <sch:name/></sch:assert>
         </sch:rule>
         
-        <sch:rule context="m:flag[exists(@ref)]">
-            <!--<sch:report test="@ref = $composed-metaschema/m:METASCHEMA/m:define-field/@name">'<sch:value-of select="@name"/>' is a field, not a flag.</sch:report>-->
-            <!--<sch:report test="@ref = $composed-metaschema/m:METASCHEMA/m:define-assembly/@name">'<sch:value-of select="@name"/>' is an assembly, not a flag.</sch:report>-->
+        <sch:rule context="m:p | m:li | m:pre">
+            <sch:assert test="matches(.,'\S')">Empty <name/> (is likely to distort rendition)</sch:assert>
         </sch:rule>
     </sch:pattern>
-
-
+    
+      
     <!-- 0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|-->
     
     
