@@ -17,17 +17,23 @@
     
     <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
     
+    <!--<xsl:variable name="transformation-sequence">
+        <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
+    </xsl:variable>-->
     
-    
-    <xsl:template match="/">
-        <xsl:param name="source" select="." as="document-node()"/>
+    <xsl:template match="/" name="nm:process-pipeline">
+        <xsl:param name="source"   as="document-node()"  select="/"/>
+        <xsl:param name="sequence" as="document-node()?" select="$transformation-sequence"/>
         <!-- Each element inside $transformation-sequence is processed in turn.
              Each represents a stage in processing.
              The result of each processing step is passed to the next step as its input, until no steps are left. -->
         <xsl:call-template name="alert">
             <xsl:with-param name="msg" expand-text="yes"> COMPOSING METASCHEMA { document-uri($source) } </xsl:with-param>
         </xsl:call-template>
-        <xsl:iterate select="$transformation-sequence/*">
+        <xsl:iterate select="$sequence/*">
             <xsl:param name="doc" select="$source" as="document-node()"/>
             <xsl:on-completion select="$doc"/>
             <xsl:next-iteration>
@@ -69,7 +75,6 @@
         </xsl:call-template>
     </xsl:template>
 
-
     <!-- Not knowing any better, any other execution step passes through its source. -->
     <xsl:template mode="nm:execute" match="*">
         <xsl:param name="sourcedoc" as="document-node()"/>
@@ -78,7 +83,6 @@
         </xsl:call-template>
                 <xsl:sequence select="$sourcedoc"/>
     </xsl:template>
-
     
     <xsl:template name="alert">
         <xsl:param name="msg"/>

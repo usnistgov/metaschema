@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../toolchains/xslt-proto-v04/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="../../toolchains/xslt-proto-v04/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <?xml-stylesheet type="text/css" href="../../toolchains/xslt-proto-v04/lib/metaschema-author.css"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd"
@@ -30,12 +30,58 @@
         <description>Not before yesterday.</description>
     </define-flag>
     
+    <define-flag name="never-used" as-type="date">
+        <formal-name>Never Used</formal-name>
+        <description>Not before yesterday.</description>
+    </define-flag>
+    
+    <define-assembly name="everything">
+        <formal-name>Every Thing</formal-name>
+        <description>Nothing left out.</description>
+        <model></model>
+    </define-assembly>
+    
+    <define-field name="line" as-type="markup-multiline">
+        <formal-name>Line of verse</formal-name>
+        <description>Could be terse</description>
+    </define-field>
+    
+    <define-assembly name="section">
+        <formal-name>Section</formal-name>
+        <description>.</description>
+        <define-flag name="class">
+            <formal-name>Class</formal-name>
+            <description>.</description>
+        </define-flag>
+        <model>
+            <field ref="title"/>
+            <field ref="prose" in-xml="UNWRAPPED"/>
+        </model>
+    </define-assembly>
+    
+    <define-field name="title" as-type="markup-line">
+        <formal-name>Title</formal-name>
+        <description>.</description>
+    </define-field>
+    
+    <define-field name="prose" as-type="markup-multiline">
+        <formal-name>Prose</formal-name>
+        <description>A placeholder for prose in an explicit model.</description>
+        <define-flag name="boo">
+            <formal-name>Boo</formal-name><description>hoo</description>
+        </define-flag>
+    </define-field>
+    
     <define-assembly name="everything">
         <formal-name>Every Thing</formal-name>
         <description>Nothing left out.</description>
         <root-name>EVERYTHING</root-name>
         <use-name>everything</use-name>
-        <flag ref="todays-date"/>
+        <flag ref="todays-date" required="yes"/>
+        <define-flag name="todays-date" as-type="date">
+            <formal-name>Today's date</formal-name>
+            <description>.</description>
+        </define-flag>
         <!--<define-flag name="required-integer" as-type="integer" required="yes">
             <formal-name>Required Integer</formal-name>
             <description>An integer.</description>
@@ -43,55 +89,13 @@
         
         <model>
             <field ref="one-string"/>
-            <!--<define-assembly name="local-assembly" min-occurs="1" max-occurs="5">
-                <formal-name>Local Assembly</formal-name>
-                <description>Declared Locally</description>
-                <use-name>LOCAL</use-name>
-                <group-as name="local-assembliese"/>
-                <flag ref="todays-date"/>
-                <define-flag name="required-integer" as-type="integer" required="yes">
-                    <formal-name>Required Integer</formal-name>
-                    <description>An integer.</description>
-                </define-flag>
-                <model ref="local-assembly"/>
-            </define-assembly>-->
-            <!--<define-field name="custom-field">
-                <formal-name>Custom</formal-name>
-                <description>Something special</description>
-                <flag ref="required-ncname" required="yes"/>
-                <define-flag name="some" required="yes">
-                    <formal-name>Some Flag</formal-name>
-                    <description>A, or B</description>
-                    <constraint>
-                        <allowed-values>
-                            <enum value="a">A</enum>
-                            <enum value="b">B</enum>
-                        </allowed-values>
-                    </constraint>
-                </define-flag>
-            </define-field>
-            <define-field name="another" max-occurs="unbounded">
-                <formal-name>Another field</formal-name>
-                <description>Something special</description>
-                <group-as name="more-fields" in-xml="GROUPED"/>
-                <flag ref="required-ncname" required="yes"/>
-                    
-                
-                <define-flag name="some" required="yes">
-                    <formal-name>Some Flag</formal-name>
-                    <description>A, or B</description>
-                    <constraint>
-                        <allowed-values>
-                            <enum value="a">A</enum>
-                            <enum value="b">B</enum>
-                        </allowed-values>
-                    </constraint>
-                </define-flag>
-            </define-field>-->
+            <field ref="line"/>
+            <assembly ref="section"/>
             <assembly ref="everything" max-occurs="3">
                 <use-name>everything</use-name>
                 <group-as name="everythings"/>
             </assembly>
+            
         </model>
     </define-assembly>
     
@@ -108,6 +112,7 @@
         <formal-name>One String</formal-name>
         <description>Not more than one.</description>
         <flag ref="todays-date"/>
+        <flag ref="required-ncname"/>
         <constraint>
             <allowed-values>
                 <enum value="Alpha"/>
