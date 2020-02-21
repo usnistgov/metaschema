@@ -81,13 +81,26 @@
     <!-- Tossing definitions we aren't keeping -->
     <xsl:template mode="keep-eligible"
         match="METASCHEMA/define-field | METASCHEMA/define-flag | METASCHEMA/define-assembly">
+        <xsl:variable name="msg" expand-text="true">REMOVING superseded definition for '{ @name }' {
+            replace(local-name(),'^define-','')} from { ancestor::METASCHEMA[1]/@module
+            }</xsl:variable>
+        <xsl:call-template name="comment">
+            <xsl:with-param name="msg" select="$msg"/>
+        </xsl:call-template>
         <xsl:call-template name="warning">
-            <xsl:with-param name="msg" expand-text="true">TOSSING definition for '{ @name }' {
-                replace(local-name(),'^define-','')} from { ancestor::METASCHEMA[1]/@module
-                }</xsl:with-param>
+            <xsl:with-param name="msg" select="$msg"/>
         </xsl:call-template>
     </xsl:template>
     
+    <xsl:template name="comment">
+        <xsl:param name="msg"/>
+        <xsl:if test="$verbose">
+            <xsl:comment>
+                <xsl:copy-of select="$msg"/>
+            </xsl:comment>
+        </xsl:if>
+    </xsl:template>
+
     <xsl:template name="warning">
         <xsl:param name="msg"/>
         <xsl:if test="$verbose">
@@ -96,6 +109,5 @@
             </xsl:message>
         </xsl:if>
     </xsl:template>
-    
     
 </xsl:stylesheet>
