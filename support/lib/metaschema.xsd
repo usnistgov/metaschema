@@ -172,6 +172,27 @@
     <xs:attributeGroup ref="m:cardinality-specification"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
     <xs:attribute name="module" type="xs:anyURI"/>
+    <xs:attribute name="in-xml" default="WITH_WRAPPER">
+      <xs:annotation>
+        <xs:documentation>A field with assigned datatype 'markup-multiline' may be designated for representation with or without a containing (wrapper) element
+          in XML.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="WITH_WRAPPER">
+            <xs:annotation>
+              <xs:documentation>Any paragraph or block contents of a markup-multiline field will be represented with a containing (wrapper) element in the XML.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="UNWRAPPED">
+            <xs:annotation>
+              <xs:documentation>With in-xml='UNWRAPPED', a field contents will be represented in the XML with no wrapper, so the field will be implicit. Among sibling fields in a given model, only one of them may be designated as UNWRAPPED.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    
   </xs:complexType>
   
   <xs:complexType name="local-flag-definition">
@@ -423,7 +444,6 @@
         <xs:element name="use-name" minOccurs="0" type="xs:NCName"/>
         <xs:element name="constraint" minOccurs="0" maxOccurs="unbounded" type="m:constraint"/>
       </xs:sequence>
-      <xs:attribute name="as-type" type="m:simple-datatypes"/>
       <xs:attribute name="ref" use="required" type="xs:NCName"/>
       <xs:attribute name="required" type="m:boolean" default="no"/>
     </xs:complexType>
