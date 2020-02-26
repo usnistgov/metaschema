@@ -54,8 +54,7 @@
             <sch:assert test="exists($aka) or empty($def)"><sch:name/> has no name defined</sch:assert>
             <sch:let name="siblings" value="(../m:flag | ../m:model//m:field | ../m:model//m:assembly) except ."/>
             <sch:let name="rivals" value="$siblings[nm:identifiers(.) = $aka]"/>
-            <sch:assert test="empty($rivals)">Name clash on flag using name '<sch:value-of select="$aka"/>'; clashes with
-                neighboring <xsl:value-of select="$rivals/local-name()" separator=", "/></sch:assert>
+            <sch:assert test="empty($rivals)">Name clash on flag using name '<sch:value-of select="$aka"/>'; clashes with neighboring <xsl:value-of select="$rivals/local-name()" separator=", "/></sch:assert>
           
         </sch:rule>
         
@@ -82,8 +81,7 @@
             <sch:report test="../@max-occurs/number() = 1">"group-as" should not be given when max-occurs is 1.</sch:report>
             <sch:let name="def" value="nm:definition-for-reference(parent::*)"/>
             <sch:assert test="count(ancestor::m:model//(m:field | m:define-field | m:assembly | m:define-assembly)[nm:identifiers(.)=$name]) = 1">group-as @name is not unique within this model</sch:assert>
-            <sch:assert test="not(@in-json='BY_KEY') or $def/m:json-key/@flag-name=$def/(m:flag/@ref|m:define-flag/@name)">Cannot group by key since the definition of <sch:value-of select="name(..)"/>
-                '<sch:value-of select="../@ref"/>' has no json-key specified. Consider adding a json-key to the '<sch:value-of select="../@ref"/>' definition, or using a different 'in-json' setting.</sch:assert>
+            <sch:assert test="not(@in-json='BY_KEY') or $def/m:json-key/@flag-name=$def/(m:flag/@ref|m:define-flag/@name)">Cannot group by key since the definition of <sch:value-of select="name(..)"/> '<sch:value-of select="../@ref"/>' has no json-key specified. Consider adding a json-key to the '<sch:value-of select="../@ref"/>' definition, or using a different 'in-json' setting.</sch:assert>
         </sch:rule>
         
         </sch:pattern>
@@ -91,14 +89,11 @@
     <sch:pattern id="flags_and_keys_and_datatypes">
         <sch:rule context="m:field | m:assembly">
             <sch:let name="def" value="nm:definition-for-reference(.)"/>
-            <sch:assert test="empty($def) or not(m:group-as/@in-json='BY_KEY') or exists($def/m:json-key)">Target definition for <sch:value-of select="@ref"/> designates a json key, so
-            the invocation should have group-as/@in-json='BY_KEY'</sch:assert>
-            <sch:assert test="matches(m:group-as/@name,'\S') or not((@max-occurs/number() gt 1) or (@max-occurs='unbounded'))">Unless @max-occurs is 1,
-                a grouping name (group-as/@name) must be given</sch:assert>
+            <sch:assert test="empty($def) or not(m:group-as/@in-json='BY_KEY') or exists($def/m:json-key)">Target definition for <sch:value-of select="@ref"/> designates a json key, so the invocation should have group-as/@in-json='BY_KEY'</sch:assert>
+            <sch:assert test="matches(m:group-as/@name,'\S') or not((@max-occurs/number() gt 1) or (@max-occurs='unbounded'))">Unless @max-occurs is 1, a grouping name (group-as/@name) must be given</sch:assert>
 
             <!-- constraints related to markup-multiline -->
-            <sch:assert test="not(@in-xml='UNWRAPPED') or not($def/@as-type='markup-multiline') or not(preceding-sibling::*[@in-xml='UNWRAPPED']/nm:definition-for-reference(.)/@as-type='markup-multiline')">Only one field may be marked
-            as 'markup-multiline' (without xml wrapping) within a model.</sch:assert>
+            <sch:assert test="not(@in-xml='UNWRAPPED') or not($def/@as-type='markup-multiline') or not(preceding-sibling::*[@in-xml='UNWRAPPED']/nm:definition-for-reference(.)/@as-type='markup-multiline')">Only one field may be marked as 'markup-multiline' (without xml wrapping) within a model.</sch:assert>
             <sch:report test="(@in-xml='UNWRAPPED') and (@max-occurs!='1')">An 'unwrapped' field must have a max occurrence of 1</sch:report>
             <sch:assert test="$def/@as-type='markup-multiline' or not(@in-xml='UNWRAPPED')">Only 'markup-multiline' fields may be unwrapped in XML.</sch:assert>
             
@@ -107,16 +102,14 @@
         <sch:rule context="m:flag | m:define-field/m:define-flag | m:define-assembly/m:define-flag">
 
             <sch:assert
-                test="not((@name | @ref) = ../m:json-value-key/@flag-name) or @required = 'yes'">A
-                flag declared as a value key must be required (@required='yes')</sch:assert>
+                test="not((@name | @ref) = ../m:json-value-key/@flag-name) or @required = 'yes'">A flag declared as a value key must be required (@required='yes')</sch:assert>
             
             <sch:assert test="not(parent::m:define-field[@as-type='markup-multiline']/nm:references-to-definition(.)/@in-xml='UNWRAPPED')">Multiline markup fields must have no flags, unless always used with a wrapper - put your flags on an assembly with an unwrapped multiline field</sch:assert>
             
         </sch:rule>
         
         <sch:rule context="m:json-key">
-            <sch:assert test="@flag-name = (../m:flag/@ref|../m:define-flag/@name)">JSON key indicates no flag on this <sch:value-of select="substring-after(local-name(..),'define-')"/>
-                <xsl:if test="exists(../m:flag)">Should be (one of) <xsl:value-of select="../m:flag/@ref | ../m:define-flag/@name" separator=", "/></xsl:if></sch:assert>
+            <sch:assert test="@flag-name = (../m:flag/@ref|../m:define-flag/@name)">JSON key indicates no flag on this <sch:value-of select="substring-after(local-name(..),'define-')"/> <xsl:if test="exists(../m:flag | ../m:define-flag)">Should be (one of) <xsl:value-of select="../m:flag/@ref | ../m:define-flag/@name" separator=", "/></xsl:if></sch:assert>
         </sch:rule>
         
         <sch:rule context="m:json-value-key">
@@ -125,8 +118,7 @@
         </sch:rule>
         
         <sch:rule context="m:allowed-values/m:enum">
-            <sch:assert test="not(@value = preceding-sibling::*/@value)">Allowed value '<sch:value-of select="@value"/>' may only be
-                specified once for flag '<sch:value-of select="../../@name"/>'.</sch:assert>
+            <sch:assert test="not(@value = preceding-sibling::*/@value)">Allowed value '<sch:value-of select="@value"/>' may only be specified once for flag '<sch:value-of select="../../@name"/>'.</sch:assert>
             <sch:assert test="m:datatype-validate(@value,../../@as-type)">Value '<sch:value-of select="@value"/>' is not a valid token of type <sch:value-of select="../../@as-type"/></sch:assert>
         </sch:rule>
     </sch:pattern>

@@ -4,7 +4,7 @@
   - see metaschema/test-suite/worked-example
   - [x] Metaschema
   - [x] XProc for XSD
-  - [ ] Refactor XSD to new design
+  - [x] Refactor XSD to new design
   - [ ] Abstract Model Map
   - [ ] JSON Schema
   - [ ] XProc for docs production
@@ -51,7 +51,7 @@ Produce each of
 
 - XSD
 - JSON Schema
-- XSD for 'exploded' form?
+- XSD for 'exploded instance' ('supermodel XML') form?
 
 ### Produce transformers
 
