@@ -56,7 +56,7 @@
         <model>
             <field ref="title"/>
             <field ref="prose" in-xml="UNWRAPPED"/>
-            <assembly ref="zabaglione"/>
+            <field ref="line"/>
         </model>
     </define-assembly>
     
