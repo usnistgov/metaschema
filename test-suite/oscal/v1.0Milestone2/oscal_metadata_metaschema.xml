@@ -1,23 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- OSCAL CATALOG METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
-<?xml-model href="../../toolchains/xslt-proto-v04/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<?xml-stylesheet type="text/css" href="../../support/lib/metaschema-author.css" title="Author" alternate="no"?>
+<?xml-model href="../../build/metaschema/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/xsl" href="metaschema-browser.xsl"?>
+<?xml-stylesheet type="text/css" href="../../build/metaschema/lib/metaschema-author.css"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd"
-   xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-   xmlns:o="http://csrc.nist.gov/ns/oscal/example">
+            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:o="http://csrc.nist.gov/ns/oscal/example"
+            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../build/metaschema/lib/metaschema.xsd"
+            root="VALIDATION_root">
    <schema-name>OSCAL Document Metadata Description</schema-name>
    <schema-version>1.0.0-milestone2</schema-version>
    <short-name>oscal-metadata</short-name>
    <namespace>http://csrc.nist.gov/ns/oscal/1.0</namespace>
 
-   
-   
+   <define-assembly name="VALIDATION_root">
+      <formal-name>(nominal root)</formal-name>
+      <description>NOT TO BE USED IN A METASCHEMA</description>
+      <model>
+         <assembly ref="metadata"/>
+         <assembly ref="back-matter"/>
+         <field ref="description" in-xml="WITH_WRAPPER"/>
+         <field ref="remarks" in-xml="WITH_WRAPPER"/>
+         <field ref="party-id"/>
+         <assembly ref="annotation"/>
+         <assembly ref="responsible-party" max-occurs="unbounded">
+            <group-as name="responsible-parties" in-json="BY_KEY"/>
+         </assembly>
+      </model>
+      <remarks>
+         <p>This declaration provides a point of entry for validating the metaschema module standalone.</p>
+      </remarks>
+   </define-assembly>
    <define-assembly name="metadata">
       <formal-name>Publication metadata</formal-name>
       <description>Provides information about the publication and availability of the containing document.</description>
-      <root-name>metadata</root-name>
       <model>
          <field ref="title" min-occurs="1"/>
          <field ref="published"/>
@@ -30,20 +47,14 @@
          <field ref="doc-id" max-occurs="unbounded">
             <group-as name="document-ids"/>
          </field>
-         <define-field name="prop" max-occurs="unbounded">
-            <formal-name>Property</formal-name>
-            <description>A property or characteristic of the control.</description>
+         <field ref="prop" max-occurs="unbounded">
             <group-as name="properties"/>
-            <define-flag name="name">
-               <formal-name>Property Name</formal-name>
-               <description>Indicates a use, purpose or classification for the property.</description>
-               <constraint>
+            <flag ref="name">
                <allowed-values allow-other="yes">
                   <enum value="keywords">Used to provide a listing of keywords. This is typically used on a <code>prop</code> in the <code>metadata</code> to provide keywords for the document.</enum>
                </allowed-values>
-               </constraint>
-            </define-flag>
-         </define-field>
+            </flag>
+         </field>
          <field ref="link" max-occurs="unbounded">
             <group-as name="links"/>
          </field>
@@ -58,6 +69,15 @@
          </assembly>
          <assembly ref="responsible-party" max-occurs="unbounded">
             <group-as name="responsible-parties" in-json="BY_KEY"/>
+            <flag name="role-id" required="yes" as-type="NCName">
+               <formal-name>Responsible Role</formal-name>
+               <description>The role that the party is responsible for.</description>
+               <allowed-values allow-other="yes">
+                  <enum value="prepared-by">Indicates the organization that created this content.</enum>
+                  <enum value="prepared-for">Indicates the organization for which this content was created.</enum>
+                  <enum value="content-approver">Indicates the organization responsible for all content represented in the "document".</enum>
+               </allowed-values>
+            </flag>
          </assembly>
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
@@ -65,7 +85,6 @@
    <define-assembly name="back-matter">
       <formal-name>Back matter</formal-name>
       <description>A collection of citations and resource references.</description>
-      <root-name>back-matter</root-name>
       <model><!--<assemblies named="section"/>-->
          <assembly ref="resource" max-occurs="unbounded">
             <group-as name="resources"/>
@@ -104,51 +123,14 @@
          <field ref="prop" max-occurs="unbounded">
             <group-as name="properties"/>
          </field>
-<!-- Here we have an entire local declaration to support a simple constraint on @ref.
-         Let's consider instead elements 'constrain field' and 'constrain flag' that would layer
-         onto referenced declarations instead of replacing them.
-         
-         So this would be:
          <field ref="link" max-occurs="unbounded">
             <group-as name="links"/>
-            <constrain flag="rel">
-              <allowed-values>
-                 <enum value="source">Indicates that the href points to the source resource for the revision entry.</enum>
-              </allowed-values>
-            </constrain>
+            <flag ref="rel">
+               <allowed-values>
+                  <enum value="source">Indicates that the href points to the source resource for the revision entry.</enum>
+               </allowed-values>
+            </flag>
          </field>
-         Such constraints can map straight up to Schematron/JSONatron rules
-         
-         Then we can extend 'constrain' to support other tests -
-         low-hanging fruit for such tests can be found in the old OSCAL declarations logic.
-         
-         These include
-           tests for uniqueness/distinctiveness across scope
-           
-                  
-         
-         -->
-         <define-field name="link" max-occurs="unbounded">
-            <formal-name>Link</formal-name>
-            <description>A reference to a local or remote resource</description>
-            <json-value-key>text</json-value-key>
-            <group-as name="links"/>
-            <flag ref="href" required="yes"/>
-            <flag ref="rel"/>
-            <flag ref="media-type"/>
-            <define-flag name="rel" as-type="NCName">
-               <formal-name>Relation</formal-name>
-               <description>Describes the type of relationship provided by the link. This can be an indicator of the link's purpose.</description>
-               <constraint>
-                  <allowed-values>
-                     <enum value="source">Indicates that the href points to the source resource for the revision entry.</enum>
-                  </allowed-values>
-               </constraint>
-               <remarks>
-                  <p>TO DO: discuss IANA link relation registry.</p>
-               </remarks>
-            </define-flag>
-         </define-field>
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
       <remarks>
@@ -225,15 +207,12 @@
       <formal-name>Document Identifier</formal-name>
       <description>A document identifier qualified by an identifier <code>type</code>.</description>
       <json-value-key>identifier</json-value-key>
-      <define-flag name="type" required="yes">
-         <formal-name>Document Identifier Type</formal-name>
+      <flag ref="type" required="yes">
          <description>Qualifies the kind of document identifier.</description>
-         <constraint>
          <allowed-values allow-other="yes">
             <enum value="doi">A <a href="https://www.doi.org/hb.html">Digital Object Identifier</a> (DOI); use is preferred, since this allows for retrieval of a full bibliographic record.</enum>
          </allowed-values>
-         </constraint>
-      </define-flag>
+      </flag>
       <remarks>
          <p>A document identifier or name, qualified by a <code>type</code> that indicates the naming system of the identifier. A document identifier may provide a hint to the persistent location of <q>the same</q> or <q>another version</q> of the document.</p>
          <p>Specific usage rules, nomenclatures, and recognized file types (e.g., DOIs, CMS locators, etc.) may be defined at application level. The value of this field may also be a hash or checksum.</p>
@@ -250,18 +229,14 @@
       <formal-name>Property</formal-name>
       <description>A value with a name, attributed to the containing control, part, or group.</description>
       <json-value-key flag-name="name"/>
-      <flag ref="id"/>
-      <flag ref="ns"/>
-      <flag ref="class"/>
-      <define-flag name="name" required="yes">
-         <formal-name>Property Name</formal-name>
-         <description>Indicates a use, purpose or classification for the property.</description>
-         <constraint>
+      <flag ref="name" required="yes">
          <allowed-values allow-other="yes">
             <enum value="marking">A label or descriptor that is tied to a sensitivity or classification marking system. An optional class can be used to define the specific marking system used for the associated value.</enum>
          </allowed-values>
-         </constraint>
-      </define-flag>
+      </flag>
+      <flag ref="id"/>
+      <flag ref="ns"/>
+      <flag ref="class"/>
       <remarks>
          <p>Properties permit the deployment and management of arbitrary controlled values, with and among control objects (controls, parts, and extensions), for any purpose useful to an application or implementation of those controls. Typically, properties will be used to sort, select, order, and arrange controls or relate them to one another or to class hierarchies, taxonomies, or external authorities.</p>
          <p>The value of a property is a simple scalar value or list of values.</p>
@@ -280,10 +255,10 @@
       <flag ref="name" required="yes"/>
       <flag ref="id"/>
       <flag ref="ns"/>
-      <define-flag name="value" as-type="string">
+      <flag name="value" as-type="string">
          <formal-name>Value</formal-name>
          <description>Indicates the value of the characteristic.</description>
-      </define-flag>
+      </flag>
       <model>
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
@@ -388,7 +363,7 @@
          <field ref="person-name"/>
          <field ref="short-name"/>
          <field ref="org-name">
-            <!--<description>Affiliated organization</description>-->
+            <description>Affiliated organization</description>
          </field>
          <field ref="person-id" max-occurs="unbounded">
             <group-as name="person-ids"/>
@@ -524,16 +499,13 @@
    <define-assembly name="address">
       <formal-name>Address</formal-name>
       <description>A postal address.</description>
-      <define-flag name="type">
-         <formal-name>Type</formal-name>
+      <flag ref="type">
          <description>Indicates the type of address.</description>
-         <constraint>
          <allowed-values allow-other="yes">
             <enum value="home">A home address.</enum>
             <enum value="work">A work address.</enum>
          </allowed-values>
-         </constraint>
-      </define-flag>
+      </flag>
       <model>
          <field ref="addr-line" max-occurs="unbounded">
             <group-as name="postal-address"/>
@@ -573,17 +545,14 @@
       <formal-name>Telephone</formal-name>
       <description>Contact number by telephone</description>
       <json-value-key>number</json-value-key>
-      <define-flag name="type">
-         <formal-name>Type</formal-name>
+      <flag ref="type">
          <description>Indicates the type of phone number.</description>
-         <constraint>
          <allowed-values allow-other="yes">
             <enum value="home">A home phone number.</enum>
             <enum value="office">An office phone number.</enum>
             <enum value="mobile">A mobile phone number.</enum>
          </allowed-values>
-         </constraint>
-      </define-flag>
+      </flag>
    </define-field>
    <define-field name="url" as-type="uri">
       <formal-name>URL</formal-name>
@@ -661,7 +630,6 @@
    <define-flag name="algorithm" as-type="string">
       <formal-name>Hash algorithm</formal-name>
       <description>Method by which a hash is derived</description>
-      <constraint>
       <allowed-values allow-other="yes">
          <enum value="SHA-224"/>
          <enum value="SHA-256"/>
@@ -669,7 +637,6 @@
          <enum value="SHA-512"/>
          <enum value="RIPEMD-160"/>
       </allowed-values>
-      </constraint>
       <remarks>
          <p>Valid values MUST be a value defined in the W3C <a href="http://www.w3.org/TR/xmlsec-algorithms/#digest-method">XML Security Algorithm Cross-Reference</a> Digest Methods (W3C, April 2013).</p>
       </remarks>
@@ -702,17 +669,10 @@
       <formal-name>Responsible Party</formal-name>
       <description>A reference to a set of organizations or persons that have responsibility for performing a referenced role relative to the parent context.</description>
       <json-key flag-name="role-id"/>
-      <define-flag name="role-id" required="yes" as-type="NCName">
+      <flag name="role-id" required="yes" as-type="NCName">
          <formal-name>Responsible Role</formal-name>
          <description>The role that the party is responsible for.</description>
-      <constraint>
-         <allowed-values allow-other="yes">
-            <enum value="prepared-by">Indicates the organization that created this content.</enum>
-            <enum value="prepared-for">Indicates the organization for which this content was created.</enum>
-            <enum value="content-approver">Indicates the organization responsible for all content represented in the "document".</enum>
-         </allowed-values>
-      </constraint>
-      </define-flag>
+      </flag>
       <model>
          <field ref="party-id" min-occurs="1" max-occurs="unbounded">
             <group-as name="party-ids"/>
@@ -777,10 +737,10 @@
       <formal-name>File Name</formal-name>
       <description>Name of the file before it was encoded as Base64 to be embedded in a <code>resource</code>. This is the name that will be assigned to the file when the file is decoded.</description>
    </define-flag>
-   <!--<define-field name="description" as-type="markup-multiline">
+   <define-field name="description" as-type="markup-multiline">
       <formal-name>Description</formal-name>
       <description>A description supporting the parent item.</description>
-   </define-field>-->
+   </define-field>
 
    <define-field name="remarks" as-type="markup-multiline">
       <formal-name>Remarks</formal-name>
