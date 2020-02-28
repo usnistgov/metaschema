@@ -25,9 +25,14 @@
     <p:pipe        port="result" step="build-model-map"/>
   </p:output>
   
-  <p:serialization port="d.xml-model-map" indent="true"/>
-  <p:output        port="d.xml-model-map" primary="false">
-    <p:pipe        port="result" step="make-xml-model-map"/>
+  <p:serialization port="d.exploded-model-map" indent="true"/>
+  <p:output        port="d.exploded-model-map" primary="false">
+    <p:pipe        port="result" step="explode-model-map"/>
+  </p:output>
+  
+  <p:serialization port="e.xml-element-tree" indent="true"/>
+  <p:output        port="e.xml-element-tree" primary="false">
+    <p:pipe        port="result" step="make-xml-element-tree"/>
   </p:output>
   
   <p:serialization port="f.final" indent="true" method="xml" omit-xml-declaration="false"/>
@@ -55,7 +60,19 @@
     </p:input>
   </p:xslt>
   
-  <p:xslt name="make-xml-model-map">
+  <p:xslt name="explode-model-map">
+    <p:input port="stylesheet">
+      <p:document href="document/explode-model-map.xsl"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:xslt name="make-xml-element-tree">
+    <p:input port="stylesheet">
+      <p:document href="document/xml-element-tree.xsl"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:xslt name="render-xml-model-map">
     <p:input port="stylesheet">
       <p:document href="document/xml-element-map-html.xsl"/>
     </p:input>
