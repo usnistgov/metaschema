@@ -34,6 +34,8 @@
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
     
+<!--    <xsl:template match="METASCHEMA//METASCHEMA//root-name" priority="5" mode="digest"/>    
+-->    
     <xsl:template match="formal-name//text() | description//text() | p//text()" mode="digest">
         <xsl:value-of select="replace(.,'\s+',' ')"/>
     </xsl:template>
