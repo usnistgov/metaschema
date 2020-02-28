@@ -184,7 +184,7 @@
     </xsl:function>
     
     <xsl:template match="m:define-assembly | m:define-field | m:define-flag" mode="nm:get-identifiers">
-        <xsl:sequence select="m:root-name,(m:use-name,@name)[1]"/>
+        <xsl:sequence select="m:root-name,(m:use-name,@name)[1], m:group-as/@name"/>
     </xsl:template>
     
     <xsl:template match="m:assembly[exists(m:use-name)] |
