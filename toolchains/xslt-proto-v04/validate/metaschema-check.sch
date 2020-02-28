@@ -138,7 +138,9 @@
     <!-- 0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|0#0|-->
     
     
-
+    <xsl:key name="definition-by-name" match="m:METASCHEMA/m:define-assembly |
+        m:METASCHEMA/m:define-field | m:METASCHEMA/m:define-flag" use="@name"/>
+    
     <xsl:key name="definition-for-reference" match="m:METASCHEMA/m:define-assembly" use="@name || ':ASSEMBLY'"/>
     <xsl:key name="definition-for-reference" match="m:METASCHEMA/m:define-field"    use="@name || ':FIELD'"/>
     <xsl:key name="definition-for-reference" match="m:METASCHEMA/m:define-flag"     use="@name || ':FLAG'"/>
