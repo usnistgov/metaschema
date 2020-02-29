@@ -1,6 +1,44 @@
-# Notation
+# Addressing - returning objects (branches)
 
-Addressing - returning objects (branches)
+We are probably not able to express the query semantics we need entirely via tagging; a concise XPath-like notation is probably necessary.
+
+Even if only a desideratum, designing such a notation - and perhaps maintaining a semantic-equivalent representation using tagging if possible - while keeping an effective XPath mapping running under tests - helps us understand the requirements.
+
+So the examples below use a mix of explicit tagging semantics, and a specialized notation we inevitably call *Metapath*.
+
+## Metapath
+
+Metapath is XPath for Metaschema. It maps to equivalent XPath (for XML) or to a JSON addressing syntax as needed. It assumes a metaschema as a backbone, meaning its data model the Metaschema data model.
+
+### Data model
+
+Metaschema archictures are made of assemblies, which are composite data objects. They consist of an amalgam of assemblies and fields, with flags. The assemblies can have flags, and so can the fields.
+
+This assembly of assemblies can be represented as a tree structure in which assemblies branch from one another. A structure described by a metaschema must always take this tree form, even if Metapath semantics (herein explained) make it possible to assert and enforcement alignment or "echoing" between branches, making it possible for such documents to represent arbitrary graph structures. But without such enforcement a basic metaschema model as derived from a parsed instance, will be a tree without cycles, 'tangles' or overlap.
+
+Within this model, fields are special types of assemblies, which have nominal designated *values*. Every field has a value (whose name or label may be configured by the metaschema) whose type is declared and enforced in the metaschema. Thus the raw data contents of arbitrary marked-up content, produced for or outside of the metaschema's purview, can be represented. (While the metaschema does not support *arbitrary* mixed content, it provides an 80%-adequate, Markdown-friendly subset of what is commonly found in rough prose. In future its prose model may also be re/pluggable.)
+
+Both assemblies and fields may additionally be enhanced with flags, which provide for further qualification, enhancement, specification and characterization of data over and above the raw contents typically assigned to fields.
+
+This tripartite organization has the feature of composability, but only up to a point. By design, it stipulates a boundary point beyond which it will not try to assert data description. This boundary point is the point where data becomes (what we loosely call) "prose", namely ordered contents whose semantic description is typically *weak* and almost inevitably *implicit* in its features.
+
+There are technologies that seek to provide for strong semantic characterization "all the way down" into arbitrary mixed contents: indeed all the great XML architectures (TEI, DITA, OASIS Docbook, NISO JATS/BITS/STS) can lay claim to offering this. These technologies can and should be brought to bear in systems using Metaschema-defined data, when such characterization is necessary. In contrast to all of these -- and complementary to them -- Metaschema offers a different tradeoff. The challenge is to identify where "murky ponds" of prose are permissible. Indeed the problem is not the murky ponds, but the fact that they hide information. If that information can *additionally* be abstracted and expressed, the murky pond where it lies latent does not actually need to be drained. We can keep it for any reason.
+
+Accordingly Metaschema provides a means to extend a more rigorous data description than can be achieved using XML technologies unassisted. Indeed the Metaschema data model is designed to be roughly at par, in its semantic richness, to XML documentary systems in which data is well-regulated -- at the point, in fact, where such systems overlap with the more rigorously enforced and more regular data sets found at higher operational levels.
+
+Because the Metaschema architecture limits the builder, it offers certain affordances. The kinds of things it can describe at all, it should be able to describe very well, in the sense that it will provide a means to enforce the constraints it declares, operationally, and thus give the designer access to a means of deploying, in a working system, programmatic means of checking and enforcing the constraints.
+
+Oh - and it does this equivalently over XML and JSON- or YAML-friendly object models. It is formally agnostic to how the information is encoded locally as long as its mapping into the Metaschema model is deterministic and known.
+
+The model of a document described by a metaschema takes the form of a tree.
+
+Assemblies are branches, which can have branches and leaves (flags).
+
+Fields are terminal branches, which can (like assemblies) have flags, but which can also have nominal values.
+
+The sequence of hierarchy is always a nesting of assemblies, with fields at various levels, and flags everywhere.
+
+### Notation
 
 . the current branch (equiv XPath self::node())
 ^flag - a flag named 'flag' (XPath @flag)
@@ -21,8 +59,12 @@ replace($str,$replace,$replacement)
 #ac-1 - an assembly or field with the id 'ac-1'
 :title - a field named 'title'
 :prop^name - a flag 'name' on a field 'prop'
+[] filter expression
 :prop[^name] - a field 'prop' with a flag 'name'
 :prop[^name='label'] - a 'prop' with 'name' flag equal 'label'
+
+'token' - a string token (must match \i\c* )
+"string" - a string (Unicode)
 
 $var - a variable reference
 || - a string concatenator
@@ -39,7 +81,7 @@ For = and !=
  
   "declare identity" enabling 
 
-    e.g. compare @id flags
+    e.g. compare @id flags?
 	
 
 # Worked examples
@@ -133,13 +175,13 @@ Index definitions (for key-based retrievals)
 
 ```xml
 <define-index name="param-by-id" assembly="param">
-  <using><value of="$param^id"/></using>
+  <using><value of="^id"/></using>
 </define-index>
 ```
 
 ```xml
 <define-index name="control-by-label" assembly="control">
-<using><value of=":prop[^name='label']"/></using>
+  <using><value of=":prop[^name='label']"/></using>
 </define-index>
 ```
 
@@ -168,6 +210,7 @@ this is equivalent to
 <define-index name="link-targets" assembly="part"    by-flag="id"/>
 
 <define-flag name="href">
+  <constrain>
     <let name="target_ID" be="replace(.,'^#','')"/>
     <require>
       <one-of>
@@ -186,6 +229,20 @@ this is equivalent to
     <value of="replace('^#','')"/>
 </let>
 ```
+
+hmmm
+
+```xml
+<require>
+ <one-of>
+   <field within="catalog" occurrence="one-only"> <!-- notice any field will do here -->
+     <flag name="id" with=".=$target_ID"/>
+   </field>
+   <assembly with="^id=$target_ID" within="catalog" occurrence="one-only"/>
+ </one-of>
+</require>
+```
+	
   
 # Model so far
 
