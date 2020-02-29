@@ -73,7 +73,7 @@ replace($str,$replace,$replacement)
 *However* - any of `@` or `:` or `^` may be abbreviated as `/` and cast to XPath '//'
 (i.e. it is 'greedy' wrt the descent)
 
-So `@control/@control[:id='ac-2.1']` is the same as `/control[:id='ac-2.1'] is the same as `#ac-2.1`
+So `@control/@control[:id='ac-2.1']` is the same as `/control[:id='ac-2.1']` is the same as `#ac-2.1`
 
 
 `$var` - a variable reference
@@ -125,12 +125,12 @@ If an assembly has flag X=x1, then field Y must be one of y1, y2, y3
   <model>
 	<field ref="Y">
 	  <constrain when="$Xx='x1'> <!-- the condition can now be set in the context of field Y -->
-		  <allowed-values>
-		    <enum>y1</enum>
-			<enum>y2</enum>
-			<enum>y3</enum>
-		  </allowed-values>
-		</constrain> 
+  	    <allowed-values>
+	  	  <enum>y1</enum>
+		  <enum>y2</enum>
+	      <enum>y3</enum>
+	    </allowed-values>
+	  </constrain> 
 	</field>
   </model>
 </define-assembly>
@@ -149,7 +149,7 @@ If an assembly has flag X=x1, then field Y must be one of y1, y2, y3
 control contains a single prop[^name='label']
 control contains no prop elements not named 'label'
 
-```
+```xml
 <define-assembly name="control">
   <constrain>
     <require>
