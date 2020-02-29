@@ -20,19 +20,15 @@ Within this model, fields are special types of assemblies, which have nominal de
 
 Both assemblies and fields may additionally be enhanced with flags, which provide for further qualification, enhancement, specification and characterization of data over and above the raw contents typically assigned to fields.
 
-This tripartite organization has the feature of composability, but only up to a point. By design, it stipulates a boundary point beyond which it will not try to assert data description. This boundary point is the point where data becomes (what we loosely call) "prose", namely ordered contents whose semantic description is typically *weak* and almost inevitably *implicit* in its features.
+This tripartite organization has the feature of composability, but only up to a point. By design, it stipulates a boundary point beyond which it will not try to assert data description. This boundary point is the point where data becomes (what we loosely call) "prose", namely ordered contents whose semantic description is typically *weak* and almost inevitably *implicit* in its features. This is what distinguishes Metaschema in its approach to data description: it accommodates 'rich' contents up to some definition of that, while nevertheless restricting itself to forms that are easily cast into a useful representation, in object-oriented systems that do not offer the same means as markup vocabularies of describing "semantic soup".
 
-There are technologies that seek to provide for strong semantic characterization "all the way down" into arbitrary mixed contents: indeed all the great XML architectures (TEI, DITA, OASIS Docbook, NISO JATS/BITS/STS) can lay claim to offering this. These technologies can and should be brought to bear in systems using Metaschema-defined data, when such characterization is necessary. In contrast to all of these -- and complementary to them -- Metaschema offers a different tradeoff. The challenge is to identify where "murky ponds" of prose are permissible. Indeed the problem is not the murky ponds, but the fact that they hide information. If that information can *additionally* be abstracted and expressed, the murky pond where it lies latent does not actually need to be drained. We can keep it for any reason.
+There are technologies that seek to provide for strong semantic characterization "all the way down" into arbitrary mixed contents: indeed all the great XML architectures (TEI, DITA, OASIS Docbook, NISO JATS/BITS/STS) can lay claim to offering this. These technologies can and should be brought to bear in systems using Metaschema-defined data, when such characterization is necessary. In contrast to all of these -- and complementary to them -- Metaschema offers a different tradeoff. The challenge is to identify where "murky ponds" of prose are permissible. Indeed the problem is not the murky ponds, but the fact that they hide information. If that information can *additionally* be abstracted and expressed, the murky pond where it lies latent does not actually need to be drained. We can keep it for any reason. This puts Metaschema at a pivot point between rich markup description (documentary data), and structured data (objects, databases) such as are typically deployed for large-scale data aggregation and processing.
 
-Accordingly Metaschema provides a means to extend a more rigorous data description than can be achieved using XML technologies unassisted. Indeed the Metaschema data model is designed to be roughly at par, in its semantic richness, to XML documentary systems in which data is well-regulated -- at the point, in fact, where such systems overlap with the more rigorously enforced and more regular data sets found at higher operational levels.
-
-Because the Metaschema architecture limits the builder, it offers certain affordances. The kinds of things it can describe at all, it should be able to describe very well, in the sense that it will provide a means to enforce the constraints it declares, operationally, and thus give the designer access to a means of deploying, in a working system, programmatic means of checking and enforcing the constraints.
-
-Oh - and it does this equivalently over XML and JSON- or YAML-friendly object models. It is formally agnostic to how the information is encoded locally as long as its mapping into the Metaschema model is deterministic and known.
+In the limitations imposed by Metaschema on the builder, it offers certain affordances. The kinds of things it can describe at all, it should be able to describe very well. If it works, it should work in two ways, by providing for transparency and ease of use, while also offering greateer capability. Specifically, the capabilities offered by Metaschema include, over and above its neutrality between XML and JSON or YAML, its usefulness as a *modeling and constraint definition language*.
 
 The model of a document described by a metaschema takes the form of a tree.
 
-Assemblies are branches, which can have branches and leaves (flags).
+In this tree, the assemblies are branches, which can have branches and leaves (flags).
 
 Fields are terminal branches, which can (like assemblies) have flags, but which can also have nominal values.
 
@@ -54,21 +50,37 @@ Operations - return strings
 
 replace($str,$replace,$replacement)
 
-@control - an assembly named 'control'
-^id - a flag named 'id'
-#ac-1 - an assembly or field with the id 'ac-1'
-:title - a field named 'title'
-:prop^name - a flag 'name' on a field 'prop'
-[] filter expression
-:prop[^name] - a field 'prop' with a flag 'name'
-:prop[^name='label'] - a 'prop' with 'name' flag equal 'label'
+`@control` - an assembly named 'control'
 
-'token' - a string token (must match \i\c* )
-"string" - a string (Unicode)
+`^id` - a flag named 'id'
 
-$var - a variable reference
-|| - a string concatenator
-node operators: union, intersect, except
+`#ac-1` - an assembly or field with the id 'ac-1'
+
+`:title` - a field named 'title'
+
+`:prop^name` - a flag 'name' on a field 'prop'
+
+`[]` filter expression
+
+`:prop[^name]` - a field 'prop' with a flag 'name'
+
+`:prop[^name='label']` - a 'prop' with 'name' flag equal 'label' alias `prop[name='label']`
+
+`'token'` - a string token (must match `\i\c*` )
+
+`"string"` - a string (Unicode)
+
+*However* - any of `@` or `:` or `^` may be abbreviated as `/` and cast to XPath '//'
+(i.e. it is 'greedy' wrt the descent)
+
+So `@control/@control[:id='ac-2.1']` is the same as `/control[:id='ac-2.1'] is the same as `#ac-2.1`
+
+
+`$var` - a variable reference
+
+`||` - a string concatenator
+
+node operators: `union`, `intersect`, `except`
 
 For = and !=
   flags and fields are cast to their respective string values
