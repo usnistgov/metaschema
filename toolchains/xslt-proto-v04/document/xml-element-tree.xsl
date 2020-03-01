@@ -14,11 +14,11 @@
     <xsl:template match="assembly | field | group">
         <element>
             <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
-                <xsl:apply-templates/>
+            <xsl:apply-templates/>
         </element>
     </xsl:template>
     
-    <xsl:template match="group[@in-xml='hidden']">
+    <xsl:template match="group[@in-xml='HIDDEN']">
         <xsl:apply-templates/>
     </xsl:template>
     
@@ -28,8 +28,17 @@
         </attribute>
     </xsl:template>
     
-    <xsl:template match="field[@as-type='markup-multiline'][@in-xml='UNWRAPPED']">
-        <unwrapped-prose-sequence/>
+    <xsl:template priority="2" match="field[@as-type='markup-multiline'][@in-xml='UNWRAPPED']">
+        <block-sequence/>
+    </xsl:template>
+    
+    <xsl:template match="field[@as-type='markup-multiline']">
+        <element>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates/>
+            <block-sequence/>
+        </element>
+        
     </xsl:template>
     
 </xsl:stylesheet>

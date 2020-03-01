@@ -9,6 +9,7 @@
     exclude-result-prefixes="#all"
     version="3.0">
     
+    
     <xsl:template match="/METASCHEMA">
         <map>
             <xsl:apply-templates select="child::*[exists(root-name)]" mode="build"/>
@@ -25,6 +26,7 @@
         <xsl:param name="group-json" select="group-as/@in-json"/>
         <xsl:param name="group-xml" select="group-as/@in-xml"/>
         <xsl:param name="in-xml" select="()"/>
+        <xsl:param name="allowed-values" select="()"/>
         <xsl:param name="visited" select="()" tunnel="true"/>
         <xsl:variable name="type" select="replace(local-name(),'^define\-','')"/>
         
@@ -52,6 +54,7 @@
                     <xsl:with-param name="visited" tunnel="true" select="$visited, string(@name)"/>
                 </xsl:apply-templates>
             </xsl:if>
+            <xsl:apply-templates select="$allowed-values" mode="build"/>
         </xsl:element>
     </xsl:template>
     
@@ -78,6 +81,7 @@
             <xsl:attribute name="name" select="(@name,@ref)[1]"/>
             <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
             <xsl:apply-templates select="@*" mode="build"/>
+            <xsl:apply-templates select="constraint/allowed-values" mode="build"/>
         </flag>
     </xsl:template>
     
@@ -91,7 +95,19 @@
             <xsl:with-param name="group-json" select="group-as/@in-json"/>
             <xsl:with-param name="group-xml" select="group-as/@in-xml"/>
             <xsl:with-param name="in-xml" select="@in-xml"/>
+            <xsl:with-param name="allowed-values" select="constraint/allowed-values"></xsl:with-param>
         </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template match="allowed-values" mode="build">
+        <xsl:copy-of select="@allow-other"/>
+        <xsl:apply-templates select="node() | @*" mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template match="enum" mode="build">
+        <xsl:copy>
+            <xsl:value-of select="@value"/>
+        </xsl:copy>
     </xsl:template>
     
     <!--<xsl:template mode="build" match="description | remarks">
