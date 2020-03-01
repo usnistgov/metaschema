@@ -47,7 +47,7 @@
                 <xsl:attribute name="group-name" select="."/>
             </xsl:for-each>
             <xsl:if test="not(@name = $visited)">
-                <xsl:apply-templates select="flag" mode="build"/>
+                <xsl:apply-templates select="define-flag | flag" mode="build"/>
                 <xsl:apply-templates select="model" mode="build">
                     <xsl:with-param name="visited" tunnel="true" select="$visited, string(@name)"/>
                 </xsl:apply-templates>
@@ -74,7 +74,7 @@
     </xsl:template>
     
     <xsl:template match="flag | define-flag" mode="build">
-        <flag max-occurs="1" min-occurs="{if (@required='yes') then 1 else 0}">
+        <flag max-occurs="1" min-occurs="{if (@required='yes') then 1 else 0}" as-type="string">
             <xsl:attribute name="name" select="(@name,@ref)[1]"/>
             <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
             <xsl:apply-templates select="@*" mode="build"/>
