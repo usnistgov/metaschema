@@ -12,27 +12,13 @@ Metapath is XPath for Metaschema. It maps to equivalent XPath (for XML) or to a 
 
 ### Data model
 
-Metaschema archictures are made of assemblies, which are composite data objects. They consist of an amalgam of assemblies and fields, with flags. The assemblies can have flags, and so can the fields.
+In the Metaschema model, a document is an assembly comprised of assemblies. An assembly is an arbitrary but controlled amalgamation of data objects.
 
-This assembly of assemblies can be represented as a tree structure in which assemblies branch from one another. A structure described by a metaschema must always take this tree form, even if Metapath semantics (herein explained) make it possible to assert and enforcement alignment or "echoing" between branches, making it possible for such documents to represent arbitrary graph structures. But without such enforcement a basic metaschema model as derived from a parsed instance, will be a tree without cycles, 'tangles' or overlap.
+Objects grouped with an assembly include both assemblies, and fields, a specialized kind of assembly that carries, instead of assemblies of its own, a nominal *value* -- arbitrary, typed strings. Within an assembly, all assemblies and fields are labeled and (when appropriate) grouped for addressing.
 
-Within this model, fields are special types of assemblies, which have nominal designated *values*. Every field has a value (whose name or label may be configured by the metaschema) whose type is declared and enforced in the metaschema. Thus the raw data contents of arbitrary marked-up content, produced for or outside of the metaschema's purview, can be represented. (While the metaschema does not support *arbitrary* mixed content, it provides an 80%-adequate, Markdown-friendly subset of what is commonly found in rough prose. In future its prose model may also be re/pluggable.)
+Additionally, both assemblies and fields may have *flags*, a simple name-value pair that provides for additional information to be associated with them. Assemblies and fields are not limited in how large or complex they may be.
 
-Both assemblies and fields may additionally be enhanced with flags, which provide for further qualification, enhancement, specification and characterization of data over and above the raw contents typically assigned to fields.
-
-This tripartite organization has the feature of composability, but only up to a point. By design, it stipulates a boundary point beyond which it will not try to assert data description. This boundary point is the point where data becomes (what we loosely call) "prose", namely ordered contents whose semantic description is typically *weak* and almost inevitably *implicit* in its features. This is what distinguishes Metaschema in its approach to data description: it accommodates 'rich' contents up to some definition of that, while nevertheless restricting itself to forms that are easily cast into a useful representation, in object-oriented systems that do not offer the same means as markup vocabularies of describing "semantic soup".
-
-There are technologies that seek to provide for strong semantic characterization "all the way down" into arbitrary mixed contents: indeed all the great XML architectures (TEI, DITA, OASIS Docbook, NISO JATS/BITS/STS) can lay claim to offering this. These technologies can and should be brought to bear in systems using Metaschema-defined data, when such characterization is necessary. In contrast to all of these -- and complementary to them -- Metaschema offers a different tradeoff. The challenge is to identify where "murky ponds" of prose are permissible. Indeed the problem is not the murky ponds, but the fact that they hide information. If that information can *additionally* be abstracted and expressed, the murky pond where it lies latent does not actually need to be drained. We can keep it for any reason. This puts Metaschema at a pivot point between rich markup description (documentary data), and structured data (objects, databases) such as are typically deployed for large-scale data aggregation and processing.
-
-In the limitations imposed by Metaschema on the builder, it offers certain affordances. The kinds of things it can describe at all, it should be able to describe very well. If it works, it should work in two ways, by providing for transparency and ease of use, while also offering greateer capability. Specifically, the capabilities offered by Metaschema include, over and above its neutrality between XML and JSON or YAML, its usefulness as a *modeling and constraint definition language*.
-
-The model of a document described by a metaschema takes the form of a tree.
-
-In this tree, the assemblies are branches, which can have branches and leaves (flags).
-
-Fields are terminal branches, which can (like assemblies) have flags, but which can also have nominal values.
-
-The sequence of hierarchy is always a nesting of assemblies, with fields at various levels, and flags everywhere.
+A Metapath expression, reading from left to right going "down" the hierarchy, will always proceed from assemblies to fields to flags.
 
 ### Notation
 
@@ -40,6 +26,11 @@ The sequence of hierarchy is always a nesting of assemblies, with fields at vari
 ^flag - a flag named 'flag' (XPath @flag)
 
 name  - a field or assembly branch of the current branch, named 'name'
+@name - an assembly named 'name'
+:name - a field named 'name'
+/ - an abbreviation for `@` or `:` or '^' (as informed by a metaschema)
+
+So `/control/name` is the same as `@control^name`
 
 Operations - return booleans
 
@@ -275,7 +266,7 @@ unique { attribute within { text } }
 
 require { (test | assembly | field | flag | one-of | any-of )* }
 
-forbid  { (test | assembly | field | flag | one-of | any-of )* }
+forbid  { (test | assembly | field | flag)* }
 
 one-of { (require*, forbid*) }
 
