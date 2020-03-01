@@ -12,12 +12,14 @@
     <xsl:mode on-no-match="shallow-copy"/>
     
     <xsl:template match="*[exists(@group-name)]">
-        <group name="{@group-name}" in-xml="{ if (@group-xml='GROUPED') then 'shown' else 'hidden' }">
-            <xsl:attribute name="min-occurs" select="(@min-occurs,'0')[1]"/>
-            <xsl:attribute name="max-occurs" select="(@max-occurs,'0')[1]"/>
+        <group name="{@group-name}" in-xml="{ if (@group-xml='GROUPED') then 'SHOWN' else 'HIDDEN' }" max-occurs="1" min-occurs="{ if (@min-occurs='0') then '0' else '1'}">
             <xsl:next-match/>
         </group>
     </xsl:template>
+    
+    <!--<xsl:template match="*[exists(@group-name)]/@min-occurs[.='0']">
+        <xsl:attribute name="min-occurs">1</xsl:attribute>
+    </xsl:template>-->
     
    
 </xsl:stylesheet>
