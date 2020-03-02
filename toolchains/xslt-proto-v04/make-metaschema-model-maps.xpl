@@ -64,7 +64,11 @@
   
   <p:identity name="composed"/>
   
+  <!--<p:identity  name="render-xml-model-map"/>-->
   <p:xslt name="build-model-map">
+    <p:input port="source">
+      <p:pipe port="result" step="composed"/>
+    </p:input>
     <p:input port="stylesheet">
       <p:document href="document/build-model-map.xsl"/>
     </p:input>

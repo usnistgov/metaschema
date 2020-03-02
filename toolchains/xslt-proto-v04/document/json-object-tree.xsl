@@ -41,11 +41,50 @@
     
     <xsl:template match="@max-occurs"/>-->
     
-    <xsl:template match="assembly | field">
+    <xsl:template match="assembly">
         <object>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs"/>
             <xsl:apply-templates/>
         </object>
+    </xsl:template>
+    
+    <xsl:template match="field">
+        <object>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs"/>
+            <xsl:apply-templates mode="field-value" select="."/>
+            <xsl:apply-templates select="flag"/>
+        </object>
+    </xsl:template>
+    
+    <xsl:template match="field" mode="field-value">
+        <string name="STRVALUE" min-occurs="0" max-occurs="1">
+            <xsl:apply-templates select="@as-type"/>
+        </string>
+    </xsl:template>
+    
+    <xsl:template match="field[@as-type='markup-line']" mode="field-value">
+        <string name="RICHTEXT" min-occurs="0" max-occurs="1">
+            <xsl:apply-templates select="@as-type"/>
+        </string>
+    </xsl:template>
+    
+    <xsl:template match="field[@as-type='markup-multiline']" mode="field-value">
+        <string name="PROSE" min-occurs="0" max-occurs="1">
+            <xsl:apply-templates select="@as-type"/>
+        </string>
+    </xsl:template>
+    
+    <xsl:template priority="2" match="field[matches(@json-value-key,'\S')]" mode="field-value">
+        <string name="{@json-value-key}" min-occurs="0" max-occurs="1">
+            <xsl:apply-templates select="@as-type"/>
+        </string>
+    </xsl:template>
+    
+    <!-- required so we have a value for the required implicit flag (whose value is designated in this name) -->
+    <xsl:template priority="3" match="field[matches(@json-value-flag,'\S')]" mode="field-value">
+        <string name="{{{{{@json-value-flag}}}}}" min-occurs="1" max-occurs="1">
+            <xsl:apply-templates select="@as-type"/>
+        </string>
     </xsl:template>
     
     <xsl:template match="field[empty(flag)]">
@@ -82,6 +121,26 @@
             <xsl:apply-templates/>
         </group-by-key>
     </xsl:template>
+    
+    <xsl:template match="group[@in-json='BY_KEY']/assembly | group[@in-json='BY_KEY']/field">
+        <object name="{{{{@json-key-flag}}}}">
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates/>
+        </object>
+    </xsl:template>
+    
+    <xsl:template priority="3" match="group[@in-json='BY_KEY']/field[not(flag/@name != @json-key-flag)]">
+        <string name="{{{{@json-key-flag}}}}">
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates/>
+        </string>
+    </xsl:template>
+    
+    <!-- Suppressing flags when they are presented as keys on a value (json-value-flag) -->
+    <xsl:template match="flag[@name=../@json-value-flag]"/>
+    
+    <!-- ... and when they are presented as keys on an object (json-key-flag) -->
+    <xsl:template match="flag[@name=../@json-key-flag]"/>
     
     <xsl:template match="flag">
         <string>

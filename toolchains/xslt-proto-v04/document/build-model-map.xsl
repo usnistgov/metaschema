@@ -31,6 +31,9 @@
         <xsl:variable name="type" select="replace(local-name(),'^define\-','')"/>
         
         <xsl:element name="{ $type }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+            <xsl:for-each select="self::define-field">
+              <xsl:attribute name="as-type">string</xsl:attribute>
+            </xsl:for-each>
             <xsl:apply-templates select="@*" mode="build"/>
             <xsl:attribute name="min-occurs" select="$minOccurs"/>
             <xsl:attribute name="max-occurs" select="$maxOccurs"/>
@@ -80,6 +83,7 @@
         <flag max-occurs="1" min-occurs="{if (@required='yes') then 1 else 0}" as-type="string">
             <xsl:attribute name="name" select="(@name,@ref)[1]"/>
             <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
+            <xsl:attribute name="as-type">string</xsl:attribute>
             <xsl:apply-templates select="@*" mode="build"/>
             <xsl:apply-templates select="constraint/allowed-values" mode="build"/>
         </flag>
