@@ -225,11 +225,18 @@ this is equivalent to
 </define-flag>
 
 <let name="x">
-  <replace value="'^#'" with="''"/>
+  <replace replacing="'^#'" with="''"/>
 </let>
   
 <let name="x">
-    <value of="replace('^#','')"/>
+    <value of="replace(.,'^#','')"/>
+</let>
+
+<let name="x">
+    <eval function="replace">
+	  <arg>.</arg>
+	  <arg>'^#'</arg>
+	  <arg>''</arg>
 </let>
 ```
 
@@ -245,8 +252,40 @@ hmmm
  </one-of>
 </require>
 ```
-	
-  
+
+
+'label' property on control must match regex:
+
+```xml
+<define-flag name="prop">
+  <constrain when=":name='label'">
+    <let name="regex" be="(AC|AT|MP)\-\d\d?"/>
+    <require>
+      <test eval="matches(.,$regex)">The label matches regex { $regex }</test>
+    </require>
+  </constrain>
+</define-flag>
+```	
+
+... or ...
+
+```xml
+<define-flag name="prop">
+  <constrain when="name='label'">
+    <!-- alternative syntax: ^name='label' -->
+    <let name="regex" be="(AC|AT|MP)\-\d\d?"/>
+    <require>
+      <test function="regex-match">
+	    <arg>.</arg>
+	    <arg>$regex</arg>
+	    <report>The label matches regex { $regex }</report>
+	  </test>
+    </require>
+  </constrain>
+</define-flag>
+```	
+
+
 # Model so far
 
 reduced rnc-like notation:
@@ -271,3 +310,11 @@ forbid  { (test | assembly | field | flag)* }
 one-of { (require*, forbid*) }
 
 any-of { (require*, forbid*) }
+
+assembly { flag*, field*, test* }
+
+field { flag*, test* }
+
+flag { test* }
+
+```

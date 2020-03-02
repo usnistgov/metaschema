@@ -69,6 +69,7 @@ span.OM-lit, .OM-cardinality { font-family: serif; font-weight: normal; color: m
          <xsl:apply-templates select="." mode="contents"/>
       </xsl:variable>
       <p class="OM-entry">
+         <xsl:text>&#x25fc; </xsl:text>
          <xsl:text>&lt;</xsl:text>
          <a class="OM-name" href="{ $path-to-docs }#{ $model-label}_{ @name }">
             <xsl:value-of select="@name"/>
@@ -126,6 +127,7 @@ span.OM-lit, .OM-cardinality { font-family: serif; font-weight: normal; color: m
 
    <xsl:template mode="html-render" match="m:field[@as-type='markup-multiline'][not(@in-xml='WITH_WRAPPER')]">
       <p class="OM-entry">
+         <xsl:text>&#x25fc; </xsl:text>
          <xsl:call-template name="describe-prose"/>
       </p>
    </xsl:template>
