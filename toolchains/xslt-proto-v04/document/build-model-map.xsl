@@ -20,7 +20,7 @@
     
     <xsl:template match="define-assembly | define-field" mode="build">
         <xsl:param name="minOccurs" select="(@min-occurs,'0')[1]"/>
-        <xsl:param name="maxOccurs" select="(@max-occurs,'0')[1]"/>
+        <xsl:param name="maxOccurs" select="(@max-occurs,'1')[1]"/>
         <xsl:param name="use-name" select="use-name"/>
         <xsl:param name="group-name" select="group-as/@name"/>
         <xsl:param name="group-json" select="group-as/@in-json"/>
