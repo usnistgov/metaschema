@@ -140,6 +140,9 @@
             <formal-name>Property</formal-name>
             <description>A property or characteristic of the part.</description>
             <group-as name="properties"/>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <flag ref="class"/>
             <define-flag name="name">
                <formal-name>Property Name</formal-name>
                <description>Indicates a use, purpose or classification for the property.</description>
