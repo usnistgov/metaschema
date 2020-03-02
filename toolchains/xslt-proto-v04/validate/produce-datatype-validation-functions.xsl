@@ -20,7 +20,7 @@
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
     
-    <xsl:variable name="type-definitions" select="document('../xml/oscal-datatypes.xsd')//xs:simpleType"/>
+    <xsl:variable name="type-definitions" select="document('../schema_gen/oscal-datatypes.xsd')//xs:simpleType"/>
     
     <xsl:template match="/">
         <XSLT:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
