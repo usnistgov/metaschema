@@ -108,7 +108,5 @@
       <p:document href="document/xml-element-map-html.xsl"/>
     </p:input>
   </p:xslt>
-  
-  
  
 </p:declare-step>
