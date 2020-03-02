@@ -17,6 +17,11 @@
         </group>
     </xsl:template>
     
+    <!--<xsl:template match="assembly//assembly[@name=/*/assembly/@name]">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+        </xsl:copy>
+    </xsl:template>-->
     <!--<xsl:template match="*[exists(@group-name)]/@min-occurs[.='0']">
         <xsl:attribute name="min-occurs">1</xsl:attribute>
     </xsl:template>-->
