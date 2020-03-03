@@ -79,6 +79,12 @@
         <xsl:copy-of select="."/>
     </xsl:template>
     
+    <xsl:template match="choice" mode="build">
+        <choice>
+            <xsl:apply-templates mode="#current"/>
+        </choice>
+    </xsl:template>
+    
     <xsl:template match="flag | define-flag" mode="build">
         <flag max-occurs="1" min-occurs="{if (@required='yes') then 1 else 0}" as-type="string">
             <xsl:attribute name="name" select="(@name,@ref)[1]"/>
