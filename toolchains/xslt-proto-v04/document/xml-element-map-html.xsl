@@ -35,9 +35,9 @@ div.OM-map p { margin: 0ex }
 
 span.OM-lit, .OM-cardinality { font-family: serif; font-weight: normal; color: midnightblue }
 
-span.OM-emph { font-weight: normal; font-style: italic }
+.OM-emph {  font-family: sans-serif; font-size: 80%; font-weight: normal; font-style: italic }
 
-.OM-cardinality  { color: blue }
+.OM-cardinality  { font-size: 80% }
 
 .OM-map a { color: inherit; text-decoration: none }
 
@@ -121,6 +121,16 @@ span.OM-emph { font-weight: normal; font-style: italic }
    
    <xsl:template priority="2" mode="contents" match="m:element[empty(m:element|m:block-sequence)]"/>
    
+   <xsl:template priority="3" mode="contents" match="m:element[matches(@as-type,'\S')][empty(m:element|m:block-sequence)]">
+      <span class="OM-emph">
+         <xsl:value-of select="@as-type"/>
+      </span>
+   </xsl:template>
+   
+   <xsl:template priority="4" mode="contents" match="m:element[@as-type='markup-line']">
+      <span class="OM-emph">Text and inline markup including <code>&lt;em></code>, <code>&lt;strong></code>, <code>&lt;code></code> and the like</span>
+   </xsl:template>
+   
    <xsl:template mode="contents" match="m:element[matches(@as-type,'\S')]">
       <span class="OM-emph">
          <xsl:value-of select="@as-type"/>
@@ -129,7 +139,7 @@ span.OM-emph { font-weight: normal; font-style: italic }
 
 
    <xsl:template name="describe-prose">
-       <i class="OM-emph">(<a href="../../datatypes/#markup-multiline">markup-multiline</a>) — any recognized block element including <code>&lt;p></code>, <code>&lt;ul></code>, <code>&lt;table></code> etc.</i>
+       <i class="OM-emph">(<a href="../../datatypes/#markup-multiline">markup-multiline</a>) — block elements including <code>&lt;p></code>, <code>&lt;ul></code>, <code>&lt;table></code> etc.</i>
    </xsl:template>
 
    <xsl:template name="cardinality-note">
