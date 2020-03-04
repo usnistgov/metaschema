@@ -261,7 +261,7 @@ hmmm
   <constrain when=":name='label'">
     <let name="regex" be="(AC|AT|MP)\-\d\d?"/>
     <require>
-      <test eval="matches(.,$regex)">The label matches regex { $regex }</test>
+      <test eval="matches(.,$regex)">The label should match regex { $regex }</test>
     </require>
   </constrain>
 </define-flag>
@@ -278,7 +278,7 @@ hmmm
       <test function="regex-match">
 	    <arg>.</arg>
 	    <arg>$regex</arg>
-	    <report>The label matches regex { $regex }</report>
+	    <confirm>the label should match regex { $regex }</confirm>
 	  </test>
     </require>
   </constrain>
@@ -311,10 +311,21 @@ one-of { (require*, forbid*) }
 
 any-of { (require*, forbid*) }
 
-assembly { flag*, field*, test* }
+assembly { attribute with { text }?,
+       attribute within { text }?,
+       attribute occurrence { 'one-or-more','one-only','more-than-one' },
+		   test* }?
+       flag*, field*, test* }
 
-field { flag*, test* }
+field { attribute with { text }?,
+       attribute within { text }?,
+       attribute occurrence { 'one-or-more','one-only','more-than-one' },
+		   test* }?
+       flag*, test* }
 
-flag { test* }
+flag { attribute with { text }?,
+       attribute within { text }?,
+       attribute occurrence { 'one-or-more','one-only','more-than-one' },
+		   test* }?
 
 ```
