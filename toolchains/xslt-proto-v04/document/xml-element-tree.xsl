@@ -9,6 +9,13 @@
     exclude-result-prefixes="#all"
     version="3.0">
     
+    <!--
+        
+    Input: an unfolded metaschema 'abstract tree' as produced by
+    steps in ../compose subdirectory
+
+    -->
+    
     <xsl:mode on-no-match="shallow-copy"/>
     
     <xsl:template match="assembly | field | group">
