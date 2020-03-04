@@ -10,7 +10,7 @@
    <!-- Input:   Metaschema -->
    <!-- Output:  HTML  -->
 
-   <xsl:import href="metaschema-common-html.xsl"/>
+   <xsl:import href="../metaschema-common-html.xsl"/>
 
    <xsl:param name="schema-path" select="document-uri(/)"/>
 
