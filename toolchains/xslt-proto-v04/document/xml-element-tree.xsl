@@ -22,6 +22,12 @@
         <xsl:apply-templates/>
     </xsl:template>
     
+    <xsl:template match="choice">
+        <choice>
+            <xsl:apply-templates/>
+        </choice>
+    </xsl:template>
+    
     <xsl:template match="flag">
         <attribute>
             <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
