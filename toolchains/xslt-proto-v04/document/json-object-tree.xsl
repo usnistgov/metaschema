@@ -13,23 +13,8 @@
     
     <!--
         
-    Account for:
-    
-    assemblies -> objects
-    fields -> objects
-    field values -> (labeled) strings
-    flags -> strings
-    groups -> arrays or object-or-array
-    
-    markup-line
-    markup-multiline
-    
-    json-value-key (fixed or by flag)
-    json-key (changes parent from array to object)
-    
-    datatypes
-      numeric types -> number
-      booleans
+    Input: an unfolded metaschema 'abstract tree' as produced by
+    steps in ../compose subdirectory
 
     -->
     
