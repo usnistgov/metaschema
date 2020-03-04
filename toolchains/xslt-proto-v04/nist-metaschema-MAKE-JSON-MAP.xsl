@@ -32,8 +32,8 @@
         <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
-        <nm:transform version="3.0">document/build-model-map.xsl</nm:transform>
-        <nm:transform version="3.0">document/unfold-model-map.xsl</nm:transform>
+        <nm:transform version="3.0">compose/build-model-map.xsl</nm:transform>
+        <nm:transform version="3.0">compose/unfold-model-map.xsl</nm:transform>
         <nm:transform version="3.0">document/json-object-tree.xsl</nm:transform>
         <nm:transform version="3.0">document/json-object-map-html.xsl</nm:transform>
     </xsl:variable>
