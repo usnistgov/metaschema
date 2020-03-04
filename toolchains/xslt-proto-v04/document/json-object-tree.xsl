@@ -41,6 +41,11 @@
     
     <xsl:template match="@max-occurs"/>-->
     
+    <xsl:template match="@name">
+        <xsl:copy-of select="."/>
+        <xsl:attribute name="key" select="."/>
+    </xsl:template>
+      
     <xsl:template match="assembly">
         <object>
             <xsl:apply-templates select="@name,@min-occurs,@max-occurs"/>
@@ -82,7 +87,7 @@
     
     <!-- required so we have a value for the required implicit flag (whose value is designated in this name) -->
     <xsl:template priority="3" match="field[matches(@json-value-flag,'\S')]" mode="field-value">
-        <string name="{{{{{@json-value-flag}}}}}" min-occurs="1" max-occurs="1">
+        <string name="{ '{{' || @json-value-flag || '}}' }" min-occurs="1" max-occurs="1">
             <xsl:apply-templates select="@as-type"/>
         </string>
     </xsl:template>
@@ -101,35 +106,21 @@
         </singleton-or-array>
     </xsl:template>
     
-    <xsl:template match="group[@in-json='ARRAY' or true()]">
-        <array>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
-            <xsl:apply-templates/>
-        </array>
-    </xsl:template>
-    
-    <xsl:template match="group[@in-json='SINGLETON_OR_ARRAY']">
-        <singleton-or-array>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
-            <xsl:apply-templates/>
-        </singleton-or-array>
-    </xsl:template>
-    
-    <xsl:template match="group[@in-json='BY_KEY']">
-        <group-by-key key-flag="{@json-key-flag}">
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
-            <xsl:apply-templates/>
-        </group-by-key>
-    </xsl:template>
-    
-    <xsl:template match="group[@in-json='BY_KEY']/assembly | group[@in-json='BY_KEY']/field">
-        <object name="{{{{@json-key-flag}}}}">
+    <xsl:template match="group[exists(@json-key-flag)]">
+        <object property-key="{@json-key-flag}">
             <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
     
-    <xsl:template priority="3" match="group[@in-json='BY_KEY']/field[not(flag/@name != @json-key-flag)]">
+    <xsl:template match="group[exists(@json-key-flag)]/*">
+        <object key="{{{{ {@json-key-flag} }}}}">
+            <xsl:apply-templates select="@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates/>
+        </object>
+    </xsl:template>
+    
+    <xsl:template priority="3" match="group[exists(@json-key-flag)]/field[not(flag/@name != @json-key-flag)]">
         <string name="{{{{@json-key-flag}}}}">
             <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
             <xsl:apply-templates/>
