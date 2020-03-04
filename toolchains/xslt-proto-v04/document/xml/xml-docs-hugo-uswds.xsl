@@ -3,6 +3,8 @@
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
    xmlns:xs="http://www.w3.org/2001/XMLSchema"
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+   xmlns="http://www.w3.org/1999/xhtml"
+   
    xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
@@ -40,7 +42,7 @@
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="description"/>
          <xsl:apply-templates select="." mode="representation-in-xml"/>
-         <xsl:apply-templates select="allowed-values"/>
+         <xsl:apply-templates select="constraint/allowed-values"/>
          <xsl:for-each-group select="key('references',@name)/parent::*" group-by="true()">
             <p><xsl:text>This attribute appears on: </xsl:text>
                <xsl:for-each-group select="current-group()" group-by="(@ref|@name)">
@@ -59,44 +61,50 @@
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="formal-name | description"/>
          <xsl:apply-templates mode="representation-in-xml" select="."/>
-         <xsl:apply-templates select="allowed-values"/>
+         <xsl:apply-templates select="constraint/allowed-values"/>
          <xsl:call-template name="appears-in"/>
-         <xsl:if test="exists(flag)">
-            <xsl:variable name="modal">
-               <xsl:choose>
-                  <xsl:when test="every $f in (flag) satisfies $f/@required = 'yes'"
-                     >must</xsl:when>
-                  <xsl:otherwise>may</xsl:otherwise>
-               </xsl:choose>
-            </xsl:variable>
-            <xsl:variable name="noun">
-               <xsl:choose>
-                  <xsl:when test="count(flag) gt 1">attributes</xsl:when>
-                  <xsl:otherwise>the attribute</xsl:otherwise>
-               </xsl:choose>
-            </xsl:variable>
-            <div class="model">
-               <p xsl:expand-text="true">The <code>{@name}</code> element { $modal } have { $noun }:</p>
-               <ul>
-                  <xsl:apply-templates select="flag" mode="model"/>
-               </ul>
-            </div>
-         </xsl:if>
+         <xsl:call-template name="flags-for-field"/>
          <xsl:call-template name="remarks-group"/>
          <xsl:apply-templates select="example"/>
          <xsl:call-template name="report-module"/>
       </div>
+   </xsl:template>
+   
+   <xsl:template name="flags-for-field">
+      <xsl:variable name="flags" select="flag | define-flag"/>
+      <xsl:if test="exists($flags)">
+         <xsl:variable name="modal">
+            <xsl:choose>
+               <xsl:when
+                  test="every $f in ($flags)
+                        satisfies $f/@required = 'yes'"
+                  >must</xsl:when>
+               <xsl:otherwise>may</xsl:otherwise>
+            </xsl:choose>
+         </xsl:variable>
+         <xsl:variable name="noun">
+            <xsl:choose>
+               <xsl:when test="count($flags) gt 1">attributes</xsl:when>
+               <xsl:otherwise>the attribute</xsl:otherwise>
+            </xsl:choose>
+         </xsl:variable>
+         <div class="model">
+            <p xsl:expand-text="true">The <code>{@name}</code> element { $modal } have { $noun
+               }:</p>
+            <ul>
+               <xsl:apply-templates select="$flags" mode="model"/>
+            </ul>
+         </div>
+      </xsl:if>
    </xsl:template>
 
    <xsl:template match="define-assembly">
       <div class="definition define-assembly" id="{@name}">
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="formal-name | description"/>
-         <xsl:if test="@name = $home/METASCHEMA/@root">
-            <h5>
-               <code xsl:expand-text="true">{ @name }</code> is the root (containing) element of
-               this schema. </h5>
-         </xsl:if>
+         <xsl:for-each select="root-name">
+            <h5><code xsl:expand-text="true">{ . }</code> is a root (containing) element in this schema. </h5>
+         </xsl:for-each>
          <xsl:call-template name="appears-in"/>
          <xsl:apply-templates select="model"/>
          <xsl:call-template name="remarks-group"/>
@@ -132,7 +140,7 @@
 
    <xsl:template match="flag"/>
 
-   <xsl:template match="flag" mode="model">
+   <xsl:template match="flag | define-flag" mode="model">
       <li class="model-entry">
          <p>
             <xsl:apply-templates mode="link-here" select="key('definitions', @ref)"/>
@@ -144,19 +152,19 @@
             <xsl:text> attribute </xsl:text>
             <xsl:apply-templates select="." mode="metaschema-type"/>
             <xsl:apply-templates select="." mode="requirement"/>
-            <xsl:apply-templates select="if (description) then description else key('definitions', @name)/description" mode="model"/>
+            <xsl:apply-templates select="if (description) then description else key('definitions', @ref)/description" mode="model"/>
          </p>
-         <xsl:apply-templates select="if (allowed-values) then allowed-values else key('definitions', @ref)/allowed-values"/>
+         <xsl:call-template name="allowed-values"/>
          <xsl:apply-templates select="remarks" mode="model"/>
       </li>
    </xsl:template>
 
    <xsl:template match="*" mode="requirement">
-      <i> [optional]</i>
+      <i class="occurrence"> [optional]</i>
    </xsl:template>
 
    <xsl:template match="*[exists(@required)]" mode="requirement">
-      <i> [required]</i>
+      <i class="occurrence"> [required]</i>
    </xsl:template>
 
    <xsl:template match="model[not(*)]" priority="3"/>
@@ -166,7 +174,7 @@
          <p>The <xsl:apply-templates select="../@name"/> element has the following contents<xsl:if
                test="count(*) > 1"> (in order)</xsl:if>:</p>
          <ul>
-            <xsl:apply-templates select="../flag" mode="model"/>
+            <xsl:apply-templates select="../(define-flag | flag)" mode="model"/>
             <xsl:apply-templates/>
          </ul>
       </div>
@@ -191,12 +199,32 @@
             <xsl:apply-templates mode="model"
                select="if (description) then description else key('definitions', @ref)/description"/>
          </p>
-         <xsl:apply-templates
-            select="if (allowed-values) then allowed-values else key('definitions', @ref)/allowed-values"/>
+         <xsl:call-template name="allowed-values"/>
          <xsl:apply-templates select="remarks" mode="model"/>
       </li>
    </xsl:template>
-
+   
+   <xsl:template match="model//define-field">
+      <li class="model-entry">
+         <p>
+            <!--<xsl:text>A</xsl:text>
+         <xsl:if test="not(translate(substring(@ref, 1, 1), 'AEIOUaeiuo', ''))">n</xsl:if>
+         <xsl:text> </xsl:text>-->
+            <a href="#{@name}">
+               <xsl:apply-templates select="(use-name,@name)[1]"/>
+            </a>
+            <xsl:text expand-text="true"> element{ if (@max-occurs != '1') then 's' else '' } </xsl:text>
+            <xsl:apply-templates select="." mode="metaschema-type"/>
+            <xsl:apply-templates select="." mode="occurrence-code"/>
+            <xsl:apply-templates mode="model"
+               select="description"/>
+         </p>
+         <xsl:apply-templates select="constraint/allowed-values"/>
+         <xsl:apply-templates select="remarks" mode="model"/>
+         <xsl:call-template name="flags-for-field"/>
+      </li>
+   </xsl:template>
+   
    <!-- remarks are kept if @class='xml' or no class is given -->
    <xsl:template match="remarks[@class != 'xml']" priority="2"/>
 
@@ -296,12 +324,6 @@
    </xsl:template>
 
 
-   <xsl:template mode="occurrence-requirements occurrence-code" match="*">
-      <i>
-         <xsl:next-match/>
-      </i>
-   </xsl:template>
-
    <xsl:template match="define-flag" mode="representation-in-xml">
       <p>An attribute<xsl:apply-templates select="." mode="metaschema-type"/></p>
    </xsl:template>
@@ -347,151 +369,6 @@
 
    <xsl:template match="*" mode="metaschema-type">
       <xsl:message>Matching <xsl:value-of select="local-name()"/></xsl:message>
-   </xsl:template>
-
-
-   <xsl:template name="css">
-      <style type="text/css">
-         html,
-         body {
-         }
-
-         pre {
-         color: darkgrey
-         }
-         .tag {
-         color: black;
-         font-family: monospace;
-         font-size: 80%;
-         font-weight: bold
-         }
-
-         pre.json {
-         color: darkblue
-         }
-
-         .METASCHEMA {
-         }
-
-         .title {
-         }
-
-         .define-assembly,
-         .define-field,
-         .define-flag {
-         margin-top: 1ex;
-         margin-bottom: 1ex;
-         border: thin inset black;
-         padding: 0.5em
-         }
-
-         .define-assembly *,
-         .define-field *,
-         .define-flag * {
-         margin: 0em
-         }
-
-
-         pre {
-         padding: 0.5em;
-         background-color: gainsboro
-         }
-
-         .define-assembly {
-         }
-
-         .define-field {
-         }
-
-         .define-flag {
-         }
-
-         .flag {
-         }
-
-         .formal-name {
-         font-size: 120%;
-         font-weight: bold;
-         font-family: sans-serif;
-         margin: 0.5em 0em
-         }
-
-         .description {
-         font-size: 90%;
-         font-family: sans-serif;
-         margin: 0.5em 0em
-         }
-
-         .remarks {
-         }
-
-         .remarks p {
-         margin-top: 0.5em
-         }
-         // .remarks > p:first-child { margin-top: 0em }
-
-         .model {
-         margin-top: 1em
-         }
-
-         .field {
-         }
-
-         .assembly {
-         }
-
-         .choice {
-         }
-
-         .example {
-         margin-top: 1em
-         }
-
-         .prose {
-         }
-
-
-         .p {
-         }
-
-         .code {
-         display: inline;
-         }
-         .q {
-         display: inline;
-         }
-         .em {
-         display: inline;
-         }
-         .strong {
-         display: inline;
-         }
-
-         .name {
-         color: midnightblue;
-         background-color: lavender;
-         font-family: monospace;
-         font-size: 90%
-         }
-
-         a {
-         text-decoration: none
-         }
-         a:hover {
-         text-decoration: underline
-         }
-
-         ul.e_map {
-         font-family: monospace;
-         list-style-type: none
-         }
-         li.e_map {
-         margin: 0em
-         }
-         .map_label {
-         font-family: serif;
-         color: darkgrey
-         }</style>
    </xsl:template>
 
 </xsl:stylesheet>

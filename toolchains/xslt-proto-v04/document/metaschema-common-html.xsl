@@ -3,6 +3,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns="http://www.w3.org/1999/xhtml"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     exclude-result-prefixes="#all">
     
@@ -23,7 +24,7 @@
     
     <xsl:variable name="all-references" select="//flag/@name | //model//*/@ref"/>
      
-    <xsl:key name="definitions" match="define-flag | define-field | define-assembly" use="@name"/>
+    <xsl:key name="definitions" match="/METASCHEMA/define-flag | /METASCHEMA/define-field | /METASCHEMA/define-assembly" use="@name"/>
     <xsl:key name="references" match="flag"             use="@name | @ref"/>
     <xsl:key name="references" match="field | assembly" use="@ref"/>
     
@@ -91,7 +92,7 @@
         <header class="definition-header">
             <xsl:call-template name="cross-links"/>
             <h2 id="{$metaschema-code}_{@name}" class="{substring-after(local-name(),'define-')}-header">
-                <xsl:apply-templates select="@name" mode="tag"/>
+                <xsl:apply-templates select="(root-name,use-name,@name)[1]" mode="tag"/>
             </h2>
         </header>
         <xsl:apply-templates select="formal-name" mode="header"/>
@@ -109,7 +110,7 @@
         <!-- can't use xsl:where-populated due to the header :-( -->
         <xsl:for-each-group select="remarks[not(@class != 'xml')]" group-by="true()">
             <div class="remarks-group">
-                <h3>Remarks</h3>
+                <h4><span class="usa-tag">Remarks</span></h4>
                 <xsl:apply-templates select="current-group()"/>
             </div>
         </xsl:for-each-group>
@@ -123,6 +124,17 @@
     
     <xsl:template mode="tag" match="@name">
         <code class="tagging"><xsl:value-of select="."/></code>   
+    </xsl:template>
+    
+    <xsl:template mode="tag" match="root-name | use-name">
+        <code class="tagging"><xsl:value-of select="."/></code>   
+    </xsl:template>
+    
+    <xsl:template name="allowed-values">
+        <xsl:apply-templates select="constraint/allowed-values"/>
+        <xsl:if test="empty(constraint/allowed-values)">
+            <xsl:apply-templates select="key('definitions', @ref)/constraint/allowed-values"/>
+        </xsl:if>
     </xsl:template>
     
     
@@ -142,12 +154,31 @@
     
     <xsl:template match="example[empty(* except (description | remarks))]"/>
     
-    <xsl:template name="css"/>
+    <xsl:template name="css">
+        <style type="text/css">
+            <xsl:sequence select="unparsed-text('hugo-uswds.css','utf-8') ! replace(.,'#xD;','')"/>
+        </style>
+    </xsl:template>
     
-    <!-- Returns true when a field must become an object, not a string, due to having
+    <xsl:template mode="occurrence-code" match="*">
+        <xsl:variable name="minOccurs" select="(@min-occurs,'0')[1]"/>
+        <xsl:variable name="maxOccurs" select="(@max-occurs,'1')[1] ! (if (. eq 'unbounded') then '&#x221e;' else .)"/>
+        <i class="occurrence">
+        <xsl:text>[</xsl:text>
+        <xsl:choose>
+            <xsl:when test="$minOccurs = $maxOccurs" expand-text="true">{ $minOccurs }</xsl:when>
+            <xsl:when test="number($maxOccurs) = number($minOccurs) + 1" expand-text="true">{ $minOccurs } or { $maxOccurs }</xsl:when>
+            <xsl:otherwise expand-text="true">{ $minOccurs } to { $maxOccurs }</xsl:otherwise>
+        </xsl:choose>
+        <xsl:text>]</xsl:text>
+        </i>
+    </xsl:template>
+    
+        <!-- Returns true when a field must become an object, not a string, due to having
      flags that must be properties. -->
     <xsl:function name="m:has-properties" as="xs:boolean">
-        <xsl:param name="who" as="element(m:field)"/>
-        <xsl:sequence select="exists($who/flag[not((@name|@ref)=../(json-key | json-value-key)/@flag-name)])"/>
+        <xsl:param name="who" as="element()"/>
+        <xsl:sequence select="exists($who/(define-flag|flag)[not((@name|@ref)=../(json-key | json-value-key)/@flag-name)])"/>
     </xsl:function>
+        
 </xsl:stylesheet>
