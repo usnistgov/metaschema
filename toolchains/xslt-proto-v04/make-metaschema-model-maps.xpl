@@ -70,13 +70,13 @@
       <p:pipe port="result" step="composed"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="document/build-model-map.xsl"/>
+      <p:document href="compose/build-model-map.xsl"/>
     </p:input>
   </p:xslt>
   
   <p:xslt name="unfold-model-map">
     <p:input port="stylesheet">
-      <p:document href="document/unfold-model-map.xsl"/>
+      <p:document href="compose/unfold-model-map.xsl"/>
     </p:input>
   </p:xslt>
   
