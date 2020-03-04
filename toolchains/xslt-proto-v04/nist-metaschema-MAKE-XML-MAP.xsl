@@ -34,8 +34,8 @@
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
         <nm:transform version="3.0">compose/build-model-map.xsl</nm:transform>
         <nm:transform version="3.0">compose/unfold-model-map.xsl</nm:transform>
-        <nm:transform version="3.0">document/xml-element-tree.xsl</nm:transform>
-        <nm:transform version="3.0">document/xml-element-map-html.xsl</nm:transform>
+        <nm:transform version="3.0">document/xml/element-tree.xsl</nm:transform>
+        <nm:transform version="3.0">document/xml/element-map-html.xsl</nm:transform>
     </xsl:variable>
     
 </xsl:stylesheet>

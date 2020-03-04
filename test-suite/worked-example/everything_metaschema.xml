@@ -107,7 +107,6 @@
         </model>
     </define-assembly>
     
-    <define-field name="one-string"></define-field>
     <define-field name="one-string">
         <formal-name>One String</formal-name>
         <description>Not more than one.</description>
