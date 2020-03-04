@@ -82,14 +82,14 @@
   
   <p:xslt name="make-xml-element-tree">
     <p:input port="stylesheet">
-      <p:document href="document/xml-element-tree.xsl"/>
+      <p:document href="document/xml/element-tree.xsl"/>
     </p:input>
   </p:xslt>
   
   <p:xslt name="render-xml-model-map">
     <p:with-option name="initial-mode" select="QName('','make-page')"/>
     <p:input port="stylesheet">
-      <p:document href="document/xml-element-map-html.xsl"/>
+      <p:document href="document/xml/element-map-html.xsl"/>
     </p:input>
     
   </p:xslt>
@@ -101,14 +101,14 @@
       <p:pipe port="result" step="unfold-model-map"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="document/json-object-tree.xsl"/>
+      <p:document href="document/json/object-tree.xsl"/>
     </p:input>
   </p:xslt>
   
   <p:xslt name="render-json-model-map">
     <p:with-option name="initial-mode" select="QName('','make-page')"/>    
     <p:input port="stylesheet">
-      <p:document href="document/json-object-map-html.xsl"/>
+      <p:document href="document/json/object-map-html.xsl"/>
     </p:input>
   </p:xslt>
  
