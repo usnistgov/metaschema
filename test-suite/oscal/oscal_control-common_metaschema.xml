@@ -56,9 +56,6 @@
             </field>
             <assembly ref="select">
                <!--<description>A set of parameter value choices, that may be picked from to set the parameter value.</description>-->
-               <remarks>
-                  <p>.</p>
-               </remarks>
             </assembly>
          </choice>
          <field ref="link" max-occurs="unbounded">
