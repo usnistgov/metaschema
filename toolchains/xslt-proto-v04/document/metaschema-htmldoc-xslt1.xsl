@@ -6,8 +6,6 @@
                 xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="xs m">
    
-   
-   
    <xsl:template match="m:METASCHEMA/m:short-name">
       <p>
          <span class="usa-tag">Short name</span>
