@@ -131,6 +131,7 @@
         
         <sch:rule context="m:p | m:li | m:pre">
             <sch:assert test="matches(.,'\S')">Empty <name/> (is likely to distort rendition)</sch:assert>
+            <sch:report role="warning" test="not(matches(.,'\w'))">Not much here is there</sch:report>
         </sch:rule>
     </sch:pattern>
     
