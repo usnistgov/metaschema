@@ -22,8 +22,6 @@
     
     <xsl:variable name="home" select="/"/>
     
-    <xsl:variable name="root-name" select="/METASCHEMA/@root/string(.)"/>
-    
     <xsl:variable name="string-value-label">STRVALUE</xsl:variable>
     <xsl:variable name="markdown-value-label">RICHTEXT</xsl:variable>
     <xsl:variable name="markdown-multiline-label">PROSE</xsl:variable>
@@ -41,39 +39,8 @@
         <xsl:apply-templates select="*"/>
     </xsl:template>-->
 
+   
     <xsl:template match="/METASCHEMA" expand-text="true">
-        <map>
-            <string key="$schema">http://json-schema.org/draft-07/schema#</string>
-            <string key="$id">{ $composed-metaschema/METASCHEMA/namespace }-schema.json</string>
-            <xsl:for-each select="schema-name">
-                <string key="$comment">{ . }: JSON Schema</string>
-            </xsl:for-each>
-
-            <xsl:apply-templates select="schema-version"/>
-            <string key="type">object</string>
-            <map key="definitions">
-                <xsl:apply-templates select="$composed-metaschema/METASCHEMA/*"/>
-
-                <!--<map key="prose">
-                    <xsl:call-template name="string-or-array-of-strings"/>
-                </map>-->
-            </map>
-            <map key="properties">
-                <!--<xsl:apply-templates mode="properties"/>-->
-                <xsl:for-each select="define-assembly[exists(root-name)]">
-                    <map key="{root-name}">
-                        <string key="$ref">#/definitions/{ @name }</string>
-                    </map>
-                </xsl:for-each>
-            </map>
-            <number key="minProperties">1</number>
-            <number key="maxProperties">1</number>
-            <boolean key="additionalProperties">false</boolean>
-        </map>
-    </xsl:template>
-    
-<!-- Template entry point skipping the Metaschema composition step   -->
-    <xsl:template mode="debug" match="/METASCHEMA" expand-text="true">
         <map>
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
             <string key="$id">{ namespace }-schema.json</string>
@@ -85,39 +52,20 @@
             <string key="type">object</string>
             <map key="definitions">
                 <xsl:apply-templates select="*"/>
-                
-                <!--<map key="prose">
-                    <xsl:call-template name="string-or-array-of-strings"/>
-                </map>-->
             </map>           
             <map key="properties">
                 <!--<xsl:apply-templates mode="properties"/>-->
-                <map key="{@root}">
-                    <string key="$ref">#/definitions/{ @root }</string>
-                </map>
+                <xsl:for-each select="/METASCHEMA/define-assembly[exists(root-name)]">
+                    <map key="{root-name}">
+                        <string key="$ref">#/definitions/{ @name }</string>
+                    </map>
+                </xsl:for-each>
             </map>
-            <!--<map key="propertyNames">
-                <array key="enum">
-                    <string>
-                        <xsl:apply-templates mode="property-names"/></string>
-                </array>
-            </map>-->
+            <number key="minProperties">1</number>
+            <number key="maxProperties">1</number>
+            <boolean key="additionalProperties">false</boolean>
         </map>
     </xsl:template>
-    
-    <!--<xsl:template name="string-or-array-of-strings">
-        <array key="anyOf">
-            <map>
-                <string key="type">string</string>
-            </map>
-            <map>
-                <string key="type">array</string>
-                <map key="items">
-                    <string key="type">string</string>
-                </map>
-            </map>
-        </array>
-    </xsl:template>-->
 
     <xsl:template match="METASCHEMA/schema-name | METASCHEMA/short-name | METASCHEMA/remarks | METASCHEMA/namespace | METASCHEMA/schema-version"/>
   
@@ -130,14 +78,11 @@
             <!--Only top-level assemblies and fields get IDs -->
             <xsl:call-template name="id-if-top-level"/>
             <string key="type">object</string>
-            <xsl:variable name="properties" as="element()*">
-                <xsl:apply-templates select="." mode="properties"/>
-            </xsl:variable>
-            <xsl:if test="exists($properties)">
-            <map key="properties">
-                <xsl:apply-templates select="." mode="properties"/>
-            </map>
-            </xsl:if>
+            <xsl:where-populated>
+                <map key="properties">
+                    <xsl:apply-templates select="." mode="properties"/>
+                </map>
+            </xsl:where-populated>
             <xsl:call-template name="required-properties"/>
             <xsl:choose>
                 <xsl:when test="exists(json-value-key/@flag-name)">
@@ -253,7 +198,9 @@
 
     <xsl:template match="define-assembly" mode="properties">
         <!-- to be excluded, flags assigned to be keys -->
-        <xsl:apply-templates mode="declaration" select="(flag|define-flag)[not((@name|@ref) = ../json-key/@flag-name)], model"/>
+        <xsl:variable name="json-key-flag" select="json-key/@flag-name"/>
+        <xsl:apply-templates mode="declaration"
+            select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)], model"/>
     </xsl:template>
 
     <xsl:template match="formal-name">
@@ -270,10 +217,28 @@
 
     <xsl:template match="remarks | example"/>
     
-    <xsl:template match="assembly | field | flag | define-field | define-assembly | define-flag" priority="2" mode="property-name">
+    <xsl:template priority="2" mode="property-name" match="assembly">
+        <xsl:apply-templates select="key('assembly-definition-by-name',@ref)" mode="#current">
+            <xsl:with-param name="named" select="(group-as/@name,use-name,@ref)[1]"></xsl:with-param>
+        </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template priority="2" mode="property-name" match="field">
+        <xsl:apply-templates select="key('field-definition-by-name',@ref)" mode="#current">
+            <xsl:with-param name="named" select="(group-as/@name,use-name,@ref)[1]"></xsl:with-param>
+        </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template priority="2" mode="property-name" match="flag">
+        <xsl:apply-templates select="key('flag-definition-by-name',@ref)" mode="#current">
+            <xsl:with-param name="named" select="(group-as/@name,use-name,@ref)[1]"></xsl:with-param>
+        </xsl:apply-templates>
+    </xsl:template>
+    
+    <xsl:template priority="2" mode="property-name" match="define-field | define-assembly | define-flag">
+        <xsl:param name="named" select="(group-as/@name,child::root-name,child::use-name,@name)[1]"/>
         <string>
-            <!--<xsl:value-of select="key('definition-by-name',@ref)/(@group-as,@name)[1]"/>-->
-            <xsl:value-of select="(group-as/@name,child::root-name,child::use-name,@name,@ref)[1]"/>
+            <xsl:value-of select="$named"/>
         </string>
     </xsl:template>
     
@@ -342,8 +307,16 @@
         </map>
     </xsl:template>
     
+    <xsl:template mode="declaration" match="model//define-field">
+        <map key="{(group-as/@name,use-name,@name)[1]}">
+            <xsl:apply-templates select="formal-name | description"/>
+            <xsl:apply-templates select="." mode="object-type"/>
+            <xsl:apply-templates select="constraint/allowed-values"/>    
+        </map>
+    </xsl:template>
+    
     <xsl:template mode="declaration" match="model//define-flag">
-        <map key="{@name}">
+        <map key="{(use-name,@name)[1]}">
             <xsl:apply-templates select="formal-name | description"/>
             <xsl:apply-templates select="." mode="object-type"/>
             <xsl:apply-templates select="constraint/allowed-values"/>    
@@ -487,7 +460,7 @@
         </array>
     </xsl:template>
     
-    <xsl:template match="field | model//define-field" priority="3" mode="object-type">
+    <xsl:template match="field" priority="3" mode="object-type">
         <xsl:choose>
             <xsl:when test="exists(@as-type)">
                 <xsl:next-match/>
@@ -497,6 +470,18 @@
             </xsl:when>
             <xsl:otherwise>
                 <string key="type">string</string> 
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template match="model//define-field" priority="3" mode="object-type">
+        <xsl:choose>
+            <xsl:when test="exists(@as-type)">
+                <xsl:next-match/>
+            </xsl:when>
+            <xsl:otherwise>
+                <!-- writing a local declaration -->
+                <xsl:apply-templates select="."/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
