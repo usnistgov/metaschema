@@ -52,15 +52,15 @@
             <sch:let name="def" value="nm:definition-for-reference(.)"/>
             <sch:assert test="exists($def)">No definition is given for <sch:name/> '<sch:value-of select="@ref"/>'.</sch:assert>
             <sch:assert test="exists($aka) or empty($def)"><sch:name/> has no name defined</sch:assert>
-            <sch:let name="siblings" value="(../m:flag | ../m:model//m:field | ../m:model//m:assembly) except ."/>
+            <sch:let name="siblings" value="(../m:flag | ../m:define-flag | ancestor::m:model//m:field | ancestor::m:model//m:assembly | ancestor::m:model//define-field | ancestor::m:model//m:define-assembly) except ."/>
             <sch:let name="rivals" value="$siblings[nm:identifiers(.) = $aka]"/>
-            <sch:assert test="empty($rivals)">Name clash on flag using name '<sch:value-of select="$aka"/>'; clashes with neighboring <xsl:value-of select="$rivals/local-name()" separator=", "/></sch:assert>
+            <sch:assert test="empty($rivals)">Name clash on <sch:name/> using name '<sch:value-of select="$aka"/>'; clashes with neighboring <xsl:value-of select="$rivals/local-name()" separator=", "/></sch:assert>
           
         </sch:rule>
         
         <sch:rule context="m:METASCHEMA/m:define-assembly | m:METASCHEMA/m:define-field | m:METASCHEMA/m:define-flag">
             <sch:let name="references" value="nm:references-to-definition(.)"/>
-            <sch:report test="@name=(../@name except @name)">Definition for '<sch:value-of select="@name"/>' clashes in this metaschema: not a good idea.</sch:report>
+            <sch:report test="@name=(../*/@name except @name)">Definition for '<sch:value-of select="@name"/>' clashes in this metaschema: not a good idea.</sch:report>
             <sch:assert role="warning" test="exists($references | self::m:define-assembly/m:root-name)">Orphan <sch:value-of select="substring-after(local-name(),'define-')"/> '<sch:value-of select="@name"/>' is never used in the composed metaschema</sch:assert>
             
             <sch:assert test="not($references/m:group-as/@in-json='BY_KEY') or exists(m:json-key)"><sch:value-of select="substring-after(local-name(),
