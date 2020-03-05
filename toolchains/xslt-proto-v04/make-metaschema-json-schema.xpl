@@ -44,6 +44,7 @@
   
   <p:identity name="composed"/>
   
+  <!--<p:identity name="make-json-schema-xml"/>-->
   <p:xslt name="make-json-schema-xml">
     <p:input port="stylesheet">
       <p:document href="schema_gen/json-schema-metamap.xsl"/>
@@ -51,7 +52,6 @@
   </p:xslt>
   
   <!--<p:identity name="serialize-json"/>-->
-  
   <p:xslt name="serialize-json">
     <p:input port="stylesheet">
       <p:document href="schema_gen/serialize-json-schema.xsl"/>
