@@ -260,7 +260,7 @@
     </xsl:template>
     
     <xsl:template match="define-field" mode="properties">
-        <xsl:apply-templates mode="declaration" select="flag"/>
+        <xsl:apply-templates mode="declaration" select="flag | define-flag"/>
         <xsl:variable name="this-key" as="xs:string?">
             <xsl:apply-templates select="." mode="value-key"/>
         </xsl:variable>
@@ -272,7 +272,7 @@
     </xsl:template>
     
     <xsl:template match="define-field[@collapsible='yes']" mode="properties">
-        <xsl:apply-templates mode="declaration" select="flag"/>
+        <xsl:apply-templates mode="declaration" select="flag | define-flag"/>
         <xsl:variable name="this-key" as="xs:string?">
             <xsl:apply-templates select="." mode="value-key"/>
         </xsl:variable>
@@ -439,7 +439,7 @@
         <string key="type">object</string>
     </xsl:template>
 
-    <xsl:template match="define-field[empty(flag)] | define-flag | flag" mode="object-type">
+    <xsl:template match="define-field[empty(flag|define-flag)] | define-flag | flag" mode="object-type">
         <string key="type">string</string>
     </xsl:template>
     
