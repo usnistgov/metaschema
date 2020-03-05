@@ -33,7 +33,7 @@
         <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
         <nm:transform version="3.0">schema_gen/json-schema-metamap.xsl</nm:transform>
-        <!--<nm:transform version="3.0">schema_gen/serialize-json-schema.xsl</nm:transform>-->
+        <nm:transform version="3.0">schema_gen/serialize-json-schema.xsl</nm:transform>
     </xsl:variable>
     
 </xsl:stylesheet>
