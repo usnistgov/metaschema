@@ -137,7 +137,6 @@
             <json-value-key>text</json-value-key>
             <group-as name="links"/>
             <flag ref="href" required="yes"/>
-            <flag ref="rel"/>
             <flag ref="media-type"/>
             <define-flag name="rel" as-type="NCName">
                <formal-name>Relation</formal-name>
