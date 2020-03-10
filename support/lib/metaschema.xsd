@@ -28,6 +28,14 @@
         </xs:choice>
       </xs:sequence>
       <xs:attribute name="module" type="xs:anyURI"/>
+      <xs:attribute name="abstract">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="yes"/>
+            <xs:enumeration value="no"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
   
