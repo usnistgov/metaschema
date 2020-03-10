@@ -22,7 +22,7 @@
   
   <p:serialization port="c.abstract-model-map" indent="true"/>
   <p:output        port="c.abstract-model-map" primary="false">
-    <p:pipe        port="result" step="build-model-map"/>
+    <p:pipe        port="result" step="make-model-map"/>
   </p:output>
   
   <p:serialization port="f.final" indent="true" method="xml" omit-xml-declaration="false"/>
@@ -44,9 +44,9 @@
   
   <p:identity name="composed"/>
   
-  <p:xslt name="build-model-map">
+  <p:xslt name="make-model-map">
     <p:input port="stylesheet">
-      <p:document href="document/build-model-map.xsl"/>
+      <p:document href="document/make-model-map.xsl"/>
     </p:input>
   </p:xslt>
   

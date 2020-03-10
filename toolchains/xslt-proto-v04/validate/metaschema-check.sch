@@ -32,25 +32,31 @@
     
     <xsl:variable name="composed-metaschema" select="nm:compose-metaschema(/)"/>
  
+    <sch:let name="metaschema-is-abstract" value="/m:METASCHEMA/@abstract='yes'"/>
     
     <sch:pattern id="top-level-and-schema-docs">
         
         <sch:rule context="/m:METASCHEMA">
             <sch:assert test="exists(m:schema-version)" role="warning">Metaschema schema version must be set for any top-level metaschema</sch:assert>
+            <sch:assert test="exists(m:define-assembly/m:root-name) or @abstract='yes'">Unless marked as @abstract='yes', a metaschema should have at least one assembly with a root-name.</sch:assert>
         </sch:rule>
         <sch:rule context="/m:METASCHEMA/m:title"/>
         <sch:rule context="/m:METASCHEMA/m:import">
             <sch:report role="warning" test="document-uri(/) = resolve-uri(@href,document-uri(/))">Schema can't import itself</sch:report>
             <sch:assert test="exists(document(@href)/m:METASCHEMA)">Can't find a metaschema at <sch:value-of select="@href"/></sch:assert>
-        </sch:rule>        
-        </sch:pattern>
+        </sch:rule>
+        <sch:rule context="/m:METASCHEMA/m:define-assembly/m:root-name">
+            <sch:report test="$metaschema-is-abstract">Assembly should not be defined as a root when /METASCHEMA/@abstract='yes'</sch:report>
+        </sch:rule>
+        
+    </sch:pattern>
     
     
     <sch:pattern id="definitions-and-name-clashes">
         <sch:rule context="m:flag | m:field | m:assembly">
             <sch:let name="aka" value="nm:identifiers(.)"/>
             <sch:let name="def" value="nm:definition-for-reference(.)"/>
-            <sch:assert test="exists($def)">No definition is given for <sch:name/> '<sch:value-of select="@ref"/>'.</sch:assert>
+            <sch:assert test="exists($def) or $metaschema-is-abstract">No definition is given for <sch:name/> '<sch:value-of select="@ref"/>'.</sch:assert>
             <sch:assert test="exists($aka) or empty($def)"><sch:name/> has no name defined</sch:assert>
             <sch:let name="siblings" value="(../m:flag | ../m:define-flag | ancestor::m:model//m:field | ancestor::m:model//m:assembly | ancestor::m:model//define-field | ancestor::m:model//m:define-assembly) except ."/>
             <sch:let name="rivals" value="$siblings[nm:identifiers(.) = $aka]"/>
@@ -61,7 +67,7 @@
         <sch:rule context="m:METASCHEMA/m:define-assembly | m:METASCHEMA/m:define-field | m:METASCHEMA/m:define-flag">
             <sch:let name="references" value="nm:references-to-definition(.)"/>
             <sch:report test="@name=(../*/@name except @name)">Definition for '<sch:value-of select="@name"/>' clashes in this metaschema: not a good idea.</sch:report>
-            <sch:assert role="warning" test="exists($references | self::m:define-assembly/m:root-name)">Orphan <sch:value-of select="substring-after(local-name(),'define-')"/> '<sch:value-of select="@name"/>' is never used in the composed metaschema</sch:assert>
+            <sch:assert role="warning" test="exists($references | self::m:define-assembly/m:root-name) or $metaschema-is-abstract">Orphan <sch:value-of select="substring-after(local-name(),'define-')"/> '<sch:value-of select="@name"/>' is never used in the composed metaschema</sch:assert>
             
             <sch:assert test="not($references/m:group-as/@in-json='BY_KEY') or exists(m:json-key)"><sch:value-of select="substring-after(local-name(),
             'define-')"/> is assigned a json key, but no 'json-key' is given</sch:assert>
@@ -81,7 +87,8 @@
             <sch:report test="../@max-occurs/number() = 1">"group-as" should not be given when max-occurs is 1.</sch:report>
             <sch:let name="def" value="nm:definition-for-reference(parent::*)"/>
             <sch:assert test="count(ancestor::m:model//(m:field | m:define-field | m:assembly | m:define-assembly)[nm:identifiers(.)=$name]) = 1">group-as @name is not unique within this model</sch:assert>
-            <sch:assert test="not(@in-json='BY_KEY') or $def/m:json-key/@flag-name=$def/(m:flag/@ref|m:define-flag/@name)">Cannot group by key since the definition of <sch:value-of select="name(..)"/> '<sch:value-of select="../@ref"/>' has no json-key specified. Consider adding a json-key to the '<sch:value-of select="../@ref"/>' definition, or using a different 'in-json' setting.</sch:assert>
+            <!-- since definition-for-reference fails on an abstract metaschema we can't perform the json-key check there. -->
+            <sch:assert test="$metaschema-is-abstract or not(@in-json='BY_KEY') or $def/m:json-key/@flag-name=$def/(m:flag/@ref|m:define-flag/@name)">Cannot group by key since the definition of <sch:value-of select="name(..)"/> '<sch:value-of select="../@ref"/>' has no json-key specified. Consider adding a json-key to the '<sch:value-of select="../@ref"/>' definition, or using a different 'in-json' setting.</sch:assert>
         </sch:rule>
         
         </sch:pattern>
@@ -89,7 +96,7 @@
     <sch:pattern id="flags_and_keys_and_datatypes">
         <sch:rule context="m:field | m:assembly">
             <sch:let name="def" value="nm:definition-for-reference(.)"/>
-            <sch:assert test="empty($def) or not(m:group-as/@in-json='BY_KEY') or exists($def/m:json-key)">Target definition for <sch:value-of select="@ref"/> designates a json key, so the invocation should have group-as/@in-json='BY_KEY'</sch:assert>
+            <sch:assert test="empty($def) or (m:group-as/@in-json='BY_KEY') or empty($def/m:json-key)">Target definition for <sch:value-of select="@ref"/> designates a json key, so the invocation should have group-as/@in-json='BY_KEY'</sch:assert>
             <sch:assert test="matches(m:group-as/@name,'\S') or not((@max-occurs/number() gt 1) or (@max-occurs='unbounded'))">Unless @max-occurs is 1, a grouping name (group-as/@name) must be given</sch:assert>
 
             <!-- constraints related to markup-multiline -->
@@ -168,7 +175,6 @@
     
     <xsl:template mode="nm:get-references" match="m:define-assembly | m:define-field | m:define-flag">
         <xsl:variable name="tag" expand-text="true">:{ substring-after(local-name(.),'define-') => upper-case() }</xsl:variable>
-        
     </xsl:template>
     
     

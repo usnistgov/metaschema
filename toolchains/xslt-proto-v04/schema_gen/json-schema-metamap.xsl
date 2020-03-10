@@ -113,11 +113,83 @@
         </map>
     </xsl:template>
     
+    <xsl:template match="define-assembly[exists(json-key)] | define-field[exists(json-key)]">
+        <map key="{ (root-name,use-name,@name)[1] }">
+            <xsl:apply-templates select="formal-name, description"/>
+            <xsl:call-template name="id-if-top-level"/>
+            <string key="type">object</string>
+            <map key="properties">
+                <xsl:apply-templates select="." mode="properties"/>
+            </map>
+            <xsl:call-template name="required-properties"/>
+            <boolean key="additionalProperties">false</boolean>
+        </map>
+    </xsl:template>
+    
+    <xsl:template match="define-field[empty(flag)]">
+        <map key="{ (use-name,@name)[1] }">
+            <xsl:apply-templates select="formal-name, description"/>
+            <xsl:call-template name="id-if-top-level"/>
+            <xsl:apply-templates select="." mode="object-type"/>
+            <xsl:apply-templates select="constraint/allowed-values"/>
+        </map>
+    </xsl:template>
+    
+    
+    
+    <xsl:template match="formal-name">
+        <string key="title">
+            <xsl:apply-templates/>
+        </string>
+    </xsl:template>
+    
+    <xsl:template match="description">
+        <string key="description">
+            <xsl:value-of select="normalize-space(.)"/>
+        </string>
+    </xsl:template>
+    
+    <xsl:template match="remarks | example"/>
+    
+    <!-- No restriction is introduced when allow others is 'yes' -->
+    <xsl:template match="allowed-values[@allow-other='yes']"/>
+    
+    <xsl:template match="allowed-values">
+        <array key="enum">
+            <xsl:apply-templates/>
+        </array>
+    </xsl:template>
+    
+    <xsl:template match="allowed-values/enum">
+        <!-- since the JSON must show enumerated values consistent with the base type notation,
+             we determine the nominal type of the node and map it to 'number', 'string' or 'boolean' whichever is best. -->
+        <xsl:variable name="type-declaration">
+            <xsl:apply-templates select="../parent::constraint/.." mode="object-type"/>
+        </xsl:variable>
+        <xsl:variable name="nominal-type">
+            <xsl:choose>
+                <xsl:when test="$type-declaration/*[@key='type']='integer'">number</xsl:when>
+                <xsl:when test="$type-declaration/*[@key='type']='boolean'">boolean</xsl:when>
+                <xsl:otherwise>string</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <!--<xsl:copy-of select="$type-declaration"/>-->
+        <xsl:element namespace="http://www.w3.org/2005/xpath-functions" name="{$nominal-type}">
+            <xsl:apply-templates select="@value"/>
+        </xsl:element>
+    </xsl:template>
+    
+    <xsl:template name="id-if-top-level">
+        <xsl:if test="parent::METASCHEMA">
+            <string key="$id">#/definitions/{@name}</string>
+        </xsl:if>
+    </xsl:template>
+    
     <xsl:template name="required-properties">
         <xsl:variable name="requirements" as="element()*">
             <!-- A value string is always required except on empty fields -->
             <xsl:variable name="value-property">
-              <xsl:apply-templates select="self::define-field" mode="value-key"/>
+                <xsl:apply-templates select="self::define-field" mode="value-key"/>
             </xsl:variable>
             <xsl:for-each select="$value-property[matches(.,'\S')]">
                 <string>
@@ -134,6 +206,24 @@
             </array>
         </xsl:if>
     </xsl:template>
+    
+    <xsl:template name="string-or-array-of-strings">
+        <array key="oneOf">
+            <map>
+                <string key="type">string</string>
+            </map>
+            <map>
+                <string key="type">array</string>
+                <array key="items">
+                    <map>
+                        <string key="type">string</string>
+                    </map>
+                </array>
+                <string key="minItems">2</string>
+            </map>
+        </array>
+    </xsl:template>
+    
     
     <xsl:template match="*" mode="text-property"/>
     
@@ -168,34 +258,6 @@
         
     <!--<xsl:template priority="3" match="define-field[exists(flag/value-key)]" mode="text-key"/>-->
     
-    <xsl:template match="define-assembly[exists(json-key)] | define-field[exists(json-key)]">
-        <map key="{ (root-name,use-name,@name)[1] }">
-            <xsl:apply-templates select="formal-name, description"/>
-            <xsl:call-template name="id-if-top-level"/>
-            <string key="type">object</string>
-            <map key="properties">
-                <xsl:apply-templates select="." mode="properties"/>
-            </map>
-            <xsl:call-template name="required-properties"/>
-            <boolean key="additionalProperties">false</boolean>
-        </map>
-    </xsl:template>
-    
-    <xsl:template name="id-if-top-level">
-        <xsl:if test="parent::METASCHEMA">
-            <string key="$id">#/definitions/{@name}</string>
-        </xsl:if>
-    </xsl:template>
-    
-    <xsl:template match="define-field[empty(flag)]">
-        <map key="{ (use-name,@name)[1] }">
-            <xsl:apply-templates select="formal-name, description"/>
-            <xsl:call-template name="id-if-top-level"/>
-            <xsl:apply-templates select="." mode="object-type"/>
-            <xsl:apply-templates select="constraint/allowed-values"/>
-        </map>
-    </xsl:template>
-
     <xsl:template match="define-assembly" mode="properties">
         <!-- to be excluded, flags assigned to be keys -->
         <xsl:variable name="json-key-flag" select="json-key/@flag-name"/>
@@ -203,19 +265,38 @@
             select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)], model"/>
     </xsl:template>
 
-    <xsl:template match="formal-name">
-        <string key="title">
-            <xsl:apply-templates/>
-        </string>
+    <xsl:template match="define-field" mode="properties">
+        <xsl:apply-templates mode="declaration" select="flag | define-flag"/>
+        <xsl:variable name="this-key" as="xs:string?">
+            <xsl:apply-templates select="." mode="value-key"/>
+        </xsl:variable>
+        <xsl:if test="matches($this-key, '\S')">
+            <map key="{$this-key}">
+                <string key="type">string</string>
+            </map>
+        </xsl:if>
     </xsl:template>
-
-    <xsl:template match="description">
-        <string key="description">
-            <xsl:value-of select="normalize-space(.)"/>
-        </string>
+    
+    <xsl:template match="define-field[@collapsible='yes']" mode="properties">
+        <xsl:apply-templates mode="declaration" select="flag | define-flag"/>
+        <xsl:variable name="this-key" as="xs:string?">
+            <xsl:apply-templates select="." mode="value-key"/>
+        </xsl:variable>
+        <xsl:if test="matches($this-key, '\S')">
+            <map key="{$this-key}">
+                <array key="anyOf">
+                    <map><string key="type">string</string></map>
+                    <map>
+                        <string key="type">array</string>
+                        <map key="items">
+                            <string key="type">string</string>
+                        </map>
+                        <number key="minItems">2</number>
+                    </map>
+                </array>
+            </map>
+        </xsl:if>
     </xsl:template>
-
-    <xsl:template match="remarks | example"/>
     
     <xsl:template priority="2" mode="property-name" match="assembly">
         <xsl:apply-templates select="key('assembly-definition-by-name',@ref)" mode="#current">
@@ -259,39 +340,6 @@
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
     
-    <xsl:template match="define-field" mode="properties">
-        <xsl:apply-templates mode="declaration" select="flag | define-flag"/>
-        <xsl:variable name="this-key" as="xs:string?">
-            <xsl:apply-templates select="." mode="value-key"/>
-        </xsl:variable>
-        <xsl:if test="matches($this-key, '\S')">
-            <map key="{$this-key}">
-                <string key="type">string</string>
-            </map>
-        </xsl:if>
-    </xsl:template>
-    
-    <xsl:template match="define-field[@collapsible='yes']" mode="properties">
-        <xsl:apply-templates mode="declaration" select="flag | define-flag"/>
-        <xsl:variable name="this-key" as="xs:string?">
-            <xsl:apply-templates select="." mode="value-key"/>
-        </xsl:variable>
-        <xsl:if test="matches($this-key, '\S')">
-            <map key="{$this-key}">
-                <array key="anyOf">
-                    <map><string key="type">string</string></map>
-                    <map>
-                        <string key="type">array</string>
-                        <map key="items">
-                            <string key="type">string</string>
-                        </map>
-                        <number key="minItems">2</number>
-                    </map>
-                </array>
-            </map>
-        </xsl:if>
-    </xsl:template>
-    
     <!--A flag declared as a key or value key gets no declaration since it
     will not show up in the JSON as a separate property -->
     
@@ -323,34 +371,6 @@
         </map>
     </xsl:template>
     
-    <!-- No restriction is introduced when allow others is 'yes' -->
-    <xsl:template match="allowed-values[@allow-other='yes']"/>
-    
-    <xsl:template match="allowed-values">
-        <array key="enum">
-            <xsl:apply-templates/>
-        </array>
-    </xsl:template>
-    
-    <xsl:template match="allowed-values/enum">
-        <!-- since the JSON must show enumerated values consistent with the base type notation,
-             we determine the nominal type of the node and map it to 'number', 'string' or 'boolean' whichever is best. -->
-        <xsl:variable name="type-declaration">
-            <xsl:apply-templates select="../parent::constraint/.." mode="object-type"/>
-        </xsl:variable>
-        <xsl:variable name="nominal-type">
-            <xsl:choose>
-                <xsl:when test="$type-declaration/*[@key='type']='integer'">number</xsl:when>
-                <xsl:when test="$type-declaration/*[@key='type']='boolean'">boolean</xsl:when>
-                <xsl:otherwise>string</xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-        <!--<xsl:copy-of select="$type-declaration"/>-->
-        <xsl:element namespace="http://www.w3.org/2005/xpath-functions" name="{$nominal-type}">
-            <xsl:apply-templates select="@value"/>
-        </xsl:element>
-    </xsl:template>
-
     <!-- irrespective of min-occurs and max-occurs, assemblies and fields designated
          with key flags are represented as objects, never arrays, as the key
          flag serves as a label -->
@@ -441,23 +461,6 @@
 
     <xsl:template match="define-field[empty(flag|define-flag)] | define-flag | flag" mode="object-type">
         <string key="type">string</string>
-    </xsl:template>
-    
-    <xsl:template name="string-or-array-of-strings">
-        <array key="oneOf">
-            <map>
-              <string key="type">string</string>
-            </map>
-            <map>
-            <string key="type">array</string>
-                <array key="items">
-                    <map>
-                      <string key="type">string</string>
-                    </map>
-                </array>
-                <string key="minItems">2</string>
-            </map>
-        </array>
     </xsl:template>
     
     <xsl:template match="field" priority="3" mode="object-type">
