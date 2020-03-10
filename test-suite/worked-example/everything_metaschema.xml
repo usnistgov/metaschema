@@ -13,6 +13,34 @@
        <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
    </remarks>
     
+<!-- 
+     Schematron
+       abstract="yes" - turns off checking for missing declarations
+        
+     ASSEMBLY
+        singleton
+        grouped
+          with and without @in-xml
+        root-name
+        use-name
+        json-key
+        choice
+        @in-json
+        
+     FIELD
+       json-value-key literal
+       json-value-key flag
+       value datatypes
+         markup-line
+         markup-multiline
+           with and without in-xml="wrapped"
+       value constraints (allowed-values)
+    
+     FLAG
+       value datatypes
+    
+    -->
+    
    <define-assembly name="anything">
        <formal-name>Any Thing</formal-name>
        <description>Any old thing.</description>
@@ -25,40 +53,87 @@
        </model>
    </define-assembly>
     
-    <define-flag name="todays-date" as-type="date">
-        <formal-name>Today's Date</formal-name>
-        <description>Not before yesterday.</description>
-    </define-flag>
-    
-    <define-flag name="never-used" as-type="date">
-        <formal-name>Never Used</formal-name>
-        <description>Not before yesterday.</description>
-    </define-flag>
-    
     <define-assembly name="everything">
         <formal-name>Every Thing</formal-name>
         <description>Nothing left out.</description>
-        <model></model>
+        <root-name>EVERYTHING</root-name>
+        <use-name>everything</use-name>
+        <flag ref="todays-date"/>
+        <define-flag name="required-integer" as-type="integer" required="yes">
+            <formal-name>Required Integer</formal-name>
+            <description>An integer.</description>
+        </define-flag>
+        
+        <model>
+            <define-field name="required-local-field" as-type="markup-line" min-occurs="1">
+                <formal-name>Required local field</formal-name>
+                <description>Declared on 'everything'</description>
+            </define-field>
+            <field ref="one-string"/>
+            <field ref="line" max-occurs="unbounded">
+                <group-as name="epigraph" in-xml="GROUPED"/>
+            </field>
+            <field ref="color" max-occurs="unbounded">
+                <group-as name="colors" in-xml="GROUPED" in-json="BY_KEY"/>
+            </field>
+            <assembly ref="singleton" max-occurs="1" min-occurs="1"/>
+            <assembly ref="section" max-occurs="unbounded" min-occurs="0">
+                <group-as name="sections" in-json="BY_KEY"/>
+            </assembly>
+            <assembly ref="everything" max-occurs="3">
+                <use-name>everything</use-name>
+                <group-as name="everythings"/>
+            </assembly>
+            
+        </model>
     </define-assembly>
     
-    <define-field name="line" as-type="markup-multiline">
-        <formal-name>Line of verse</formal-name>
-        <description>Could be terse</description>
-    </define-field>
+    <define-assembly name="singleton">
+        <formal-name>Singleton assembly</formal-name>
+        <description>One of a kind.</description>
+        <flag ref="todays-date"/>
+        <model>
+            <field ref="title" min-occurs="1"/>
+            <field ref="remarks" in-xml="WITH_WRAPPER" />
+        </model>
+    </define-assembly>
     
     <define-assembly name="section">
         <formal-name>Section</formal-name>
         <description>.</description>
+        <json-key flag-name="id"/>
+        <define-flag name="id" as-type="NCName">
+            <formal-name>id</formal-name>
+            <description>.</description>
+        </define-flag>
         <define-flag name="class">
             <formal-name>Class</formal-name>
             <description>.</description>
         </define-flag>
         <model>
             <field ref="title"/>
+            <field ref="named-value"/>
+            <field ref="line" max-occurs="unbounded">
+                <group-as name="epigraph" in-xml="GROUPED"/>
+            </field>
             <field ref="prose" in-xml="UNWRAPPED"/>
-            <field ref="line"/>
         </model>
     </define-assembly>
+    
+    <define-field name="color" as-type="string">
+        <formal-name>Color</formal-name>
+        <description>Name and code</description>
+        <json-key flag-name="code"/>
+        <define-flag name="code" required="yes">
+            <formal-name>Code</formal-name>
+            <description>The six-digit hex code, so FF0000 for red</description>
+        </define-flag>
+    </define-field>
+    
+    <define-field name="line" as-type="markup-line">
+        <formal-name>Line of verse</formal-name>
+        <description>Could be terse</description>
+    </define-field>
     
     <define-field name="title" as-type="markup-line">
         <formal-name>Title</formal-name>
@@ -68,44 +143,24 @@
     <define-field name="prose" as-type="markup-multiline">
         <formal-name>Prose</formal-name>
         <description>A placeholder for prose in an explicit model.</description>
-        
     </define-field>
     
-    <define-assembly name="everything">
-        <formal-name>Every Thing</formal-name>
-        <description>Nothing left out.</description>
-        <root-name>EVERYTHING</root-name>
-        <use-name>everything</use-name>
-        <flag ref="todays-date" required="yes"/>
-        <define-flag name="todays-date" as-type="date">
-            <formal-name>Today's date</formal-name>
-            <description>.</description>
-        </define-flag>
-        <!--<define-flag name="required-integer" as-type="integer" required="yes">
-            <formal-name>Required Integer</formal-name>
-            <description>An integer.</description>
-        </define-flag>-->
-        
-        <model>
-            <field ref="one-string"/>
-            <field ref="line"/>
-            <assembly ref="section"/>
-            <assembly ref="everything" max-occurs="3">
-                <use-name>everything</use-name>
-                <group-as name="everythings"/>
-            </assembly>
-            
-        </model>
-    </define-assembly>
+    <define-field name="remarks" as-type="markup-multiline">
+        <formal-name>Prose</formal-name>
+        <description>A block o' prose.</description>
+    </define-field>
     
-    <define-assembly name="local-assembly">
-        <formal-name>Local Assembly</formal-name>
-        <description>Declared Locally</description>
-        <use-name>LOCAL</use-name>
-        <model>
-            <assembly ref="everything"/>
-        </model>
-    </define-assembly>
+    <define-field name="named-value" as-type="string">
+        <formal-name>Named value</formal-name>
+        <description>A field with a json value flag</description>
+        <json-value-key flag-name="name"/>
+        <flag ref="class"/>
+        <define-flag name="name" required="yes">
+            <formal-name>Name</formal-name>
+            <description>The name for the value</description>
+        </define-flag>
+    </define-field>
+    
     
     <define-field name="one-string">
         <formal-name>One String</formal-name>
@@ -120,11 +175,20 @@
             </allowed-values>
         </constraint>
     </define-field>
+    <define-flag name="todays-date" as-type="date">
+        <formal-name>Today's Date</formal-name>
+        <description>Not before yesterday.</description>
+    </define-flag>
 
     <define-flag name="required-ncname" as-type="NCName">
         <!--(declared a string by default)-->
         <formal-name>Required NCName</formal-name>
         <description>A no-colon name.</description>
+    </define-flag>
+    
+    <define-flag name="class" as-type="NCName">
+        <formal-name>Class</formal-name>
+        <description>Some class.</description>
     </define-flag>
     
     <!--<define-field name="custom-field">
