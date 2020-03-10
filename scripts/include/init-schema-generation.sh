@@ -26,11 +26,11 @@ validate_schema() {
   # validate generated schema
   case ${format} in
   xml)
-    result=$(validate_xml "${METASCHEMA_SCRIPT_DIR}/../support/schema/XMLSchema.xsd" "$schema_file")
+    result=$(validate_xml "${METASCHEMA_SCRIPT_DIR}/../support/xml/XMLSchema.xsd" "$schema_file")
     cmd_exitcode=$?
     ;;
   json)
-    result=$(validate_json "${METASCHEMA_SCRIPT_DIR}/../support/schema/json-schema-schema.json" "$schema_file")
+    result=$(validate_json "${METASCHEMA_SCRIPT_DIR}/../support/json/json-schema-schema.json" "$schema_file")
     cmd_exitcode=$?
     ;;
   *)
