@@ -6,18 +6,17 @@
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
    xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd"
    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-   xmlns:o="http://csrc.nist.gov/ns/oscal/example">
+   xmlns:o="http://csrc.nist.gov/ns/oscal/example"
+   abstract="yes">
+   
    <schema-name>OSCAL Document Metadata Description</schema-name>
    <schema-version>1.0.0-milestone2</schema-version>
    <short-name>oscal-metadata</short-name>
    <namespace>http://csrc.nist.gov/ns/oscal/1.0</namespace>
 
-   
-   
    <define-assembly name="metadata">
       <formal-name>Publication metadata</formal-name>
       <description>Provides information about the publication and availability of the containing document.</description>
-      <root-name>metadata</root-name>
       <model>
          <field ref="title" min-occurs="1"/>
          <field ref="published"/>
@@ -67,8 +66,7 @@
    </define-assembly>
    <define-assembly name="back-matter">
       <formal-name>Back matter</formal-name>
-      <description>A collection of citations and resource references.</description>
-      <root-name>back-matter</root-name>
+      <description>References and resources.</description>
       <model><!--<assemblies named="section"/>-->
          <assembly ref="resource" max-occurs="unbounded">
             <group-as name="resources"/>
