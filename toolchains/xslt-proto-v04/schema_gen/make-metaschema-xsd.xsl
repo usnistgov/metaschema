@@ -298,7 +298,7 @@
             <!-- producing xs:unique to govern attributes that will be promoted to keys -->
             <!-- this works over and above XSD type validation e.g. ID -->
             <!--<xsl:apply-templates select="$decl" mode="annotated"/>-->
-            <xsl:apply-templates select="$decl/json-key" mode="uniqueness-constraint"/>
+            <!--<xsl:apply-templates select="$decl/json-key" mode="uniqueness-constraint"/>-->
         </xs:element>
     </xsl:template>
     
@@ -306,14 +306,14 @@
         <xs:element name="{group-as/@name}"
             minOccurs="{ if (@min-occurs != '0') then 1 else 0 }"
             maxOccurs="1">
-            <xsl:variable name="decl" select="key('global-field-by-name',@ref)"/>
+            <xsl:variable name="decl" select="key('global-field-by-name',self::field/@ref) | key('global-assembly-by-name',self::assembly/@ref)"/>
             <!--<xsl:apply-templates select="$decl" mode="annotated"/>-->
             <xs:complexType>
                 <xs:sequence>
                   <xsl:next-match/>
                 </xs:sequence>
             </xs:complexType>
-            <!--<xsl:apply-templates select="$decl/json-key" mode="uniqueness-constraint"/>-->
+            <xsl:apply-templates select="$decl/json-key" mode="uniqueness-constraint"/>
         </xs:element>
     </xsl:template>
     
