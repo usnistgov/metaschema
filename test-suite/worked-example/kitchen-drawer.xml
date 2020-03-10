@@ -29,6 +29,11 @@
           <p>Some remarks here.</p>
         </remarks>
       </singleton>
+      <section id="sec1">
+        <title>Section One</title>
+        <p>Sections may contain any sort of thing, really.</p>
+        <h5>There is more to come</h5>
+      </section>
       
     </everything>
 </ANYTHING>
