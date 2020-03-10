@@ -129,6 +129,7 @@
             <sch:assert test="m:datatype-validate(@value,../../@as-type)">Value '<sch:value-of select="@value"/>' is not a valid token of type <sch:value-of select="../../@as-type"/></sch:assert>
         </sch:rule>
     </sch:pattern>
+    
     <sch:pattern id="schema-docs">
         <sch:rule context="m:define-assembly | m:define-field | m:define-flag">
             <sch:assert role="warning" test="exists(m:formal-name)">Formal name missing from <sch:name/></sch:assert>
