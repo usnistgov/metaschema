@@ -66,7 +66,7 @@ if [ -z ${METASCHEMA_SCRIPT_INIT+x} ]; then
   initialize_defaults() {
     # set meaningful defaults if not set by local configuration
     if [ -z ${PROVIDER_DIR+x} ]; then
-      PROVIDER_DIR="${METASCHEMA_SCRIPT_DIR}/../toolchains/oscal-m2"
+      PROVIDER_DIR="${METASCHEMA_SCRIPT_DIR}/../toolchains/xslt-proto-v04"
     fi
 
     if [ -z ${WORKING_DIR+x} ]; then
