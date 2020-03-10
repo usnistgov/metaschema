@@ -8,7 +8,7 @@ So the examples below use a mix of explicit tagging semantics, and a specialized
 
 ## Metapath
 
-Metapath is XPath for Metaschema. It maps to equivalent XPath (for XML) or to a JSON addressing syntax as needed. It assumes a metaschema as a backbone, meaning its data model the Metaschema data model.
+Metapath is XPath for Metaschema. It maps to equivalent XPath (for XML) or to a JSON addressing syntax as needed. It assumes a metaschema as a backbone, meaning its data model is the Metaschema data model.
 
 ### Data model
 
@@ -85,16 +85,129 @@ For = and !=
   "declare identity" enabling 
 
     e.g. compare @id flags?
-	
+    
 
 # Worked examples
 
 
 If a property has flag x its value flag must be Y
 
-("property 'impact' must have the value LOW, MODERATE or HIGH")
+("property 'THIS' must have the value LOW, MODERATE or HIGH")
+
+VALID
+<prop name="THIS">LOW</prop>
+
+INVALID
+<prop name="THIS">LOWx</prop>
+
 
 <define-field name="prop">
+  <define-flag name="name">
+    <constraints>
+      <allowed-values allow-other="no" when='@name'> 
+        <enum>THIS</enum>
+        <enum>THAT</enum>
+      </allowed-values>
+    </contraints>
+  </define-flag>
+
+  <define-flag name="class"/>
+  
+  
+<field name="prop">
+  <constraints>
+    <require-value target="@name">
+      <enums allow-other="yes">
+        <enum>THIS</enum>
+        <enum>THAT</enum>
+      </enums>
+    </require-value>
+    <require when='@name="THIS"'>
+      <require-value target=".">
+        <pattern>regex</pattern>
+        <enums><!-- default: allow-other="no" -->
+          <enum>LOW</enum>
+          <enum>MODERATE</enum>
+          <enum>HIGH</enum>
+        </enums>
+      </require-value>
+    </require>
+    <require when='@name="THAT"'>
+      <require-value target="@class">
+        <pattern>regex</pattern>
+        <enums><!-- default: allow-other="no" -->
+          <enum>LOW</enum>
+          <enum>MODERATE</enum>
+          <enum>HIGH</enum>
+        </enums>
+      </require-value>
+      <require-keyref key-name="some-key" key-lookup="."/>
+      <require-occurrence field="some-field" min-occurs="2"/>
+    </require>
+  </constraints>
+</field>
+  
+  
+constraints
+require-value
+enums
+enum
+pattern
+require-keyref
+@key-name
+@key-lookup
+require-occurrence
+@field | @flag | @assembly
+@min-occurs
+@max-occurs
+require
+@when
+require-value
+require-keyref
+require-occurrence
+
+Name change suggestions:
+
+'@scope' for @target
+'value-test' for 'require-value'
+'keyref' for 'require-keyref'
+'occurrence' for 'require-occurrence'
+
+with these changes we would have
+
+<constraints>
+  <value-test scope="@name">
+      <enums allow-other="yes">
+          <enum>THIS</enum>
+          <enum>THAT</enum>
+      </enums>
+  </require-value>
+  <require when='@name="THIS"'>
+      <value-test scope=".">
+          <pattern>regex</pattern>
+          <enums><!-- default: allow-other="no" -->
+              <enum>LOW</enum>
+              <enum>MODERATE</enum>
+              <enum>HIGH</enum>
+          </enums>
+      </value-test>
+  </require>
+  <require when='@name="THAT"'>
+      <value-test scope="@class">
+          <pattern>regex</pattern>
+          <enums><!-- default: allow-other="no" -->
+              <enum>LOW</enum>
+              <enum>MODERATE</enum>
+              <enum>HIGH</enum>
+          </enums>
+      </value-test>
+      <keyref key-name="some-key" key-lookup="."/>
+      <occurrence field="some-field" min-occurs="2"/>
+  </require>
+</constraints>
+
+<define-key name="parameters-by-id" return="param" using="@id"/>
+
 
 ```xml
 <constrain when="^name='impact'">
@@ -114,15 +227,15 @@ If an assembly has flag X=x1, then field Y must be one of y1, y2, y3
   <flag ref="X"/>
   <let name="Xx" be="^X"/>  <!-- $Xx now refers to the flag 'X' -->
   <model>
-	<field ref="Y">
-	  <constrain when="$Xx='x1'> <!-- the condition can now be set in the context of field Y -->
-  	    <allowed-values>
-	  	  <enum>y1</enum>
-		  <enum>y2</enum>
-	      <enum>y3</enum>
-	    </allowed-values>
-	  </constrain> 
-	</field>
+    <field ref="Y">
+      <constrain when="$Xx='x1'> <!-- the condition can now be set in the context of field Y -->
+        <allowed-values>
+          <enum>y1</enum>
+          <enum>y2</enum>
+          <enum>y3</enum>
+        </allowed-values>
+      </constrain> 
+    </field>
   </model>
 </define-assembly>
 ```
@@ -234,9 +347,9 @@ this is equivalent to
 
 <let name="x">
     <eval function="replace">
-	  <arg>.</arg>
-	  <arg>'^#'</arg>
-	  <arg>''</arg>
+      <arg>.</arg>
+      <arg>'^#'</arg>
+      <arg>''</arg>
 </let>
 ```
 
@@ -265,7 +378,7 @@ hmmm
     </require>
   </constrain>
 </define-flag>
-```	
+``` 
 
 ... or ...
 
@@ -276,14 +389,14 @@ hmmm
     <let name="regex" be="(AC|AT|MP)\-\d\d?"/>
     <require>
       <test function="regex-match">
-	    <arg>.</arg>
-	    <arg>$regex</arg>
-	    <confirm>the label should match regex { $regex }</confirm>
-	  </test>
+        <arg>.</arg>
+        <arg>$regex</arg>
+        <confirm>the label should match regex { $regex }</confirm>
+      </test>
     </require>
   </constrain>
 </define-flag>
-```	
+``` 
 
 
 # Model so far
@@ -314,18 +427,18 @@ any-of { (require*, forbid*) }
 assembly { attribute with { text }?,
        attribute within { text }?,
        attribute occurrence { 'one-or-more','one-only','more-than-one' },
-		   test* }?
+           test* }?
        flag*, field*, test* }
 
 field { attribute with { text }?,
        attribute within { text }?,
        attribute occurrence { 'one-or-more','one-only','more-than-one' },
-		   test* }?
+           test* }?
        flag*, test* }
 
 flag { attribute with { text }?,
        attribute within { text }?,
        attribute occurrence { 'one-or-more','one-only','more-than-one' },
-		   test* }?
+           test* }?
 
 ```
