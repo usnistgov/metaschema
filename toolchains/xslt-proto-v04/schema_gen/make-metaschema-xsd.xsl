@@ -71,7 +71,7 @@
                         </xs:choice>
                     </xs:group>
                 </xsl:if>
-                <xsl:apply-templates mode="acquire-prose" select="document('../lib/oscal-prose-module.xsd')"/>
+                <xsl:apply-templates mode="acquire-prose" select="document('oscal-prose-module.xsd')"/>
             </xsl:if>
             <xsl:variable name="all-types" select="$metaschema//@as-type"/>
             
@@ -79,7 +79,7 @@
         </xs:schema>
     </xsl:template>
     
-    <xsl:variable name="types-library" select="document('../lib/oscal-datatypes.xsd')/*"/>
+    <xsl:variable name="types-library" select="document('oscal-datatypes.xsd')/*"/>
     
     <xsl:template match="namespace"/>
         
@@ -116,13 +116,6 @@
             <xsl:apply-templates select="model"/>
             <xsl:apply-templates select="flag | define-flag"/>
         </xs:complexType>
-            <!-- producing xs:unique to govern attributes that will be promoted to keys -->
-            <!-- this works over and above XSD type validation e.g. ID -->
-        <xsl:for-each select="model//*[group-as/@in-json='BY_KEY'][not(group-as/@in-xml='GROUPED')]">
-                <xsl:apply-templates select="key('global-assembly-by-name',@ref)/json-key" mode="uniqueness-constraint">
-                    <xsl:with-param name="whose" select="$whose"/>
-                </xsl:apply-templates>
-            </xsl:for-each>
     </xsl:template>
     
     <xsl:template priority="11"
@@ -149,6 +142,15 @@
             </xsl:apply-templates>
         </xs:element>
     </xsl:template>
+    
+    <xsl:template match="json-key" mode="uniqueness-constraint">
+        <xsl:param name="whose"  select="(ancestor::define-assembly | ancestor::define-field)[last()]"/>
+        <xs:unique name="{ $whose/@name}-{ ../@name }-keys">
+            <xs:selector xpath="{ $declaration-prefix}:{../@name }"/>
+            <xs:field xpath="@{ @flag-name }"/>
+        </xs:unique>
+    </xsl:template>
+    
     
     <xsl:template priority="10" match="model//define-assembly | model//define-field">
         <xsl:variable name="gi" select="(use-name,@name)[1]"/>
@@ -222,16 +224,7 @@
     <xsl:template priority="6" match="METASCHEMA/define-field[@as-type='markup-multiline'][not(@in-xml='WITH_WRAPPER')]"/>
     
 
-
-    <xsl:template match="json-key" mode="uniqueness-constraint">
-        <xsl:param name="whose"/>
-        <xs:unique name="{ $whose/@name}-{ ../@name }-keys">
-            <xs:selector xpath="{ $declaration-prefix}:{../@name }"/>
-            <xs:field xpath="@{ @flag-name }"/>
-        </xs:unique>
-    </xsl:template>
-
-    <!-- Flags become attributes; this schema defines them all locally. -->
+   <!-- Flags become attributes; this schema defines them all locally. -->
     <xsl:template match="define-flag"/>
 
     <!-- Extra coverage -->
@@ -279,6 +272,7 @@
         <xsl:variable name="decl" select="key('global-field-by-name',@ref)"/>
         <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
         <xsl:call-template name="declare-element-as-type">
+            <xsl:with-param name="decl" select="$decl"/>
             <xsl:with-param name="gi" select="$gi"/>
             <xsl:with-param name="type" select="$declaration-prefix || ':' || @ref || '-FIELD'"></xsl:with-param>
         </xsl:call-template>
@@ -288,17 +282,23 @@
         <xsl:variable name="decl" select="key('global-assembly-by-name',@ref)"/>
         <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
         <xsl:call-template name="declare-element-as-type">
+            <xsl:with-param name="decl" select="$decl"/>
             <xsl:with-param name="gi" select="$gi"/>
             <xsl:with-param name="type" select="$declaration-prefix || ':' || @ref || '-ASSEMBLY'"></xsl:with-param>
         </xsl:call-template>
     </xsl:template>
     
     <xsl:template name="declare-element-as-type">
-        <xsl:param name="gi"/>
+        <xsl:param name="decl" select="()"/>
+        <xsl:param name="gi" required="yes"/>
         <xsl:param name="type" select="@ref"/>
         <xs:element name="{$gi}" type="{$type}"
             minOccurs="{ if (exists(@min-occurs)) then @min-occurs else 0 }"
-            maxOccurs="{ if (exists(@max-occurs)) then @max-occurs else 1 }"/>
+            maxOccurs="{ if (exists(@max-occurs)) then @max-occurs else 1 }">
+            <!-- producing xs:unique to govern attributes that will be promoted to keys -->
+            <!-- this works over and above XSD type validation e.g. ID -->
+            <xsl:apply-templates select="$decl/json-key" mode="uniqueness-constraint"/>
+        </xs:element>
     </xsl:template>
     
     <xsl:template priority="5" match="field[group-as/@in-xml='GROUPED'] | assembly[group-as/@in-xml='GROUPED']">
@@ -312,9 +312,7 @@
                   <xsl:next-match/>
                 </xs:sequence>
             </xs:complexType>
-            <xsl:apply-templates select="$decl/json-key" mode="uniqueness-constraint">
-                <xsl:with-param name="whose" select="ancestor::define-assembly"/>
-            </xsl:apply-templates>
+            <!--<xsl:apply-templates select="$decl/json-key" mode="uniqueness-constraint"/>-->
         </xs:element>
     </xsl:template>
     
