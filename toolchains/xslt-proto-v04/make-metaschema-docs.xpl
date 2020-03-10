@@ -22,7 +22,7 @@
   
   <!--<p:serialization port="c.abstract-model-map" indent="true"/>
   <p:output        port="c.abstract-model-map" primary="false">
-    <p:pipe        port="result" step="build-model-map"/>
+    <p:pipe        port="result" step="make-model-map"/>
   </p:output>
   
   <p:serialization port="d.unfolded-model-map" indent="true"/>
@@ -55,12 +55,12 @@
   <p:identity name="composed"/>
   
   <!--<p:identity  name="render-xml-model-map"/>-->
-  <!--<p:xslt name="build-model-map">
+  <!--<p:xslt name="make-model-map">
     <p:input port="source">
       <p:pipe port="result" step="composed"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="compose/build-model-map.xsl"/>
+      <p:document href="compose/make-model-map.xsl"/>
     </p:input>
   </p:xslt>-->
   
