@@ -5,14 +5,30 @@
     
     <everything required-integer="3">
       <required-local-field>field!</required-local-field>
+      <epigraph>
+        <line>The best-laid plans o' mice and men</line>
+        <line><b>Gang oft aglay</b>.</line>
+      </epigraph>
       <colors>
         <color code="FF0000">red</color>
       </colors>
+      <dramatis-personae>
+        <role role-id="hamlet">
+          <title>Hamlet</title>
+          <remarks><p>Prince of Denmark.</p></remarks>
+        </role>
+        <role role-id="ophelia">
+          <title>Ophelia</title>
+          <remarks><p>Daughter of Polonius.</p></remarks>
+        </role>
+      </dramatis-personae>
+      
       <singleton>
         <title>Single Ton!</title>
         <remarks>
           <p>Some remarks here.</p>
         </remarks>
       </singleton>
+      
     </everything>
 </ANYTHING>
