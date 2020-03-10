@@ -9,7 +9,7 @@ generate_xml_schema() {
   local metaschema="$1"; shift
   local output_file="$1"; shift
 
-  local transform="${PROVIDER_RESOURCE_DIR}/xml/produce-xsd.xsl"
+  local transform="${PROVIDER_RESOURCE_DIR}/nist-metaschema-MAKE-XSD.xsl"
   local result=$(xsl_transform "$transform" "$metaschema" "$output_file" 2>&1)
   local cmd_exitcode=$?
   if [ $cmd_exitcode -ne 0 ]; then
@@ -26,7 +26,7 @@ generate_json_schema() {
   local metaschema="$1"; shift
   local output_file="$1"; shift
 
-  local transform="${PROVIDER_RESOURCE_DIR}/json/produce-json-schema.xsl"
+  local transform="${PROVIDER_RESOURCE_DIR}/nist-metaschema-MAKE-JSON-SCHEMA.xsl"
   local result=$(xsl_transform "$transform" "$metaschema" "$output_file" 2>&1)
   local cmd_exitcode=$?
   if [ $cmd_exitcode -ne 0 ]; then
