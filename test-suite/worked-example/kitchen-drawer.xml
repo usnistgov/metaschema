@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ANYTHING xmlns="http://csrc.nist.gov/metaschema/ns/everything"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/everything everything.xsd">
+    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/everything everything_metaschema.xsd">
     
     <everything required-integer="3">
       <required-local-field>field!</required-local-field>
@@ -22,18 +22,15 @@
           <remarks><p>Daughter of Polonius.</p></remarks>
         </role>
       </dramatis-personae>
-      
-      <singleton>
-        <title>Single Ton!</title>
-        <remarks>
-          <p>Some remarks here.</p>
-        </remarks>
-      </singleton>
+      <SINGLETON>
+        <title></title>
+      </SINGLETON>
       <section id="sec1">
         <title>Section One</title>
         <p>Sections may contain any sort of thing, really.</p>
         <h5>There is more to come</h5>
       </section>
+      
       
     </everything>
 </ANYTHING>

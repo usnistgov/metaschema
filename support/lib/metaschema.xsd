@@ -47,8 +47,10 @@
     <xs:sequence>
       <xs:element minOccurs="0" ref="m:formal-name"/>
       <xs:element minOccurs="0" ref="m:description"/>
-      <xs:element minOccurs="0" name="root-name" type="xs:NCName"/>
-      <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
+      <xs:choice>
+        <xs:element minOccurs="0" name="root-name" type="xs:NCName"/>
+        <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
+      </xs:choice>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-key"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="m:local-flag-definition"/>
