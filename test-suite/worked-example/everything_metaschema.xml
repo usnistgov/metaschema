@@ -57,7 +57,6 @@
         <formal-name>Every Thing</formal-name>
         <description>Nothing left out.</description>
         <root-name>EVERYTHING</root-name>
-        <use-name>everything</use-name>
         <flag ref="todays-date"/>
         <define-flag name="required-integer" as-type="integer" required="yes">
             <formal-name>Required Integer</formal-name>
@@ -97,6 +96,7 @@
     <define-assembly name="singleton">
         <formal-name>Singleton assembly</formal-name>
         <description>One of a kind.</description>
+        <use-name>SINGLETON</use-name>
         <flag ref="todays-date"/>
         <model>
             <field ref="title" min-occurs="1"/>
@@ -219,7 +219,6 @@
     </define-flag>
 
     <define-flag name="required-ncname" as-type="NCName">
-        <!--(declared a string by default)-->
         <formal-name>Required NCName</formal-name>
         <description>A no-colon name.</description>
     </define-flag>
