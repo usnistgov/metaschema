@@ -41,12 +41,14 @@ recover from definition
     
     <xsl:template match="METASCHEMA/*" mode="build"/>
     
-    <xsl:template mode="build" priority="2" match="/*/define-assembly | /*/define-field | /*/define-flag">
+    <xsl:template mode="build" priority="2" match="/*/define-assembly | /*/define-field">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates mode="#current"/>
         </xsl:copy>
     </xsl:template>
+    
+    <xsl:template mode="build" priority="2" match="/*/define-flag"/>
     
     <xsl:template match="model//*[exists(group-as)]" mode="build">
         <group in-json="ARRAY">
@@ -67,7 +69,8 @@ recover from definition
             <xsl:attribute name="max-occurs">1</xsl:attribute>
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates select="key('assembly-definition-by-name',@ref)" mode="reflect"/>
-            <xsl:apply-templates mode="build"/>
+            <xsl:apply-templates select="use-name" mode="reflect"/>
+            <xsl:apply-templates select="* except use-name" mode="build"/>
         </xsl:copy>
     </xsl:template>
     
@@ -77,7 +80,8 @@ recover from definition
             <xsl:attribute name="max-occurs">1</xsl:attribute>
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates select="key('field-definition-by-name',@ref)" mode="reflect"/>
-            <xsl:apply-templates mode="build"/>
+            <xsl:apply-templates select="use-name" mode="build"/>
+            <xsl:apply-templates select="* except use-name" mode="build"/>
         </xsl:copy>
     </xsl:template>
     
@@ -87,6 +91,8 @@ recover from definition
         </xsl:apply-templates>
     </xsl:template>
     
+    <xsl:template match="use-name" mode="build"/>
+        
     <xsl:template match="define-flag" mode="local-definition">
         <xsl:param name="caller" as="element()?"/>
         <xsl:copy>
