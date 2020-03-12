@@ -43,6 +43,10 @@
             <xsl:when test="$uri = $so-far">
                 <xsl:comment expand-text="true">Warning: circular import of { $uri } skipped</xsl:comment>
             </xsl:when>
+            <xsl:when test="not(doc-available($uri))">
+                <xsl:message terminate="yes" expand-text="true">Error: No metaschema module is found at { $uri }</xsl:message>
+                <xsl:comment expand-text="true">Warning: circular import of { $uri } skipped</xsl:comment>
+            </xsl:when>
             <xsl:otherwise>
                 <xsl:apply-templates select="document($uri)/METASCHEMA" mode="acquire">
                     <xsl:with-param name="so-far" select="$so-far,$uri"/>
