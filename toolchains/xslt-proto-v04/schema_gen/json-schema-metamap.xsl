@@ -155,7 +155,7 @@
             <xsl:variable name="all-properties" select="flag[not(@ref = $value-key-name)] |
                     define-flag[not(@name = $value-key-name)] |
                     model//(field | assembly)"/>
-            <xsl:comment> we require an unspecified property, with any key, to carry the nominal value</xsl:comment>
+            <xsl:comment> we require an unspecified property, with any key, to carry the nominal value </xsl:comment>
             <number key="minProperties">
                 <xsl:value-of
                     select="count(json-value-key[exists(@flag-name)] | $all-properties[@required = 'yes' or @min-occurs &gt; 0])"
@@ -518,8 +518,21 @@
         <string key="type">object</string>
     </xsl:template>
 
-    <xsl:template match="define-field[empty(flag|define-flag)] | define-flag | flag" mode="object-type">
+    <xsl:template match="define-flag | flag" mode="object-type">
         <string key="type">string</string>
+    </xsl:template>
+    
+    <xsl:template match="define-field" mode="object-type">
+        <xsl:variable name="implicit-flags" select="(json-key | json-value-key)/@flag-name"/>
+        <xsl:choose>
+            <xsl:when test="empty(flag[not(@ref=$implicit-flags)] | define-flag[not(@name=$implicit-flags)])">
+                <string key="type">string</string>        
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:next-match/>
+            </xsl:otherwise>
+        </xsl:choose>
+        
     </xsl:template>
     
     <xsl:template match="field" priority="3" mode="object-type">

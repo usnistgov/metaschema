@@ -258,9 +258,9 @@
         </xs:sequence>
     </xsl:template>
     
-    <xsl:template priority="10" match="model[exists(@ref)]">
+    <!--<xsl:template priority="10" match="model[exists(@ref)]">
         <xsl:apply-templates select="key('global-assembly-by-name',@ref)/model"/>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:template match="choice">
         <xs:choice>
