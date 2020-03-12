@@ -199,7 +199,6 @@
         </define-flag>
     </define-field>
     
-    
     <define-field name="one-string">
         <formal-name>One String</formal-name>
         <description>Not more than one.</description>
@@ -213,6 +212,7 @@
             </allowed-values>
         </constraint>
     </define-field>
+    
     <define-flag name="todays-date" as-type="date">
         <formal-name>Today's Date</formal-name>
         <description>Not before yesterday.</description>

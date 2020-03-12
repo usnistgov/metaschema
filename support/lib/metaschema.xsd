@@ -51,24 +51,11 @@
         <xs:element minOccurs="0" name="root-name" type="xs:NCName"/>
         <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       </xs:choice>
-      <xs:element minOccurs="0" maxOccurs="1" ref="m:json-key"/>
+      <xs:element minOccurs="0" maxOccurs="1"         ref="m:json-key"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="m:local-flag-definition"/>
-      <xs:element name="model" minOccurs="0">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:choice minOccurs="0" maxOccurs="unbounded">
-              <xs:element ref="m:assembly"/>
-              <xs:element ref="m:field"/>
-              <xs:element name="define-assembly" type="m:local-assembly-definition"/>
-              <xs:element name="define-field"    type="m:local-field-definition"/>
-              <xs:element ref="m:choice"/>
-            </xs:choice>
-            <xs:element ref="m:any" minOccurs="0"/>
-          </xs:sequence>
-        </xs:complexType>
-      </xs:element>
-      <xs:element minOccurs="0" name="constraint" type="m:constraint"/>
+      <xs:element name="model" minOccurs="0"          type="m:assembly-model"/>
+      <xs:element minOccurs="0" name="constraint"     type="m:constraint"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
@@ -76,6 +63,19 @@
     <xs:attribute name="module" type="xs:anyURI"/>
   </xs:complexType>
 
+  <xs:complexType name="assembly-model">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="m:assembly"/>
+        <xs:element ref="m:field"/>
+        <xs:element name="define-assembly" type="m:local-assembly-definition"/>
+        <xs:element name="define-field"    type="m:local-field-definition"/>
+        <xs:element ref="m:choice"/>
+      </xs:choice>
+      <xs:element ref="m:any" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  
   <xs:complexType name="global-field-definition">
     <xs:annotation>
       <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
@@ -137,11 +137,7 @@
       <xs:element minOccurs="0" ref="m:group-as"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="m:local-flag-definition"/>
-      <xs:element name="model" minOccurs="0">
-         <xs:complexType>
-           <xs:attribute name="ref" type="xs:NCName"/>
-         </xs:complexType>
-      </xs:element>
+      <xs:element name="model" minOccurs="0"          type="m:assembly-model"/>
       <!--<xs:element minOccurs="0" name="constraint" type="m:constraint"/>-->
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
