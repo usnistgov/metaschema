@@ -175,6 +175,78 @@ Name change suggestions:
 
 with these changes we would have
 
+constraints
+  require flag 'name'
+  require 'class' to be THIS or THAT
+  when 'class' is THIS, value must be LOW MODERATE or HIGH
+  when 'class' is THAT, value must be OPEN, PLANNED, PENDING or RESOLVED
+  
+---
+- test allowed-values on flags and fields
+    global and local
+- constraint/require[@when]
+- constraint/equals[@select][@occurrence]
+- constraint/is-distinct[@within]
+  constraint/ (has-assembly[@occurrence] | has-field[@occurrence])
+  
+<define-field name="status">
+  <flag name="class">
+    <constrain>
+      <allowed-values>
+        <enum>THIS</enum>
+        <enum>THAT</enum>
+      </allowed-values>
+    </constrain>
+  </flag>
+  <constrain>
+    <require when="@class='THIS'">
+    <allowed-values>
+        <enum>LOW</enum>
+        <enum>MODERATE</enum>
+        <enum>HIGH</enum>
+      </allowed-values>
+    
+
+constraints
+  require flag 'color-id'
+  require it to correspond to a //color/@id
+
+<define-field name="scheme">
+  <flag ref="color-id">
+    <constrain>
+      <uses key="color-by-id"/>
+      <equals select="//color/@id" occurrence="one-only"/>
+    </constrain>
+  </flag>
+</define-field>
+
+<define-field name="color">
+  <constrain>
+    <require flag="id" key="color-by-id"/>
+    
+    <key name="color-by-id" use="@id"/>
+  <flag ref="id" required="yes">
+    <constrain>
+      <key name="color-by-id" scope="all"/>
+      <is-distinct within=""/> <!-- scope is closest ancestor -->
+    </constrain>
+  </flag>
+</define-field>
+
+--> translates to xs:key name="distinct-color"
+  xs:selector xpath="//color"
+  xs:field xpath="@id"
+
+--> xs:keyref name="color-reference" refer="distinct-color"
+  xs:selector xpath="//scheme"
+  xs:field xpath="@color-id"
+  
+  
+  
+
+
+ 
+
 <constraints>
   <value-test scope="@name">
       <enums allow-other="yes">
