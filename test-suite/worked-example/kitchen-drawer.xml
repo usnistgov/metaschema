@@ -1,8 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ANYTHING xmlns="http://csrc.nist.gov/metaschema/ns/everything"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/everything everything_metaschema.xsd">
+
+<EVERYTHING  required-integer="0"  xmlns="http://csrc.nist.gov/metaschema/ns/everything"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/everything everything_metaschema_XML-SCHEMA.xsd">
+  <required-local-field>field!</required-local-field>
+  <!--<colors>
+    <color code="FF0000">red</color>
+    <color code="FF0000">red</color>
+    <color code="FF8888">pink</color>
+  </colors>-->
+  
+  <SINGLETON>
+    <title></title>
+  </SINGLETON>
+  
+  <everything required-integer="3">
+    <required-local-field>field!</required-local-field>
+    <epigraph>
+      <line>The best-laid plans o' mice and men</line>
+      <line><b>Gang oft aglay</b>.</line>
+    </epigraph>
+    <colors>
+      <color code="FF0000">red</color>
+      <color code="FF8888">pink</color>
+    </colors>
     
+    <SINGLETON>
+      <title></title>
+    </SINGLETON>
+  </everything>
+  
     <everything required-integer="3">
       <required-local-field>field!</required-local-field>
       <epigraph>
@@ -11,6 +38,15 @@
       </epigraph>
       <colors>
         <color code="FF0000">red</color>
+        <color code="FF8888">pink</color>
+      </colors>
+      <colors>
+        <color code="FF0000">red</color>
+        <color code="FF8888">pink</color>
+      </colors>
+      <colors>
+        <color code="FF0000">red</color>
+        <color code="FF8888">pink</color>
       </colors>
       <dramatis-personae>
         <role role-id="hamlet">
@@ -33,4 +69,4 @@
       
       
     </everything>
-</ANYTHING>
+</EVERYTHING>
