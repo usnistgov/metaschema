@@ -69,6 +69,9 @@
                 <description>Declared on 'everything'</description>
             </define-field>
             <field ref="one-string"/>
+            <field ref="expectation" max-occurs="unbounded">
+                <group-as name="expectations"/>
+            </field>
             <field ref="line" max-occurs="unbounded">
                 <group-as name="epigraph" in-xml="GROUPED"/>
             </field>
@@ -93,6 +96,39 @@
         </model>
     </define-assembly>
     
+    <define-field name="expectation">
+        <formal-name>Expectation</formal-name>
+        <description>Something that may or may not occur in the future.</description>
+        <define-flag name="type" required="yes">
+            <formal-name>Expectation type</formal-name>
+            <description>Saying something about an expectation.</description>
+            <constraint>
+                <allowed-values>
+                    <enum value="type">type</enum>
+                    <enum value="date">date</enum>
+                    <enum value="eventref">event reference</enum>
+                </allowed-values>
+            </constraint>
+        </define-flag>
+        <constraint>
+            <require when="@type='type'">
+                <allowed-values>
+                    <enum value="start">start</enum>
+                    <enum value="end">end</enum>
+                </allowed-values>
+            </require>
+            <require when="@type='date'">
+                <matches as-type="date"/>
+            </require>
+            <require when="@type='eventref'">
+                <equals select="//event/@id"/>
+            </require>
+            <require when="@type='one-off'">
+                <is-distinct/>
+            </require>
+        </constraint>
+    </define-field>
+        
     <define-assembly name="singleton">
         <formal-name>Singleton assembly</formal-name>
         <description>One of a kind.</description>

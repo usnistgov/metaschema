@@ -458,15 +458,50 @@
   <xs:complexType name="constraint">
     <xs:sequence>
       <xs:element minOccurs="0" ref="m:remarks"/>
-      <xs:element minOccurs="0" name="allowed-values">
-        <xs:complexType>
-          <xs:complexContent>
-            <xs:extension base="m:allowed-values-type">
-              <xs:attribute name="extends" type="m:boolean" default="yes"/>
-            </xs:extension>
-          </xs:complexContent>
-        </xs:complexType>
-      </xs:element>
+      <xs:choice>
+        <xs:element minOccurs="0" name="allowed-values">
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="m:allowed-values-type">
+                <xs:attribute name="extends" type="m:boolean" default="yes"/>
+              </xs:extension>
+            </xs:complexContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="matches">
+           <xs:complexType>
+             <xs:attribute name="regex"/>
+             <xs:attribute name="as-type"  type="m:simple-datatypes"/>
+           </xs:complexType>
+        </xs:element>
+        <xs:element name="is-distinct">
+          <xs:complexType/>
+        </xs:element>
+        <xs:element name="equals">
+          <xs:complexType>
+            <xs:attribute name="select"/>
+            <xs:attribute name="occurrence">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="empty" />
+                  <xs:enumeration value="markup-line"/>
+                  <xs:enumeration value="markup-multiline"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="require">
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="m:constraint">
+                <xs:attribute name="when"/>
+              </xs:extension>
+            </xs:complexContent>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+
     </xs:sequence>
     <xs:attribute name="scope" default="."/>
     <xs:attribute name="required" type="m:boolean" default="no"/>
