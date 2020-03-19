@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  elementFormDefault="qualified"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
   xmlns:oscal="http://csrc.nist.gov/ns/oscal/1.0"
   xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
   targetNamespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
@@ -23,8 +22,8 @@
         <xs:choice maxOccurs="unbounded">
           <xs:element ref="m:import"/>
           <xs:element name="define-assembly" type="m:global-assembly-definition"/>
-          <xs:element name="define-field"    type="m:global-field-definition"/>
-          <xs:element name="define-flag"     type="m:global-flag-definition"/>
+          <xs:element name="define-field" type="m:global-field-definition"/>
+          <xs:element name="define-flag" type="m:global-flag-definition"/>
         </xs:choice>
       </xs:sequence>
       <xs:attribute name="module" type="xs:anyURI"/>
@@ -38,7 +37,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:complexType name="global-assembly-definition">
     <xs:annotation>
       <xs:documentation>An element with structured element content in XML; in JSON, an object with
@@ -51,11 +50,12 @@
         <xs:element minOccurs="0" name="root-name" type="xs:NCName"/>
         <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       </xs:choice>
-      <xs:element minOccurs="0" maxOccurs="1"         ref="m:json-key"/>
+      <xs:element minOccurs="0" maxOccurs="1" ref="m:json-key"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="m:local-flag-definition"/>
-      <xs:element name="model" minOccurs="0"          type="m:assembly-model"/>
-      <xs:element minOccurs="0" name="constraint"     type="m:constraint"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
+        type="m:local-flag-definition"/>
+      <xs:element name="model" minOccurs="0" type="m:assembly-model"/>
+      <xs:element minOccurs="0" name="constraint" type="m:assembly-constraint-type"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
@@ -69,13 +69,13 @@
         <xs:element ref="m:assembly"/>
         <xs:element ref="m:field"/>
         <xs:element name="define-assembly" type="m:local-assembly-definition"/>
-        <xs:element name="define-field"    type="m:local-field-definition"/>
+        <xs:element name="define-field" type="m:local-field-definition"/>
         <xs:element ref="m:choice"/>
       </xs:choice>
       <xs:element ref="m:any" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  
+
   <xs:complexType name="global-field-definition">
     <xs:annotation>
       <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
@@ -89,8 +89,9 @@
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-key"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-value-key"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="m:local-flag-definition"/>
-      <xs:element minOccurs="0" name="constraint" type="m:constraint"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
+        type="m:local-flag-definition"/>
+      <xs:element minOccurs="0" name="constraint" type="m:model-constraint-type"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
@@ -111,7 +112,7 @@
       <xs:element minOccurs="0" ref="m:formal-name"/>
       <xs:element minOccurs="0" ref="m:description"/>
       <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
-      <xs:element name="constraint" minOccurs="0" type="m:constraint"/>
+      <xs:element name="constraint" minOccurs="0" type="m:define-flag-constraints-type"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
@@ -121,7 +122,7 @@
     <!-- defined for composed (compiled) metaschemas -->
     <xs:attribute name="module" type="xs:anyURI"/>
   </xs:complexType>
-  
+
   <xs:complexType name="local-assembly-definition">
     <xs:annotation>
       <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
@@ -136,9 +137,10 @@
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-value-key"/>
       <xs:element minOccurs="0" ref="m:group-as"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="m:local-flag-definition"/>
-      <xs:element name="model" minOccurs="0"          type="m:assembly-model"/>
-      <!--<xs:element minOccurs="0" name="constraint" type="m:constraint"/>-->
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
+        type="m:local-flag-definition"/>
+      <xs:element name="model" minOccurs="0" type="m:assembly-model"/>
+      <xs:element minOccurs="0" name="constraint" type="m:assembly-constraint-type"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
@@ -148,8 +150,8 @@
     <xs:attribute name="name" use="required" type="xs:NCName"/>
     <xs:attribute name="module" type="xs:anyURI"/>
   </xs:complexType>
-  
-  
+
+
   <xs:complexType name="local-field-definition">
     <xs:annotation>
       <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
@@ -168,8 +170,9 @@
           <xs:element name="flag" type="m:named-flag"/>
         </xs:choice>-->
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="m:local-flag-definition"/>
-      <xs:element minOccurs="0" name="constraint" type="m:constraint"/>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
+        type="m:local-flag-definition"/>
+      <xs:element minOccurs="0" name="constraint" type="m:model-constraint-type"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
@@ -198,9 +201,9 @@
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
-    
+
   </xs:complexType>
-  
+
   <xs:complexType name="local-flag-definition">
     <xs:annotation>
       <xs:documentation>A data point to be expressed as an attribute in the XML or a name/value pair in the JSON. A local definition describes and constrains the appearance of the flag only in its parent (assembly or field) context.</xs:documentation>
@@ -208,18 +211,18 @@
     <xs:sequence>
       <xs:element minOccurs="0" ref="m:formal-name"/>
       <xs:element minOccurs="0" ref="m:description"/>
-      <xs:element name="constraint" minOccurs="0" type="m:constraint"/>
+      <xs:element name="constraint" minOccurs="0" type="m:define-flag-constraints-type"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
     <!-- datatype should default to 'string' -->
-    <xs:attribute name="as-type" type="m:simple-datatypes" default="string"/>    
+    <xs:attribute name="as-type" type="m:simple-datatypes" default="string"/>
     <xs:attribute name="required" type="m:boolean" default="no"/>
     <!-- defined for composed (compiled) metaschemas -->
     <xs:attribute name="module" type="xs:anyURI"/>
   </xs:complexType>
-  
+
   <xs:element name="formal-name" type="xs:string">
     <xs:annotation>
       <xs:documentation>A formal name for the data construct, to be presented in documentation. It
@@ -228,7 +231,7 @@
         the very least confirm the intended semantics for the user, not confuse them.</xs:documentation>
     </xs:annotation>
   </xs:element>
-  
+
   <xs:element name="namespace" type="xs:anyURI">
     <xs:annotation>
       <xs:documentation>The XML namespace governing the names of elements in XML documents, which
@@ -239,7 +242,7 @@
         should not rely on namespaces alone to disambiguate or resolve semantics.</xs:documentation>
     </xs:annotation>
   </xs:element>
-  
+
   <xs:group name="markup-elements">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
@@ -251,7 +254,7 @@
       </xs:choice>
     </xs:sequence>
   </xs:group>
-  
+
   <xs:element name="description">
     <xs:annotation>
       <xs:documentation>A short description of the data construct, to be inserted into
@@ -263,7 +266,7 @@
       <xs:group ref="m:markup-elements"/>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="remarks">
     <xs:annotation>
       <xs:documentation>Any explanatory or helpful information to be provided in the
@@ -281,7 +284,7 @@
       <xs:attribute name="module" type="xs:anyURI"/>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="schema-name">
     <xs:annotation>
       <xs:documentation>The name of the information model to be represented by derived schemas.</xs:documentation>
@@ -293,14 +296,14 @@
       </xs:choice>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="schema-version">
     <xs:annotation>
       <xs:documentation>The version of the information model to be represented by derived schemas.</xs:documentation>
     </xs:annotation>
     <xs:complexType mixed="true"/>
   </xs:element>
-  
+
   <xs:element name="short-name">
     <xs:annotation>
       <xs:documentation>A short (code) name to be used for the metaschema, for example as a constituent of names assigned to
@@ -308,7 +311,7 @@
     </xs:annotation>
     <xs:complexType mixed="true"/>
   </xs:element>
-  
+
   <xs:element name="import">
     <xs:annotation>
       <xs:documentation>To import a set of declarations from an out-of-line schema, supporting reuse of common information structures.</xs:documentation>
@@ -321,7 +324,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="assembly">
     <xs:annotation>
       <xs:documentation>Referencing an assembly definition to include an assembly or assemblies of a given type in a model.</xs:documentation>
@@ -336,7 +339,7 @@
       <xs:attributeGroup ref="m:cardinality-specification"/>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="field">
     <xs:annotation>
       <xs:documentation>Referencing a field definition to include a field or fields of a given type in a model.</xs:documentation>
@@ -371,21 +374,20 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:attributeGroup name="cardinality-specification">
     <xs:attribute name="min-occurs" type="xs:nonNegativeInteger" default="0">
       <xs:annotation>
-        <xs:documentation>Minimum occurrence of assemblies within a valid model. The default value is 0, for an optional occurrence.</xs:documentation>
+        <xs:documentation>Minimum occurrence of assemblies or fields within a valid model. The default value is 0, for an optional occurrence.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="max-occurs"
-      type="m:natural-number-or-unbounded" default="1">
+    <xs:attribute name="max-occurs" type="m:natural-number-or-unbounded" default="1">
       <xs:annotation>
-        <xs:documentation>Maximum occurrence of assemblies within a valid model. The default value is 1, for a single occurrence. 'unbounded' permits any number of assemblies of the designated type.</xs:documentation>
+        <xs:documentation>Maximum occurrence of assemblies or fields within a valid model. The default value is 1, for a single occurrence. 'unbounded' permits any number of assemblies of the designated type.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
   </xs:attributeGroup>
-  
+
   <xs:simpleType name="natural-number-or-unbounded">
     <xs:union memberTypes="xs:positiveInteger">
       <xs:simpleType>
@@ -395,7 +397,7 @@
       </xs:simpleType>
     </xs:union>
   </xs:simpleType>
-  
+
   <xs:complexType name="allowed-values-type">
     <xs:annotation>
       <xs:documentation>Indicates a set of values to be recognized for a flag or field, with semantics asserted by a metaschema enumeration (enum).</xs:documentation>
@@ -409,7 +411,7 @@
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
- 
+
   <xs:element name="enum">
     <xs:annotation>
       <xs:documentation>An enumerated value for a flag or field. The value is indicated by the 'value' attribute while the element contents describe the intended semantics for documentation.</xs:documentation>
@@ -423,7 +425,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="p">
     <xs:annotation>
       <xs:documentation>A paragraph or paragraph fragment, in documentation.</xs:documentation>
@@ -432,29 +434,240 @@
       <xs:group ref="m:markup-elements"/>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="a">
     <xs:complexType mixed="true">
       <xs:attribute name="href"/>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="q" type="xs:string"/>
   <xs:element name="code" type="xs:string"/>
   <xs:element name="em" type="xs:string"/>
   <xs:element name="strong" type="xs:string"/>
-  
+
   <xs:element name="flag">
     <xs:complexType>
-      <xs:sequence>        
+      <xs:sequence>
         <xs:element name="use-name" minOccurs="0" type="xs:NCName"/>
-        <xs:element name="constraint" minOccurs="0" maxOccurs="unbounded" type="m:constraint"/>
+        <xs:element name="constraint" minOccurs="0" maxOccurs="unbounded"
+          type="m:flag-reference-constraints-type"/>
       </xs:sequence>
       <xs:attribute name="ref" use="required" type="xs:NCName"/>
       <xs:attribute name="required" type="m:boolean" default="no"/>
     </xs:complexType>
   </xs:element>
-  
+
+  <xs:simpleType name="regex">
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <xs:simpleType name="metaschema-path-type">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="collapse"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="matches-constraint-type">
+    <!-- TODO: need a metaschema check to make sure either a pattern or a datatype is used; or make these element children and use a choice -->
+    <xs:attribute name="regex" type="m:regex"/>
+    <xs:attribute name="datatype" type="m:simple-datatypes">
+      <xs:annotation>
+        <xs:documentation>Specifies the datatype for which the value identified by the scope attribute must conform to.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="scoped-matches-constraint-type">
+    <xs:complexContent>
+      <xs:extension base="m:matches-constraint-type">
+        <xs:attribute name="target" type="m:metaschema-path-type" use="required">
+          <xs:annotation>
+            <xs:documentation>Specifies the target of the constraint as a metaschema path. If the value is "." and the containing metaschema object is a field, the constraint applies to the field's value. Otherwise, the scope value "." is not allowed to be used.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="define-flag-constraints-type">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element minOccurs="0" name="allowed-values" type="m:allowed-values-type">
+          <xs:annotation>
+            <xs:documentation>Constrains the allowed values for the flag.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="matches" type="m:matches-constraint-type">
+          <xs:annotation>
+            <xs:documentation>Constrains the allowed values based on the provided regex pattern.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+      <xs:element minOccurs="0" ref="m:remarks"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="flag-reference-constraints-type">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="allowed-values" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Constrains the allowed values for the flag.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="m:allowed-values-type">
+                <xs:attribute name="extends" type="m:boolean" default="yes">
+                  <xs:annotation>
+                    <xs:documentation>If <code>yes</code>, indicates that the provided enumerated
+                      values are appended to those defined by the referenced flag. If
+                        <code>no</code>, then the provided enumerated values are used in place of
+                      those defined by the referenced flag/</xs:documentation>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:extension>
+            </xs:complexContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="matches" type="m:matches-constraint-type">
+          <xs:annotation>
+            <xs:documentation>Constrains the allowed values based on the provided regex pattern.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+      <xs:element minOccurs="0" ref="m:remarks"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="index-field-type">
+    <xs:attribute name="target" type="m:metaschema-path-type" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies the field or flag value that is used to generate the key for a given object that is a member of this index. If more than one key-field is provided, then the key is a composition of the specified key-fields. The ordering of the key-field defined the relative order of the index's key. The field or flag values pointed to must be a field value or a required flag value.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="index-constraint-type">
+    <xs:annotation>
+      <xs:documentation>Defines an index, a check against and index, or a uniqueness constraint.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="key-field" type="m:index-field-type" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Specifies a value, relative to the provided <code>target</code>, that is to be used as part of the key. More than one key-field can be used to create a composite key.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:NCName" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies the name of the index, a reference to an index, or the name of a uniqueness constraint.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="target" type="m:metaschema-path-type" use="required">
+      <xs:annotation>
+        <xs:documentation>Specifies the value objects to be included in the index or uniqueness constraint, or the object that contains a reference to an item in an index. If the value is ".", then the key is targeting the current metaschema object.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:group name="model-constraints-group">
+    <xs:sequence>
+      <xs:element name="require" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="m:model-constraint-type">
+              <xs:attribute name="when" type="m:metaschema-path-type" use="required"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="allowed-values" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Constrains the allowed values for the flag or field referenced by the scope attribute.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="m:allowed-values-type">
+              <xs:attribute name="extends" type="m:boolean" default="yes">
+                <xs:annotation>
+                  <xs:documentation>If <code>yes</code>, indicates that the provided enumerated
+                    values are appended to those defined by the referenced flag. If
+                    <code>no</code>, then the provided enumerated values are used in place of
+                    those defined by the referenced flag/</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+              <xs:attribute name="target" type="m:metaschema-path-type" use="required">
+                <xs:annotation>
+                  <xs:documentation>Specifies the target of the constraint as a metaschema path. If the value is "." and the containing metaschema object is a field, the constraint applies to the field's value. Otherwise, the scope value "." is not allowed to be used.</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="matches" type="m:scoped-matches-constraint-type" minOccurs="0"
+        maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Constrains the allowed values based on the provided regex pattern or checks that the value is conformant to the specified datatype.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="index-has-key" type="m:index-constraint-type" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Checks that the specified <code>key-field</code> values match a key in the index with the specified <code>name</code>.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="is-unique" type="m:index-constraint-type" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Checks that the specified set of <code>target</code> entries have a key, based on the <code>key-field</code> entries that is unique. The <code>name</code> identifies the name of the uniqueness constraint, which can be used for error reporting, etc.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="has-cardinality" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Checks that the specified set of <code>target</code> entries match the provided cardinality.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="target" type="m:metaschema-path-type" use="required">
+            <xs:annotation>
+              <xs:documentation>Specifies the target of the constraint as a metaschema path. If the value is "." and the containing metaschema object is a field, the constraint applies to the field's value. Otherwise, the scope value "." is not allowed to be used.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="min-occurs" type="xs:nonNegativeInteger">
+            <xs:annotation>
+              <xs:documentation>Minimum occurrence of assemblies or fields within the set of objects identified by the <code>target</code>.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="max-occurs" type="m:natural-number-or-unbounded">
+            <xs:annotation>
+              <xs:documentation>Maximum occurrence of assemblies or fields within the set of objects identified by the <code>target</code>.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:complexType name="model-constraint-type">
+    <xs:sequence>
+      <xs:group ref="m:model-constraints-group"/>
+      <xs:element minOccurs="0" ref="m:remarks"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="assembly-constraint-type">
+    <xs:sequence>
+      <xs:element name="index" type="m:index-constraint-type" minOccurs="0"
+        maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Defines a new named index. Each entry in the index will have a unqiue key, based on the <code>key-field</code> elements, and an associated object value, based on the <code>target</code> selection..</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:group ref="m:model-constraints-group"/>
+      <xs:element minOccurs="0" ref="m:remarks"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--
   <xs:complexType name="constraint">
     <xs:sequence>
       <xs:element minOccurs="0" ref="m:remarks"/>
@@ -506,7 +719,8 @@
     <xs:attribute name="scope" default="."/>
     <xs:attribute name="required" type="m:boolean" default="no"/>
   </xs:complexType>
-  
+-->
+
   <xs:element name="choice">
     <xs:annotation>
       <xs:documentation>Within a model, indicates that only one of a set of fields or assemblies, referenced in the choice, may occur in valid instances.</xs:documentation>
@@ -516,17 +730,17 @@
         <xs:element ref="m:assembly"/>
         <xs:element ref="m:field"/>
         <xs:element name="define-assembly" type="m:local-assembly-definition"/>
-        <xs:element name="define-field"    type="m:local-field-definition"/>
+        <xs:element name="define-field" type="m:local-field-definition"/>
       </xs:choice>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="any">
     <xs:annotation>
       <xs:documentation>Within a model, a foreign element may be permitted here..</xs:documentation>
     </xs:annotation>
   </xs:element>
-  
+
   <xs:element name="example">
     <xs:complexType>
       <xs:sequence>
@@ -541,7 +755,7 @@
       <xs:attribute name="module" type="xs:anyURI"/>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="json-key">
     <xs:annotation>
       <xs:documentation>In the XML, produces an attribute with the given name, whose value is used as a key value (aka object property name) in the JSON, enabling objects to be 'lifted' out of arrays when such values are distinct. Implies that siblings will never share values. Overloading with datatype 'ID' and naming the key 'id' is legitimate and useful. Even without ID validation, uniqueness of these values among siblings is validable.</xs:documentation>
@@ -551,14 +765,15 @@
       <!-- do not have to flag if required; it always will be <xs:attribute name="required" type="xs:NCName"/>-->
     </xs:complexType>
   </xs:element>
-  
+
   <xs:element name="group-as">
     <xs:annotation>
       <xs:documentation>When a given referenced field or assembly must be wrapped in an outer grouping, these settings apply, including a name for the group, and how to express the grouping in the respective formats. Not necessary when a field or assembly has max-occurs='1'</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="name" type="xs:NCName" use="required"/>
-      <xs:attribute name="in-json" type="m:json-group-behavior" use="optional" default="SINGLETON_OR_ARRAY">
+      <xs:attribute name="in-json" type="m:json-group-behavior" use="optional"
+        default="SINGLETON_OR_ARRAY">
         <xs:annotation>
           <xs:documentation>How to represent a grouping in JSON</xs:documentation>
         </xs:annotation>
@@ -570,7 +785,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:simpleType name="json-group-behavior">
     <xs:restriction base="xs:string">
       <xs:enumeration value="ARRAY">
@@ -604,7 +819,7 @@
       </xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
-  
+
   <!-- a value-key provides a literal to be used in JSON as a key for the field value;
      when given as a child of a flag (reference), designates that flag's value to serve as
      the key (JSON property label) for the field's value. Inside flag this element
@@ -620,23 +835,23 @@
       <xs:attribute name="flag-name" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:simpleType name="simple-datatypes">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="boolean" />
-      <xs:enumeration value="string" />
-      <xs:enumeration value="NCName" />
-      <xs:enumeration value="decimal" />
+      <xs:enumeration value="boolean"/>
+      <xs:enumeration value="string"/>
+      <xs:enumeration value="NCName"/>
+      <xs:enumeration value="decimal"/>
       <!-- Not supporting float or double -->
       <!--<xs:enumeration value="float" />
       <xs:enumeration value="double" />-->
-      <xs:enumeration value="integer" />
+      <xs:enumeration value="integer"/>
       <xs:enumeration value="nonNegativeInteger"/>
       <xs:enumeration value="positiveInteger"/>
       <xs:enumeration value="dateTime"/>
       <xs:enumeration value="date"/>
       <xs:enumeration value="base64Binary"/>
-      
+
       <!-- specialized datatypes -->
       <xs:enumeration value="dateTime-with-timezone"/>
       <xs:enumeration value="date-with-timezone"/>
@@ -647,14 +862,14 @@
       <xs:enumeration value="ip-v6-address"/>
       <xs:enumeration value="uri"/>
       <xs:enumeration value="uri-reference"/>
-    </xs:restriction>   
+    </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="field-types">
     <xs:union memberTypes="m:simple-datatypes">
       <xs:simpleType>
         <xs:restriction base="xs:string">
-          <xs:enumeration value="empty" />
+          <xs:enumeration value="empty"/>
           <xs:enumeration value="markup-line"/>
           <xs:enumeration value="markup-multiline"/>
         </xs:restriction>
