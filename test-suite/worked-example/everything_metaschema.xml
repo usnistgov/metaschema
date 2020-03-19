@@ -92,8 +92,15 @@
                 <use-name>everything</use-name>
                 <group-as name="everythings"/>
             </assembly>
-            
         </model>
+        <constraint>
+            <is-unique target="expectation[@type='oneof']" name="unique-expectation-oneof">
+                <key-field target="value()"/>
+            </is-unique>
+            <index name="role-index" target="role">
+                <key-field target="@role-id"/>
+            </index>
+        </constraint>
     </define-assembly>
     
     <define-field name="expectation">
@@ -106,25 +113,25 @@
                 <allowed-values>
                     <enum value="type">type</enum>
                     <enum value="date">date</enum>
-                    <enum value="eventref">event reference</enum>
+                    <enum value="roleref">role reference</enum>
+                    <enum value="oneof">a unique set of values</enum>
                 </allowed-values>
             </constraint>
         </define-flag>
         <constraint>
             <require when="@type='type'">
-                <allowed-values>
+                <allowed-values target="value()">
                     <enum value="start">start</enum>
                     <enum value="end">end</enum>
                 </allowed-values>
             </require>
             <require when="@type='date'">
-                <matches as-type="date"/>
+                <matches datatype="date" target="value()"/>
             </require>
-            <require when="@type='eventref'">
-                <equals select="//event/@id"/>
-            </require>
-            <require when="@type='one-off'">
-                <is-distinct/>
+            <require when="@type='roleref'">
+                <index-has-key target="." name="role-index">
+                    <key-field target="value()"/>
+                </index-has-key>
             </require>
         </constraint>
     </define-field>
@@ -241,7 +248,7 @@
         <flag ref="todays-date"/>
         <flag ref="required-ncname"/>
         <constraint>
-            <allowed-values>
+            <allowed-values scope=".">
                 <enum value="Alpha"/>
                 <enum value="Beta"/>
                 <enum value="Gamma"/>
