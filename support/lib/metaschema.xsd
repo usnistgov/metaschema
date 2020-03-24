@@ -573,15 +573,6 @@
 
   <xs:group name="model-constraints-group">
     <xs:sequence>
-      <xs:element name="require" minOccurs="0" maxOccurs="unbounded">
-        <xs:complexType>
-          <xs:complexContent>
-            <xs:extension base="m:model-constraint-type">
-              <xs:attribute name="when" type="m:metaschema-path-type" use="required"/>
-            </xs:extension>
-          </xs:complexContent>
-        </xs:complexType>
-      </xs:element>
       <xs:element name="allowed-values" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
           <xs:documentation>Constrains the allowed values for the flag or field referenced by the scope attribute.</xs:documentation>
@@ -599,7 +590,7 @@
               </xs:attribute>
               <xs:attribute name="target" type="m:metaschema-path-type" use="required">
                 <xs:annotation>
-                  <xs:documentation>Specifies the target of the constraint as a metaschema path. If the value is "." and the containing metaschema object is a field, the constraint applies to the field's value. Otherwise, the scope value "." is not allowed to be used.</xs:documentation>
+                  <xs:documentation>Specifies the target of the constraint as a metaschema path. If the value is "." and the containing metaschema object is a field, the constraint applies to the field's value.</xs:documentation>
                 </xs:annotation>
               </xs:attribute>
             </xs:extension>
@@ -642,6 +633,15 @@
               <xs:documentation>Maximum occurrence of assemblies or fields within the set of objects identified by the <code>target</code>.</xs:documentation>
             </xs:annotation>
           </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="require" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="m:model-constraint-type">
+              <xs:attribute name="when" type="m:metaschema-path-type" use="required"/>
+            </xs:extension>
+          </xs:complexContent>
         </xs:complexType>
       </xs:element>
     </xs:sequence>
