@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!--<?xml-model href="everything-metatron-mockup.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>-->
+<?xml-model href="everything-metaschema_METATRON.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <EVERYTHING  required-integer="0"  xmlns="http://csrc.nist.gov/metaschema/ns/everything"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/everything everything_metaschema_XML-SCHEMA.xsd">
@@ -10,21 +11,38 @@
     <color code="FF8888">pink</color>
   </colors>-->
   
+  
   <SINGLETON>
-    <title></title>
+    <title>Have you forgotten your shirt?</title>
   </SINGLETON>
   
   <everything required-integer="3">
     <required-local-field>field!</required-local-field>
+    <expectation type="type">start</expectation>
     <epigraph>
       <line>The best-laid plans o' mice and men</line>
       <line><b>Gang oft aglay</b>.</line>
     </epigraph>
+    
+    <poem>
+      <stanza type="quatrain">
+        <line>'Twas brilling, and the slithy toves</line>
+        <line>Did gyre and gimble in the wabe:</line>
+        <line>All mimsy were the borogoves,</line>
+        <line>And the mome raths outgrabe.</line>
+      </stanza>
+      
+    </poem>
+    
     <colors>
       <color code="FF0000">red</color>
       <color code="FF8888">pink</color>
     </colors>
-    
+    <dramatis-personae>
+      <role role-id="Hamlet0">
+        <title>Larry</title>
+      </role>
+    </dramatis-personae>
     <SINGLETON>
       <title></title>
     </SINGLETON>
@@ -36,14 +54,6 @@
         <line>The best-laid plans o' mice and men</line>
         <line><b>Gang oft aglay</b>.</line>
       </epigraph>
-      <colors>
-        <color code="FF0000">red</color>
-        <color code="FF8888">pink</color>
-      </colors>
-      <colors>
-        <color code="FF0000">red</color>
-        <color code="FF8888">pink</color>
-      </colors>
       <colors>
         <color code="FF0000">red</color>
         <color code="FF8888">pink</color>
