@@ -13,10 +13,40 @@
        <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
    </remarks>
     
+   <!-- so far: index, is-unique, allowed-values, require, matches, index-has-key
+       need examples: has-cardinality, matches[@regex], allowed-values[@extends='yes']
+   
+   XSD - index, is-unique (xs:unique), index-has-key (xs:keyref);
+           constraint/(allowed-values, matches/@regex, matches/@datatype)
+   
+   Schematron - require[@when]/*
+   
+     require[@when]/allowed-values
+     require[@when]/is-unique
+     require[@when]/index-has-key
+     require[@when]/has-cardinality
+     require[@when]/matches/@regex
+     require[@when]/matches/@datatype
+
+     require[@when]/index-has-key[@target]
+
+Under 'stanza'
+     require[@when]/has-cardinality[@target]
+
+Under 'widget'
+     require[@when]/allowed-values[@target]
+     require[@when]/is-unique[@target]
+     require[@when]/matches[@target]/@regex
+     require[@when]/matches[@target]/@datatype
+
+
+     index[target="data()"] - is indexed from the root / implicitly across dynamic scope
+     
+     Build out examples in OSCAL schemas
+     Document examples on an Issue for testing/tracking
+     unit tests?
+   -->
 <!-- 
-     Schematron
-       abstract="yes" - turns off checking for missing declarations
-        
      ASSEMBLY
         singleton
         grouped
@@ -75,12 +105,18 @@
             <field ref="line" max-occurs="unbounded">
                 <group-as name="epigraph" in-xml="GROUPED"/>
             </field>
+            <assembly ref="stanza" max-occurs="unbounded">
+                <group-as name="poem" in-xml="GROUPED"/>
+            </assembly>
             <field ref="color" max-occurs="unbounded">
                 <group-as name="colors" in-xml="GROUPED" in-json="BY_KEY"/>
             </field>
             <field ref="point" max-occurs="unbounded">
                 <group-as name="lattice" in-xml="GROUPED" in-json="BY_KEY"/>
             </field>
+            <assembly ref="widget" max-occurs="unbounded">
+                <group-as name="widgetry" in-xml="UNGROUPED"/>
+            </assembly>
             <assembly ref="role" max-occurs="unbounded">
                 <group-as name="dramatis-personae" in-xml="GROUPED" in-json="BY_KEY"/>
             </assembly>
@@ -94,15 +130,95 @@
             </assembly>
         </model>
         <constraint>
-            <is-unique target="expectation[@type='oneof']" name="unique-expectation-oneof">
-                <key-field target="value()"/>
-            </is-unique>
             <index name="role-index" target="role">
                 <key-field target="@role-id"/>
             </index>
+            <is-unique target="expectation[@type='oneof']" name="unique-expectation-oneof">
+                <key-field target="data()"/>
+            </is-unique>
+            
+            
         </constraint>
     </define-assembly>
     
+    <define-assembly name="widget">
+        <formal-name>Widget</formal-name>
+        <description>With knobs and switches.</description>
+        <define-flag name="banner-type">
+            <formal-name>Banner type</formal-name>
+            <description>How should we check the banner (a flag)</description>
+            <constraint>
+                <allowed-values>
+                    <enum value="date">Date type</enum>
+                    <enum value="color">Color</enum>
+                    <enum value="wholeNo">Lexically, a whole number (\d+)</enum>
+                    <enum value="ID">A unique identifier</enum>
+                </allowed-values>
+            </constraint>
+        </define-flag>
+        <define-flag name="banner">
+            <formal-name>Banner</formal-name>
+            <description>A flag, with a dynamic (lexical) type</description>
+        </define-flag>
+        <model>
+            <field ref="line" max-occurs="4" min-occurs="4">
+                <group-as name="quatrain" in-xml="GROUPED"/>
+            </field>
+        </model>
+        <constraint>
+            <matches target="@banner" regex="^\d+$"/>
+            <require when="@banner-type='date'">
+                <matches target="@banner" datatype="date"/>
+            </require>
+            <require when="@banner-type='color'">
+                <allowed-values target="@banner">
+                    <enum value="red">Red</enum>
+                    <enum value="blue">Blue</enum>
+                    <enum value="green">Green</enum>
+                </allowed-values>
+            </require>
+            <require when="@banner-type='wholeNo'">
+                <matches target="@banner" regex="^\d+$"/>
+            </require>
+            <require when="@banner-type='ID'">
+                <is-unique name="widget-banner" target="@banner">
+                    <key-field target="data()"/>
+                </is-unique>
+            </require>
+        </constraint>
+    </define-assembly>
+    
+    <define-assembly name="stanza">
+        <formal-name>Verse stanza</formal-name>
+        <description>A sequence of lines of determinate length</description>
+        <define-flag name="type">
+            <formal-name>Verse type</formal-name>
+            <description>Be creative</description>
+            <constraint>
+                <allowed-values allow-other="yes">
+                    <enum value="couplet">Couplet</enum>
+                    <enum value="tercet">Tercet</enum>
+                    <enum value="quatrain">Quatrain</enum>
+                </allowed-values>
+            </constraint>
+        </define-flag>
+        <model>
+            <field ref="line" min-occurs="1" max-occurs="unbounded">
+                <group-as name="lines"/>
+            </field>
+        </model>
+        <constraint>
+            <require when="@type='couplet'">
+                <has-cardinality target="line" max-occurs="2" min-occurs="2"/>
+            </require>
+            <require when="@type='tercet'">
+                <has-cardinality target="line" max-occurs="3" min-occurs="3"/>
+            </require>
+            <require when="@type='quatrain'">
+                <has-cardinality target="line" max-occurs="4" min-occurs="4"/>
+            </require>
+        </constraint>
+    </define-assembly>
     <define-field name="expectation">
         <formal-name>Expectation</formal-name>
         <description>Something that may or may not occur in the future.</description>
@@ -116,6 +232,7 @@
                     <enum value="roleref">role reference</enum>
                     <enum value="oneof">a unique set of values</enum>
                 </allowed-values>
+                
             </constraint>
         </define-flag>
         <constraint>
@@ -248,7 +365,7 @@
         <flag ref="todays-date"/>
         <flag ref="required-ncname"/>
         <constraint>
-            <allowed-values scope=".">
+            <allowed-values target="."><!-- we could make @target optional here -->
                 <enum value="Alpha"/>
                 <enum value="Beta"/>
                 <enum value="Gamma"/>
