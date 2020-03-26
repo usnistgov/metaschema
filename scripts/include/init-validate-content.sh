@@ -69,7 +69,7 @@ validate_xml() {
   fi
 
   if [ -z "$instance_file" ]; then
-      echo -e "${P_ERROR}The JSON file must be provided as the second argument.${P_END}"
+      echo -e "${P_ERROR}The XML file must be provided as the second argument.${P_END}"
   else
     set -- "$@" "${instance_file}"
   fi
