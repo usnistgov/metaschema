@@ -209,13 +209,13 @@ Under 'widget'
         </model>
         <constraint>
             <require when="@type='couplet'">
-                <has-cardinality target="line" max-occurs="2" min-occurs="2"/>
+                <has-cardinality target="everything:line" max-occurs="2" min-occurs="2"/>
             </require>
             <require when="@type='tercet'">
-                <has-cardinality target="line" max-occurs="3" min-occurs="3"/>
+                <has-cardinality target="everything:line" max-occurs="3" min-occurs="3"/>
             </require>
             <require when="@type='quatrain'">
-                <has-cardinality target="line" max-occurs="4" min-occurs="4"/>
+                <has-cardinality target="everything:line" max-occurs="4" min-occurs="4"/>
             </require>
         </constraint>
     </define-assembly>
@@ -237,17 +237,17 @@ Under 'widget'
         </define-flag>
         <constraint>
             <require when="@type='type'">
-                <allowed-values target="value()">
+                <allowed-values target="data()">
                     <enum value="start">start</enum>
                     <enum value="end">end</enum>
                 </allowed-values>
             </require>
             <require when="@type='date'">
-                <matches datatype="date" target="value()"/>
+                <matches datatype="date" target="data()"/>
             </require>
             <require when="@type='roleref'">
                 <index-has-key target="." name="role-index">
-                    <key-field target="value()"/>
+                    <key-field target="data()"/>
                 </index-has-key>
             </require>
         </constraint>
