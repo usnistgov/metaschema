@@ -125,7 +125,7 @@
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(parent::matches))" expand-text="true">not({ m:condition(parent::matches) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="test" expand-text="true">matches( { $target }, '{ . }')</xsl:variable>
+        <xsl:variable name="test" expand-text="true">matches({ $target }, '{ . }')</xsl:variable>
         <assert test="{ $exception }{ $test }">
             <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/>/<xsl:value-of select="$target"/> '<value-of select="{ $target }"/>' is expected to match regular expression '<xsl:value-of select="."/>'</assert>
     </xsl:template>
