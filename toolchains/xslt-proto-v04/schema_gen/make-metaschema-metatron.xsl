@@ -18,6 +18,8 @@
 <!-- nb The schema and Schematron for the metaschema format is essential
         for validating constraints assumed by this transformation. -->
 
+    <xsl:import href="../metapath/parse-metapath.xsl"/>
+    
     <xsl:output indent="yes"/>
 
     <xsl:strip-space elements="METASCHEMA define-assembly define-field define-flag model choice allowed-values remarks"/>
@@ -82,34 +84,34 @@
     <xsl:template match="has-cardinality/@min-occurs" mode="assertion">
         <xsl:variable name="target" select="m:target(parent::has-cardinality)"/>
         <xsl:variable name="condition" select="m:condition(parent::has-cardinality)"/>
-        <xsl:variable name="exception">
-            <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or </xsl:if>
+        <xsl:variable name="exception-clause">
+            <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or</xsl:if>
         </xsl:variable>
-        <assert test="{ $exception }count({ $target }) le { (. cast as xs:integer) } )">
-            <xsl:value-of select="m:condition(parent::has-cardinality) ! ('Where ' || . || ', ')"/><name/>/ <xsl:value-of
-                select="$target"/> is expected to occur <xsl:value-of select="m:times(. cast as xs:integer )"/> at most</assert>
+        <assert test="{ $exception-clause } count({ $target }) le { (. cast as xs:integer) } )">
+            <xsl:value-of select="m:condition(parent::has-cardinality) ! ('Where ' || . || ', ')"/><name/> is expected to have at most <xsl:value-of select="m:conditional-plural(. cast as xs:integer ,'occurrence')"/> of <xsl:value-of
+                select="$target"/></assert>
     </xsl:template>
     
     <xsl:template match="has-cardinality/@max-occurs" mode="assertion">
         <xsl:variable name="target" select="m:target(parent::has-cardinality)"/>
         <xsl:variable name="condition" select="m:condition(parent::has-cardinality)"/>
-        <xsl:variable name="exception">
-            <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or </xsl:if>
+        <xsl:variable name="exception-clause">
+            <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or</xsl:if>
         </xsl:variable>
-        <assert test="{ $exception }count({ $target }) ge { (. cast as xs:integer) } )">
-            <xsl:value-of select="$condition ! ('Where ' || . || ', ')"/><name/>/ <xsl:value-of select="$target"/> is expected to occur at least <xsl:value-of select="m:times(. cast as xs:integer)"/></assert>
+        <assert test="{ $exception-clause } count({ $target }) ge { (. cast as xs:integer) } )">
+            <xsl:value-of select="$condition ! ('Where ' || . || ', ')"/><name/> is expected to have at least <xsl:value-of select="m:conditional-plural(. cast as xs:integer,'occurrence')"/> of <xsl:value-of select="$target"/></assert>
     </xsl:template>
     
     <xsl:template priority="3" match="has-cardinality[@min-occurs = @max-occurs]" mode="assertion">
         <xsl:variable name="target" select="m:target(.)"/>
         <xsl:variable name="condition" select="m:condition(.)"/>
-        <xsl:variable name="exception">
-            <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or </xsl:if>
+        <xsl:variable name="exception-clause">
+            <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or</xsl:if>
         </xsl:variable>
-        <xsl:variable name="test" expand-text="true">count({ $target }) eq { (@min-occurs cast as xs:integer) }</xsl:variable>
+        <xsl:variable name="test" expand-text="true">count({$target}) eq { xs:integer(@min-occurs) }</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
-        <assert test="{ $exception }{ $test }">
-            <xsl:value-of select="$condition ! ('Where ' || . || ', ')"/><name/>/ <xsl:value-of select="$target"/> is expected to occur exactly <xsl:value-of select="m:times(@min-occurs cast as xs:integer)"/></assert>
+        <assert test="{ $exception-clause } { $test }">
+            <xsl:value-of select="$condition ! ('Where ' || . || ', ')"/><name/> is expected to have exactly <xsl:value-of select="m:conditional-plural(@min-occurs cast as xs:integer,'occurrence')"/> of <xsl:value-of select="$target"/></assert>
     </xsl:template>
     
     
@@ -125,7 +127,7 @@
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(parent::matches))" expand-text="true">not({ m:condition(parent::matches) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="test" expand-text="true">matches({ $target }, '{ . }')</xsl:variable>
+        <xsl:variable name="test" expand-text="true">matches({$target}, '{.}')</xsl:variable>
         <assert test="{ $exception }{ $test }">
             <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/>/<xsl:value-of select="$target"/> '<value-of select="{ $target }"/>' is expected to match regular expression '<xsl:value-of select="."/>'</assert>
     </xsl:template>
@@ -256,8 +258,29 @@
         <xsl:param name="whose" as="element()"/>
         <!-- Insulate XPath here -->
 <!-- no-namespace paths have to be expanded to ns? -->
-        <xsl:value-of select="($whose/@target,'.')[1]"/>
+        <xsl:value-of>
+          <xsl:apply-templates mode="okay-xpath" select="($whose/@target,'.')[1] => m:prefixed-path($declaration-prefix)"/>
+        </xsl:value-of>
     </xsl:function>
+    
+    <xsl:template mode="okay-xpath" match=".">
+        <xsl:sequence select="."/>
+    </xsl:template>
+    
+    <xsl:template mode="okay-xpath" priority="100" match=".[starts-with(.,'/')]">
+        <xsl:text> ( (: ... not liking absolute path </xsl:text>
+        <xsl:sequence select="."/>
+        <xsl:text> ... :) ) </xsl:text>
+    </xsl:template>
+    
+    <!-- regex matches axis specifiers we want to exclude -->
+    <xsl:variable name="backward-axes" as="xs:string">(parent|ancestor|ancestor-or-self|preceding-sibling|preceding)::</xsl:variable>
+    
+    <xsl:template mode="okay-xpath" priority="101" match=".[matches(.,$backward-axes)]">
+        <xsl:text>(: not liking the reverse axis </xsl:text>
+        <xsl:sequence select="."/>
+        <xsl:text> :)</xsl:text>
+    </xsl:template>
     
     <xsl:function name="m:condition" as="xs:string?" cache="yes">
         <!-- Insulate XPath here -->
@@ -268,9 +291,10 @@
         </xsl:if>
     </xsl:function>
     
-    <xsl:function name="m:times" as="xs:string?" cache="yes">
+    <xsl:function name="m:conditional-plural" as="xs:string?" cache="yes">
         <xsl:param name="count" as="xs:integer"/>
-        <xsl:text expand-text="true">{ if ($count eq 1) then 'once' else ($count || ' times' ) }</xsl:text>
+        <xsl:param name="noun" as="xs:string"/>
+        <xsl:text expand-text="true">{ if ($count eq 1) then ('one ' || $noun) else ($count || ' ' || $noun || 's' ) }</xsl:text>
     </xsl:function>
     
 </xsl:stylesheet>
