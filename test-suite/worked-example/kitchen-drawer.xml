@@ -27,7 +27,7 @@
     <poem>
       <stanza type="quatrain">
         <line>'Twas brilling, and the slithy toves</line>
-        <!--<line>Did gyre and gimble in the wabe:</line>-->
+        <line>Did gyre and gimble in the wabe:</line>
         <line>All mimsy were the borogoves,</line>
         <line>And the mome raths outgrabe.</line>
       </stanza>
