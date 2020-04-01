@@ -19,7 +19,6 @@
     
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
-    
     <xsl:variable name="type-definitions" select="document('../schema_gen/oscal-datatypes.xsd')//xs:simpleType"/>
     
     <xsl:template match="/">
