@@ -5,7 +5,6 @@
     exclude-result-prefixes="xs math"
     version="3.0"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    xmlns:mp="http://csrc.nist.gov/ns/oscal/metapath/1.0"
     xmlns:p="xpath20">
     
     <xsl:import href="parse-metapath.xsl"/>
@@ -20,15 +19,13 @@
     
     -->
     <xsl:template match="/">
-        <xsl:variable name="path">@pink[../link/@href='.']</xsl:variable>
+        <xsl:variable name="path">@pink[../link/@href='.' and matches(ancestor::sec/@id,'AC')]</xsl:variable>
         <test>
-        <path>
-        <xsl:value-of select="mp:prefixed-path($path)"/>
-        </path>
+            <path>
+                <xsl:value-of select="m:prefixed-path($path,'pf')"/>
+            </path>
             <xsl:sequence select="p:parse-XPath($path)"/>
         </test>
     </xsl:template>
-    
-    
     
 </xsl:stylesheet>

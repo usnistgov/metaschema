@@ -209,13 +209,13 @@ Under 'widget'
         </model>
         <constraint>
             <require when="@type='couplet'">
-                <has-cardinality target="everything:line" max-occurs="2" min-occurs="2"/>
+                <has-cardinality target="//line" max-occurs="2" min-occurs="2"/>
             </require>
             <require when="@type='tercet'">
-                <has-cardinality target="everything:line" max-occurs="3" min-occurs="3"/>
+                <has-cardinality target="line" max-occurs="3" min-occurs="3"/>
             </require>
             <require when="@type='quatrain'">
-                <has-cardinality target="everything:line" max-occurs="4" min-occurs="4"/>
+                <has-cardinality target="line" max-occurs="4" min-occurs="4"/>
             </require>
         </constraint>
     </define-assembly>
@@ -296,23 +296,30 @@ Under 'widget'
         </define-flag>
     </define-field>
     
-    <define-field name="point" as-type="empty">
-        <formal-name>Point</formal-name>
-        <description>Point location</description>
-        <json-key flag-name="point-id"/>
-        <define-flag name="point-id" required="yes">
-            <formal-name>Point ID</formal-name>
-            <description>A unique identifier for the point</description>
-        </define-flag>
-        <define-flag name="x" as-type="decimal">
-            <formal-name>X</formal-name>
-            <description>Abscissa</description>
-        </define-flag>
-        <define-flag name="y" as-type="decimal">
-            <formal-name>Y</formal-name>
-            <description>ordinate</description>
-        </define-flag>
-    </define-field>
+<define-field name="point" as-type="empty">
+    <formal-name>Point</formal-name>
+    <description>Point location</description>
+    <json-key flag-name="point-id"/>
+    <define-flag name="point-id" required="yes">
+        <formal-name>Point ID</formal-name>
+        <description>A name for the point</description>
+    </define-flag>
+    <define-flag name="x" as-type="decimal">
+        <formal-name>X</formal-name>
+        <description>Abscissa</description>
+    </define-flag>
+    <define-flag name="y" as-type="decimal">
+        <formal-name>Y</formal-name>
+        <description>ordinate</description>
+    </define-flag>
+    <constraint>
+        <matches target="x" datatype="decimal"/>
+        <matches target="y" datatype="decimal"/>
+        <is-unique target="." name="point-identifiers">
+            <key-field target="@point-id"/>
+        </is-unique>
+    </constraint>
+</define-field>
     
     <define-assembly name="role">
         <formal-name>Role</formal-name>
