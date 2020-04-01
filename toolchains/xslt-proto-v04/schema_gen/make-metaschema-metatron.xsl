@@ -4,7 +4,7 @@
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    exclude-result-prefixes="xs math m"
+    exclude-result-prefixes="xs math"
     version="3.0"
     xmlns:sch="http://purl.oclc.org/dsdl/schematron"
     xmlns="http://purl.oclc.org/dsdl/schematron"
@@ -19,6 +19,8 @@
         for validating constraints assumed by this transformation. -->
 
     <xsl:import href="../metapath/parse-metapath.xsl"/>
+    
+    <xsl:import href="metatron-datatype-functions.xsl"/>
     
     <xsl:output indent="yes"/>
 
@@ -44,6 +46,7 @@
     <xsl:template match="/" name="build-schema">
         <schema queryBinding="xslt2">
             
+            <ns prefix="m" uri="http://csrc.nist.gov/ns/oscal/metaschema/1.0"/>
             <ns prefix="{ $declaration-prefix }" uri="{ $target-namespace }"/>
             
             <!--<pattern>
@@ -55,6 +58,10 @@
             <pattern>
               <xsl:apply-templates select="//constraint"/>
             </pattern>
+            
+            <xsl:call-template name="m:produce-validation-function"/>
+            
+            <xsl:apply-templates select="$type-definitions" mode="m:make-template"/>
         </schema>
     </xsl:template>
     
@@ -120,20 +127,30 @@
         <xsl:apply-templates mode="#current" select="@min-occurs, @max-occurs"/>
     </xsl:template>
     
-    <xsl:template priority="2" match="matches/@datatype" mode="assertion"/>
+    <xsl:template priority="2" match="matches/@datatype" mode="assertion">
+        <xsl:variable name="target" select="m:target(parent::matches)"/>
+        <xsl:variable name="exception">
+            <xsl:if test="exists(m:condition(parent::matches))" expand-text="true">not({ m:condition(parent::matches) }) or </xsl:if>
+        </xsl:variable>
+        <xsl:variable name="test" expand-text="true">(every $t in ({$target}) satisfies m:datatype-validate($t, '{.}') )</xsl:variable>
+        <xsl:apply-templates select="." mode="echo.if"/>
+        <assert test="{ $exception }{ $test }">
+            <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/>/<xsl:value-of select="$target"/> '<value-of select="{ $target }"/>' is expected to follow rules for <xsl:value-of select="."/>'</assert>
+        
+    </xsl:template>
     
     <xsl:template priority="2" match="matches/@regex" mode="assertion">
         <xsl:variable name="target" select="m:target(parent::matches)"/>
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(parent::matches))" expand-text="true">not({ m:condition(parent::matches) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="test" expand-text="true">matches({$target}, '{.}')</xsl:variable>
+        <xsl:variable name="test" expand-text="true">(every $t in ({$target}) satisfies matches($t, '{.}') )</xsl:variable>
+        <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/>/<xsl:value-of select="$target"/> '<value-of select="{ $target }"/>' is expected to match regular expression '<xsl:value-of select="."/>'</assert>
     </xsl:template>
     
     <xsl:template priority="2" match="matches" mode="assertion">    
-        <xsl:apply-templates select="." mode="echo.if"/>
         <xsl:apply-templates mode="#current" select="@regex | @datatype"/>
     </xsl:template>
     
@@ -147,7 +164,7 @@
         </xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test } )">
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/>/<xsl:value-of select="m:target(.)"/> '<value-of select="{ m:target(.) }"/>' is expected to be one of <xsl:value-of select="$value-sequence"/></assert>
+            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/>/<xsl:value-of select="m:target(.)"/> is expected to be (one of) <xsl:value-of select="$value-sequence"/>, not '<value-of select="{ m:target(.) }"/>'</assert>
     </xsl:template>
     
     <xsl:param name="noisy" as="xs:string">yes</xsl:param>
@@ -169,10 +186,17 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="matches[@regex]" mode="echo.if">
+    <xsl:template match="matches/@regex" mode="echo.if">
         <xsl:if test="$echo.source">
             <xsl:text expand-text="true">&#xA;      { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
-            <xsl:comment expand-text="true">{ m:condition(.) ! (' when ' || . || ', ') }{ m:target(.) } matches regex '{ @regex }'</xsl:comment>
+            <xsl:comment expand-text="true">{ m:condition(parent::matches) ! (' when ' || . || ', ') }{ m:target(parent::matches) } should match regex '{ . }'</xsl:comment>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="matches/@datatype" mode="echo.if">
+        <xsl:if test="$echo.source">
+            <xsl:text expand-text="true">&#xA;      { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
+            <xsl:comment expand-text="true">{ m:condition(parent::matches) ! (' when ' || . || ', ') }{ m:target(parent::matches) } should datatype '{ . }'</xsl:comment>
         </xsl:if>
     </xsl:template>
     
@@ -282,6 +306,7 @@
         <xsl:text> :)</xsl:text>
     </xsl:template>
     
+    <!-- produces a sequence of conditional tests from @when ancestry -->
     <xsl:function name="m:condition" as="xs:string?" cache="yes">
         <!-- Insulate XPath here -->
         <xsl:param name="whose" as="element()"/>
