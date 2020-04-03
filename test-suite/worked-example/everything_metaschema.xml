@@ -98,13 +98,16 @@ Under 'widget'
                 <formal-name>Required local field</formal-name>
                 <description>Declared on 'everything'</description>
             </define-field>
-            <field ref="one-string"/>
+            <field ref="greek-letter"/>
             <field ref="expectation" max-occurs="unbounded">
                 <group-as name="expectations"/>
             </field>
             <field ref="line" max-occurs="unbounded">
                 <group-as name="epigraph" in-xml="GROUPED"/>
             </field>
+            <assembly ref="skit" max-occurs="unbounded">
+                <group-as name="skits" in-xml="GROUPED"/>
+            </assembly>
             <assembly ref="stanza" max-occurs="unbounded">
                 <group-as name="poem" in-xml="GROUPED"/>
             </assembly>
@@ -144,6 +147,9 @@ Under 'widget'
     <define-assembly name="widget">
         <formal-name>Widget</formal-name>
         <description>With knobs and switches.</description>
+            
+            
+        
         <define-flag name="banner-type">
             <formal-name>Banner type</formal-name>
             <description>How should we check the banner (a flag)</description>
@@ -161,12 +167,14 @@ Under 'widget'
             <description>A flag, with a dynamic (lexical) type</description>
         </define-flag>
         <model>
-            <field ref="line" max-occurs="4" min-occurs="4">
-                <group-as name="quatrain" in-xml="GROUPED"/>
+            <field ref="line" max-occurs="unbounded">
+                <group-as name="line-group"/>
             </field>
+            <assembly ref="stanza"/>
         </model>
         <constraint>
-            <matches target="@banner" regex="^\d+$"/>
+            <!--lines must start with non-space characters -->
+            <matches target="line" regex="^\S"/>
             <require when="@banner-type='date'">
                 <matches target="@banner" datatype="date"/>
             </require>
@@ -209,7 +217,7 @@ Under 'widget'
         </model>
         <constraint>
             <require when="@type='couplet'">
-                <has-cardinality target="//line" max-occurs="2" min-occurs="2"/>
+                <has-cardinality target="line" max-occurs="2" min-occurs="2"/>
             </require>
             <require when="@type='tercet'">
                 <has-cardinality target="line" max-occurs="3" min-occurs="3"/>
@@ -219,6 +227,7 @@ Under 'widget'
             </require>
         </constraint>
     </define-assembly>
+    
     <define-field name="expectation">
         <formal-name>Expectation</formal-name>
         <description>Something that may or may not occur in the future.</description>
@@ -237,7 +246,7 @@ Under 'widget'
         </define-flag>
         <constraint>
             <require when="@type='type'">
-                <allowed-values target="data()">
+                <allowed-values target=".">
                     <enum value="start">start</enum>
                     <enum value="end">end</enum>
                 </allowed-values>
@@ -350,6 +359,48 @@ Under 'widget'
         <description>A placeholder for prose in an explicit model.</description>
     </define-field>
     
+    <define-assembly name="skit">
+        <formal-name>Skit</formal-name>
+        <description>An exchange of lines</description>
+        <model>
+            <define-field name="line" as-type="markup-line" max-occurs="unbounded">
+                <formal-name>line of a skit</formal-name>
+                <description>A single spoken line</description>
+                <group-as name="skit-lines"/>
+                <flag ref="class"/>
+                <define-flag name="who">
+                    <formal-name>Who</formal-name>
+                    <description>Who speaks the line</description>
+                </define-flag>
+                <constraint>
+                    <require when="@who='ghost'">
+                       <allowed-values target=".">
+                            <enum value="Boo!"/>
+                        </allowed-values>
+                    </require>
+                    <require when="@class='has-a'">
+                        <matches target="." regex="a|A"/>
+                    </require>
+                </constraint>
+            </define-field>
+        </model>
+        <constraint>
+            <!--
+            skit[@type='snl']/line[@who='ghost']
+              => match="skit/line"
+                 when="not((ancestor::skit[@type='snl']) and (@who='ghost'))-->
+            
+            
+            
+            <allowed-values target="line[@who='ghost']"> <!-- skit/line @who='ghost'-->
+                <enum value="Boo!"/>
+            </allowed-values>
+            <matches target="line[@class='has-a']" regex="a|A"/>
+            
+        </constraint>
+    
+    </define-assembly>
+    
     <define-field name="remarks" as-type="markup-multiline">
         <formal-name>Prose</formal-name>
         <description>A block o' prose.</description>
@@ -366,9 +417,9 @@ Under 'widget'
         </define-flag>
     </define-field>
     
-    <define-field name="one-string">
-        <formal-name>One String</formal-name>
-        <description>Not more than one.</description>
+    <define-field name="greek-letter">
+        <formal-name>Greek letter</formal-name>
+        <description>Not more than one, spelled out, but only ɑ, β and γ</description>
         <flag ref="todays-date"/>
         <flag ref="required-ncname"/>
         <constraint>
