@@ -61,7 +61,7 @@
             
             <xsl:call-template name="m:produce-validation-function"/>
             
-            <xsl:apply-templates select="$type-definitions" mode="m:make-template"/>
+            <xsl:apply-templates select="$type-definitions[@name=$metaschema//constraint//matches/@datatype]" mode="m:make-template"/>
         </schema>
     </xsl:template>
     
@@ -95,6 +95,7 @@
             <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or</xsl:if>
         </xsl:variable>
         <assert test="{ $exception-clause } count({ $target }) le { (. cast as xs:integer) } )">
+            <xsl:call-template name="id-assertion"/>
             <xsl:value-of select="m:condition(parent::has-cardinality) ! ('Where ' || . || ', ')"/><name/> is expected to have at most <xsl:value-of select="m:conditional-plural(. cast as xs:integer ,'occurrence')"/> of <xsl:value-of
                 select="$target"/></assert>
     </xsl:template>
@@ -106,6 +107,7 @@
             <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or</xsl:if>
         </xsl:variable>
         <assert test="{ $exception-clause } count({ $target }) ge { (. cast as xs:integer) } )">
+            <xsl:call-template name="id-assertion"/>
             <xsl:value-of select="$condition ! ('Where ' || . || ', ')"/><name/> is expected to have at least <xsl:value-of select="m:conditional-plural(. cast as xs:integer,'occurrence')"/> of <xsl:value-of select="$target"/></assert>
     </xsl:template>
     
@@ -118,6 +120,7 @@
         <xsl:variable name="test" expand-text="true">count({$target}) eq { xs:integer(@min-occurs) }</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception-clause } { $test }">
+            <xsl:call-template name="id-assertion"/>
             <xsl:value-of select="$condition ! ('Where ' || . || ', ')"/><name/> is expected to have exactly <xsl:value-of select="m:conditional-plural(@min-occurs cast as xs:integer,'occurrence')"/> of <xsl:value-of select="$target"/></assert>
     </xsl:template>
     
@@ -135,6 +138,7 @@
         <xsl:variable name="test" expand-text="true">(every $t in ({$target}) satisfies m:datatype-validate($t, '{.}') )</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
+            <xsl:call-template name="id-assertion"/>
             <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/>/<xsl:value-of select="$target"/> '<value-of select="{ $target }"/>' is expected to follow rules for <xsl:value-of select="."/>'</assert>
         
     </xsl:template>
@@ -147,6 +151,7 @@
         <xsl:variable name="test" expand-text="true">(every $t in ({$target}) satisfies matches($t, '{.}') )</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
+            <xsl:call-template name="id-assertion"/>
             <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/>/<xsl:value-of select="$target"/> '<value-of select="{ $target }"/>' is expected to match regular expression '<xsl:value-of select="."/>'</assert>
     </xsl:template>
     
@@ -164,6 +169,7 @@
         </xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test } )">
+            <xsl:call-template name="id-assertion"/>
             <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/>/<xsl:value-of select="m:target(.)"/> is expected to be (one of) <xsl:value-of select="$value-sequence"/>, not '<value-of select="{ m:target(.) }"/>'</assert>
     </xsl:template>
     
@@ -321,5 +327,13 @@
         <xsl:param name="noun" as="xs:string"/>
         <xsl:text expand-text="true">{ if ($count eq 1) then ('one ' || $noun) else ($count || ' ' || $noun || 's' ) }</xsl:text>
     </xsl:function>
+    
+    <xsl:template name="id-assertion">
+        <!--<xsl:attribute name="id">
+            <xsl:value-of select="string-join(ancestor-or-self::*/(@name | @ref), '.')"/>
+            <xsl:text>-</xsl:text>
+            <xsl:value-of select="local-name()"/>
+        </xsl:attribute>-->
+    </xsl:template>
     
 </xsl:stylesheet>
