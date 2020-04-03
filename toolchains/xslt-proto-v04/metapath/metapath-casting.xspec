@@ -4,14 +4,14 @@
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:p="xpath20">
     
-    <x:scenario label="Scenario for testing a function">
+    <x:scenario label="Testing path rewrite">
         <x:call function="m:prefixed-path">
             <x:param name="expr" as="xs:string" select="'@pink[../link/@href='.' and matches(ancestor::sec/@id,'AC')]'"/>
             <x:param name="ns-prefix" select="'pf'"/>
         </x:call>
         <x:expect label="rewrite" select="'@pink[../pf:link/@href='.' and matches(ancestor::pf:sec/@id,'AC')]'"/>
     </x:scenario>
-    <x:scenario label="test">
+    <x:scenario label="Testing XSpec (it should show a failure)">
         <x:call function="substring-before">
             <x:param select="'123'"/>
             <x:param select="'2'"/>
