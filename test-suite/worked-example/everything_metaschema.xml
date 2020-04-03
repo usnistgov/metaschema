@@ -40,7 +40,7 @@ Under 'widget'
      require[@when]/matches[@target]/@datatype
 
 
-     index[target="data()"] - is indexed from the root / implicitly across dynamic scope
+     index[target="value()"] - is indexed from the root / implicitly across dynamic scope
      
      Build out examples in OSCAL schemas
      Document examples on an Issue for testing/tracking
@@ -136,8 +136,11 @@ Under 'widget'
             <index name="role-index" target="role">
                 <key-field target="@role-id"/>
             </index>
+            <!--<allowed-values target="widget/@banner-type">
+                <enum value="color"></enum>
+            </allowed-values>-->
             <is-unique target="expectation[@type='oneof']" name="unique-expectation-oneof">
-                <key-field target="data()"/>
+                <key-field target="value()"/>
             </is-unique>
             
             
@@ -190,7 +193,7 @@ Under 'widget'
             </require>
             <require when="@banner-type='ID'">
                 <is-unique name="widget-banner" target="@banner">
-                    <key-field target="data()"/>
+                    <key-field target="value()"/>
                 </is-unique>
             </require>
         </constraint>
@@ -252,11 +255,11 @@ Under 'widget'
                 </allowed-values>
             </require>
             <require when="@type='date'">
-                <matches datatype="date" target="data()"/>
+                <matches datatype="date" target="value()"/>
             </require>
             <require when="@type='roleref'">
                 <index-has-key target="." name="role-index">
-                    <key-field target="data()"/>
+                    <key-field target="value()"/>
                 </index-has-key>
             </require>
         </constraint>
