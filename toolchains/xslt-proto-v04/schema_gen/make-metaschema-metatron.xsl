@@ -63,8 +63,8 @@
                 <xsl:apply-templates select="current-group()" mode="make-key"/>
             </xsl:for-each-group>
             
-            <xsl:apply-templates select="//constraint"/>
-            <!--<xsl:variable name="rules" as="element()*">
+            <!--<xsl:apply-templates select="//constraint"/>-->
+            <xsl:variable name="rules" as="element()*">
               <xsl:apply-templates select="//constraint"/>
             </xsl:variable>
             <xsl:for-each-group select="$rules" group-by="count(tokenize(@context,'/'))">
@@ -78,7 +78,7 @@
                         </rule>
                     </xsl:for-each-group>
                 </pattern>
-            </xsl:for-each-group>-->
+            </xsl:for-each-group>
             
             <xsl:for-each-group select="$type-definitions[@name=$metaschema//constraint//matches/@datatype]" group-by="true()">
                 <xsl:comment> LEXICAL / DATATYPE VALIDATION FUNCTIONS </xsl:comment>
@@ -178,8 +178,7 @@
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="key-value" expand-text="true">string-join({ m:key-field/@target/m:prefixed-path((.[not(.=('.','value()'))],'string(.)')[1],$declaration-prefix) })</xsl:variable>
-        <xsl:variable name="test" expand-text="true">exists(key('{@name}',{$key-value},ancestor::{$parent-context}))</xsl:variable>
+        <xsl:variable name="test" expand-text="true">exists(key('{@name}',{m:key-value(.)},ancestor::{$parent-context}))</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
@@ -191,8 +190,7 @@
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="key-value" expand-text="true">string-join({ m:key-field/@target/m:prefixed-path((.[not(.=('.','value()'))],'string(.)')[1],$declaration-prefix) })</xsl:variable>
-        <xsl:variable name="test" expand-text="true">exists(key('{@name}',{$key-value}))</xsl:variable>
+        <xsl:variable name="test" expand-text="true">exists(key('{@name}',{m:key-value(.)}))</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
@@ -206,8 +204,7 @@
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="key-value" expand-text="true">string-join({ m:key-field/@target/m:prefixed-path((.[not(.=('.','value()'))],'string(.)')[1],$declaration-prefix) })</xsl:variable>
-        <xsl:variable name="test" expand-text="true">count(key('{@name}',{$key-value},ancestor::{$parent-context}))=1</xsl:variable>
+        <xsl:variable name="test" expand-text="true">count(key('{@name}',{m:key-value(.)},ancestor::{$parent-context}))=1</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
@@ -219,8 +216,7 @@
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="key-value" expand-text="true">string-join({ m:key-field/@target/m:prefixed-path((.[not(.=('.','value()'))],'string(.)')[1],$declaration-prefix) })</xsl:variable>
-        <xsl:variable name="test" expand-text="true">count(key('{@name}',{$key-value}))=1</xsl:variable>
+        <xsl:variable name="test" expand-text="true">count(key('{@name}',{m:key-value(.)}))=1</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
@@ -230,7 +226,7 @@
     <xsl:template match="matches/@datatype" mode="assertion">
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(parent::matches))" expand-text="true">not({ m:condition(parent::matches) }) or </xsl:if>
-        </xsl:variable>
+        </xsl:variable> 
         <xsl:variable name="test" expand-text="true">m:datatype-validate(., '{.}')</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
@@ -305,6 +301,32 @@
         <xsl:if test="$echo.source">
             <xsl:text expand-text="true">&#xA;      { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
             <xsl:comment expand-text="true">{ m:condition(.) ! (' when ' || . || ', ') }{ m:target-match(.) } has cardinality: { @min-occurs ! ( ' at least ' || (.,'0')[1]) } { @max-occurs ! ( ' at most ' || (.,'unbounded')[1]) }</xsl:comment>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="index-has-key" mode="echo.if">
+        <xsl:if test="$echo.source">
+            <xsl:text expand-text="true">&#xA;     { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
+            <xsl:comment expand-text="true">
+                <xsl:text>{ m:condition(.) ! (' when ' || . || ', ') }{ m:target-match(.) } must correspond to an entry in the '{@name}' index</xsl:text>
+                <xsl:if test="matches(@target,'\S') and not(@target=('.','value()'))">
+                    <xsl:text> within the context of its ancestor</xsl:text>
+                    <xsl:apply-templates select="ancestor::constraint" mode="rule-context"/>
+                </xsl:if>
+            </xsl:comment>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="is-unique" mode="echo.if">
+        <xsl:if test="$echo.source">
+            <xsl:text expand-text="true">&#xA;     { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
+            <xsl:comment expand-text="true">
+                <xsl:text>{ m:condition(.) ! (' when ' || . || ', ') }{ m:target-match(.) } is unique</xsl:text>
+                <xsl:if test="matches(@target,'\S') and not(@target=('.','value()'))">
+                    <xsl:text> within the context of its ancestor</xsl:text>
+                    <xsl:apply-templates select="ancestor::constraint" mode="rule-context"/>
+                </xsl:if>
+            </xsl:comment>
         </xsl:if>
     </xsl:template>
     
@@ -462,8 +484,14 @@
                 <xsl:sequence select="m:target-match(..) => replace('^(\./)+','')"/>
             </xsl:for-each>
         </xsl:variable>
-        <xsl:variable name="use-targets" select="m:key-field/(m:target-match(.),'string(.)')[1]"/>
-        <XSLT:key name="{@name}" match="{$context}" use="{string-join($use-targets,' | ')}"/>
+        <XSLT:key name="{@name}" match="{$context}" use="{m:key-value(.)}"/>
     </xsl:template>
     
+    <xsl:function name="m:key-value" as="xs:string">
+        <xsl:param name="whose" as="element()"/>
+        <!-- delimit values with '|' emitting 'string()' for any key-field with no @target or @target=('.','value()') -->
+        <xsl:value-of separator="|">
+            <xsl:sequence select="$whose/m:key-field/@target/m:prefixed-path((.[not(.=('.','value()'))],'string(.)')[1],$declaration-prefix)"/>
+        </xsl:value-of>
+    </xsl:function>
 </xsl:stylesheet>

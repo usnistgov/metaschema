@@ -193,8 +193,8 @@ Under 'widget'
                 <matches target="@banner" regex="^\d+$"/>
             </require>
             <require when="@banner-type='ID'">
-                <is-unique name="widget-banner" target="@banner">
-                    <key-field target="value()"/>
+                <is-unique name="widget-banner" target=".">
+                    <key-field target="@banner"/>
                 </is-unique>
             </require>
         </constraint>
