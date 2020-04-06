@@ -133,6 +133,7 @@ Under 'widget'
             </assembly>
         </model>
         <constraint>
+            
             <index name="role-index" target=".//role">
                 <key-field target="@role-id"/>
             </index>
@@ -239,6 +240,7 @@ Under 'widget'
             <formal-name>Expectation type</formal-name>
             <description>Saying something about an expectation.</description>
             <constraint>
+                
                 <allowed-values>
                     <enum value="type">type</enum>
                     <enum value="date">date</enum>
@@ -256,10 +258,11 @@ Under 'widget'
                 </allowed-values>
             </require>
             <require when="@type='date'">
-                <matches datatype="date" target="value()"/>
+                <matches datatype="date" target="some/path"/>
             </require>
             <require when="@type='roleref'">
-                <index-has-key target="." name="role-index">
+                <index-has-key target="some/node()" name="role-index">
+                    
                     <key-field target="value()"/>
                 </index-has-key>
             </require>
