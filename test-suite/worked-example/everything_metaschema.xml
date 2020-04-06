@@ -133,7 +133,7 @@ Under 'widget'
             </assembly>
         </model>
         <constraint>
-            <index name="role-index" target="role">
+            <index name="role-index" target=".//role">
                 <key-field target="@role-id"/>
             </index>
             <!--<allowed-values target="widget/@banner-type">
@@ -228,6 +228,7 @@ Under 'widget'
             <require when="@type='quatrain'">
                 <has-cardinality target="line" max-occurs="4" min-occurs="4"/>
             </require>
+            
         </constraint>
     </define-assembly>
     
@@ -345,6 +346,14 @@ Under 'widget'
             <field ref="title"/>
             <field ref="remarks"/>
         </model>
+        <constraint>
+            <index name="all-roles" target=".">
+                <key-field target="@role-id"/>
+            </index>
+            <is-unique name="role-is-unique" target=".">
+                <key-field target="@role-id"/>
+            </is-unique>
+        </constraint>
     </define-assembly>
     
     <define-field name="line" as-type="markup-line">
