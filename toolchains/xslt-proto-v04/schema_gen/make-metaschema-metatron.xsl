@@ -3,11 +3,14 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns:XSLT="http://csrc.nist.gov/ns/oscal/metaschema/xslt-alias"
+    
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     exclude-result-prefixes="xs math"
     version="3.0"
     xmlns:sch="http://purl.oclc.org/dsdl/schematron"
     xmlns="http://purl.oclc.org/dsdl/schematron"
+    
     >
 
     
@@ -17,7 +20,9 @@
 
 <!-- nb The schema and Schematron for the metaschema format is essential
         for validating constraints assumed by this transformation. -->
-
+    <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
+    
+    
     <xsl:import href="../metapath/parse-metapath.xsl"/>
     
     <xsl:import href="metatron-datatype-functions.xsl"/>
@@ -55,23 +60,35 @@
                 </rule>
             </pattern>-->
             
+            <xsl:for-each-group select="//index | //is-unique" group-by="true()">
+                <xsl:comment> INDEX DEFINITIONS AS KEY DECLARATIONS </xsl:comment>
+                <xsl:apply-templates select="current-group()" mode="make-key"/>
+            </xsl:for-each-group>
+            
             <xsl:variable name="rules" as="element()*">
               <xsl:apply-templates select="//constraint"/>
             </xsl:variable>
             
-            <xsl:for-each-group select="$rules" group-by="replace(@context,'[^/]','')">
-                <xsl:sort select="string-length(current-grouping-key())"/>
-                <pattern id="match-depth-{string-length(current-grouping-key())}">
+            <xsl:for-each-group select="$rules" group-by="count(tokenize(@context,'/'))">
+                <xsl:sort select="current-grouping-key()"/>
+                <xsl:comment expand-text="true"> RULES : CONTEXT DEPTH : { current-grouping-key() }</xsl:comment>
+                
+                <pattern id="match-depth-{current-grouping-key()}">
                     <xsl:for-each-group select="current-group()" group-by="@context">
-                        <rule context="{ current-grouping-key() }">
+                        <rule context="{current-grouping-key()}">
                             <xsl:sequence select="current-group()/(*|comment())"/>
                         </rule>
                     </xsl:for-each-group>
                 </pattern>
             </xsl:for-each-group>
-            <xsl:call-template name="m:produce-validation-function"/>
             
-            <xsl:apply-templates select="$type-definitions[@name=$metaschema//constraint//matches/@datatype]" mode="m:make-template"/>
+            <xsl:for-each-group select="$type-definitions[@name=$metaschema//constraint//matches/@datatype]" group-by="true()">
+                <xsl:comment> LEXICAL / DATATYPE VALIDATION FUNCTIONS </xsl:comment>
+
+                <xsl:call-template name="m:produce-validation-function"/>
+                <xsl:apply-templates select="current-group()" mode="m:make-template"/>
+            </xsl:for-each-group>
+            
         </schema>
     </xsl:template>
     
@@ -374,6 +391,18 @@
             <xsl:text>-</xsl:text>
             <xsl:value-of select="local-name()"/>
         </xsl:attribute>-->
+    </xsl:template>
+    
+    <xsl:template match="m:index | m:is-unique" mode="make-key">
+        <xsl:variable name="context">
+            <xsl:apply-templates select=".." mode="rule-context"/>
+            <xsl:for-each select="@target[not(.=('.','value()'))]">
+                <xsl:text>/</xsl:text>
+                <xsl:sequence select="m:target-branch(string(.),$declaration-prefix)"/>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:variable name="use-targets" select="m:key-field/(m:target-match(.),'string(.)')[1]"/>
+        <XSLT:key name="{@name}" match="{$context}" use="{string-join($use-targets,' | ')}"/>
     </xsl:template>
     
 </xsl:stylesheet>

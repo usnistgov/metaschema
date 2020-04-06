@@ -128,7 +128,17 @@
             <sch:assert test="not(@value = preceding-sibling::*/@value)">Allowed value '<sch:value-of select="@value"/>' may only be specified once for flag '<sch:value-of select="../../@name"/>'.</sch:assert>
             <sch:assert test="m:datatype-validate(@value,../../@as-type)">Value '<sch:value-of select="@value"/>' is not a valid token of type <sch:value-of select="../../@as-type"/></sch:assert>
         </sch:rule>
+        
+        <sch:rule context="m:index | m:is-unique">
+            <sch:assert test="count(key('index-by-name',@name))=1">Only one index or uniqueness assertion may be named '<sch:value-of select="@name"/>'</sch:assert>
+        </sch:rule>
+        
+        <sch:rule context="m:key-field">
+            <sch:report test="@target = preceding-sibling::*/@target">Index key field target '<sch:value-of select="@target"/>' is already declared.</sch:report>
+        </sch:rule>
     </sch:pattern>
+    
+    <xsl:key name="index-by-name" match="m:index | m:is-unique" use="@name"/>
     
     <sch:pattern id="schema-docs">
         <sch:rule context="m:define-assembly | m:define-field | m:define-flag">

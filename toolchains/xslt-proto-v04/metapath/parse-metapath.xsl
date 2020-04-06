@@ -41,11 +41,13 @@
         <xsl:param name="expr" as="xs:string"/>
         <xsl:param name="ns-prefix" as="xs:string"/>
         <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
-        <xsl:value-of>
+        <xsl:variable name="rewrite">
             <xsl:apply-templates select="$parse.tree" mode="scrub-filters">
                 <xsl:with-param name="pfx" as="xs:string" tunnel="yes" select="$ns-prefix"/>
             </xsl:apply-templates>
-        </xsl:value-of>
+        </xsl:variable>
+        <!-- strip initial './' as no-op -->
+        <xsl:value-of select="replace($rewrite,'^(\./)+','')"/>
     </xsl:function>
 
     <xsl:template mode="scrub-filters" match="PredicateList"/>
