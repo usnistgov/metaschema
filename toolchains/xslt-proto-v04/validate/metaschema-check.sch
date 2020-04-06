@@ -133,6 +133,10 @@
             <sch:assert test="count(key('index-by-name',@name))=1">Only one index or uniqueness assertion may be named '<sch:value-of select="@name"/>'</sch:assert>
         </sch:rule>
         
+        <sch:rule context="m:index-has-key">
+            <sch:assert test="count(key('index-by-name',@name)/self::m:index)=1">No '<sch:value-of select="@name"/>' index is defined.</sch:assert>
+        </sch:rule>
+        
         <sch:rule context="m:key-field">
             <sch:report test="@target = preceding-sibling::*/@target">Index key field target '<sch:value-of select="@target"/>' is already declared.</sch:report>
         </sch:rule>
