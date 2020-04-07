@@ -1,0 +1,345 @@
+// Reduced XPath for Metaschema
+
+/**
+  * We are keeping only paths, not arbitrary expressions (although arbitrary expressions can still occur in filters)
+  * We are keeping only the downward-looking axes, discarding the reverse and sibling axes
+
+  * XPath 2.0 features we are retaining
+    * compound steps e.g. path/(to|from)/node
+    * set operations union, intersect, except
+  
+  * to do: scrub unused tokens from keywords e.g. 'preceding-sibling'
+*/
+
+
+// was: XPath    ::= Expr EOF
+XPath    ::= UnionExpr EOF
+
+// was: Expr     ::= ExprSingle ( ',' ExprSingle )*
+Expr     ::= ExprSingle
+
+// removed: ForExpr, QuantifiedExpr, IfExpr
+ExprSingle
+         ::= OrExpr
+         
+// ForExpr
+// SimpleForClause
+// QuantifiedExpr
+// IfExpr
+
+OrExpr   ::= AndExpr ( 'or' AndExpr )*
+AndExpr  ::= ComparisonExpr ( 'and' ComparisonExpr )*
+
+// was: ComparisonExpr ::= RangeExpr ( ( ValueComp | GeneralComp | NodeComp ) RangeExpr )?
+ComparisonExpr
+         ::= AdditiveExpr ( GeneralComp AdditiveExpr )?
+
+// RangeExpr
+
+AdditiveExpr
+         ::= MultiplicativeExpr ( ( '+' | '-' ) MultiplicativeExpr )*
+         
+// removed: 'idiv' operator from MultiplicativeExpr
+MultiplicativeExpr
+         ::= UnionExpr ( ( '*' | 'div' | 'mod' ) UnionExpr )*
+
+// leaving set operations for now
+UnionExpr
+         ::= IntersectExceptExpr ( ( 'union' | '|' ) IntersectExceptExpr )*
+// was: IntersectExceptExpr ::= InstanceofExpr ( ( 'intersect' | 'except' ) InstanceofExpr )*
+IntersectExceptExpr
+         ::= UnaryExpr ( ( 'intersect' | 'except' ) UnaryExpr )*
+         
+// InstanceofExpr
+// TreatExpr
+// CastableExpr
+// CastExpr
+
+UnaryExpr
+         ::= ( '-' | '+' )* ValueExpr
+
+// was: ValueExpr ::= PathExpr
+ValueExpr
+         ::= FilterExpr
+           | PathExpr
+
+GeneralComp
+         ::= '='
+           | '!='
+           | '<'
+           | '<='
+           | '>'
+           | '>='
+
+// ValueComp ::= 'eq' | 'ne' | 'lt' | 'le' | 'gt' | 'ge'
+// NodeComp ::= 'is' | '<<' | '>>'
+
+PathExpr ::= '/' ( RelativePathExpr / )
+           | '//' RelativePathExpr
+           | RelativePathExpr
+RelativePathExpr
+         ::= StepExpr ( ( '/' | '//' ) StepExpr )*
+
+// removed from StepExpr: FilterExpr
+
+StepExpr ::= AxisStep
+
+// was: AxisStep ::= ( ReverseStep | ForwardStep ) PredicateList
+AxisStep ::= ForwardStep PredicateList
+ForwardStep
+         ::= ForwardAxis NodeTest
+           | AbbrevForwardStep
+           
+// removing 'following-sibling', 'following' and 'namespace' from forward axes
+ForwardAxis
+         ::= 'child' '::'
+           | 'descendant' '::'
+           | 'attribute' '::'
+           | 'self' '::'
+           | 'descendant-or-self' '::'
+           | 'following-sibling' '::'
+           | 'following' '::'
+           | 'namespace' '::'
+AbbrevForwardStep
+         ::= '@'? NodeTest
+         
+// ReverseStep ::= ReverseAxis NodeTest | AbbrevReverseStep
+// ReverseAxis
+// AbbrevReverseStep ::= '..'
+
+NodeTest ::= KindTest
+           | NameTest
+NameTest ::= QName
+           | Wildcard
+           
+FilterExpr  ::= PrimaryExpr PredicateList
+
+PredicateList
+         ::= Predicate*
+Predicate
+         ::= '[' Expr ']'
+         
+// removed VarRef from PrimaryExpr
+PrimaryExpr
+         ::= Literal
+           | ParenthesizedExpr
+           | ContextItemExpr
+           | FunctionCall
+Literal  ::= NumericLiteral
+           | StringLiteral
+NumericLiteral
+         ::= IntegerLiteral
+           | DecimalLiteral
+           | DoubleLiteral
+
+// VarRef   ::= '$' VarName
+// VarName  ::= QName
+
+ParenthesizedExpr
+         ::= '(' Expr? ')'
+ContextItemExpr
+         ::= '.'
+FunctionCall
+         ::= FunctionName '(' ( ExprSingle ( ',' ExprSingle )* )? ')'
+
+// removed SingleType          ::= AtomicType '?'?
+// removed SequenceType        ::= 'empty-sequence' '(' ')' | ItemType OccurrenceIndicator?
+
+OccurrenceIndicator
+         ::= '?'
+           | '*'^OccurrenceIndicator
+           | '+'^OccurrenceIndicator
+
+ItemType ::= KindTest
+           | 'item' '(' ')'
+           | AtomicType
+AtomicType
+         ::= QName
+
+// removed from KindTest: CommentTest
+KindTest ::= DocumentTest
+           | ElementTest
+           | AttributeTest
+           | PITest
+           | SchemaElementTest
+           | SchemaAttributeTest
+           | TextTest
+           | AnyKindTest
+AnyKindTest
+         ::= 'node' '(' ')'
+DocumentTest
+         ::= 'document-node' '(' ( ElementTest | SchemaElementTest )? ')'
+TextTest ::= 'text' '(' ')'
+
+// CommentTest ::= 'comment' '(' ')'
+PITest   ::= 'processing-instruction' '(' ( NCName | StringLiteral )? ')'
+
+AttributeTest
+         ::= 'attribute' '(' ( AttribNameOrWildcard ( ',' TypeName )? )? ')'
+AttribNameOrWildcard
+         ::= AttributeName
+           | '*'
+SchemaAttributeTest
+         ::= 'schema-attribute' '(' AttributeDeclaration ')'
+AttributeDeclaration
+         ::= AttributeName
+ElementTest
+         ::= 'element' '(' ( ElementNameOrWildcard ( ',' TypeName '?'? )? )? ')'
+ElementNameOrWildcard
+         ::= ElementName
+           | '*'
+SchemaElementTest
+         ::= 'schema-element' '(' ElementDeclaration ')'
+ElementDeclaration
+         ::= ElementName
+AttributeName
+         ::= QName
+ElementName
+         ::= QName
+TypeName ::= QName
+QName    ::= FunctionName
+           | 'attribute'
+           | 'comment'
+           | 'document-node'
+           | 'element'
+           | 'empty-sequence'
+           | 'if'
+           | 'item'
+           | 'node'
+           | 'processing-instruction'
+           | 'schema-attribute'
+           | 'schema-element'
+           | 'text'
+           | 'typeswitch'
+FunctionName
+         ::= QName^Token
+           | 'ancestor'
+           | 'ancestor-or-self'
+           | 'and'
+           | 'cast'
+           | 'castable'
+           | 'child'
+           | 'descendant'
+           | 'descendant-or-self'
+           | 'div'
+           | 'else'
+           | 'eq'
+           | 'every'
+           | 'except'
+           | 'following'
+           | 'following-sibling'
+           | 'for'
+           | 'ge'
+           | 'gt'
+           | 'idiv'
+           | 'instance'
+           | 'intersect'
+           | 'is'
+           | 'le'
+           | 'lt'
+           | 'mod'
+           | 'namespace'
+           | 'ne'
+           | 'or'
+           | 'parent'
+           | 'preceding'
+           | 'preceding-sibling'
+           | 'return'
+           | 'satisfies'
+           | 'self'
+           | 'some'
+           | 'to'
+           | 'treat'
+           | 'union'
+WhiteSpace
+         ::= ( S^WhiteSpace | Comment )+
+          /* ws: definition */
+Comment  ::= '(:' ( CommentContents | Comment )* ':)'
+          /* ws: explicit */
+
+<?TOKENS?>
+
+EOF      ::= $
+IntegerLiteral
+         ::= Digits
+DecimalLiteral
+         ::= '.' Digits
+           | Digits '.' [0-9]*
+          /* ws: explicit */
+DoubleLiteral
+         ::= ( '.' Digits | Digits ( '.' [0-9]* )? ) [eE] [+#x2D]? Digits
+          /* ws: explicit */
+StringLiteral
+         ::= '"' ( EscapeQuot | [^"] )* '"'
+           | "'" ( EscapeApos | [^'] )* "'"
+          /* ws: explicit */
+EscapeQuot
+         ::= '""'
+EscapeApos
+         ::= "''"
+Wildcard ::= '*'
+           | NCName ':' '*'
+           | '*' ':' NCName
+          /* ws: explicit */
+NameStartChar
+         ::= ':'
+           | [A-Z]
+           | '_'
+           | [a-z]
+           | [#x00C0-#x00D6]
+           | [#x00D8-#x00F6]
+           | [#x00F8-#x02FF]
+           | [#x0370-#x037D]
+           | [#x037F-#x1FFF]
+           | [#x200C-#x200D]
+           | [#x2070-#x218F]
+           | [#x2C00-#x2FEF]
+           | [#x3001-#xD7FF]
+           | [#xF900-#xFDCF]
+           | [#xFDF0-#xFFFD]
+           | [#x10000-#xEFFFF]
+NameChar ::= NameStartChar
+           | '-'
+           | '.'
+           | [0-9]
+           | #x00B7
+           | [#x0300-#x036F]
+           | [#x203F-#x2040]
+Name     ::= NameStartChar NameChar*
+NCName   ::= Name - ( Char* ':' Char* )
+QName    ::= PrefixedName
+           | UnprefixedName
+PrefixedName
+         ::= Prefix ':' LocalPart
+UnprefixedName
+         ::= LocalPart
+Prefix   ::= NCName
+LocalPart
+         ::= NCName
+Char     ::= #x0009
+           | #x000A
+           | #x000D
+           | [#x0020-#xD7FF]
+           | [#xE000-#xFFFD]
+           | [#x10000-#x10FFFF]
+Digits   ::= [0-9]+
+S        ::= ( #x0020 | #x0009 | #x000D | #x000A )+
+CommentContents
+         ::= ( ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) - ( Char* '(' ) ) &':'
+           | ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) &'('
+'+'       << '+'^OccurrenceIndicator
+'*'       << Wildcard '*'^OccurrenceIndicator
+QName^Token
+          << 'ancestor' 'ancestor-or-self' 'and' 'attribute' 'cast' 'castable' 'child' 'comment' 'descendant' 'descendant-or-self' 'div' 'document-node' 'element' 'else' 'empty-sequence' 'eq' 'every' 'except' 'following' 'following-sibling' 'for' 'ge' 'gt' 'idiv' 'if' 'instance' 'intersect' 'is' 'item' 'le' 'lt' 'mod' 'namespace' 'ne' 'node' 'or' 'parent' 'preceding' 'preceding-sibling' 'processing-instruction' 'return' 'satisfies' 'schema-attribute' 'schema-element' 'self' 'some' 'text' 'to' 'treat' 'typeswitch' 'union'
+NonNCNameChar
+         ::= $
+           | ':'
+           | Char - NameChar
+DelimitingChar
+         ::= NonNCNameChar
+           | '-'
+           | '.'
+DelimitingChar
+          \\ DecimalLiteral DoubleLiteral IntegerLiteral
+NonNCNameChar
+          \\ NCName QName^Token 'ancestor' 'ancestor-or-self' 'and' 'as' 'attribute' 'cast' 'castable' 'child' 'comment' 'descendant' 'descendant-or-self' 'div' 'document-node' 'element' 'else' 'empty-sequence' 'eq' 'every' 'except' 'following' 'following-sibling' 'for' 'ge' 'gt' 'idiv' 'if' 'in' 'instance' 'intersect' 'is' 'item' 'le' 'lt' 'mod' 'namespace' 'ne' 'node' 'of' 'or' 'parent' 'preceding' 'preceding-sibling' 'processing-instruction' 'return' 'satisfies' 'schema-attribute' 'schema-element' 'self' 'some' 'text' 'then' 'to' 'treat' 'typeswitch' 'union'
