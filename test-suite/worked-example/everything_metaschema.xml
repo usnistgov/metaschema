@@ -262,7 +262,6 @@ Under 'widget'
             </require>
             <require when="@type='roleref'">
                 <index-has-key target="some/node()" name="role-index">
-                    
                     <key-field target="value()"/>
                 </index-has-key>
             </require>
