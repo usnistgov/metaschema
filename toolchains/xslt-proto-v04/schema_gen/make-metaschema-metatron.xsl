@@ -12,12 +12,12 @@
     xmlns="http://purl.oclc.org/dsdl/schematron"
     >
     
-<!-- Purpose: Produce an XSD Schema representing constraints declared in a netaschema -->
+<!-- Purpose: Produce an Schematron representing constraints declared in a metaschema -->
 <!-- Input:   A Metaschema -->
 <!-- Output:  An XSD, with embedded documentation -->
 
-<!-- nb The schema and Schematron for the metaschema format is essential
-        for validating constraints assumed by this transformation. -->
+<!-- nb Validation against both schema and Schematron for the metaschema format
+        is assumed. -->
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
     
