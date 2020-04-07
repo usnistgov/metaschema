@@ -3,9 +3,9 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" exclude-result-prefixes="#all"
-    version="3.0" xmlns:p="xpath20">
+    version="3.0" xmlns:p="xpath20h">
 
-    <xsl:import href="REx/xpath20.xslt"/>
+    <xsl:import href="REx/xpath20h.xslt"/>
 
     <xsl:output indent="yes"/>
 
