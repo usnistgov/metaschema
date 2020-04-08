@@ -97,8 +97,10 @@ ForwardAxis
            | 'following-sibling' '::'
            | 'following' '::'
            | 'namespace' '::'
+
+// AbbrevForwardStep ::= '@'? NodeTest
 AbbrevForwardStep
-         ::= '@'? NodeTest
+         ::= '.' | '@'? NodeTest
          
 // ReverseStep ::= ReverseAxis NodeTest | AbbrevReverseStep
 // ReverseAxis
