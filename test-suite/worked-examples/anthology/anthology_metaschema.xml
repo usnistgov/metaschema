@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../toolchains/xslt-proto-v04/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/css" href="../../../support/lib/metaschema-author.css"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../support/lib/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>Anthology Metaschema</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>anthology</short-name>
+    <namespace>http://csrc.nist.gov/metaschema/ns/anthology</namespace>
+   
+   <remarks>
+       <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
+   </remarks>
+    
+   <!-- so far: index, is-unique, allowed-values, require, matches, index-has-key
+       need examples: has-cardinality, matches[@regex], allowed-values[@extends='yes']
+   
+   XSD - index, is-unique (xs:unique), index-has-key (xs:keyref);
+           constraint/(allowed-values, matches/@regex, matches/@datatype)
+   
+   Schematron - require[@when]/*
+   
+     require[@when]/allowed-values
+     require[@when]/is-unique
+     require[@when]/index-has-key
+     require[@when]/has-cardinality
+     require[@when]/matches/@regex
+     require[@when]/matches/@datatype
+
+     require[@when]/index-has-key[@target]
+
+Under 'stanza'
+     require[@when]/has-cardinality[@target]
+
+Under 'widget'
+     require[@when]/allowed-values[@target]
+     require[@when]/is-unique[@target]
+     require[@when]/matches[@target]/@regex
+     require[@when]/matches[@target]/@datatype
+
+
+     index[target="value()"] - is indexed from the root / implicitly across dynamic scope
+     
+     Build out examples in OSCAL schemas
+     Document examples on an Issue for testing/tracking
+     unit tests?
+   -->
+<!-- 
+     ASSEMBLY
+        singleton
+        grouped
+          with and without @in-xml
+        root-name
+        use-name
+        json-key
+        choice
+        @in-json
+        
+     FIELD
+       json-value-key literal
+       json-value-key flag
+       value datatypes
+         markup-line
+         markup-multiline
+           with and without in-xml="wrapped"
+       value constraints (allowed-values)
+    
+     FLAG
+       value datatypes
+    
+    -->
+    
+   <define-assembly name="anthology">
+       <formal-name>Anthology</formal-name>
+       <description>A collection of literary excerpts</description>
+       <root-name>ANTHOLOGY</root-name>
+       <flag ref="id"/>
+       <model>
+           <assembly ref="meta"/>
+           <assembly ref="piece" max-occurs="unbounded" min-occurs="0">
+               <group-as name="pieces"/>
+           </assembly>
+           <assembly ref="back"/>
+       </model>
+        <constraint>
+            <index-has-key name="creators-index" target=".//meta/creator[matches(@who,'\S')]">
+                <key-field target="@who"/>
+            </index-has-key>
+        </constraint>
+   </define-assembly>
+    
+    <define-flag name="id" as-type="NCName">
+        <formal-name>Identifier</formal-name>
+        <description>A distinct code</description>
+    </define-flag>
+    
+    <define-assembly name="meta">
+        <formal-name>Front matter / metadata</formal-name>
+        <description>Metadata for the anthology as a whole, or for a single piece within it</description>
+        <model>
+            <field ref="creator" max-occurs="unbounded">
+                <group-as name="creators"/>
+            </field>
+            <field ref="remarks"/>
+        </model>
+    </define-assembly>
+    
+    <define-field name="creator">
+        <formal-name>Creator (author or editor)</formal-name>
+        <description>The text contents should name the person; the optional <code>who</code> flag links it to the index.</description>
+        <define-flag name="role" required="yes">
+            <formal-name>Role</formal-name>
+            <description>Contribution of the creator</description>
+            <constraint>
+                <allowed-values>
+                    <enum value="author">Author</enum>
+                    <enum value="editor">Editor</enum>
+                    <enum value="translator">Translator</enum>
+                </allowed-values>
+            </constraint>
+        </define-flag>
+        <define-flag name="who">
+            <formal-name>Person identifier</formal-name>
+            <description>Relates a person to the biographical index</description>
+        </define-flag>
+    </define-field>
+    
+    <define-field name="remarks" as-type="markup-multiline">
+        <formal-name>Remarks</formal-name>
+        <description>Pertinent information of any kind.</description>
+    </define-field>
+    
+    <define-assembly name="piece">
+        <formal-name>Piece</formal-name>
+        <description>A single anthologized piece; poetry or prose, entire or excerpted</description>
+        <model>
+            <assembly ref="meta"/>
+            <choice>
+                <assembly ref="verse"/>
+                <field ref="prose" in-xml="WITH_WRAPPER"/>
+            </choice>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="verse">
+        <formal-name>Verse</formal-name>
+        <description>A composition in lines, or an excerpt from such a composition</description>
+        <flag ref="type"/>
+        <model>
+            <choice>
+                <field ref="line" max-occurs="unbounded">
+                    <group-as name="lines"/>
+                </field>
+                <assembly ref="stanza" max-occurs="unbounded">
+                    <group-as name="stanzas"/>
+                </assembly>
+            </choice>
+        </model>
+    </define-assembly>
+    
+    <define-flag name="type">
+        <formal-name>Verse type</formal-name>
+        <description>Any specialized form such as Byronic, terza rima, sestina, sonnet</description>
+    </define-flag>
+
+    <define-field name="line" as-type="markup-line">
+        <formal-name>Line of verse</formal-name>
+        <description>May be metrical</description>
+        <define-flag name="feet" as-type="integer">
+            <formal-name>Meter count(feet)</formal-name>
+            <description>Count of metrical feet (dimeter, trimeter, tetrameter etc) represented as a natural number</description>
+            <constraint>
+                <matches regex="^[1-9]"/>
+                <remarks>
+                    <p>Should not be negative or zero</p>
+                </remarks>
+            </constraint>
+        </define-flag>
+        <define-flag name="base">
+            <formal-name>Base meter</formal-name>
+            <description>Identifies the base metrical type, if any</description>
+            <constraint>
+                <allowed-values allow-other="yes">
+                    <enum value="dactyl">Dactylic</enum>
+                    <enum value="anapest">Anapestic</enum>
+                    <enum value="trochee">Trochaic</enum>
+                    <enum value="iambic">Iambic</enum>
+                    <enum value="mixed">Mixed</enum>
+                </allowed-values>
+            </constraint>
+        </define-flag>
+    </define-field>
+    
+    <define-assembly name="stanza">
+        <formal-name>Stanza</formal-name>
+        <description>A group of lines within a verse</description>
+        <flag ref="type"/>
+        <model>
+            <field ref="line" max-occurs="unbounded">
+                <group-as name="lines"/>
+            </field>
+        </model>
+    </define-assembly>
+    
+    <define-field name="prose" as-type="markup-multiline">
+        <formal-name>Prose</formal-name>
+        <description>Short prose or an excerpt</description>
+    </define-field>
+    
+    <define-assembly name="back">
+        <formal-name>Back matter</formal-name>
+        <description>Indexes and appurtenances</description>
+        <model>
+            <assembly ref="author-index"/>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="author-index">
+        <formal-name>Author index</formal-name>
+        <description>Information about authors cited in the anthology</description>
+        <model>
+            <assembly ref="author" max-occurs="unbounded">
+                <group-as name="authors" in-json="BY_KEY"/>
+            </assembly>
+        </model>
+        <constraint>
+            <index name="creators-index" target="author">
+                <key-field target="@id"/>
+            </index>
+        </constraint>
+    </define-assembly>
+    
+    <define-assembly name="author">
+        <formal-name>Author</formal-name>
+        <description>A single author cited in the anthology, with relevant info</description>
+        <json-key flag-name="id"/>
+        <flag ref="id"/>
+        <model>
+            <field ref="name"/>
+            <field ref="dates"/>
+            <field ref="publication" max-occurs="unbounded" min-occurs="0">
+                <group-as name="publications"/>
+            </field>
+        </model>
+    </define-assembly>
+    
+    <define-field name="name" as-type="string">
+        <formal-name>Name</formal-name>
+        <description>A personal or place name</description>
+    </define-field>
+    
+    <define-field name="dates" as-type="empty">
+        <formal-name>Dates</formal-name>
+        <description>As a range (birth-death) or floruit</description>
+        <json-value-key>range</json-value-key>
+        <define-flag name="birth" as-type="date">
+            <formal-name>Birth date</formal-name>
+            <description>Approximate</description>
+        </define-flag>
+        <!-- validate: after birth date, if given? -->
+        <define-flag name="death" as-type="date">
+            <formal-name>Death date</formal-name>
+            <description>Approximate</description>
+        </define-flag>
+        <define-flag name="floruit" as-type="date">
+            <formal-name>Birth date</formal-name>
+            <description>Approximate</description>
+        </define-flag>
+    </define-field>
+    <define-field name="publication">
+        <formal-name>Publication</formal-name>
+        <description>A publication attributed to an author</description>
+        <define-flag name="date" as-type="date">
+            <formal-name>Publication date</formal-name>
+            <description>Date of (first) publication</description>
+        </define-flag>
+    </define-field>
+    
+    
+</METASCHEMA>
