@@ -15,7 +15,7 @@
 <!-- Purpose: Produce an Schematron representing constraints declared in a metaschema -->
 <!-- Input:   A Metaschema -->
 <!-- Output:  An XSD, with embedded documentation -->
-
+<!-- Maintenance note: when Saxon10 is available in tooling, try cache=yes on function declarations. -->
 <!-- nb Validation against both schema and Schematron for the metaschema format
         is assumed. -->
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
@@ -131,8 +131,8 @@
     </xsl:template>
     
     <xsl:template match="has-cardinality/@min-occurs" mode="assertion">
-        <xsl:variable name="target" select="parent::has-cardinality/@target"/>
-        <xsl:variable name="condition" select="m:condition(parent::has-cardinality)"/>
+        <xsl:variable name="target" select="parent::has-cardinality/@target ! m:prefixed-path(.,$declaration-prefix)"/>
+        <xsl:variable name="condition" select="m:wrapper-condition(parent::has-cardinality)"/>
         <xsl:variable name="exception-clause">
             <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or</xsl:if>
         </xsl:variable>
@@ -143,8 +143,8 @@
     </xsl:template>
     
     <xsl:template match="has-cardinality/@max-occurs" mode="assertion">
-        <xsl:variable name="target" select="parent::has-cardinality/@target"/>
-        <xsl:variable name="condition" select="m:condition(parent::has-cardinality)"/>
+        <xsl:variable name="target" select="parent::has-cardinality/@target ! m:prefixed-path(.,$declaration-prefix)"/>
+        <xsl:variable name="condition" select="m:wrapper-condition(parent::has-cardinality)"/>
         <xsl:variable name="exception-clause">
             <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or</xsl:if>
         </xsl:variable>
@@ -154,8 +154,8 @@
     </xsl:template>
     
     <xsl:template priority="3" match="has-cardinality[@min-occurs = @max-occurs]" mode="assertion">
-        <xsl:variable name="target" select="@target"/>
-        <xsl:variable name="condition" select="m:condition(.)"/>
+        <xsl:variable name="target" select="@target ! m:prefixed-path(.,$declaration-prefix)"/>
+        <xsl:variable name="condition" select="m:wrapper-condition(.)"/>
         <xsl:variable name="exception-clause">
             <xsl:if test="exists($condition)" expand-text="true">not({ $condition }) or</xsl:if>
         </xsl:variable>
@@ -182,7 +182,7 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to correspond to an entry in the '<sch:value-of select="@name"/>' index within the containing <sch:value-of select="$parent-context"/></assert>
+            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to correspond to an entry in the '<xsl:value-of select="@name"/>' index within the containing <xsl:value-of select="$parent-context"/></assert>
     </xsl:template>
     
     <!-- When an index-has-key is targetted not at . (or value) it needs extra logic for scoping. -->
@@ -194,7 +194,7 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to correspond to an entry in the '<sch:value-of select="@name"/>' inde.</assert>
+            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to correspond to an entry in the '<xsl:value-of select="@name"/>' index.</assert>
     </xsl:template>
     
     <xsl:template match="is-unique[matches(@target,'\S') and not(@target =('.','value()'))]" mode="assertion">
@@ -208,11 +208,11 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be unique within the containing <sch:value-of select="$parent-context"/></assert>
+            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be unique within the containing <xsl:value-of select="$parent-context"/></assert>
     </xsl:template>
     
     <!-- When an index-has-key is targetted not at . (or value) it needs extra logic for scoping. -->
-    <xsl:template match="index-has-key" mode="assertion">
+    <xsl:template match="is-unique" mode="assertion">
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
         </xsl:variable>
@@ -340,10 +340,7 @@
         </output:serialization-parameters>
     </xsl:variable>
     
-    <!-- Not yet handling flags, definition references, root or use-name ... -->
-    <xsl:template match="*[@name]" mode="rule-context" as="xs:string">
-        <xsl:value-of select="ancestor-or-self::*/(@name|@ref)/m:prefixed(.)" separator="/"/>
-    </xsl:template>
+    
     
     <xsl:template match="flag[@ref]" mode="rule-context" as="xs:string">
         <xsl:value-of>
@@ -389,13 +386,13 @@
        <xsl:apply-templates select="ancestor-or-self::constraint/parent::*" mode="#current"/>
     </xsl:template>
     
-    <xsl:function name="m:rule-context" as="xs:string" cache="yes">
+    <xsl:function name="m:rule-context" as="xs:string">
         <xsl:param name="whose"/>
         <!-- Insulate XPath here -->
         <xsl:apply-templates select="$whose" mode="rule-context"/>
     </xsl:function>
     
-    <xsl:function name="m:prefixed" as="xs:string" cache="yes">
+    <xsl:function name="m:prefixed" as="xs:string">
         <xsl:param name="whose"/>
         <!-- Insulate XPath here -->
         <xsl:text expand-text="true">{ $declaration-prefix }:{ $whose/string(.) }</xsl:text>
@@ -406,7 +403,7 @@
     yields exception clause (with prefix 'o')
       not(self::o:part[@name='statement]/ancestor::o:control[@id='ac-2']/ancestor::o:group/@id='ac')
     -->
-    <xsl:function name="m:target-exception" as="xs:string?" cache="yes">
+    <xsl:function name="m:target-exception" as="xs:string?">
         <xsl:param name="whose" as="element()"/>
         <!-- Insulate XPath here -->
         <!-- no-namespace paths have to be expanded to ns? -->
@@ -416,7 +413,7 @@
         <xsl:sequence select="$target-path[not(.=('.','value()'))]"/>
     </xsl:function>
     
-    <xsl:function name="m:target-match" as="xs:string?" cache="yes">
+    <xsl:function name="m:target-match" as="xs:string?">
         <xsl:param name="whose" as="element()"/>
         <!-- Insulate XPath here -->
         <!-- no-namespace paths have to be expanded to ns? -->
@@ -446,23 +443,34 @@
     </xsl:template>
     
     <!-- produces a sequence of conditional tests from @when ancestry -->
-    <xsl:function name="m:condition" as="xs:string?" cache="yes">
+    <xsl:function name="m:condition" as="xs:string?">
         <!-- Insulate XPath here -->
         <xsl:param name="whose" as="element()"/>
         <xsl:variable name="whose-context" as="xs:string?">
             <xsl:if test="matches($whose/@target,'\S') and not($whose/@target = ('.','value()'))">
-              <xsl:apply-templates mode="rule-context" select="$whose/ancestor::require/ancestor::constraint"/>
+                <xsl:apply-templates mode="rule-context" select="$whose/ancestor::require/ancestor::constraint"/>
             </xsl:if>
         </xsl:variable>
         <xsl:variable name="predicates" select="$whose/ancestor-or-self::*/@when ! ( $whose-context ! ('ancestor::' || . || '/') || . )"/>
         <xsl:variable name="target-exception" select="m:write-target-exception($whose/@target,$declaration-prefix)"/>
-
+        
         <xsl:if test="exists(($predicates, $target-exception))">
             <xsl:value-of select="string-join(($predicates, $target-exception),' and ')"/>
         </xsl:if>
     </xsl:function>
     
-    <xsl:function name="m:conditional-plural" as="xs:string?" cache="yes">
+    <!-- similar to m:condition, except relative to an aggregation not a single node -->
+    <xsl:function name="m:wrapper-condition" as="xs:string?">
+        <!-- Insulate XPath here -->
+        <xsl:param name="whose" as="element()"/>
+        <xsl:variable name="predicates" select="$whose/ancestor-or-self::*/@when"/>
+        
+        <xsl:if test="exists($predicates)">
+            <xsl:value-of select="string-join($predicates,' and ')"/>
+        </xsl:if>
+    </xsl:function>
+    
+    <xsl:function name="m:conditional-plural" as="xs:string?">
         <xsl:param name="count" as="xs:integer"/>
         <xsl:param name="noun" as="xs:string"/>
         <xsl:text expand-text="true">{ if ($count eq 1) then ('one ' || $noun) else ($count || ' ' || $noun || 's' ) }</xsl:text>
