@@ -60,7 +60,7 @@
     <xsl:template mode="scrub-filters" match="PredicateList"/>
 
 
-    <xsl:function name="m:step-map" as="element(step)*">
+    <xsl:function name="m:step-map" as="element()*">
         <xsl:param name="expr" as="xs:string"/>
         <xsl:param name="ns-prefix" as="xs:string"/>
         <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
@@ -71,12 +71,18 @@
 
     <xsl:template match="text()" mode="step-map"/>
 
+    <xsl:template match="UnaryExpr" mode="step-map">
+        <alternative>
+            <xsl:apply-templates mode="#current"/>
+        </alternative>
+    </xsl:template>
+    
     <xsl:template match="StepExpr" mode="step-map">
         <step>
             <xsl:apply-templates mode="#current"/>
         </step>
     </xsl:template>
-
+    
     <xsl:template match="NodeTest" mode="step-map">
         <node>
             <xsl:apply-templates mode="prefix-ncnames"/>
@@ -98,24 +104,29 @@
     <xsl:function name="m:write-target-exception" as="xs:string?">
         <xsl:param name="who" as="item()?"/>
         <xsl:param name="ns-prefix" as="xs:string"/>
-        <xsl:variable name="steps" as="element()*" select="m:step-map(string($who), $ns-prefix)"/>
-        <xsl:for-each-group select="$steps[exists(filter)]" group-by="true()">
+        <xsl:variable name="alternatives" as="element()*" select="m:step-map(string($who), $ns-prefix)"/>
+        <xsl:for-each-group select="$alternatives[exists(step/node)]" group-by="true()">
             <xsl:value-of>
-            <xsl:text>(empty( </xsl:text>
-            <xsl:for-each select="current-group()">
-                <xsl:sort select="position()" order="descending"/>
-                <xsl:text expand-text="true">{ if (position() eq 1) then 'self::' else 'ancestor::' }</xsl:text>
-                <xsl:value-of select="node"/>
-                <xsl:for-each select="filter">
-                    <xsl:text>[</xsl:text>
-                    <xsl:value-of select="."/>
-                    <xsl:text>]</xsl:text>
+                <xsl:text>exists(</xsl:text>
+                <xsl:for-each select="current-group()">
+                    <xsl:for-each select="step[exists(node)]">
+                        <xsl:sort select="position()" order="descending"/>
+                        <xsl:text expand-text="true">{ if (position() eq 1) then 'self::' else 'ancestor::' }</xsl:text>
+                        <xsl:value-of select="node"/>
+                        <xsl:for-each select="filter">
+                            <xsl:text>[</xsl:text>
+                            <xsl:value-of select="."/>
+                            <xsl:text>]</xsl:text>
+                        </xsl:for-each>
+                        <xsl:if test="not(position() = last())">/</xsl:if>
+                    </xsl:for-each>
+                    <xsl:if test="not(position() = last())"> | </xsl:if>
                 </xsl:for-each>
-                <xsl:if test="not(position()=last())">/</xsl:if>
-            </xsl:for-each>
-            <xsl:text> ))</xsl:text>
+                    <xsl:text>)</xsl:text>
             </xsl:value-of>
+            
         </xsl:for-each-group>
+        
     </xsl:function>
 
 

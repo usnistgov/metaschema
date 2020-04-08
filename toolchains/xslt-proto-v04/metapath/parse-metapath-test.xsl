@@ -20,6 +20,11 @@
     <xsl:template match="/">
         <tests>
         <xsl:variable name="paths" as="element()*">
+            <path p="x">.</path>
+            <path p="z">.//meta/creator[matches(@who,'\S')]</path>
+            <path p="a">a[true()] | b[true()]/c</path>
+            <path p="anthology">descendant::meta/creator</path>
+            <path p="anthology">.//meta/creator[matches(@who,'\S')]</path>
             <path p="d">short[count(z) > 1]</path>
             <path p="d">long/path//into//document</path>
             <path p="n">blue[@class='midnight']/pink[@class='green'][contains(line[1],'boo')]</path>
@@ -73,19 +78,19 @@
                         </xsl:otherwise>
                 </xsl:choose>    
                 
-                <!--<target-match>
-                    <!-\- wipes predicates (filters) from expressions -\->
+                <target-match>
+                    <!-- wipes predicates (filters) from expressions -->
                     <xsl:value-of select="m:target-branch($path, $path/@p)"/>
                 </target-match>
                 <target-exception>
                     <xsl:value-of select="m:write-target-exception($path,$path/@p)"/>
                 </target-exception>
                 <filtered>
-                    <!-\- emits a sequence of steps, each with its NodeTest and filter (predicate) -\->
+                    <!-- emits a sequence of steps, each with its NodeTest and filter (predicate) -->
                     <xsl:sequence select="m:step-map($path, $path/@p)"/>
-                </filtered>-->
+                </filtered>
                 
-                <!--<xsl:sequence xmlns:p="xpath20i" select="p:parse-XPath($path)"/>-->
+                <!--<xsl:sequence xmlns:p="minipath" select="p:parse-XPath($path)"/>-->
             </test>
         </xsl:for-each>
         </tests>
