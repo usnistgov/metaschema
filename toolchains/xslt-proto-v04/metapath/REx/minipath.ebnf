@@ -1,14 +1,12 @@
-// Reduced XPath for Metaschema
+// Minipath: Reduced XPath for Metaschema
 
 /**
-  * We are keeping only paths, not arbitrary expressions (although arbitrary expressions can still occur in filters)
   * We are keeping only the downward-looking axes, discarding the reverse and sibling axes
-
-  * XPath 2.0 features we are retaining
-    * compound steps e.g. path/(to|from)/node
-    * set operations union, intersect, except
-  
-  * to do: scrub unused tokens from keywords e.g. 'preceding-sibling'
+  * No more steps not paths (/path/to/2) or compound steps (path/(to|from)/step)
+      see ValueExpr, PathExpr
+  * No more set operations union, intersect, except
+  * Removed most 2.0 functionality including type support (treat as, cast as etc.)
+  * Compare this file to xpath20.ebnf to see changes
 */
 
 
@@ -43,12 +41,11 @@ AdditiveExpr
 MultiplicativeExpr
          ::= UnionExpr ( ( '*' | 'div' | 'mod' ) UnionExpr )*
 
-// leaving set operations for now
+// was:  UnionExpr ::= IntersectExceptExpr ( ( 'union' | '|' ) IntersectExceptExpr )*
 UnionExpr
-         ::= IntersectExceptExpr ( ( 'union' | '|' ) IntersectExceptExpr )*
-// was: IntersectExceptExpr ::= InstanceofExpr ( ( 'intersect' | 'except' ) InstanceofExpr )*
-IntersectExceptExpr
-         ::= UnaryExpr ( ( 'intersect' | 'except' ) UnaryExpr )*
+         ::= UnaryExpr ( '|' UnaryExpr )*
+
+// had: IntersectExceptExpr ::= InstanceofExpr ( ( 'intersect' | 'except' ) InstanceofExpr )*
          
 // InstanceofExpr
 // TreatExpr
@@ -156,22 +153,24 @@ ItemType ::= KindTest
 AtomicType
          ::= QName
 
-// removed from KindTest: CommentTest
+// removed from KindTest: CommentTest| SchemaElementTest | SchemaAttributeTest
+           
 KindTest ::= DocumentTest
            | ElementTest
            | AttributeTest
            | PITest
-           | SchemaElementTest
-           | SchemaAttributeTest
            | TextTest
            | AnyKindTest
 AnyKindTest
          ::= 'node' '(' ')'
-DocumentTest
-         ::= 'document-node' '(' ( ElementTest | SchemaElementTest )? ')'
+
+// was:  DocumentTest  ::= 'document-node' '(' ( ElementTest | SchemaElementTest )? ')'
+DocumentTest  ::= 'document-node' '(' ElementTest? ')'
+
 TextTest ::= 'text' '(' ')'
 
 // CommentTest ::= 'comment' '(' ')'
+
 PITest   ::= 'processing-instruction' '(' ( NCName | StringLiteral )? ')'
 
 AttributeTest
@@ -179,82 +178,52 @@ AttributeTest
 AttribNameOrWildcard
          ::= AttributeName
            | '*'
-SchemaAttributeTest
-         ::= 'schema-attribute' '(' AttributeDeclaration ')'
-AttributeDeclaration
-         ::= AttributeName
+           
+// SchemaAttributeTest  ::= 'schema-attribute' '(' AttributeDeclaration ')'
+// AttributeDeclaration ::= AttributeName
+
 ElementTest
          ::= 'element' '(' ( ElementNameOrWildcard ( ',' TypeName '?'? )? )? ')'
 ElementNameOrWildcard
          ::= ElementName
            | '*'
-SchemaElementTest
-         ::= 'schema-element' '(' ElementDeclaration ')'
-ElementDeclaration
-         ::= ElementName
+// SchemaElementTest  ::= 'schema-element' '(' ElementDeclaration ')'
+// ElementDeclaration ::= ElementName
+
 AttributeName
          ::= QName
 ElementName
          ::= QName
 TypeName ::= QName
+
+// removing from QName:  'comment' | 'document-node' | 'empty-sequence' | 'if' | 'item' | 'schema-attribute' | 'schema-element' | 'typeswitch'
+           
 QName    ::= FunctionName
            | 'attribute'
-           | 'comment'
-           | 'document-node'
            | 'element'
-           | 'empty-sequence'
-           | 'if'
-           | 'item'
            | 'node'
            | 'processing-instruction'
-           | 'schema-attribute'
-           | 'schema-element'
            | 'text'
-           | 'typeswitch'
+
+// removing from FunctionName: 'ancestor' | 'ancestor-or-self' | 'cast' | 'castable' | 'else' | 'eq' | 'every' | 'except' | 'following' | 'following-sibling' | 'for' | 'ge' | 'gt' | 'idiv' | 'instance' | 'intersect' | 'is' | 'le' | 'lt' | 'namespace' | 'ne' | 'parent' | 'preceding' | 'preceding-sibling' | 'return' | 'satisfies' | 'some' | 'to' | 'treat' | 'union'
+
 FunctionName
          ::= QName^Token
-           | 'ancestor'
-           | 'ancestor-or-self'
            | 'and'
-           | 'cast'
-           | 'castable'
            | 'child'
            | 'descendant'
            | 'descendant-or-self'
            | 'div'
-           | 'else'
-           | 'eq'
-           | 'every'
-           | 'except'
-           | 'following'
-           | 'following-sibling'
-           | 'for'
-           | 'ge'
-           | 'gt'
-           | 'idiv'
-           | 'instance'
-           | 'intersect'
-           | 'is'
-           | 'le'
-           | 'lt'
            | 'mod'
-           | 'namespace'
-           | 'ne'
            | 'or'
-           | 'parent'
-           | 'preceding'
-           | 'preceding-sibling'
-           | 'return'
-           | 'satisfies'
            | 'self'
-           | 'some'
-           | 'to'
-           | 'treat'
-           | 'union'
+
+// removing from WhiteSpace: Comment
 WhiteSpace
-         ::= ( S^WhiteSpace | Comment )+
+         ::= ( S^WhiteSpace )+
           /* ws: definition */
-Comment  ::= '(:' ( CommentContents | Comment )* ':)'
+
+// Comment  ::= '(:' ( CommentContents | Comment )* ':)'
           /* ws: explicit */
 
 <?TOKENS?>
@@ -324,9 +293,9 @@ Char     ::= #x0009
            | [#x10000-#x10FFFF]
 Digits   ::= [0-9]+
 S        ::= ( #x0020 | #x0009 | #x000D | #x000A )+
-CommentContents
-         ::= ( ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) - ( Char* '(' ) ) &':'
-           | ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) &'('
+
+// CommentContents ::= ( ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) - ( Char* '(' ) ) &':'  | ( Char+ - ( Char* ( '(:' | ':)' ) Char* ) ) &'('
+
 '+'       << '+'^OccurrenceIndicator
 '*'       << Wildcard '*'^OccurrenceIndicator
 QName^Token
