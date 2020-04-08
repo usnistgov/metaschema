@@ -77,7 +77,7 @@ Under 'widget'
        <root-name>ANTHOLOGY</root-name>
        <flag ref="id"/>
        <model>
-           <assembly ref="meta"/>
+           <assembly ref="meta" min-occurs="1" max-occurs="1"/>
            <assembly ref="piece" max-occurs="unbounded" min-occurs="0">
                <group-as name="pieces"/>
            </assembly>
@@ -102,6 +102,13 @@ Under 'widget'
             <field ref="creator" max-occurs="unbounded">
                 <group-as name="creators"/>
             </field>
+            <define-field name="date">
+                <formal-name>Date</formal-name>
+                <description>As represented</description>
+                <constraint>
+                    <matches target="." regex="^[1-9]\d?\d?\d?$"/>
+                </constraint>
+            </define-field>
             <field ref="remarks"/>
         </model>
     </define-assembly>
@@ -157,6 +164,11 @@ Under 'widget'
                 </assembly>
             </choice>
         </model>
+        <constraint>
+            <require when="@type='quatrain'">
+                <has-cardinality target="line" max-occurs="4" min-occurs="4"/>
+            </require>
+        </constraint>
     </define-assembly>
     
     <define-flag name="type">
@@ -167,16 +179,7 @@ Under 'widget'
     <define-field name="line" as-type="markup-line">
         <formal-name>Line of verse</formal-name>
         <description>May be metrical</description>
-        <define-flag name="feet" as-type="integer">
-            <formal-name>Meter count(feet)</formal-name>
-            <description>Count of metrical feet (dimeter, trimeter, tetrameter etc) represented as a natural number</description>
-            <constraint>
-                <matches regex="^[1-9]"/>
-                <remarks>
-                    <p>Should not be negative or zero</p>
-                </remarks>
-            </constraint>
-        </define-flag>
+        <flag ref="feet"/>
         <define-flag name="base">
             <formal-name>Base meter</formal-name>
             <description>Identifies the base metrical type, if any</description>
@@ -191,6 +194,18 @@ Under 'widget'
             </constraint>
         </define-flag>
     </define-field>
+    
+    <define-flag name="feet" as-type="integer">
+        <formal-name>Meter count(feet)</formal-name>
+        <description>Count of metrical feet (dimeter, trimeter, tetrameter etc) represented as a natural number</description>
+        <constraint>
+            <matches regex="^[1-9]"/>
+            <remarks>
+                <p>Should not be negative or zero</p>
+            </remarks>
+        </constraint>
+    </define-flag>
+    
     
     <define-assembly name="stanza">
         <formal-name>Stanza</formal-name>
