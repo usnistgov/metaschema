@@ -20,21 +20,22 @@
     <xsl:template match="/">
         <tests>
         <xsl:variable name="paths" as="element()*">
-            <path p="b" label="a step, but not to a node">path/1/node</path>
             <path p="d">short[count(z) > 1]</path>
             <path p="d">long/path//into//document</path>
             <path p="n">blue[@class='midnight']/pink[@class='green'][contains(line[1],'boo')]</path>
             <path p="osc">catalog[@id='x']/group/control[@id='ac.2']/part[@name='statement']</path>
             <path p="a" label="pipe (union) operator">line | phrase</path>
             
+            <path p="x" label="PI test">descendant::processing-instruction('boo')</path>
+            
+            
+            <!-- THESE SHOULD BREAK under reduced XPath (metapath): they are no longer permissible -->
+            <path p="d">short[count(z) > 1 (: comment :)]</path>
             <path p="b" label="union operator">line union phrase</path>
             <path p="b" label="except operator">line except phrase</path>
             <path p="b" label="intersect operator">.//line intersect descendant::*[1]</path>
-            
-            <path p="x" label="PI test">descendant::processing-instruction('boo')</path>
             <path p="x" label="schema element test">child::schema-element(boo)</path>
-            
-            <!-- THESE SHOULD BREAK under reduced XPath (metapath): they are no longer permissible -->
+            <path p="b" label="a step, but not to a node">path/1/node</path>
             <path p="b" label="compound step">path/(to|from)/node</path>
             <path p="d" label="unsupported gt operator">short[count(z) gt 1]</path>
             <path p="x" label="comment test">child::comment()</path>
@@ -58,9 +59,20 @@
                 <path>
                     <xsl:value-of select="$path"/>
                 </path>
-                <rewritten prefix="{$path/@p}">
-                    <xsl:value-of select="m:prefixed-path($path, $path/@p)"/>
-                </rewritten>
+                <xsl:variable name="rewritten-path" select="m:prefixed-path($path, $path/@p)"/>
+                <xsl:choose>
+                    <xsl:when test="starts-with($rewritten-path,'!ERROR! ')">
+                        <ERROR>
+                            <xsl:value-of select="substring-after($rewritten-path,'!ERROR! ')"/>
+                        </ERROR>
+                    </xsl:when>
+                        <xsl:otherwise>
+                            <rewritten prefix="{$path/@p}">
+                                <xsl:value-of select="$rewritten-path"/>
+                            </rewritten>
+                        </xsl:otherwise>
+                </xsl:choose>    
+                
                 <!--<target-match>
                     <!-\- wipes predicates (filters) from expressions -\->
                     <xsl:value-of select="m:target-branch($path, $path/@p)"/>
@@ -73,8 +85,8 @@
                     <xsl:sequence select="m:step-map($path, $path/@p)"/>
                 </filtered>-->
                 
-                <!--<xsl:sequence xmlns:p="xpath20h" select="p:parse-XPath($path)"/>
-   -->         </test>
+                <!--<xsl:sequence xmlns:p="xpath20i" select="p:parse-XPath($path)"/>-->
+            </test>
         </xsl:for-each>
         </tests>
     </xsl:template>
