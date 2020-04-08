@@ -201,7 +201,7 @@
     <xsl:template priority="5" match="define-field[@as-type='empty']">
         <xs:complexType>
             <xsl:call-template name="name-global-field-type"/>
-            <xsl:apply-templates select="flag"/>
+            <xsl:apply-templates select="define-flag | flag"/>
         </xs:complexType>
     </xsl:template>
     
@@ -209,7 +209,7 @@
             <xs:complexType mixed="true">
                 <xsl:call-template name="name-global-field-type"/>
                 <xs:group ref="{$declaration-prefix}:everything-inline"/>
-                <xsl:apply-templates select="flag"/>
+                <xsl:apply-templates select="define-flag | flag"/>
             </xs:complexType>
     </xsl:template>
     
@@ -217,7 +217,7 @@
             <xs:complexType mixed="true">
                 <xsl:call-template name="name-global-field-type"/>
                 <xs:group ref="{$declaration-prefix}:PROSE"/>
-                <xsl:apply-templates select="flag"/>
+                <xsl:apply-templates select="define-flag | flag"/>
             </xs:complexType>
     </xsl:template>
     
