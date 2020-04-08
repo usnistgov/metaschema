@@ -3,9 +3,9 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" exclude-result-prefixes="#all"
-    version="3.0" xmlns:p="xpath20h">
+    version="3.0" xmlns:p="minipath">
 
-    <xsl:import href="REx/xpath20h.xslt"/>
+    <xsl:import href="REx/minipath.xslt"/>
 
     <xsl:output indent="yes"/>
 
@@ -15,11 +15,18 @@
         <xsl:param name="expr" as="xs:string"/>
         <xsl:param name="ns-prefix" as="xs:string"/>
         <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
-        <xsl:value-of>
-            <xsl:apply-templates select="$parse.tree" mode="prefix-ncnames">
-                <xsl:with-param name="pfx" as="xs:string" tunnel="yes" select="$ns-prefix"/>
-            </xsl:apply-templates>
-        </xsl:value-of>
+        <xsl:choose>
+            <xsl:when test="exists($parse.tree/self::ERROR)" expand-text="true">!ERROR! { normalize-space($parse.tree) }</xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of>
+                    <xsl:apply-templates select="$parse.tree" mode="prefix-ncnames">
+                        <xsl:with-param name="pfx" as="xs:string" tunnel="yes" select="$ns-prefix"/>
+                    </xsl:apply-templates>
+                </xsl:value-of>
+
+            </xsl:otherwise>
+        </xsl:choose>
+
     </xsl:function>
 
     <xsl:template mode="prefix-ncnames scrub-filters"
