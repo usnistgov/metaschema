@@ -85,7 +85,7 @@ Under 'widget'
        </model>
         <constraint>
             <index-has-key name="creators-index" target=".//meta/creator[matches(@who,'\S')]">
-                <key-field target="@who"/>
+                <key-field target="@who" pattern="#(\w+)"/>
             </index-has-key>
         </constraint>
    </define-assembly>
@@ -97,7 +97,7 @@ Under 'widget'
     
     <define-assembly name="meta">
         <formal-name>Front matter / metadata</formal-name>
-        <description>Metadata for the anthology as a whole, or for a single piece within it</description>
+        <description>Metadata for the anthology as a ^whole, or for a single piece within it</description>
         <model>
             <field ref="creator" max-occurs="unbounded">
                 <group-as name="creators"/>
@@ -105,8 +105,21 @@ Under 'widget'
             <define-field name="date">
                 <formal-name>Date</formal-name>
                 <description>As represented</description>
+                <define-flag name="type">
+                    <formal-name>Type of date representation</formal-name>
+                    <description>May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.</description>
+                    <constraint>
+                        
+                    </constraint>
+                </define-flag>
                 <constraint>
-                    <matches target="." regex="^[1-9]\d?\d?\d?$"/>
+                    <allowed-values target="@type">
+                        <enum value="YYYY">Four-digit year (CE)</enum>
+                    </allowed-values>
+                    <require when="@type='YYYY'">
+                        
+                      <matches target="." regex="^[1-9]\d?\d?\d?$"/>
+                    </require>
                 </constraint>
             </define-field>
             <field ref="remarks"/>
@@ -240,7 +253,9 @@ Under 'widget'
             </assembly>
         </model>
         <constraint>
+            
             <index name="creators-index" target="author">
+                <key-field target="@ns"/>
                 <key-field target="@id"/>
             </index>
         </constraint>
@@ -271,17 +286,23 @@ Under 'widget'
         <json-value-key>range</json-value-key>
         <define-flag name="birth" as-type="date">
             <formal-name>Birth date</formal-name>
-            <description>Approximate</description>
+            <description>If only the year is known use June 30.</description>
         </define-flag>
         <!-- validate: after birth date, if given? -->
         <define-flag name="death" as-type="date">
             <formal-name>Death date</formal-name>
-            <description>Approximate</description>
+            <description>If only the year is known use July 1.</description>
+            
         </define-flag>
-        <define-flag name="floruit" as-type="date">
-            <formal-name>Birth date</formal-name>
-            <description>Approximate</description>
-        </define-flag>
+        <constraint>
+            <!--if floruit is given, birth and death should not be?-->
+            <expect test="@birth &lt; @death"/>
+            
+            <expect>
+                
+            </expect>
+            
+        </constraint>
     </define-field>
     <define-field name="publication">
         <formal-name>Publication</formal-name>

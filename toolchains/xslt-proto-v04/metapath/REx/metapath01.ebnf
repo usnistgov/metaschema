@@ -1,4 +1,4 @@
-// Minipath: Reduced XPath for Metaschema
+// Metapath: XPath for Metaschema
 
 /**
   * We are keeping only the downward-looking axes, discarding the reverse and sibling axes
