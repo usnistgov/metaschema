@@ -3,9 +3,9 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" exclude-result-prefixes="#all"
-    version="3.0" xmlns:p="minipath">
+    version="3.0" xmlns:p="metapath01">
 
-    <xsl:import href="REx/minipath.xslt"/>
+    <xsl:import href="REx/metapath01.xslt"/>
 
     <xsl:output indent="yes"/>
 
@@ -83,6 +83,17 @@
         </step>
     </xsl:template>
     
+    <xsl:template match="ForwardStep[AbbrevForwardStep/TOKEN='@']" mode="step-map">
+        <axis>attribute</axis>
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template match="ForwardAxis" mode="step-map">
+        <axis>
+            <xsl:value-of select="TOKEN[not(.='::')]"/>
+        </axis>
+    </xsl:template>
+    
     <xsl:template match="NodeTest" mode="step-map">
         <node>
             <xsl:apply-templates mode="prefix-ncnames"/>
@@ -111,13 +122,7 @@
                 <xsl:for-each select="current-group()">
                     <xsl:for-each select="step[exists(node)]">
                         <xsl:sort select="position()" order="descending"/>
-                        <xsl:text expand-text="true">{ if (position() eq 1) then 'self::' else 'ancestor::' }</xsl:text>
-                        <xsl:value-of select="node"/>
-                        <xsl:for-each select="filter">
-                            <xsl:text>[</xsl:text>
-                            <xsl:value-of select="."/>
-                            <xsl:text>]</xsl:text>
-                        </xsl:for-each>
+                        <xsl:apply-templates select="." mode="target-step-check"/>
                         <xsl:if test="not(position() = last())">/</xsl:if>
                     </xsl:for-each>
                     <xsl:if test="not(position() = last())"> | </xsl:if>
@@ -129,7 +134,30 @@
         
     </xsl:function>
 
-
+<!-- Mode 'target-step-check', for any step, writes an XPath traversing to that step, going up the tree -->
+    <xsl:template priority="2" match="step[axis='attribute']" mode="target-step-check">
+      <xsl:text>.</xsl:text>
+        <xsl:apply-templates mode="#current" select="filter"/>
+    </xsl:template>
+    
+    <xsl:template match="step[empty(following-sibling::step)]" mode="target-step-check">
+        <xsl:text>self::</xsl:text>
+        <xsl:value-of select="node"/>
+        <xsl:apply-templates mode="#current" select="filter"/>
+    </xsl:template>
+    
+    <xsl:template match="step" mode="target-step-check">
+        <xsl:text>ancestor::</xsl:text>
+        <xsl:value-of select="node"/>
+        <xsl:apply-templates mode="#current" select="filter"/>
+    </xsl:template>
+    
+    <xsl:template match="filter" mode="target-step-check">
+        <xsl:text>[</xsl:text>
+        <xsl:value-of select="."/>
+        <xsl:text>]</xsl:text>
+    </xsl:template>
+    
     <!--<xsl:function name="m:xpath-eval-okay" as="xs:boolean">
         <xsl:param name="expr" as="xs:string"/>
         <xsl:variable name="any.place" as="element()"><m:any/></xsl:variable>
