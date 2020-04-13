@@ -22,17 +22,18 @@
    </pattern>
    <!-- RULES : CONTEXT DEPTH : 2-->
    <pattern id="match-depth-2">
-      <rule context="anthology:meta/anthology:date"><!-- should match regex '^[1-9]\d?\d?\d?$'-->
-         <assert test="matches(., '^[1-9]\d?\d?\d?$')">
-            <name/> is expected to match regular expression '^[1-9]\d?\d?\d?$'</assert>
+      <rule context="anthology:meta/anthology:date"><!-- when @type='YYYY',  should match regex '^[1-9]\d?\d?\d?$'-->
+         <assert test="not(@type='YYYY') or matches(., '^[1-9]\d?\d?\d?$')">Where @type='YYYY', <name/> is expected to match regular expression '^[1-9]\d?\d?\d?$'</assert>
       </rule>
       <rule context="anthology:creator/@role"><!--allowed-values on : author, editor, translator-->
          <assert test="( . = ( 'author', 'editor', 'translator' ) )">
             <name/> is expected to be (one of) 'author', 'editor', 'translator', not '<value-of select="."/>'</assert>
       </rule>
-      <rule context="anthology:line/@base"><!--allowed-values on : dactyl, anapest, trochee, iambic, mixed-->
-         <assert test="( . = ( 'dactyl', 'anapest', 'trochee', 'iambic', 'mixed' ) )">
-            <name/> is expected to be (one of) 'dactyl', 'anapest', 'trochee', 'iambic', 'mixed', not '<value-of select="."/>'</assert>
+   </pattern>
+   <!-- RULES : CONTEXT DEPTH : 3-->
+   <pattern id="match-depth-3">
+      <rule context="anthology:meta/anthology:date/@type"><!-- when exists(self::type), allowed-values on @type: YYYY-->
+         <assert test="not(exists(self::type)) or ( . = ( 'YYYY' ) )">Where exists(self::type), <name/> is expected to be (one of) 'YYYY', not '<value-of select="."/>'</assert>
       </rule>
    </pattern>
    <!-- RULES : CONTEXT DEPTH : 4-->

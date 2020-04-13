@@ -77,9 +77,31 @@
                      <b>Date</b>: As represented</xs:documentation>
                </xs:annotation>
                <xs:simpleContent>
-                  <xs:extension base="xs:string"/>
+                  <xs:extension base="anthology:date-FIELD-VALUE-ENUMERATION">
+                     <xs:attribute name="type" type="xs:string">
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Type of date representation</m:formal-name>
+                              <m:description>May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Type of date representation</b>: May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.</xs:documentation>
+                        </xs:annotation>
+                     </xs:attribute>
+                  </xs:extension>
                </xs:simpleContent>
             </xs:complexType>
+            <xs:simpleType name="date-FIELD-VALUE-ENUMERATION">
+               <xs:restriction base="xs:string">
+                  <xs:enumeration value="YYYY">
+                     <xs:annotation>
+                        <xs:documentation>
+                           <p>Four-digit year (CE)</p>
+                        </xs:documentation>
+                     </xs:annotation>
+                  </xs:enumeration>
+               </xs:restriction>
+            </xs:simpleType>
          </xs:element>
          <xs:element name="remarks" minOccurs="0" maxOccurs="1">
             <xs:annotation>
