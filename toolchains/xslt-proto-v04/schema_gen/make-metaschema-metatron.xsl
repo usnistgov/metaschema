@@ -106,6 +106,7 @@
         </xsl:for-each-group>
     </xsl:template>
     
+    <xsl:template match="allowed-values[@allow-other='yes']"/>
     
     <xsl:template match="matches | allowed-values | index-has-key | is-unique">
         <xsl:variable name="context">

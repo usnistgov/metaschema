@@ -20,7 +20,7 @@
     <xsl:template match="/">
         <tests>
         <xsl:variable name="paths" as="element()*">
-            <path p="x">.</path>
+            <path p="x">@type[.='boo']</path>
             <path p="z">.//meta/creator[matches(@who,'\S')]</path>
             <path p="a">a[true()] | b[true()]/c</path>
             <path p="anthology">descendant::meta/creator</path>
@@ -85,10 +85,10 @@
                 <target-exception>
                     <xsl:value-of select="m:write-target-exception($path,$path/@p)"/>
                 </target-exception>
-                <filtered>
-                    <!-- emits a sequence of steps, each with its NodeTest and filter (predicate) -->
+                <!--<filtered>
+                    <!-\- emits a sequence of steps, each with its NodeTest and filter (predicate) -\->
                     <xsl:sequence select="m:step-map($path, $path/@p)"/>
-                </filtered>
+                </filtered>-->
                 
                 <!--<xsl:sequence xmlns:p="minipath" select="p:parse-XPath($path)"/>-->
             </test>
