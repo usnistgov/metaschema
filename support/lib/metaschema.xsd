@@ -410,6 +410,7 @@
         <xs:documentation>The given enumerated value or values are inclusive of other values ('yes') or not ('no', the default)</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="id" type="xs:ID"/>
   </xs:complexType>
 
   <xs:element name="enum">
@@ -476,6 +477,7 @@
         <xs:documentation>Specifies the datatype for which the value identified by the scope attribute must conform to.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="id" type="xs:ID"/>
   </xs:complexType>
 
   <xs:complexType name="scoped-matches-constraint-type">
@@ -506,6 +508,7 @@
       </xs:choice>
       <xs:element minOccurs="0" ref="m:remarks"/>
     </xs:sequence>
+    <xs:attribute name="id" type="xs:ID"/>
   </xs:complexType>
 
   <xs:complexType name="flag-reference-constraints-type">
@@ -538,6 +541,7 @@
       </xs:choice>
       <xs:element minOccurs="0" ref="m:remarks"/>
     </xs:sequence>
+    <xs:attribute name="id" type="xs:ID"/>
   </xs:complexType>
 
   <xs:complexType name="index-field-type">
@@ -550,13 +554,24 @@
 
   <xs:complexType name="index-constraint-type">
     <xs:annotation>
-      <xs:documentation>Defines an index, a check against and index, or a uniqueness constraint.</xs:documentation>
+      <xs:documentation>Defines an index, a check against an index, or a uniqueness constraint.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="key-field" type="m:index-field-type" maxOccurs="unbounded">
+      <xs:element name="key-field" maxOccurs="unbounded">
         <xs:annotation>
           <xs:documentation>Specifies a value, relative to the provided <code>target</code>, that is to be used as part of the key. More than one key-field can be used to create a composite key.</xs:documentation>
         </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="m:index-field-type">
+              <xs:attribute name="pattern" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The first captured group in the regular expression is used as the key value for lookup. The regular expression must not match a zero-length string.</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
       </xs:element>
     </xs:sequence>
     <xs:attribute name="name" type="xs:NCName" use="required">
@@ -569,6 +584,7 @@
         <xs:documentation>Specifies the value objects to be included in the index or uniqueness constraint, or the object that contains a reference to an item in an index. If the value is ".", then the key is targeting the current metaschema object.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="id" type="xs:ID"/>
   </xs:complexType>
 
   <xs:group name="model-constraints-group">
@@ -607,6 +623,7 @@
         <xs:annotation>
           <xs:documentation>Checks that the specified <code>key-field</code> values match a key in the index with the specified <code>name</code>.</xs:documentation>
         </xs:annotation>
+        
       </xs:element>
       <xs:element name="is-unique" type="m:index-constraint-type" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
@@ -633,6 +650,21 @@
               <xs:documentation>Maximum occurrence of assemblies or fields within the set of objects identified by the <code>target</code>.</xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute name="id" type="xs:ID"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="expect" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Checks that the specified test returns true in this evaluation context.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="test" type="m:metaschema-path-type" use="required">
+            <xs:annotation>
+              <xs:documentation>A test that is expected to pass in this context. Presently, datatyping is not directly supported except by
+              explicit use of data type casting functions, e.g. xs:double() and xs:date().</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="id" type="xs:ID"/>
         </xs:complexType>
       </xs:element>
       <xs:element name="require" minOccurs="0" maxOccurs="unbounded">
@@ -652,6 +684,7 @@
       <xs:group ref="m:model-constraints-group"/>
       <xs:element minOccurs="0" ref="m:remarks"/>
     </xs:sequence>
+    <xs:attribute name="id" type="xs:ID"/>
   </xs:complexType>
 
   <xs:complexType name="assembly-constraint-type">
@@ -665,6 +698,7 @@
       <xs:group ref="m:model-constraints-group"/>
       <xs:element minOccurs="0" ref="m:remarks"/>
     </xs:sequence>
+    <xs:attribute name="id" type="xs:ID"/>
   </xs:complexType>
 
   <!--

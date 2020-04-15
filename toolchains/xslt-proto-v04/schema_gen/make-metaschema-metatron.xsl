@@ -108,7 +108,7 @@
     
     <xsl:template match="allowed-values[@allow-other='yes']"/>
     
-    <xsl:template match="matches | allowed-values | index-has-key | is-unique">
+    <xsl:template match="matches | allowed-values | index-has-key | is-unique | expect">
         <xsl:variable name="context">
             <xsl:apply-templates select=".." mode="rule-context"/>
             <xsl:for-each select="@target[not(.=('.','value()'))]">
@@ -140,7 +140,9 @@
         <assert test="{ $exception-clause } count({ $target }) le { (. cast as xs:integer) } )">
             <xsl:call-template name="id-assertion"/>
             <xsl:value-of select="m:condition(parent::has-cardinality) ! ('Where ' || . || ', ')"/><name/> is expected to have at most <xsl:value-of select="m:conditional-plural(. cast as xs:integer ,'occurrence')"/> of <xsl:value-of
-                select="$target"/></assert>
+                select="$target"/>
+            <xsl:call-template name="label-assertion"/>
+        </assert>
     </xsl:template>
     
     <xsl:template match="has-cardinality/@max-occurs" mode="assertion">
@@ -151,7 +153,9 @@
         </xsl:variable>
         <assert test="{ $exception-clause } count({ $target }) ge { (. cast as xs:integer) } )">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="$condition ! ('Where ' || . || ', ')"/><name/> is expected to have at least <xsl:value-of select="m:conditional-plural(. cast as xs:integer,'occurrence')"/> of <xsl:value-of select="$target"/></assert>
+            <xsl:value-of select="$condition ! ('Where ' || . || ', ')"/><name/> is expected to have at least <xsl:value-of select="m:conditional-plural(. cast as xs:integer,'occurrence')"/> of <xsl:value-of select="$target"/>
+            <xsl:call-template name="label-assertion"/>
+        </assert>
     </xsl:template>
     
     <xsl:template priority="3" match="has-cardinality[@min-occurs = @max-occurs]" mode="assertion">
@@ -164,7 +168,9 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception-clause } { $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="$condition ! ('Where ' || . || ', ')"/><name/> is expected to have exactly <xsl:value-of select="m:conditional-plural(@min-occurs cast as xs:integer,'occurrence')"/> of <xsl:value-of select="$target"/></assert>
+            <xsl:value-of select="$condition ! ('Where ' || . || ', ')"/><name/> is expected to have exactly <xsl:value-of select="m:conditional-plural(@min-occurs cast as xs:integer,'occurrence')"/> of <xsl:value-of select="$target"/>
+            <xsl:call-template name="label-assertion"/>
+        </assert>
     </xsl:template>
     
     <xsl:template priority="2" match="has-cardinality" mode="assertion">
@@ -179,11 +185,28 @@
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="test" expand-text="true">exists(key('{@name}',{m:key-value(.)},ancestor::{$parent-context}))</xsl:variable>
+        <xsl:variable name="test" expand-text="true">exists(key('{@name}',$lookup,ancestor::{$parent-context}))</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
+        <xsl:variable name="key-value-sequence">
+            <xsl:call-template name="key-value-sequence"/>
+        </xsl:variable>
+        <let name="lookup" value="{ $key-value-sequence }"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to correspond to an entry in the '<xsl:value-of select="@name"/>' index within the containing <xsl:value-of select="$parent-context"/></assert>
+            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to correspond to an entry in the '<xsl:value-of select="@name"/>' index within the containing <xsl:value-of select="$parent-context"/>
+            <xsl:call-template name="label-assertion"/>
+        </assert>
+    </xsl:template>
+    
+    <xsl:template name="key-value-sequence">
+        <xsl:param name="declaration-prefix"/>
+        <xsl:for-each select="key-field">
+            <xsl:if test="exists(preceding-sibling::key-field)">,</xsl:if>
+            <xsl:if test="count(../*) gt 1">(</xsl:if>
+            <xsl:value-of select="m:prefixed-path(@target/string(.), $declaration-prefix)"/>
+            <xsl:for-each select="@pattern" expand-text="true">[matches(.,'^{.}$')] ! replace(.,'^{.}$','$1')</xsl:for-each>
+            <xsl:if test="count(../*) gt 1">)</xsl:if>
+        </xsl:for-each>
     </xsl:template>
     
     <!-- When an index-has-key is targetted not at . (or value) it needs extra logic for scoping. -->
@@ -191,11 +214,17 @@
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="test" expand-text="true">exists(key('{@name}',{m:key-value(.)}))</xsl:variable>
+        <xsl:variable name="test" expand-text="true">exists(key('{@name}',$lookup))</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
+        <xsl:variable name="key-value-sequence">
+            <xsl:call-template name="key-value-sequence"/>
+        </xsl:variable>
+        <let name="lookup" value="{ $key-value-sequence }"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to correspond to an entry in the '<xsl:value-of select="@name"/>' index.</assert>
+            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to correspond to an entry in the '<xsl:value-of select="@name"/>' index.
+            <xsl:call-template name="label-assertion"/>
+        </assert>
     </xsl:template>
     
     <xsl:template match="is-unique[matches(@target,'\S') and not(@target =('.','value()'))]" mode="assertion">
@@ -209,7 +238,9 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be unique within the containing <xsl:value-of select="$parent-context"/></assert>
+            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be unique within the containing <xsl:value-of select="$parent-context"/>
+            <xsl:call-template name="label-assertion"/>
+        </assert>
     </xsl:template>
     
     <!-- When an index-has-key is targetted not at . (or value) it needs extra logic for scoping. -->
@@ -221,7 +252,22 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be unique.</assert>
+            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be unique.
+            <xsl:call-template name="label-assertion"/>
+        </assert>
+    </xsl:template>
+    
+    <xsl:template match="expect" mode="assertion">
+        <xsl:variable name="exception">
+            <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
+        </xsl:variable>
+        <xsl:variable name="test" expand-text="true">exists(self::node()[{ @test }])</xsl:variable>
+        <xsl:apply-templates select="." mode="echo.if"/>
+        <assert test="{ $exception }{ m:prefixed-path($test,$declaration-prefix) }">
+            <xsl:call-template name="id-assertion"/>
+            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> fails to pass evaluation of '<xsl:value-of select="@test"/>'
+            <xsl:call-template name="label-assertion"/>
+        </assert>
     </xsl:template>
     
     <xsl:template match="matches/@datatype" mode="assertion">
@@ -232,18 +278,22 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/> is expected to take the form of datatype <xsl:value-of select="."/>'</assert>
+            <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/> is expected to take the form of datatype <xsl:value-of select="."/>'
+            <xsl:call-template name="label-assertion"/>
+        </assert>
     </xsl:template>
     
     <xsl:template match="matches/@regex" mode="assertion">
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(parent::matches))" expand-text="true">not({ m:condition(parent::matches) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="test" expand-text="true">matches(., '{.}')</xsl:variable>
+        <xsl:variable name="test" expand-text="true">matches(., '^{.}$')</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/> is expected to match regular expression '<xsl:value-of select="."/>'</assert>
+            <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/> is expected to match regular expression '^<xsl:value-of select="."/>$'
+            <xsl:call-template name="label-assertion"/>
+        </assert>
     </xsl:template>
     
     <xsl:template match="matches" mode="assertion">    
@@ -261,7 +311,9 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be (one of) <xsl:value-of select="$value-sequence"/>, not '<value-of select="."/>'</assert>
+            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be (one of) <xsl:value-of select="$value-sequence"/>, not '<value-of select="."/>'
+            <xsl:call-template name="label-assertion"/>
+        </assert>
     </xsl:template>
     
     <xsl:param name="noisy" as="xs:string">yes</xsl:param>
@@ -281,6 +333,13 @@
         <xsl:if test="$echo.source">
             <xsl:text expand-text="true">&#xA;      { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
             <xsl:comment expand-text="true">{ m:condition(.) ! (' when ' || . || ', ') }allowed-values on { m:target-match(.) }: { string-join(enum/@value,', ' ) }</xsl:comment>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template match="expect" mode="echo.if">
+        <xsl:if test="$echo.source">
+            <xsl:text expand-text="true">&#xA;      { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
+            <xsl:comment expand-text="true">{ m:condition(.) ! (' when ' || . || ', ') }expect on { m:target-match(.) }: { @test }</xsl:comment>
         </xsl:if>
     </xsl:template>
     
@@ -477,12 +536,30 @@
         <xsl:text expand-text="true">{ if ($count eq 1) then ('one ' || $noun) else ($count || ' ' || $noun || 's' ) }</xsl:text>
     </xsl:function>
     
+    <xsl:template name="label-assertion">
+        <xsl:for-each select="ancestor::constraint[@id]">
+            <xsl:text expand-text="true">[[See constraint#{@id}]]</xsl:text>
+        </xsl:for-each>
+        <xsl:for-each select="@id">
+            <xsl:text expand-text="true">[[See {local-name()}#{.}]]</xsl:text>
+        </xsl:for-each>
+    </xsl:template>
+    
     <xsl:template name="id-assertion">
-        <!--<xsl:attribute name="id">
-            <xsl:value-of select="string-join(ancestor-or-self::*/(@name | @ref), '.')"/>
-            <xsl:text>-</xsl:text>
-            <xsl:value-of select="local-name()"/>
-        </xsl:attribute>-->
+        <xsl:where-populated>
+            <xsl:attribute name="id">
+                <xsl:if test="exists(ancestor::constraint/@id)">
+                    <xsl:value-of select="ancestor::constraint/@id"/>
+                    <xsl:text>_</xsl:text>
+                    <xsl:number level="multiple" from="constraint" format="1-1"/>
+                    <xsl:text expand-text="true">_{ local-name() }</xsl:text>
+                </xsl:if>
+                <xsl:for-each select="@id">
+                    <xsl:if test="exists(ancestor::constraint/@id)">_</xsl:if>
+                    <xsl:value-of select="."/>
+                </xsl:for-each>
+            </xsl:attribute>
+        </xsl:where-populated>
     </xsl:template>
     
     <xsl:template match="m:index | m:is-unique" mode="make-key">
@@ -493,14 +570,19 @@
                 <xsl:sequence select="m:target-match(..) => replace('^(\./)+','')"/>
             </xsl:for-each>
         </xsl:variable>
-        <XSLT:key name="{@name}" match="{$context}" use="{m:key-value(.)}"/>
+        <XSLT:key name="{@name}" match="{$context}" use="{m:key-value(.)}">
+            <xsl:if test="count(m:key-field) gt 1">
+                <xsl:attribute name="composite">yes</xsl:attribute>
+            </xsl:if>
+        </XSLT:key>
     </xsl:template>
     
     <xsl:function name="m:key-value" as="xs:string">
         <xsl:param name="whose" as="element()"/>
         <!-- delimit values with '|' emitting 'string()' for any key-field with no @target or @target=('.','value()') -->
-        <xsl:value-of separator="|">
+        <xsl:value-of separator=",">
             <xsl:sequence select="$whose/m:key-field/@target/m:prefixed-path((.[not(.=('.','value()'))],'string(.)')[1],$declaration-prefix)"/>
         </xsl:value-of>
     </xsl:function>
+    
 </xsl:stylesheet>

@@ -56,53 +56,20 @@
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Front matter / metadata</m:formal-name>
-            <m:description>Metadata for the anthology as a whole, or for a single piece within it</m:description>
+            <m:description>Metadata for the anthology as a ^whole, or for a single piece within it</m:description>
          </xs:appinfo>
          <xs:documentation>
-            <b>Front matter / metadata</b>: Metadata for the anthology as a whole, or for a single piece within it</xs:documentation>
+            <b>Front matter / metadata</b>: Metadata for the anthology as a ^whole, or for a single piece within it</xs:documentation>
       </xs:annotation>
       <xs:sequence>
          <xs:element name="creator"
                      type="anthology:creator-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
-         <xs:element name="date" minOccurs="0" maxOccurs="1">
-            <xs:complexType>
-               <xs:annotation>
-                  <xs:appinfo>
-                     <m:formal-name>Date</m:formal-name>
-                     <m:description>As represented</m:description>
-                  </xs:appinfo>
-                  <xs:documentation>
-                     <b>Date</b>: As represented</xs:documentation>
-               </xs:annotation>
-               <xs:simpleContent>
-                  <xs:extension base="anthology:date-FIELD-VALUE-ENUMERATION">
-                     <xs:attribute name="type" type="xs:string">
-                        <xs:annotation>
-                           <xs:appinfo>
-                              <m:formal-name>Type of date representation</m:formal-name>
-                              <m:description>May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.</m:description>
-                           </xs:appinfo>
-                           <xs:documentation>
-                              <b>Type of date representation</b>: May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.</xs:documentation>
-                        </xs:annotation>
-                     </xs:attribute>
-                  </xs:extension>
-               </xs:simpleContent>
-            </xs:complexType>
-            <xs:simpleType name="date-FIELD-VALUE-ENUMERATION">
-               <xs:restriction base="xs:string">
-                  <xs:enumeration value="YYYY">
-                     <xs:annotation>
-                        <xs:documentation>
-                           <p>Four-digit year (CE)</p>
-                        </xs:documentation>
-                     </xs:annotation>
-                  </xs:enumeration>
-               </xs:restriction>
-            </xs:simpleType>
-         </xs:element>
+         <xs:element name="date"
+                     type="anthology:date-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
          <xs:element name="remarks" minOccurs="0" maxOccurs="1">
             <xs:annotation>
                <xs:appinfo>
@@ -117,6 +84,30 @@
             </xs:complexType>
          </xs:element>
       </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="date-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Date</m:formal-name>
+            <m:description>As represented</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Date</b>: As represented</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="type" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Type of date representation</m:formal-name>
+                     <m:description>May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Type of date representation</b>: May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
    </xs:complexType>
    <xs:complexType name="creator-FIELD">
       <xs:annotation>
@@ -420,30 +411,20 @@
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>Birth date</m:formal-name>
-               <m:description>Approximate</m:description>
+               <m:description>If only the year is known use June 30.</m:description>
             </xs:appinfo>
             <xs:documentation>
-               <b>Birth date</b>: Approximate</xs:documentation>
+               <b>Birth date</b>: If only the year is known use June 30.</xs:documentation>
          </xs:annotation>
       </xs:attribute>
       <xs:attribute name="death" type="xs:date">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>Death date</m:formal-name>
-               <m:description>Approximate</m:description>
+               <m:description>If only the year is known use July 1.</m:description>
             </xs:appinfo>
             <xs:documentation>
-               <b>Death date</b>: Approximate</xs:documentation>
-         </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="floruit" type="xs:date">
-         <xs:annotation>
-            <xs:appinfo>
-               <m:formal-name>Birth date</m:formal-name>
-               <m:description>Approximate</m:description>
-            </xs:appinfo>
-            <xs:documentation>
-               <b>Birth date</b>: Approximate</xs:documentation>
+               <b>Death date</b>: If only the year is known use July 1.</xs:documentation>
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
