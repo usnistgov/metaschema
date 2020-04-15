@@ -46,7 +46,7 @@
   
   <p:xslt name="make-model-map">
     <p:input port="stylesheet">
-      <p:document href="document/make-model-map.xsl"/>
+      <p:document href="compose/make-definition-map.xsl"/>
     </p:input>
   </p:xslt>
   

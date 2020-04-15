@@ -84,8 +84,9 @@ Under 'widget'
            <assembly ref="back"/>
        </model>
         <constraint>
-            <index-has-key name="creators-index" target=".//meta/creator[matches(@who,'\S')]">
-                <key-field target="@who" pattern="#(\w+)"/>
+            <matches target=".//meta/creator/@who" regex="#(\S+)"/>
+            <index-has-key name="creators-index" target=".//meta/creator[matches(@who,'\S')]" id="ref-creators-index">
+                <key-field target="@who" pattern="#(\S+)"/>
             </index-has-key>
         </constraint>
    </define-assembly>
@@ -102,29 +103,27 @@ Under 'widget'
             <field ref="creator" max-occurs="unbounded">
                 <group-as name="creators"/>
             </field>
-            <define-field name="date">
-                <formal-name>Date</formal-name>
-                <description>As represented</description>
-                <define-flag name="type">
-                    <formal-name>Type of date representation</formal-name>
-                    <description>May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.</description>
-                    <constraint>
-                        
-                    </constraint>
-                </define-flag>
-                <constraint>
-                    <allowed-values target="@type">
-                        <enum value="YYYY">Four-digit year (CE)</enum>
-                    </allowed-values>
-                    <require when="@type='YYYY'">
-                        
-                      <matches target="." regex="^[1-9]\d?\d?\d?$"/>
-                    </require>
-                </constraint>
-            </define-field>
+            <field ref="date"/>
             <field ref="remarks"/>
         </model>
+        <constraint id="meta-rules">
+            <allowed-values target="@type">
+                <enum value="YYYY">Four-digit year (CE)</enum>
+            </allowed-values>
+            <require when="@type='YYYY'">
+                <matches target="@date" regex="^[1-9]\d?\d?\d?$"/>
+            </require>
+        </constraint>
     </define-assembly>
+    
+    <define-field name="date">
+        <formal-name>Date</formal-name>
+        <description>As represented</description>
+        <define-flag name="type">
+            <formal-name>Type of date representation</formal-name>
+            <description>May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.</description>
+        </define-flag>
+    </define-field>
     
     <define-field name="creator">
         <formal-name>Creator (author or editor)</formal-name>
@@ -255,7 +254,6 @@ Under 'widget'
         <constraint>
             
             <index name="creators-index" target="author">
-                <key-field target="@ns"/>
                 <key-field target="@id"/>
             </index>
         </constraint>
@@ -280,10 +278,29 @@ Under 'widget'
         <description>A personal or place name</description>
     </define-field>
     
+    <define-assembly name="bio">
+        <formal-name>Biographical info</formal-name>
+        <description>Gives basic facts or colorful detail.</description>
+        <model>
+            <define-assembly name="facts">
+                <model>
+                    <field ref="dates"/>
+                </model>
+            </define-assembly>
+            <define-assembly name="colorful-details">
+                <model>
+                    <define-field name="dates" as-type="string"/>
+                    <field ref="remarks"/>
+                </model>
+            </define-assembly>
+        </model>
+    </define-assembly>
+    
     <define-field name="dates" as-type="empty">
         <formal-name>Dates</formal-name>
         <description>As a range (birth-death) or floruit</description>
         <json-value-key>range</json-value-key>
+        <!--nb: the Schematron does not presently validate datatypes on definitions only on constraint/matches-->
         <define-flag name="birth" as-type="date">
             <formal-name>Birth date</formal-name>
             <description>If only the year is known use June 30.</description>
@@ -292,16 +309,15 @@ Under 'widget'
         <define-flag name="death" as-type="date">
             <formal-name>Death date</formal-name>
             <description>If only the year is known use July 1.</description>
-            
+        </define-flag>
+        <define-flag name="floruit" as-type="date">
+            <formal-name>Floruit date</formal-name>
+            <description>Do not use along with both birth and death</description>
         </define-flag>
         <constraint>
             <!--if floruit is given, birth and death should not be?-->
-            <expect test="@birth &lt; @death"/>
-            
-            <expect>
-                
-            </expect>
-            
+            <matches target="@birth" datatype="date"/>
+            <expect id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>
         </constraint>
     </define-field>
     <define-field name="publication">
