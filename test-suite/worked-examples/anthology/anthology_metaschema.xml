@@ -285,6 +285,16 @@ Under 'widget'
             <define-assembly name="facts">
                 <model>
                     <field ref="dates"/>
+                    <define-assembly name="residence" max-occurs="unbounded">
+                        <group-as name="residences"/>
+                        <model>
+                            <define-field name="dates" as-type="empty">
+                                <define-flag name="start" as-type="date"/>
+                                <define-flag name="end" as-type="date"/>
+                            </define-field>
+                            <assembly ref="address"/>
+                        </model>
+                    </define-assembly>
                 </model>
             </define-assembly>
             <define-assembly name="colorful-details">
