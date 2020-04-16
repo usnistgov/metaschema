@@ -20,8 +20,8 @@
     <p:pipe        port="result"     step="composed"/>
   </p:output>
   
-  <p:serialization port="c.abstract-model-map" indent="true"/>
-  <p:output        port="c.abstract-model-map" primary="false">
+  <p:serialization port="c.definitions-map" indent="true"/>
+  <p:output        port="c.definitions-map" primary="false">
     <p:pipe        port="result" step="make-model-map"/>
   </p:output>
   
