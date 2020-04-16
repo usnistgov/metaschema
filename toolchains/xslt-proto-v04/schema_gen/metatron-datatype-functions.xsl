@@ -79,7 +79,7 @@
     <xsl:template match="*" mode="m:make-template"/>
     
     <xsl:template match="xs:restriction" mode="m:make-template">
-    <xsl:apply-templates mode="#current"/>
+      <xsl:apply-templates mode="#current"/>
     </xsl:template>
 
     <xsl:template match="xs:pattern" mode="m:make-template">
