@@ -56,6 +56,9 @@
                 <enum value="2">two</enum>
                 <enum value="3">three</enum>
             </allowed-values>
+            
+            <!-- Extends is not implemented: which definition(s) does this extend?
+                 possibilities include global and local definitions for 'item' -->
             <allowed-values target=".//item[@type='german']" extends="yes">
                 <!-- should this produce a rule applicable to .//subsequence/item[@type='german'] ? -->
                 <enum value="Ä">a umlaut</enum>
