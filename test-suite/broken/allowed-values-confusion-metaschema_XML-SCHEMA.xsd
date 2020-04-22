@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:anthology="http://csrc.nist.gov/metaschema/ns/test"
+           xmlns:oscal-prose="http://csrc.nist.gov/metaschema/ns/test"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/metaschema/ns/test"
+           version="1.0">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Test Metaschema</m:schema-name>
+         <m:schema-version>1.0</m:schema-version>
+         <m:short-name>anthology</m:short-name>
+         <m:remarks>
+            <p>Bug: test produced for constraint 'chronology-check' at the end, erroneously applies to elements defined with local definitions with the same name.</p>
+            <p>Local definitions must provide implicit overrides of rules defined in global definitions.</p>
+         </m:remarks>
+         <m:root>SEQUENCES</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="SEQUENCES" type="anthology:number-sequences-ASSEMBLY"/>
+   <xs:complexType name="number-sequences-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Number sequences</m:formal-name>
+            <m:description>Several number sequences, in sequence</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Number sequences</b>: Several number sequences, in sequence</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="sequence"
+                     type="anthology:sequence-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="sequence-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Sequence</m:formal-name>
+            <m:description>A series of items</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Sequence</b>: A series of items</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="item"
+                     type="anthology:item-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="subsequence"
+                     type="anthology:subsequence-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="subsequence-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Subsequence</m:formal-name>
+            <m:description>More sequences</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Subsequence</b>: More sequences</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="item" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Subsequence item</m:formal-name>
+                     <m:description>An item in a sequence in a sequence</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Subsequence item</b>: An item in a sequence in a sequence</xs:documentation>
+               </xs:annotation>
+               <xs:simpleContent>
+                  <xs:extension base="xs:string"/>
+               </xs:simpleContent>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="item-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Item</m:formal-name>
+            <m:description>A member of a sequence</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Item</b>: A member of a sequence</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="anthology:item-FIELD-VALUE-ENUMERATION">
+            <xs:attribute name="type" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Item type</m:formal-name>
+                     <m:description>Characterizes the type of item</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Item type</b>: Characterizes the type of item</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:simpleType name="item-FIELD-VALUE-ENUMERATION">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="A">
+            <xs:annotation>
+               <xs:documentation>
+                  <p>a</p>
+               </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="B">
+            <xs:annotation>
+               <xs:documentation>
+                  <p>b</p>
+               </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="C">
+            <xs:annotation>
+               <xs:documentation>
+                  <p>c</p>
+               </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>

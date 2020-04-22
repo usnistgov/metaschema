@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="../../../support/lib/metaschema-author.css"?>
+<?xml-model href="../../toolchains/xslt-proto-v04/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>Test Metaschema</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>anthology</short-name>
+    <namespace>http://csrc.nist.gov/metaschema/ns/test</namespace>
+   
+   <remarks>
+       <p>Bug: test produced for constraint 'chronology-check' at the end, erroneously applies to elements defined with local definitions with the same name.</p>
+       <p>Local definitions must provide implicit overrides of rules defined in global definitions.</p>
+   </remarks>
+ 
+    <define-assembly name="bio">
+        <formal-name>Biographical info</formal-name>
+        <description>Gives basic facts or colorful detail.</description>
+        <root-name>BIO</root-name>
+        <model>
+            <define-assembly name="facts">
+                <formal-name>Facts</formal-name>
+                <description>Structured data</description>
+                <model>
+                    <field ref="dates"/>
+                    <define-assembly name="residence" max-occurs="unbounded">
+                        <formal-name>Residency</formal-name>
+                        <description>A range of values in time-space</description>
+                        <group-as name="residences"/>
+                        <model>
+                            <define-field name="place">
+                                <formal-name>Place of residence</formal-name>
+                                <description>Name of locale, site or habitation</description>
+                            </define-field>
+                            <define-field name="dates" as-type="empty">
+                                <formal-name>Dates</formal-name>
+                                <description>Start to end</description>
+                                <define-flag name="start" as-type="date">
+                                    <formal-name>Start</formal-name>
+                                    <description>When initiated</description></define-flag>
+                                <define-flag name="end" as-type="date">
+                                    <formal-name>End</formal-name>
+                                    <description>When concluded or abandoned</description>
+                                </define-flag>
+                            </define-field>
+                            <!--<assembly ref="address"/>-->
+                        </model>
+                    </define-assembly>
+                </model>
+            </define-assembly>
+            <define-assembly name="colorful-details">
+                <formal-name>Colorful details</formal-name>
+                <description>Unstructured data</description>
+                <model>
+                    <define-field name="dates" as-type="string">
+                        <formal-name>Dates</formal-name>
+                        <description>This time, a string, so "Lincoln's Birthday" is a date.</description>
+                    </define-field>
+                </model>
+            </define-assembly>
+        </model>
+    </define-assembly>
+    
+    <define-field name="dates" as-type="empty">
+        <formal-name>Dates</formal-name>
+        <description>As a range (birth-death) or floruit</description>
+        <json-value-key>range</json-value-key>
+        <!--nb: the Schematron does not presently validate datatypes on definitions only on constraint/matches-->
+        <!--    the XSD and JSON Schema *do* validate datatypes on definitions (but not on constraint/matches) -->
+        <define-flag name="birth" as-type="date">
+            <formal-name>Birth date</formal-name>
+            <description>If only the year is known use June 30.</description>
+        </define-flag>
+        <!-- validate: after birth date, if given? -->
+        <define-flag name="death" as-type="date">
+            <formal-name>Death date</formal-name>
+            <description>If only the year is known use July 1.</description>
+        </define-flag>
+        <define-flag name="floruit" as-type="date">
+            <formal-name>Floruit date</formal-name>
+            <description>Do not use along with both birth and death</description>
+        </define-flag>
+        <constraint>
+            <!--if floruit is given, birth and death should not be?-->
+            <matches id="birth-matches-date-datatype" target="@birth" datatype="date"/>
+            <expect id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>
+        </constraint>
+    </define-field>
+    
+</METASCHEMA>
