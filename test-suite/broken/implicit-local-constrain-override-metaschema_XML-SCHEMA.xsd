@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:anthology="http://csrc.nist.gov/metaschema/ns/test"
+           xmlns:oscal-prose="http://csrc.nist.gov/metaschema/ns/test"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/metaschema/ns/test"
+           version="1.0">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Test Metaschema</m:schema-name>
+         <m:schema-version>1.0</m:schema-version>
+         <m:short-name>anthology</m:short-name>
+         <m:remarks>
+            <p>Local definitions must provide implicit overrides of rules defined in global definitions.</p>
+         </m:remarks>
+         <m:root>BIO</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="BIO" type="anthology:bio-ASSEMBLY"/>
+   <xs:complexType name="bio-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Biographical info</m:formal-name>
+            <m:description>Gives basic facts or colorful detail.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Biographical info</b>: Gives basic facts or colorful detail.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="facts" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Facts</m:formal-name>
+                     <m:description>Structured data</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Facts</b>: Structured data</xs:documentation>
+               </xs:annotation>
+               <xs:sequence>
+                  <xs:element name="dates"
+                              type="anthology:dates-FIELD"
+                              minOccurs="0"
+                              maxOccurs="1"/>
+                  <xs:element name="residence" minOccurs="0" maxOccurs="unbounded">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Residency</m:formal-name>
+                              <m:description>A range of values in time-space</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Residency</b>: A range of values in time-space</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="place" minOccurs="0" maxOccurs="1">
+                              <xs:complexType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Place of residence</m:formal-name>
+                                       <m:description>Name of locale, site or habitation</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Place of residence</b>: Name of locale, site or habitation</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:simpleContent>
+                                    <xs:extension base="xs:string"/>
+                                 </xs:simpleContent>
+                              </xs:complexType>
+                           </xs:element>
+                           <xs:element name="dates" minOccurs="0" maxOccurs="1">
+                              <xs:complexType>
+                                 <xs:attribute name="start" type="xs:date">
+                                    <xs:annotation>
+                                       <xs:appinfo>
+                                          <m:formal-name>Start</m:formal-name>
+                                          <m:description>When initiated</m:description>
+                                       </xs:appinfo>
+                                       <xs:documentation>
+                                          <b>Start</b>: When initiated</xs:documentation>
+                                    </xs:annotation>
+                                 </xs:attribute>
+                                 <xs:attribute name="end" type="xs:date">
+                                    <xs:annotation>
+                                       <xs:appinfo>
+                                          <m:formal-name>End</m:formal-name>
+                                          <m:description>When concluded or abandoned</m:description>
+                                       </xs:appinfo>
+                                       <xs:documentation>
+                                          <b>End</b>: When concluded or abandoned</xs:documentation>
+                                    </xs:annotation>
+                                 </xs:attribute>
+                              </xs:complexType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="colorful-details" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Colorful details</m:formal-name>
+                     <m:description>Unstructured data</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Colorful details</b>: Unstructured data</xs:documentation>
+               </xs:annotation>
+               <xs:sequence>
+                  <xs:element name="dates" minOccurs="0" maxOccurs="1">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Dates</m:formal-name>
+                              <m:description>This time, a string, so "Lincoln's Birthday" is a date.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Dates</b>: This time, a string, so "Lincoln's Birthday" is a date.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleContent>
+                           <xs:extension base="xs:string"/>
+                        </xs:simpleContent>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="dates-FIELD">
+      <xs:attribute name="birth" type="xs:date">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Birth date</m:formal-name>
+               <m:description>If only the year is known use June 30.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Birth date</b>: If only the year is known use June 30.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="death" type="xs:date">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Death date</m:formal-name>
+               <m:description>If only the year is known use July 1.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Death date</b>: If only the year is known use July 1.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="floruit" type="xs:date">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Floruit date</m:formal-name>
+               <m:description>Do not use along with both birth and death</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Floruit date</b>: Do not use along with both birth and death</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+</xs:schema>

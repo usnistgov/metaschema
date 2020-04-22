@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="../../../support/lib/metaschema-author.css"?>
+<?xml-model href="../../toolchains/xslt-proto-v04/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>Test Metaschema</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>anthology</short-name>
+    <namespace>http://csrc.nist.gov/metaschema/ns/test</namespace>
+   
+   <remarks>
+       <p>Bug: test produced for constraint 'chronology-check' at the end, erroneously applies to elements defined with local definitions with the same name.</p>
+       <p>Local definitions must provide implicit overrides of rules defined in global definitions.</p>
+   </remarks>
+ 
+    <define-assembly name="number-sequences">
+        <formal-name>Number sequences</formal-name>
+        <description>Several number sequences, in sequence</description>
+        <root-name>SEQUENCES</root-name>
+        <model>
+            <assembly ref="sequence" max-occurs="unbounded">
+                <group-as name="sequences"/>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="sequence">
+        <formal-name>Sequence</formal-name>
+        <description>A series of items</description>
+        <model>
+            <field ref="item" max-occurs="unbounded">
+                <group-as name="items"/>
+            </field>
+            <assembly ref="subsequence" max-occurs="unbounded">
+                <group-as name="subsequences"/>
+            </assembly>
+        </model>
+        <constraint>
+            <allowed-values target=".//item[@type='number']" allow-other="yes">
+                <enum value="1">one</enum>
+                <enum value="2">two</enum>
+                <enum value="3">three</enum>
+            </allowed-values>
+            <allowed-values target=".//item[@type='german']" extends="yes">
+                <!-- should this produce a rule applicable to .//subsequence/item[@type='german'] ? -->
+                <enum value="Ä">a umlaut</enum>
+                <enum value="Ö">o umlaut</enum>
+                <enum value="Ü">u umlaut</enum>
+            </allowed-values>
+        </constraint>
+    </define-assembly>
+    
+    <define-assembly name="subsequence">
+        <formal-name>Subsequence</formal-name>
+        <description>More sequences</description>
+        <model>
+            <define-field name="item" max-occurs="unbounded">
+<!-- Q: does this local field declaration overlap in any way with other declarations of 'item'?
+     if not, must not other rules for other allowed-values make an exception for subsequence/item? -->
+                <formal-name>Subsequence item</formal-name>
+                <description>An item in a sequence in a sequence</description>
+                <group-as name="items"/>
+                <constraint>
+                    <require when="@type='color">
+                        <allowed-values target=".">
+                            <enum value="red">red</enum>
+                            <enum value="blue">blue</enum>
+                            <enum value="green">green</enum>
+                        </allowed-values>
+                    </require>
+                </constraint>
+            </define-field>
+        </model>
+    </define-assembly>
+    
+    <define-field name="item">
+        <formal-name>Item</formal-name>
+        <description>A member of a sequence</description>
+        <flag ref="type"/>
+        <constraint>
+            <allowed-values target="." allow-other="no">
+                <enum value="A">a</enum>
+                <enum value="B">b</enum>
+                <enum value="C">c</enum>
+            </allowed-values>
+         </constraint>
+    </define-field>
+    
+    <define-flag name="type">
+        <formal-name>Item type</formal-name>
+        <description>Characterizes the type of item</description>
+    </define-flag>
+</METASCHEMA>
