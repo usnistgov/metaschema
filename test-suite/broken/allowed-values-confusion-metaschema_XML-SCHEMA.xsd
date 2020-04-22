@@ -80,6 +80,10 @@
                </xs:simpleContent>
             </xs:complexType>
          </xs:element>
+         <xs:element name="subsequence"
+                     type="anthology:subsequence-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="item-FIELD">
