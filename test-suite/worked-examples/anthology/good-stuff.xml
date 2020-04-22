@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?xml-stylesheet type="text/css" href="anthology.css"?>
+<?xml-model href="anthology_metaschema_METATRON.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<ANTHOLOGY xmlns="http://csrc.nist.gov/metaschema/ns/anthology"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/anthology file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-examples/anthology/anthology_metaschema_XML-SCHEMA.xsd">
+    
+    <meta>
+        <creator role="editor">Wendell Piez</creator>
+        <keyword>poetry</keyword>
+        <keyword>verse</keyword>
+        
+        <remarks>
+            <h1>Demo anthology</h1>
+            <p>Compiled for purposes of testing and demonstrating validations against constraints
+                defined by NIST Metaschema.</p>
+        </remarks>
+    </meta>
+    <piece>
+        <meta>
+            <creator role="author" who="#w.h.auden">W.H. Auden</creator>
+            <date>1954</date>
+        </meta>
+        <verse type="quatrain">
+            <line base="trochee" feet="4">Guard, Civility, with guns</line>
+            <line base="iamb"    feet="4">Your modes and your declensions:</line>
+            <line base="trochee" feet="4">Any lout can spear with ease</line>
+            <line base="trochee" feet="4">Singular Archimedes.</line>
+        </verse>
+    </piece>
+    <back>
+        <author-index>
+            <author id="w.h.auden">
+                <name>Wystan Hugh Auden</name>
+                <dates birth="1907-02-21" death="1973-09-29"/>
+                <bio>
+                    <facts>
+                        <dates birth="1907-02-21" death="1973-09-29"/>
+                        <!--<residence>
+                            <dates start="1970-01-01" end="1972-01-01"/>
+                        </residence>-->
+                    </facts>
+                </bio>
+            </author>
+        </author-index>
+    </back>
+</ANTHOLOGY>
