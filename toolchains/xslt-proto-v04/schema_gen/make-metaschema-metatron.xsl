@@ -234,7 +234,7 @@
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
         </xsl:variable>
-        <xsl:variable name="test" expand-text="true">count(key('{@name}',{m:key-value(.)},ancestor::{$parent-context}))=1</xsl:variable>
+        <xsl:variable name="test" expand-text="true">exactly-one(key('{@name}',{m:key-value(.)},ancestor::{$parent-context})))</xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
@@ -537,9 +537,6 @@
     </xsl:function>
     
     <xsl:template name="label-assertion">
-        <xsl:for-each select="ancestor::constraint[@id]">
-            <xsl:text expand-text="true">[[See constraint#{@id}]]</xsl:text>
-        </xsl:for-each>
         <xsl:for-each select="@id">
             <xsl:text expand-text="true">[[See {local-name()}#{.}]]</xsl:text>
         </xsl:for-each>
@@ -547,18 +544,7 @@
     
     <xsl:template name="id-assertion">
         <xsl:where-populated>
-            <xsl:attribute name="id">
-                <xsl:if test="exists(ancestor::constraint/@id)">
-                    <xsl:value-of select="ancestor::constraint/@id"/>
-                    <xsl:text>_</xsl:text>
-                    <xsl:number level="multiple" from="constraint" format="1-1"/>
-                    <xsl:text expand-text="true">_{ local-name() }</xsl:text>
-                </xsl:if>
-                <xsl:for-each select="@id">
-                    <xsl:if test="exists(ancestor::constraint/@id)">_</xsl:if>
-                    <xsl:value-of select="."/>
-                </xsl:for-each>
-            </xsl:attribute>
+            <xsl:attribute name="id" select="@id"/>
         </xsl:where-populated>
     </xsl:template>
     
