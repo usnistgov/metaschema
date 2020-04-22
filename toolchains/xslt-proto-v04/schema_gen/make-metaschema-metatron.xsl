@@ -21,6 +21,7 @@
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
     
+    
     <xsl:import href="../metapath/parse-metapath.xsl"/>
     
     <xsl:import href="metatron-datatype-functions.xsl"/>
@@ -28,6 +29,12 @@
     <xsl:output indent="yes"/>
 
     <xsl:strip-space elements="METASCHEMA define-assembly define-field define-flag model choice allowed-values remarks"/>
+    
+    <!-- set to anything but 'no' or 'false' or 'false()' to produce warnings:
+         * unrecognized values in cases where allowed-values.@allow-other='yes'
+    -->
+    
+    <xsl:param name="produce-warnings" as="xs:string">no</xsl:param>
     
     <xsl:variable name="target-namespace" select="string(/METASCHEMA/namespace)"/>
     
@@ -65,15 +72,20 @@
             
             <!--<xsl:apply-templates select="//constraint"/>-->
             <xsl:variable name="rules" as="element()*">
-              <xsl:apply-templates select="//constraint//(* except require)"/>
+              <xsl:apply-templates select="//constraint//(* except require)">
+                  <xsl:sort select="count(@target[not(.=('.','value()'))] | ancestor::require | ancestor::define-assembly | ancestor::define-flag | ancestor::define-field)" order="descending"/>
+              </xsl:apply-templates>
             </xsl:variable>
+            
+            <let name="silence-warnings" value="{ $produce-warnings = ('no','false','false()') }()"/>
             
             <!--<debug> <xsl:copy-of select="$rules"/> </debug>-->
             <pattern>
-                <xsl:for-each select="$rules">
+                <xsl:copy-of select="$rules"/>
+                <!--<xsl:for-each select="$rules">
                     <xsl:sort select="count(tokenize(@context,'/'))" order="descending"/>
                     <xsl:sequence select="."/>
-                </xsl:for-each>
+                </xsl:for-each>-->
             </pattern>
             <!--<xsl:for-each-group select="$rules" group-by="true()">
                 <xsl:sort select="count(tokenize(@context,'/'))" order="descending"/>
@@ -113,8 +125,6 @@
             </rule>
         </xsl:for-each-group>-->
     </xsl:template>
-    
-    <xsl:template match="allowed-values[@allow-other='yes']"/>
     
     <xsl:template match="matches | allowed-values | index-has-key | is-unique | expect">
         <xsl:variable name="context">
@@ -308,16 +318,20 @@
         <xsl:apply-templates mode="#current" select="@regex | @datatype"/>
     </xsl:template>
     
+    
     <xsl:template match="allowed-values" mode="assertion">
         <xsl:variable name="exception">
             <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
         </xsl:variable>
         <xsl:variable name="value-sequence" select="(enum/@value ! ('''' || . || '''')) => string-join(', ')"/>
         <xsl:variable name="test" as="xs:string">
-            <xsl:text expand-text="true">( . = ( { $value-sequence } ) )</xsl:text>
+            <xsl:text expand-text="true">({ @allow-other[.='yes']/'$silence-warnings or ' }. = ( { $value-sequence } ))</xsl:text>
         </xsl:variable>
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
+            <xsl:if test="@allow-other='yes'">
+                <xsl:attribute name="role">warning</xsl:attribute>
+            </xsl:if>
             <xsl:call-template name="id-assertion"/>
             <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be (one of) <xsl:value-of select="$value-sequence"/>, not '<value-of select="."/>'
             <xsl:call-template name="label-assertion"/>
