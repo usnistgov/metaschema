@@ -84,8 +84,8 @@ Under 'widget'
            <assembly ref="back"/>
        </model>
         <constraint>
-            <matches target=".//meta/creator/@who" regex="#(\S+)"/>
-            <index-has-key name="creators-index" target=".//meta/creator[matches(@who,'\S')]" id="ref-creators-index">
+            <matches id="regex-match" target=".//meta/creator/@who" regex="#(\S+)"/>
+            <index-has-key name="creators-index" target=".//meta/creator[matches(@who,'\S')]" id="creators-index-ref">
                 <key-field target="@who" pattern="#(\S+)"/>
             </index-has-key>
         </constraint>
@@ -104,14 +104,24 @@ Under 'widget'
                 <group-as name="creators"/>
             </field>
             <field ref="date"/>
+            <define-field name="keyword" max-occurs="unbounded">
+                <formal-name>Key word</formal-name>
+                <description>A string</description>
+                <group-as name="keywords"/>
+                <constraint>
+                    <is-unique name="distinct-keyword" target=".">
+                        <key-field target="."/>
+                    </is-unique>
+                </constraint>
+            </define-field>
             <field ref="remarks"/>
         </model>
-        <constraint id="meta-rules">
-            <allowed-values target="@type">
+        <constraint>
+            <allowed-values id="type-check" target="@type">
                 <enum value="YYYY">Four-digit year (CE)</enum>
             </allowed-values>
             <require when="@type='YYYY'">
-                <matches target="@date" regex="^[1-9]\d?\d?\d?$"/>
+                <matches id="when-yyyy-regex-check" target="@date" regex="[1-9]\d?\d?\d?"/>
             </require>
         </constraint>
     </define-assembly>
@@ -132,7 +142,7 @@ Under 'widget'
             <formal-name>Role</formal-name>
             <description>Contribution of the creator</description>
             <constraint>
-                <allowed-values>
+                <allowed-values id="creator-type-check">
                     <enum value="author">Author</enum>
                     <enum value="editor">Editor</enum>
                     <enum value="translator">Translator</enum>
@@ -170,6 +180,7 @@ Under 'widget'
             <choice>
                 <field ref="line" max-occurs="unbounded">
                     <group-as name="lines"/>
+                    
                 </field>
                 <assembly ref="stanza" max-occurs="unbounded">
                     <group-as name="stanzas"/>
@@ -178,7 +189,8 @@ Under 'widget'
         </model>
         <constraint>
             <require when="@type='quatrain'">
-                <has-cardinality target="line" max-occurs="4" min-occurs="4"/>
+                
+                <has-cardinality id="quatrain-cardinality-check" target="line" max-occurs="4" min-occurs="4"/>
             </require>
         </constraint>
     </define-assembly>
@@ -192,32 +204,47 @@ Under 'widget'
         <formal-name>Line of verse</formal-name>
         <description>May be metrical</description>
         <flag ref="feet"/>
-        <define-flag name="base">
-            <formal-name>Base meter</formal-name>
-            <description>Identifies the base metrical type, if any</description>
-            <constraint>
-                <allowed-values allow-other="yes">
-                    <enum value="dactyl">Dactylic</enum>
-                    <enum value="anapest">Anapestic</enum>
-                    <enum value="trochee">Trochaic</enum>
-                    <enum value="iambic">Iambic</enum>
-                    <enum value="mixed">Mixed</enum>
+        <flag ref="base"/>
+            <!--<xxxxconstraint>
+                <matches><!-\- All apply -\-></matches>
+                <allowed-values extends="yes" allow-other="yes">
+                    <enum value=""></enum>
                 </allowed-values>
-            </constraint>
-        </define-flag>
+            </xxxxconstraint>-->
+        
+        <constraint>
+            <!--<allowed-values target="" extends="">
+                <enum value=""></enum>
+            </allowed-values>-->
+            <has-cardinality target=""></has-cardinality>
+        </constraint>
     </define-field>
+    
+    <define-flag name="base">
+        <formal-name>Base meter</formal-name>
+        <description>Identifies the base metrical type, if any</description>
+        <constraint>
+            <allowed-values id="versetype-enumerations-check" allow-other="no">
+                <enum value="dactyl">Dactylic</enum>
+                <enum value="anapest">Anapestic</enum>
+                <enum value="trochee">Trochaic</enum>
+                <enum value="iamb">Iambic</enum>
+                <enum value="mixed">Mixed</enum>
+            </allowed-values>
+        </constraint>
+    </define-flag>
     
     <define-flag name="feet" as-type="integer">
         <formal-name>Meter count(feet)</formal-name>
         <description>Count of metrical feet (dimeter, trimeter, tetrameter etc) represented as a natural number</description>
         <constraint>
-            <matches regex="^[1-9]"/>
-            <remarks>
-                <p>Should not be negative or zero</p>
-            </remarks>
+            <matches id="foot-count-regex-check" regex="[1-9]">
+                <remarks>
+                    <p>A regex check on an integer - so 001 is not valid, nor 11. Expressed as a regex this could also be expressed as an <code>expect</code> with a value test.</p>
+                </remarks>
+            </matches>
         </constraint>
-    </define-flag>
-    
+    </define-flag>   
     
     <define-assembly name="stanza">
         <formal-name>Stanza</formal-name>
@@ -248,12 +275,14 @@ Under 'widget'
         <description>Information about authors cited in the anthology</description>
         <model>
             <assembly ref="author" max-occurs="unbounded">
-                <group-as name="authors" in-json="BY_KEY"/>
+                <!-- hard to validate: when in-json="BY_KEY"
+                     is there an applicable uniqueness check -->
+                <group-as name="authors" in-json="BY_KEY"/>                
             </assembly>
         </model>
+        
         <constraint>
-            
-            <index name="creators-index" target="author">
+            <index id="creators-index" name="creators-index" target="author">
                 <key-field target="@id"/>
             </index>
         </constraint>
@@ -270,6 +299,7 @@ Under 'widget'
             <field ref="publication" max-occurs="unbounded" min-occurs="0">
                 <group-as name="publications"/>
             </field>
+            <assembly ref="bio"/>
         </model>
     </define-assembly>
     
@@ -282,24 +312,44 @@ Under 'widget'
         <formal-name>Biographical info</formal-name>
         <description>Gives basic facts or colorful detail.</description>
         <model>
-            <define-assembly name="facts">
+            <field ref="name" max-occurs="unbounded">
+                <group-as name="also-known-as"/>
+            </field>
+            <define-assembly name="facts" max-occurs="3">
+                <formal-name>Facts</formal-name>
+                <description>Structured data</description>
+                <group-as name="fact-statements"/>
                 <model>
                     <field ref="dates"/>
                     <define-assembly name="residence" max-occurs="unbounded">
+                        <formal-name>Residency</formal-name>
+                        <description>A range of values in time-space</description>
                         <group-as name="residences"/>
                         <model>
                             <define-field name="dates" as-type="empty">
-                                <define-flag name="start" as-type="date"/>
-                                <define-flag name="end" as-type="date"/>
+                                <formal-name>Dates</formal-name>
+                                <description>Start to end</description>
+                                <define-flag name="start" as-type="date">
+                                    <formal-name>Start</formal-name>
+                                    <description>When initiated</description></define-flag>
+                                <define-flag name="end" as-type="date">
+                                    <formal-name>End</formal-name>
+                                    <description>When concluded or abandoned</description>
+                                </define-flag>
                             </define-field>
-                            <assembly ref="address"/>
+                            <!--<assembly ref="address"/>-->
                         </model>
                     </define-assembly>
                 </model>
             </define-assembly>
             <define-assembly name="colorful-details">
+                <formal-name>Colorful details</formal-name>
+                <description>Unstructured data</description>
                 <model>
-                    <define-field name="dates" as-type="string"/>
+                    <define-field name="dates" as-type="string">
+                        <formal-name>Dates</formal-name>
+                        <description>This time, a string, so "Lincoln's Birthday" is a date.</description>
+                    </define-field>
                     <field ref="remarks"/>
                 </model>
             </define-assembly>
@@ -326,7 +376,7 @@ Under 'widget'
         </define-flag>
         <constraint>
             <!--if floruit is given, birth and death should not be?-->
-            <matches target="@birth" datatype="date"/>
+            <matches id="birth-matches-date-datatype" target="@birth" datatype="date"/>
             <expect id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>
         </constraint>
     </define-field>
