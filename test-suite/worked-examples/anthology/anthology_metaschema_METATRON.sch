@@ -13,33 +13,17 @@
    <xsl:key name="creators-index"
             match="anthology:author-index/anthology:author"
             use="@id"/>
-   <!-- RULES : CONTEXT DEPTH : 1-->
-   <pattern id="match-depth-1">
-      <rule context="anthology:verse"><!-- when ancestor::anthology:verse/@type='quatrain' and exists(self::anthology:line), anthology:line has cardinality:  at least 4  at most 4-->
-         <assert test="not(@type='quatrain') or count(anthology:line) eq 4"
-                 id="quatrain-cardinality-check">Where @type='quatrain', <name/> is expected to have exactly 4 occurrences of anthology:line[[See id#quatrain-cardinality-check]]</assert>
-      </rule>
-      <rule context="anthology:line"><!--!ERROR! lexical analysis failed while expecting [IntegerLiteral, DecimalLiteral, DoubleLiteral, StringLiteral, Wildcard, QName, S, '(', '+', '-', '.', '/', '//', '@', 'and', 'attribute', 'child', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'following', 'following-sibling', 'mod', 'namespace', 'node', 'or', 'processing-instruction', 'self', 'text'] at line 1, column 1: ...... has cardinality:  --></rule>
-      <rule context="@base"><!--allowed-values on : dactyl, anapest, trochee, iamb, mixed-->
-         <assert test="( . = ( 'dactyl', 'anapest', 'trochee', 'iamb', 'mixed' ) )"
-                 id="versetype-enumerations-check">
-            <name/> is expected to be (one of) 'dactyl', 'anapest', 'trochee', 'iamb', 'mixed', not '<value-of select="."/>'
-            [[See id#versetype-enumerations-check]]</assert>
-      </rule>
-      <rule context="@feet"><!-- should match regex '[1-9]'-->
-         <assert test="matches(., '^[1-9]$')">
-            <name/> is expected to match regular expression '^[1-9]$'
+   <pattern>
+      <rule context="anthology:ANTHOLOGY//anthology:meta/anthology:creator/@who"><!-- when exists(./ancestor::anthology:creator/ancestor::anthology:meta), .//anthology:meta/anthology:creator/@who should match regex '#(\S+)'-->
+         <assert test="not(exists(./ancestor::anthology:creator/ancestor::anthology:meta)) or matches(., '^#(\S+)$')">Where exists(./ancestor::anthology:creator/ancestor::anthology:meta), <name/> is expected to match regular expression '^#(\S+)$'
             </assert>
       </rule>
-      <rule context="anthology:dates"><!--expect on : xs:date(@birth) < xs:date(@death)-->
-         <assert test="exists(self::node()[xs:date(@birth) &lt; xs:date(@death)])"
-                 id="chronology-check">
-            <name/> fails to pass evaluation of 'xs:date(@birth) &lt; xs:date(@death)'
-            [[See id#chronology-check]]</assert>
+      <rule context="anthology:ANTHOLOGY//anthology:meta/anthology:creator"><!-- when exists(self::anthology:creator[matches(@who,'\S')]/ancestor::anthology:meta), .//anthology:meta/anthology:creator[matches(@who,'\S')] must correspond to an entry in the 'creators-index' index within the context of its ancestoranthology:ANTHOLOGY-->
+         <let name="lookup"
+              value="@who[matches(.,'^#(\S+)$')] ! replace(.,'^#(\S+)$','$1')"/>
+         <assert test="not(exists(self::anthology:creator[matches(@who,'\S')]/ancestor::anthology:meta)) or exists(key('creators-index',$lookup,ancestor::anthology:ANTHOLOGY))"
+                 id="creators-index-ref">Where exists(self::anthology:creator[matches(@who,'\S')]/ancestor::anthology:meta), <name/> is expected to correspond to an entry in the 'creators-index' index within the containing anthology:ANTHOLOGY[[See id#creators-index-ref]]</assert>
       </rule>
-   </pattern>
-   <!-- RULES : CONTEXT DEPTH : 2-->
-   <pattern id="match-depth-2">
       <rule context="anthology:meta/anthology:keyword"><!-- is unique-->
          <assert test="count(key('distinct-keyword',string(.)))=1">
             <name/> is expected to be unique.
@@ -59,25 +43,31 @@
             <name/> is expected to be (one of) 'author', 'editor', 'translator', not '<value-of select="."/>'
             [[See id#creator-type-check]]</assert>
       </rule>
+      <rule context="anthology:verse"><!-- when ancestor::anthology:verse/@type='quatrain' and exists(self::anthology:line), anthology:line has cardinality:  at least 4  at most 4-->
+         <assert test="not(@type='quatrain') or count(anthology:line) eq 4"
+                 id="quatrain-cardinality-check">Where @type='quatrain', <name/> is expected to have exactly 4 occurrences of anthology:line[[See id#quatrain-cardinality-check]]</assert>
+      </rule>
+      <rule context="anthology:line"><!--!ERROR! lexical analysis failed while expecting [IntegerLiteral, DecimalLiteral, DoubleLiteral, StringLiteral, Wildcard, QName, S, '(', '+', '-', '.', '/', '//', '@', 'and', 'attribute', 'child', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'following', 'following-sibling', 'mod', 'namespace', 'node', 'or', 'processing-instruction', 'self', 'text'] at line 1, column 1: ...... has cardinality:  --></rule>
+      <rule context="@base"><!--allowed-values on : dactyl, anapest, trochee, iamb, mixed-->
+         <assert test="( . = ( 'dactyl', 'anapest', 'trochee', 'iamb', 'mixed' ) )"
+                 id="versetype-enumerations-check">
+            <name/> is expected to be (one of) 'dactyl', 'anapest', 'trochee', 'iamb', 'mixed', not '<value-of select="."/>'
+            [[See id#versetype-enumerations-check]]</assert>
+      </rule>
+      <rule context="@feet"><!-- should match regex '[1-9]'-->
+         <assert test="matches(., '^[1-9]$')">
+            <name/> is expected to match regular expression '^[1-9]$'
+            </assert>
+      </rule>
       <rule context="anthology:dates/@birth"><!-- when exists(.), @birth should take the form of datatype 'date'-->
          <assert test="not(exists(.)) or m:datatype-validate(., 'date')">Where exists(.), <name/> is expected to take the form of datatype date'
             </assert>
       </rule>
-   </pattern>
-   <!-- RULES : CONTEXT DEPTH : 4-->
-   <pattern id="match-depth-4">
-      <rule context="anthology:ANTHOLOGY//anthology:meta/anthology:creator"><!-- when exists(self::anthology:creator[matches(@who,'\S')]/ancestor::anthology:meta), .//anthology:meta/anthology:creator[matches(@who,'\S')] must correspond to an entry in the 'creators-index' index within the context of its ancestoranthology:ANTHOLOGY-->
-         <let name="lookup"
-              value="@who[matches(.,'^#(\S+)$')] ! replace(.,'^#(\S+)$','$1')"/>
-         <assert test="not(exists(self::anthology:creator[matches(@who,'\S')]/ancestor::anthology:meta)) or exists(key('creators-index',$lookup,ancestor::anthology:ANTHOLOGY))"
-                 id="creators-index-ref">Where exists(self::anthology:creator[matches(@who,'\S')]/ancestor::anthology:meta), <name/> is expected to correspond to an entry in the 'creators-index' index within the containing anthology:ANTHOLOGY[[See id#creators-index-ref]]</assert>
-      </rule>
-   </pattern>
-   <!-- RULES : CONTEXT DEPTH : 5-->
-   <pattern id="match-depth-5">
-      <rule context="anthology:ANTHOLOGY//anthology:meta/anthology:creator/@who"><!-- when exists(./ancestor::anthology:creator/ancestor::anthology:meta), .//anthology:meta/anthology:creator/@who should match regex '#(\S+)'-->
-         <assert test="not(exists(./ancestor::anthology:creator/ancestor::anthology:meta)) or matches(., '^#(\S+)$')">Where exists(./ancestor::anthology:creator/ancestor::anthology:meta), <name/> is expected to match regular expression '^#(\S+)$'
-            </assert>
+      <rule context="anthology:dates"><!--expect on : xs:date(@birth) < xs:date(@death)-->
+         <assert test="exists(self::node()[xs:date(@birth) &lt; xs:date(@death)])"
+                 id="chronology-check">
+            <name/> fails to pass evaluation of 'xs:date(@birth) &lt; xs:date(@death)'
+            [[See id#chronology-check]]</assert>
       </rule>
    </pattern>
    <!-- LEXICAL / DATATYPE VALIDATION FUNCTIONS -->

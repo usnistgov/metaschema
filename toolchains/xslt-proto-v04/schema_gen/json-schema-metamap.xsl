@@ -112,11 +112,11 @@
         <map key="{ (root-name, use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name, description"/>
             <string key="type">object</string>
-            <!--<xsl:where-populated>-->
+            <xsl:where-populated>
                 <map key="properties">
                     <xsl:apply-templates select="." mode="properties"/>
                 </map>
-            <!--</xsl:where-populated>-->
+            </xsl:where-populated>
             <xsl:call-template name="required-properties"/>
             <boolean key="additionalProperties">false</boolean>
         </map>
