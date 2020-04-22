@@ -65,20 +65,28 @@
             
             <!--<xsl:apply-templates select="//constraint"/>-->
             <xsl:variable name="rules" as="element()*">
-              <xsl:apply-templates select="//constraint"/>
+              <xsl:apply-templates select="//constraint//(* except require)"/>
             </xsl:variable>
-            <xsl:for-each-group select="$rules" group-by="count(tokenize(@context,'/'))">
-                <xsl:sort select="current-grouping-key()"/>
-                <xsl:comment expand-text="true"> RULES : CONTEXT DEPTH : { current-grouping-key() }</xsl:comment>
+            
+            <!--<debug> <xsl:copy-of select="$rules"/> </debug>-->
+            <pattern>
+                <xsl:for-each select="$rules">
+                    <xsl:sort select="count(tokenize(@context,'/'))" order="descending"/>
+                    <xsl:sequence select="."/>
+                </xsl:for-each>
+            </pattern>
+            <!--<xsl:for-each-group select="$rules" group-by="true()">
+                <xsl:sort select="count(tokenize(@context,'/'))" order="descending"/>
                 
-                <pattern id="match-depth-{current-grouping-key()}">
-                    <xsl:for-each-group select="current-group()" group-by="@context">
-                        <rule context="{current-grouping-key()}">
+                <pattern>
+                    <xsl:sequence select="current-group()"/>
+                    <!-\-<xsl:for-each-group select="current-group()" group-adjacent="@context">
+                        <rule sort="{count(tokenize(@context,'/'))}" context="{current-grouping-key()}">
                             <xsl:sequence select="current-group()/(*|comment())"/>
                         </rule>
-                    </xsl:for-each-group>
+                    </xsl:for-each-group>-\->
                 </pattern>
-            </xsl:for-each-group>
+            </xsl:for-each-group>-->
             
             <xsl:for-each-group select="$type-definitions[@name=$metaschema//constraint//matches/@datatype]" group-by="true()">
                 <xsl:comment> LEXICAL / DATATYPE VALIDATION FUNCTIONS </xsl:comment>
@@ -95,15 +103,15 @@
     <xsl:template match="text()"/>
     
     <xsl:template match="constraint">
-        <!--<xsl:apply-templates/>-->
-        <xsl:variable name="rules" as="element(sch:rule)*">
+        <xsl:apply-templates/>
+        <!--<xsl:variable name="rules" as="element(sch:rule)*">
             <xsl:apply-templates/>
         </xsl:variable>
         <xsl:for-each-group select="$rules" group-by="@context">
             <rule context="{ current-grouping-key() }">
                 <xsl:sequence select="current-group()/(*|comment())"/>
             </rule>
-        </xsl:for-each-group>
+        </xsl:for-each-group>-->
     </xsl:template>
     
     <xsl:template match="allowed-values[@allow-other='yes']"/>
