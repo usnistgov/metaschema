@@ -14,6 +14,20 @@
        <p>Local definitions must provide implicit overrides of rules defined in global definitions.</p>
    </remarks>
  
+ 
+    <define-field name="item">
+        <formal-name>Item</formal-name>
+        <description>A member of a sequence</description>
+        <flag ref="type"/>
+        <constraint>
+            <allowed-values target="." allow-other="no" id="global-item-allowed-values">
+                <enum value="A">a</enum>
+                <enum value="B">b</enum>
+                <enum value="C">c</enum>
+            </allowed-values>
+        </constraint>
+    </define-field>
+    
     <define-assembly name="number-sequences">
         <formal-name>Number sequences</formal-name>
         <description>Several number sequences, in sequence</description>
@@ -48,6 +62,17 @@
                 <enum value="Ö">o umlaut</enum>
                 <enum value="Ü">u umlaut</enum>
             </allowed-values>
+            <!--
+                This rule overrides not the global definition but a local
+                (doesn't it?) - implement when we have path resolution support 
+                
+                <allowed-values target=".//subsequence//item" extends="yes">
+                <!-\- which nodes will this rule apply to? Any? note that subsequence/item is defined locally.
+                     If this rule applies, what are the respective sets for subsequence/item[@type='color']-\->
+                <enum value="pink">a umlaut</enum>
+                <enum value="orange">o umlaut</enum>
+                <enum value="purple">u umlaut</enum>
+            </allowed-values>-->
         </constraint>
     </define-assembly>
     
@@ -55,6 +80,7 @@
         <formal-name>Subsequence</formal-name>
         <description>More sequences</description>
         <model>
+            <!--<assembly ref="sequence"/>-->
             <define-field name="item" max-occurs="unbounded">
 <!-- Q: does this local field declaration overlap in any way with other declarations of 'item'?
      if not, must not other rules for other allowed-values make an exception for subsequence/item? -->
@@ -62,8 +88,8 @@
                 <description>An item in a sequence in a sequence</description>
                 <group-as name="items"/>
                 <constraint>
-                    <require when="@type='color">
-                        <allowed-values target=".">
+                    <require when="@type='color'">
+                        <allowed-values target="." id="local-color-item-allowed-values">
                             <enum value="red">red</enum>
                             <enum value="blue">blue</enum>
                             <enum value="green">green</enum>
@@ -71,21 +97,12 @@
                     </require>
                 </constraint>
             </define-field>
+            <assembly ref="subsequence" max-occurs="unbounded">
+                <group-as name="subsequences"/>
+            </assembly>
         </model>
     </define-assembly>
     
-    <define-field name="item">
-        <formal-name>Item</formal-name>
-        <description>A member of a sequence</description>
-        <flag ref="type"/>
-        <constraint>
-            <allowed-values target="." allow-other="no">
-                <enum value="A">a</enum>
-                <enum value="B">b</enum>
-                <enum value="C">c</enum>
-            </allowed-values>
-         </constraint>
-    </define-field>
     
     <define-flag name="type">
         <formal-name>Item type</formal-name>
