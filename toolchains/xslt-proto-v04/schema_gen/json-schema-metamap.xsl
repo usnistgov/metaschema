@@ -112,11 +112,11 @@
         <map key="{ (root-name, use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name, description"/>
             <string key="type">object</string>
-            <xsl:where-populated>
+            <!--<xsl:where-populated>-->
                 <map key="properties">
                     <xsl:apply-templates select="." mode="properties"/>
                 </map>
-            </xsl:where-populated>
+            <!--</xsl:where-populated>-->
             <xsl:call-template name="required-properties"/>
             <boolean key="additionalProperties">false</boolean>
         </map>
@@ -181,13 +181,13 @@
         </map>
     </xsl:template>
     
-    <xsl:template match="formal-name">
+    <xsl:template match="formal-name" mode="#all">
         <string key="title">
             <xsl:apply-templates/>
         </string>
     </xsl:template>
     
-    <xsl:template match="description">
+    <xsl:template match="description" mode="#all">
         <string key="description">
             <xsl:value-of select="normalize-space(.)"/>
         </string>
@@ -248,7 +248,7 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template name="string-or-array-of-strings">
+    <!--<xsl:template name="string-or-array-of-strings">
         <array key="oneOf">
             <map>
                 <string key="type">string</string>
@@ -263,7 +263,7 @@
                 <string key="minItems">2</string>
             </map>
         </array>
-    </xsl:template>
+    </xsl:template>-->
     
     
     <xsl:template match="*" mode="text-property"/>
@@ -389,8 +389,7 @@
     
     <xsl:template mode="declaration" priority="5" match="define-flag[@name=../(json-value-key|json-key)/@flag-name] |
         flag[@ref=../(json-value-key|json-key)/@flag-name]"/>
-        
-    <xsl:template mode="declaration" match="flag">
+            <xsl:template mode="declaration" match="flag">
         <xsl:variable name="decl" select="key('flag-definition-by-name',@ref)"/>
         <map key="{ $decl/(use-name,@name)[1] }">
             <xsl:apply-templates select="$decl/(formal-name | description)"/>
@@ -399,13 +398,13 @@
         </map>
     </xsl:template>
     
-    <xsl:template mode="declaration" match="model//define-field">
+    <!--<xsl:template mode="declaration" match="model//define-field">
         <map key="{ (group-as/@name,use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name | description"/>
             <xsl:apply-templates select="." mode="object-type"/>
             <xsl:apply-templates select="constraint/allowed-values"/>    
         </map>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:template mode="declaration" match="define-assembly/define-flag | define-field/define-flag">
         <map key="{ (use-name,@name)[1] }">
@@ -419,7 +418,9 @@
          with key flags are represented as objects, never arrays, as the key
          flag serves as a label -->
     <xsl:template mode="declaration" priority="5"
-        match="assembly[group-as/@in-json='BY_KEY'][exists(key('assembly-definition-by-name',@ref)/json-key)] |
+        match="define-assembly[group-as/@in-json='BY_KEY'][exists(json-key)] |
+        define-field[group-as/@in-json='BY_KEY'][exists(json-key)] |
+        assembly[group-as/@in-json='BY_KEY'][exists(key('assembly-definition-by-name',@ref)/json-key)] |
         field[group-as/@in-json='BY_KEY'][exists(key('field-definition-by-name',@ref)/json-key)]">
         <xsl:variable name="group-name" select="group-as/@name"/>
         <map key="{ $group-name }">
@@ -429,7 +430,7 @@
                 <array key="allOf">
                     <map>
                         <string key="type">object</string>
-                        <xsl:apply-templates select="." mode="definition-reference"/>
+                        <xsl:apply-templates select="." mode="definition-or-reference"/>
                     </map>
                     <map>
                         <map key="not">
@@ -443,25 +444,25 @@
     
     <!-- Always a map when max-occurs is 1 or implicit -->
     <xsl:template mode="declaration" priority="4"
-        match="assembly[empty(@max-occurs) or number(@max-occurs) = 1]">
-        <xsl:variable name="decl" select="key('assembly-definition-by-name', @ref)"/>
+        match="assembly[empty(@max-occurs) or number(@max-occurs) = 1] | define-assembly[empty(@max-occurs) or number(@max-occurs) = 1]">
+        <xsl:variable name="decl" select="key('assembly-definition-by-name', @ref) | self::define-assembly"/>
         <map key="{ $decl/(root-name,use-name,@name)[1] }">
-            <xsl:apply-templates select="." mode="definition-reference"/>
+            <xsl:apply-templates select="." mode="definition-or-reference"/>
         </map>
     </xsl:template>
     
+    <!-- Always a map when max-occurs is 1 or implicit -->
     <xsl:template mode="declaration" priority="4"
-        match="field[empty(@max-occurs) or number(@max-occurs)= 1 ]">
-        <xsl:variable name="decl" select="key('field-definition-by-name', @ref)"/>
+        match="field[empty(@max-occurs) or number(@max-occurs) = 1] | define-field[empty(@max-occurs) or number(@max-occurs) = 1]">
+        <xsl:variable name="decl" select="key('field-definition-by-name', @ref) | self::define-field"/>
         <map key="{ $decl/(root-name,use-name,@name)[1] }">
-            <xsl:apply-templates select="." mode="definition-reference"/>
+            <xsl:apply-templates select="." mode="definition-or-reference"/>
         </map>
     </xsl:template>
     
     <!-- Otherwise, always an array when min-occurs is greater than 1 or whenever so designated -->
     <xsl:template mode="declaration" priority="3" expand-text="yes"
-        match="assembly[number(@min-occurs) &gt; 1 ] | field[number(@min-occurs) &gt; 1 ] |
-               assembly[group-as/@in-json='ARRAY']   | field[group-as/@in-json='ARRAY']">
+        match="*[number(@min-occurs) &gt; 1 ] | *[child::group-as/@in-json='ARRAY']">
         <map key="{ group-as/@name }">
             <string key="type">array</string>
             <!-- despite @min-occurs = 0, we have a minimum of 1 since the array itself is optional -->
@@ -471,44 +472,49 @@
                 <number key="maxItems">{ . }</number>
             </xsl:for-each>
             <map key="items">
-                <xsl:apply-templates select="." mode="definition-reference"/>
+                <xsl:apply-templates select="." mode="definition-or-reference"/>
             </map>
         </map>
     </xsl:template>
     
     <!-- Now matching when min-occurs is 1 or less, max-occurs is more than 1,
          and group-as/@in-json is not 'BY-KEY' or 'ARRAY' ... -->
-    <xsl:template mode="declaration" match="assembly | field">
+    <xsl:template mode="declaration" match="assembly | field | define-assembly | define-field">
         <map key="{ group-as/@name }">
             <array key="anyOf">
                 <map>
-                    <xsl:apply-templates select="." mode="definition-reference"/>
+                    <xsl:apply-templates select="." mode="definition-or-reference"/>
                 </map>
                 <map>
                     <string key="type">array</string>
                     <xsl:if test="@max-occurs != 'unbounded'">
                         <number key="maxItems">{ @max-occurs }</number>
                     </xsl:if>
-                    <number key="minItems">2</number>
+                    <number key="minItems">1</number><!-- See Issue #536 -->
                     <map key="items">
-                        <xsl:apply-templates select="." mode="definition-reference"/>
+                        <xsl:apply-templates select="." mode="definition-or-reference"/>
                     </map>
                 </map>
             </array>
         </map>
     </xsl:template>
     
-    <xsl:template match="flag" mode="definition-reference">
+    
+    <xsl:template match="define-assembly | define-field | define-flag" mode="definition-or-reference">
+        <xsl:apply-templates select="."/>
+    </xsl:template>
+    
+    <xsl:template match="flag" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('flag-definition-by-name',@ref)"/>
         <string key="$ref">#/definitions/{ $definition/(use-name,@name)[1] }</string>
     </xsl:template>
     
-    <xsl:template match="field" mode="definition-reference">
+    <xsl:template match="field" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('field-definition-by-name',@ref)"/>
         <string key="$ref">#/definitions/{ $definition/(use-name,@name)[1] }</string>
     </xsl:template>
     
-    <xsl:template match="assembly" mode="definition-reference">
+    <xsl:template match="assembly" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('assembly-definition-by-name',@ref)"/>
         <string key="$ref">#/definitions/{ $definition/(root-name,use-name,@name)[1] }</string>
     </xsl:template>
@@ -555,8 +561,7 @@
                 <xsl:next-match/>
             </xsl:when>
             <xsl:otherwise>
-                <!-- writing a local declaration -->
-                <xsl:apply-templates select="."/>
+                <xsl:next-match/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
