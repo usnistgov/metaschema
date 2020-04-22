@@ -70,6 +70,21 @@
                      type="anthology:date-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
+         <xs:element name="keyword" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Key word</m:formal-name>
+                     <m:description>A string</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Key word</b>: A string</xs:documentation>
+               </xs:annotation>
+               <xs:simpleContent>
+                  <xs:extension base="xs:string"/>
+               </xs:simpleContent>
+            </xs:complexType>
+         </xs:element>
          <xs:element name="remarks" minOccurs="0" maxOccurs="1">
             <xs:annotation>
                <xs:appinfo>
@@ -257,47 +272,43 @@
                <b>Base meter</b>: Identifies the base metrical type, if any</xs:documentation>
          </xs:annotation>
          <xs:simpleType>
-            <xs:union memberTypes="xs:string">
-               <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                     <xs:enumeration value="dactyl">
-                        <xs:annotation>
-                           <xs:documentation>
-                              <p>Dactylic</p>
-                           </xs:documentation>
-                        </xs:annotation>
-                     </xs:enumeration>
-                     <xs:enumeration value="anapest">
-                        <xs:annotation>
-                           <xs:documentation>
-                              <p>Anapestic</p>
-                           </xs:documentation>
-                        </xs:annotation>
-                     </xs:enumeration>
-                     <xs:enumeration value="trochee">
-                        <xs:annotation>
-                           <xs:documentation>
-                              <p>Trochaic</p>
-                           </xs:documentation>
-                        </xs:annotation>
-                     </xs:enumeration>
-                     <xs:enumeration value="iambic">
-                        <xs:annotation>
-                           <xs:documentation>
-                              <p>Iambic</p>
-                           </xs:documentation>
-                        </xs:annotation>
-                     </xs:enumeration>
-                     <xs:enumeration value="mixed">
-                        <xs:annotation>
-                           <xs:documentation>
-                              <p>Mixed</p>
-                           </xs:documentation>
-                        </xs:annotation>
-                     </xs:enumeration>
-                  </xs:restriction>
-               </xs:simpleType>
-            </xs:union>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="dactyl">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>Dactylic</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+               <xs:enumeration value="anapest">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>Anapestic</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+               <xs:enumeration value="trochee">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>Trochaic</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+               <xs:enumeration value="iamb">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>Iambic</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+               <xs:enumeration value="mixed">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>Mixed</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+            </xs:restriction>
          </xs:simpleType>
       </xs:attribute>
    </xs:complexType>
@@ -381,6 +392,10 @@
                      type="anthology:publication-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
+         <xs:element name="bio"
+                     type="anthology:bio-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="id" type="xs:NCName">
          <xs:annotation>
@@ -406,6 +421,116 @@
          <xs:extension base="xs:string"/>
       </xs:simpleContent>
    </xs:complexType>
+   <xs:complexType name="bio-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Biographical info</m:formal-name>
+            <m:description>Gives basic facts or colorful detail.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Biographical info</b>: Gives basic facts or colorful detail.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="facts" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Facts</m:formal-name>
+                     <m:description>Structured data</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Facts</b>: Structured data</xs:documentation>
+               </xs:annotation>
+               <xs:sequence>
+                  <xs:element name="dates"
+                              type="anthology:dates-FIELD"
+                              minOccurs="0"
+                              maxOccurs="1"/>
+                  <xs:element name="residence" minOccurs="0" maxOccurs="unbounded">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Residency</m:formal-name>
+                              <m:description>A range of values in time-space</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Residency</b>: A range of values in time-space</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="dates" minOccurs="0" maxOccurs="1">
+                              <xs:complexType>
+                                 <xs:attribute name="start" type="xs:date">
+                                    <xs:annotation>
+                                       <xs:appinfo>
+                                          <m:formal-name>Start</m:formal-name>
+                                          <m:description>When initiated</m:description>
+                                       </xs:appinfo>
+                                       <xs:documentation>
+                                          <b>Start</b>: When initiated</xs:documentation>
+                                    </xs:annotation>
+                                 </xs:attribute>
+                                 <xs:attribute name="end" type="xs:date">
+                                    <xs:annotation>
+                                       <xs:appinfo>
+                                          <m:formal-name>End</m:formal-name>
+                                          <m:description>When concluded or abandoned</m:description>
+                                       </xs:appinfo>
+                                       <xs:documentation>
+                                          <b>End</b>: When concluded or abandoned</xs:documentation>
+                                    </xs:annotation>
+                                 </xs:attribute>
+                              </xs:complexType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="colorful-details" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Colorful details</m:formal-name>
+                     <m:description>Unstructured data</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Colorful details</b>: Unstructured data</xs:documentation>
+               </xs:annotation>
+               <xs:sequence>
+                  <xs:element name="dates" minOccurs="0" maxOccurs="1">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Dates</m:formal-name>
+                              <m:description>This time, a string, so "Lincoln's Birthday" is a date.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Dates</b>: This time, a string, so "Lincoln's Birthday" is a date.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleContent>
+                           <xs:extension base="xs:string"/>
+                        </xs:simpleContent>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="remarks" minOccurs="0" maxOccurs="1">
+                     <xs:annotation>
+                        <xs:appinfo>
+                           <m:formal-name>Remarks</m:formal-name>
+                           <m:description>Pertinent information of any kind.</m:description>
+                        </xs:appinfo>
+                        <xs:documentation>
+                           <b>Remarks</b>: Pertinent information of any kind.</xs:documentation>
+                     </xs:annotation>
+                     <xs:complexType>
+                        <xs:group ref="anthology:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
    <xs:complexType name="dates-FIELD">
       <xs:attribute name="birth" type="xs:date">
          <xs:annotation>
@@ -425,6 +550,16 @@
             </xs:appinfo>
             <xs:documentation>
                <b>Death date</b>: If only the year is known use July 1.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="floruit" type="xs:date">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Floruit date</m:formal-name>
+               <m:description>Do not use along with both birth and death</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Floruit date</b>: Do not use along with both birth and death</xs:documentation>
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
