@@ -1,0 +1,190 @@
+<map xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+   <assembly key="anthology" gi="anthology">
+      <flag as-type="NCName" key="id" gi="id"/>
+      <assembly key="meta" gi="meta">
+         <group key="creators">
+            <field as-type="string" gi="creator">
+               <flag as-type="string" key="role" gi="role">
+                  <constraint>
+                     <allowed-values id="creator-type-check">
+                        <enum value="author">Author</enum>
+                        <enum value="editor">Editor</enum>
+                        <enum value="translator">Translator</enum>
+                     </allowed-values>
+                  </constraint>
+               </flag>
+               <flag as-type="string" key="who" gi="who"/>
+            </field>
+         </group>
+         <field as-type="string" key="date" gi="date">
+            <flag as-type="string" key="type" gi="type"/>
+         </field>
+         <group key="keywords">
+            <field as-type="string" gi="keyword">
+               <constraint>
+                  <is-unique key="distinct-keyword" gi="distinct-keyword" target=".">
+                     <key-field target="."/>
+                  </is-unique>
+               </constraint>
+            </field>
+         </group>
+         <field as-type="markup-multiline" key="remarks" gi="remarks"/>
+         <constraint>
+            <allowed-values id="type-check" target="@type">
+               <enum value="YYYY">Four-digit year (CE)</enum>
+            </allowed-values>
+            <require when="@type='YYYY'">
+               <matches id="when-yyyy-regex-check" target="@date" regex="[1-9]\d?\d?\d?"/>
+            </require>
+         </constraint>
+      </assembly>
+      <group key="pieces">
+         <assembly gi="piece">
+            <assembly key="meta" gi="meta">
+               <group key="creators">
+                  <field as-type="string" gi="creator">
+                     <flag as-type="string" key="role" gi="role">
+                        <constraint>
+                           <allowed-values id="creator-type-check">
+                              <enum value="author">Author</enum>
+                              <enum value="editor">Editor</enum>
+                              <enum value="translator">Translator</enum>
+                           </allowed-values>
+                        </constraint>
+                     </flag>
+                     <flag as-type="string" key="who" gi="who"/>
+                  </field>
+               </group>
+               <field as-type="string" key="date" gi="date">
+                  <flag as-type="string" key="type" gi="type"/>
+               </field>
+               <group key="keywords">
+                  <field as-type="string" gi="keyword">
+                     <constraint>
+                        <is-unique key="distinct-keyword" gi="distinct-keyword" target=".">
+                           <key-field target="."/>
+                        </is-unique>
+                     </constraint>
+                  </field>
+               </group>
+               <field as-type="markup-multiline" key="remarks" gi="remarks"/>
+               <constraint>
+                  <allowed-values id="type-check" target="@type">
+                     <enum value="YYYY">Four-digit year (CE)</enum>
+                  </allowed-values>
+                  <require when="@type='YYYY'">
+                     <matches id="when-yyyy-regex-check" target="@date" regex="[1-9]\d?\d?\d?"/>
+                  </require>
+               </constraint>
+            </assembly>
+            <choice>
+               <assembly key="verse" gi="verse">
+                  <flag as-type="string" key="type" gi="type"/>
+                  <choice>
+                     <group key="lines">
+                        <field as-type="markup-line" gi="line">
+                           <flag as-type="integer" key="feet" gi="feet"/>
+                           <flag as-type="string" key="base" gi="base"/>
+                           <constraint>
+                              <has-cardinality target=""/>
+                           </constraint>
+                        </field>
+                     </group>
+                     <group key="stanzas">
+                        <assembly gi="stanza">
+                           <flag as-type="string" key="type" gi="type"/>
+                           <group key="lines">
+                              <field as-type="markup-line" gi="line">
+                                 <flag as-type="integer" key="feet" gi="feet"/>
+                                 <flag as-type="string" key="base" gi="base"/>
+                                 <constraint>
+                                    <has-cardinality target=""/>
+                                 </constraint>
+                              </field>
+                           </group>
+                        </assembly>
+                     </group>
+                  </choice>
+                  <constraint>
+                     <require when="@type='quatrain'">
+                        <has-cardinality id="quatrain-cardinality-check" target="line"/>
+                     </require>
+                  </constraint>
+               </assembly>
+               <field as-type="markup-multiline" key="prose" gi="prose"/>
+            </choice>
+         </assembly>
+      </group>
+      <assembly key="back" gi="back">
+         <assembly key="author-index" gi="author-index">
+            <group key="authors" json-key-flag="id">
+               <assembly gi="author" json-key-flag="id">
+                  <flag as-type="NCName" key="id" gi="id"/>
+                  <field as-type="string" key="name" gi="name"/>
+                  <field as-type="empty" key="dates" gi="dates" json-value-key="range">
+                     <flag as-type="date" key="birth" gi="birth"/>
+                     <flag as-type="date" key="death" gi="death"/>
+                     <flag as-type="date" key="floruit" gi="floruit"/>
+                     <constraint>
+                        <matches id="birth-matches-date-datatype" target="@birth" datatype="date"/>
+                        <expect id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>
+                     </constraint>
+                  </field>
+                  <group key="publications">
+                     <field as-type="string" gi="publication">
+                        <flag as-type="date" key="date" gi="date"/>
+                     </field>
+                  </group>
+                  <assembly key="bio" gi="bio">
+                     <group key="also-known-as">
+                        <field as-type="string" gi="name"/>
+                     </group>
+                     <group key="fact-statements">
+                        <assembly gi="facts">
+                           <field as-type="empty" key="dates" gi="dates" json-value-key="range">
+                              <flag as-type="date" key="birth" gi="birth"/>
+                              <flag as-type="date" key="death" gi="death"/>
+                              <flag as-type="date" key="floruit" gi="floruit"/>
+                              <constraint>
+                                 <matches id="birth-matches-date-datatype" target="@birth" datatype="date"/>
+                                 <expect id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>
+                              </constraint>
+                           </field>
+                           <group key="residences">
+                              <assembly gi="residence">
+                                 <field as-type="empty" key="dates" gi="dates">
+                                    <flag as-type="date" key="start" gi="start"/>
+                                    <flag as-type="date" key="end" gi="end"/>
+                                 </field>
+                              </assembly>
+                           </group>
+                        </assembly>
+                     </group>
+                     <assembly key="colorful-details" gi="colorful-details">
+                        <field as-type="string" key="dates" gi="dates"/>
+                        <field as-type="markup-multiline" key="remarks" gi="remarks"/>
+                     </assembly>
+                  </assembly>
+               </assembly>
+            </group>
+            <constraint>
+               <index id="creators-index"
+                      key="creators-index"
+                      gi="creators-index"
+                      target="author">
+                  <key-field target="@id"/>
+               </index>
+            </constraint>
+         </assembly>
+      </assembly>
+      <constraint>
+         <matches id="regex-match" target=".//meta/creator/@who" regex="#(\S+)"/>
+         <index-has-key key="creators-index"
+                        gi="creators-index"
+                        target=".//meta/creator[matches(@who,'\S')]"
+                        id="creators-index-ref">
+            <key-field target="@who" pattern="#(\S+)"/>
+         </index-has-key>
+      </constraint>
+   </assembly>
+</map>
