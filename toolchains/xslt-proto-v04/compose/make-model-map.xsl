@@ -119,7 +119,13 @@
     </xsl:template>
     
     <xsl:template match="constraint" mode="build">
-        <xsl:copy-of select="."/>
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:if test="exists(../parent::METASCHEMA)">
+                <xsl:attribute name="scope">global</xsl:attribute>
+            </xsl:if>
+            <xsl:copy-of select="*"/>
+        </xsl:copy>
     </xsl:template>
     
     <xsl:template match="text()" mode="build"/>
