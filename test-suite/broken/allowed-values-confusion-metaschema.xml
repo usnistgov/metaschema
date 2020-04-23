@@ -19,6 +19,8 @@
         <formal-name>Item</formal-name>
         <description>A member of a sequence</description>
         <flag ref="type"/>
+        <define-flag name="id"/>
+        
         <constraint>
             <allowed-values target="." allow-other="no" id="global-item-allowed-values">
                 <enum value="A">a</enum>
@@ -44,7 +46,7 @@
         <description>A series of items</description>
         <model>
             <field ref="item" max-occurs="unbounded">
-                <group-as name="items"/>
+                <group-as name="items" in-json="SINGLETON_OR_ARRAY"/>
             </field>
             <assembly ref="subsequence" max-occurs="unbounded">
                 <group-as name="subsequences"/>
@@ -91,13 +93,11 @@
                 <description>An item in a sequence in a sequence</description>
                 <group-as name="items"/>
                 <constraint>
-                    <require when="@type='color'">
                         <allowed-values target="." id="local-color-item-allowed-values">
                             <enum value="red">red</enum>
                             <enum value="blue">blue</enum>
                             <enum value="green">green</enum>
                         </allowed-values>
-                    </require>
                 </constraint>
             </define-field>
             <assembly ref="subsequence" max-occurs="unbounded">
