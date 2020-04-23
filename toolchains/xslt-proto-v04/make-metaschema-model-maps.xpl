@@ -2,6 +2,7 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   type="metaschema:make-xml-map" name="make-xml-map">
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
@@ -22,32 +23,42 @@
   
   <p:serialization port="c.abstract-model-map" indent="true"/>
   <p:output        port="c.abstract-model-map" primary="false">
-    <p:pipe        port="result" step="make-model-map"/>
+    <p:pipe        port="result"               step="make-model-map"/>
   </p:output>
   
   <p:serialization port="d.unfolded-model-map" indent="true"/>
   <p:output        port="d.unfolded-model-map" primary="false">
-    <p:pipe        port="result" step="unfold-model-map"/>
+    <p:pipe        port="result"               step="unfold-model-map"/>
+  </p:output>
+  
+  <p:serialization port="e.models-only" indent="true"/>
+  <p:output        port="e.models-only" primary="false">
+    <p:pipe        port="result"        step="remove-constraints"/>
+  </p:output>
+  
+  <p:serialization port="F.declaration-map" indent="true"/>
+  <p:output        port="F.declaration-map" primary="false">
+    <p:pipe        port="result"        step="declaration-map"/>
   </p:output>
   
   <p:serialization port="X1.xml-element-tree" indent="true"/>
   <p:output        port="X1.xml-element-tree" primary="false">
-    <p:pipe        port="result" step="make-xml-element-tree"/>
+    <p:pipe        port="result"              step="make-xml-element-tree"/>
   </p:output>
   
   <p:serialization port="X2.xml-model-html" indent="false" method="xml" omit-xml-declaration="false"/>
   <p:output        port="X2.xml-model-html" primary="false">
-    <p:pipe        port="result" step="render-xml-model-map"/>
+    <p:pipe        port="result"            step="render-xml-model-map"/>
   </p:output>
   
   <p:serialization port="J1.json-object-tree" indent="true"/>
   <p:output        port="J1.json-object-tree" primary="false">
-    <p:pipe        port="result" step="make-json-object-tree"/>
+    <p:pipe        port="result"              step="make-json-object-tree"/>
   </p:output>
   
   <p:serialization port="J2.json-model-html" indent="false" method="xml" omit-xml-declaration="false"/>
   <p:output        port="J2.json-model-html" primary="false">
-    <p:pipe        port="result" step="render-json-model-map"/>
+    <p:pipe        port="result"             step="render-json-model-map"/>
   </p:output>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
@@ -80,7 +91,38 @@
     </p:input>
   </p:xslt>
   
+  <!--<p:identity name="remove-constraints"/>-->
+  <!--<p:filter name="remove-constraints" select="//metaschema:constraint"/>-->
+  
+  <p:xslt name="remove-constraints">
+    <p:input port="stylesheet">
+      <p:inline>
+        <xsl:stylesheet version="3.0"
+          xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+          <xsl:mode on-no-match="shallow-copy"/>
+          <xsl:template match="constraint"/>
+        </xsl:stylesheet>
+      </p:inline>
+    </p:input>
+  </p:xslt>
+  
+  <p:sink/>
+  
+  <p:xslt name="declaration-map">
+    <p:input port="source">
+      <p:pipe port="result" step="unfold-model-map"/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="compose/reduce-map.xsl"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:sink/>
+  
   <p:xslt name="make-xml-element-tree">
+    <p:input port="source">
+      <p:pipe port="result" step="remove-constraints"/>
+    </p:input>
     <p:input port="stylesheet">
       <p:document href="document/xml/element-tree.xsl"/>
     </p:input>
@@ -98,7 +140,7 @@
   
   <p:xslt name="make-json-object-tree">
     <p:input port="source">
-      <p:pipe port="result" step="unfold-model-map"/>
+      <p:pipe port="result" step="remove-constraints"/>
     </p:input>
     <p:input port="stylesheet">
       <p:document href="document/json/object-tree.xsl"/>
