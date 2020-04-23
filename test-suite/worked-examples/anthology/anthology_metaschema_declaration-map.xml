@@ -29,7 +29,7 @@
             </field>
          </group>
          <field as-type="markup-multiline" key="remarks" gi="remarks"/>
-         <constraint>
+         <constraint scope="global">
             <allowed-values id="type-check" target="@type">
                <enum value="YYYY">Four-digit year (CE)</enum>
             </allowed-values>
@@ -68,7 +68,7 @@
                   </field>
                </group>
                <field as-type="markup-multiline" key="remarks" gi="remarks"/>
-               <constraint>
+               <constraint scope="global">
                   <allowed-values id="type-check" target="@type">
                      <enum value="YYYY">Four-digit year (CE)</enum>
                   </allowed-values>
@@ -85,7 +85,7 @@
                         <field as-type="markup-line" gi="line">
                            <flag as-type="integer" key="feet" gi="feet"/>
                            <flag as-type="string" key="base" gi="base"/>
-                           <constraint>
+                           <constraint scope="global">
                               <has-cardinality target=""/>
                            </constraint>
                         </field>
@@ -97,7 +97,7 @@
                               <field as-type="markup-line" gi="line">
                                  <flag as-type="integer" key="feet" gi="feet"/>
                                  <flag as-type="string" key="base" gi="base"/>
-                                 <constraint>
+                                 <constraint scope="global">
                                     <has-cardinality target=""/>
                                  </constraint>
                               </field>
@@ -105,7 +105,7 @@
                         </assembly>
                      </group>
                   </choice>
-                  <constraint>
+                  <constraint scope="global">
                      <require when="@type='quatrain'">
                         <has-cardinality id="quatrain-cardinality-check" target="line"/>
                      </require>
@@ -125,7 +125,7 @@
                      <flag as-type="date" key="birth" gi="birth"/>
                      <flag as-type="date" key="death" gi="death"/>
                      <flag as-type="date" key="floruit" gi="floruit"/>
-                     <constraint>
+                     <constraint scope="global">
                         <matches id="birth-matches-date-datatype" target="@birth" datatype="date"/>
                         <expect id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>
                      </constraint>
@@ -145,7 +145,7 @@
                               <flag as-type="date" key="birth" gi="birth"/>
                               <flag as-type="date" key="death" gi="death"/>
                               <flag as-type="date" key="floruit" gi="floruit"/>
-                              <constraint>
+                              <constraint scope="global">
                                  <matches id="birth-matches-date-datatype" target="@birth" datatype="date"/>
                                  <expect id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>
                               </constraint>
@@ -167,7 +167,7 @@
                   </assembly>
                </assembly>
             </group>
-            <constraint>
+            <constraint scope="global">
                <index id="creators-index"
                       key="creators-index"
                       gi="creators-index"
@@ -177,7 +177,7 @@
             </constraint>
          </assembly>
       </assembly>
-      <constraint>
+      <constraint scope="global">
          <matches id="regex-match" target=".//meta/creator/@who" regex="#(\S+)"/>
          <index-has-key key="creators-index"
                         gi="creators-index"
