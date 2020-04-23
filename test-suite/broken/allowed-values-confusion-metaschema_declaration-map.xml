@@ -6,7 +6,7 @@
                <field as-type="string" gi="item">
                   <flag as-type="string" key="type" gi="type"/>
                   <flag as-type="string" key="id" gi="id"/>
-                  <constraint>
+                  <constraint scope="global">
                      <allowed-values target="." allow-other="no" id="global-item-allowed-values">
                         <enum value="A">a</enum>
                         <enum value="B">b</enum>
@@ -33,7 +33,7 @@
                   </group>
                </assembly>
             </group>
-            <constraint>
+            <constraint scope="global">
                <allowed-values target=".//item[@type='number']" allow-other="yes">
                   <enum value="1">one</enum>
                   <enum value="2">two</enum>
