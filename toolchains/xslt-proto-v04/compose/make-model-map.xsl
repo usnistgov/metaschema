@@ -9,6 +9,7 @@
     exclude-result-prefixes="#all"
     version="3.0">
     
+    <xsl:mode on-no-match="shallow-copy"/>
     
     <xsl:template match="/METASCHEMA">
         <map>
@@ -16,7 +17,8 @@
         </map>
     </xsl:template>
     
-    <xsl:key name="definitions" match="METASCHEMA/define-assembly | METASCHEMA/define-field | METASCHEMA/define-flag" use="@name"/>
+    <xsl:key name="global-assemblies" match="METASCHEMA/define-assembly" use="@name"/>
+    <xsl:key name="global-fields"     match="METASCHEMA/define-field"    use="@name"/>
     
     <xsl:template match="define-assembly | define-field" mode="build">
         <xsl:param name="minOccurs" select="(@min-occurs,'0')[1]"/>
@@ -26,7 +28,6 @@
         <xsl:param name="group-json" select="group-as/@in-json"/>
         <xsl:param name="group-xml" select="group-as/@in-xml"/>
         <xsl:param name="in-xml" select="()"/>
-        <xsl:param name="allowed-values" select="()"/>
         <xsl:param name="visited" select="()" tunnel="true"/>
         <xsl:variable name="type" select="replace(local-name(),'^define\-','')"/>
         
@@ -57,7 +58,7 @@
                     <xsl:with-param name="visited" tunnel="true" select="$visited, string(@name)"/>
                 </xsl:apply-templates>
             </xsl:if>
-            <xsl:apply-templates select="$allowed-values" mode="build"/>
+            <xsl:apply-templates select="constraint" mode="build"/>
         </xsl:element>
     </xsl:template>
     
@@ -85,47 +86,42 @@
         </choice>
     </xsl:template>
     
-    <xsl:template match="flag | define-flag" mode="build">
-        <flag max-occurs="1" min-occurs="{if (@required='yes') then 1 else 0}" as-type="string">
-            <xsl:attribute name="name" select="(@name,@ref)[1]"/>
-            <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
-            <xsl:attribute name="as-type">string</xsl:attribute>
-            <xsl:apply-templates select="@*" mode="build"/>
-            <xsl:apply-templates select="constraint/allowed-values" mode="build"/>
-        </flag>
-    </xsl:template>
-    
-    <xsl:template match="text()" mode="build"/>
-    
-    <xsl:template mode="build" match="model//field | model//assembly">
-        <xsl:apply-templates mode="build" select="key('definitions', @ref)">
+    <xsl:template mode="build" match="model//assembly">
+        <xsl:apply-templates mode="build" select="key('global-assemblies', @ref)">
             <xsl:with-param name="minOccurs" select="(@min-occurs,'0')[1]"/>
             <xsl:with-param name="maxOccurs" select="(@max-occurs,'1')[1]"/>
             <xsl:with-param name="group-name" select="group-as/@name"/>
             <xsl:with-param name="group-json" select="group-as/@in-json"/>
             <xsl:with-param name="group-xml" select="group-as/@in-xml"/>
             <xsl:with-param name="in-xml" select="@in-xml"/>
-            <xsl:with-param name="allowed-values" select="constraint/allowed-values"></xsl:with-param>
         </xsl:apply-templates>
     </xsl:template>
     
-    <xsl:template match="allowed-values" mode="build">
-        <xsl:copy-of select="@allow-other"/>
-        <xsl:apply-templates select="node() | @*" mode="#current"/>
+    <xsl:template mode="build" match="model//field">
+        <xsl:apply-templates mode="build" select="key('global-fields', @ref)">
+            <xsl:with-param name="minOccurs" select="(@min-occurs,'0')[1]"/>
+            <xsl:with-param name="maxOccurs" select="(@max-occurs,'1')[1]"/>
+            <xsl:with-param name="group-name" select="group-as/@name"/>
+            <xsl:with-param name="group-json" select="group-as/@in-json"/>
+            <xsl:with-param name="group-xml" select="group-as/@in-xml"/>
+            <xsl:with-param name="in-xml" select="@in-xml"/>
+        </xsl:apply-templates>
     </xsl:template>
     
-    <xsl:template match="enum" mode="build">
-        <xsl:copy>
-            <xsl:value-of select="@value"/>
-        </xsl:copy>
+    <xsl:template match="flag | define-flag" mode="build">
+        <flag max-occurs="1" min-occurs="{if (@required='yes') then 1 else 0}" as-type="string">
+            <xsl:attribute name="name" select="(@name,@ref)[1]"/>
+            <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
+            <xsl:attribute name="as-type">string</xsl:attribute>
+            <xsl:apply-templates select="@*" mode="build"/>
+            <xsl:apply-templates select="constraint" mode="build"/>
+        </flag>
     </xsl:template>
     
-    <!--<xsl:template mode="build" match="description | remarks">
-        <xsl:apply-templates mode="#current"/>
+    <xsl:template match="constraint" mode="build">
+        <xsl:copy-of select="."/>
     </xsl:template>
     
-    <xsl:template mode="build" match="*">
-        <xsl:apply-templates mode="#current"/>
-    </xsl:template>-->
+    <xsl:template match="text()" mode="build"/>
     
 </xsl:stylesheet>

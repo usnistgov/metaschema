@@ -18,6 +18,55 @@
          <m:root>SEQUENCES</m:root>
       </xs:appinfo>
    </xs:annotation>
+   <xs:complexType name="item-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Item</m:formal-name>
+            <m:description>A member of a sequence</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Item</b>: A member of a sequence</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="anthology:item-FIELD-VALUE-ENUMERATION">
+            <xs:attribute name="type" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Item type</m:formal-name>
+                     <m:description>Characterizes the type of item</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Item type</b>: Characterizes the type of item</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:simpleType name="item-FIELD-VALUE-ENUMERATION">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="A">
+            <xs:annotation>
+               <xs:documentation>
+                  <p>a</p>
+               </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="B">
+            <xs:annotation>
+               <xs:documentation>
+                  <p>b</p>
+               </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+         <xs:enumeration value="C">
+            <xs:annotation>
+               <xs:documentation>
+                  <p>c</p>
+               </xs:documentation>
+            </xs:annotation>
+         </xs:enumeration>
+      </xs:restriction>
+   </xs:simpleType>
    <xs:element name="SEQUENCES" type="anthology:number-sequences-ASSEMBLY"/>
    <xs:complexType name="number-sequences-ASSEMBLY">
       <xs:annotation>
@@ -76,9 +125,34 @@
                      <b>Subsequence item</b>: An item in a sequence in a sequence</xs:documentation>
                </xs:annotation>
                <xs:simpleContent>
-                  <xs:extension base="xs:string"/>
+                  <xs:extension base="anthology:item-FIELD-VALUE-ENUMERATION"/>
                </xs:simpleContent>
             </xs:complexType>
+            <xs:simpleType name="item-FIELD-VALUE-ENUMERATION">
+               <xs:restriction base="xs:string">
+                  <xs:enumeration value="red">
+                     <xs:annotation>
+                        <xs:documentation>
+                           <p>red</p>
+                        </xs:documentation>
+                     </xs:annotation>
+                  </xs:enumeration>
+                  <xs:enumeration value="blue">
+                     <xs:annotation>
+                        <xs:documentation>
+                           <p>blue</p>
+                        </xs:documentation>
+                     </xs:annotation>
+                  </xs:enumeration>
+                  <xs:enumeration value="green">
+                     <xs:annotation>
+                        <xs:documentation>
+                           <p>green</p>
+                        </xs:documentation>
+                     </xs:annotation>
+                  </xs:enumeration>
+               </xs:restriction>
+            </xs:simpleType>
          </xs:element>
          <xs:element name="subsequence"
                      type="anthology:subsequence-ASSEMBLY"
@@ -86,53 +160,4 @@
                      maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="item-FIELD">
-      <xs:annotation>
-         <xs:appinfo>
-            <m:formal-name>Item</m:formal-name>
-            <m:description>A member of a sequence</m:description>
-         </xs:appinfo>
-         <xs:documentation>
-            <b>Item</b>: A member of a sequence</xs:documentation>
-      </xs:annotation>
-      <xs:simpleContent>
-         <xs:extension base="anthology:item-FIELD-VALUE-ENUMERATION">
-            <xs:attribute name="type" type="xs:string">
-               <xs:annotation>
-                  <xs:appinfo>
-                     <m:formal-name>Item type</m:formal-name>
-                     <m:description>Characterizes the type of item</m:description>
-                  </xs:appinfo>
-                  <xs:documentation>
-                     <b>Item type</b>: Characterizes the type of item</xs:documentation>
-               </xs:annotation>
-            </xs:attribute>
-         </xs:extension>
-      </xs:simpleContent>
-   </xs:complexType>
-   <xs:simpleType name="item-FIELD-VALUE-ENUMERATION">
-      <xs:restriction base="xs:string">
-         <xs:enumeration value="A">
-            <xs:annotation>
-               <xs:documentation>
-                  <p>a</p>
-               </xs:documentation>
-            </xs:annotation>
-         </xs:enumeration>
-         <xs:enumeration value="B">
-            <xs:annotation>
-               <xs:documentation>
-                  <p>b</p>
-               </xs:documentation>
-            </xs:annotation>
-         </xs:enumeration>
-         <xs:enumeration value="C">
-            <xs:annotation>
-               <xs:documentation>
-                  <p>c</p>
-               </xs:documentation>
-            </xs:annotation>
-         </xs:enumeration>
-      </xs:restriction>
-   </xs:simpleType>
 </xs:schema>

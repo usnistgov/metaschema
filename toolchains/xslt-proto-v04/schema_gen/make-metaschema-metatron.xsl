@@ -20,7 +20,7 @@
         is assumed. -->
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
-    
+ 
     
     <xsl:import href="../metapath/parse-metapath.xsl"/>
     
@@ -73,6 +73,8 @@
             <!--<xsl:apply-templates select="//constraint"/>-->
             <xsl:variable name="rules" as="element()*">
               <xsl:apply-templates select="//constraint//(* except require)">
+<!-- Sort into descending order by constraint definition depth
+                    so deeper rules go firs-->
                   <xsl:sort select="count(@target[not(.=('.','value()'))] | ancestor::require | ancestor::define-assembly | ancestor::define-flag | ancestor::define-field)" order="descending"/>
               </xsl:apply-templates>
             </xsl:variable>
