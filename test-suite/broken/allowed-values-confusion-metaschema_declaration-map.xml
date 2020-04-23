@@ -12,6 +12,12 @@
                         <enum value="B">b</enum>
                         <enum value="C">c</enum>
                      </allowed-values>
+                     <is-unique key="item-uniqueness" gi="item-uniqueness" target=".">
+                        <key-field target="@id"/>
+                     </is-unique>
+                     <require when="@type='hex'">
+                        <matches target="." regex="[\dabcdef]+"/>
+                     </require>
                   </constraint>
                </field>
             </group>
