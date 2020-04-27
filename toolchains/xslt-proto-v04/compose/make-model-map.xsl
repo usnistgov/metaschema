@@ -47,6 +47,9 @@
             <xsl:for-each select="$group-json"><!-- ARRAY (default), SINGLETON_OR_ARRAY, BY_KEY --> 
                 <xsl:attribute name="group-json" select="."/>
             </xsl:for-each>
+            <xsl:for-each select="root-name | use-name">
+                <xsl:attribute name="{ local-name() }" select="."/>
+            </xsl:for-each>
             
             <xsl:apply-templates select="json-key, json-value-key" mode="build"/>
             <xsl:for-each select="$group-name">
