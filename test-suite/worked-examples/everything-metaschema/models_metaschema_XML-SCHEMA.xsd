@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:everything="http://csrc.nist.gov/metaschema/ns/everything"
+           xmlns:oscal-prose="http://csrc.nist.gov/metaschema/ns/everything"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/metaschema/ns/everything"
+           version="1.0">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>NIST Metaschema Everything</m:schema-name>
+         <m:schema-version>1.0</m:schema-version>
+         <m:short-name>everything</m:short-name>
+         <m:remarks>
+            <p>A mini metaschema produced for <em>conversion</em> testing purposes.</p>
+            <p>Exercises Metaschema modeling with global declarations. Does not exercise datatypes, constraints, or cardinality except as reflected in models (where grouping must be explicit).</p>
+         </m:remarks>
+         <m:root>EVERYTHING</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="EVERYTHING" type="everything:everything-ASSEMBLY"/>
+   <xs:complexType name="everything-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="field-1only"
+                     type="everything:field-1only-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="field-named-value"
+                     type="everything:field-named-value-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="field-groupable"
+                     type="everything:field-groupable-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="wrapped-fields" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="field-wrappable"
+                              type="everything:field-wrappable-FIELD"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="field-by-key"
+                     type="everything:field-by-key-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="field-dynamic-value-key"
+                     type="everything:field-dynamic-value-key-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="wrapped-prose" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+               <xs:appinfo>
+                  <m:formal-name/>
+                  <m:description/>
+               </xs:appinfo>
+               <xs:documentation>
+                  <b/>: </xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:group ref="everything:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="loose-prose" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+               <xs:appinfo>
+                  <m:formal-name/>
+                  <m:description/>
+               </xs:appinfo>
+               <xs:documentation>
+                  <b/>: </xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:group ref="everything:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="assembly-1only"
+                     type="everything:assembly-1only-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="assembly-groupable"
+                     type="everything:assembly-groupable-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="wrapped-assemblies" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="assembly-wrappable"
+                              type="everything:assembly-wrappable-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="assembly-by-key"
+                     type="everything:assembly-by-key-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="everything"
+                     type="everything:everything-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name/>
+               <m:description/>
+            </xs:appinfo>
+            <xs:documentation>
+               <b/>: </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="field-1only-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="field-groupable-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="field-wrappable-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="field-by-key-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="id" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name/>
+                     <m:description/>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b/>: </xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="field-named-value-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="id" use="required" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name/>
+                     <m:description/>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b/>: </xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="field-dynamic-value-key-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="id" use="required" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name/>
+                     <m:description/>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b/>: </xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="assembly-1only-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="field-1only"
+                     type="everything:field-1only-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="assembly-1only"
+                     type="everything:assembly-1only-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="assembly-groupable-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="field-groupable"
+                     type="everything:field-groupable-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="assembly-groupable"
+                     type="everything:assembly-groupable-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="assembly-wrappable-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="wrapped-fields" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="field-wrappable"
+                              type="everything:field-wrappable-FIELD"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="wrapped-assemblies" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="assembly-wrappable"
+                              type="everything:assembly-wrappable-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="assembly-by-key-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="field-by-key"
+                     type="everything:field-by-key-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="assembly-by-key"
+                     type="everything:assembly-by-key-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name/>
+               <m:description/>
+            </xs:appinfo>
+            <xs:documentation>
+               <b/>: </xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:group name="PROSE">
+      <xs:choice>
+         <xs:element ref="oscal-prose:h1"/>
+         <xs:element ref="oscal-prose:h2"/>
+         <xs:element ref="oscal-prose:h3"/>
+         <xs:element ref="oscal-prose:h4"/>
+         <xs:element ref="oscal-prose:h5"/>
+         <xs:element ref="oscal-prose:h6"/>
+         <xs:element ref="oscal-prose:p"/>
+         <xs:element ref="oscal-prose:ul"/>
+         <xs:element ref="oscal-prose:ol"/>
+         <xs:element ref="oscal-prose:pre"/>
+         <xs:element ref="oscal-prose:table"/>
+      </xs:choice>
+   </xs:group>
+   <xs:element name="h1">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h2">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h3">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h4">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h5">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h6">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="p">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:everything-inline"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="pre">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ol">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:li"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="li">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:everything-inline"/>
+            <xs:element ref="oscal-prose:ol"/>
+            <xs:element ref="oscal-prose:ul"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ul">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:li"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="table">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:tr"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="tr">
+      <xs:complexType>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:td"/>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:th"/>
+         </xs:choice>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="th">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:everything-inline"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="td">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:everything-inline"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:group name="everything-inline">
+      <xs:sequence>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:group ref="oscal-prose:special"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:group>
+   <xs:group name="mix">
+      <xs:sequence>
+         <xs:group minOccurs="0" maxOccurs="unbounded" ref="oscal-prose:inlines"/>
+      </xs:sequence>
+   </xs:group>
+   <xs:group name="inlines">
+      <xs:sequence>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:q"/>
+            <xs:element ref="oscal-prose:code"/>
+            <xs:element ref="oscal-prose:em"/>
+            <xs:element ref="oscal-prose:i"/>
+            <xs:element ref="oscal-prose:strong"/>
+            <xs:element ref="oscal-prose:b"/>
+            <xs:element ref="oscal-prose:sub"/>
+            <xs:element ref="oscal-prose:sup"/>
+            <xs:element ref="oscal-prose:img"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:group>
+   <xs:element name="q">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:code"/>
+            <xs:element ref="oscal-prose:em"/>
+            <xs:element ref="oscal-prose:i"/>
+            <xs:element ref="oscal-prose:b"/>
+            <xs:element ref="oscal-prose:strong"/>
+            <xs:element ref="oscal-prose:sub"/>
+            <xs:element ref="oscal-prose:sup"/>
+         </xs:choice>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="code">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:mix"/>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="strong">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="em">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="i">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="b">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="sub">
+      <xs:complexType mixed="true">
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="sup">
+      <xs:complexType mixed="true">
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="img">
+      <xs:complexType>
+         <xs:attribute name="alt"/>
+         <xs:attribute name="src" use="required" type="xs:anyURI"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="a">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:q"/>
+            <xs:element ref="oscal-prose:code"/>
+            <xs:element name="em">
+               <xs:complexType mixed="true">
+                  <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+               </xs:complexType>
+            </xs:element>
+         </xs:choice>
+         <xs:attribute name="href"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:group name="special">
+      <xs:sequence>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:insert"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:group>
+   <xs:element name="insert">
+      <xs:complexType>
+         <xs:attribute name="param-id" use="required" type="xs:NCName"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:attributeGroup name="requiredClass"/>
+   <xs:attributeGroup name="optionalClass"/>
+   <xs:attributeGroup name="hrefAttr">
+      <xs:attribute name="href"/>
+   </xs:attributeGroup>
+</xs:schema>

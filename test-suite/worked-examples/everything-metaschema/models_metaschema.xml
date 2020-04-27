@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../toolchains/xslt-proto-v04/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/css" href="../../../toolchains/xslt-proto-v04/lib/metaschema-author.css"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../support/lib/metaschema.xsd"
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>NIST Metaschema Everything</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>everything</short-name>
+    <namespace>http://csrc.nist.gov/metaschema/ns/everything</namespace>
+
+    <remarks>
+        <p>A mini metaschema produced for <em>conversion</em> testing purposes.</p>
+        <p>Exercises Metaschema modeling with global declarations. Does not exercise
+            datatypes, constraints, or cardinality except as reflected in models (where grouping
+            must be explicit).</p>
+    </remarks>
+
+    <define-flag name="id">
+        <formal-name/>
+        <description/>
+    </define-flag>
+
+    <!-- -->
+    <define-assembly name="everything">
+        <formal-name/>
+        <description/>
+        <root-name>EVERYTHING</root-name>
+        <flag ref="id"/>
+        <model>
+            <field ref="field-1only"/>
+            <field ref="field-named-value"/>
+            <field ref="field-groupable" max-occurs="unbounded">
+                <group-as name="groupable-fields"/>
+            </field>
+            <field ref="field-wrappable" max-occurs="unbounded">
+                <group-as name="wrapped-fields" in-xml="GROUPED"/>
+            </field>
+            <field ref="field-by-key" max-occurs="unbounded">
+                <group-as name="keyed-fields" in-json="BY_KEY"/>
+            </field>
+            <field ref="field-dynamic-value-key" max-occurs="unbounded">
+                <group-as name="dynamic-value-key-fields"/>
+            </field>
+            
+            <field ref="wrapped-prose" in-xml="WITH_WRAPPER"/>
+            <field ref="loose-prose"/>
+            
+            <assembly ref="assembly-1only"/>
+            <assembly ref="assembly-groupable" max-occurs="unbounded">
+                <group-as name="groupable-assemblies"/>
+            </assembly>
+            <assembly ref="assembly-wrappable" max-occurs="unbounded">
+                <group-as name="wrapped-assemblies" in-xml="GROUPED"/>
+            </assembly>
+            <assembly ref="assembly-by-key" max-occurs="unbounded">
+                <group-as name="keyed-assemblies" in-json="BY_KEY"/>
+            </assembly>
+            <assembly ref="everything" max-occurs="unbounded">
+                <group-as name="everything-recursive"/>
+            </assembly>
+        </model>
+    </define-assembly>
+
+    <define-field name="field-1only">
+        <formal-name/>
+        <description/>
+    </define-field>
+    
+    <define-field name="field-groupable">
+        <formal-name/>
+        <description/>
+    </define-field>
+    
+    <define-field name="field-wrappable">
+        <formal-name/>
+        <description/>
+    </define-field>
+    
+    <define-field name="field-by-key">
+        <formal-name/>
+        <description/>
+        <json-key flag-name="id"/>
+        <flag ref="id"/>
+    </define-field>
+    
+    <define-field name="field-named-value">
+        <formal-name/>
+        <description/>
+        <json-value-key>VALUE</json-value-key>
+        <flag ref="id" required="yes"/>
+    </define-field>
+    
+    <define-field name="field-dynamic-value-key">
+        <formal-name/>
+        <description/>
+        <json-value-key flag-name="id"/>
+        <flag ref="id" required="yes"/>
+    </define-field>
+
+    <define-field name="wrapped-prose" as-type="markup-multiline">
+        <formal-name/>
+        <description/>
+    </define-field>
+    
+    <define-field name="loose-prose" as-type="markup-multiline">
+        <formal-name/>
+        <description/>
+    </define-field>
+    
+    <define-assembly name="assembly-1only">
+        <formal-name/>
+        <description/>
+        <model>
+            <field ref="field-1only"/>
+            <assembly ref="assembly-1only"/>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="assembly-groupable">
+        <formal-name/>
+        <description/>
+        <model>
+            <field ref="field-groupable" max-occurs="unbounded">
+                <group-as name="groupable-fields"/>
+            </field>
+            <assembly ref="assembly-groupable" max-occurs="unbounded">
+                <group-as name="groupable-assemblies"/>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="assembly-wrappable">
+        <formal-name/>
+        <description/>
+        <model>
+            <field ref="field-wrappable" max-occurs="unbounded">
+                <group-as name="wrapped-fields" in-xml="GROUPED"/>
+            </field>
+            <assembly ref="assembly-wrappable" max-occurs="unbounded">
+                <group-as name="wrapped-assemblies" in-xml="GROUPED"/>
+            </assembly>
+        </model>
+        
+    </define-assembly>
+    
+    <define-assembly name="assembly-by-key">
+        <formal-name/>
+        <description/>
+        <json-key flag-name="id"/>
+        <flag ref="id" required="yes"/>
+        
+        <model>
+            <field ref="field-by-key" max-occurs="unbounded">
+                <group-as name="keyed-fields" in-json="BY_KEY"/>
+            </field>
+            <assembly ref="assembly-by-key" max-occurs="unbounded">
+                <group-as name="keyed-assemblies" in-json="BY_KEY"/>
+            </assembly>
+        </model>
+    </define-assembly>
+
+</METASCHEMA>
