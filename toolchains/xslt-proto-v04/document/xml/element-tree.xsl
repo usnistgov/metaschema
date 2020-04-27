@@ -54,4 +54,6 @@
         
     </xsl:template>
     
+    <xsl:template match="constraint"/>
+    
 </xsl:stylesheet>

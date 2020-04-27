@@ -1,5 +1,5 @@
 <map xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
-   <assembly key="number-sequences" gi="number-sequences">
+   <assembly key="SEQUENCES" gi="SEQUENCES">
       <group key="sequences">
          <assembly gi="sequence">
             <group key="items">
