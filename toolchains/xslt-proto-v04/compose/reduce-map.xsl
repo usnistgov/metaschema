@@ -11,14 +11,15 @@
     
     <xsl:mode on-no-match="shallow-copy"/>
     
-    <xsl:template match="@group-name | @group-json | @in-xml | @link"/>
+    <xsl:template match="@group-name | @group-json | @in-xml | @link | @root-name | @use-name"/>
+    
     
     <xsl:template match="@name">
         <xsl:if test="empty(../parent::group)">
-            <xsl:attribute name="key" select="."/>
+            <xsl:attribute name="key" select="(../@root-name,../@use-name,.)[1]"/>
         </xsl:if>
         <xsl:if test="not(../@in-xml='HIDDEN')">
-            <xsl:attribute name="gi" select="."/>
+            <xsl:attribute name="gi"  select="(../@root-name,../@use-name,.)[1]"/>
         </xsl:if>
     </xsl:template>
     

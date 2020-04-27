@@ -1,5 +1,5 @@
 <map xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
-   <assembly key="anthology" gi="anthology">
+   <assembly key="ANTHOLOGY" gi="ANTHOLOGY">
       <flag as-type="NCName" key="id" gi="id"/>
       <assembly key="meta" gi="meta">
          <group key="creators">
