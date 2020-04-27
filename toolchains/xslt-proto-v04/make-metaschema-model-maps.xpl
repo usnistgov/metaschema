@@ -31,13 +31,8 @@
     <p:pipe        port="result"               step="unfold-model-map"/>
   </p:output>
   
-  <p:serialization port="e.models-only" indent="true"/>
-  <p:output        port="e.models-only" primary="false">
-    <p:pipe        port="result"        step="remove-constraints"/>
-  </p:output>
-  
-  <p:serialization port="F.declaration-map" indent="true"/>
-  <p:output        port="F.declaration-map" primary="false">
+  <p:serialization port="E.declaration-map" indent="true"/>
+  <p:output        port="E.declaration-map" primary="false">
     <p:pipe        port="result"        step="declaration-map"/>
   </p:output>
   
@@ -91,23 +86,6 @@
     </p:input>
   </p:xslt>
   
-  <!--<p:identity name="remove-constraints"/>-->
-  <!--<p:filter name="remove-constraints" select="//metaschema:constraint"/>-->
-  
-  <p:xslt name="remove-constraints">
-    <p:input port="stylesheet">
-      <p:inline>
-        <xsl:stylesheet version="3.0"
-          xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
-          <xsl:mode on-no-match="shallow-copy"/>
-          <xsl:template match="constraint"/>
-        </xsl:stylesheet>
-      </p:inline>
-    </p:input>
-  </p:xslt>
-  
-  <p:sink/>
-  
   <p:xslt name="declaration-map">
     <p:input port="source">
       <p:pipe port="result" step="unfold-model-map"/>
@@ -121,7 +99,7 @@
   
   <p:xslt name="make-xml-element-tree">
     <p:input port="source">
-      <p:pipe port="result" step="remove-constraints"/>
+      <p:pipe port="result" step="unfold-model-map"/>
     </p:input>
     <p:input port="stylesheet">
       <p:document href="document/xml/element-tree.xsl"/>
@@ -140,7 +118,7 @@
   
   <p:xslt name="make-json-object-tree">
     <p:input port="source">
-      <p:pipe port="result" step="remove-constraints"/>
+      <p:pipe port="result" step="unfold-model-map"/>
     </p:input>
     <p:input port="stylesheet">
       <p:document href="document/json/object-tree.xsl"/>
