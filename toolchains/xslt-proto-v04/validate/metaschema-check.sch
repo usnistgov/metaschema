@@ -110,13 +110,17 @@
 
             <sch:assert
                 test="not((@name | @ref) = ../m:json-value-key/@flag-name) or @required = 'yes'">A flag declared as a value key must be required (@required='yes')</sch:assert>
+            <sch:assert
+                test="not((@name | @ref) = ../m:json-key/@flag-name) or @required = 'yes'">A flag declared as a key must be required (@required='yes')</sch:assert>
             
             <sch:assert test="not(parent::m:define-field[@as-type='markup-multiline']/nm:references-to-definition(.)/@in-xml='UNWRAPPED')">Multiline markup fields must have no flags, unless always used with a wrapper - put your flags on an assembly with an unwrapped multiline field</sch:assert>
             
         </sch:rule>
         
         <sch:rule context="m:json-key">
-            <sch:assert test="@flag-name = (../m:flag/@ref|../m:define-flag/@name)">JSON key indicates no flag on this <sch:value-of select="substring-after(local-name(..),'define-')"/> <xsl:if test="exists(../m:flag | ../m:define-flag)">Should be (one of) <xsl:value-of select="../m:flag/@ref | ../m:define-flag/@name" separator=", "/></xsl:if></sch:assert>
+            <sch:let name="json-key-flag-name" value="@flag-name"/>
+            <sch:let name="json-key-flag" value="../m:flag[@ref=$json-key-flag-name] |../m:define-flag[@name=$json-key-flag-name]"/>
+            <sch:assert test="exists($json-key-flag)">JSON key indicates no flag on this <sch:value-of select="substring-after(local-name(..),'define-')"/> <xsl:if test="exists(../m:flag | ../m:define-flag)">Should be (one of) <xsl:value-of select="../m:flag/@ref | ../m:define-flag/@name" separator=", "/></xsl:if></sch:assert>
         </sch:rule>
         
         <sch:rule context="m:json-value-key">
