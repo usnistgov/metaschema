@@ -15,6 +15,8 @@
             "type" : "string" },
           "field-1only" : 
           { "$ref" : "#/definitions/field-1only" },
+          "field-base64" : 
+          { "$ref" : "#/definitions/field-base64" },
           "field-named-value" : 
           { "$ref" : "#/definitions/field-named-value" },
           "groupable-fields" : 
@@ -104,6 +106,10 @@
       { "title" : "",
         "description" : "",
         "type" : "string" },
+      "field-base64" : 
+      { "title" : "",
+        "description" : "",
+        "type" : "string" },
       "field-groupable" : 
       { "title" : "",
         "description" : "",
@@ -131,10 +137,10 @@
           { "title" : "",
             "description" : "",
             "type" : "string" },
-          "VALUE" : 
+          "CUSTOM-VALUE-KEY" : 
           { "type" : "string" } },
         "required" : 
-        [ "VALUE",
+        [ "CUSTOM-VALUE-KEY",
           "id" ],
         "additionalProperties" : false },
       "field-dynamic-value-key" : 

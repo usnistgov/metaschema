@@ -73,17 +73,14 @@
                 <enum value="Ö">o umlaut</enum>
                 <enum value="Ü">u umlaut</enum>
             </allowed-values>
-            <!--
-                This rule overrides not the global definition but a local
-                (doesn't it?) - implement when we have path resolution support 
-                
-                <allowed-values target=".//subsequence//item" extends="yes">
-                <!-\- which nodes will this rule apply to? Any? note that subsequence/item is defined locally.
-                     If this rule applies, what are the respective sets for subsequence/item[@type='color']-\->
-                <enum value="pink">a umlaut</enum>
-                <enum value="orange">o umlaut</enum>
-                <enum value="purple">u umlaut</enum>
-            </allowed-values>-->
+            
+            <allowed-values target=".//subsequence//item" extends="yes">
+                <!-- which 'allowed-values' will this extend? Any? note that subsequence/item is defined locally.
+                     If this rule applies, what are the respective sets for subsequence/item[@type='color']-->
+                <enum value="pink">pink</enum>
+                <enum value="orange">orange</enum>
+                <enum value="purple">purple</enum>
+            </allowed-values>
         </constraint>
     </define-assembly>
     
@@ -111,7 +108,6 @@
             </assembly>
         </model>
     </define-assembly>
-    
     
     <define-flag name="type">
         <formal-name>Item type</formal-name>

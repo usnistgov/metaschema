@@ -7,7 +7,15 @@
    <ns prefix="m" uri="http://csrc.nist.gov/ns/oscal/metaschema/1.0"/>
    <ns prefix="anthology" uri="http://csrc.nist.gov/metaschema/ns/test"/>
    <let name="silence-warnings" value="true()"/>
+   <!-- INDEX DEFINITIONS AS KEY DECLARATIONS -->
+   <xsl:key name="item-uniqueness" match="anthology:item" use="@id"/>
+   <!-- RULES -->
    <pattern>
+      <rule context="anthology:item">
+               <!-- when @type='hex',  should match regex '[\dabcdef]+'-->
+         <assert test="not(@type='hex') or matches(., '^[\dabcdef]+$')">Where @type='hex', <name/> is expected to match regular expression '^[\dabcdef]+$'
+            </assert>
+      </rule>
       <rule context="anthology:sequence//anthology:item">
          <!-- when exists(self::anthology:item[@type='number']), allowed-values on .//anthology:item[@type='number']: 1, 2, 3-->
          <assert test="not(exists(self::anthology:item[@type='number'])) or ($silence-warnings or . = ( '1', '2', '3' ))"
@@ -17,6 +25,11 @@
       <rule context="anthology:sequence//anthology:item">
          <!-- when exists(self::anthology:item[@type='german']), allowed-values on .//anthology:item[@type='german']: Ä, Ö, Ü-->
          <assert test="not(exists(self::anthology:item[@type='german'])) or (. = ( 'Ä', 'Ö', 'Ü' ))">Where exists(self::anthology:item[@type='german']), <name/> is expected to be (one of) 'Ä', 'Ö', 'Ü', not '<value-of select="."/>'
+            </assert>
+      </rule>
+      <rule context="anthology:sequence//anthology:subsequence//anthology:item">
+         <!-- when exists(self::anthology:item/ancestor::anthology:subsequence), allowed-values on .//anthology:subsequence//anthology:item: pink, orange, purple-->
+         <assert test="not(exists(self::anthology:item/ancestor::anthology:subsequence)) or (. = ( 'pink', 'orange', 'purple' ))">Where exists(self::anthology:item/ancestor::anthology:subsequence), <name/> is expected to be (one of) 'pink', 'orange', 'purple', not '<value-of select="."/>'
             </assert>
       </rule>
       <rule context="anthology:subsequence/anthology:item">
@@ -31,6 +44,12 @@
          <assert test="(. = ( 'A', 'B', 'C' ))" id="global-item-allowed-values">
             <name/> is expected to be (one of) 'A', 'B', 'C', not '<value-of select="."/>'
             [[See id#global-item-allowed-values]]</assert>
+      </rule>
+      <rule context="anthology:item">
+        <!-- is unique-->
+         <assert test="count(key('item-uniqueness',@id))=1">
+            <name/> is expected to be unique.
+            </assert>
       </rule>
    </pattern>
 </schema>
