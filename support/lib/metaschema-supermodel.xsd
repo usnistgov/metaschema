@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0" xmlns:metaschema="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+  <xs:element name="map">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="metaschema:assembly"/>
+      </xs:sequence>
+      <xs:attribute name="namespace" use="required" type="xs:anyURI"/>
+      <xs:attribute name="prefix" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="assembly">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="metaschema:assembly"/>
+        <xs:element ref="metaschema:field"/>
+        <xs:element ref="metaschema:flag"/>
+        <xs:element ref="metaschema:group"/>
+      </xs:choice>
+      <xs:attribute name="gi" use="required" type="xs:NCName"/>
+      <xs:attribute name="group-xml" type="xs:NCName"/>
+      <xs:attribute name="json-key-flag" type="xs:NCName"/>
+      <xs:attribute name="key" type="xs:NCName"/>
+      <xs:attribute name="scope" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="group">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="metaschema:assembly"/>
+        <xs:element minOccurs="0" ref="metaschema:field"/>
+      </xs:sequence>
+      <xs:attribute name="gi" type="xs:NCName"/>
+      <xs:attribute name="json-key-flag" type="xs:NCName"/>
+      <xs:attribute name="key" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="flag">
+    <xs:complexType>
+      <xs:attribute name="as-type" use="required" type="xs:NCName"/>
+      <xs:attribute name="gi" use="required" type="xs:NCName"/>
+      <xs:attribute name="key" use="required" type="xs:NCName"/>
+      <xs:attribute name="scope" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="field">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="metaschema:flag"/>
+        <xs:element ref="metaschema:value"/>
+      </xs:sequence>
+      <xs:attribute name="gi" use="required" type="xs:NCName"/>
+      <xs:attribute name="group-xml" type="xs:NCName"/>
+      <xs:attribute name="json-key-flag" type="xs:NCName"/>
+      <xs:attribute name="key" type="xs:NCName"/>
+      <xs:attribute name="scope" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="value">
+    <xs:complexType mixed="true">
+      <xs:attribute name="as-type" use="required" type="xs:NCName"/>
+      <xs:attribute name="key" type="xs:NCName"/>
+      <xs:attribute name="key-flag" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

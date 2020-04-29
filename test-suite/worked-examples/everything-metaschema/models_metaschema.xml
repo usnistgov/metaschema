@@ -11,9 +11,11 @@
 
     <remarks>
         <p>A mini metaschema produced for <em>conversion</em> testing purposes.</p>
-        <p>Exercises Metaschema modeling with global declarations. Does not exercise
+        <p>This metaschema exercises modeling with global definitions. It does not exercise
             datatypes, constraints, or cardinality except as reflected in models (where grouping
             must be explicit).</p>
+        <p>When this is stable and working, extend to include local definitions.</p>
+        <p>Also cover <code>use-name</code> as appropriate.</p>
     </remarks>
 
     <define-flag name="id">
@@ -29,6 +31,7 @@
         <flag ref="id"/>
         <model>
             <field ref="field-1only"/>
+            <field ref="field-base64"/>
             <field ref="field-named-value"/>
             <field ref="field-groupable" max-occurs="unbounded">
                 <group-as name="groupable-fields"/>
@@ -44,7 +47,7 @@
             </field>
             
             <field ref="wrapped-prose" in-xml="WITH_WRAPPER"/>
-            <field ref="loose-prose"/>
+            <field ref="loose-prose"   in-xml="UNWRAPPED"/>
             
             <assembly ref="assembly-1only"/>
             <assembly ref="assembly-groupable" max-occurs="unbounded">
@@ -67,6 +70,11 @@
         <description/>
     </define-field>
     
+    <define-field name="field-base64" as-type="base64Binary">
+        <formal-name/>
+        <description/>
+    </define-field>
+    
     <define-field name="field-groupable">
         <formal-name/>
         <description/>
@@ -81,13 +89,13 @@
         <formal-name/>
         <description/>
         <json-key flag-name="id"/>
-        <flag ref="id"/>
+        <flag ref="id" required="yes"/>
     </define-field>
     
     <define-field name="field-named-value">
         <formal-name/>
         <description/>
-        <json-value-key>VALUE</json-value-key>
+        <json-value-key>CUSTOM-VALUE-KEY</json-value-key>
         <flag ref="id" required="yes"/>
     </define-field>
     

@@ -31,9 +31,9 @@
     <p:pipe        port="result"               step="unfold-model-map"/>
   </p:output>
   
-  <p:serialization port="E.declaration-map" indent="true"/>
-  <p:output        port="E.declaration-map" primary="false">
-    <p:pipe        port="result"        step="declaration-map"/>
+  <p:serialization port="E.definition-map" indent="true"/>
+  <p:output        port="E.definition-map" primary="false">
+    <p:pipe        port="result"        step="definition-map"/>
   </p:output>
   
   <p:serialization port="X1.xml-element-tree" indent="true"/>
@@ -86,7 +86,7 @@
     </p:input>
   </p:xslt>
   
-  <p:xslt name="declaration-map">
+  <p:xslt name="definition-map">
     <p:input port="source">
       <p:pipe port="result" step="unfold-model-map"/>
     </p:input>
