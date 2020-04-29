@@ -13,7 +13,9 @@
          <m:short-name>everything</m:short-name>
          <m:remarks>
             <p>A mini metaschema produced for <em>conversion</em> testing purposes.</p>
-            <p>Exercises Metaschema modeling with global declarations. Does not exercise datatypes, constraints, or cardinality except as reflected in models (where grouping must be explicit).</p>
+            <p>This metaschema exercises modeling with global definitions. It does not exercise datatypes, constraints, or cardinality except as reflected in models (where grouping must be explicit).</p>
+            <p>When this is stable and working, extend to include local definitions.</p>
+            <p>Also cover <code>use-name</code> as appropriate.</p>
          </m:remarks>
          <m:root>EVERYTHING</m:root>
       </xs:appinfo>
@@ -31,6 +33,10 @@
       <xs:sequence>
          <xs:element name="field-1only"
                      type="everything:field-1only-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="field-base64"
+                     type="everything:field-base64-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="field-named-value"
@@ -72,19 +78,7 @@
                <xs:group ref="everything:PROSE" maxOccurs="unbounded" minOccurs="0"/>
             </xs:complexType>
          </xs:element>
-         <xs:element name="loose-prose" minOccurs="0" maxOccurs="1">
-            <xs:annotation>
-               <xs:appinfo>
-                  <m:formal-name/>
-                  <m:description/>
-               </xs:appinfo>
-               <xs:documentation>
-                  <b/>: </xs:documentation>
-            </xs:annotation>
-            <xs:complexType>
-               <xs:group ref="everything:PROSE" maxOccurs="unbounded" minOccurs="0"/>
-            </xs:complexType>
-         </xs:element>
+         <xs:group ref="everything:PROSE" maxOccurs="unbounded" minOccurs="0"/>
          <xs:element name="assembly-1only"
                      type="everything:assembly-1only-ASSEMBLY"
                      minOccurs="0"
@@ -136,6 +130,19 @@
          <xs:extension base="xs:string"/>
       </xs:simpleContent>
    </xs:complexType>
+   <xs:complexType name="field-base64-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name/>
+            <m:description/>
+         </xs:appinfo>
+         <xs:documentation>
+            <b/>: </xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:base64Binary"/>
+      </xs:simpleContent>
+   </xs:complexType>
    <xs:complexType name="field-groupable-FIELD">
       <xs:annotation>
          <xs:appinfo>
@@ -173,7 +180,7 @@
       </xs:annotation>
       <xs:simpleContent>
          <xs:extension base="xs:string">
-            <xs:attribute name="id" type="xs:string">
+            <xs:attribute name="id" use="required" type="xs:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name/>

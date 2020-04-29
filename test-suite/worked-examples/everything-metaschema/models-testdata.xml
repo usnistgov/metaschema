@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EVERYTHING xmlns="http://csrc.nist.gov/metaschema/ns/everything"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/everything file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-examples/everything-metaschema/models_metaschema_XML-SCHEMA.xsd">
+    
+    <field-1only>FIELD-1-ONLY</field-1only>
+    <field-base64>1234abcd</field-base64>
+    <field-named-value id="fnv1">FIELD-NAMED-VALUE</field-named-value>
+    <field-groupable>field-groupable 1</field-groupable>
+    <field-groupable>field-groupable 2</field-groupable>
+    <field-groupable>field-groupable 3</field-groupable>
+    <wrapped-fields>
+        <field-wrappable>field-wrappable 1</field-wrappable>
+        <field-wrappable>field-wrappable 2</field-wrappable>
+        <field-wrappable>field-wrappable 3</field-wrappable>
+    </wrapped-fields>
+    <field-by-key id="fbk1">field-by-key 1</field-by-key>
+    <field-by-key id="fbk2">field-by-key 2</field-by-key>
+    <field-by-key id="fbk3">field-by-key 3</field-by-key>
+    <field-dynamic-value-key id="fdvk1">field-dynamic-value-key 1</field-dynamic-value-key>
+    <field-dynamic-value-key id="fdvk2">field-dynamic-value-key 2</field-dynamic-value-key>
+    <field-dynamic-value-key id="fdvk3">field-dynamic-value-key 3</field-dynamic-value-key>
+    
+    <wrapped-prose>
+        <h1>Wrapped up prose</h1>
+        <p>This is prose. All wrapped up.</p>
+    </wrapped-prose>
+    <h1>Unwrapped prose</h1>
+    <p>Here we have unwrapped prose....</p>
+    <assembly-1only>
+        <field-1only>ASSEMBLY-1-ONLY / FIELD-1-ONLY</field-1only>
+    </assembly-1only>
+    <assembly-groupable>
+        <field-groupable>assembly-groupable 1 / field-groupable 1</field-groupable>
+        <field-groupable>assembly-groupable 1 / field-groupable 2</field-groupable>
+        <field-groupable>assembly-groupable 1 / field-groupable 3</field-groupable>
+    </assembly-groupable>
+    <assembly-groupable>
+        <field-groupable>assembly-groupable 2 / field-groupable 1</field-groupable>
+        <field-groupable>assembly-groupable 2 / field-groupable 2</field-groupable>
+        <field-groupable>assembly-groupable 2 / field-groupable 3</field-groupable>
+    </assembly-groupable>
+    <assembly-groupable>
+        <field-groupable>assembly-groupable 3 / field-groupable 1</field-groupable>
+        <field-groupable>assembly-groupable 3 / field-groupable 2</field-groupable>
+        <field-groupable>assembly-groupable 3 / field-groupable 3</field-groupable>
+    </assembly-groupable>
+    <wrapped-assemblies>
+        <assembly-wrappable>
+            <wrapped-fields>
+                <field-wrappable>assembly-wrappable 1 / field-wrappable 1</field-wrappable>
+            <field-wrappable>assembly-wrappable 1 / field-wrappable 2</field-wrappable>
+            <field-wrappable>assembly-wrappable 1 / field-wrappable 3</field-wrappable>
+            </wrapped-fields>
+        </assembly-wrappable>
+        <assembly-wrappable>
+            <wrapped-fields>
+                <field-wrappable>assembly-wrappable 2 / field-wrappable 1</field-wrappable>
+                <field-wrappable>assembly-wrappable 2 / field-wrappable 2</field-wrappable>
+                <field-wrappable>assembly-wrappable 2 / field-wrappable 3</field-wrappable>
+            </wrapped-fields>
+        </assembly-wrappable>
+        <assembly-wrappable>
+            <wrapped-fields>
+                <field-wrappable>assembly-wrappable 3 / field-wrappable 1</field-wrappable>
+                <field-wrappable>assembly-wrappable 3 / field-wrappable 2</field-wrappable>
+                <field-wrappable>assembly-wrappable 3 / field-wrappable 3</field-wrappable>
+            </wrapped-fields>
+        </assembly-wrappable>
+    </wrapped-assemblies>
+    <assembly-by-key id="abk1">
+        <field-by-key id="abk1.fbk1">assembly-by-key 1 / field-by-key 1</field-by-key>
+        <field-by-key id="abk1.fbk2">assembly-by-key 1 / field-by-key 2</field-by-key>
+        <field-by-key id="abk1.fbk3">assembly-by-key 1 / field-by-key 3</field-by-key>
+    </assembly-by-key>
+    <assembly-by-key id="abk2">
+        <field-by-key id="abk2.fbk1">assembly-by-key 1 / field-by-key 1</field-by-key>
+        <field-by-key id="abk2.fbk2">assembly-by-key 1 / field-by-key 2</field-by-key>
+        <field-by-key id="abk2.fbk3">assembly-by-key 1 / field-by-key 3</field-by-key>
+    </assembly-by-key>
+    <assembly-by-key id="abk3">
+        <field-by-key id="abk3.fbk1">assembly-by-key 1 / field-by-key 1</field-by-key>
+        <field-by-key id="abk3.fbk2">assembly-by-key 1 / field-by-key 2</field-by-key>
+        <field-by-key id="abk3.fbk3">assembly-by-key 1 / field-by-key 3</field-by-key>
+    </assembly-by-key>
+    <everything>
+        <field-1only>nested FIELD-1-ONLY</field-1only>
+    </everything>
+</EVERYTHING>

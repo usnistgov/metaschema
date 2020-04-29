@@ -12,7 +12,8 @@
     <xsl:mode on-no-match="shallow-copy"/>
     
     <xsl:template match="/METASCHEMA">
-        <map>
+        <map namespace="{child::namespace ! normalize-space(.) }"
+            prefix="{child::namespace ! normalize-space(.) }">
             <xsl:apply-templates select="child::*[exists(root-name)]" mode="build"/>
         </map>
     </xsl:template>
@@ -32,9 +33,7 @@
         <xsl:variable name="type" select="replace(local-name(),'^define\-','')"/>
         
         <xsl:element name="{ $type }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
-            <xsl:for-each select="self::define-field">
-              <xsl:attribute name="as-type">string</xsl:attribute>
-            </xsl:for-each>
+            <xsl:attribute name="scope" select="if (exists(parent::METASCHEMA)) then 'global' else 'local'"/>
             <xsl:apply-templates select="@*" mode="build"/>
             <xsl:attribute name="min-occurs" select="$minOccurs"/>
             <xsl:attribute name="max-occurs" select="$maxOccurs"/>
@@ -47,11 +46,10 @@
             <xsl:for-each select="$group-json"><!-- ARRAY (default), SINGLETON_OR_ARRAY, BY_KEY --> 
                 <xsl:attribute name="group-json" select="."/>
             </xsl:for-each>
-            <xsl:for-each select="root-name | use-name">
+            <xsl:for-each select="root-name | ($use-name, child::use-name)[1]">
                 <xsl:attribute name="{ local-name() }" select="."/>
             </xsl:for-each>
-            
-            <xsl:apply-templates select="json-key, json-value-key" mode="build"/>
+            <xsl:apply-templates select="json-key" mode="build"/>
             <xsl:for-each select="$group-name">
                 <xsl:attribute name="group-name" select="."/>
             </xsl:for-each>
@@ -60,6 +58,11 @@
                 <xsl:apply-templates select="model" mode="build">
                     <xsl:with-param name="visited" tunnel="true" select="$visited, string(@name)"/>
                 </xsl:apply-templates>
+                <xsl:for-each select="self::define-field">
+                    <value as-type="{(@as-type,'string')[1]}">
+                        <xsl:apply-templates select="." mode="value-key"/>
+                    </value>
+                </xsl:for-each>
             </xsl:if>
             <xsl:apply-templates select="constraint" mode="build"/>
         </xsl:element>
@@ -69,9 +72,9 @@
         <xsl:attribute name="json-value-flag" select="@flag-name"/>
     </xsl:template>
     
-    <xsl:template mode="build" match="json-value-key">
+    <!--<xsl:template mode="build" match="json-value-key">
         <xsl:attribute name="{ local-name() }" select="."/>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:template mode="build" match="json-key">
         <xsl:attribute name="json-key-flag" select="@flag-name"/>
@@ -82,6 +85,9 @@
     <xsl:template match="@*" mode="build">
         <xsl:copy-of select="."/>
     </xsl:template>
+    
+    <!-- dropped in build mode b/c picked up by calling template -->
+    <xsl:template match="define-field/@as-type" mode="build"/>
     
     <xsl:template match="choice" mode="build">
         <choice>
@@ -113,6 +119,9 @@
     
     <xsl:template match="flag | define-flag" mode="build">
         <flag max-occurs="1" min-occurs="{if (@required='yes') then 1 else 0}" as-type="string">
+            <xsl:for-each select="self::flag">
+                <xsl:attribute name="scope">global</xsl:attribute>
+            </xsl:for-each>
             <xsl:attribute name="name" select="(@name,@ref)[1]"/>
             <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
             <xsl:attribute name="as-type">string</xsl:attribute>
@@ -124,13 +133,34 @@
     <xsl:template match="constraint" mode="build">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:if test="exists(../parent::METASCHEMA)">
-                <xsl:attribute name="scope">global</xsl:attribute>
-            </xsl:if>
             <xsl:copy-of select="*"/>
         </xsl:copy>
     </xsl:template>
     
     <xsl:template match="text()" mode="build"/>
+    
+    <xsl:variable name="string-value-label">STRVALUE</xsl:variable>
+    <xsl:variable name="markdown-value-label">RICHTEXT</xsl:variable>
+    <xsl:variable name="markdown-multiline-label">PROSE</xsl:variable>
+
+    <xsl:template priority="3" match="define-field[exists(json-value-key/@flag-name)]" mode="value-key">
+        <xsl:attribute name="key-flag" select="json-value-key/@flag-name"/>
+    </xsl:template>
+    
+    <xsl:template priority="2" match="define-field[exists(json-value-key)]" mode="value-key">
+        <xsl:attribute name="key" select="json-value-key"/>
+    </xsl:template>
+    
+    <xsl:template match="define-field[@as-type='markup-line']" mode="value-key">
+        <xsl:attribute name="key" select="$markdown-value-label"/>
+    </xsl:template>
+    
+    <xsl:template match="define-field[@as-type='markup-multiline']" mode="value-key">
+        <xsl:attribute name="key" select="$markdown-multiline-label"/>
+    </xsl:template>
+    
+    <xsl:template match="define-field" mode="value-key">
+        <xsl:attribute name="key" select="$string-value-label"/>
+    </xsl:template>
     
 </xsl:stylesheet>
