@@ -58,6 +58,7 @@
             
             <ns prefix="m" uri="http://csrc.nist.gov/ns/oscal/metaschema/1.0"/>
             <ns prefix="{ $declaration-prefix }" uri="{ $target-namespace }"/>
+            <let name="silence-warnings" value="{ $produce-warnings = ('no','false','false()') }()"/>
             
             <!--<pattern>
                 <rule context="/*">
@@ -71,6 +72,7 @@
             </xsl:for-each-group>
             
             <!--<xsl:apply-templates select="//constraint"/>-->
+            <xsl:comment> RULES </xsl:comment>
             <xsl:variable name="rules" as="element()*">
               <xsl:apply-templates select="//constraint//(* except require)">
 <!-- Sort into descending order by constraint definition depth
@@ -79,7 +81,6 @@
               </xsl:apply-templates>
             </xsl:variable>
             
-            <let name="silence-warnings" value="{ $produce-warnings = ('no','false','false()') }()"/>
             
             <!--<debug> <xsl:copy-of select="$rules"/> </debug>-->
             <pattern>
