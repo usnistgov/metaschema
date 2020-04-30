@@ -11,10 +11,13 @@
     
     <xsl:mode on-no-match="shallow-copy"/>
     
+    <!-- Moved up to new 'group' parent -->
+    <xsl:template match="@group-json | @group-xml | @group-name"/>
+    
     <xsl:template match="*[exists(@group-name)]">
         <group name="{@group-name}" in-xml="{ if (@group-xml='GROUPED') then 'SHOWN' else 'HIDDEN' }"
             max-occurs="1" min-occurs="{ if (@min-occurs='0') then '0' else '1'}">
-            <xsl:copy-of select="@json-key-flag"/>
+            <xsl:copy-of select="@json-key-flag | @group-json"/>
             <xsl:next-match/>
         </group>
     </xsl:template>
