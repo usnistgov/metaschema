@@ -1,6 +1,7 @@
-<map xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-     namespace="http://csrc.nist.gov/metaschema/ns/everything"
-     prefix="http://csrc.nist.gov/metaschema/ns/everything">
+<model xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+       root-at="EVERYTHING"
+       namespace="http://csrc.nist.gov/metaschema/ns/everything"
+       prefix="everything">
    <assembly scope="global" key="EVERYTHING" gi="EVERYTHING">
       <flag as-type="string" scope="global" key="id" gi="id"/>
       <field scope="global" key="field-1only" gi="field-1only">
@@ -13,23 +14,23 @@
          <flag as-type="string" scope="global" key="id" gi="id"/>
          <value as-type="string" key="CUSTOM-VALUE-KEY"/>
       </field>
-      <group key="groupable-fields" gi="groupable-fields">
+      <group key="groupable-fields">
          <field scope="global" gi="field-groupable">
             <value as-type="string" key="STRVALUE"/>
          </field>
       </group>
-      <group key="wrapped-fields" gi="wrapped-fields">
+      <group key="wrapped-fields" gi="wrapped-fields" group-json="ARRAY">
          <field scope="global" gi="field-wrappable">
             <value as-type="string" key="STRVALUE"/>
          </field>
       </group>
-      <group key="keyed-fields" gi="keyed-fields" json-key-flag="id">
+      <group key="keyed-fields" group-json="BY_KEY" json-key-flag="id">
          <field scope="global" gi="field-by-key" json-key-flag="id">
             <flag as-type="string" scope="global" key="id" gi="id"/>
             <value as-type="string" key="STRVALUE"/>
          </field>
       </group>
-      <group key="dynamic-value-key-fields" gi="dynamic-value-key-fields">
+      <group key="dynamic-value-key-fields">
          <field scope="global" gi="field-dynamic-value-key">
             <flag as-type="string" scope="global" key="id" gi="id"/>
             <value as-type="string" key-flag="id"/>
@@ -47,14 +48,14 @@
          </field>
          <assembly scope="global" key="assembly-1only" gi="assembly-1only"/>
       </assembly>
-      <group key="groupable-assemblies" gi="groupable-assemblies">
+      <group key="groupable-assemblies">
          <assembly scope="global" gi="assembly-groupable">
-            <group key="groupable-fields" gi="groupable-fields">
+            <group key="groupable-fields">
                <field scope="global" gi="field-groupable">
                   <value as-type="string" key="STRVALUE"/>
                </field>
             </group>
-            <group key="groupable-assemblies" gi="groupable-assemblies">
+            <group key="groupable-assemblies">
                <assembly scope="global" gi="assembly-groupable"/>
             </group>
          </assembly>
@@ -71,22 +72,22 @@
             </group>
          </assembly>
       </group>
-      <group key="keyed-assemblies" gi="keyed-assemblies" json-key-flag="id">
+      <group key="keyed-assemblies" group-json="BY_KEY" json-key-flag="id">
          <assembly scope="global" gi="assembly-by-key" json-key-flag="id">
             <flag as-type="string" scope="global" key="id" gi="id"/>
-            <group key="keyed-fields" gi="keyed-fields" json-key-flag="id">
+            <group key="keyed-fields" group-json="BY_KEY" json-key-flag="id">
                <field scope="global" gi="field-by-key" json-key-flag="id">
                   <flag as-type="string" scope="global" key="id" gi="id"/>
                   <value as-type="string" key="STRVALUE"/>
                </field>
             </group>
-            <group key="keyed-assemblies" gi="keyed-assemblies" json-key-flag="id">
+            <group key="keyed-assemblies" group-json="BY_KEY" json-key-flag="id">
                <assembly scope="global" gi="assembly-by-key" json-key-flag="id"/>
             </group>
          </assembly>
       </group>
-      <group key="everything-recursive" gi="everything-recursive">
+      <group key="everything-recursive">
          <assembly scope="global" gi="EVERYTHING"/>
       </group>
    </assembly>
-</map>
+</model>
