@@ -11,8 +11,14 @@
     
     <xsl:mode on-no-match="shallow-copy"/>
     
-    <xsl:template match="@group-name | @group-json | @group-xml | @in-xml | @link | @root-name | @use-name"/>
+    <xsl:template match="@group-name | @group-xml | @in-xml | @link | @root-name | @use-name"/>
     
+    <xsl:template match="/map">
+        <model root-at="{*/@root-name}">
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates/>
+        </model>
+    </xsl:template>
     
     <xsl:template match="@name">
         <xsl:if test="empty(../parent::group)">
