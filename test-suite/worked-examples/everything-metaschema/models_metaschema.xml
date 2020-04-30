@@ -37,7 +37,7 @@
                 <group-as name="groupable-fields"/>
             </field>
             <field ref="field-wrappable" max-occurs="unbounded">
-                <group-as name="wrapped-fields" in-xml="GROUPED"/>
+                <group-as name="wrapped-fields" in-xml="GROUPED" in-json="ARRAY"/>
             </field>
             <field ref="field-by-key" max-occurs="unbounded">
                 <group-as name="keyed-fields" in-json="BY_KEY"/>
