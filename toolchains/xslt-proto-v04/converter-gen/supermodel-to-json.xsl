@@ -6,6 +6,13 @@
     exclude-result-prefixes="xs math"
     version="3.0">
     
+<!-- XXX TO DO XXX
+    
+    stitch in XML to markdown (see xml-to-markdown.xsl)
+    map datatypes to JSON object types 'number' 'boolean' etc.
+        
+    -->
+    
     <xsl:output indent="true"/>
     <xsl:strip-space elements="*"/>
     <xsl:preserve-space elements="flag value"/>
@@ -80,6 +87,8 @@
         </string>
     </xsl:template>
     
+    <xsl:template match="flag[@key=../value/@key-flag]"/>
+    
     <xsl:template match="flag">
         <string>
             <xsl:copy-of select="@key"/>
@@ -99,7 +108,8 @@
     
     <xsl:template match="value">
         <xsl:param name="use-key" select="()"/>
-        <string key="{ ($use-key,@key)[1] }">
+        <xsl:variable name="key-flag-name" select="@key-flag"/>
+        <string key="{ ($use-key,../flag[@key=$key-flag-name],@key)[1] }">
             <xsl:apply-templates/>
         </string>
     </xsl:template>
@@ -108,7 +118,45 @@
         <xsl:apply-templates select="." mode="make-markdown"/>
     </xsl:template>
     
+    <xsl:template mode="as-string" match="@* | *">
+        <xsl:param name="key" select="local-name()"/>
+        <xsl:param name="mandatory" select="false()"/>
+        <xsl:if test="$mandatory or matches(., '\S')">
+            <string key="{{ $key }}">
+                <xsl:value-of select="."/>
+            </string>
+        </xsl:if>
+    </xsl:template>
     
+    <xsl:template mode="as-boolean" match="@* | *">
+        <xsl:param name="key" select="local-name()"/>
+        <xsl:param name="mandatory" select="false()"/>
+        <xsl:if test="$mandatory or matches(., '\S')">
+            <boolean key="{{ $key }}">
+                <xsl:value-of select="."/>
+            </boolean>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template mode="as-integer" match="@* | *">
+        <xsl:param name="key" select="local-name()"/>
+        <xsl:param name="mandatory" select="false()"/>
+        <xsl:if test="$mandatory or matches(., '\S')">
+            <integer key="{{ $key }}">
+                <xsl:value-of select="."/>
+            </integer>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template mode="as-number" match="@* | *">
+        <xsl:param name="key" select="local-name()"/>
+        <xsl:param name="mandatory" select="false()"/>
+        <xsl:if test="$mandatory or matches(., '\S')">
+            <number key="{{ $key }}">
+                <xsl:value-of select="."/>
+            </number>
+        </xsl:if>
+    </xsl:template>
     
     
     
