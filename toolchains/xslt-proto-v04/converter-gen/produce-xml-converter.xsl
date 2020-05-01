@@ -180,7 +180,7 @@
     
     <xsl:template match="value" mode="make-pull">
         <value>
-            <xsl:copy-of select="@gi | @key | @as-type"/>
+            <xsl:copy-of select="@key | @key-flag | @as-type"/>
             <XSLT:value-of select="."/>
         </value>
     </xsl:template>
