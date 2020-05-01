@@ -87,6 +87,8 @@
                 <xsl:apply-templates select="*" mode="make-pull"/>     
             </xsl:element>
         </XSLT:template>
+        <!--Additionally we need templates for elements defined implicitly as wrappers for given assemblies or fields-->
+        <xsl:apply-templates select="parent::group[exists(@gi)]" mode="make-template"/>
     </xsl:template>
     
     <xsl:template match="flag" mode="make-template">
@@ -106,15 +108,21 @@
         <xsl:value-of select="@gi"/>
     </xsl:template>
     
-    <xsl:template priority="10" match="*[@scope='global']" mode="make-xml-match make-xml-step">
+    <xsl:template priority="10" match="*[@scope='global'] | group[*/@scope='global']" mode="make-xml-match make-xml-step">
+        <xsl:value-of select="@gi"/>
+    </xsl:template>
+    
+    <xsl:template match="*[exists(@gi)]" mode="make-xml-step">
         <xsl:value-of select="@gi"/>
     </xsl:template>
     
     <xsl:template match="*" mode="make-xml-match">
+        <xsl:message expand-text="true">fired on { local-name() } '{ @gi }' ... { string-join(ancestor-or-self::*/@gi,'/') }</xsl:message>
         <xsl:for-each select="ancestor-or-self::*[@gi]">
             <xsl:value-of select="if (exists(self::flag)) then '/@' else '/'"/>
             <xsl:apply-templates select="." mode="make-xml-step"/>
         </xsl:for-each>
+        <xsl:text>  | BOO </xsl:text>
     </xsl:template>
 
     <xsl:template match="*" mode="make-pull">
@@ -143,7 +151,7 @@
         <XSLT:apply-templates select="{@gi}"/>
     </xsl:template>
     
-    <xsl:template priority="2" match="group" mode="make-pull">
+    <xsl:template match="group" mode="make-pull">
         <xsl:variable name="json-grouping" select="if (exists(@group-json)) then @group-json else 'SINGLETON_OR_ARRAY'"/>
         <XSLT:for-each-group select="{ */@gi }" group-by="true()">
             <group in-json="{ $json-grouping }">
