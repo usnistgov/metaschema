@@ -54,7 +54,7 @@
   <!--<p:identity name="serialize-json"/>-->
   <p:xslt name="serialize-json">
     <p:input port="stylesheet">
-      <p:document href="schema_gen/serialize-json-schema.xsl"/>
+      <p:document href="lib/xpath-json-to-json.xsl"/>
     </p:input>
   </p:xslt>
 
