@@ -133,12 +133,15 @@
     
     <xsl:variable name="prose-elements">p | ul | ol | pre | h1 | h2 | h3 | h4 | h5 | h6 | table</xsl:variable>
     
-    <!-- A field without a GI is implicit in the XML -->
+    <!-- A field without a GI is implicit in the XML; Metaschema prevents it from having flags -->
     <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-pull">
         <XSLT:for-each-group select="{ $prose-elements }" group-by="true()">
-            <field>
-                <xsl:copy-of select="@gi | @key"/>
-                <XSLT:apply-templates select="current-group()" mode="cast-prose"/>
+            <field in-json="STRING">
+                <xsl:copy-of select="@* except @scope"/>
+                <value>
+                    <xsl:copy-of select="value/@*"/>
+                    <XSLT:apply-templates select="current-group()" mode="cast-prose"/>
+                </value>
             </field>
         </XSLT:for-each-group>
     </xsl:template>
@@ -172,17 +175,21 @@
         </XSLT:for-each>
     </xsl:template>-->
     
-    <xsl:template match="value[@as-type='markup-multiline']" mode="make-pull">
+    <xsl:template match="value" mode="make-pull">
+        <value>
+            <xsl:copy-of select="@key | @key-flag | @as-type"/>
+            <xsl:apply-templates select="." mode="cast-value"/>
+        </value>
+    </xsl:template>
+    
+    <xsl:template match="value[@as-type='markup-multiline']" mode="cast-value">
         <XSLT:for-each-group select="{ $prose-elements }" group-by="true()">
             <XSLT:apply-templates select="current-group()" mode="cast-prose"/>
         </XSLT:for-each-group>
     </xsl:template>
     
-    <xsl:template match="value" mode="make-pull">
-        <value>
-            <xsl:copy-of select="@key | @key-flag | @as-type"/>
-            <XSLT:value-of select="."/>
-        </value>
+    <xsl:template match="value" mode="cast-value">
+        <XSLT:value-of select="."/>
     </xsl:template>
     
     
