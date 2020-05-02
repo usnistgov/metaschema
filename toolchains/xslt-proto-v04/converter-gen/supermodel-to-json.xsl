@@ -3,6 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"
+    xmlns="http://www.w3.org/2005/xpath-functions"
     exclude-result-prefixes="xs math"
     version="3.0">
     
@@ -65,6 +66,13 @@
         <xsl:apply-templates>
                 <xsl:with-param name="use-key" select="flag[@key=$json-key-flag-name]"/>
             </xsl:apply-templates>
+    </xsl:template>
+    
+    <!-- Extra object wrapper at the top   -->
+    <xsl:template match="/assembly">
+        <map>
+            <xsl:next-match/>
+        </map>
     </xsl:template>
     
     <xsl:template match="assembly">
