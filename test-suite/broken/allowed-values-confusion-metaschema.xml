@@ -22,7 +22,7 @@
         <define-flag name="id"/>
         
         <constraint>
-            <allowed-values target="." allow-other="no" id="global-item-allowed-values">
+            <allowed-values target="." allow-other="no" id="G1">
                 <enum value="A">a</enum>
                 <enum value="B">b</enum>
                 <enum value="C">c</enum>
@@ -59,7 +59,7 @@
             </assembly>
         </model>
         <constraint>
-            <allowed-values target=".//item[@type='number']" allow-other="yes">
+            <allowed-values target=".//item[@type='number']" allow-other="yes" id="T1">
                 <enum value="1">one</enum>
                 <enum value="2">two</enum>
                 <enum value="3">three</enum>
@@ -67,14 +67,14 @@
             
             <!-- Extends is not implemented: which definition(s) does this extend?
                  possibilities include global and local definitions for 'item' -->
-            <allowed-values target=".//item[@type='german']" extends="yes">
-                <!-- should this produce a rule applicable to .//subsequence/item[@type='german'] ? -->
+            <allowed-values target=".//item[@type='german']" id="T2">
+                <!-- should this produce a rule applicable to .//subsequence/item[@type='german'] ?  (yes) -->
                 <enum value="Ä">a umlaut</enum>
                 <enum value="Ö">o umlaut</enum>
                 <enum value="Ü">u umlaut</enum>
             </allowed-values>
             
-            <allowed-values target=".//subsequence//item" extends="yes">
+            <allowed-values target=".//subsequence//item" id="T3">
                 <!-- which 'allowed-values' will this extend? Any? note that subsequence/item is defined locally.
                      If this rule applies, what are the respective sets for subsequence/item[@type='color']-->
                 <enum value="pink">pink</enum>
@@ -96,7 +96,7 @@
                 <description>An item in a sequence in a sequence</description>
                 <group-as name="items"/>
                 <constraint>
-                        <allowed-values target="." id="local-color-item-allowed-values">
+                        <allowed-values target="." id="L1">
                             <enum value="red">red</enum>
                             <enum value="blue">blue</enum>
                             <enum value="green">green</enum>
