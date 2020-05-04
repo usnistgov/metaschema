@@ -39,6 +39,7 @@
                      <b>Item type</b>: Characterizes the type of item</xs:documentation>
                </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="id" type="xs:string"/>
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
