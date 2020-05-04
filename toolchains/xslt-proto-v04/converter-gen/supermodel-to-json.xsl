@@ -11,6 +11,7 @@
     
     stitch in XML to markdown (see xml-to-markdown.xsl)
     map datatypes to JSON object types 'number' 'boolean' etc.
+    implement 'collapsible='yes'"
         
     -->
     
@@ -59,13 +60,13 @@
         </map>
     </xsl:template>
     
-    <xsl:template priority="3" match="group/field[@in-json='STRING']">
+    <xsl:template priority="3" match="group/field[@in-json='SCALAR']">
         <xsl:param name="group-key" select="()"/>
         <xsl:variable name="json-key-flag-name" select="@json-key-flag"/>
         <!-- with no flags, this field has only its value -->
         <xsl:apply-templates>
-                <xsl:with-param name="use-key" select="flag[@key=$json-key-flag-name]"/>
-            </xsl:apply-templates>
+            <xsl:with-param name="use-key" select="flag[@key = $json-key-flag-name]"/>
+        </xsl:apply-templates>
     </xsl:template>
     
     <!-- Extra object wrapper at the top   -->
@@ -87,12 +88,14 @@
         </map>
     </xsl:template>
     
-    <xsl:template match="field[@in-json='STRING']">
-        <!-- when there are no flags, the field is a string whose value is the value -->
+    <xsl:template match="field[@in-json='SCALAR']">
+        <xsl:apply-templates/>
+        <!--
+        <!-\- when there are no flags, the field is a string whose value is the value -\->
         <string>
             <xsl:copy-of select="@key"/>
             <xsl:value-of select="value"/>
-        </string>
+        </string> -->
     </xsl:template>
     
     <xsl:template match="flag[@key=../value/@key-flag]"/>
@@ -104,22 +107,36 @@
         </string>
     </xsl:template>
     
-    <xsl:template match="field[@in-json='STRING']/value">
-        <xsl:param name="use-key" select="()"/>
-        <string>
-            <xsl:for-each select="$use-key">
-                <xsl:attribute name="key" select="."/>
-            </xsl:for-each>
+    <!--Processing values:
+     The JSON value type is given on @in-json 
+      A key is assigned as follows:
+            if the (parent) field has a value key flag, its value is used
+            otherwise if the field is a scalar, its key is used, with no key if it has none
+            otherwise the nominated key is used --> 
+    
+    <xsl:template priority="2" match="field[exists(@json-key-flag)]/value">
+        <xsl:variable name="key-flag-name" select="../@json-key-flag"/>
+        <xsl:element name="{@in-json}" namespace="http://www.w3.org/2005/xpath-functions">
+            <xsl:attribute name="key" select="../flag[@key = $key-flag-name]"/>
             <xsl:apply-templates/>
-        </string>
+        </xsl:element>
+    </xsl:template>
+    
+    <xsl:template match="field[@in-json='SCALAR'][empty(@key)]/value">
+        <!-- A value given on a scalar field with no key gets no key either -->
+        <xsl:element name="{@in-json}" namespace="http://www.w3.org/2005/xpath-functions">
+            <xsl:apply-templates/>
+        </xsl:element>
     </xsl:template>
     
     <xsl:template match="value">
-        <xsl:param name="use-key" select="()"/>
         <xsl:variable name="key-flag-name" select="@key-flag"/>
-        <string key="{ ($use-key,../flag[@key=$key-flag-name],@key)[1] }">
+        <xsl:element name="{(@in-json,'string')[1]}"
+            namespace="http://www.w3.org/2005/xpath-functions">
+            <xsl:attribute name="key"
+                select="(../flag[@key=$key-flag-name],parent::field[@in-json = 'SCALAR']/@key, @key)[1]"/>
             <xsl:apply-templates/>
-        </string>
+        </xsl:element>
     </xsl:template>
     
     <xsl:template match="p | ul | ol | pre | h1 | h2 | h3 | h4 | h5 | h6 | table">
@@ -165,7 +182,5 @@
             </number>
         </xsl:if>
     </xsl:template>
-    
-    
     
 </xsl:stylesheet>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <EVERYTHING xmlns="http://csrc.nist.gov/metaschema/ns/everything"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/everything file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-examples/everything-metaschema/models_metaschema_XML-SCHEMA.xsd">
+    xsi:schemaLocation="models_metaschema_XML-SCHEMA.xsd">
     
     <field-1only>FIELD-1-ONLY</field-1only>
     <field-base64>1234abcd</field-base64>
+    <field-boolean>true</field-boolean>
     <field-named-value id="fnv1">FIELD-NAMED-VALUE</field-named-value>
     <field-groupable>field-groupable 1</field-groupable>
     <field-groupable>field-groupable 2</field-groupable>

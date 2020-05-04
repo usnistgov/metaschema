@@ -75,8 +75,10 @@
         <XSLT:template match="{ $matching}">
             <xsl:element name="{ local-name() }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
                 <xsl:copy-of select="@* except @scope"/>
+                <!--'SCALAR' marks fields that will be strings or data values, not maps (objects)
+                by virtue of not permitting flags other than designated for the JSON key-->
                 <xsl:if test="self::field[empty(flag[not(@key=$json-key-flag-name)])]">
-                    <xsl:attribute name="in-json">STRING</xsl:attribute>
+                    <xsl:attribute name="in-json">SCALAR</xsl:attribute>
                 </xsl:if>
                 <xsl:for-each select="parent::model" expand-text="true">
                     <XSLT:if test=". is /*">
@@ -116,13 +118,14 @@
         <xsl:value-of select="@gi"/>
     </xsl:template>
     
+<!-- Matches local declarations (only) -->
     <xsl:template match="*" mode="make-xml-match">
-        <xsl:message expand-text="true">fired on { local-name() } '{ @gi }' ... { string-join(ancestor-or-self::*/@gi,'/') }</xsl:message>
-        <xsl:for-each select="ancestor-or-self::*[@gi]">
-            <xsl:value-of select="if (exists(self::flag)) then '/@' else '/'"/>
+        
+        <xsl:for-each select="ancestor-or-self::*[@gi] except ancestor-or-self::*[@scope='global']/ancestor::*">
+            <xsl:if test="position() gt 1">/</xsl:if>
+            <xsl:value-of select="self::flag/'@'"/>
             <xsl:apply-templates select="." mode="make-xml-step"/>
         </xsl:for-each>
-        <xsl:text>  | BOO </xsl:text>
     </xsl:template>
 
     <xsl:template match="*" mode="make-pull">
@@ -138,7 +141,7 @@
         <XSLT:for-each-group select="{ $prose-elements }" group-by="true()">
             <field in-json="STRING">
                 <xsl:copy-of select="@* except @scope"/>
-                <value>
+                <value in-json="string">
                     <xsl:copy-of select="value/@*"/>
                     <XSLT:apply-templates select="current-group()" mode="cast-prose"/>
                 </value>
@@ -178,8 +181,36 @@
     <xsl:template match="value" mode="make-pull">
         <value>
             <xsl:copy-of select="@key | @key-flag | @as-type"/>
+            <xsl:apply-templates select="@as-type" mode="json-type"/>
             <xsl:apply-templates select="." mode="cast-value"/>
         </value>
+    </xsl:template>
+    
+    <!-- In the JSON representation all values are strings unless mapped otherwise. -->
+    <xsl:template match="@as-type" mode="json-type">
+        <xsl:attribute name="in-json">string</xsl:attribute>
+    </xsl:template>
+    
+    <xsl:template match="@as-type[.='boolean']" mode="json-type">
+        <xsl:attribute name="in-json">boolean</xsl:attribute>
+    </xsl:template>
+    
+    <xsl:variable name="integer-types" as="element()*">
+        <type>integer</type>
+        <type>positiveInteger</type>
+        <type>nonNegativeInteger</type>
+    </xsl:variable>
+    
+    <xsl:template match="@as-type[.=$integer-types]" mode="json-type">
+        <xsl:attribute name="in-json">number</xsl:attribute>
+    </xsl:template>
+    
+    <xsl:variable name="numeric-types" as="element()*">
+        <type>decimal</type>
+    </xsl:variable>
+    
+    <xsl:template match="@as-type[.=$numeric-types]" mode="json-type">
+        <xsl:attribute name="in-json">number</xsl:attribute>
     </xsl:template>
     
     <xsl:template match="value[@as-type='markup-multiline']" mode="cast-value">
