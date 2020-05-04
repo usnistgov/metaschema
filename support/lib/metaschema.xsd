@@ -600,14 +600,16 @@
         <xs:complexType>
           <xs:complexContent>
             <xs:extension base="m:allowed-values-type">
-              <xs:attribute name="extends" type="m:boolean" default="yes">
+              <!-- Not supporting @extends until semantics of application (scope) can be defined - which
+                   constraints (global and local) are extended? 
+                <xs:attribute name="extends" type="m:boolean" default="yes">
                 <xs:annotation>
                   <xs:documentation>If <code>yes</code>, indicates that the provided enumerated
                     values are appended to those defined by the referenced flag. If
                     <code>no</code>, then the provided enumerated values are used in place of
                     those defined by the referenced flag/</xs:documentation>
                 </xs:annotation>
-              </xs:attribute>
+              </xs:attribute>-->
               <xs:attribute name="target" type="m:metaschema-path-type" use="required">
                 <xs:annotation>
                   <xs:documentation>Specifies the target of the constraint as a metaschema path. If the value is "." and the containing metaschema object is a field, the constraint applies to the field's value.</xs:documentation>
