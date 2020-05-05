@@ -7,7 +7,7 @@
     <field-base64>1234abcd</field-base64>
     <field-boolean>true</field-boolean>
     <field-named-value id="fnv1">FIELD-NAMED-VALUE</field-named-value>
-    <markup-line>Here's some <em>markup</em>: make of it <strong>what you will</strong>! Even if it has ... * funky characters ` ...</markup-line>
+    <markup-line>Here's some <em>markup</em>: make of it <strong>what you will</strong>! Even if it has ... * funky characters ` ... and even an <img alt="some picture" src="img.jpg"/></markup-line>
     <field-groupable>field-groupable 1</field-groupable>
     <field-groupable>field-groupable 2</field-groupable>
     <field-groupable>field-groupable 3</field-groupable>
