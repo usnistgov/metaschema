@@ -139,7 +139,7 @@
     <!-- A field without a GI is implicit in the XML; Metaschema prevents it from having flags -->
     <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-pull">
         <XSLT:for-each-group select="{ $prose-elements }" group-by="true()">
-            <field in-json="STRING">
+            <field in-json="SCALAR">
                 <xsl:copy-of select="@* except @scope"/>
                 <value in-json="string">
                     <xsl:copy-of select="value/@*"/>
