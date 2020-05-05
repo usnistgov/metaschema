@@ -34,6 +34,7 @@
             <field ref="field-base64"/>
             <field ref="field-boolean"/>
             <field ref="field-named-value"/>
+            <field ref="markup-line"/>
             <field ref="field-groupable" max-occurs="unbounded">
                 <group-as name="groupable-fields"/>
             </field>
@@ -46,7 +47,6 @@
             <field ref="field-dynamic-value-key" max-occurs="unbounded">
                 <group-as name="dynamic-value-key-fields"/>
             </field>
-            
             <field ref="wrapped-prose" in-xml="WITH_WRAPPER"/>
             <field ref="loose-prose"   in-xml="UNWRAPPED"/>
             
@@ -116,6 +116,11 @@
         </define-flag>
     </define-field>
 
+    <define-field name="markup-line" as-type="markup-line">
+        <formal-name/>
+        <description/>
+    </define-field>
+    
     <define-field name="wrapped-prose" as-type="markup-multiline">
         <formal-name/>
         <description/>

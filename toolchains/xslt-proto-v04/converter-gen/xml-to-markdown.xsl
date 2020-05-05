@@ -12,48 +12,6 @@
     
 <!-- Purpose: Convert XML to markdown. Note that namespace bindings must be given. -->
 
-
-
-        <xsl:template mode="as-string" match="@* | *">
-            <xsl:param name="key" select="local-name()"/>
-            <xsl:param name="mandatory" select="false()"/>
-            <xsl:if test="$mandatory or matches(., '\S')">
-                <string key="{{ $key }}">
-                    <xsl:value-of select="."/>
-                </string>
-            </xsl:if>
-        </xsl:template>
-
-        <xsl:template mode="as-boolean" match="@* | *">
-            <xsl:param name="key" select="local-name()"/>
-            <xsl:param name="mandatory" select="false()"/>
-            <xsl:if test="$mandatory or matches(., '\S')">
-                <boolean key="{{ $key }}">
-                    <xsl:value-of select="."/>
-                </boolean>
-            </xsl:if>
-        </xsl:template>
-
-        <xsl:template mode="as-integer" match="@* | *">
-            <xsl:param name="key" select="local-name()"/>
-            <xsl:param name="mandatory" select="false()"/>
-            <xsl:if test="$mandatory or matches(., '\S')">
-                <integer key="{{ $key }}">
-                    <xsl:value-of select="."/>
-                </integer>
-            </xsl:if>
-        </xsl:template>
-
-        <xsl:template mode="as-number" match="@* | *">
-            <xsl:param name="key" select="local-name()"/>
-            <xsl:param name="mandatory" select="false()"/>
-            <xsl:if test="$mandatory or matches(., '\S')">
-                <number key="{{ $key }}">
-                    <xsl:value-of select="."/>
-                </number>
-            </xsl:if>
-        </xsl:template>
-
         <!--<XSLT:key name="parameters" match="param" use="@id"/>-->
 
         <xsl:template name="conditional-lf">
@@ -64,7 +22,7 @@
             </xsl:if>
         </xsl:template>
 
-        <xsl:template mode="md" match="p | link | part/*">
+        <xsl:template mode="md" match="p">
             <xsl:call-template name="conditional-lf"/>
             <string>
                 <xsl:apply-templates mode="md"/>

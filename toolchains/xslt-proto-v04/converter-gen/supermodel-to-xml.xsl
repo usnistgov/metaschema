@@ -19,6 +19,10 @@
         </xsl:element>
     </xsl:template>
     
+    <xsl:template match="value[@as-type='markup-line']">
+        <xsl:apply-templates mode="cast-prose"/>
+    </xsl:template>
+    
     <xsl:template match="p | ul | ol | pre | h1 | h2 | h3 | h4 | h5 | h6 | table">
         <xsl:apply-templates select="." mode="cast-prose"/>
     </xsl:template>
