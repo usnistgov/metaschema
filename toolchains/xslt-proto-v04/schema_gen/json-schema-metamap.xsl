@@ -59,6 +59,8 @@
     
     <xsl:template match="/METASCHEMA" mode="require-a-root">
         <xsl:apply-templates select="define-assembly[exists(root-name)]" mode="root-requirement"/>
+        <boolean key="additionalProperties">false</boolean>
+        <number key="maxProperties">1</number>
     </xsl:template>
     
     <!--
@@ -83,6 +85,8 @@
             <xsl:for-each select="define-assembly[exists(root-name)]">
                 <map>
                     <xsl:apply-templates select="." mode="root-requirement"/>
+                    <boolean key="additionalProperties">false</boolean>
+                    <number key="maxProperties">1</number>
                 </map>
             </xsl:for-each>
         </array>
