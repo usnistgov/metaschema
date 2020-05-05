@@ -429,14 +429,14 @@
             <map key="additionalProperties">
                 <array key="allOf">
                     <map>
-                        <string key="type">object</string>
+                        <!--<string key="type">object</string>-->
                         <xsl:apply-templates select="." mode="definition-or-reference"/>
                     </map>
-                    <map>
+                    <!--<map>
                         <map key="not">
                             <string key="type">string</string>
                         </map>
-                    </map>
+                    </map>-->
                 </array>
             </map>
         </map>
