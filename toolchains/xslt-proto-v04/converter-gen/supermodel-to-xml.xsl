@@ -35,6 +35,7 @@
     
     <xsl:template match="*" mode="cast-prose">
         <xsl:element name="{local-name()}" namespace="{ $ns }">
+            <xsl:copy-of select="@*"/>
             <xsl:apply-templates mode="#current"/>
         </xsl:element>
     </xsl:template>
