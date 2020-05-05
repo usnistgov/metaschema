@@ -135,12 +135,12 @@
   </p:identity>
   
   <!-- Back downhill to JSON -->
-  <p:identity  name="convert-prose-to-markdown"/>
-  <!--<p:xslt name="convert-prose-to-markdown">
+  <!--<p:identity  name="convert-prose-to-markdown"/>-->
+  <p:xslt name="convert-prose-to-markdown">
     <p:input port="stylesheet">
-      <p:document href="../converter-gen/supermodel-markdown.xsl"/>
+      <p:document href="../converter-gen/supermodel-to-markdown.xsl"/>
     </p:input>
-  </p:xslt>-->
+  </p:xslt>
   
   <p:xslt name="convert-supermodel-to-xpath-json">
     <p:input port="stylesheet">

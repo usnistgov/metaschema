@@ -213,6 +213,10 @@
         <xsl:attribute name="in-json">number</xsl:attribute>
     </xsl:template>
     
+    <xsl:template match="value[@as-type='markup-line']" mode="cast-value">
+        <XSLT:apply-templates mode="cast-prose"/>
+    </xsl:template>
+    
     <xsl:template match="value[@as-type='markup-multiline']" mode="cast-value">
         <XSLT:for-each-group select="{ $prose-elements }" group-by="true()">
             <XSLT:apply-templates select="current-group()" mode="cast-prose"/>
