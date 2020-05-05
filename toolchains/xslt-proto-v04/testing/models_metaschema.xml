@@ -137,6 +137,7 @@
     <define-assembly name="assembly-1only">
         <formal-name>ASSEMBLY-1ONLY</formal-name>
         <description>assembly assembly-1only</description>
+        <root-name>ASSEMBLY-1ONLY</root-name>
         <model>
             <field ref="field-1only"/>
             <assembly ref="assembly-1only"/>
