@@ -7,10 +7,15 @@
   version="2.0"
   exclude-result-prefixes="#all">
   
-  <!-- Originally adapted from https://github.com/wendellpiez/XMLjellysandwich/blob/master/lib/starterXSLT-maker.xsl -->
-  
   <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
   
+<!-- To do:
+  
+  * Provide strip-space for assemblies
+  * Ungroup the templates; give each definition its own template, qualified by context
+  * Add support for casting markup-line and markup-multiline contents into HTML
+  
+  -->
   <xsl:output indent="yes"/>
   
   <!-- Set $xsl-version to 1.0 and you get an XSLT that will run in any old browser. -->
@@ -19,17 +24,6 @@
   <!-- Include the XSLT utility functions -->
   <xsl:param as="xs:string" name="functions-wanted">no</xsl:param>
   
-  <!-- The assumption is, elements in the input data sample will fall into
-    three classes:
-    'wrappers' are elements that never contain text directly, only elements.
-    So blocks, divs, sections and other content structures are likely to be wrappers.
-    'inlines' are those that appear next to content, such as 'italics' and 'bold' and
-    what not, unless they are already wrappers. (Wrappers will remain wrappers.)
-    'paras' (paragraphs) are those that contain text children, such as p and td, but
-    do not appear next to text (so they are not inlines).
-    'divs' are all elements except inlines and paragraphs, which amounts to $wrappers.
-       -->
-
   <xsl:variable name="lf"> <xsl:text>&#xA;</xsl:text></xsl:variable>
   <xsl:variable name="lf2"><xsl:text>&#xA;&#xA;</xsl:text></xsl:variable>
   
