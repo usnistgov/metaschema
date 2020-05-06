@@ -47,7 +47,7 @@
   <!--<p:identity name="make-json-schema-xml"/>-->
   <p:xslt name="make-json-schema-xml">
     <p:input port="stylesheet">
-      <p:document href="schema_gen/json-schema-metamap.xsl"/>
+      <p:document href="schema_gen/make-json-schema-metamap.xsl"/>
     </p:input>
   </p:xslt>
   
