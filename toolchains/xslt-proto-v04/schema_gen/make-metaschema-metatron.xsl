@@ -20,8 +20,6 @@
         is assumed. -->
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
- 
-    
     <xsl:import href="../metapath/parse-metapath.xsl"/>
     
     <xsl:import href="metatron-datatype-functions.xsl"/>
@@ -35,6 +33,10 @@
     -->
     
     <xsl:param name="produce-warnings" as="xs:string">no</xsl:param>
+    
+<!-- Set to 'yes', produces comments for diagnosis    -->
+    <xsl:param name="noisy" as="xs:string">yes</xsl:param>
+    
     
     <xsl:variable name="target-namespace" select="string(/METASCHEMA/namespace)"/>
     
@@ -77,31 +79,19 @@
               <xsl:apply-templates select="//constraint//(* except require)">
 <!-- Sort into descending order by constraint definition depth
                     so deeper rules go firs-->
-                  <xsl:sort select="count(@target[not(.=('.','value()'))] | ancestor::require | ancestor::define-assembly | ancestor::define-flag | ancestor::define-field)" order="descending"/>
+                  <!--<xsl:sort select="count(@target[not(.=('.','value()'))] | ancestor::require | ancestor::define-assembly | ancestor::define-flag | ancestor::define-field)" order="descending"/>-->
               </xsl:apply-templates>
             </xsl:variable>
             
             
             <!--<debug> <xsl:copy-of select="$rules"/> </debug>-->
             <pattern>
-                <xsl:copy-of select="$rules"/>
-                <!--<xsl:for-each select="$rules">
-                    <xsl:sort select="count(tokenize(@context,'/'))" order="descending"/>
-                    <xsl:sequence select="."/>
-                </xsl:for-each>-->
+                <xsl:for-each-group select="$rules" group-by="@context">
+                    <rule context="{current-grouping-key()}">
+                        <xsl:sequence select="current-group()/(*|comment())"/>
+                    </rule>
+                </xsl:for-each-group>
             </pattern>
-            <!--<xsl:for-each-group select="$rules" group-by="true()">
-                <xsl:sort select="count(tokenize(@context,'/'))" order="descending"/>
-                
-                <pattern>
-                    <xsl:sequence select="current-group()"/>
-                    <!-\-<xsl:for-each-group select="current-group()" group-adjacent="@context">
-                        <rule sort="{count(tokenize(@context,'/'))}" context="{current-grouping-key()}">
-                            <xsl:sequence select="current-group()/(*|comment())"/>
-                        </rule>
-                    </xsl:for-each-group>-\->
-                </pattern>
-            </xsl:for-each-group>-->
             
             <xsl:for-each-group select="$type-definitions[@name=$metaschema//constraint//matches/@datatype]" group-by="true()">
                 <xsl:comment> LEXICAL / DATATYPE VALIDATION FUNCTIONS </xsl:comment>
@@ -117,25 +107,18 @@
     
     <xsl:template match="text()"/>
     
+    <!-- not actually hitting this template ... -->
     <xsl:template match="constraint">
         <xsl:apply-templates/>
-        <!--<xsl:variable name="rules" as="element(sch:rule)*">
-            <xsl:apply-templates/>
-        </xsl:variable>
-        <xsl:for-each-group select="$rules" group-by="@context">
-            <rule context="{ current-grouping-key() }">
-                <xsl:sequence select="current-group()/(*|comment())"/>
-            </rule>
-        </xsl:for-each-group>-->
     </xsl:template>
     
     <xsl:template match="matches | allowed-values | index-has-key | is-unique | expect">
         <xsl:variable name="context">
             <xsl:apply-templates select=".." mode="rule-context"/>
-            <xsl:for-each select="@target[not(.=('.','value()'))]">
+            <!--<xsl:for-each select="@target[not(.=('.','value()'))]">
                 <xsl:text>/</xsl:text>
                 <xsl:sequence select="m:target-branch(string(.),$declaration-prefix)"/>
-            </xsl:for-each>
+            </xsl:for-each>-->
         </xsl:variable>
         <rule context="{ $context }">
             <xsl:apply-templates mode="assertion" select="."/>
@@ -143,7 +126,20 @@
         
     </xsl:template>
     
-    <xsl:template match="has-cardinality">
+<!-- When a @target is designated, the context is derived from the target,
+     while the assertion picks up an extra exception clause -->
+    <xsl:template priority="2" match="*[matches(@target,'\S') and not(@target = ('.','value()'))]">
+        <!-- Context is the last step of the target, stripped of predicates -->
+        <xsl:variable name="context" select="m:prefixed-path-no-filters(string(@target),$declaration-prefix) => replace('.*/','')"/>
+        <rule context="{ $context }">
+            <xsl:apply-templates mode="assertion" select="."/>
+        </rule>
+    </xsl:template>
+    
+        
+<!-- The has-cardinality rule handles the target differently, within the assertion,
+        as it has no bearing on the match. -->
+    <xsl:template priority="3" match="has-cardinality">
         <xsl:variable name="context">
             <xsl:apply-templates select=".." mode="rule-context"/>
         </xsl:variable>
@@ -152,6 +148,7 @@
         </rule>
     </xsl:template>
     
+    <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
     <xsl:template match="has-cardinality/@min-occurs" mode="assertion">
         <xsl:variable name="target" select="parent::has-cardinality/@target ! m:prefixed-path(.,$declaration-prefix)"/>
         <xsl:variable name="condition" select="m:wrapper-condition(parent::has-cardinality)"/>
@@ -214,7 +211,7 @@
         <let name="lookup" value="{ $key-value-sequence }"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to correspond to an entry in the '<xsl:value-of select="@name"/>' index within the containing <xsl:value-of select="$parent-context"/>
+            <xsl:apply-templates select="." mode="qualify-report"/><name/> is expected to correspond to an entry in the '<xsl:value-of select="@name"/>' index within the containing <xsl:value-of select="$parent-context"/>
             <xsl:call-template name="label-assertion"/>
         </assert>
     </xsl:template>
@@ -243,7 +240,7 @@
         <let name="lookup" value="{ $key-value-sequence }"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to correspond to an entry in the '<xsl:value-of select="@name"/>' index.
+            <xsl:apply-templates select="." mode="qualify-report"/><name/> is expected to correspond to an entry in the '<xsl:value-of select="@name"/>' index.
             <xsl:call-template name="label-assertion"/>
         </assert>
     </xsl:template>
@@ -259,7 +256,7 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be unique within the containing <xsl:value-of select="$parent-context"/>
+            <xsl:apply-templates select="." mode="qualify-report"/><name/> is expected to be unique within the containing <xsl:value-of select="$parent-context"/>
             <xsl:call-template name="label-assertion"/>
         </assert>
     </xsl:template>
@@ -273,7 +270,7 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be unique.
+            <xsl:apply-templates select="." mode="qualify-report"/><name/> is expected to be unique.
             <xsl:call-template name="label-assertion"/>
         </assert>
     </xsl:template>
@@ -286,7 +283,7 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ m:prefixed-path($test,$declaration-prefix) }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> fails to pass evaluation of '<xsl:value-of select="@test"/>'
+            <xsl:apply-templates select="." mode="qualify-report"/><name/> fails to pass evaluation of '<xsl:value-of select="@test"/>'
             <xsl:call-template name="label-assertion"/>
         </assert>
     </xsl:template>
@@ -312,9 +309,15 @@
         <xsl:apply-templates select="." mode="echo.if"/>
         <assert test="{ $exception }{ $test }">
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(parent::matches) ! ('Where ' || . || ', ')"/><name/> is expected to match regular expression '^<xsl:value-of select="."/>$'
+            <xsl:apply-templates select=".." mode="qualify-report"/>
+            
+            <name/> is expected to match regular expression '^<xsl:value-of select="."/>$'
             <xsl:call-template name="label-assertion"/>
         </assert>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="qualify-report">
+        <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/>
     </xsl:template>
     
     <xsl:template match="matches" mode="assertion">    
@@ -336,15 +339,14 @@
                 <xsl:attribute name="role">warning</xsl:attribute>
             </xsl:if>
             <xsl:call-template name="id-assertion"/>
-            <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/><name/> is expected to be (one of) <xsl:value-of select="$value-sequence"/>, not '<value-of select="."/>'
+            <xsl:apply-templates select="." mode="qualify-report"/><name/> is expected to be (one of) <xsl:value-of select="$value-sequence"/>, not '<value-of select="."/>'
             <xsl:call-template name="label-assertion"/>
         </assert>
     </xsl:template>
     
-    <xsl:param name="noisy" as="xs:string">yes</xsl:param>
-    
     <xsl:variable name="echo.source" select="$noisy='yes'"/>
     
+    <!-- fallback template for development: should not be visited -->
     <xsl:template match="*" mode="echo.if">
         <xsl:if test="$echo.source">
             <xsl:text>&#xA;&#xA;</xsl:text>
@@ -354,38 +356,38 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="allowed-values" mode="echo.if">
+    <!--<xsl:template match="allowed-values" mode="echo.if">
         <xsl:if test="$echo.source">
             <xsl:text expand-text="true">&#xA;      { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
-            <xsl:comment expand-text="true">{ m:condition(.) ! (' when ' || . || ', ') }allowed-values on { m:target-match(.) }: { string-join(enum/@value,', ' ) }</xsl:comment>
+            <xsl:comment expand-text="true">allowed-values on { m:target-match(.) }: { string-join(enum/@value,', ' ) }</xsl:comment>
         </xsl:if>
     </xsl:template>
     
     <xsl:template match="expect" mode="echo.if">
         <xsl:if test="$echo.source">
             <xsl:text expand-text="true">&#xA;      { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
-            <xsl:comment expand-text="true">{ m:condition(.) ! (' when ' || . || ', ') }expect on { m:target-match(.) }: { @test }</xsl:comment>
+            <xsl:comment expand-text="true">expect on { m:target-match(.) }: { @test }</xsl:comment>
         </xsl:if>
     </xsl:template>
     
     <xsl:template match="matches/@regex" mode="echo.if">
         <xsl:if test="$echo.source">
             <xsl:text expand-text="true">&#xA;      { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
-            <xsl:comment expand-text="true">{ m:condition(parent::matches) ! (' when ' || . || ', ') }{ m:target-match(parent::matches) } should match regex '{ . }'</xsl:comment>
+            <xsl:comment expand-text="true">{ m:target-match(parent::matches) } should match regex '{ . }'</xsl:comment>
         </xsl:if>
     </xsl:template>
     
     <xsl:template match="matches/@datatype" mode="echo.if">
         <xsl:if test="$echo.source">
             <xsl:text expand-text="true">&#xA;      { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
-            <xsl:comment expand-text="true">{ m:condition(parent::matches) ! (' when ' || . || ', ') }{ m:target-match(parent::matches) } should take the form of datatype '{ . }'</xsl:comment>
+            <xsl:comment expand-text="true">{ m:target-match(parent::matches) } should take the form of datatype '{ . }'</xsl:comment>
         </xsl:if>
     </xsl:template>
     
     <xsl:template match="has-cardinality" mode="echo.if">
         <xsl:if test="$echo.source">
             <xsl:text expand-text="true">&#xA;      { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
-            <xsl:comment expand-text="true">{ m:condition(.) ! (' when ' || . || ', ') }{ m:target-match(.) } has cardinality: { @min-occurs ! ( ' at least ' || (.,'0')[1]) } { @max-occurs ! ( ' at most ' || (.,'unbounded')[1]) }</xsl:comment>
+            <xsl:comment expand-text="true">{ m:target-match(.) } has cardinality: { @min-occurs ! ( ' at least ' || (.,'0')[1]) } { @max-occurs ! ( ' at most ' || (.,'unbounded')[1]) }</xsl:comment>
         </xsl:if>
     </xsl:template>
     
@@ -393,7 +395,7 @@
         <xsl:if test="$echo.source">
             <xsl:text expand-text="true">&#xA;     { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
             <xsl:comment expand-text="true">
-                <xsl:text>{ m:condition(.) ! (' when ' || . || ', ') }{ m:target-match(.) } must correspond to an entry in the '{@name}' index</xsl:text>
+                <xsl:text>{ m:target-match(.) } must correspond to an entry in the '{@name}' index</xsl:text>
                 <xsl:if test="matches(@target,'\S') and not(@target=('.','value()'))">
                     <xsl:text> within the context of its ancestor</xsl:text>
                     <xsl:apply-templates select="ancestor::constraint" mode="rule-context"/>
@@ -406,14 +408,14 @@
         <xsl:if test="$echo.source">
             <xsl:text expand-text="true">&#xA;     { ancestor::*[exists(ancestor-or-self::constraint)] ! '  ' } </xsl:text>
             <xsl:comment expand-text="true">
-                <xsl:text>{ m:condition(.) ! (' when ' || . || ', ') }{ m:target-match(.) } is unique</xsl:text>
+                <xsl:text>{ m:target-match(.) } is unique</xsl:text>
                 <xsl:if test="matches(@target,'\S') and not(@target=('.','value()'))">
                     <xsl:text> within the context of its ancestor</xsl:text>
                     <xsl:apply-templates select="ancestor::constraint" mode="rule-context"/>
                 </xsl:if>
             </xsl:comment>
         </xsl:if>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:variable name="serializer-settings" as="element()">
         <output:serialization-parameters
@@ -421,7 +423,7 @@
             xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
             <output:method value="xml"/>
             <output:version value="1.0"/>
-            <output:indent value="yes"/>
+            <output:indent value="no"/>
         </output:serialization-parameters>
     </xsl:variable>
     
@@ -429,7 +431,7 @@
     
     <xsl:template match="flag[@ref]" mode="rule-context" as="xs:string">
         <xsl:value-of>
-            <xsl:value-of select="ancestor::*/@name/m:prefixed(.)" separator="/"/>
+            <xsl:value-of select="ancestor::*/m:effective-name(.) ! m:prefixed(.)" separator="/"/>
             <xsl:text>/</xsl:text>
             <xsl:apply-templates mode="#current" select="key('global-flag-by-name',@ref)"/>
         </xsl:value-of>
@@ -437,7 +439,7 @@
     
     <xsl:template match="assembly[@ref]" mode="rule-context" as="xs:string">
         <xsl:value-of>
-            <xsl:value-of select="ancestor::*/@name/m:prefixed(.)" separator="/"/>
+            <xsl:value-of select="ancestor::*/m:effective-name(.) ! m:prefixed(.)" separator="/"/>
             <xsl:text>/</xsl:text>
             <xsl:apply-templates mode="#current" select="key('global-assembly-by-name', @ref)"/>
         </xsl:value-of>
@@ -445,25 +447,25 @@
     
     <xsl:template match="field[@ref]" mode="rule-context" as="xs:string">
         <xsl:value-of>
-            <xsl:value-of select="ancestor::*/@name/m:prefixed(.)" separator="/"/>
+            <xsl:value-of select="ancestor::*/m:effective-name(.) ! m:prefixed(.)" separator="/"/>
             <xsl:text>/</xsl:text>
             <xsl:apply-templates mode="#current" select="key('global-field-by-name', @ref)"/>
         </xsl:value-of>
     </xsl:template>
     
     <xsl:template match="define-assembly | define-field" mode="rule-context">
-        <xsl:for-each select="ancestor::model/parent::define-assembly">
-            <xsl:value-of select="(root-name, use-name, @name)[1] / m:prefixed(.)"/>
+        <!--<xsl:for-each select="parent::model/parent::define-assembly">
+            <xsl:value-of select="m:effective-name(.) / m:prefixed(.)"/>
             <xsl:text>/</xsl:text>
-        </xsl:for-each>
-        <xsl:value-of select="(root-name, use-name, @name)[1] / m:prefixed(.)"/>
+        </xsl:for-each>-->
+        <xsl:value-of select="m:effective-name(.) / m:prefixed(.)"/>
     </xsl:template>
     
     <xsl:template priority="2" match="define-flag" mode="rule-context">
-        <xsl:for-each select="ancestor::define-assembly | ancestor::define-field">
-            <xsl:value-of select="(root-name, use-name, @name)[1] / m:prefixed(.)"/>
+        <!--<xsl:for-each select="ancestor::define-assembly | ancestor::define-field">
+            <xsl:value-of select="m:effective-name(.) / m:prefixed(.)"/>
             <xsl:text>/</xsl:text>
-        </xsl:for-each>
+        </xsl:for-each>-->
         <xsl:value-of select="'@' || (use-name, @name)[1]"/>
     </xsl:template>
     
@@ -477,6 +479,11 @@
         <xsl:apply-templates select="$whose" mode="rule-context"/>
     </xsl:function>
     
+    <xsl:function name="m:effective-name">
+        <xsl:param name="whose" as="node()" required="yes"/>
+        <xsl:value-of select="$whose/(root-name, use-name, @name)[1]"/>
+    </xsl:function>
+    
     <xsl:function name="m:prefixed" as="xs:string">
         <xsl:param name="whose"/>
         <!-- Insulate XPath here -->
@@ -488,15 +495,15 @@
     yields exception clause (with prefix 'o')
       not(self::o:part[@name='statement]/ancestor::o:control[@id='ac-2']/ancestor::o:group/@id='ac')
     -->
-    <xsl:function name="m:target-exception" as="xs:string?">
+    <!--<xsl:function name="m:target-exception" as="xs:string?">
         <xsl:param name="whose" as="element()"/>
-        <!-- Insulate XPath here -->
-        <!-- no-namespace paths have to be expanded to ns? -->
+        <!-\- Insulate XPath here -\->
+        <!-\- no-namespace paths have to be expanded to ns? -\->
         <xsl:variable name="target-path" as="xs:string">
             <xsl:apply-templates mode="okay-xpath" select="($whose/@target,'.')[1] => m:prefixed-path($declaration-prefix)"/>
         </xsl:variable>
         <xsl:sequence select="$target-path[not(.=('.','value()'))]"/>
-    </xsl:function>
+    </xsl:function>-->
     
     <xsl:function name="m:target-match" as="xs:string?">
         <xsl:param name="whose" as="element()"/>
@@ -527,7 +534,13 @@
         <xsl:text> :)</xsl:text>
     </xsl:template>
     
-    <!-- produces a sequence of conditional tests from @when ancestry -->
+    <!-- produces a sequence of conditional tests from @when ancestry
+    XXX extend this to include
+      - @target ancestry and predicates
+      - ancestry of locally declared constraints
+    
+    -->
+    
     <xsl:function name="m:condition" as="xs:string?">
         <!-- Insulate XPath here -->
         <xsl:param name="whose" as="element()"/>
@@ -536,11 +549,19 @@
                 <xsl:apply-templates mode="rule-context" select="$whose/ancestor::require/ancestor::constraint"/>
             </xsl:if>
         </xsl:variable>
-        <xsl:variable name="predicates" select="$whose/ancestor-or-self::*/@when ! ( $whose-context ! ('ancestor::' || . || '/') || . )"/>
-        <xsl:variable name="target-exception" select="m:write-target-exception($whose/@target,$declaration-prefix)"/>
         
-        <xsl:if test="exists(($predicates, $target-exception))">
-            <xsl:value-of select="string-join(($predicates, $target-exception),' and ')"/>
+        <!-- These two are independent - $when-conditions captures require/@when
+                                         $target-exception expresses ancestry given in @target -->
+        <xsl:variable name="when-conditions" select="$whose/ancestor-or-self::*/@when ! ( $whose-context ! ('ancestor::' || . || '/') || . )"/>
+        
+        <xsl:variable name="ancestor-names" select="$whose/(ancestor::define-flag | ancestor::define-field | ancestor::define-assembly) ! m:effective-name(.)" />
+        <!-- stitching together a match pattern from ancestors + a given @target, with steps '/.' removed -->
+        <xsl:variable name="path-from-global" select="string-join(($ancestor-names,$whose/@target),'/') => replace('/\.','')"/>
+        
+        <xsl:variable name="ancestry-condition" select="m:rewrite-match-as-test($path-from-global,$declaration-prefix)"/>
+        <!-- <xsl:message expand-text="true">{ $whose/@id }: { $path-from-global }</xsl:message> -->        
+        <xsl:if test="exists(($when-conditions, $ancestry-condition))">
+            <xsl:value-of select="string-join(($when-conditions, $ancestry-condition),' and ')"/>
         </xsl:if>
     </xsl:function>
     
