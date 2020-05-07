@@ -44,7 +44,7 @@
     </xsl:template>
 
     <!-- returns a path, element names prefixed, filters (predicates) removed -->
-    <xsl:function name="m:target-branch" as="xs:string">
+    <xsl:function name="m:prefixed-path-no-filters" as="xs:string">
         <xsl:param name="expr" as="xs:string"/>
         <xsl:param name="ns-prefix" as="xs:string"/>
         <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
@@ -56,9 +56,8 @@
         <!-- strip initial './' as no-op -->
         <xsl:value-of select="replace($rewrite,'^(\./)+','')"/>
     </xsl:function>
-
+    
     <xsl:template mode="scrub-filters" match="PredicateList"/>
-
 
     <xsl:function name="m:step-map" as="element()*">
         <xsl:param name="expr" as="xs:string"/>
@@ -78,7 +77,16 @@
     </xsl:template>
     
     <xsl:template match="StepExpr" mode="step-map">
+        <xsl:if test="preceding-sibling::*[1]/self::TOKEN='//'">
+            <step>
+                <axis>descendant-or-self</axis>
+                <node>*</node>
+            </step>
+        </xsl:if>
         <step>
+            <xsl:if test="AxisStep/ForwardStep/AbbrevForwardStep[empty(TOKEN)]">
+                <axis>child</axis>
+            </xsl:if>
             <xsl:apply-templates mode="#current"/>
         </step>
     </xsl:template>
@@ -112,7 +120,9 @@
         <xsl:apply-templates select="." mode="prefix-ncnames"/>
     </xsl:template>
 
-    <xsl:function name="m:write-target-exception" as="xs:string?">
+    <!-- for path a[x]/b/c[y][z] and prefix p, returns "exists(self::p:c:[p:y][p:z]/parent::p:b/ancestor::p:a[p:x]) "-->
+    
+    <xsl:function name="m:rewrite-match-as-test" as="xs:string?">
         <xsl:param name="who" as="item()?"/>
         <xsl:param name="ns-prefix" as="xs:string"/>
         <xsl:variable name="alternatives" as="element()*" select="m:step-map(string($who), $ns-prefix)"/>
@@ -135,17 +145,31 @@
     </xsl:function>
 
 <!-- Mode 'target-step-check', for any step, writes an XPath traversing to that step, going up the tree -->
+    
     <xsl:template priority="2" match="step[axis='attribute']" mode="target-step-check">
-      <xsl:text>.</xsl:text>
+        <xsl:text expand-text="true">self::/attribute({ node })</xsl:text>
         <xsl:apply-templates mode="#current" select="filter"/>
     </xsl:template>
     
-    <xsl:template match="step[empty(following-sibling::step)]" mode="target-step-check">
+    <xsl:template priority="2" match="step[empty(following-sibling::step)]" mode="target-step-check">
         <xsl:text>self::</xsl:text>
         <xsl:value-of select="node"/>
         <xsl:apply-templates mode="#current" select="filter"/>
     </xsl:template>
     
+    <xsl:template match="step[axis='child']" mode="target-step-check">
+        <xsl:text>parent::</xsl:text>
+        <xsl:value-of select="node"/>
+        <xsl:apply-templates mode="#current" select="filter"/>
+    </xsl:template>
+    
+    <xsl:template match="step[axis='descendant-or-self']" mode="target-step-check">
+        <xsl:text>ancestor-or-self::</xsl:text>
+        <xsl:value-of select="node"/>
+        <xsl:apply-templates mode="#current" select="filter"/>
+    </xsl:template>
+
+    <!-- catches descendant   -->
     <xsl:template match="step" mode="target-step-check">
         <xsl:text>ancestor::</xsl:text>
         <xsl:value-of select="node"/>
