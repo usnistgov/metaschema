@@ -20,6 +20,11 @@
     <xsl:template match="/">
         <tests>
         <xsl:variable name="paths" as="element()*">
+            <path p="a">a/child::b</path>
+            <path p="b">a//b</path>
+            <path p="p">a[x]//b/c[y][z]</path>
+            <path p="q">child::a[x]/descendant-or-self::*/child::b/child::c[y][z]</path>
+            
             <path p="x">@type[.='boo']</path>
             <path p="z">.//meta/creator[matches(@who,'\S')]</path>
             <path p="a">a[true()] | b[true()]/c</path>
@@ -78,19 +83,23 @@
                         </xsl:otherwise>
                 </xsl:choose>    
                 
-                <target-match>
+                <target-branch>
                     <!-- wipes predicates (filters) from expressions -->
-                    <xsl:value-of select="m:target-branch($path, $path/@p)"/>
-                </target-match>
+                    <xsl:value-of select="m:prefixed-path-no-filters($path, $path/@p)"/>
+                </target-branch>
+                <target-terminal-step>
+                    <!-- returns only the terminal step of the forgoing -->
+                    <xsl:value-of select="m:prefixed-path-no-filters($path, $path/@p) => replace('.*/','')"/>
+                </target-terminal-step>
                 <target-exception>
-                    <xsl:value-of select="m:write-target-exception($path,$path/@p)"/>
+                    <xsl:value-of select="m:rewrite-match-as-test($path,$path/@p)"/>
                 </target-exception>
                 <!--<filtered>
                     <!-\- emits a sequence of steps, each with its NodeTest and filter (predicate) -\->
                     <xsl:sequence select="m:step-map($path, $path/@p)"/>
                 </filtered>-->
                 
-                <!--<xsl:sequence xmlns:p="minipath" select="p:parse-XPath($path)"/>-->
+                <!--<xsl:sequence xmlns:p="metapath01" select="p:parse-XPath($path)"/>-->
             </test>
         </xsl:for-each>
         </tests>
