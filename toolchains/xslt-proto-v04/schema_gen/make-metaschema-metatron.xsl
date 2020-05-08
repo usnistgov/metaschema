@@ -317,7 +317,10 @@
     </xsl:template>
     
     <xsl:template match="*" mode="qualify-report">
-        <xsl:value-of select="m:condition(.) ! ('Where ' || . || ', ')"/>
+<!-- XXX   -->
+        <xsl:message expand-text="true">report qualification on { @id }?</xsl:message>
+<!-- context - different when @target is not (.,'value()')       -->
+        <xsl:text>This </xsl:text>
     </xsl:template>
     
     <xsl:template match="matches" mode="assertion">    
