@@ -94,10 +94,10 @@
                 <target-exception>
                     <xsl:value-of select="m:rewrite-match-as-test($path,$path/@p)"/>
                 </target-exception>
-                <!--<filtered>
-                    <!-\- emits a sequence of steps, each with its NodeTest and filter (predicate) -\->
-                    <xsl:sequence select="m:step-map($path, $path/@p)"/>
-                </filtered>-->
+                <filtered>
+                    <!-- emits a sequence of steps, each with its NodeTest and filter (predicate) -->
+                    <xsl:sequence select="m:prefixed-step-map($path, $path/@p)"/>
+                </filtered>
                 
                 <!--<xsl:sequence xmlns:p="metapath01" select="p:parse-XPath($path)"/>-->
             </test>
