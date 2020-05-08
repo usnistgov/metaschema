@@ -64,7 +64,7 @@
                 <group-as name="keyed-assemblies" in-json="BY_KEY"/>
             </assembly>
             <assembly ref="everything" max-occurs="unbounded">
-                <group-as name="everything-recursive"/>
+                <group-as name="everything-recursive" in-json="ARRAY"/>
             </assembly>
         </model>
     </define-assembly>
