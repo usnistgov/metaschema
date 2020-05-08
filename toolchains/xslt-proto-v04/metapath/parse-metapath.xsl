@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:math="http://www.w3.org/2005/xpath-functions/math"
-    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" exclude-result-prefixes="#all"
+    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    exclude-result-prefixes="#all"
     version="3.0" xmlns:p="metapath01">
 
     <xsl:import href="REx/metapath01.xslt"/>
@@ -31,15 +31,16 @@
 
     <xsl:template mode="prefix-ncnames scrub-filters"
         match="AxisStep/*[not(ForwardAxis/TOKEN = ('@', 'attribute'))]/NodeTest/NameTest/QName[not(contains(., ':'))]">
-        <xsl:param name="pfx" as="xs:string" tunnel="yes"/>
-        <xsl:value-of select="$pfx ! (. || ':')"/>
+        <xsl:param name="pfx" tunnel="yes"/>
+        <!-- defending against prefixes not NCName       -->
+        <xsl:if test="matches($pfx,'\i[\c^:]*')" expand-text="true">{$pfx}:</xsl:if>
         <xsl:next-match/>
     </xsl:template>
 
     <xsl:template mode="prefix-ncnames scrub-filters"
         match="AxisStep/*/AbbrevForwardStep[not(TOKEN = '@')]/NodeTest/NameTest/QName[not(contains(., ':'))]">
-        <xsl:param name="pfx" as="xs:string" tunnel="yes"/>
-        <xsl:value-of select="$pfx ! (. || ':')"/>
+        <xsl:param name="pfx" tunnel="yes"/>
+        <xsl:if test="matches($pfx,'\i[\c^:]*')" expand-text="true">{$pfx}:</xsl:if>
         <xsl:next-match/>
     </xsl:template>
 
@@ -60,6 +61,13 @@
     <xsl:template mode="scrub-filters" match="PredicateList"/>
 
     <xsl:function name="m:step-map" as="element()*">
+        <xsl:param name="expr"/>
+        <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
+        <xsl:apply-templates select="$parse.tree" mode="step-map"/>
+    </xsl:function>
+    
+    <!-- With two arguments, a prefix can be provided -->
+    <xsl:function name="m:prefixed-step-map" as="element()*">
         <xsl:param name="expr" as="xs:string"/>
         <xsl:param name="ns-prefix" as="xs:string"/>
         <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
@@ -67,51 +75,52 @@
             <xsl:with-param name="pfx" as="xs:string" tunnel="yes" select="$ns-prefix"/>
         </xsl:apply-templates>
     </xsl:function>
-
+    
+<!-- because the axis is expanded we switch the token   -->
     <xsl:template match="text()" mode="step-map"/>
 
     <xsl:template match="UnaryExpr" mode="step-map">
-        <alternative>
+        <m:alternative>
             <xsl:apply-templates mode="#current"/>
-        </alternative>
+        </m:alternative>
     </xsl:template>
     
     <xsl:template match="StepExpr" mode="step-map">
         <xsl:if test="preceding-sibling::*[1]/self::TOKEN='//'">
-            <step>
-                <axis>descendant-or-self</axis>
-                <node>*</node>
-            </step>
+            <m:step>
+                <m:axis>descendant-or-self</m:axis>
+                <m:node>*</m:node>
+            </m:step>
         </xsl:if>
-        <step>
+        <m:step>
             <xsl:if test="AxisStep/ForwardStep/AbbrevForwardStep[empty(TOKEN)]">
-                <axis>child</axis>
+                <m:axis>child</m:axis>
             </xsl:if>
             <xsl:apply-templates mode="#current"/>
-        </step>
+        </m:step>
     </xsl:template>
     
     <xsl:template match="ForwardStep[AbbrevForwardStep/TOKEN='@']" mode="step-map">
-        <axis>attribute</axis>
+        <m:axis>attribute</m:axis>
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
     
     <xsl:template match="ForwardAxis" mode="step-map">
-        <axis>
+        <m:axis>
             <xsl:value-of select="TOKEN[not(.='::')]"/>
-        </axis>
+        </m:axis>
     </xsl:template>
     
     <xsl:template match="NodeTest" mode="step-map">
-        <node>
+        <m:node>
             <xsl:apply-templates mode="prefix-ncnames"/>
-        </node>
+        </m:node>
     </xsl:template>
 
     <xsl:template match="Predicate" mode="step-map">
-        <filter>
+        <m:filter>
             <xsl:apply-templates mode="#current"/>
-        </filter>
+        </m:filter>
     </xsl:template>
 
     <xsl:template priority="2" match="Predicate/TOKEN" mode="step-map"/>
@@ -125,62 +134,62 @@
     <xsl:function name="m:rewrite-match-as-test" as="xs:string?">
         <xsl:param name="who" as="item()?"/>
         <xsl:param name="ns-prefix" as="xs:string"/>
-        <xsl:variable name="alternatives" as="element()*" select="m:step-map(string($who), $ns-prefix)"/>
-        <xsl:for-each-group select="$alternatives[exists(step/node)]" group-by="true()">
+        <xsl:variable name="alternatives" as="element()*" select="m:prefixed-step-map(string($who), $ns-prefix)"/>
+        <xsl:for-each-group select="$alternatives[exists(m:step/m:node)]" group-by="true()">
             <xsl:value-of>
                 <xsl:text>exists(</xsl:text>
                 <xsl:for-each select="current-group()">
-                    <xsl:for-each select="step[exists(node)]">
+                    <xsl:for-each select="m:step[exists(m:node)]">
                         <xsl:sort select="position()" order="descending"/>
-                        <xsl:apply-templates select="." mode="target-step-check"/>
+                        <xsl:apply-templates select="." mode="invert-path"/>
                         <xsl:if test="not(position() = last())">/</xsl:if>
                     </xsl:for-each>
                     <xsl:if test="not(position() = last())"> | </xsl:if>
                 </xsl:for-each>
                     <xsl:text>)</xsl:text>
             </xsl:value-of>
-            
         </xsl:for-each-group>
-        
     </xsl:function>
 
-<!-- Mode 'target-step-check', for any step, writes an XPath traversing to that step, going up the tree -->
+<!-- Mode 'invert-path' converts match-pattern logic to selection logic
+        "a//b" becomes self::b/ancestor-or-self::*/parent::a -->
     
-    <xsl:template priority="2" match="step[axis='attribute']" mode="target-step-check">
-        <xsl:text expand-text="true">self::/attribute({ node })</xsl:text>
-        <xsl:apply-templates mode="#current" select="filter"/>
+    <xsl:template priority="3" match="m:step[m:axis='attribute']" mode="invert-path">
+        <xsl:text expand-text="true">self::/attribute({ m:node })</xsl:text>
+        <xsl:apply-templates mode="#current" select="m:filter"/>
     </xsl:template>
     
-    <xsl:template priority="2" match="step[empty(following-sibling::step)]" mode="target-step-check">
+    <xsl:template priority="2" match="m:step[empty(following-sibling::m:step)]" mode="invert-path">
         <xsl:text>self::</xsl:text>
-        <xsl:value-of select="node"/>
-        <xsl:apply-templates mode="#current" select="filter"/>
+        <xsl:value-of select="m:node"/>
+        <xsl:apply-templates mode="#current" select="m:filter"/>
     </xsl:template>
     
-    <xsl:template match="step[axis='child']" mode="target-step-check">
+    <xsl:template match="m:step[m:axis='child']" mode="invert-path">
         <xsl:text>parent::</xsl:text>
-        <xsl:value-of select="node"/>
-        <xsl:apply-templates mode="#current" select="filter"/>
+        <xsl:value-of select="m:node"/>
+        <xsl:apply-templates mode="#current" select="m:filter"/>
     </xsl:template>
     
-    <xsl:template match="step[axis='descendant-or-self']" mode="target-step-check">
+    <xsl:template match="m:step[m:axis='descendant-or-self']" mode="invert-path">
         <xsl:text>ancestor-or-self::</xsl:text>
-        <xsl:value-of select="node"/>
-        <xsl:apply-templates mode="#current" select="filter"/>
+        <xsl:value-of select="m:node"/>
+        <xsl:apply-templates mode="#current" select="m:filter"/>
     </xsl:template>
 
     <!-- catches descendant   -->
-    <xsl:template match="step" mode="target-step-check">
+    <xsl:template match="m:step" mode="invert-path">
         <xsl:text>ancestor::</xsl:text>
         <xsl:value-of select="node"/>
         <xsl:apply-templates mode="#current" select="filter"/>
     </xsl:template>
     
-    <xsl:template match="filter" mode="target-step-check">
+    <xsl:template match="m:filter" mode="invert-path">
         <xsl:text>[</xsl:text>
         <xsl:value-of select="."/>
         <xsl:text>]</xsl:text>
     </xsl:template>
+    
     
     <!--<xsl:function name="m:xpath-eval-okay" as="xs:boolean">
         <xsl:param name="expr" as="xs:string"/>
