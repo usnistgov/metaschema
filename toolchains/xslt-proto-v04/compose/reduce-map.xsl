@@ -21,6 +21,7 @@
     </xsl:template>
     
     <xsl:template match="@name">
+        <xsl:copy-of select="."/>
         <xsl:if test="empty(../parent::group)">
             <xsl:attribute name="key" select="(../@root-name,../@use-name,.)[1]"/>
         </xsl:if>
