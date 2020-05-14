@@ -29,7 +29,9 @@
             
             <xsl:comment> METASCHEMA conversion stylesheet supports XML -> METASCHEMA/SUPERMODEL conversion </xsl:comment>
             <xsl:text>&#xA;</xsl:text>
-            <xsl:comment> 888888888888888888888888888888888888888888888888888888888888888888888888888888888 </xsl:comment>
+            <xsl:comment> ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ </xsl:comment>
+            <xsl:text>&#xA;</xsl:text>
+            <xsl:comment expand-text="true"> METASCHEMA: { schema-name}{ schema-version ! (' (version ' || . || ')' ) } in namespace "{ $source-namespace }"</xsl:comment>
             <xsl:text>&#xA;</xsl:text>
 
             <!--<XSLT:character-map name="delimiters">
@@ -38,22 +40,26 @@
             </XSLT:character-map>-->
 
             <!-- first we produce templates for (each) of the global definitions.-->
-            <xsl:for-each-group select="//*[@scope = 'global']"
-                group-by="string-join((local-name(), @gi), ':')">
+            <xsl:for-each-group select="//*[@scope = 'global'][not(@recursive='true')]"
+                group-by="string-join((local-name(), @name), ':')">
                 <!-- These are all the same so we do only one -->
-                <xsl:apply-templates select="current-group()[1]" mode="make-template"/>
+                <xsl:apply-templates select="current-group()[1]" mode="make-template">
+                    <xsl:with-param name="ilk" select="current-group()"/>
+                </xsl:apply-templates>
             </xsl:for-each-group>
 
             <!-- next we produce templates for local definitions -->
             <xsl:apply-templates select=".//assembly | .//field | .//flag" mode="make-template-for-local"/>
 
-            <!--finally, a template for copying prose across, stripping ns -->
+            <!--finally, if needed, a template for copying prose across, stripping ns -->
+            <xsl:if test="exists(//value[@as-type=('markup-line','markup-multiline')])">
             <XSLT:template match="*" mode="cast-prose">
                 <XSLT:element name="{{ local-name() }}" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
                     <XSLT:copy-of select="@*"/>
                     <XSLT:apply-templates mode="#current"/>     
                 </XSLT:element>
             </XSLT:template>
+            </xsl:if>
             
         </XSLT:stylesheet> 
     </xsl:template>
@@ -68,18 +74,26 @@
     <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-template"/>
         
     <xsl:template match="*" mode="make-template">
+        <!-- $ilk keeps all the declarations with this name -->
+        <xsl:param name="ilk" as="element()+"/>
         <xsl:variable name="matching">
             <xsl:apply-templates select="." mode="make-xml-match"/>
         </xsl:variable>
         <xsl:variable name="json-key-flag-name" select="@json-key-flag"/>
         <XSLT:template match="{ $matching}">
+            <XSLT:param name="with-key" select="true()"/>
             <xsl:element name="{ local-name() }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
-                <xsl:copy-of select="@* except @scope"/>
+                <xsl:copy-of select="@* except (@key|@scope)"/>
                 <!--'SCALAR' marks fields that will be strings or data values, not maps (objects)
                 by virtue of not permitting flags other than designated for the JSON key-->
                 <xsl:if test="self::field[empty(flag[not(@key=$json-key-flag-name)])]">
                     <xsl:attribute name="in-json">SCALAR</xsl:attribute>
                 </xsl:if>
+                <XSLT:if test="$with-key">
+                    <XSLT:attribute name="key">
+                        <xsl:value-of select="@key"/>
+                    </XSLT:attribute>
+                </XSLT:if>
                 <xsl:for-each select="parent::model" expand-text="true">
                     <XSLT:if test=". is /*">
                         <XSLT:attribute name="namespace">{ $source-namespace }</XSLT:attribute>
@@ -162,7 +176,10 @@
         <XSLT:for-each-group select="{ */@gi }" group-by="true()">
             <group in-json="{ $json-grouping }">
                 <xsl:copy-of select="@key"/>
-                <XSLT:apply-templates select="current-group()"/>
+                <XSLT:apply-templates select="current-group()">
+                    <!-- defending against an inadvertant JSON key directive -->
+                    <XSLT:with-param name="with-key" select="false()"/>
+                </XSLT:apply-templates>
             </group>
         </XSLT:for-each-group>
     </xsl:template>
