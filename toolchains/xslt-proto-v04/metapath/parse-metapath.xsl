@@ -5,6 +5,18 @@
     exclude-result-prefixes="#all"
     version="3.0" xmlns:p="metapath01">
 
+
+<!-- XXX cleanup punchlist for when finished
+       check functions - any not being called? (remove)
+         (regression test everything after this)
+       reconsider names of functions and modes
+       cut all the commented code
+       add explanatory comments
+       any cosmetic reformatting
+       look at namespaces
+       
+    -->
+    
     <xsl:import href="REx/metapath01.xslt"/>
 
     <xsl:output indent="yes"/>
@@ -60,7 +72,7 @@
     
     <xsl:template mode="scrub-filters" match="PredicateList"/>
 
-    <xsl:function name="m:step-map" as="element()*">
+    <xsl:function name="m:simple-step-map" as="element()*">
         <xsl:param name="expr"/>
         <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
         <xsl:apply-templates select="$parse.tree" mode="step-map"/>
@@ -78,8 +90,8 @@
     
 <!-- because the axis is expanded we switch the token   -->
     <xsl:template match="text()" mode="step-map"/>
-
-    <xsl:template match="UnaryExpr" mode="step-map">
+    
+    <xsl:template match="XPath/UnionExpr/UnaryExpr" mode="step-map">
         <m:alternative>
             <xsl:apply-templates mode="#current"/>
         </m:alternative>
@@ -89,7 +101,7 @@
         <xsl:if test="preceding-sibling::*[1]/self::TOKEN='//'">
             <m:step>
                 <m:axis>descendant-or-self</m:axis>
-                <m:node>*</m:node>
+                <m:node>node()</m:node>
             </m:step>
         </xsl:if>
         <m:step>
@@ -116,15 +128,15 @@
             <xsl:apply-templates mode="prefix-ncnames"/>
         </m:node>
     </xsl:template>
-
+    
     <xsl:template match="Predicate" mode="step-map">
         <m:filter>
             <xsl:apply-templates mode="#current"/>
         </m:filter>
     </xsl:template>
-
+    
     <xsl:template priority="2" match="Predicate/TOKEN" mode="step-map"/>
-
+    
     <xsl:template match="Predicate/*" mode="step-map">
         <xsl:apply-templates select="." mode="prefix-ncnames"/>
     </xsl:template>
@@ -190,6 +202,68 @@
         <xsl:text>]</xsl:text>
     </xsl:template>
     
+    <!-- Mode path-map is somewhat like simple-step-map and they could XXX be
+        consolidated (except where they can't) -->
+    
+    <!-- Differences: text is not suppressed in step-map
+           (slightly rewritten where paths are explicated)
+      paths are kept, not only steps-->
+    <xsl:template match="XPath/UnionExpr/UnaryExpr" mode="path-map">
+        <m:alternative>
+            <xsl:apply-templates mode="#current"/>
+        </m:alternative>
+    </xsl:template>
+    
+    <xsl:template match="PathExpr" mode="path-map">
+        <m:path>
+            <xsl:apply-templates mode="#current"/>
+        </m:path>
+    </xsl:template>
+    
+    <!-- since '//' is expanded, we reduce the token to '/' -->
+    <xsl:template match="TOKEN[.='//']" mode="path-map">/</xsl:template>
+    <!-- similarly we drop '@s since we expand to 'attribute::'   -->
+    <xsl:template match="TOKEN[.='@']" mode="path-map"/>
+    
+    <xsl:template match="StepExpr" mode="path-map">
+        <xsl:if test="preceding::*[1]/self::TOKEN='//'">
+            <m:step>
+                <m:axis>descendant-or-self::</m:axis>
+                <m:node>node()</m:node>
+            </m:step>
+            <xsl:text>/</xsl:text>
+        </xsl:if>
+        <m:step>
+            <xsl:if test="AxisStep/ForwardStep/AbbrevForwardStep[empty(TOKEN)]">
+                <m:axis>child::</m:axis>
+            </xsl:if>
+            <xsl:apply-templates mode="#current"/>
+        </m:step>
+    </xsl:template>
+    
+    <xsl:template match="ForwardStep[AbbrevForwardStep/TOKEN='@']" mode="path-map">
+        <m:axis>attribute::</m:axis>
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template match="ForwardAxis" mode="path-map">
+        <m:axis>
+            <xsl:apply-templates mode="#current"/>
+        </m:axis>
+    </xsl:template>
+    
+    <xsl:template match="NodeTest" mode="path-map">
+        <m:node>
+            <xsl:apply-templates mode="prefix-ncnames"/>
+        </m:node>
+    </xsl:template>
+    
+    <xsl:template match="Predicate" mode="path-map">
+        <m:filter>
+            <xsl:apply-templates mode="#current"/>
+        </m:filter>
+    </xsl:template>
+
     
     <!--<xsl:function name="m:xpath-eval-okay" as="xs:boolean">
         <xsl:param name="expr" as="xs:string"/>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="3.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    exclude-result-prefixes="#all"
-    xmlns:p="metapath01"
-    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+                      xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+                    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    version="3.0"
+    xmlns:p="metapath01"
+    exclude-result-prefixes="#all"
     expand-text="true">
     
     <xsl:import href="parse-metapath.xsl"/>
@@ -68,22 +68,26 @@
         
         -->
     
-    <xsl:variable name="px" as="xs:string">j</xsl:variable>
+    <xsl:param name="px" as="xs:string">j</xsl:param>
     
-    <xsl:variable name="map" select="document('../testing/models_definition-map.xml')"/>
+    <xsl:param name="definition-map" select="document('../testing/tiny_definition-map.xml')"/>
+    
+    <!-- We have to detect wildcards on path steps with no node name (XML GI) -->
+    <xsl:variable name="wildcard" as="xs:string+" select="'*','node()'"/>
     
     <xsl:variable name="tests">
-        <test>a/b//c/d[e=f]</test>
-        <test>EVERYTHING//field-by-key</test>
-        <test>field-groupable</test>
+        <test>string-field</test>
+        <test>object-field</test>
+        <!--<test>//EVERYTHING//field-by-key</test>
+        <test>field-groupable[with-child/grandchild and x]</test>
         <test>assembly-by-key</test>
-        <test>/</test>                <!-- returns /map-->
-        <test>field-boolean</test>                <!-- returns /map-->
-        <test>id</test>                <!-- returns /map-->
-        <test>EVERYTHING</test>       <!-- returns map[@key='EVERYTHING'] -->
-        <test>field-1only</test>      <!-- returns *[@key='field-1only'] or string[@key='field-1only']-->
-        <test>field-named-value</test><!-- returns map[@key='field-named-value']/string[@key='CUSTOM-VALUE-KEY'] -->
-        <test>X</test><!-- returns nada -->
+        <test>/</test>                <!-\- returns /map-\->
+        <test>field-boolean</test>                <!-\- returns /map-\->
+        <test>id</test>                <!-\- returns /map-\->
+        <test>EVERYTHING</test>       <!-\- returns map[@key='EVERYTHING'] -\->
+        <test>field-1only</test>      <!-\- returns *[@key='field-1only'] or string[@key='field-1only']-\->
+        <test>field-named-value</test><!-\- returns map[@key='field-named-value']/string[@key='CUSTOM-VALUE-KEY'] -\->
+        <test>X</test><!-\- returns nada -\->-->
     </xsl:variable>
     
     <xsl:template match="/">
@@ -93,7 +97,7 @@
     </xsl:template>
     
     <!-- testing steps only -->
-    <xsl:template match="test" mode="testing">
+    <!--<xsl:template match="test" mode="testing">
         <xsl:variable name="every" as="element()*">
             <xsl:apply-templates select="key('obj-by-gi',.,$map)" mode="cast-node-test"/>
         </xsl:variable>
@@ -102,15 +106,15 @@
                 <xsl:sequence select="."/>
             </xsl:for-each-group>
             
-            <!--<xsl:sequence select="p:parse-XPath(.)"/>-->
+            <!-\-<xsl:sequence select="p:parse-XPath(.)"/>-\->
         </test>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:template match="test" mode="testing">
-        <test expr="{.}">
-            
-            
-            <xsl:sequence select="m:cast-path(.)"/>
+        <xsl:variable name="map" select="m:path-map(string(.))"/>
+            <test expr="{.}" expand="{string($map)}">
+                <xsl:sequence select="m:jsonize-path(.)"/>
+                <!--<xsl:sequence select="p:parse-XPath(.)"/>-->
         </test>
     </xsl:template>
     
@@ -215,33 +219,174 @@
         <type>nonNegativeInteger</type>
     </xsl:variable>
     
-    <xsl:template match="@as-type[. = $integer-types]" mode="json-type">number</xsl:template>
+    <xsl:template match="@as-type[. = $integer-types]" mode="json-type">integer</xsl:template>
     
     <xsl:variable name="numeric-types" as="element()*">
         <type>decimal</type>
     </xsl:variable>
     
-    <xsl:template match="@as-type[.=$numeric-types]" mode="json-type">number</xsl:template>
+    <xsl:template match="@as-type[. = $numeric-types]" mode="json-type">number</xsl:template>
+    
+    
+    <xsl:function name="m:path-map" as="element()*">
+        <xsl:param name="expr"/>
+        <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
+        <xsl:apply-templates select="$parse.tree" mode="path-map"/>
+    </xsl:function>
+    
+    
+    <!--<xsl:template mode="find-target" match="*">
+        <xsl:param name="from" as="node()" required="yes"/>
+        <xsl:sequence select="$from"/>
+    </xsl:template>-->
     
     <!-- Given a string, returns the same string with its
     node tests cast into the JSONized equivalent.
+    
+    It does this by passing into map-path mode, which performs
+    a sibling traversal over steps represented in the reduced parse tree
+    (path map).
+    Nodes in the declaration map are passed through to provide
+    execution context for finding each step.
+    
     NB for any path, several or no JSONized paths may be returned -
     only paths viable in the metaschema (represented in the map)
     come back, but there can be multiple. -->
-    <xsl:function name="m:cast-path">
-        <xsl:param name="path" as="xs:string" required="yes"/>
-        <xsl:variable name="parse.tree" select="p:parse-XPath($path)"/>
-        <xsl:apply-templates select="$parse.tree" mode="cast-path"/>
+    <!--XXXX-->
+    <xsl:function name="m:jsonize-path" as="xs:string">
+        <xsl:param name="metapath" as="xs:string" required="yes"/>
+        <xsl:variable name="path-map" select="m:path-map($metapath)"/>
+        <xsl:variable name="alternatives" as="xs:string*">
+            <xsl:apply-templates select="$path-map" mode="cast-path"/>
+        </xsl:variable>
+        <xsl:value-of select="string-join($alternatives,' | ')"/>
     </xsl:function>
     
-<!-- XXX   -->
-    <!--Mode 'cast-path' moves one step at a time through a path,
-    each step serving as context for retrieval of the next step with
-    reference to the definition map. 
-    Multiple paths may be returned. -->
-    
-    <xsl:template mode="cast-path" match="NodeTest" xpath-default-namespace="">
-        <xsl:apply-templates select="key('obj-by-gi',string(.),$map)" mode="cast-node-test"/>
+    <!-- An absolute path starts from the top -->
+    <xsl:template mode="cast-path" match="alternative[starts-with(.,'/')]">
+        <xsl:apply-templates mode="#current" select="path/step[1]">
+            <xsl:with-param name="from" select="$definition-map/*"/>
+        </xsl:apply-templates>
     </xsl:template>
+    
+    <!-- An relative path starts from the top -->
+    <xsl:template mode="cast-path" match="alternative">
+        <xsl:variable name="start"/>
+        <xsl:apply-templates mode="#current" select="path/step[1]">
+            <xsl:with-param name="from" select="()"/>
+        </xsl:apply-templates>
+        <!--<xsl:apply-templates select="key('obj-by-gi',string(.),$definition-map)" mode="cast-node-test"/>-->
+    </xsl:template>
+    
+    <xsl:template mode="cast-path" match="step">
+<!-- $from defaults only for the first step in a relative path, otherwise
+        it is provided by its ancestor 'alternative' (for an absolute path)
+        or by the preceding sibling step - nb it could be several -->
+        <xsl:param name="from" as="element()*" required="true"/>
+        <xsl:variable name="here">
+            <xsl:choose>
+                <xsl:when test="empty($from)">
+                    <xsl:sequence select="key('obj-by-gi',string(node),$definition-map)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="." mode="find-definition">
+                        <xsl:with-param name="from" select="$from"/>
+                    </xsl:apply-templates>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <!-- making all the steps to the JSON       -->
+        <xsl:variable name="all-json-steps" as="xs:string*">
+            <xsl:variable name="step-axis" select="axis"/>
+            <xsl:iterate select="$here">
+                <xsl:message expand-text="true">here: { $here/name()}, { $here/@gi }</xsl:message>
+                <xsl:value-of>
+                    <xsl:value-of select="$step-axis"/>
+                    <xsl:apply-templates select="$here" mode="cast-node-test"/>
+                </xsl:value-of>
+            </xsl:iterate>
+        </xsl:variable>
+        <!-- dealing with duplicates -->
+        <xsl:variable name="json-steps" select="distinct-values($all-json-steps)"/>
+        
+        <!-- and writing these out as a big union! -->
+        <xsl:if test="exists($json-steps[2])">(</xsl:if>
+        <xsl:value-of select="string-join($json-steps,' | ')"/>
+        <xsl:if test="exists($json-steps[2])">)</xsl:if>
+        
+        <!-- now we have to write any filters, accounting for their paths -->
+        
+        <xsl:apply-templates select="filter" mode="#current">
+            <xsl:with-param name="from" select="$here"/>
+        </xsl:apply-templates>
+<!-- then we traverse to the next sibling, with a new $from value       -->
+        <xsl:apply-templates select="following-sibling::step[1]" mode="#current">
+            <xsl:with-param name="from" select="$here"/>
+        </xsl:apply-templates>
+<!-- if there are no further siblings, we are done -->
+    </xsl:template>
+
+
+
+    <xsl:template mode="find-definition" priority="5" match="step[axis='child::'][node=$wildcard]">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:variable name="recursors" select="$from/m:find-recursors(.)"/>
+        <xsl:sequence select="($from|$recursors)/(.|group[empty(@gi)])/(group|assembly|field)[exists(@gi)]"/>
+    </xsl:template>
+    
+    <xsl:template mode="find-definition" priority="5" match="step[axis='descendant::'][node=$wildcard]">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:variable name="recursors" select="$from/m:find-recursors(.)"/>
+        <xsl:sequence select="($from|$recursors)/(descendant::group|descendant::assembly|descendant::field)[exists(@gi)]"/>
+    </xsl:template>
+    
+    <xsl:template mode="find-definition" priority="5" match="step[axis='descendant-or-self::'][node=$wildcard]">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:variable name="recursors" select="$from/m:find-recursors(.)"/>
+        <xsl:sequence select="($from|$recursors)/(descendant-or-self::group|descendant-or-self::assembly|descendant-or-self::field)[exists(@gi)]"/>
+    </xsl:template>
+    
+    <xsl:template mode="find-definition" priority="5" match="step[axis='attribute::'][node=$wildcard]">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:sequence select="$from/child::flag"/>
+    </xsl:template>
+    
+    <xsl:template mode="find-definition" match="step[axis='child::']">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:variable name="nodetest" select="node"/>
+        <xsl:variable name="recursors" select="$from/m:find-recursors(.)"/>
+        <xsl:sequence select="($from|$recursors)/(.|group[empty(@gi)])/(group|assembly|field)[@gi=$nodetest]"/>
+    </xsl:template>
+    
+    <xsl:template mode="find-definition" match="step[axis='descendant::']">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:variable name="nodetest" select="node"/>
+        <xsl:variable name="recursors" select="$from/m:find-recursors(.)"/>
+        <xsl:sequence select="($from|$recursors)/(descendant::group|descendant::assembly|descendant::field)[@gi=$nodetest]"/>
+    </xsl:template>
+    
+    <xsl:template mode="find-definition" match="step[axis='descendant-or-self::']">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:variable name="nodetest" select="node"/>
+        <xsl:variable name="recursors" select="$from/m:find-recursors(.)"/>
+        <xsl:sequence select="($from|$recursors)/(descendant-or-self::group|descendant-or-self::assembly|descendant-or-self::field)[@gi=$nodetest]"/>
+    </xsl:template>
+    
+    <xsl:template mode="find-definition" match="step[axis='attribute::']">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:variable name="nodetest" select="node"/>
+        <xsl:variable name="recursors" select="$from/m:find-recursors(.)"/>
+        <xsl:sequence select="$from/child::flag[@gi=$nodetest]"/>
+    </xsl:template>
+    
+    <xsl:function name="m:find-recursors" as="element(assembly)*">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:variable name="recursion-points"
+            select="$from/descendant-or-self::assembly[@recursive = 'true']"/>
+        <xsl:for-each select="$recursion-points">
+            <xsl:variable name="recursing" select="@name"/>
+            <xsl:sequence select="ancestor::assembly[@name = $recursing][1]"/>
+        </xsl:for-each>
+    </xsl:function>
     
 </xsl:stylesheet>
