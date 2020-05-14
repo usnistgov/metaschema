@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../support/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/css" href="../../../toolchains/xslt-proto-v04/lib/metaschema-author.css"?>
+
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../support/lib/metaschema.xsd">
+    <schema-name>NIST Tiny Metaschema</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>t</short-name>
+    <namespace>http://csrc.nist.gov/metaschema/ns/tiny</namespace>
+
+    <define-assembly name="tiny">
+        <formal-name>Tiny stuff</formal-name>
+        <description>Tiny, but hard</description>
+        <root-name>TINY</root-name>
+        <flag ref="id-flag"/>
+        <model>
+            <field ref="string-field"/>
+            <field ref="object-field"/>
+            <assembly ref="tiny" max-occurs="unbounded">
+                <group-as name="more-tiny" in-json="ARRAY"/>
+            </assembly>
+        </model>
+    </define-assembly>
+
+    <define-field name="string-field">
+        <formal-name>STRING FIELD</formal-name>
+        <description>Will be only a string</description>
+    </define-field>
+
+    <define-field name="object-field" as-type="boolean">
+        <formal-name>OBJECT FIELD</formal-name>
+        <description>With a flag, will be an object</description>
+        <json-value-key>boolean-value</json-value-key>
+        <flag ref="id-flag"/>
+    </define-field>
+    
+    <define-flag name="id-flag">
+        <formal-name>ID FLAG</formal-name>
+        <description>For identification</description>
+    </define-flag>  
+    
+
+</METASCHEMA>
