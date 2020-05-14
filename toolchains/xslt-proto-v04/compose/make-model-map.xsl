@@ -34,6 +34,9 @@
         
         <xsl:element name="{ $type }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
             <xsl:attribute name="scope" select="if (exists(parent::METASCHEMA)) then 'global' else 'local'"/>
+            <xsl:if test="@name = $visited">
+                <xsl:attribute name="recursive">true</xsl:attribute>
+            </xsl:if>
             <xsl:apply-templates select="@*" mode="build"/>
             <xsl:attribute name="min-occurs" select="$minOccurs"/>
             <xsl:attribute name="max-occurs" select="$maxOccurs"/>
