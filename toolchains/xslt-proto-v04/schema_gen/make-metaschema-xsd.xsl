@@ -280,7 +280,7 @@
     
     <xsl:template match="assembly">
         <xsl:variable name="decl" select="key('global-assembly-by-name',@ref)"/>
-        <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
+        <xsl:variable name="gi" select="(use-name,$decl/root-name,$decl/use-name,@ref)[1]"/>
         <xsl:call-template name="declare-element-as-type">
             <xsl:with-param name="decl" select="$decl"/>
             <xsl:with-param name="gi" select="$gi"/>
