@@ -19,9 +19,12 @@
        flags
     o values on fields including with value flags
     o recursive assemblies
+    o filters! (predicates) both with and w/o paths
+    o fields with @json-value-key - both the value, and the flag
     o paths including explicit XML groupings
     o paths to nodes that do not exist
       - should we see errors or report exceptions?
+    o for better encapsulation, consider providing the definition map as an argument to m:jsonize-path(), tunneling it through mode "cast-path" as necessary
     -->
     
     <xsl:output indent="yes"/>
