@@ -10,78 +10,39 @@
     expand-text="true">
     
     <xsl:import href="parse-metapath.xsl"/>
-<!--
-     Supports rewriting XPath expressions addressing XML as paths into equivalent JSON
-       based on a Metaschema mapping given as a definition map
-     
-     KEEPING IN MIND THAT ANY STEP OR PATH MAY RETURN SEVERAL EQUIVALENTS
-       and that paths must be metaschema-context-aware
-       
-     x Deliver the equivalent step for a step
-       assemblies
-         ungrouped
-         grouped
-           both as singletons, and in arrays
-           in arrays only
-         grouped by key
-       fields
-         ungrouped
-           without flags (strings)
-           with flags (maps)
-         grouped
-           both singletons, and in arrays
-             without flags (strings)
-             with flags (maps)
-           in arrays only
-             without flags (strings)
-             with flags (maps)
-         grouped by key
-           without flags not the key flag (strings)
-           with flags (maps)
-       flags
-         appearing explicitly
-         appearing as keys
-
-     o deliver the equivalent path for a path
-         steps interpolated with axes
-         steps inside predicates (filter expressions)
-         support recursion e.g. paths like 'sequence/group/sequence/group/sequence'
     
+<!-- Testing:
+    o all object types
+       including grouped and ungrouped assemblies and fields
+         including grouped with keys (a json key flag exists)
+         also when group-json="SINGLETON_OR_ARRAY" (the *default* for groups) we should see two paths
+       flags
+    o values on fields including with value flags
+    o recursive assemblies
+    o paths including explicit XML groupings
+    o paths to nodes that do not exist
+      - should we see errors or report exceptions?
     -->
     
     <xsl:output indent="yes"/>
     
-    <xsl:key name="obj-by-gi" match="*" use="@gi"/>
+    <xsl:key name="obj-by-gi" match="*"       use="@gi"/>
     <xsl:key name="obj-by-gi" match="/model" use="'/'"/>
     
-    <!--TYPES OF OBJECTS
-      standalone assemblies and fields (singletons)
-        bring back field value objects (strings), not field objects
-      standalone flags (same, but @ in XML)
-      assembly and field members of groups
-        both arrays and objects, or addressed by key
-        
-      edge cases ...
-       for terminal steps in a path to a field, traversal to the field value....
-       when a json-key is given, traversal to its flag should return the key
-       when a json-value-key is given, traversal to the field value must be provided
-        
-        -->
     
     <xsl:param name="px" as="xs:string">j</xsl:param>
     
-    <xsl:param name="definition-map" select="document('../testing/tiny_definition-map.xml')"/>
+    <xsl:param name="definition-map" select="document('../testing/models_definition-map.xml')"/>
     
     <!-- We have to detect wildcards on path steps with no node name (XML GI) -->
     <xsl:variable name="wildcard" as="xs:string+" select="'*','node()'"/>
     
     <xsl:variable name="tests">
-        <test>string-field</test>
-        <test>object-field</test>
-        <!--<test>//EVERYTHING//field-by-key</test>
+        <test>assembly-by-key/@id</test>
+        
+        <!--<!-\-<test>//EVERYTHING//field-by-key</test>-\->
         <test>field-groupable[with-child/grandchild and x]</test>
-        <test>assembly-by-key</test>
-        <test>/</test>                <!-\- returns /map-\->
+        <!-\-<test>/</test>-\->                <!-\- returns /map-\->
         <test>field-boolean</test>                <!-\- returns /map-\->
         <test>id</test>                <!-\- returns /map-\->
         <test>EVERYTHING</test>       <!-\- returns map[@key='EVERYTHING'] -\->
@@ -96,25 +57,12 @@
         </all-tests>
     </xsl:template>
     
-    <!-- testing steps only -->
-    <!--<xsl:template match="test" mode="testing">
-        <xsl:variable name="every" as="element()*">
-            <xsl:apply-templates select="key('obj-by-gi',.,$map)" mode="cast-node-test"/>
-        </xsl:variable>
-        <test expr="{.}">
-            <xsl:for-each-group select="$every" group-by="string(.)">
-                <xsl:sequence select="."/>
-            </xsl:for-each-group>
-            
-            <!-\-<xsl:sequence select="p:parse-XPath(.)"/>-\->
-        </test>
-    </xsl:template>-->
-    
     <xsl:template match="test" mode="testing">
         <xsl:variable name="map" select="m:path-map(string(.))"/>
-            <test expr="{.}" expand="{string($map)}">
-                <xsl:sequence select="m:jsonize-path(.)"/>
-                <!--<xsl:sequence select="p:parse-XPath(.)"/>-->
+        <test expr="{.}" expand="{string($map)}" json-path="{m:jsonize-path(.)}">
+            <!--<xsl:apply-templates select="key('obj-by-gi',.,$definition-map)" mode="cast-node-test"/>-->
+            <!--<xsl:sequence select="m:path-map(.)"/>-->
+            <!--<xsl:sequence select="p:parse-XPath(.)"/>-->
         </test>
     </xsl:template>
     
@@ -122,52 +70,71 @@
         <expr>/{$px}:map</expr>
     </xsl:template>
     
-    <xsl:template match="assembly[exists(@key)]" mode="cast-node-test">
-        <expr>{$px}:map[@key='{@key}']</expr>
+    <xsl:template priority="2" match="group[@group-json='BY_KEY']/assembly" mode="cast-node-test">
+        <expr>{$px}:map[@key='{../@key}']/{$px}:map</expr>
     </xsl:template>
     
-    <xsl:template match="group[@group-json='BY_KEY']/assembly" mode="cast-node-test">
-        <expr>{$px}:*[@key='{../@key}']/{$px}:map</expr>
-    </xsl:template>
-    
-    <xsl:template match="group[@group-json='ARRAY']/assembly" mode="cast-node-test">
+    <xsl:template priority="2" match="group[@group-json='ARRAY']/assembly" mode="cast-node-test">
         <expr>{$px}:array[@key='{../@key}']/{$px}:map</expr>
     </xsl:template>
     
-    <!-- Catches assembly grouped as SINGLETON-OR-ARRAY -->
-    <xsl:template match="assembly" mode="cast-node-test">
+    <!-- Catches assembly grouped as SINGLETON_OR_ARRAY -->
+    <xsl:template match="group/assembly" mode="cast-node-test">
         <expr>{$px}:assembly[@key='{../@key}']/{$px}:map</expr>
         <expr>{$px}:map[@key='{../@key}']</expr>
     </xsl:template>
     
-    <xsl:template match="field[exists(@key)]" mode="cast-node-test">
+    <xsl:template match="assembly" mode="cast-node-test">
+        <expr>{$px}:map[@key='{@key}']</expr>
+    </xsl:template>
+    
+    <!-- field grouped by key -->
+    <xsl:template priority="3" match="group[@group-json='BY_KEY']/field" mode="cast-node-test">
+        <xsl:variable name="type">
+            <xsl:apply-templates select="." mode="object-type"/>
+        </xsl:variable>
+        <xsl:variable name="field-path">
+            <xsl:next-match/>
+        </xsl:variable>
+        <expr>{$px}:map[@key='{../@key}']/{$field-path}</expr>
+    </xsl:template>
+    
+    <xsl:template priority="3" match="group[@group-json='ARRAY']/field" mode="cast-node-test">
+        <xsl:variable name="type">
+            <xsl:apply-templates select="." mode="object-type"/>
+        </xsl:variable>
+        <xsl:variable name="field-path">
+            <xsl:next-match/>
+        </xsl:variable>
+        <expr>{$px}:array[@key='{../@key}']/{$field-path}</expr>
+    </xsl:template>
+    
+    <!-- Catches field grouped as SINGLETON-OR-ARRAY -->
+    <xsl:template match="group/field" mode="cast-node-test">
+        <xsl:variable name="type">
+            <xsl:apply-templates select="." mode="object-type"/>
+        </xsl:variable>
+        <xsl:variable name="field-path">
+            <xsl:next-match/>
+        </xsl:variable>
+        <expr>{$px}:array[@key='{../@key}']/{$field-path}</expr>
+        <expr>{$px}:{$type}[@key='{../@key}']</expr>
+    </xsl:template>
+    
+    <!-- field with no flags apart from a json-key-flag points to itself as a value property -->
+    <xsl:template match="field[empty(flag[not(@key = ../@json-key-flag)])]" mode="cast-node-test">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
         <expr>{$px}:{$type}[@key='{@key}']</expr>
     </xsl:template>
     
-    <xsl:template match="group[@group-json='BY_KEY']/field" mode="cast-node-test">
-        <xsl:variable name="type">
-            <xsl:apply-templates select="." mode="object-type"/>
-        </xsl:variable>
-        <expr>{$px}:*[@key='{../@key}']/{$px}:{$type}</expr>
-    </xsl:template>
-    
-    <xsl:template match="group[@group-json='ARRAY']/field" mode="cast-node-test">
-        <xsl:variable name="type">
-            <xsl:apply-templates select="." mode="object-type"/>
-        </xsl:variable>
-        <expr>{$px}:array[@key='{../@key}']/{$px}:{$type}</expr>
-    </xsl:template>
-    
-    <!-- Catches assembly grouped as SINGLETON-OR-ARRAY -->
+    <!-- field points to its value property -->
     <xsl:template match="field" mode="cast-node-test">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
-        <expr>{$px}:assembly[@key='{../@key}']/{$px}:{$type}</expr>
-        <expr>{$px}:{$type}[@key='{../@key}']</expr>
+        <expr>{$px}:map[@key='{@key}']/{$px}:{$type}[@key='{value/@key}']</expr>
     </xsl:template>
     
     <xsl:template match="flag" mode="cast-node-test">
@@ -177,18 +144,11 @@
         <expr>{$px}:{$type}[@key='{@key}']</expr>
     </xsl:template>
     
-    <xsl:template match="flag[@key = ../@json-key-flag]" mode="cast-node-test">
-        <xsl:variable name="grandparent-type">
-            <xsl:apply-templates select="../.." mode="object-type"/>
-        </xsl:variable>
-        <xsl:variable name="parent-type">
-            <xsl:apply-templates select=".." mode="object-type"/>
-        </xsl:variable>
-        
-        <expr>{$px}:{$grandparent-type}[@key='{../../@key}']/{$px}:{$parent-type}/@key</expr>
-    </xsl:template>
+    <!-- In the case of a json key flag, the node test on a relative path from its parent is ... "key" -->
+    <xsl:template match="flag[@key = ../@json-key-flag]" mode="cast-node-test">key</xsl:template>
     
     <xsl:template match="*" mode="cast-node-test">
+        <expr>OoopsFellThrough</expr>
         <expr>{$px}:*[@key='{../@key}']</expr>
     </xsl:template>
     
@@ -197,8 +157,6 @@
       appropriate data type for any other fields or flags (string, number, boolean)-->
       
     <xsl:template match="*" mode="object-type">map</xsl:template>
-
-    <xsl:template match="field[flag/@key != @json-key-flag]" mode="object-type">map</xsl:template>
     
     <xsl:template match="field" mode="object-type">
       <xsl:apply-templates select="value/@as-type" mode="json-type"/>
@@ -226,33 +184,21 @@
     </xsl:variable>
     
     <xsl:template match="@as-type[. = $numeric-types]" mode="json-type">number</xsl:template>
-    
-    
+       
     <xsl:function name="m:path-map" as="element()*">
         <xsl:param name="expr"/>
         <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
         <xsl:apply-templates select="$parse.tree" mode="path-map"/>
     </xsl:function>
     
+    <!-- Given string $str, function m:jsonize-path($str)
+        returns the same string cast into the JSONized equivalent.
     
-    <!--<xsl:template mode="find-target" match="*">
-        <xsl:param name="from" as="node()" required="yes"/>
-        <xsl:sequence select="$from"/>
-    </xsl:template>-->
+    It relies on mode "cast-path", which executes a sibling traversal over steps represented in the reduced parse tree (path map).
+    Nodes in the declaration map are passed through to provide execution context for finding each step.
     
-    <!-- Given a string, returns the same string with its
-    node tests cast into the JSONized equivalent.
+    NB for any path, several or no JSONized paths may be returned - only paths viable in the metaschema (represented in the map) come back, but there can be multiple. -->
     
-    It does this by passing into map-path mode, which performs
-    a sibling traversal over steps represented in the reduced parse tree
-    (path map).
-    Nodes in the declaration map are passed through to provide
-    execution context for finding each step.
-    
-    NB for any path, several or no JSONized paths may be returned -
-    only paths viable in the metaschema (represented in the map)
-    come back, but there can be multiple. -->
-    <!--XXXX-->
     <xsl:function name="m:jsonize-path" as="xs:string">
         <xsl:param name="metapath" as="xs:string" required="yes"/>
         <xsl:variable name="path-map" select="m:path-map($metapath)"/>
@@ -262,31 +208,37 @@
         <xsl:value-of select="string-join($alternatives,' | ')"/>
     </xsl:function>
     
-    <!-- An absolute path starts from the top -->
-    <xsl:template mode="cast-path" match="alternative[starts-with(.,'/')]">
-        <xsl:apply-templates mode="#current" select="path/step[1]">
-            <xsl:with-param name="from" select="$definition-map/*"/>
-        </xsl:apply-templates>
+    <!-- An absolute path -->
+    <xsl:template mode="cast-path" as="xs:string" match="alternative[starts-with(.,'/')]">
+        <xsl:value-of>
+            <xsl:apply-templates mode="#current" select="path/step[1]">
+                <xsl:with-param name="starting" select="true()"/>
+                <xsl:with-param name="relative" select="false()"/>
+            </xsl:apply-templates>
+        </xsl:value-of>
     </xsl:template>
     
-    <!-- An relative path starts from the top -->
-    <xsl:template mode="cast-path" match="alternative">
-        <xsl:variable name="start"/>
-        <xsl:apply-templates mode="#current" select="path/step[1]">
-            <xsl:with-param name="from" select="()"/>
-        </xsl:apply-templates>
-        <!--<xsl:apply-templates select="key('obj-by-gi',string(.),$definition-map)" mode="cast-node-test"/>-->
+    <!-- A relative path -->
+    <xsl:template mode="cast-path" as="xs:string" match="alternative">
+        <xsl:value-of>
+            <xsl:apply-templates mode="#current" select="path/step[1]">
+                <xsl:with-param name="starting" select="true()"/>
+            </xsl:apply-templates>
+        </xsl:value-of>
     </xsl:template>
     
     <xsl:template mode="cast-path" match="step">
-<!-- $from defaults only for the first step in a relative path, otherwise
-        it is provided by its ancestor 'alternative' (for an absolute path)
-        or by the preceding sibling step - nb it could be several -->
-        <xsl:param name="from" as="element()*" required="true"/>
-        <xsl:variable name="here">
+<!-- $from gives us a node in the definition map providing the execution context for the step -->
+        <xsl:param name="from" as="element()*"/>
+        <xsl:param name="starting" as="xs:boolean" select="false()"/>
+        <xsl:param name="relative" as="xs:boolean" select="true()"/>
+        <xsl:if test="not($starting)">/</xsl:if>
+        <xsl:variable name="here" as="element()*">
             <xsl:choose>
-                <xsl:when test="empty($from)">
-                    <xsl:sequence select="key('obj-by-gi',string(node),$definition-map)"/>
+                <xsl:when test="$starting">
+                    <xsl:variable name="lookup"
+                        select="if ($relative) then string(node) else '/'"/>
+                    <xsl:sequence select="key('obj-by-gi', $lookup, $definition-map)"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates select="." mode="find-definition">
@@ -296,17 +248,17 @@
             </xsl:choose>
         </xsl:variable>
         <!-- making all the steps to the JSON       -->
+        
         <xsl:variable name="all-json-steps" as="xs:string*">
             <xsl:variable name="step-axis" select="axis"/>
-            <xsl:iterate select="$here">
-                <xsl:message expand-text="true">here: { $here/name()}, { $here/@gi }</xsl:message>
+            <xsl:for-each select="$here">
                 <xsl:value-of>
-                    <xsl:value-of select="$step-axis"/>
-                    <xsl:apply-templates select="$here" mode="cast-node-test"/>
+                    <xsl:apply-templates mode="abbreviate-axis" select="$step-axis"/>
+                    <xsl:apply-templates select="." mode="cast-node-test"/>
                 </xsl:value-of>
-            </xsl:iterate>
+            </xsl:for-each>
         </xsl:variable>
-        <!-- dealing with duplicates -->
+        <!-- removing duplicates -->
         <xsl:variable name="json-steps" select="distinct-values($all-json-steps)"/>
         
         <!-- and writing these out as a big union! -->
@@ -325,8 +277,6 @@
         </xsl:apply-templates>
 <!-- if there are no further siblings, we are done -->
     </xsl:template>
-
-
 
     <xsl:template mode="find-definition" priority="5" match="step[axis='child::'][node=$wildcard]">
         <xsl:param name="from" as="element()*"/>
@@ -388,5 +338,14 @@
             <xsl:sequence select="ancestor::assembly[@name = $recursing][1]"/>
         </xsl:for-each>
     </xsl:function>
+    
+    <xsl:template match="axis" mode="abbreviate-axis">
+        <xsl:value-of select="."/>
+    </xsl:template>
+    
+    <xsl:template match="axis[.='attribute::']" mode="abbreviate-axis">@</xsl:template>
+    
+    <xsl:template match="axis[.='child::']" mode="abbreviate-axis"/>
+    
     
 </xsl:stylesheet>
