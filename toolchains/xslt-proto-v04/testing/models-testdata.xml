@@ -2,7 +2,6 @@
 <EVERYTHING xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/everything models_metaschema_XML-SCHEMA.xsd"
  xmlns="http://csrc.nist.gov/metaschema/ns/everything">
-    
     <field-1only>FIELD-1-ONLY</field-1only>
     <field-base64>1234abcd</field-base64>
     <field-boolean>true</field-boolean>
@@ -29,9 +28,9 @@
     </wrapped-prose>
     <h1>Unwrapped prose</h1>
     <p>Here we have unwrapped prose....</p>
-    <assembly-1only>
+    <ASSEMBLY-1ONLY>
         <field-1only>ASSEMBLY-1-ONLY / FIELD-1-ONLY</field-1only>
-    </assembly-1only>
+    </ASSEMBLY-1ONLY>
     <assembly-groupable>
         <field-groupable>assembly-groupable 1 / field-groupable 1</field-groupable>
         <field-groupable>assembly-groupable 1 / field-groupable 2</field-groupable>
@@ -85,7 +84,7 @@
         <field-by-key id="abk3.fbk2">assembly-by-key 1 / field-by-key 2</field-by-key>
         <field-by-key id="abk3.fbk3">assembly-by-key 1 / field-by-key 3</field-by-key>
     </assembly-by-key>
-    <everything>
+    <EVERYTHING>
         <field-1only>nested FIELD-1-ONLY</field-1only>
-    </everything>
+    </EVERYTHING>
 </EVERYTHING>
