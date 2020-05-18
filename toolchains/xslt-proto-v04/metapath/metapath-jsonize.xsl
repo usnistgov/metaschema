@@ -44,7 +44,7 @@
     <xsl:variable name="tests">
         <test>/</test>
         <test>/*</test>
-        <test>/EVERYTHING</test>
+        <test>/EVERYTHING[field-1only='x']</test>
         <test>/EVERYTHING/EVERYTHING</test>
         <test>EVERYTHING/EVERYTHING/EVERYTHING</test>
         
@@ -217,10 +217,10 @@
     </xsl:function>
     
     <!-- An absolute path -->
-    <xsl:template mode="cast-path" as="xs:string" match="alternative[starts-with(.,'/')]">
+    <xsl:template mode="cast-path" as="xs:string" match="path[starts-with(.,'/')]">
         <xsl:value-of>
             <xsl:text expand-text="true">/{$px}:map</xsl:text>
-            <xsl:apply-templates mode="#current" select="path/step[1]">
+            <xsl:apply-templates mode="#current" select="step[1]">
                 <xsl:with-param name="starting" select="true()"/>
                 <xsl:with-param name="relative" select="false()"/>
             </xsl:apply-templates>
@@ -228,9 +228,9 @@
     </xsl:template>
     
     <!-- A relative path -->
-    <xsl:template mode="cast-path" as="xs:string" match="alternative">
+    <xsl:template mode="cast-path" as="xs:string" match="path">
         <xsl:value-of>
-            <xsl:apply-templates mode="#current" select="path/step[1]">
+            <xsl:apply-templates mode="#current" select="step[1]">
                 <xsl:with-param name="starting" select="true()"/>
             </xsl:apply-templates>
         </xsl:value-of>
