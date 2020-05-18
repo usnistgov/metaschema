@@ -74,13 +74,13 @@
     <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-template"/>
         
     <xsl:template match="*" mode="make-template">
-        <!-- $ilk keeps all the declarations with this name -->
-        <xsl:param name="ilk" as="element()+"/>
         <xsl:variable name="matching">
             <xsl:apply-templates select="." mode="make-xml-match"/>
         </xsl:variable>
         <xsl:variable name="json-key-flag-name" select="@json-key-flag"/>
         <XSLT:template match="{ $matching}">
+            <!-- A parameter allows the call to drop the key, necessary for recursive
+                groups of elements also allowed at the root (at least) -->
             <XSLT:param name="with-key" select="true()"/>
             <xsl:element name="{ local-name() }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
                 <xsl:copy-of select="@* except (@key|@scope)"/>
@@ -89,11 +89,13 @@
                 <xsl:if test="self::field[empty(flag[not(@key=$json-key-flag-name)])]">
                     <xsl:attribute name="in-json">SCALAR</xsl:attribute>
                 </xsl:if>
-                <XSLT:if test="$with-key">
-                    <XSLT:attribute name="key">
-                        <xsl:value-of select="@key"/>
-                    </XSLT:attribute>
-                </XSLT:if>
+                <xsl:if test="exists(@key)">
+                    <XSLT:if test="$with-key">
+                        <XSLT:attribute name="key">
+                            <xsl:value-of select="@key"/>
+                        </XSLT:attribute>
+                    </XSLT:if>
+                </xsl:if>
                 <xsl:for-each select="parent::model" expand-text="true">
                     <XSLT:if test=". is /*">
                         <XSLT:attribute name="namespace">{ $source-namespace }</XSLT:attribute>
