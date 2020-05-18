@@ -46,7 +46,7 @@
         <test>/*</test>
         <test>/EVERYTHING</test>
         <test>/EVERYTHING/EVERYTHING</test>
-        <test>EVERYTHING</test>
+        <test>EVERYTHING/EVERYTHING/EVERYTHING</test>
         
         <!--<!-\-<test>//EVERYTHING//field-by-key</test>-\->
         <test>field-groupable[with-child/grandchild and x]</test>
@@ -241,7 +241,7 @@
         <xsl:param name="from" as="element()*"/>
         <xsl:param name="starting" as="xs:boolean" select="false()"/>
         <xsl:param name="relative" as="xs:boolean" select="true()"/>
-        <xsl:text>/</xsl:text>
+        <xsl:if test="not($starting) or not($relative)">/</xsl:if>
         <xsl:variable name="here" as="element()*">
             <xsl:choose>
                 <!-- the first step of an absolute path is located relative to the root -->
@@ -300,7 +300,15 @@
 
     <xsl:template mode="find-definition" priority="5" match="step[axis='child::'][node=$wildcard]">
         <xsl:param name="from" as="element()*"/>
-        <xsl:variable name="recursors" select="$from/assembly[@recursive = 'true']"/>
+        <xsl:variable name="recursors" select="$from/(.|group[empty(@gi)])/assembly[@recursive = 'true']"/>
+        <xsl:variable name="recursors" as="element()*">
+            <xsl:variable name="recursion-points"
+                select="$from/(. | assembly | group[empty(@gi)])[@recursive = 'true']"/>
+            <xsl:for-each select="$recursion-points">
+                <xsl:variable name="recursing" select="@name"/>
+                <xsl:sequence select="ancestor::assembly[@name = $recursing][1]"/>
+            </xsl:for-each>
+        </xsl:variable>
         <xsl:sequence select="($from|$recursors)/(.|group[empty(@gi)])/(group|assembly|field)[exists(@gi)]"/>
     </xsl:template>
     
@@ -324,7 +332,14 @@
     <xsl:template mode="find-definition" match="step[axis='child::']">
         <xsl:param name="from" as="element()*"/>
         <xsl:variable name="nodetest" select="node"/>
-        <xsl:variable name="recursors" select="$from/assembly[@recursive = 'true']"/>
+        <xsl:variable name="recursors" as="element()*">
+            <xsl:variable name="recursion-points"
+                select="$from/(. | assembly | group[empty(@gi)])[@recursive = 'true']"/>
+            <xsl:for-each select="$recursion-points">
+                <xsl:variable name="recursing" select="@name"/>
+                <xsl:sequence select="ancestor::assembly[@name = $recursing][1]"/>
+            </xsl:for-each>
+        </xsl:variable>
         <xsl:sequence select="($from|$recursors)/(.|group[empty(@gi)])/(group|assembly|field)[@gi=$nodetest]"/>
     </xsl:template>
     
