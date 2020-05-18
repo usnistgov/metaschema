@@ -30,8 +30,9 @@
     <xsl:output indent="yes"/>
     
     <xsl:key name="obj-by-gi" match="*"       use="@gi"/>
-    <xsl:key name="obj-by-gi" match="/model" use="'/'"/>
     
+<!-- Starting point for absolute paths   -->
+    <xsl:key name="obj-by-gi" match="/model" use="'/'"/>
     
     <xsl:param name="px" as="xs:string">j</xsl:param>
     
@@ -41,7 +42,11 @@
     <xsl:variable name="wildcard" as="xs:string+" select="'*','node()'"/>
     
     <xsl:variable name="tests">
-        <test>assembly-by-key/@id</test>
+        <test>/</test>
+        <test>/*</test>
+        <test>/EVERYTHING</test>
+        <test>/EVERYTHING/EVERYTHING</test>
+        <test>EVERYTHING</test>
         
         <!--<!-\-<test>//EVERYTHING//field-by-key</test>-\->
         <test>field-groupable[with-child/grandchild and x]</test>
@@ -64,7 +69,7 @@
         <xsl:variable name="map" select="m:path-map(string(.))"/>
         <test expr="{.}" expand="{string($map)}" json-path="{m:jsonize-path(.)}">
             <!--<xsl:apply-templates select="key('obj-by-gi',.,$definition-map)" mode="cast-node-test"/>-->
-            <!--<xsl:sequence select="m:path-map(.)"/>-->
+            <xsl:sequence select="m:path-map(.)"/>
             <!--<xsl:sequence select="p:parse-XPath(.)"/>-->
         </test>
     </xsl:template>
@@ -113,7 +118,7 @@
     </xsl:template>
     
     <!-- Catches field grouped as SINGLETON-OR-ARRAY -->
-    <xsl:template match="group/field" mode="cast-node-test">
+    <xsl:template priority="2" match="group/field" mode="cast-node-test">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
@@ -214,6 +219,7 @@
     <!-- An absolute path -->
     <xsl:template mode="cast-path" as="xs:string" match="alternative[starts-with(.,'/')]">
         <xsl:value-of>
+            <xsl:text expand-text="true">/{$px}:map</xsl:text>
             <xsl:apply-templates mode="#current" select="path/step[1]">
                 <xsl:with-param name="starting" select="true()"/>
                 <xsl:with-param name="relative" select="false()"/>
@@ -235,14 +241,25 @@
         <xsl:param name="from" as="element()*"/>
         <xsl:param name="starting" as="xs:boolean" select="false()"/>
         <xsl:param name="relative" as="xs:boolean" select="true()"/>
-        <xsl:if test="not($starting)">/</xsl:if>
+        <xsl:text>/</xsl:text>
         <xsl:variable name="here" as="element()*">
             <xsl:choose>
+                <!-- the first step of an absolute path is located relative to the root -->
                 <xsl:when test="$starting">
-                    <xsl:variable name="lookup"
-                        select="if ($relative) then string(node) else '/'"/>
-                    <xsl:sequence select="key('obj-by-gi', $lookup, $definition-map)"/>
+                    <xsl:choose>
+                        <xsl:when test="$relative">
+                            <!-- the first step of a relative path starts where it starts-->
+                            <xsl:sequence select="key('obj-by-gi', string(node), $definition-map)"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <!-- an absolute path starts from the root -->
+                            <xsl:apply-templates select="." mode="find-definition">
+                                <xsl:with-param name="from" select="$definition-map/*"/>
+                            </xsl:apply-templates>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:when>
+                <!-- if we are not starting, we have a $from to go from -->
                 <xsl:otherwise>
                     <xsl:apply-templates select="." mode="find-definition">
                         <xsl:with-param name="from" select="$from"/>
@@ -251,7 +268,6 @@
             </xsl:choose>
         </xsl:variable>
         <!-- making all the steps to the JSON       -->
-        
         <xsl:variable name="all-json-steps" as="xs:string*">
             <xsl:variable name="step-axis" select="axis"/>
             <xsl:for-each select="$here">
@@ -264,10 +280,11 @@
         <!-- removing duplicates -->
         <xsl:variable name="json-steps" select="distinct-values($all-json-steps)"/>
         
-        <!-- and writing these out as a big union! -->
-        <xsl:if test="exists($json-steps[2])">(</xsl:if>
+        <!-- and writing these out as a big union -->
+        <!-- grouping multiple paths or none -->
+        <xsl:if test="count($json-steps) ne 1">(</xsl:if>
         <xsl:value-of select="string-join($json-steps,' | ')"/>
-        <xsl:if test="exists($json-steps[2])">)</xsl:if>
+        <xsl:if test="count($json-steps) ne 1">)</xsl:if>
         
         <!-- now we have to write any filters, accounting for their paths -->
         
@@ -283,7 +300,7 @@
 
     <xsl:template mode="find-definition" priority="5" match="step[axis='child::'][node=$wildcard]">
         <xsl:param name="from" as="element()*"/>
-        <xsl:variable name="recursors" select="$from/m:find-recursors(.)"/>
+        <xsl:variable name="recursors" select="$from/assembly[@recursive = 'true']"/>
         <xsl:sequence select="($from|$recursors)/(.|group[empty(@gi)])/(group|assembly|field)[exists(@gi)]"/>
     </xsl:template>
     
@@ -307,7 +324,7 @@
     <xsl:template mode="find-definition" match="step[axis='child::']">
         <xsl:param name="from" as="element()*"/>
         <xsl:variable name="nodetest" select="node"/>
-        <xsl:variable name="recursors" select="$from/m:find-recursors(.)"/>
+        <xsl:variable name="recursors" select="$from/assembly[@recursive = 'true']"/>
         <xsl:sequence select="($from|$recursors)/(.|group[empty(@gi)])/(group|assembly|field)[@gi=$nodetest]"/>
     </xsl:template>
     
