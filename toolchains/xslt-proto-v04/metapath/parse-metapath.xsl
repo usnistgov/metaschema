@@ -3,7 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     exclude-result-prefixes="#all"
-    version="3.0" xmlns:p="metapath01">
+    version="3.0" xmlns:p="metapath02">
 
 
 <!-- XXX cleanup punchlist for when finished
@@ -17,7 +17,7 @@
        
     -->
     
-    <xsl:import href="REx/metapath01.xslt"/>
+    <xsl:import href="REx/metapath02.xslt"/>
 
     <xsl:output indent="yes"/>
 
@@ -134,6 +134,8 @@
             <xsl:apply-templates mode="#current"/>
         </m:filter>
     </xsl:template>
+    
+    
     
     <xsl:template priority="2" match="Predicate/TOKEN" mode="step-map"/>
     
@@ -264,6 +266,13 @@
         </m:filter>
     </xsl:template>
 
+    <xsl:template match="FunctionCall" mode="path-map">
+        <m:function>
+            <xsl:apply-templates mode="#current"/>
+        </m:function>
+    </xsl:template>
+    
+    
     
     <!--<xsl:function name="m:xpath-eval-okay" as="xs:boolean">
         <xsl:param name="expr" as="xs:string"/>
