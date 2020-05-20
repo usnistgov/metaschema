@@ -2,7 +2,7 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     stylesheet="parse-metapath.xsl"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
-    
+<!-- Tests path-aware element name prefixing -->
     <x:scenario label="Element, implicit child">
         <x:call function="m:prefixed-path">
             <x:param name="expr" as="xs:string">element</x:param>
