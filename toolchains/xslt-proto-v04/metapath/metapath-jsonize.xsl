@@ -5,12 +5,25 @@
                       xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
                     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    xmlns:p="metapath01"
+    xmlns:p="metapath02"
     exclude-result-prefixes="#all"
     expand-text="true">
     
+    <!-- xmlns:p="xpath20" -->
+    <!--<xsl:import href="REx/xpath20.xslt"/>-->
+    
+    <!-- xmlns:p="metapath01" -->
     <xsl:import href="parse-metapath.xsl"/>
     
+<!-- Setting $diagnostic to true() permits emitting paths that do not
+     correspond to nodes given in the metaschema definition map ...
+     they will end in '()' -->
+    <xsl:param name="diagnostic" select="true()"/>
+    
+<!-- Feature set
+       support 'value()' on terminal step 
+       correct ws inside predicates
+       tighten data types in function calls returning errors -->
 <!-- Testing:
     o all object types
        including grouped and ungrouped assemblies and fields
@@ -29,10 +42,7 @@
     
     <xsl:output indent="yes"/>
     
-    <xsl:key name="obj-by-gi" match="*"       use="@gi"/>
-    
-<!-- Starting point for absolute paths   -->
-    <xsl:key name="obj-by-gi" match="/model" use="'/'"/>
+    <xsl:key name="obj-by-gi" match="*"      use="@gi"/>
     
     <xsl:param name="px" as="xs:string">j</xsl:param>
     
@@ -42,21 +52,31 @@
     <xsl:variable name="wildcard" as="xs:string+" select="'*','node()'"/>
     
     <xsl:variable name="tests">
-        <test>/</test>
+        <test>field-1only/(value() + 1)</test>
+        <test>field-1only/(value() + path)</test>
+        
+        <test>/EVERYTHING/(field-1only | field-named-value)</test>
         <test>/*</test>
+        <!--<test>field-named-value/value()</test>-->
+        
+        <!--field with dynamic value key?-->
+        <!--<test>X</test>
+        <test>/</test>
+        
         <test>/EVERYTHING[field-1only='x']</test>
         <test>/EVERYTHING/EVERYTHING</test>
         <test>EVERYTHING/EVERYTHING/EVERYTHING</test>
+        <test>field-1only</test>
+        <test>field-1only/value()</test>
+        --><!-- returns map[@key='field-named-value']/string[@key='CUSTOM-VALUE-KEY'] -->
         
-        <!--<!-\-<test>//EVERYTHING//field-by-key</test>-\->
-        <test>field-groupable[with-child/grandchild and x]</test>
-        <!-\-<test>/</test>-\->                <!-\- returns /map-\->
-        <test>field-boolean</test>                <!-\- returns /map-\->
-        <test>id</test>                <!-\- returns /map-\->
-        <test>EVERYTHING</test>       <!-\- returns map[@key='EVERYTHING'] -\->
-        <test>field-1only</test>      <!-\- returns *[@key='field-1only'] or string[@key='field-1only']-\->
-        <test>field-named-value</test><!-\- returns map[@key='field-named-value']/string[@key='CUSTOM-VALUE-KEY'] -\->
-        <test>X</test><!-\- returns nada -\->-->
+        <!--<test>//EVERYTHING//field-by-key</test>-->
+        <!--<test>field-groupable[with-child/grandchild and x]</test>-->
+        <!--<test>field-boolean</test>-->
+        <!--<test>id</test>-->
+              <!-- also returns string[@key='field-1only']-->
+        
+        <!-- returns nada -->
     </xsl:variable>
     
     <xsl:template match="/">
@@ -68,32 +88,34 @@
     <xsl:template match="test" mode="testing">
         <xsl:variable name="map" select="m:path-map(string(.))"/>
         <test expr="{.}" expand="{string($map)}" json-path="{m:jsonize-path(.)}">
+        <!--<test>-->
             <!--<xsl:apply-templates select="key('obj-by-gi',.,$definition-map)" mode="cast-node-test"/>-->
+            <xsl:sequence select="m:jsonize-path(.)"/>
             <xsl:sequence select="m:path-map(.)"/>
             <!--<xsl:sequence select="p:parse-XPath(.)"/>-->
         </test>
     </xsl:template>
     
     <xsl:template match="/model" mode="cast-node-test">
-        <expr>/{$px}:map</expr>
+        <cast>/{$px}:map</cast>
     </xsl:template>
     
     <xsl:template priority="2" match="group[@group-json='BY_KEY']/assembly" mode="cast-node-test">
-        <expr>{$px}:map[@key='{../@key}']/{$px}:map</expr>
+        <cast>{$px}:map[@key='{../@key}']/{$px}:map</cast>
     </xsl:template>
     
     <xsl:template priority="2" match="group[@group-json='ARRAY']/assembly" mode="cast-node-test">
-        <expr>{$px}:array[@key='{../@key}']/{$px}:map</expr>
+        <cast>{$px}:array[@key='{../@key}']/{$px}:map</cast>
     </xsl:template>
     
     <!-- Catches assembly grouped as SINGLETON_OR_ARRAY -->
     <xsl:template match="group/assembly" mode="cast-node-test">
-        <expr>{$px}:assembly[@key='{../@key}']/{$px}:map</expr>
-        <expr>{$px}:map[@key='{../@key}']</expr>
+        <cast>{$px}:assembly[@key='{../@key}']/{$px}:map</cast>
+        <cast>{$px}:map[@key='{../@key}']</cast>
     </xsl:template>
     
     <xsl:template match="assembly" mode="cast-node-test">
-        <expr>{$px}:map[@key='{@key}']</expr>
+        <cast>{$px}:map[@key='{@key}']</cast>
     </xsl:template>
     
     <!-- field grouped by key -->
@@ -104,7 +126,7 @@
         <xsl:variable name="field-path">
             <xsl:next-match/>
         </xsl:variable>
-        <expr>{$px}:map[@key='{../@key}']/{$field-path}</expr>
+        <cast>{$px}:map[@key='{../@key}']/{$field-path}</cast>
     </xsl:template>
     
     <xsl:template priority="3" match="group[@group-json='ARRAY']/field" mode="cast-node-test">
@@ -114,7 +136,7 @@
         <xsl:variable name="field-path">
             <xsl:next-match/>
         </xsl:variable>
-        <expr>{$px}:array[@key='{../@key}']/{$field-path}</expr>
+        <cast>{$px}:array[@key='{../@key}']/{$field-path}</cast>
     </xsl:template>
     
     <!-- Catches field grouped as SINGLETON-OR-ARRAY -->
@@ -125,8 +147,8 @@
         <xsl:variable name="field-path">
             <xsl:next-match/>
         </xsl:variable>
-        <expr>{$px}:array[@key='{../@key}']/{$field-path}</expr>
-        <expr>{$px}:{$type}[@key='{../@key}']</expr>
+        <cast>{$px}:array[@key='{../@key}']/{$field-path}</cast>
+        <cast>{$px}:{$type}[@key='{../@key}']</cast>
     </xsl:template>
     
     <!-- field with no flags apart from a json-key-flag points to itself as a value property -->
@@ -134,30 +156,40 @@
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
-        <expr>{$px}:{$type}[@key='{@key}']</expr>
+        <cast>{$px}:{$type}[@key='{@key}']</cast>
+    </xsl:template>
+
+    <!-- The value path of a field with no value property is itself -->
+    <xsl:template match="field[empty(flag[not(@key = ../@json-key-flag)])]" mode="cast-value-path">
+        <cast>.</cast>
     </xsl:template>
     
-    <!-- field points to its value property -->
+    <!-- field points to its object -->
     <xsl:template match="field" mode="cast-node-test">
+        <cast>{$px}:map[@key='{@key}']</cast>
+    </xsl:template>
+    
+    <!-- field value points to its value property -->
+    <xsl:template match="field" mode="cast-value-path">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
-        <expr>{$px}:map[@key='{@key}']/{$px}:{$type}[@key='{value/@key}']</expr>
+        <cast>{$px}:{$type}[@key='{value/@key}']</cast>
     </xsl:template>
     
     <xsl:template match="flag" mode="cast-node-test">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
-        <expr>{$px}:{$type}[@key='{@key}']</expr>
+        <cast>{$px}:{$type}[@key='{@key}']</cast>
     </xsl:template>
     
     <!-- In the case of a json key flag, the node test on a relative path from its parent is ... "key" -->
     <xsl:template match="flag[@key = ../@json-key-flag]" mode="cast-node-test">key</xsl:template>
     
     <xsl:template match="*" mode="cast-node-test">
-        <expr>OoopsFellThrough</expr>
-        <expr>{$px}:*[@key='{../@key}']</expr>
+        <cast>OoopsFellThrough</cast>
+        <cast>{$px}:*[@key='{../@key}']</cast>
     </xsl:template>
     
     <!-- object-type returns
@@ -193,7 +225,7 @@
     
     <xsl:template match="@as-type[. = $numeric-types]" mode="json-type">number</xsl:template>
        
-    <xsl:function name="m:path-map" as="element()*">
+    <xsl:function name="m:path-map" as="node()">
         <xsl:param name="expr"/>
         <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
         <xsl:apply-templates select="$parse.tree" mode="path-map"/>
@@ -206,43 +238,84 @@
     Nodes in the declaration map are passed through to provide execution context for finding each step.
     
     NB for any path, several or no JSONized paths may be returned - only paths viable in the metaschema (represented in the map) come back, but there can be multiple. -->
-    
-    <xsl:function name="m:jsonize-path" as="xs:string">
+        
+    <xsl:function name="m:jsonize-path" as="element()">
         <xsl:param name="metapath" as="xs:string" required="yes"/>
         <xsl:variable name="path-map" select="m:path-map($metapath)"/>
-        <xsl:variable name="alternatives" as="xs:string*">
+        <!--<xsl:variable name="alternatives" as="xs:string*">
             <xsl:apply-templates select="$path-map" mode="cast-path"/>
         </xsl:variable>
-        <xsl:value-of select="string-join($alternatives,' | ')"/>
+        <xsl:variable name="keepers" select="$alternatives[not(ends-with(.,'()')) or $diagnostic]"/>
+        <xsl:value-of select="string-join($keepers,' | ')"/>-->
+        <xsl:apply-templates select="$path-map" mode="cast-path"/>
     </xsl:function>
     
+    <!-- Casting a path requires a sibling traversal -->
+    <!-- no tunneling of parameters (yet!) to prevent accidents... -->
+    
+    <xsl:template mode="cast-path" match="node()">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:param name="starting" as="xs:boolean" select="false()"/>
+        <xsl:param name="relative" as="xs:boolean" select="true()"/>
+        <xsl:copy>
+            <xsl:apply-templates mode="#current" select="node()[1]">
+                <xsl:with-param name="from" select="$from"/>
+                <xsl:with-param name="starting" select="$starting"/>
+                <xsl:with-param name="relative" select="$relative"/>
+            </xsl:apply-templates>
+        </xsl:copy>
+        <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
+            <xsl:with-param name="from"      select="$from"/>
+            <xsl:with-param name="starting"  select="$starting"/>
+            <xsl:with-param name="relative"  select="$relative"/>
+        </xsl:apply-templates>
+    </xsl:template>
+
     <!-- An absolute path -->
-    <xsl:template mode="cast-path" as="xs:string" match="path[starts-with(.,'/')]">
-        <xsl:value-of>
+    <xsl:template mode="cast-path" as="node()*" match="path[starts-with(.,'/')]">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:param name="starting" as="xs:boolean" select="false()"/>
+        <xsl:param name="relative" as="xs:boolean" select="true()"/>
+        <xsl:copy>
             <xsl:text expand-text="true">/{$px}:map</xsl:text>
-            <xsl:apply-templates mode="#current" select="step[1]">
+            <xsl:apply-templates mode="#current" select="node()[1]">
                 <xsl:with-param name="starting" select="true()"/>
+                <!-- alerting the receiving template that we will start from the root -->
                 <xsl:with-param name="relative" select="false()"/>
             </xsl:apply-templates>
-        </xsl:value-of>
+        </xsl:copy>
+        <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
+            <xsl:with-param name="from"      select="$from"/>
+            <xsl:with-param name="starting"  select="$starting"/>
+            <xsl:with-param name="relative"  select="$relative"/>
+        </xsl:apply-templates>
     </xsl:template>
     
     <!-- A relative path -->
-    <xsl:template mode="cast-path" as="xs:string" match="path">
-        <xsl:value-of>
-            <xsl:apply-templates mode="#current" select="step[1]">
+    <xsl:template mode="cast-path" as="node()*" match="path">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:param name="starting" as="xs:boolean" select="false()"/>
+        <xsl:param name="relative" as="xs:boolean" select="true()"/>
+        <xsl:copy>
+            <xsl:apply-templates mode="#current" select="node()[1]">
                 <xsl:with-param name="starting" select="true()"/>
             </xsl:apply-templates>
-        </xsl:value-of>
+        </xsl:copy>
+        <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
+            <xsl:with-param name="from"      select="$from"/>
+            <xsl:with-param name="starting"  select="$starting"/>
+            <xsl:with-param name="relative"  select="$relative"/>
+        </xsl:apply-templates>
     </xsl:template>
     
+ 
     <xsl:template mode="cast-path" match="step">
 <!-- $from gives us a node in the definition map providing the execution context for the step -->
         <xsl:param name="from" as="element()*"/>
         <xsl:param name="starting" as="xs:boolean" select="false()"/>
         <xsl:param name="relative" as="xs:boolean" select="true()"/>
-        <xsl:if test="not($starting) or not($relative)">/</xsl:if>
-        <xsl:variable name="here" as="element()*">
+        <!--<xsl:if test="not($starting) or not($relative)">/</xsl:if>-->
+        <xsl:variable name="here" as="node()*">
             <xsl:choose>
                 <!-- the first step of an absolute path is located relative to the root -->
                 <xsl:when test="$starting">
@@ -268,36 +341,113 @@
             </xsl:choose>
         </xsl:variable>
         <!-- making all the steps to the JSON       -->
-        <xsl:variable name="all-json-steps" as="xs:string*">
-            <xsl:variable name="step-axis" select="axis"/>
-            <xsl:for-each select="$here">
-                <xsl:value-of>
-                    <xsl:apply-templates mode="abbreviate-axis" select="$step-axis"/>
-                    <xsl:apply-templates select="." mode="cast-node-test"/>
-                </xsl:value-of>
+        <xsl:variable name="all-json-steps" as="node()*">
+            <xsl:variable name="this-step" select="."/>
+            <xsl:variable name="definitions" select="$here/self::*"/>
+            <xsl:for-each select="$definitions">
+                <xsl:variable name="definition" select="."/>
+                <step>
+                    <xsl:for-each select="$this-step">
+                        <xsl:apply-templates mode="cast-path" select="node()[1]">
+                            <xsl:with-param name="from" select="$definition"/>
+                        </xsl:apply-templates>
+                    </xsl:for-each>
+                </step>
             </xsl:for-each>
         </xsl:variable>
+        
         <!-- removing duplicates -->
-        <xsl:variable name="json-steps" select="distinct-values($all-json-steps)"/>
+        <xsl:variable name="distinct-steps" as="element(step)*">
+            <xsl:for-each-group select="$all-json-steps" group-by="string(.)">
+                <xsl:sequence select="current-group()[1]"/>
+            </xsl:for-each-group>
+        </xsl:variable>
         
-        <!-- and writing these out as a big union -->
-        <!-- grouping multiple paths or none -->
-        <xsl:if test="count($json-steps) ne 1">(</xsl:if>
-        <xsl:value-of select="string-join($json-steps,' | ')"/>
-        <xsl:if test="count($json-steps) ne 1">)</xsl:if>
+        <!-- showing a split if any -->
+        <xsl:choose>
+            <xsl:when test="count($distinct-steps) eq 1">
+                <xsl:sequence select="$distinct-steps"/>
+            </xsl:when>
+            <xsl:when test="empty($distinct-steps)"><nope>((: NOWHERE :))</nope></xsl:when>
+            <xsl:otherwise>
+                <split>
+                    <xsl:text>(</xsl:text>
+                    <xsl:for-each select="$all-json-steps">
+                        <xsl:if test="position() gt 1"> | </xsl:if>
+                        <xsl:sequence select="."/>
+                    </xsl:for-each>
+                    <xsl:text>)</xsl:text>
+                </split>
+            </xsl:otherwise>
+            
+        </xsl:choose>
         
-        <!-- now we have to write any filters, accounting for their paths -->
         
-        <xsl:apply-templates select="filter" mode="#current">
-            <xsl:with-param name="from" select="$here"/>
-        </xsl:apply-templates>
-<!-- then we traverse to the next sibling, with a new $from value       -->
-        <xsl:apply-templates select="following-sibling::step[1]" mode="#current">
-            <xsl:with-param name="from" select="$here"/>
-        </xsl:apply-templates>
-<!-- if there are no further siblings, we are done -->
+        <!--<!-\- now we have to traverse to contents, accounting for their paths -\->
+        
+        <xsl:apply-templates select="child::node()[1]" mode="#current">
+            <xsl:with-param name="from" select="$here/self::*"/>
+        </xsl:apply-templates>-->
+        
+        <!-- if there is nowhere to go, we don't -->
+        <xsl:if test="exists($here)">
+            <!-- otherwise we traverse to the next sibling, from $here -->
+            <xsl:apply-templates select="following-sibling::node()[1]" mode="#current">
+                <xsl:with-param name="from" select="$here"/>
+            </xsl:apply-templates>
+        </xsl:if>
+        <!-- if there are no further siblings, we are done -->
     </xsl:template>
 
+    <xsl:template mode="cast-path" match="axis">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:param name="starting" as="xs:boolean" select="false()"/>
+        <xsl:param name="relative" as="xs:boolean" select="true()"/>
+        <axis>
+            <xsl:apply-templates select="." mode="abbreviate-axis"/>
+        </axis>
+        <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
+            <xsl:with-param name="from"      select="$from"/>
+            <xsl:with-param name="starting"  select="$starting"/>
+            <xsl:with-param name="relative"  select="$relative"/>
+        </xsl:apply-templates>       
+    </xsl:template>
+    
+    <xsl:template mode="cast-path" match="node">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:param name="starting" as="xs:boolean" select="false()"/>
+        <xsl:param name="relative" as="xs:boolean" select="true()"/>
+        <node>
+            <xsl:apply-templates select="$from" mode="cast-node-test"/>
+        </node>
+        <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
+            <xsl:with-param name="from"      select="$from"/>
+            <xsl:with-param name="starting"  select="$starting"/>
+            <xsl:with-param name="relative"  select="$relative"/>
+        </xsl:apply-templates>       
+    </xsl:template>
+    
+    <xsl:template mode="cast-path" match="function[.='value()']">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:param name="starting" as="xs:boolean" select="false()"/>
+        <xsl:param name="relative" as="xs:boolean" select="true()"/>
+        <function>
+            <xsl:apply-templates select="$from" mode="cast-value-path"/>
+        </function>
+        <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
+            <xsl:with-param name="from"      select="$from"/>
+            <xsl:with-param name="starting"  select="$starting"/>
+            <xsl:with-param name="relative"  select="$relative"/>
+        </xsl:apply-templates>       
+    </xsl:template>
+    
+<!-- steps that are not location paths return their starting point as their destination   -->
+    <xsl:template mode="find-definition" match="step">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:sequence select="$from"/>
+    </xsl:template>
+        
+    
     <xsl:template mode="find-definition" priority="5" match="step[axis='child::'][node=$wildcard]">
         <xsl:param name="from" as="element()*"/>
         <xsl:variable name="recursors" select="$from/(.|group[empty(@gi)])/assembly[@recursive = 'true']"/>
