@@ -6,7 +6,8 @@
   not string
   type object
   titles and descriptions
-  --><METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../support/lib/metaschema.xsd">
+  -->
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../support/lib/metaschema.xsd">
     <schema-name>NIST Metaschema Everything</schema-name>
     <schema-version>1.0</schema-version>
     <short-name>everything</short-name>
@@ -38,8 +39,11 @@
             <field ref="field-boolean"/>
             <field ref="field-named-value"/>
             <field ref="markup-line"/>
-            <field ref="field-groupable" max-occurs="unbounded">
-                <group-as name="groupable-fields"/>
+            <field ref="field-simple-groupable" max-occurs="unbounded">
+                <group-as name="groupable-simple-fields"/>
+            </field>
+            <field ref="field-flagged-groupable" max-occurs="unbounded">
+                <group-as name="groupable-flagged-fields"/>
             </field>
             <field ref="field-wrappable" max-occurs="unbounded">
                 <group-as name="wrapped-fields" in-xml="GROUPED" in-json="ARRAY"/>
@@ -84,9 +88,22 @@
         <description>field field-boolean</description>
     </define-field>
     
-    <define-field name="field-groupable">
-        <formal-name>FIELD-GROUPABLE</formal-name>
+    <define-field name="field-simple-groupable">
+        <formal-name>FIELD-SIMPLE-GROUPABLE</formal-name>
+        <description>simple field, no flags, groupable</description>
+    </define-field>
+    
+    <define-field name="field-flagged-groupable">
+        <formal-name>FIELD-FLAGGED-GROUPABLE</formal-name>
         <description>field field-groupable</description>
+        <define-flag name="flagged-date" as-type="date">
+            <formal-name>Date flag</formal-name>
+            <description>A flag for a date</description>
+        </define-flag>
+        <define-flag name="flagged-decimal" as-type="decimal">
+            <formal-name>Decimal flag</formal-name>
+            <description>A flag with a decimal value</description>
+        </define-flag>
     </define-field>
     
     <define-field name="field-wrappable">
@@ -148,8 +165,8 @@
         <formal-name>ASSEMBLY-GROUPABLE</formal-name>
         <description>assembly assembly-groupable</description>
         <model>
-            <field ref="field-groupable" max-occurs="unbounded">
-                <group-as name="groupable-fields"/>
+            <field ref="field-simple-groupable" max-occurs="unbounded">
+                <group-as name="groupable-simple-fields"/>
             </field>
             <assembly ref="assembly-groupable" max-occurs="unbounded">
                 <group-as name="groupable-assemblies"/>

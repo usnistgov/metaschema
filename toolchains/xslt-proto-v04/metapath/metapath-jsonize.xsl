@@ -22,8 +22,11 @@
     
 <!-- Feature set
        support 'value()' on terminal step 
+         including json-value-key/@flag-name
        correct ws inside predicates
-       tighten data types in function calls returning errors -->
+       review data types on templates and functions
+       better error trapping, handling and reporting (parameterized?)
+    -->
 <!-- Testing:
     o all object types
        including grouped and ungrouped assemblies and fields
@@ -42,7 +45,9 @@
     
     <xsl:output indent="yes"/>
     
-    <xsl:key name="obj-by-gi" match="*"      use="@gi"/>
+<!-- Overloading this key so wildcards get everythang   -->
+    <xsl:key name="obj-by-gi" match="*[exists(@gi)]" use="@gi"/>
+    <xsl:key name="obj-by-gi" match="*[exists(@gi)]" use="$wildcard"/>
     
     <xsl:param name="px" as="xs:string">j</xsl:param>
     
@@ -52,7 +57,11 @@
     <xsl:variable name="wildcard" as="xs:string+" select="'*','node()'"/>
     
     <xsl:variable name="tests">
-        <test>field-1only/(value() + 1)</test>
+        <!--<test>field-flagged-groupable</test>
+        <test>field-dynamic-value-key</test>-->
+        <test>*/@color</test>
+        <test>field-dynamic-value-key/@id</test>
+        
         <test>field-1only/(value() + path)</test>
         
         <test>/EVERYTHING/(field-1only | field-named-value)</test>
@@ -148,7 +157,7 @@
             <xsl:next-match/>
         </xsl:variable>
         <cast>{$px}:array[@key='{../@key}']/{$field-path}</cast>
-        <cast>{$px}:{$type}[@key='{../@key}']</cast>
+        <cast>{$field-path}[@key='{../@key}']</cast>
     </xsl:template>
     
     <!-- field with no flags apart from a json-key-flag points to itself as a value property -->
@@ -166,10 +175,22 @@
     
     <!-- field points to its object -->
     <xsl:template match="field" mode="cast-node-test">
-        <cast>{$px}:map[@key='{@key}']</cast>
+        <cast>{$px}:map</cast>
     </xsl:template>
     
-    <!-- field value points to its value property -->
+    <!-- sometimes the field value sits on a dynamic flag -->
+    <xsl:template match="field[value/@key-flag = flag/@name]" mode="cast-value-path">
+        <xsl:variable name="value-type">
+            <xsl:apply-templates select="value" mode="object-type"/>
+        </xsl:variable>
+        <xsl:variable name="not-value-flags" select="flag[not(@name=../value/@key-flag)]/@name"/>
+        <xsl:variable name="not-value-filter">
+            <xsl:text expand-text="true">[not(@key=({ string-join($not-value-flags ! ( '''' || . || '''') ) }))]</xsl:text>
+        </xsl:variable>
+        <cast>{$px}:{$value-type}{$not-value-filter}</cast>
+    </xsl:template>
+    
+    <!-- otherwise a field value points to its value property -->
     <xsl:template match="field" mode="cast-value-path">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
@@ -185,10 +206,22 @@
     </xsl:template>
     
     <!-- In the case of a json key flag, the node test on a relative path from its parent is ... "key" -->
-    <xsl:template match="flag[@key = ../@json-key-flag]" mode="cast-node-test">key</xsl:template>
+    <xsl:template match="flag[@key = ../@json-key-flag]" mode="cast-node-test">
+        <cast>key</cast>
+    </xsl:template>
     
-    <xsl:template match="*" mode="cast-node-test">
-        <cast>OoopsFellThrough</cast>
+    <xsl:template match="flag[@key = ../value/@key-flag]" mode="cast-node-test">
+        <xsl:variable name="value-type">
+            <xsl:apply-templates select="../value" mode="object-type"/>
+        </xsl:variable><xsl:variable name="not-value-flags" select="../(flag except .)/@name"/>
+        <xsl:variable name="not-value-filter">
+            <xsl:text expand-text="true">[not(@key=({ string-join($not-value-flags ! ( '''' || . || ''''), ',' ) }))]</xsl:text>
+        </xsl:variable>
+        <cast>{$px}:{$value-type}{ $not-value-filter[matches(.,'\S')]}</cast>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="cast-node-test" expand-text="true">
+        <cast>OoopsFellThroughOn{ name() }</cast>
         <cast>{$px}:*[@key='{../@key}']</cast>
     </xsl:template>
     
@@ -198,11 +231,16 @@
       
     <xsl:template match="*" mode="object-type">map</xsl:template>
     
+<!-- A field may be a map whose properties give flags along with values. Note
+    that a flag designated as a value-key flag is not a flag for these purposes. -->
+    <xsl:template match="field[exists(flag[not(@name=../value/@key-flag)])]" mode="object-type">map</xsl:template>
+    
+<!-- A field without such flags, becomes an object of its nominal type. -->
     <xsl:template match="field" mode="object-type">
-      <xsl:apply-templates select="value/@as-type" mode="json-type"/>
+        <xsl:apply-templates select="value/@as-type" mode="json-type"/>
     </xsl:template>
     
-    <xsl:template match="flag" mode="object-type">
+    <xsl:template match="flag | value" mode="object-type">
         <xsl:apply-templates select="@as-type" mode="json-type"/>
     </xsl:template>
     
@@ -358,12 +396,14 @@
         
         <!-- removing duplicates -->
         <xsl:variable name="distinct-steps" as="element(step)*">
-            <xsl:for-each-group select="$all-json-steps" group-by="string(.)">
+            <xsl:for-each-group select="$all-json-steps" group-by="serialize(.)">
+                <!--. returns current-group()[1] -->
                 <xsl:sequence select="current-group()[1]"/>
             </xsl:for-each-group>
         </xsl:variable>
         
-        <!-- showing a split if any -->
+        <!-- showing a split if any. Note, we insert syntax here rather than
+             executing yet another subpipeline. -->
         <xsl:choose>
             <xsl:when test="count($distinct-steps) eq 1">
                 <xsl:sequence select="$distinct-steps"/>
@@ -413,12 +453,52 @@
         </xsl:apply-templates>       
     </xsl:template>
     
+    <!--<!-\- When the given node test is a wildcard, we don't need to expand it.   -\->
+    <xsl:template mode="cast-path" match="node[.='*']">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:param name="starting" as="xs:boolean" select="false()"/>
+        <xsl:param name="relative" as="xs:boolean" select="true()"/>
+        <node>*</node>
+        <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
+            <xsl:with-param name="from"      select="$from"/>
+            <xsl:with-param name="starting"  select="$starting"/>
+            <xsl:with-param name="relative"  select="$relative"/>
+        </xsl:apply-templates>       
+    </xsl:template>-->
+    
     <xsl:template mode="cast-path" match="node">
         <xsl:param name="from" as="element()*"/>
         <xsl:param name="starting" as="xs:boolean" select="false()"/>
         <xsl:param name="relative" as="xs:boolean" select="true()"/>
         <node>
-            <xsl:apply-templates select="$from" mode="cast-node-test"/>
+       <!-- The matched 'node' element represents an XPath node test, which is to be cast into
+            a path equivalent that addresses the JSON model corresponding to the XML
+            model putatively addressed by the metapath (as an XPath subset). That is,
+            what is a 'prop' element in the XML might be expressed (addressed in the JSON)
+            as j:map[@key='prop'] or j:array[@key='properties']/j:string, or both.
+            Many paths coming back are conveniently grouped in the XPath results
+            of this operation, so we also add the punctuation. The tradeoff is the
+            tree coming back from 'cast-path' shows strings at this point. -->
+       <!-- By calling the appropriate template on each $from node proxy (element in the definition tree),
+            casts are produced for the node test. Note this the node test happens to
+            take the form of the XML GI, but its value is not actually used here - the
+            same node test having been used to given as a simple XML GI
+            (generic identifier), but in the JSON, any number or no casts
+            might be produced. At this point, $from can be multiple - a set of elements
+            in the description (definition) tree that happens to describe the node
+            types we have found so far. Even when $from is single, multiple
+            casts can be produced for different potential variant expressions
+            (or 'synonyms') in the JSON, such as when a given object may appear
+            either grouped or ungrouped. -->
+            <xsl:variable name="casts" as="element(cast)*">
+                <xsl:apply-templates select="$from" mode="cast-node-test"/>
+            </xsl:variable>
+            <!-- Now we have to format the stuff coming back. NB each cast comes as zero
+                or more 'cast' elements, whose string values we stitch together. -->
+            <!-- The 'else' clause captures the singleton or null case. -->
+            <xsl:sequence select="if (count($casts) gt 1) then
+                string-join($casts,' | ') ! ('(' || . || ')') else $casts"/>
+            <!--<xsl:apply-templates select="$from" mode="cast-node-test"/>-->
         </node>
         <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
             <xsl:with-param name="from"      select="$from"/>
@@ -528,7 +608,8 @@
         <xsl:value-of select="."/>
     </xsl:template>
     
-    <xsl:template match="axis[.='attribute::']" mode="abbreviate-axis">@</xsl:template>
+<!-- The attribute axis becomes a child in the supermodel or JSON representations   -->
+    <xsl:template match="axis[.='attribute::']" mode="abbreviate-axis"/>
     
     <xsl:template match="axis[.='child::']" mode="abbreviate-axis"/>
     
