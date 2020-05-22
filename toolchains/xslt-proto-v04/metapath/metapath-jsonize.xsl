@@ -59,7 +59,8 @@
     <xsl:variable name="tests">
         <!--<test>field-flagged-groupable</test>
         <test>field-dynamic-value-key</test>-->
-        <test>*/@color</test>
+        <!--<test>*/@color</test>-->
+        <test>field-by-key/@id</test>
         <test>field-dynamic-value-key/@id</test>
         
         <test>field-1only/(value() + path)</test>
@@ -99,8 +100,8 @@
         <test expr="{.}" expand="{string($map)}" json-path="{m:jsonize-path(.)}">
         <!--<test>-->
             <!--<xsl:apply-templates select="key('obj-by-gi',.,$definition-map)" mode="cast-node-test"/>-->
-            <xsl:sequence select="m:jsonize-path(.)"/>
-            <xsl:sequence select="m:path-map(.)"/>
+            <!--<xsl:sequence select="m:jsonize-path(.)"/>
+            <xsl:sequence select="m:path-map(.)"/>-->
             <!--<xsl:sequence select="p:parse-XPath(.)"/>-->
         </test>
     </xsl:template>
@@ -149,7 +150,7 @@
     </xsl:template>
     
     <!-- Catches field grouped as SINGLETON-OR-ARRAY -->
-    <xsl:template priority="2" match="group/field" mode="cast-node-test">
+    <xsl:template priority="2" match="group[not(@group-json=('BY_KEY','ARRAY'))]/field" mode="cast-node-test">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
@@ -165,7 +166,8 @@
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
-        <cast>{$px}:{$type}[@key='{@key}']</cast>
+        <!--<cast>{$px}:{$type}[@key='{@key}']</cast>-->
+        <cast>{$px}:{$type}{ @key ! ('[@key=''' || . || ''']') }</cast>
     </xsl:template>
 
     <!-- The value path of a field with no value property is itself -->
@@ -207,7 +209,8 @@
     
     <!-- In the case of a json key flag, the node test on a relative path from its parent is ... "key" -->
     <xsl:template match="flag[@key = ../@json-key-flag]" mode="cast-node-test">
-        <cast>key</cast>
+        <!-- test this       -->
+        <cast>@key</cast>
     </xsl:template>
     
     <xsl:template match="flag[@key = ../value/@key-flag]" mode="cast-node-test">
@@ -232,8 +235,9 @@
     <xsl:template match="*" mode="object-type">map</xsl:template>
     
 <!-- A field may be a map whose properties give flags along with values. Note
-    that a flag designated as a value-key flag is not a flag for these purposes. -->
-    <xsl:template match="field[exists(flag[not(@name=../value/@key-flag)])]" mode="object-type">map</xsl:template>
+    that flags designated as an object key or value-key flag are not flags
+    for these purposes. -->
+    <xsl:template match="field[exists(flag[not(@name=(../@json-key-flag,../value/@key-flag))])]" mode="object-type">map</xsl:template>
     
 <!-- A field without such flags, becomes an object of its nominal type. -->
     <xsl:template match="field" mode="object-type">
