@@ -1,0 +1,255 @@
+
+  { "$schema" : "http://json-schema.org/draft-07/schema#",
+    "$id" : "http://csrc.nist.gov/metaschema/ns/everything-schema.json",
+    "$comment" : "NIST Metaschema Everything: JSON Schema",
+    "type" : "object",
+    "definitions" : 
+    { "EVERYTHING" : 
+      { "title" : "EVERYTHING",
+        "description" : "assembly everything",
+        "type" : "object",
+        "properties" : 
+        { "id" : 
+          { "title" : "ID",
+            "description" : "flag id",
+            "type" : "string" },
+          "field-1only" : 
+          { "$ref" : "#/definitions/field-1only" },
+          "field-base64" : 
+          { "$ref" : "#/definitions/field-base64" },
+          "field-boolean" : 
+          { "$ref" : "#/definitions/field-boolean" },
+          "field-named-value" : 
+          { "$ref" : "#/definitions/field-named-value" },
+          "markup-line" : 
+          { "$ref" : "#/definitions/markup-line" },
+          "groupable-fields" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/field-groupable" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/field-groupable" } } ] },
+          "wrapped-fields" : 
+          { "type" : "array",
+            "minItems" : 1,
+            "items" : 
+            { "$ref" : "#/definitions/field-wrappable" } },
+          "keyed-fields" : 
+          { "type" : "object",
+            "minProperties" : 1,
+            "additionalProperties" : 
+            { "allOf" : 
+              [ 
+                { "$ref" : "#/definitions/field-by-key" } ] } },
+          "dynamic-value-key-fields" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/field-dynamic-value-key" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/field-dynamic-value-key" } } ] },
+          "wrapped-prose" : 
+          { "$ref" : "#/definitions/wrapped-prose" },
+          "loose-prose" : 
+          { "$ref" : "#/definitions/loose-prose" },
+          "ASSEMBLY-1ONLY" : 
+          { "$ref" : "#/definitions/ASSEMBLY-1ONLY" },
+          "groupable-assemblies" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/assembly-groupable" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/assembly-groupable" } } ] },
+          "wrapped-assemblies" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/assembly-wrappable" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/assembly-wrappable" } } ] },
+          "keyed-assemblies" : 
+          { "type" : "object",
+            "minProperties" : 1,
+            "additionalProperties" : 
+            { "allOf" : 
+              [ 
+                { "$ref" : "#/definitions/assembly-by-key" } ] } },
+          "everything-recursive" : 
+          { "type" : "array",
+            "minItems" : 1,
+            "items" : 
+            { "$ref" : "#/definitions/EVERYTHING" } } },
+        "additionalProperties" : false },
+      "field-1only" : 
+      { "title" : "FIELD-1ONLY",
+        "description" : "field field-1only",
+        "type" : "string" },
+      "field-base64" : 
+      { "title" : "FIELD-BASE64",
+        "description" : "field field-base64",
+        "type" : "string" },
+      "field-boolean" : 
+      { "title" : "FIELD-BOOLEAN",
+        "description" : "field field-boolean",
+        "type" : "boolean" },
+      "field-groupable" : 
+      { "title" : "FIELD-GROUPABLE",
+        "description" : "field field-groupable",
+        "type" : "string" },
+      "field-wrappable" : 
+      { "title" : "FIELD-WRAPPABLE",
+        "description" : "field field-wrappable",
+        "type" : "string" },
+      "field-by-key" : 
+      { "title" : "FIELD-BY-KEY",
+        "description" : "field field-by-key",
+        "type" : "object",
+        "properties" : 
+        { "STRVALUE" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "STRVALUE" ],
+        "additionalProperties" : false },
+      "field-named-value" : 
+      { "title" : "FIELD-NAMED-VALUE",
+        "description" : "field field-named-value",
+        "type" : "object",
+        "properties" : 
+        { "id" : 
+          { "title" : "ID",
+            "description" : "flag id",
+            "type" : "string" },
+          "CUSTOM-VALUE-KEY" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "CUSTOM-VALUE-KEY",
+          "id" ],
+        "additionalProperties" : false },
+      "field-dynamic-value-key" : 
+      { "title" : "FIELD-DYNAMIC-VALUE-KEY",
+        "description" : "field field-dynamic-value-key",
+        "type" : "object",
+        "properties" : 
+        { "color" : 
+          { "title" : "COLOR",
+            "description" : "flag color",
+            "type" : "string" } },
+        "minProperties" : 1,
+        "maxProperties" : 2 },
+      "markup-line" : 
+      { "title" : "MARKUP-LINE",
+        "description" : "field markup-line",
+        "type" : "string" },
+      "wrapped-prose" : 
+      { "title" : "WRAPPED-PROSE",
+        "description" : "field wrapped-prose",
+        "type" : "string" },
+      "loose-prose" : 
+      { "title" : "LOOSE-PROSE",
+        "description" : "field loose-prose",
+        "type" : "string" },
+      "ASSEMBLY-1ONLY" : 
+      { "title" : "ASSEMBLY-1ONLY",
+        "description" : "assembly assembly-1only",
+        "type" : "object",
+        "properties" : 
+        { "field-1only" : 
+          { "$ref" : "#/definitions/field-1only" },
+          "ASSEMBLY-1ONLY" : 
+          { "$ref" : "#/definitions/ASSEMBLY-1ONLY" } },
+        "additionalProperties" : false },
+      "assembly-groupable" : 
+      { "title" : "ASSEMBLY-GROUPABLE",
+        "description" : "assembly assembly-groupable",
+        "type" : "object",
+        "properties" : 
+        { "groupable-fields" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/field-groupable" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/field-groupable" } } ] },
+          "groupable-assemblies" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/assembly-groupable" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/assembly-groupable" } } ] } },
+        "additionalProperties" : false },
+      "assembly-wrappable" : 
+      { "title" : "ASSEMBLY-WRAPPABLE",
+        "description" : "assembly assembly-wrappable",
+        "type" : "object",
+        "properties" : 
+        { "wrapped-fields" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/field-wrappable" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/field-wrappable" } } ] },
+          "wrapped-assemblies" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/assembly-wrappable" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/assembly-wrappable" } } ] } },
+        "additionalProperties" : false },
+      "assembly-by-key" : 
+      { "title" : "ASSEMBLY-BY-KEY",
+        "description" : "assembly assembly-by-key",
+        "type" : "object",
+        "properties" : 
+        { "keyed-fields" : 
+          { "type" : "object",
+            "minProperties" : 1,
+            "additionalProperties" : 
+            { "allOf" : 
+              [ 
+                { "$ref" : "#/definitions/field-by-key" } ] } },
+          "keyed-assemblies" : 
+          { "type" : "object",
+            "minProperties" : 1,
+            "additionalProperties" : 
+            { "allOf" : 
+              [ 
+                { "$ref" : "#/definitions/assembly-by-key" } ] } } },
+        "additionalProperties" : false } },
+    "oneOf" : 
+    [ 
+      { "properties" : 
+        { "EVERYTHING" : 
+          { "$ref" : "#/definitions/EVERYTHING" } },
+        "required" : 
+        [ "EVERYTHING" ],
+        "additionalProperties" : false,
+        "maxProperties" : 1 },
+      
+      { "properties" : 
+        { "ASSEMBLY-1ONLY" : 
+          { "$ref" : "#/definitions/ASSEMBLY-1ONLY" } },
+        "required" : 
+        [ "ASSEMBLY-1ONLY" ],
+        "additionalProperties" : false,
+        "maxProperties" : 1 } ] }
