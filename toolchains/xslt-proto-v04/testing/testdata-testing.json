@@ -1,0 +1,80 @@
+
+  { "EVERYTHING" : 
+    { "field-1only" : "FIELD-1-ONLY",
+      "field-base64" : "1234abcd",
+      "field-boolean" : true,
+      "field-named-value" : 
+      { "id" : "fnv1",
+        "CUSTOM-VALUE-KEY" : "FIELD-NAMED-VALUE" },
+      "markup-line" : "Here's some *markup*: make of it **what you will**! Even if it has ... \\* funky characters \\` ... and even an ![some picture](img.jpg)",
+      "groupable-fields" : 
+      [ "field-groupable 1",
+        "field-groupable 2",
+        "field-groupable 3" ],
+      "wrapped-fields" : 
+      [ "field-wrappable 1",
+        "field-wrappable 2",
+        "field-wrappable 3" ],
+      "keyed-fields" : 
+      { "fbk1" : "field-by-key 1",
+        "fbk2" : "field-by-key 2",
+        "fbk3" : "field-by-key 3" },
+      "dynamic-value-key-fields" : 
+      [ 
+        { "fdvk1" : "field-dynamic-value-key 1" },
+        
+        { "fdvk2" : "field-dynamic-value-key 2" },
+        
+        { "fdvk3" : "field-dynamic-value-key 3" } ],
+      "wrapped-prose" : "\n# Wrapped up prose\n\nThis is prose. All wrapped up.",
+      "loose-prose" : "\n# Unwrapped prose\n\nHere we have unwrapped prose....",
+      "assembly-1only" : 
+      { "field-1only" : "ASSEMBLY-1-ONLY / FIELD-1-ONLY" },
+      "groupable-assemblies" : 
+      [ 
+        { "groupable-fields" : 
+          [ "assembly-groupable 1 / field-groupable 1",
+            "assembly-groupable 1 / field-groupable 2",
+            "assembly-groupable 1 / field-groupable 3" ] },
+        
+        { "groupable-fields" : 
+          [ "assembly-groupable 2 / field-groupable 1",
+            "assembly-groupable 2 / field-groupable 2",
+            "assembly-groupable 2 / field-groupable 3" ] },
+        
+        { "groupable-fields" : 
+          [ "assembly-groupable 3 / field-groupable 1",
+            "assembly-groupable 3 / field-groupable 2",
+            "assembly-groupable 3 / field-groupable 3" ] } ],
+      "wrapped-assemblies" : 
+      [ 
+        { "wrapped-fields" : 
+          [ "assembly-wrappable 1 / field-wrappable 1",
+            "assembly-wrappable 1 / field-wrappable 2",
+            "assembly-wrappable 1 / field-wrappable 3" ] },
+        
+        { "wrapped-fields" : 
+          [ "assembly-wrappable 2 / field-wrappable 1",
+            "assembly-wrappable 2 / field-wrappable 2",
+            "assembly-wrappable 2 / field-wrappable 3" ] },
+        
+        { "wrapped-fields" : 
+          [ "assembly-wrappable 3 / field-wrappable 1",
+            "assembly-wrappable 3 / field-wrappable 2",
+            "assembly-wrappable 3 / field-wrappable 3" ] } ],
+      "keyed-assemblies" : 
+      { "abk1" : 
+        { "keyed-fields" : 
+          { "abk1.fbk1" : "assembly-by-key 1 / field-by-key 1",
+            "abk1.fbk2" : "assembly-by-key 1 / field-by-key 2",
+            "abk1.fbk3" : "assembly-by-key 1 / field-by-key 3" } },
+        "abk2" : 
+        { "keyed-fields" : 
+          { "abk2.fbk1" : "assembly-by-key 1 / field-by-key 1",
+            "abk2.fbk2" : "assembly-by-key 1 / field-by-key 2",
+            "abk2.fbk3" : "assembly-by-key 1 / field-by-key 3" } },
+        "abk3" : 
+        { "keyed-fields" : 
+          { "abk3.fbk1" : "assembly-by-key 1 / field-by-key 1",
+            "abk3.fbk2" : "assembly-by-key 1 / field-by-key 2",
+            "abk3.fbk3" : "assembly-by-key 1 / field-by-key 3" } } } } }

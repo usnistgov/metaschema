@@ -1,0 +1,213 @@
+<model xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+       root-at="EVERYTHING ASSEMBLY-1ONLY"
+       namespace="http://csrc.nist.gov/metaschema/ns/everything"
+       prefix="everything">
+   <schema-name>NIST Metaschema Everything</schema-name>
+   <schema-version>1.0</schema-version>
+   <assembly scope="global"
+             name="everything"
+             key="EVERYTHING"
+             gi="EVERYTHING">
+      <flag as-type="string" scope="global" name="id" key="id" gi="id"/>
+      <field scope="global"
+             name="field-1only"
+             key="field-1only"
+             gi="field-1only">
+         <value as-type="string" key="STRVALUE"/>
+      </field>
+      <field scope="global"
+             name="field-base64"
+             key="field-base64"
+             gi="field-base64">
+         <value as-type="base64Binary" key="STRVALUE"/>
+      </field>
+      <field scope="global"
+             name="field-boolean"
+             key="field-boolean"
+             gi="field-boolean">
+         <value as-type="boolean" key="STRVALUE"/>
+      </field>
+      <field scope="global"
+             name="field-named-value"
+             key="field-named-value"
+             gi="field-named-value">
+         <flag as-type="string" scope="global" name="id" key="id" gi="id"/>
+         <value as-type="string" key="CUSTOM-VALUE-KEY"/>
+      </field>
+      <field scope="global"
+             name="markup-line"
+             key="markup-line"
+             gi="markup-line">
+         <value as-type="markup-line" key="RICHTEXT"/>
+      </field>
+      <group name="groupable-simple-fields" key="groupable-simple-fields">
+         <field scope="global"
+                name="field-simple-groupable"
+                gi="field-simple-groupable">
+            <value as-type="string" key="STRVALUE"/>
+         </field>
+      </group>
+      <group name="groupable-flagged-fields" key="groupable-flagged-fields">
+         <field scope="global"
+                name="field-flagged-groupable"
+                gi="field-flagged-groupable">
+            <flag as-type="date"
+                  name="flagged-date"
+                  key="flagged-date"
+                  gi="flagged-date"/>
+            <flag as-type="decimal"
+                  name="flagged-decimal"
+                  key="flagged-decimal"
+                  gi="flagged-decimal"/>
+            <value as-type="string" key="STRVALUE"/>
+         </field>
+      </group>
+      <group name="wrapped-fields"
+             key="wrapped-fields"
+             gi="wrapped-fields"
+             group-json="ARRAY">
+         <field scope="global" name="field-wrappable" gi="field-wrappable">
+            <value as-type="string" key="STRVALUE"/>
+         </field>
+      </group>
+      <group name="keyed-fields"
+             key="keyed-fields"
+             group-json="BY_KEY"
+             json-key-flag="id">
+         <field scope="global"
+                name="field-by-key"
+                gi="field-by-key"
+                json-key-flag="id">
+            <flag as-type="string" scope="global" name="id" key="id" gi="id"/>
+            <value as-type="string" key="STRVALUE"/>
+         </field>
+      </group>
+      <group name="dynamic-value-key-fields" key="dynamic-value-key-fields">
+         <field scope="global"
+                name="field-dynamic-value-key"
+                gi="field-dynamic-value-key">
+            <flag as-type="string" scope="global" name="id" key="id" gi="id"/>
+            <flag as-type="string" name="color" key="color" gi="color"/>
+            <value as-type="string" key-flag="id"/>
+         </field>
+      </group>
+      <field scope="global"
+             name="wrapped-prose"
+             key="wrapped-prose"
+             gi="wrapped-prose">
+         <value as-type="markup-multiline" key="PROSE"/>
+      </field>
+      <field scope="global" name="loose-prose" key="loose-prose">
+         <value as-type="markup-multiline" key="PROSE"/>
+      </field>
+      <assembly scope="global"
+                name="assembly-1only"
+                key="ASSEMBLY-1ONLY"
+                gi="ASSEMBLY-1ONLY">
+         <field scope="global"
+                name="field-1only"
+                key="field-1only"
+                gi="field-1only">
+            <value as-type="string" key="STRVALUE"/>
+         </field>
+         <assembly scope="global"
+                   recursive="true"
+                   name="assembly-1only"
+                   key="ASSEMBLY-1ONLY"
+                   gi="ASSEMBLY-1ONLY"/>
+      </assembly>
+      <group name="groupable-assemblies" key="groupable-assemblies">
+         <assembly scope="global" name="assembly-groupable" gi="assembly-groupable">
+            <group name="groupable-simple-fields" key="groupable-simple-fields">
+               <field scope="global"
+                      name="field-simple-groupable"
+                      gi="field-simple-groupable">
+                  <value as-type="string" key="STRVALUE"/>
+               </field>
+            </group>
+            <group name="groupable-assemblies" key="groupable-assemblies">
+               <assembly scope="global"
+                         recursive="true"
+                         name="assembly-groupable"
+                         gi="assembly-groupable"/>
+            </group>
+         </assembly>
+      </group>
+      <group name="wrapped-assemblies"
+             key="wrapped-assemblies"
+             gi="wrapped-assemblies">
+         <assembly scope="global" name="assembly-wrappable" gi="assembly-wrappable">
+            <group name="wrapped-fields" key="wrapped-fields" gi="wrapped-fields">
+               <field scope="global" name="field-wrappable" gi="field-wrappable">
+                  <value as-type="string" key="STRVALUE"/>
+               </field>
+            </group>
+            <group name="wrapped-assemblies"
+                   key="wrapped-assemblies"
+                   gi="wrapped-assemblies">
+               <assembly scope="global"
+                         recursive="true"
+                         name="assembly-wrappable"
+                         gi="assembly-wrappable"/>
+            </group>
+         </assembly>
+      </group>
+      <group name="keyed-assemblies"
+             key="keyed-assemblies"
+             group-json="BY_KEY"
+             json-key-flag="id">
+         <assembly scope="global"
+                   name="assembly-by-key"
+                   gi="assembly-by-key"
+                   json-key-flag="id">
+            <flag as-type="string" scope="global" name="id" key="id" gi="id"/>
+            <group name="keyed-fields"
+                   key="keyed-fields"
+                   group-json="BY_KEY"
+                   json-key-flag="id">
+               <field scope="global"
+                      name="field-by-key"
+                      gi="field-by-key"
+                      json-key-flag="id">
+                  <flag as-type="string" scope="global" name="id" key="id" gi="id"/>
+                  <value as-type="string" key="STRVALUE"/>
+               </field>
+            </group>
+            <group name="keyed-assemblies"
+                   key="keyed-assemblies"
+                   group-json="BY_KEY"
+                   json-key-flag="id">
+               <assembly scope="global"
+                         recursive="true"
+                         name="assembly-by-key"
+                         gi="assembly-by-key"
+                         json-key-flag="id"/>
+            </group>
+         </assembly>
+      </group>
+      <group name="everything-recursive"
+             key="everything-recursive"
+             group-json="ARRAY">
+         <assembly scope="global"
+                   recursive="true"
+                   name="everything"
+                   gi="EVERYTHING"/>
+      </group>
+   </assembly>
+   <assembly scope="global"
+             name="assembly-1only"
+             key="ASSEMBLY-1ONLY"
+             gi="ASSEMBLY-1ONLY">
+      <field scope="global"
+             name="field-1only"
+             key="field-1only"
+             gi="field-1only">
+         <value as-type="string" key="STRVALUE"/>
+      </field>
+      <assembly scope="global"
+                recursive="true"
+                name="assembly-1only"
+                key="ASSEMBLY-1ONLY"
+                gi="ASSEMBLY-1ONLY"/>
+   </assembly>
+</model>

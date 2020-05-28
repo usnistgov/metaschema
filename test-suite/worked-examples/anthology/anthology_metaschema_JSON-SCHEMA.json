@@ -1,0 +1,447 @@
+
+  { "$schema" : "http://json-schema.org/draft-07/schema#",
+    "$id" : "http://csrc.nist.gov/metaschema/ns/anthology-schema.json",
+    "$comment" : "Anthology Metaschema: JSON Schema",
+    "type" : "object",
+    "definitions" : 
+    { "ANTHOLOGY" : 
+      { "title" : "Anthology",
+        "description" : "A collection of literary excerpts",
+        "type" : "object",
+        "properties" : 
+        { "id" : 
+          { "title" : "Identifier",
+            "description" : "A distinct code",
+            "type" : "string" },
+          "meta" : 
+          { "$ref" : "#/definitions/meta" },
+          "pieces" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/piece" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/piece" } } ] },
+          "back" : 
+          { "$ref" : "#/definitions/back" } },
+        "required" : 
+        [ "meta" ],
+        "additionalProperties" : false },
+      "meta" : 
+      { "title" : "Front matter / metadata",
+        "description" : "Metadata for the anthology as a ^whole, or for a single piece within it",
+        "type" : "object",
+        "properties" : 
+        { "creators" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/creator" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/creator" } } ] },
+          "date" : 
+          { "$ref" : "#/definitions/date" },
+          "keywords" : 
+          { "anyOf" : 
+            [ 
+              { "keyword" : 
+                { "title" : "Key word",
+                  "description" : "A string",
+                  "type" : "string" } },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "keyword" : 
+                  { "title" : "Key word",
+                    "description" : "A string",
+                    "type" : "string" } } } ] },
+          "remarks" : 
+          { "$ref" : "#/definitions/remarks" } },
+        "additionalProperties" : false },
+      "date" : 
+      { "title" : "Date",
+        "description" : "As represented",
+        "type" : "object",
+        "properties" : 
+        { "type" : 
+          { "title" : "Type of date representation",
+            "description" : "May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.",
+            "type" : "string" },
+          "STRVALUE" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "STRVALUE" ],
+        "additionalProperties" : false },
+      "creator" : 
+      { "title" : "Creator (author or editor)",
+        "description" : "The text contents should name the person; the optional who flag links it to the index.",
+        "type" : "object",
+        "properties" : 
+        { "role" : 
+          { "title" : "Role",
+            "description" : "Contribution of the creator",
+            "type" : "string",
+            "enum" : 
+            [ "author",
+              "editor",
+              "translator" ] },
+          "who" : 
+          { "title" : "Person identifier",
+            "description" : "Relates a person to the biographical index",
+            "type" : "string" },
+          "STRVALUE" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "STRVALUE",
+          "role" ],
+        "additionalProperties" : false },
+      "remarks" : 
+      { "title" : "Remarks",
+        "description" : "Pertinent information of any kind.",
+        "type" : "string" },
+      "piece" : 
+      { "title" : "Piece",
+        "description" : "A single anthologized piece; poetry or prose, entire or excerpted",
+        "type" : "object",
+        "properties" : 
+        { "meta" : 
+          { "$ref" : "#/definitions/meta" },
+          "verse" : 
+          { "$ref" : "#/definitions/verse" },
+          "prose" : 
+          { "$ref" : "#/definitions/prose" } },
+        "additionalProperties" : false },
+      "verse" : 
+      { "title" : "Verse",
+        "description" : "A composition in lines, or an excerpt from such a composition",
+        "type" : "object",
+        "properties" : 
+        { "type" : 
+          { "title" : "Verse type",
+            "description" : "Any specialized form such as Byronic, terza rima, sestina, sonnet",
+            "type" : "string" },
+          "lines" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/line" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/line" } } ] },
+          "stanzas" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/stanza" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/stanza" } } ] } },
+        "additionalProperties" : false },
+      "line" : 
+      { "title" : "Line of verse",
+        "description" : "May be metrical",
+        "type" : "object",
+        "properties" : 
+        { "feet" : 
+          { "title" : "Meter count(feet)",
+            "description" : "Count of metrical feet (dimeter, trimeter, tetrameter etc) represented as a natural number",
+            "type" : "integer" },
+          "base" : 
+          { "title" : "Base meter",
+            "description" : "Identifies the base metrical type, if any",
+            "type" : "string",
+            "enum" : 
+            [ "dactyl",
+              "anapest",
+              "trochee",
+              "iamb",
+              "mixed" ] },
+          "RICHTEXT" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "RICHTEXT" ],
+        "additionalProperties" : false },
+      "stanza" : 
+      { "title" : "Stanza",
+        "description" : "A group of lines within a verse",
+        "type" : "object",
+        "properties" : 
+        { "type" : 
+          { "title" : "Verse type",
+            "description" : "Any specialized form such as Byronic, terza rima, sestina, sonnet",
+            "type" : "string" },
+          "lines" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/line" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/line" } } ] } },
+        "additionalProperties" : false },
+      "prose" : 
+      { "title" : "Prose",
+        "description" : "Short prose or an excerpt",
+        "type" : "string" },
+      "back" : 
+      { "title" : "Back matter",
+        "description" : "Indexes and appurtenances",
+        "type" : "object",
+        "properties" : 
+        { "author-index" : 
+          { "$ref" : "#/definitions/author-index" } },
+        "additionalProperties" : false },
+      "author-index" : 
+      { "title" : "Author index",
+        "description" : "Information about authors cited in the anthology",
+        "type" : "object",
+        "properties" : 
+        { "authors" : 
+          { "type" : "object",
+            "minProperties" : 1,
+            "additionalProperties" : 
+            { "allOf" : 
+              [ 
+                { "type" : "object",
+                  "$ref" : "#/definitions/author" },
+                
+                { "not" : 
+                  { "type" : "string" } } ] } } },
+        "additionalProperties" : false },
+      "author" : 
+      { "title" : "Author",
+        "description" : "A single author cited in the anthology, with relevant info",
+        "type" : "object",
+        "properties" : 
+        { "name" : 
+          { "$ref" : "#/definitions/name" },
+          "dates" : 
+          { "$ref" : "#/definitions/dates" },
+          "publications" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/publication" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/publication" } } ] },
+          "bio" : 
+          { "$ref" : "#/definitions/bio" } },
+        "additionalProperties" : false },
+      "name" : 
+      { "title" : "Name",
+        "description" : "A personal or place name",
+        "type" : "string" },
+      "bio" : 
+      { "title" : "Biographical info",
+        "description" : "Gives basic facts or colorful detail.",
+        "type" : "object",
+        "properties" : 
+        { "also-known-as" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/name" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/name" } } ] },
+          "fact-statements" : 
+          { "anyOf" : 
+            [ 
+              { "facts" : 
+                { "title" : "Facts",
+                  "description" : "Structured data",
+                  "type" : "object",
+                  "properties" : 
+                  { "dates" : 
+                    { "$ref" : "#/definitions/dates" },
+                    "residences" : 
+                    { "anyOf" : 
+                      [ 
+                        { "residence" : 
+                          { "title" : "Residency",
+                            "description" : "A range of values in time-space",
+                            "type" : "object",
+                            "properties" : 
+                            { "dates" : 
+                              { "dates" : 
+                                { "title" : "Dates",
+                                  "description" : "Start to end",
+                                  "type" : "object",
+                                  "properties" : 
+                                  { "start" : 
+                                    { "title" : "Start",
+                                      "description" : "When initiated",
+                                      "type" : "string",
+                                      "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+                                    "end" : 
+                                    { "title" : "End",
+                                      "description" : "When concluded or abandoned",
+                                      "type" : "string",
+                                      "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
+                                  "additionalProperties" : false } } },
+                            "additionalProperties" : false } },
+                        
+                        { "type" : "array",
+                          "minItems" : 1,
+                          "items" : 
+                          { "residence" : 
+                            { "title" : "Residency",
+                              "description" : "A range of values in time-space",
+                              "type" : "object",
+                              "properties" : 
+                              { "dates" : 
+                                { "dates" : 
+                                  { "title" : "Dates",
+                                    "description" : "Start to end",
+                                    "type" : "object",
+                                    "properties" : 
+                                    { "start" : 
+                                      { "title" : "Start",
+                                        "description" : "When initiated",
+                                        "type" : "string",
+                                        "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+                                      "end" : 
+                                      { "title" : "End",
+                                        "description" : "When concluded or abandoned",
+                                        "type" : "string",
+                                        "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
+                                    "additionalProperties" : false } } },
+                              "additionalProperties" : false } } } ] } },
+                  "additionalProperties" : false } },
+              
+              { "type" : "array",
+                "maxItems" : 3,
+                "minItems" : 1,
+                "items" : 
+                { "facts" : 
+                  { "title" : "Facts",
+                    "description" : "Structured data",
+                    "type" : "object",
+                    "properties" : 
+                    { "dates" : 
+                      { "$ref" : "#/definitions/dates" },
+                      "residences" : 
+                      { "anyOf" : 
+                        [ 
+                          { "residence" : 
+                            { "title" : "Residency",
+                              "description" : "A range of values in time-space",
+                              "type" : "object",
+                              "properties" : 
+                              { "dates" : 
+                                { "dates" : 
+                                  { "title" : "Dates",
+                                    "description" : "Start to end",
+                                    "type" : "object",
+                                    "properties" : 
+                                    { "start" : 
+                                      { "title" : "Start",
+                                        "description" : "When initiated",
+                                        "type" : "string",
+                                        "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+                                      "end" : 
+                                      { "title" : "End",
+                                        "description" : "When concluded or abandoned",
+                                        "type" : "string",
+                                        "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
+                                    "additionalProperties" : false } } },
+                              "additionalProperties" : false } },
+                          
+                          { "type" : "array",
+                            "minItems" : 1,
+                            "items" : 
+                            { "residence" : 
+                              { "title" : "Residency",
+                                "description" : "A range of values in time-space",
+                                "type" : "object",
+                                "properties" : 
+                                { "dates" : 
+                                  { "dates" : 
+                                    { "title" : "Dates",
+                                      "description" : "Start to end",
+                                      "type" : "object",
+                                      "properties" : 
+                                      { "start" : 
+                                        { "title" : "Start",
+                                          "description" : "When initiated",
+                                          "type" : "string",
+                                          "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+                                        "end" : 
+                                        { "title" : "End",
+                                          "description" : "When concluded or abandoned",
+                                          "type" : "string",
+                                          "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
+                                      "additionalProperties" : false } } },
+                                "additionalProperties" : false } } } ] } },
+                    "additionalProperties" : false } } } ] },
+          "colorful-details" : 
+          { "colorful-details" : 
+            { "title" : "Colorful details",
+              "description" : "Unstructured data",
+              "type" : "object",
+              "properties" : 
+              { "dates" : 
+                { "dates" : 
+                  { "title" : "Dates",
+                    "description" : "This time, a string, so \"Lincoln's Birthday\" is a date.",
+                    "type" : "string" } },
+                "remarks" : 
+                { "$ref" : "#/definitions/remarks" } },
+              "additionalProperties" : false } } },
+        "additionalProperties" : false },
+      "dates" : 
+      { "title" : "Dates",
+        "description" : "As a range (birth-death) or floruit",
+        "type" : "object",
+        "properties" : 
+        { "birth" : 
+          { "title" : "Birth date",
+            "description" : "If only the year is known use June 30.",
+            "type" : "string",
+            "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+          "death" : 
+          { "title" : "Death date",
+            "description" : "If only the year is known use July 1.",
+            "type" : "string",
+            "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+          "floruit" : 
+          { "title" : "Floruit date",
+            "description" : "Do not use along with both birth and death",
+            "type" : "string",
+            "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+          "range" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "range" ],
+        "additionalProperties" : false },
+      "publication" : 
+      { "title" : "Publication",
+        "description" : "A publication attributed to an author",
+        "type" : "object",
+        "properties" : 
+        { "date" : 
+          { "title" : "Publication date",
+            "description" : "Date of (first) publication",
+            "type" : "string",
+            "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+          "STRVALUE" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "STRVALUE" ],
+        "additionalProperties" : false } },
+    "properties" : 
+    { "ANTHOLOGY" : 
+      { "$ref" : "#/definitions/ANTHOLOGY" } },
+    "required" : 
+    [ "ANTHOLOGY" ] }

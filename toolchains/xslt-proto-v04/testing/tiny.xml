@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TINY xmlns="http://csrc.nist.gov/metaschema/ns/tiny"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/tiny tiny_metaschema_XML-SCHEMA.xsd">
+    <string-field>Here is a string</string-field>
+    <object-field id-flag="boo">true</object-field>
+    <TINY>
+        <string-field>Here a string is</string-field>
+        <object-field id-flag="foo">false</object-field>
+    </TINY>
+</TINY>
