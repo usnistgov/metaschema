@@ -517,6 +517,7 @@
       <xs:enumeration value="ip-v6-address"/>
       <xs:enumeration value="uri"/>
       <xs:enumeration value="uri-reference"/>
+      <xs:enumeration value="uuid"/>
     </xs:restriction>   
   </xs:simpleType>
   
