@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" stylesheet="metapath-jsonize.xsl">
+    <x:param name="definition-map" href="../testing/models_definition-map.xml"/>
+    <x:scenario label="Path to root">
+        <x:call function="m:jsonize-path">
+            <x:param>/</x:param>
+        </x:call>
+        <x:expect label="path to root" select="'/j:map'"/>
+    </x:scenario>
+
+    <x:scenario label="Nominal document element">
+        <x:call function="m:jsonize-path">
+            <x:param>/*</x:param>
+        </x:call>
+        <x:expect label="the definition map indicates two possible objects at the root"
+            
+            select="'/j:map/(j:map[@key=''EVERYTHING''] | j:map[@key=''ASSEMBLY-1ONLY''])'"/>
+    </x:scenario>
+    
+    <x:scenario label="Absolute path to specified document element">
+        <x:call function="m:jsonize-path">
+            <x:param>/EVERYTHING</x:param>
+        </x:call>
+        <x:expect label="definition map indicates two possible roots"
+            select="'/j:map/j:map[@key=''EVERYTHING'']'"/>
+    </x:scenario>
+    
+    <x:scenario label="A path to a node not described in the definition map">
+        <x:call function="m:jsonize-path">
+            <x:param>/nothing</x:param>
+        </x:call>
+        <x:expect label="produces a no-op (path to nothing)"
+            select="'/j:map/()'"/>
+    </x:scenario>
+    
+    <x:scenario label="Absolute path to document element, with predicate">
+        <x:call function="m:jsonize-path">
+            <x:param>/EVERYTHING[true()]</x:param>
+        </x:call>
+        <x:expect label="logical predicates are preserved"
+            select="'/j:map/j:map[@key=''EVERYTHING''][true()]'"/>
+    </x:scenario>
+    
+    
+    <!--<x:scenario label="Absolute path to document element, with predicate including a relative path">
+        <x:call function="m:jsonize-path">
+            <x:param>/EVERYTHING[field-1only=''x'']</x:param>
+        </x:call>
+        <x:expect label="within the predicate a relative path must also be cast"
+            select="'/j:map/j:map[@key=''EVERYTHING''][j:string[@key=''field-1only'']=''x'']'"/>
+    </x:scenario>
+
+    <x:scenario label="Absolute path showing two steps into a recursive structure">
+        <x:call function="m:jsonize-path">
+            <x:param>/EVERYTHING/EVERYTHING</x:param>
+        </x:call>
+        <x:expect label="from the root, the first step isolates a singleton"
+            select="'/j:map/j:map[@key=''EVERYTHING'']/j:array[@key=''everything-recursive'']/j:map'"/>
+    </x:scenario>
+
+    <x:scenario label="Relative path showing three steps into a recursive structure">
+        <x:call function="m:jsonize-path">
+            <x:param>EVERYTHING/EVERYTHING/EVERYTHING</x:param>
+        </x:call>
+        <x:expect label="in a relative path each step shows all possibilities at that step"
+            select="'(j:map[@key=''EVERYTHING''] | j:array[@key=''everything-recursive'']/j:map)/j:array[@key=''everything-recursive'']/j:map/j:array[@key=''everything-recursive'']/j:map'"/>
+    </x:scenario>-->
+
+</x:description>

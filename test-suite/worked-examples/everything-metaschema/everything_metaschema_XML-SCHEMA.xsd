@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:everything="http://csrc.nist.gov/metaschema/ns/everything"
+           xmlns:oscal-prose="http://csrc.nist.gov/metaschema/ns/everything"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/metaschema/ns/everything"
+           version="1.0">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>NIST Metaschema Everything</m:schema-name>
+         <m:schema-version>1.0</m:schema-version>
+         <m:short-name>everything</m:short-name>
+         <m:remarks>
+            <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
+         </m:remarks>
+         <m:root>ANYTHING</m:root>
+         <m:root>EVERYTHING</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="ANYTHING" type="everything:anything-ASSEMBLY"/>
+   <xs:complexType name="anything-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Any Thing</m:formal-name>
+            <m:description>Any old thing.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Any Thing</b>: Any old thing.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="everything"
+                     type="everything:everything-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="todays-date" type="xs:date">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Today's Date</m:formal-name>
+               <m:description>Not before yesterday.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Today's Date</b>: Not before yesterday.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:element name="EVERYTHING" type="everything:everything-ASSEMBLY"/>
+   <xs:complexType name="everything-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Every Thing</m:formal-name>
+            <m:description>Nothing left out.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Every Thing</b>: Nothing left out.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="required-local-field" minOccurs="1" maxOccurs="1">
+            <xs:complexType mixed="true">
+               <xs:group ref="everything:everything-inline"/>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="greek-letter"
+                     type="everything:greek-letter-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="expectation"
+                     type="everything:expectation-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="epigraph" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="line"
+                              type="everything:line-FIELD"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="skits" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="skit"
+                              type="everything:skit-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="poem" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="stanza"
+                              type="everything:stanza-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="colors" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="color"
+                              type="everything:color-FIELD"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+            <xs:unique name="color-color-keys">
+               <xs:selector xpath="everything:color"/>
+               <xs:field xpath="@code"/>
+            </xs:unique>
+         </xs:element>
+         <xs:element name="lattice" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="point"
+                              type="everything:point-FIELD"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+            <xs:unique name="point-point-keys">
+               <xs:selector xpath="everything:point"/>
+               <xs:field xpath="@point-id"/>
+            </xs:unique>
+         </xs:element>
+         <xs:element name="widget"
+                     type="everything:widget-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="dramatis-personae" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="role"
+                              type="everything:role-ASSEMBLY"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+            <xs:unique name="role-role-keys">
+               <xs:selector xpath="everything:role"/>
+               <xs:field xpath="@role-id"/>
+            </xs:unique>
+         </xs:element>
+         <xs:element name="SINGLETON"
+                     type="everything:singleton-ASSEMBLY"
+                     minOccurs="1"
+                     maxOccurs="1"/>
+         <xs:element name="section"
+                     type="everything:section-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="everything"
+                     type="everything:everything-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="3"/>
+      </xs:sequence>
+      <xs:attribute name="todays-date" type="xs:date">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Today's Date</m:formal-name>
+               <m:description>Not before yesterday.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Today's Date</b>: Not before yesterday.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="required-integer" use="required" type="xs:integer">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Required Integer</m:formal-name>
+               <m:description>An integer.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Required Integer</b>: An integer.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="widget-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Widget</m:formal-name>
+            <m:description>With knobs and switches.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Widget</b>: With knobs and switches.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="line"
+                     type="everything:line-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="stanza"
+                     type="everything:stanza-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="banner-type">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Banner type</m:formal-name>
+               <m:description>How should we check the banner (a flag)</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Banner type</b>: How should we check the banner (a flag)</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="date">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>Date type</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+               <xs:enumeration value="color">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>Color</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+               <xs:enumeration value="wholeNo">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>Lexically, a whole number (\d+)</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+               <xs:enumeration value="ID">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>A unique identifier</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="banner" type="xs:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Banner</m:formal-name>
+               <m:description>A flag, with a dynamic (lexical) type</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Banner</b>: A flag, with a dynamic (lexical) type</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="stanza-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Verse stanza</m:formal-name>
+            <m:description>A sequence of lines of determinate length</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Verse stanza</b>: A sequence of lines of determinate length</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="line"
+                     type="everything:line-FIELD"
+                     minOccurs="1"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="type">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Verse type</m:formal-name>
+               <m:description>Be creative</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Verse type</b>: Be creative</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:union memberTypes="xs:string">
+               <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                     <xs:enumeration value="couplet">
+                        <xs:annotation>
+                           <xs:documentation>
+                              <p>Couplet</p>
+                           </xs:documentation>
+                        </xs:annotation>
+                     </xs:enumeration>
+                     <xs:enumeration value="tercet">
+                        <xs:annotation>
+                           <xs:documentation>
+                              <p>Tercet</p>
+                           </xs:documentation>
+                        </xs:annotation>
+                     </xs:enumeration>
+                     <xs:enumeration value="quatrain">
+                        <xs:annotation>
+                           <xs:documentation>
+                              <p>Quatrain</p>
+                           </xs:documentation>
+                        </xs:annotation>
+                     </xs:enumeration>
+                  </xs:restriction>
+               </xs:simpleType>
+            </xs:union>
+         </xs:simpleType>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="expectation-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Expectation</m:formal-name>
+            <m:description>Something that may or may not occur in the future.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Expectation</b>: Something that may or may not occur in the future.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="type" use="required">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Expectation type</m:formal-name>
+                     <m:description>Saying something about an expectation.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Expectation type</b>: Saying something about an expectation.</xs:documentation>
+               </xs:annotation>
+               <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                     <xs:enumeration value="type">
+                        <xs:annotation>
+                           <xs:documentation>
+                              <p>type</p>
+                           </xs:documentation>
+                        </xs:annotation>
+                     </xs:enumeration>
+                     <xs:enumeration value="date">
+                        <xs:annotation>
+                           <xs:documentation>
+                              <p>date</p>
+                           </xs:documentation>
+                        </xs:annotation>
+                     </xs:enumeration>
+                     <xs:enumeration value="roleref">
+                        <xs:annotation>
+                           <xs:documentation>
+                              <p>role reference</p>
+                           </xs:documentation>
+                        </xs:annotation>
+                     </xs:enumeration>
+                     <xs:enumeration value="oneof">
+                        <xs:annotation>
+                           <xs:documentation>
+                              <p>a unique set of values</p>
+                           </xs:documentation>
+                        </xs:annotation>
+                     </xs:enumeration>
+                  </xs:restriction>
+               </xs:simpleType>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="singleton-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Singleton assembly</m:formal-name>
+            <m:description>One of a kind.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Singleton assembly</b>: One of a kind.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="title"
+                     type="everything:title-FIELD"
+                     minOccurs="1"
+                     maxOccurs="1"/>
+         <xs:element name="remarks" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+               <xs:appinfo>
+                  <m:formal-name>Prose</m:formal-name>
+                  <m:description>A block o' prose.</m:description>
+               </xs:appinfo>
+               <xs:documentation>
+                  <b>Prose</b>: A block o' prose.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:group ref="everything:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="todays-date" type="xs:date">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Today's Date</m:formal-name>
+               <m:description>Not before yesterday.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Today's Date</b>: Not before yesterday.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="section-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Section</m:formal-name>
+            <m:description>.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Section</b>: .</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="title"
+                     type="everything:title-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="named-value"
+                     type="everything:named-value-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="epigraph" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="line"
+                              type="everything:line-FIELD"
+                              minOccurs="0"
+                              maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:group ref="everything:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>id</m:formal-name>
+               <m:description>.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>id</b>: .</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="class" type="xs:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Class</m:formal-name>
+               <m:description>.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Class</b>: .</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="color-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Color</m:formal-name>
+            <m:description>Name and code</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Color</b>: Name and code</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="code" use="required" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Code</m:formal-name>
+                     <m:description>The six-digit hex code, so FF0000 for red</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Code</b>: The six-digit hex code, so FF0000 for red</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="point-FIELD"/>
+   <xs:complexType name="role-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Role</m:formal-name>
+            <m:description>.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Role</b>: .</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="title"
+                     type="everything:title-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="remarks" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+               <xs:appinfo>
+                  <m:formal-name>Prose</m:formal-name>
+                  <m:description>A block o' prose.</m:description>
+               </xs:appinfo>
+               <xs:documentation>
+                  <b>Prose</b>: A block o' prose.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:group ref="everything:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="role-id" use="required" type="xs:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Role ID</m:formal-name>
+               <m:description>A unique identifier for the role</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Role ID</b>: A unique identifier for the role</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType mixed="true" name="line-FIELD">
+      <xs:group ref="everything:everything-inline"/>
+   </xs:complexType>
+   <xs:complexType mixed="true" name="title-FIELD">
+      <xs:group ref="everything:everything-inline"/>
+   </xs:complexType>
+   <xs:complexType name="skit-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Skit</m:formal-name>
+            <m:description>An exchange of lines</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Skit</b>: An exchange of lines</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="line" minOccurs="0" maxOccurs="unbounded">
+            <xs:complexType mixed="true">
+               <xs:group ref="everything:everything-inline"/>
+               <xs:attribute name="class" type="xs:NCName">
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Class</m:formal-name>
+                        <m:description>Some class.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Class</b>: Some class.</xs:documentation>
+                  </xs:annotation>
+               </xs:attribute>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="named-value-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Named value</m:formal-name>
+            <m:description>A field with a json value flag</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Named value</b>: A field with a json value flag</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="class" type="xs:NCName">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Class</m:formal-name>
+                     <m:description>Some class.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Class</b>: Some class.</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="name" use="required" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Name</m:formal-name>
+                     <m:description>The name for the value</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Name</b>: The name for the value</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="greek-letter-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Greek letter</m:formal-name>
+            <m:description>Not more than one, spelled out, but only ɑ, β and γ</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Greek letter</b>: Not more than one, spelled out, but only ɑ, β and γ</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="everything:greek-letter-FIELD-VALUE-ENUMERATION">
+            <xs:attribute name="todays-date" type="xs:date">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Today's Date</m:formal-name>
+                     <m:description>Not before yesterday.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Today's Date</b>: Not before yesterday.</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="required-ncname" type="xs:NCName">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Required NCName</m:formal-name>
+                     <m:description>A no-colon name.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Required NCName</b>: A no-colon name.</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:simpleType name="greek-letter-FIELD-VALUE-ENUMERATION">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="Alpha"/>
+         <xs:enumeration value="Beta"/>
+         <xs:enumeration value="Gamma"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:group name="PROSE">
+      <xs:choice>
+         <xs:element ref="oscal-prose:h1"/>
+         <xs:element ref="oscal-prose:h2"/>
+         <xs:element ref="oscal-prose:h3"/>
+         <xs:element ref="oscal-prose:h4"/>
+         <xs:element ref="oscal-prose:h5"/>
+         <xs:element ref="oscal-prose:h6"/>
+         <xs:element ref="oscal-prose:p"/>
+         <xs:element ref="oscal-prose:ul"/>
+         <xs:element ref="oscal-prose:ol"/>
+         <xs:element ref="oscal-prose:pre"/>
+         <xs:element ref="oscal-prose:table"/>
+      </xs:choice>
+   </xs:group>
+   <xs:element name="h1">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h2">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h3">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h4">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h5">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h6">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="p">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:everything-inline"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="pre">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ol">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:li"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="li">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:everything-inline"/>
+            <xs:element ref="oscal-prose:ol"/>
+            <xs:element ref="oscal-prose:ul"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ul">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:li"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="table">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:tr"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="tr">
+      <xs:complexType>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:td"/>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:th"/>
+         </xs:choice>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="th">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:everything-inline"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="td">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:everything-inline"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:group name="everything-inline">
+      <xs:sequence>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:group ref="oscal-prose:special"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:group>
+   <xs:group name="mix">
+      <xs:sequence>
+         <xs:group minOccurs="0" maxOccurs="unbounded" ref="oscal-prose:inlines"/>
+      </xs:sequence>
+   </xs:group>
+   <xs:group name="inlines">
+      <xs:sequence>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:q"/>
+            <xs:element ref="oscal-prose:code"/>
+            <xs:element ref="oscal-prose:em"/>
+            <xs:element ref="oscal-prose:i"/>
+            <xs:element ref="oscal-prose:strong"/>
+            <xs:element ref="oscal-prose:b"/>
+            <xs:element ref="oscal-prose:sub"/>
+            <xs:element ref="oscal-prose:sup"/>
+            <xs:element ref="oscal-prose:img"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:group>
+   <xs:element name="q">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:code"/>
+            <xs:element ref="oscal-prose:em"/>
+            <xs:element ref="oscal-prose:i"/>
+            <xs:element ref="oscal-prose:b"/>
+            <xs:element ref="oscal-prose:strong"/>
+            <xs:element ref="oscal-prose:sub"/>
+            <xs:element ref="oscal-prose:sup"/>
+         </xs:choice>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="code">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:mix"/>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="strong">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="em">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="i">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="b">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="sub">
+      <xs:complexType mixed="true">
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="sup">
+      <xs:complexType mixed="true">
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="img">
+      <xs:complexType>
+         <xs:attribute name="alt"/>
+         <xs:attribute name="src" use="required" type="xs:anyURI"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="a">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:q"/>
+            <xs:element ref="oscal-prose:code"/>
+            <xs:element name="em">
+               <xs:complexType mixed="true">
+                  <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+               </xs:complexType>
+            </xs:element>
+         </xs:choice>
+         <xs:attribute name="href"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:group name="special">
+      <xs:sequence>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:insert"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:group>
+   <xs:element name="insert">
+      <xs:complexType>
+         <xs:attribute name="param-id" use="required" type="xs:NCName"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:attributeGroup name="requiredClass"/>
+   <xs:attributeGroup name="optionalClass"/>
+   <xs:attributeGroup name="hrefAttr">
+      <xs:attribute name="href"/>
+   </xs:attributeGroup>
+</xs:schema>
