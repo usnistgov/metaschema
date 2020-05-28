@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<?xml-model href="everything-metatron-mockup.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>-->
+<?xml-model href="everything-metaschema_METATRON.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<EVERYTHING  required-integer="0"  xmlns="http://csrc.nist.gov/metaschema/ns/everything"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/everything everything_metaschema_XML-SCHEMA.xsd">
+  <required-local-field>field!</required-local-field>
+ 
+  
+  <!--
+    
+    with and without @target -
+       allowed-values[empty(@target)]
+         x //widget/@banner-type
+       allowed-values[exists(@target)]
+         x //one-string
+       
+       matches[empty(@target)]/@regex
+       matches[exists(@target)]/@regex
+         x //widget[@banner-type='wholeNo'] target @banner
+         x a field value targeted from an assembly, when the field is multiple
+         
+       o matches[empty(@target)]/@datatype
+       x matches[exists(@target)]/@datatype
+             
+       o has-cardinality[empty(@target)] - not valid
+       x has-cardinality[exists(@target)]
+       
+       index-has-key[empty(@target)] - not valid
+       index-has-key[exists(@target)]
+       is-unique[empty(@target)]
+       is-unique[exists(@target)]
+    
+       index
+         used in conjunction with index-has-key
+    
+    Metaschema Schematron - complain if same key name is used twice
+    
+    require[@when]/
+       allowed-values
+       matches
+       index-has-key
+       is-unique
+       has-cardinality
+  
+  test both local and global declarations?
+
+  flag[@ref]/constraint/allowed-values with and w/o @extends
+  flag[@ref]/constraint/matches
+  flag[@ref]/constraint/* (any others?)
+  field/constraint?
+  assembly/constraint?
+  
+  -->
+ 
+ 
+ <SINGLETON>
+   <title>Ye Singleton</title>
+ </SINGLETON>
+  <everything required-integer="5" >
+    <required-local-field>required</required-local-field>
+    <greek-letter todays-date="2020-04-01-04:00">Alpha</greek-letter>
+    <skits>
+      <skit>
+        <line who="ghost" class="ha-a">Boo!</line>
+        <line who="bird">Caw!</line>
+        <line who="ghost" class="has-b">Boo!</line>
+      </skit>
+    </skits>
+    <widget banner-type="date" banner="2020-04-01-04:00">
+      
+    </widget>
+    <SINGLETON>
+      <title></title>
+    </SINGLETON>
+  </everything>
+  <everything required-integer="5" >
+    <required-local-field>required</required-local-field>
+<!-- greek-letter 'Aleph' is not an allowed value - this is also tested by XSD -->
+    <greek-letter>Aleph</greek-letter>
+    
+    <!-- @banner-type 'not allowed' is not an allowed value - this is also tested by XSD -->
+    <widget banner-type="not allowed">
+      
+    </widget>
+    <widget banner-type="color" banner="duskyrose">
+      
+    </widget>
+    <widget banner-type="date" banner="2020-04-01-04:00">
+      
+    </widget>
+    <SINGLETON>
+      <title>ERRORS</title>
+    </SINGLETON>
+  </everything>
+</EVERYTHING>

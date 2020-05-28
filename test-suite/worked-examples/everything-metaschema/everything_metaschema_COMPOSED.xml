@@ -1,0 +1,416 @@
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml">
+   <schema-name>NIST Metaschema Everything</schema-name>
+   <schema-version>1.0</schema-version>
+   <short-name>everything</short-name>
+   <namespace>http://csrc.nist.gov/metaschema/ns/everything</namespace>
+   <remarks>
+      <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
+   </remarks>
+   <define-assembly module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                    name="anything">
+      <formal-name>Any Thing</formal-name>
+      <description>Any old thing.</description>
+      <root-name>ANYTHING</root-name>
+      <flag as-type="date" ref="todays-date"/>
+      <model>
+         <assembly ref="everything" min-occurs="0">
+            <use-name>everything</use-name>
+         </assembly>
+      </model>
+   </define-assembly>
+   <define-assembly module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                    name="everything">
+      <formal-name>Every Thing</formal-name>
+      <description>Nothing left out.</description>
+      <root-name>EVERYTHING</root-name>
+      <flag as-type="date" ref="todays-date"/>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="required-integer"
+                   as-type="integer"
+                   required="yes">
+         <formal-name>Required Integer</formal-name>
+         <description>An integer.</description>
+      </define-flag>
+      <model>
+         <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                       name="required-local-field"
+                       as-type="markup-line"
+                       min-occurs="1">
+            <formal-name>Required local field</formal-name>
+            <description>Declared on 'everything'</description>
+         </define-field>
+         <field ref="greek-letter"/>
+         <field ref="expectation" max-occurs="unbounded">
+            <group-as name="expectations"/>
+         </field>
+         <field ref="line" max-occurs="unbounded">
+            <group-as name="epigraph" in-xml="GROUPED"/>
+         </field>
+         <assembly ref="skit" max-occurs="unbounded">
+            <group-as name="skits" in-xml="GROUPED"/>
+         </assembly>
+         <assembly ref="stanza" max-occurs="unbounded">
+            <group-as name="poem" in-xml="GROUPED"/>
+         </assembly>
+         <field ref="color" max-occurs="unbounded">
+            <group-as name="colors" in-xml="GROUPED" in-json="BY_KEY"/>
+         </field>
+         <field ref="point" max-occurs="unbounded">
+            <group-as name="lattice" in-xml="GROUPED" in-json="BY_KEY"/>
+         </field>
+         <assembly ref="widget" max-occurs="unbounded">
+            <group-as name="widgetry" in-xml="UNGROUPED"/>
+         </assembly>
+         <assembly ref="role" max-occurs="unbounded">
+            <group-as name="dramatis-personae" in-xml="GROUPED" in-json="BY_KEY"/>
+         </assembly>
+         <assembly ref="singleton" max-occurs="1" min-occurs="1"/>
+         <assembly ref="section" max-occurs="unbounded" min-occurs="0">
+            <group-as name="sections" in-json="BY_KEY"/>
+         </assembly>
+         <assembly ref="everything" max-occurs="3">
+            <use-name>everything</use-name>
+            <group-as name="everythings"/>
+         </assembly>
+      </model>
+      <constraint>
+         <index name="role-index" target=".//role">
+            <key-field target="@role-id"/>
+         </index>
+         <is-unique target="expectation[@type='oneof']" name="unique-expectation-oneof">
+            <key-field target="value()"/>
+         </is-unique>
+      </constraint>
+   </define-assembly>
+   <define-assembly module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                    name="widget">
+      <formal-name>Widget</formal-name>
+      <description>With knobs and switches.</description>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="banner-type">
+         <formal-name>Banner type</formal-name>
+         <description>How should we check the banner (a flag)</description>
+         <constraint>
+            <allowed-values>
+               <enum value="date">Date type</enum>
+               <enum value="color">Color</enum>
+               <enum value="wholeNo">Lexically, a whole number (\d+)</enum>
+               <enum value="ID">A unique identifier</enum>
+            </allowed-values>
+         </constraint>
+      </define-flag>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="banner">
+         <formal-name>Banner</formal-name>
+         <description>A flag, with a dynamic (lexical) type</description>
+      </define-flag>
+      <model>
+         <field ref="line" max-occurs="unbounded">
+            <group-as name="line-group"/>
+         </field>
+         <assembly ref="stanza"/>
+      </model>
+      <constraint>
+         <matches target="line" regex="^\S"/>
+         <require when="@banner-type='date'">
+            <matches target="@banner" datatype="date"/>
+         </require>
+         <require when="@banner-type='color'">
+            <allowed-values target="@banner">
+               <enum value="red">Red</enum>
+               <enum value="blue">Blue</enum>
+               <enum value="green">Green</enum>
+            </allowed-values>
+         </require>
+         <require when="@banner-type='wholeNo'">
+            <matches target="@banner" regex="^\d+$"/>
+         </require>
+         <require when="@banner-type='ID'">
+            <is-unique name="widget-banner" target="@banner">
+               <key-field target="value()"/>
+            </is-unique>
+         </require>
+      </constraint>
+   </define-assembly>
+   <define-assembly module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                    name="stanza">
+      <formal-name>Verse stanza</formal-name>
+      <description>A sequence of lines of determinate length</description>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="type">
+         <formal-name>Verse type</formal-name>
+         <description>Be creative</description>
+         <constraint>
+            <allowed-values allow-other="yes">
+               <enum value="couplet">Couplet</enum>
+               <enum value="tercet">Tercet</enum>
+               <enum value="quatrain">Quatrain</enum>
+            </allowed-values>
+         </constraint>
+      </define-flag>
+      <model>
+         <field ref="line" min-occurs="1" max-occurs="unbounded">
+            <group-as name="lines"/>
+         </field>
+      </model>
+      <constraint>
+         <require when="@type='couplet'">
+            <has-cardinality target="line" max-occurs="2" min-occurs="2"/>
+         </require>
+         <require when="@type='tercet'">
+            <has-cardinality target="line" max-occurs="3" min-occurs="3"/>
+         </require>
+         <require when="@type='quatrain'">
+            <has-cardinality target="line" max-occurs="4" min-occurs="4"/>
+         </require>
+      </constraint>
+   </define-assembly>
+   <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                 name="expectation">
+      <formal-name>Expectation</formal-name>
+      <description>Something that may or may not occur in the future.</description>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="type"
+                   required="yes">
+         <formal-name>Expectation type</formal-name>
+         <description>Saying something about an expectation.</description>
+         <constraint>
+            <allowed-values>
+               <enum value="type">type</enum>
+               <enum value="date">date</enum>
+               <enum value="roleref">role reference</enum>
+               <enum value="oneof">a unique set of values</enum>
+            </allowed-values>
+         </constraint>
+      </define-flag>
+      <constraint>
+         <require when="@type='type'">
+            <allowed-values target=".">
+               <enum value="start">start</enum>
+               <enum value="end">end</enum>
+            </allowed-values>
+         </require>
+         <require when="@type='date'">
+            <matches datatype="date" target="value()"/>
+         </require>
+         <require when="@type='roleref'">
+            <index-has-key target="." name="role-index">
+               <key-field target="value()"/>
+            </index-has-key>
+         </require>
+      </constraint>
+   </define-field>
+   <define-assembly module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                    name="singleton">
+      <formal-name>Singleton assembly</formal-name>
+      <description>One of a kind.</description>
+      <use-name>SINGLETON</use-name>
+      <flag as-type="date" ref="todays-date"/>
+      <model>
+         <field ref="title" min-occurs="1"/>
+         <field ref="remarks" in-xml="WITH_WRAPPER"/>
+      </model>
+   </define-assembly>
+   <define-assembly module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                    name="section">
+      <formal-name>Section</formal-name>
+      <description>.</description>
+      <json-key flag-name="id"/>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="id"
+                   as-type="NCName">
+         <formal-name>id</formal-name>
+         <description>.</description>
+      </define-flag>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="class">
+         <formal-name>Class</formal-name>
+         <description>.</description>
+      </define-flag>
+      <model>
+         <field ref="title"/>
+         <field ref="named-value"/>
+         <field ref="line" max-occurs="unbounded">
+            <group-as name="epigraph" in-xml="GROUPED"/>
+         </field>
+         <field ref="prose" in-xml="UNWRAPPED"/>
+      </model>
+   </define-assembly>
+   <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                 name="color"
+                 as-type="string">
+      <formal-name>Color</formal-name>
+      <description>Name and code</description>
+      <json-key flag-name="code"/>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="code"
+                   required="yes">
+         <formal-name>Code</formal-name>
+         <description>The six-digit hex code, so FF0000 for red</description>
+      </define-flag>
+   </define-field>
+   <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                 name="point"
+                 as-type="empty">
+      <formal-name>Point</formal-name>
+      <description>Point location</description>
+      <json-key flag-name="point-id"/>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="point-id"
+                   required="yes">
+         <formal-name>Point ID</formal-name>
+         <description>A name for the point</description>
+      </define-flag>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="x"
+                   as-type="decimal">
+         <formal-name>X</formal-name>
+         <description>Abscissa</description>
+      </define-flag>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="y"
+                   as-type="decimal">
+         <formal-name>Y</formal-name>
+         <description>ordinate</description>
+      </define-flag>
+      <constraint>
+         <matches target="x" datatype="decimal"/>
+         <matches target="y" datatype="decimal"/>
+         <is-unique target="." name="point-identifiers">
+            <key-field target="@point-id"/>
+         </is-unique>
+      </constraint>
+   </define-field>
+   <define-assembly module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                    name="role">
+      <formal-name>Role</formal-name>
+      <description>.</description>
+      <json-key flag-name="role-id"/>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="role-id"
+                   required="yes">
+         <formal-name>Role ID</formal-name>
+         <description>A unique identifier for the role</description>
+      </define-flag>
+      <model>
+         <field ref="title"/>
+         <field ref="remarks"/>
+      </model>
+      <constraint>
+         <index name="all-roles" target=".">
+            <key-field target="@role-id"/>
+         </index>
+         <is-unique name="role-is-unique" target=".">
+            <key-field target="@role-id"/>
+         </is-unique>
+      </constraint>
+   </define-assembly>
+   <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                 name="line"
+                 as-type="markup-line">
+      <formal-name>Line of verse</formal-name>
+      <description>Could be terse</description>
+   </define-field>
+   <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                 name="title"
+                 as-type="markup-line">
+      <formal-name>Title</formal-name>
+      <description>.</description>
+   </define-field>
+   <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                 name="prose"
+                 as-type="markup-multiline">
+      <formal-name>Prose</formal-name>
+      <description>A placeholder for prose in an explicit model.</description>
+   </define-field>
+   <define-assembly module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                    name="skit">
+      <formal-name>Skit</formal-name>
+      <description>An exchange of lines</description>
+      <model>
+         <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                       name="line"
+                       as-type="markup-line"
+                       max-occurs="unbounded">
+            <formal-name>line of a skit</formal-name>
+            <description>A single spoken line</description>
+            <group-as name="skit-lines"/>
+            <flag as-type="NCName" ref="class"/>
+            <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                         name="who">
+               <formal-name>Who</formal-name>
+               <description>Who speaks the line</description>
+            </define-flag>
+            <constraint>
+               <require when="@who='ghost'">
+                  <allowed-values target=".">
+                     <enum value="Boo!"/>
+                  </allowed-values>
+               </require>
+               <require when="@class='has-a'">
+                  <matches target="." regex="a|A"/>
+               </require>
+            </constraint>
+         </define-field>
+      </model>
+      <constraint>
+         <allowed-values target="line[@who='ghost']">
+            <enum value="Boo!"/>
+         </allowed-values>
+         <matches target="line[@class='has-a']" regex="a|A"/>
+      </constraint>
+   </define-assembly>
+   <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                 name="remarks"
+                 as-type="markup-multiline">
+      <formal-name>Prose</formal-name>
+      <description>A block o' prose.</description>
+   </define-field>
+   <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                 name="named-value"
+                 as-type="string">
+      <formal-name>Named value</formal-name>
+      <description>A field with a json value flag</description>
+      <json-value-key flag-name="name"/>
+      <flag as-type="NCName" ref="class"/>
+      <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                   name="name"
+                   required="yes">
+         <formal-name>Name</formal-name>
+         <description>The name for the value</description>
+      </define-flag>
+   </define-field>
+   <define-field module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                 name="greek-letter">
+      <formal-name>Greek letter</formal-name>
+      <description>Not more than one, spelled out, but only ɑ, β and γ</description>
+      <flag as-type="date" ref="todays-date"/>
+      <flag as-type="NCName" ref="required-ncname"/>
+      <constraint>
+         <allowed-values target=".">
+            <enum value="Alpha"/>
+            <enum value="Beta"/>
+            <enum value="Gamma"/>
+         </allowed-values>
+      </constraint>
+   </define-field>
+   <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                name="todays-date"
+                as-type="date">
+      <formal-name>Today's Date</formal-name>
+      <description>Not before yesterday.</description>
+   </define-flag>
+   <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                name="required-ncname"
+                as-type="NCName">
+      <formal-name>Required NCName</formal-name>
+      <description>A no-colon name.</description>
+   </define-flag>
+   <define-flag module="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-example/everything_metaschema.xml"
+                name="class"
+                as-type="NCName">
+      <formal-name>Class</formal-name>
+      <description>Some class.</description>
+   </define-flag>
+</METASCHEMA>

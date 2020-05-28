@@ -1,0 +1,50 @@
+
+  { "$schema" : "http://json-schema.org/draft-07/schema#",
+    "$id" : "http://csrc.nist.gov/metaschema/ns/tiny-schema.json",
+    "$comment" : "NIST Tiny Testing Metaschema: JSON Schema",
+    "type" : "object",
+    "definitions" : 
+    { "TINY" : 
+      { "title" : "Tiny stuff",
+        "description" : "Tiny, but hard",
+        "type" : "object",
+        "properties" : 
+        { "id-flag" : 
+          { "title" : "ID FLAG",
+            "description" : "For identification",
+            "type" : "string" },
+          "string-field" : 
+          { "$ref" : "#/definitions/string-field" },
+          "object-field" : 
+          { "$ref" : "#/definitions/object-field" },
+          "more-tiny" : 
+          { "type" : "array",
+            "minItems" : 1,
+            "items" : 
+            { "$ref" : "#/definitions/TINY" } } },
+        "additionalProperties" : false },
+      "string-field" : 
+      { "title" : "STRING FIELD",
+        "description" : "Will be only a string",
+        "type" : "string" },
+      "object-field" : 
+      { "title" : "OBJECT FIELD",
+        "description" : "With a flag, will be an object",
+        "type" : "object",
+        "properties" : 
+        { "id-flag" : 
+          { "title" : "ID FLAG",
+            "description" : "For identification",
+            "type" : "string" },
+          "boolean-value" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "boolean-value" ],
+        "additionalProperties" : false } },
+    "properties" : 
+    { "TINY" : 
+      { "$ref" : "#/definitions/TINY" } },
+    "required" : 
+    [ "TINY" ],
+    "additionalProperties" : false,
+    "maxProperties" : 1 }
