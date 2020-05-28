@@ -114,7 +114,7 @@
    </xsl:template>
    <xsl:template match="m:uuid" mode="m:validate-type" as="xs:boolean">
       <xsl:variable name="extra">
-         <xsl:sequence select="matches(.,'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$')"/>
+         <xsl:sequence select="matches(.,'^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$')"/>
       </xsl:variable>
       <xsl:sequence select="(. castable as xs:string) and $extra"/>
    </xsl:template>

@@ -132,7 +132,7 @@
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:whiteSpace value="collapse"/>
-      <xs:pattern value="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}">
+      <xs:pattern value="[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}">
         <xs:annotation>
           <xs:documentation>Requires a scheme with colon per RFC 3986</xs:documentation>
         </xs:annotation>
