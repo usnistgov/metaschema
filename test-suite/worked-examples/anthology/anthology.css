@@ -1,0 +1,44 @@
+* { display: block }
+
+p *,
+li *,
+pre *,
+th *,
+td * { display: inline }
+
+table  { display: table }
+tr     { display: table-row }
+th, td { display: table-cell }
+
+
+meta {  }
+
+piece { margin: 0.5em; padding: 0.5em; border: thin solid black }
+
+back {  }
+
+creator {  }
+
+remarks {  }
+
+verse {  }
+
+prose {  }
+
+line {  }
+
+stanza {  }
+
+author-index {  }
+
+author {  }
+
+name {  }
+
+dates {  }
+
+publication {  }
+
+em, i { font-style: italic }
+strong, b { font-weight: bold }
+

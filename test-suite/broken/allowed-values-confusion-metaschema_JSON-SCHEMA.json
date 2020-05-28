@@ -1,0 +1,108 @@
+
+  { "$schema" : "http://json-schema.org/draft-07/schema#",
+    "$id" : "http://csrc.nist.gov/metaschema/ns/test-schema.json",
+    "$comment" : "Test Metaschema: JSON Schema",
+    "type" : "object",
+    "definitions" : 
+    { "item" : 
+      { "title" : "Item",
+        "description" : "A member of a sequence",
+        "type" : "object",
+        "properties" : 
+        { "type" : 
+          { "title" : "Item type",
+            "description" : "Characterizes the type of item",
+            "type" : "string" },
+          "id" : 
+          { "type" : "string" },
+          "STRVALUE" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "STRVALUE" ],
+        "additionalProperties" : false,
+        "enum" : 
+        [ "A",
+          "B",
+          "C" ] },
+      "SEQUENCES" : 
+      { "title" : "Number sequences",
+        "description" : "Several number sequences, in sequence",
+        "type" : "object",
+        "properties" : 
+        { "sequences" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/sequence" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/sequence" } } ] } },
+        "additionalProperties" : false },
+      "sequence" : 
+      { "title" : "Sequence",
+        "description" : "A series of items",
+        "type" : "object",
+        "properties" : 
+        { "items" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/item" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/item" } } ] },
+          "subsequences" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/subsequence" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/subsequence" } } ] } },
+        "additionalProperties" : false },
+      "subsequence" : 
+      { "title" : "Subsequence",
+        "description" : "More sequences",
+        "type" : "object",
+        "properties" : 
+        { "items" : 
+          { "anyOf" : 
+            [ 
+              { "item" : 
+                { "title" : "Subsequence item",
+                  "description" : "An item in a sequence in a sequence",
+                  "type" : "string",
+                  "enum" : 
+                  [ "red",
+                    "blue",
+                    "green" ] } },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "item" : 
+                  { "title" : "Subsequence item",
+                    "description" : "An item in a sequence in a sequence",
+                    "type" : "string",
+                    "enum" : 
+                    [ "red",
+                      "blue",
+                      "green" ] } } } ] },
+          "subsequences" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/subsequence" },
+              
+              { "type" : "array",
+                "minItems" : 1,
+                "items" : 
+                { "$ref" : "#/definitions/subsequence" } } ] } },
+        "additionalProperties" : false } },
+    "properties" : 
+    { "SEQUENCES" : 
+      { "$ref" : "#/definitions/SEQUENCES" } },
+    "required" : 
+    [ "SEQUENCES" ] }

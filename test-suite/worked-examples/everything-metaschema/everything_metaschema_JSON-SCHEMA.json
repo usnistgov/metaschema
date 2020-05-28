@@ -1,0 +1,250 @@
+
+  { "$schema" : "http://json-schema.org/draft-07/schema#",
+    "$id" : "http://csrc.nist.gov/metaschema/ns/everything-schema.json",
+    "$comment" : "NIST Metaschema Everything: JSON Schema",
+    "type" : "object",
+    "definitions" : 
+    { "ANYTHING" : 
+      { "title" : "Any Thing",
+        "description" : "Any old thing.",
+        "type" : "object",
+        "properties" : 
+        { "todays-date" : 
+          { "title" : "Today's Date",
+            "description" : "Not before yesterday.",
+            "type" : "string",
+            "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+          "EVERYTHING" : 
+          { "$ref" : "#/definitions/EVERYTHING" } },
+        "additionalProperties" : false },
+      "EVERYTHING" : 
+      { "title" : "Every Thing",
+        "description" : "Nothing left out.",
+        "type" : "object",
+        "properties" : 
+        { "todays-date" : 
+          { "title" : "Today's Date",
+            "description" : "Not before yesterday.",
+            "type" : "string",
+            "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+          "required-integer" : 
+          { "title" : "Required Integer",
+            "description" : "An integer.",
+            "type" : "integer" },
+          "required-local-field" : 
+          { "title" : "Required local field",
+            "description" : "Declared on 'everything'",
+            "type" : "string" },
+          "one-string" : 
+          { "$ref" : "#/definitions/one-string" },
+          "epigraph" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/line" },
+              
+              { "type" : "array",
+                "minItems" : 2,
+                "items" : 
+                { "$ref" : "#/definitions/line" } } ] },
+          "colors" : 
+          { "type" : "object",
+            "minProperties" : 1,
+            "additionalProperties" : 
+            { "allOf" : 
+              [ 
+                { "type" : "object",
+                  "$ref" : "#/definitions/color" },
+                
+                { "not" : 
+                  { "type" : "string" } } ] } },
+          "lattice" : 
+          { "type" : "object",
+            "minProperties" : 1,
+            "additionalProperties" : 
+            { "allOf" : 
+              [ 
+                { "type" : "object",
+                  "$ref" : "#/definitions/point" },
+                
+                { "not" : 
+                  { "type" : "string" } } ] } },
+          "dramatis-personae" : 
+          { "type" : "object",
+            "minProperties" : 1,
+            "additionalProperties" : 
+            { "allOf" : 
+              [ 
+                { "type" : "object",
+                  "$ref" : "#/definitions/role" },
+                
+                { "not" : 
+                  { "type" : "string" } } ] } },
+          "SINGLETON" : 
+          { "$ref" : "#/definitions/SINGLETON" },
+          "sections" : 
+          { "type" : "object",
+            "minProperties" : 1,
+            "additionalProperties" : 
+            { "allOf" : 
+              [ 
+                { "type" : "object",
+                  "$ref" : "#/definitions/section" },
+                
+                { "not" : 
+                  { "type" : "string" } } ] } },
+          "everythings" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/EVERYTHING" },
+              
+              { "type" : "array",
+                "maxItems" : 3,
+                "minItems" : 2,
+                "items" : 
+                { "$ref" : "#/definitions/EVERYTHING" } } ] } },
+        "required" : 
+        [ "required-integer",
+          "required-local-field",
+          "SINGLETON" ],
+        "additionalProperties" : false },
+      "SINGLETON" : 
+      { "title" : "Singleton assembly",
+        "description" : "One of a kind.",
+        "type" : "object",
+        "properties" : 
+        { "todays-date" : 
+          { "title" : "Today's Date",
+            "description" : "Not before yesterday.",
+            "type" : "string",
+            "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+          "title" : 
+          { "$ref" : "#/definitions/title" },
+          "remarks" : 
+          { "$ref" : "#/definitions/remarks" } },
+        "required" : 
+        [ "title" ],
+        "additionalProperties" : false },
+      "section" : 
+      { "title" : "Section",
+        "description" : ".",
+        "type" : "object",
+        "properties" : 
+        { "class" : 
+          { "title" : "Class",
+            "description" : ".",
+            "type" : "string" },
+          "title" : 
+          { "$ref" : "#/definitions/title" },
+          "named-value" : 
+          { "$ref" : "#/definitions/named-value" },
+          "epigraph" : 
+          { "anyOf" : 
+            [ 
+              { "$ref" : "#/definitions/line" },
+              
+              { "type" : "array",
+                "minItems" : 2,
+                "items" : 
+                { "$ref" : "#/definitions/line" } } ] },
+          "prose" : 
+          { "$ref" : "#/definitions/prose" } },
+        "additionalProperties" : false },
+      "color" : 
+      { "title" : "Color",
+        "description" : "Name and code",
+        "type" : "object",
+        "properties" : 
+        { "STRVALUE" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "STRVALUE" ],
+        "additionalProperties" : false },
+      "point" : 
+      { "title" : "Point",
+        "description" : "Point location",
+        "type" : "object",
+        "properties" : 
+        { "x" : 
+          { "title" : "X",
+            "description" : "Abscissa",
+            "type" : "number",
+            "pattern" : "^(\\+|-)?([0-9]+(\\.[0-9]*)?|\\.[0-9]+)$" },
+          "y" : 
+          { "title" : "Y",
+            "description" : "ordinate",
+            "type" : "number",
+            "pattern" : "^(\\+|-)?([0-9]+(\\.[0-9]*)?|\\.[0-9]+)$" } },
+        "additionalProperties" : false },
+      "role" : 
+      { "title" : "Role",
+        "description" : ".",
+        "type" : "object",
+        "properties" : 
+        { "title" : 
+          { "$ref" : "#/definitions/title" },
+          "remarks" : 
+          { "$ref" : "#/definitions/remarks" } },
+        "additionalProperties" : false },
+      "line" : 
+      { "title" : "Line of verse",
+        "description" : "Could be terse",
+        "type" : "string" },
+      "title" : 
+      { "title" : "Title",
+        "description" : ".",
+        "type" : "string" },
+      "prose" : 
+      { "title" : "Prose",
+        "description" : "A placeholder for prose in an explicit model.",
+        "type" : "string" },
+      "remarks" : 
+      { "title" : "Prose",
+        "description" : "A block o' prose.",
+        "type" : "string" },
+      "named-value" : 
+      { "title" : "Named value",
+        "description" : "A field with a json value flag",
+        "type" : "object",
+        "properties" : 
+        { "class" : 
+          { "title" : "Class",
+            "description" : "Some class.",
+            "type" : "string" } },
+        "minProperties" : 1,
+        "maxProperties" : 2 },
+      "one-string" : 
+      { "title" : "One String",
+        "description" : "Not more than one.",
+        "type" : "object",
+        "properties" : 
+        { "todays-date" : 
+          { "title" : "Today's Date",
+            "description" : "Not before yesterday.",
+            "type" : "string",
+            "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+          "required-ncname" : 
+          { "title" : "Required NCName",
+            "description" : "A no-colon name.",
+            "type" : "string" },
+          "STRVALUE" : 
+          { "type" : "string" } },
+        "required" : 
+        [ "STRVALUE" ],
+        "additionalProperties" : false,
+        "enum" : 
+        [ "Alpha",
+          "Beta",
+          "Gamma" ] } },
+    "oneOf" : 
+    [ 
+      { "properties" : 
+        { "ANYTHING" : 
+          { "$ref" : "#/definitions/ANYTHING" } },
+        "required" : 
+        [ "ANYTHING" ] },
+      
+      { "properties" : 
+        { "EVERYTHING" : 
+          { "$ref" : "#/definitions/EVERYTHING" } },
+        "required" : 
+        [ "EVERYTHING" ] } ] }
