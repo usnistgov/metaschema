@@ -557,7 +557,7 @@
             <!-- Digits pattern is 8-4-4-4-12; value space is hexadecimal -->
             <!-- NB: this regex validates that digit 13 has '4' and digits 17-18 are (each) in the range '8-B', indicating RFC 4122 compliance. -->
             <!-- See Roger Costello post here: http://lists.xml.org/archives/xml-dev/201003/msg00027.html -->
-            <string key="pattern">^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$</string>
+            <string key="pattern">^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$</string>
         </map>
         <map key="ip-v6-address">
             <string key="type">string</string>

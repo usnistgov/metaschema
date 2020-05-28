@@ -10,7 +10,7 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/../../scripts/i
 
 # configuration
 UNIT_TESTS_DIR=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../test-suite/schema-generation")
-METASCHEMA_SCHEMA=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/oscal-m2/lib/metaschema.xsd")
+METASCHEMA_SCHEMA=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/oscal-m3/lib/metaschema.xsd")
 DEBUG="false"
 
 # Option defaults
@@ -208,7 +208,7 @@ if [ "$VERBOSE" = "true" ]; then
 fi
 
 # compile the schematron
-metaschema_lib=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/oscal-m2/lib")
+metaschema_lib=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/oscal-m3/lib")
 schematron="$metaschema_lib/metaschema-check.sch"
 compiled_schematron="${SCRATCH_DIR}/metaschema-schematron-compiled.xsl"
 
