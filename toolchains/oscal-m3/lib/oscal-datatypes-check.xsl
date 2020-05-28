@@ -25,6 +25,9 @@
    <xsl:template match="m:boolean" mode="m:validate-type" as="xs:boolean">
       <xsl:sequence select=". castable as xs:boolean"/>
    </xsl:template>
+   <xsl:template match="m:base64Binary" mode="m:validate-type" as="xs:boolean">
+      <xsl:sequence select=". castable as xs:base64Binary"/>
+   </xsl:template>
    <xsl:template match="m:string" mode="m:validate-type" as="xs:boolean">
       <xsl:sequence select=". castable as xs:string"/>
    </xsl:template>
@@ -108,5 +111,11 @@
    <xsl:template match="m:uri-reference" mode="m:validate-type" as="xs:boolean">
       <xsl:variable name="extra"/>
       <xsl:sequence select="(. castable as xs:anyURI) and $extra"/>
+   </xsl:template>
+   <xsl:template match="m:uuid" mode="m:validate-type" as="xs:boolean">
+      <xsl:variable name="extra">
+         <xsl:sequence select="matches(.,'^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[8-9a-bA-B][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$')"/>
+      </xsl:variable>
+      <xsl:sequence select="(. castable as xs:string) and $extra"/>
    </xsl:template>
 </xsl:stylesheet>
