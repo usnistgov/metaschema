@@ -51,6 +51,7 @@
         <type>ipv6</type>
         <type>uri</type>
         <type>uri-reference</type>
+        <!-- uuid is not known to JSON Schema <type>uuid</type>-->
     </xsl:variable>
     
     <xsl:template match="simpleType[@name=$known-types]" mode="cast-type">
