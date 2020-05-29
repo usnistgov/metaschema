@@ -74,6 +74,7 @@ convert_content() {
     exit 2
   fi
 
+  local cmd_exitcode=$?
   echo "$result"
-  return $?;
+  return $cmd_exitcode;
 }
