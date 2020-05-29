@@ -572,6 +572,15 @@
             <string key="format">uri-reference</string>
             <!---->
         </map>
+        <map key="uuid">
+            <string key="type">string</string>
+            <!-- no json format <string key="format">uuid</string>-->
+            <!-- The uuid type specifies a uuid conformant to [IETF RFC 4122](https://tools.ietf.org/html/rfc4122) type 4. -->
+            <!-- Digits pattern is 8-4-4-4-12; value space is hexadecimal -->
+            <!-- NB: this regex validates that digit 13 has '4' and digits 17-18 are (each) in the range '8-B', indicating RFC 4122 compliance. -->
+            <!-- See Roger Costello post here: http://lists.xml.org/archives/xml-dev/201003/msg00027.html -->
+            <string key="pattern">^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$</string>
+        </map>
         <!-- Possibly add support for XSD types ID, IDREF, IDREFS, NCName, NMTOKENS ???        -->
     </xsl:variable>
 
