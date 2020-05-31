@@ -324,7 +324,8 @@
     <xsl:template match="m:replace" expand-text="true">
         <xsl:param name="str" as="xs:string"/>
         <!--<xsl:value-of>replace({$str},{@match},{string(.)})</xsl:value-of>-->
-        <xsl:sequence select="replace($str, @match, string(.))"/>
+<!-- 's' sets dot-matches-all       -->
+        <xsl:sequence select="replace($str, @match, string(.),'s')"/>
         <!--<xsl:copy-of select="."/>-->
     </xsl:template>
 
@@ -461,6 +462,8 @@
     
      <xsl:variable name="examples" xml:space="preserve">
         <p>**Markdown** and even " quoted text" and **more markdown**</p>
+         <p>**See the FedRAMP Documents page under Key Cloud Service Provider (CSP) Documents> Vulnerability Scanning Requirements** ([https://www.FedRAMP.gov/documents/](https://www.FedRAMP.gov/documents/))</p>
+         <p>**See the FedRAMP Documents page under Key Cloud Service Provider\n\t\t\t\t\t\t\t\t(CSP) Documents> Vulnerability Scanning Requirements** ([https://www.FedRAMP.gov/documents/](https://www.FedRAMP.gov/documents/))</p>
         <p>
 
 Just a plain old \* star, and another \* ...
