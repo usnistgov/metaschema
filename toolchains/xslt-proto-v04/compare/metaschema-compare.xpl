@@ -9,7 +9,7 @@
   
   <p:option name="new.site" select="'https://raw.githubusercontent.com/usnistgov/OSCAL/master'"/>
   
-  <p:option name="schema.path" select="'/src/metaschema/oscal_catalog_metaschema.xml'"/>
+  <p:option name="schema.path" select="'/src/metaschema/oscal_ssp_metaschema.xml'"/>
   
   <p:option name="old.location" select="$old.site || $schema.path"/>
   <p:option name="new.location" select="$new.site || $schema.path"/>
