@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../support/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- OSCAL CATALOG METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
+<?xml-model href="../../build/metaschema/toolchains/oscal-m2/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/xsl" href="metaschema-browser.xsl"?>
+<?xml-stylesheet type="text/css" href="../../build/metaschema/toolchains/oscal-m2/lib/metaschema-author.css"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:o="http://csrc.nist.gov/ns/oscal/example"
-            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd">
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../build/metaschema/toolchains/oscal-m2/lib/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+ xmlns:o="http://csrc.nist.gov/ns/oscal/example" root="VALIDATION_root">
    <schema-name>OSCAL Document Metadata Description</schema-name>
    <schema-version>1.0.0-milestone3</schema-version>
    <short-name>oscal-metadata</short-name>
    <namespace>http://csrc.nist.gov/ns/oscal/1.0</namespace>
+
    <define-assembly name="VALIDATION_root">
       <formal-name>(nominal root)</formal-name>
       <description>NOT TO BE USED IN A METASCHEMA</description>
-      <root-name>VALIDATION_root</root-name>
       <model>
          <assembly ref="metadata"/>
          <assembly ref="back-matter"/>
@@ -44,20 +46,14 @@
          <field ref="doc-id" max-occurs="unbounded">
             <group-as name="document-ids" in-json="ARRAY"/>
          </field>
-         <define-field name="prop" max-occurs="unbounded">
-            <formal-name>prop field</formal-name>
-            <description>prop field ... </description>
+         <field ref="prop" max-occurs="unbounded">
             <group-as name="properties" in-json="ARRAY"/>
-            <define-flag name="name">
-               <formal-name>name flag</formal-name>
-               <description>name flag ... </description>
-               <constraint>
-                  <allowed-values allow-other="yes">
-                     <enum value="keywords">Used to provide a listing of keywords. This is typically used on a <code>prop</code> in the <code>metadata</code> to provide keywords for the document.</enum>
-                  </allowed-values>
-               </constraint>
-            </define-flag>
-         </define-field>
+            <flag ref="name">
+               <allowed-values allow-other="yes">
+                  <enum value="keywords">Used to provide a listing of keywords. This is typically used on a <code>prop</code> in the <code>metadata</code> to provide keywords for the document.</enum>
+               </allowed-values>
+            </flag>
+         </field>
          <field ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
          </field>
@@ -70,38 +66,18 @@
          <assembly ref="party" max-occurs="unbounded">
             <group-as name="parties" in-json="ARRAY"/>
          </assembly>
-         <define-assembly name="responsible-party" max-occurs="unbounded">
-            <formal-name>Responsible Party</formal-name>
-            <description>A reference to a set of organizations or persons that have responsibility for performing a referenced role relative to the parent context.</description>
-            <json-key flag-name="role-id"/>
+         <assembly ref="responsible-party" max-occurs="unbounded">
             <group-as name="responsible-parties" in-json="BY_KEY"/>
-            <define-flag required="yes" name="role-id" as-type="NCName">
+            <flag name="role-id" required="yes" as-type="NCName">
                <formal-name>Responsible Role</formal-name>
                <description>The role that the party is responsible for.</description>
-               <constraint>
-                  <allowed-values allow-other="yes">
-                     <enum value="prepared-by">Indicates the organization that created this content.</enum>
-                     <enum value="prepared-for">Indicates the organization for which this content was created.</enum>
-                     <enum value="content-approver">Indicates the organization responsible for all content represented in the "document".</enum>
-                  </allowed-values>
-               </constraint>
-            </define-flag>
-            <model>
-               <field ref="party-uuid" min-occurs="1" max-occurs="unbounded">
-                  <group-as name="party-uuids" in-json="ARRAY"/>
-               </field>
-               <field ref="prop" max-occurs="unbounded">
-                  <group-as name="properties" in-json="ARRAY"/>
-               </field>
-               <assembly ref="annotation" max-occurs="unbounded">
-                  <group-as name="annotations" in-json="ARRAY"/>
-               </assembly>
-               <field ref="link" max-occurs="unbounded">
-                  <group-as name="links" in-json="ARRAY"/>
-               </field>
-               <field ref="remarks" in-xml="WITH_WRAPPER"/>
-            </model>
-         </define-assembly>
+               <allowed-values allow-other="yes">
+                  <enum value="prepared-by">Indicates the organization that created this content.</enum>
+                  <enum value="prepared-for">Indicates the organization for which this content was created.</enum>
+                  <enum value="content-approver">Indicates the organization responsible for all content represented in the "document".</enum>
+               </allowed-values>
+            </flag>
+         </assembly>
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
    </define-assembly>
@@ -119,11 +95,12 @@
       <example>
          <description>Use of link, citation, and resource</description>
          <remarks>
-            <p>The following is a contrived example to show the use of link, citation, and resource.</p>
+            <p>The following is a contrived example to show the use of link, citation, and
+               resource.</p>
          </remarks>
          <o:profile>
             <o:metadata>
-               <o:link rel="citation" href="#resource1">My citation</o:link>
+              <o:link rel="citation" href="#resource1">My citation</o:link>
             </o:metadata>
             <o:back-matter>
                <o:resource id="resource1">
@@ -145,20 +122,14 @@
          <field ref="prop" max-occurs="unbounded">
             <group-as name="properties" in-json="ARRAY"/>
          </field>
-         <define-field name="link" max-occurs="unbounded">
-            <formal-name>link field</formal-name>
-            <description>link field ... </description>
+         <field ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
-            <define-flag name="rel">
-               <formal-name>rel flag</formal-name>
-               <description>rel flag ... </description>
-               <constraint>
-                  <allowed-values>
-                     <enum value="source">Indicates that the href points to the source resource for the revision entry.</enum>
-                  </allowed-values>
-               </constraint>
-            </define-flag>
-         </define-field>
+            <flag ref="rel">
+               <allowed-values>
+                  <enum value="source">Indicates that the href points to the source resource for the revision entry.</enum>
+               </allowed-values>
+            </flag>
+         </field>
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
       <remarks>
@@ -173,7 +144,8 @@
       <flag ref="rel"/>
       <flag ref="media-type"/>
       <remarks>
-         <p>This is a rough analog to an HTML anchor (<code>a</code>), except this is a line-oriented (block) element.</p>
+         <p>This is a rough analog to an HTML anchor (<code>a</code>), except this is a line-oriented (block)
+        element.</p>
          <p>The <code>href</code> must point to a local or remote resource. If a local resource is used, this will be indicated by a fragment "#" followed by an identifier which references an identified <code>citation</code> or <code>resource</code> in the document's <code>back-matter</code>. If a remote resource is used, the <code>href</code> value will be an absolute or relative URI pointing to the location of the referenced resource. A relative URI can be resolved relative to the location of the document containing the link.</p>
          <p>To provide a cryptographic hash for a remote target resource, a local reference to a <code>resource</code> is needed. The resource allows one or more hash values to be provided using the <code>rlink</code>
             <code>hash</code> object.</p>
@@ -226,22 +198,20 @@
       <formal-name>OSCAL version</formal-name>
       <description>OSCAL model version.</description>
       <remarks>
-         <p>Indicates the version of the OSCAL model to which this data set conforms, for example <q>1.0-M1</q>.</p>
+         <p>Indicates the version of the OSCAL model to which this data set conforms, for example
+      <q>1.0-M1</q>.</p>
       </remarks>
    </define-field>
    <define-field name="doc-id">
       <formal-name>Document Identifier</formal-name>
       <description>A document identifier qualified by an identifier <code>type</code>.</description>
       <json-value-key>identifier</json-value-key>
-      <define-flag name="type" required="yes">
-         <formal-name>type flag</formal-name>
+      <flag ref="type" required="yes">
          <description>Qualifies the kind of document identifier.</description>
-         <constraint>
-            <allowed-values allow-other="yes">
-               <enum value="doi">A <a href="https://www.doi.org/hb.html">Digital Object Identifier</a> (DOI); use is preferred, since this allows for retrieval of a full bibliographic record.</enum>
-            </allowed-values>
-         </constraint>
-      </define-flag>
+         <allowed-values allow-other="yes">
+            <enum value="doi">A <a href="https://www.doi.org/hb.html">Digital Object Identifier</a> (DOI); use is preferred, since this allows for retrieval of a full bibliographic record.</enum>
+         </allowed-values>
+      </flag>
       <remarks>
          <p>A document identifier or name, qualified by a <code>type</code> that indicates the naming system of the identifier. A document identifier may provide a hint to the persistent location of <q>the same</q> or <q>another version</q> of the document.</p>
          <p>Specific usage rules, nomenclatures, and recognized file types (e.g., DOIs, CMS locators, etc.) may be defined at application level. The value of this field may also be a hash or checksum.</p>
@@ -258,35 +228,36 @@
       <formal-name>Property</formal-name>
       <description>A value with a name, attributed to the containing control, part, or group.</description>
       <json-value-key>value</json-value-key>
-      <define-flag name="name" required="yes">
-         <formal-name>name flag</formal-name>
-         <description>name flag ... </description>
-         <constraint>
-            <allowed-values allow-other="yes">
-               <enum value="marking">A label or descriptor that is tied to a sensitivity or classification marking system. An optional class can be used to define the specific marking system used for the associated value.</enum>
-            </allowed-values>
-         </constraint>
-      </define-flag>
+      <flag ref="name" required="yes">
+         <allowed-values allow-other="yes">
+            <enum value="marking">A label or descriptor that is tied to a sensitivity or classification marking system. An optional class can be used to define the specific marking system used for the associated value.</enum>
+         </allowed-values>
+      </flag>
       <flag ref="id"/>
       <flag ref="ns"/>
       <flag ref="class"/>
       <remarks>
          <p>Properties permit the deployment and management of arbitrary controlled values, with and among control objects (controls, parts, and extensions), for any purpose useful to an application or implementation of those controls. Typically, properties will be used to sort, select, order, and arrange controls or relate them to one another or to class hierarchies, taxonomies, or external authorities.</p>
          <p>The value of a property is a simple scalar value or list of values.</p>
-         <p>The lexical composition of properties may be constrained by external processes to ensure consistency.</p>
-         <p>Because properties are often used as selectors or identifiers for OSCAL operations, their values can be expected frequently to be normalized (e.g., with respect to whitespace) in use; however, this is application defined.</p>
+         <p>The lexical composition of properties may be constrained by external
+         processes to ensure consistency.</p>
+         <p>Because properties are often used as selectors or identifiers for OSCAL operations, their
+        values can be expected frequently to be normalized (e.g., with respect to whitespace) in
+        use; however, this is application defined.</p>
       </remarks>
    </define-field>
    <define-assembly name="annotation">
       <formal-name>Annotation</formal-name>
       <description>A name/value pair with optional explanatory remarks.</description>
+      <!-- TODO: Add support for this -->
+<!--      <json-value-key key-flag-name="name" value-flag-name="value" /> -->
       <flag ref="name" required="yes"/>
       <flag ref="id"/>
       <flag ref="ns"/>
-      <define-flag name="value" as-type="string">
+      <flag name="value" as-type="string">
          <formal-name>Value</formal-name>
          <description>Indicates the value of the characteristic.</description>
-      </define-flag>
+      </flag>
       <model>
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
@@ -299,15 +270,19 @@
       <formal-name>Name</formal-name>
       <description>Identifying the purpose and intended use of the property, part or other object.</description>
       <remarks>
-         <p>This flag is intended to be used as a control point for validation of properties and parts with respect to constraints related to local semantics. A name is not necessarily expected to be unique, even within the scope of the parent (containing) structure. In some local applications, it is possible for a name to be unique and uniqueness of a name can be validated in such cases.</p>
-         <p>The definition of a name is subject to its namespace, offered by an <code>ns</code> flag (q.v.). When <code>ns</code> is not given, the namespace is assumed to be <q>oscal</q> and the name should be one of the recognized values for names in OSCAL.</p>
+         <p>This flag is intended to be used as a control point for validation of properties and parts
+      with respect to constraints related to local semantics. A name is not necessarily expected to be unique,
+      even within the scope of the parent (containing) structure. In some local applications, it is possible for a name to be unique and uniqueness of a name can be validated in such cases.</p>
+         <p>The definition of a name is subject to its namespace, offered by an <code>ns</code> flag (q.v.). When <code>ns</code> is not given, the namespace is assumed to be <q>oscal</q> and the name should be one of the recognized values for names
+      in OSCAL.</p>
       </remarks>
    </define-flag>
    <define-flag name="ns" as-type="string">
       <formal-name>Namespace</formal-name>
       <description>A namespace qualifying the name.</description>
       <remarks>
-         <p>Identifies an organization or compliance regime defining the information needs (requirements) addressed by an object. When this attribute is not given, its value should be assumed to be <code>oscal</code> and the name should be a name defined by this specification.</p>
+         <p>Identifies an organization or compliance regime defining the information needs (requirements) addressed by
+      an object. When this attribute is not given, its value should be assumed to be <code>oscal</code> and the name should be a name defined by this specification.</p>
       </remarks>
    </define-flag>
    <define-flag name="class" as-type="NCName">
@@ -353,16 +328,16 @@
       <formal-name>Party (organization or person)</formal-name>
       <description>A responsible entity, either singular (an organization or person) or collective (multiple persons)</description>
       <flag ref="uuid" required="yes"/>
-      <define-flag name="type" as-type="string" required="yes">
+      
+      <flag name="type" as-type="string" required="yes">
          <formal-name>Party Type</formal-name>
          <description>A category describing the kind of party the object describes.</description>
-         <constraint>
-            <allowed-values allow-other="no">
-               <enum value="person">An individual.</enum>
-               <enum value="organization">A group of individuals formed for a specific purpose.</enum>
-            </allowed-values>
-         </constraint>
-      </define-flag>
+         <allowed-values allow-other="no" >
+            <enum value="person">An individual.</enum>
+            <enum value="organization">A group of individuals formed for a specific purpose.</enum>
+         </allowed-values>
+      </flag>
+      
       <model>
          <field ref="party-name" min-occurs="1"/>
          <field ref="short-name"/>
@@ -389,7 +364,7 @@
          </field>
          <field ref="member-of-organization" max-occurs="unbounded">
             <group-as name="member-of-organizations" in-json="ARRAY"/>
-         </field>
+         </field>   
          <field ref="location-uuid" max-occurs="unbounded">
             <group-as name="location-uuids" in-json="ARRAY"/>
          </field>
@@ -403,6 +378,7 @@
       <formal-name>Party Reference</formal-name>
       <description>References a <code>party</code> defined in <code>metadata</code>.</description>
    </define-field>
+
    <define-field name="external-id">
       <formal-name>Personal Identifier</formal-name>
       <description>An identifier for a person (such as an ORCID) using a designated scheme.</description>
@@ -430,16 +406,14 @@
    <define-flag name="rel" as-type="NCName">
       <formal-name>Relation</formal-name>
       <description>Describes the type of relationship provided by the link. This can be an indicator of the link's purpose.</description>
-      <constraint>
-         <allowed-values allow-other="yes">
-            <enum value="homepage">A link to a homepage related to the containing object.</enum>
-            <enum value="interview-notes">Interview Notes</enum>
-            <enum value="tool-output">Tool Output</enum>
-            <enum value="photograph">Photograph</enum>
-            <enum value="questionnaire">Questionnaire</enum>
-            <enum value="screen-shot">Screen Shot</enum>
-         </allowed-values>
-      </constraint>
+      <allowed-values allow-other="yes">
+         <enum value="homepage">A link to a homepage related to the containing object.</enum>
+         <enum value="interview-notes">Interview Notes</enum>
+         <enum value="tool-output">Tool Output</enum>
+         <enum value="photograph">Photograph</enum>
+         <enum value="questionnaire">Questionnaire</enum>
+         <enum value="screen-shot">Screen Shot</enum>
+      </allowed-values>
       <remarks>
          <p>TO DO: discuss IANA link relation registry.</p>
       </remarks>
@@ -459,22 +433,20 @@
       <formal-name>short-name</formal-name>
       <description>A common name, short name or acronym</description>
       <remarks>
-         <p>This element is not expected to be used to identify individual persons, but rather an organization or system.</p>
+         <p>This element is not expected to be used to identify individual persons, but rather an
+        organization or system.</p>
       </remarks>
    </define-field>
    <define-assembly name="address">
       <formal-name>Address</formal-name>
       <description>A postal address.</description>
-      <define-flag name="type">
-         <formal-name>type flag</formal-name>
+      <flag ref="type">
          <description>Indicates the type of address.</description>
-         <constraint>
-            <allowed-values allow-other="yes">
-               <enum value="home">A home address.</enum>
-               <enum value="work">A work address.</enum>
-            </allowed-values>
-         </constraint>
-      </define-flag>
+         <allowed-values allow-other="yes">
+            <enum value="home">A home address.</enum>
+            <enum value="work">A work address.</enum>
+         </allowed-values>
+      </flag>
       <model>
          <field ref="addr-line" max-occurs="unbounded">
             <group-as name="postal-address" in-json="ARRAY"/>
@@ -514,17 +486,14 @@
       <formal-name>Telephone</formal-name>
       <description>Contact number by telephone</description>
       <json-value-key>number</json-value-key>
-      <define-flag name="type">
-         <formal-name>type flag</formal-name>
+      <flag ref="type">
          <description>Indicates the type of phone number.</description>
-         <constraint>
-            <allowed-values allow-other="yes">
-               <enum value="home">A home phone number.</enum>
-               <enum value="office">An office phone number.</enum>
-               <enum value="mobile">A mobile phone number.</enum>
-            </allowed-values>
-         </constraint>
-      </define-flag>
+         <allowed-values allow-other="yes">
+            <enum value="home">A home phone number.</enum>
+            <enum value="office">An office phone number.</enum>
+            <enum value="mobile">A mobile phone number.</enum>
+         </allowed-values>
+      </flag>
    </define-field>
    <define-field name="url" as-type="uri">
       <formal-name>URL</formal-name>
@@ -585,8 +554,7 @@
          <assembly ref="biblio"/>
       </model>
       <remarks>
-         <p>A <code>text</code> is used to define the endnote text, without any explicit bibliographic structure. If structured bibliographic data is needed, then the <code>biblio&gt; can be used for this purpose.</code>
-         </p>
+         <p>A <code>text</code> is used to define the endnote text, without any explicit bibliographic structure. If structured bibliographic data is needed, then the <code>biblio> can be used for this purpose.</code></p>
          <p>A <code>biblio</code> can be used to capture a structured bibliograpical citation in an appropriate format.</p>
       </remarks>
    </define-assembly>
@@ -603,18 +571,16 @@
    <define-flag name="algorithm" as-type="string">
       <formal-name>Hash algorithm</formal-name>
       <description>Method by which a hash is derived</description>
-      <constraint>
-         <allowed-values allow-other="yes">
-            <enum value="SHA-224"/>
-            <enum value="SHA-256"/>
-            <enum value="SHA-384"/>
-            <enum value="SHA-512"/>
-            <enum value="SHA3-224"/>
-            <enum value="SHA3-256"/>
-            <enum value="SHA3-384"/>
-            <enum value="SHA3-512"/>
-         </allowed-values>
-      </constraint>
+      <allowed-values allow-other="yes">
+         <enum value="SHA-224"/>
+         <enum value="SHA-256"/>
+         <enum value="SHA-384"/>
+         <enum value="SHA-512"/>
+         <enum value="SHA3-224"/>
+         <enum value="SHA3-256"/>
+         <enum value="SHA3-384"/>
+         <enum value="SHA3-512"/>
+      </allowed-values>
       <remarks>
          <p>Valid values MUST be a value defined in the W3C <a href="http://www.w3.org/TR/xmlsec-algorithms/#digest-method">XML Security Algorithm Cross-Reference</a> Digest Methods (W3C, April 2013).</p>
       </remarks>
@@ -639,17 +605,18 @@
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
       <remarks>
-         <p>Permissible values to be determined closer to the application (e.g. by a receiving authority).</p>
+         <p>Permissible values to be determined closer to the application (e.g. by a receiving
+        authority).</p>
       </remarks>
    </define-assembly>
    <define-assembly name="responsible-party">
       <formal-name>Responsible Party</formal-name>
       <description>A reference to a set of organizations or persons that have responsibility for performing a referenced role relative to the parent context.</description>
       <json-key flag-name="role-id"/>
-      <define-flag required="yes" name="role-id" as-type="NCName">
+      <flag name="role-id" required="yes" as-type="NCName">
          <formal-name>Responsible Role</formal-name>
          <description>The role that the party is responsible for.</description>
-      </define-flag>
+      </flag>
       <model>
          <field ref="party-uuid" min-occurs="1" max-occurs="unbounded">
             <group-as name="party-uuids" in-json="ARRAY"/>
@@ -666,18 +633,22 @@
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
    </define-assembly>
+
    <define-flag name="href" as-type="uri-reference">
       <formal-name>hypertext reference</formal-name>
       <description>A link to a document or document fragment (actual, nominal or projected)</description>
       <remarks>
-         <p>Note in particular that <code>href</code> targets include elements (locations) in representations of documents that exist only by virtue of dynamic application, such as (for example) the results of profile resolution.</p>
+         <p>Note in particular that <code>href</code> targets include elements (locations) in
+        representations of documents that exist only by virtue of dynamic application, such as (for
+        example) the results of profile resolution.</p>
       </remarks>
    </define-flag>
    <define-flag name="id" as-type="NCName">
       <formal-name>Identifier</formal-name>
       <description>Unique identifier of the containing object</description>
       <remarks>
-         <p>No mechanism is proposed to ensure that <code>id</code> values do not collide across different catalogs. Use profiling without <q>merge</q> to detect such clashes.</p>
+         <p>No mechanism is proposed to ensure that <code>id</code> values do not collide across
+        different catalogs. Use profiling without <q>merge</q> to detect such clashes.</p>
       </remarks>
       <example>
          <o:citation id="xyz2">Some <o:strong>citation</o:strong> of some sort</o:citation>
@@ -696,8 +667,7 @@
          <!-\- TODO: Need to add others -\->
       </allowed-values>
    </define-field>
--->
-   <define-field name="title" as-type="markup-line">
+-->   <define-field name="title" as-type="markup-line">
       <formal-name>Title</formal-name>
       <description>A title for display and navigation</description>
       <remarks>
@@ -706,7 +676,7 @@
    </define-field>
    <define-field name="base64" as-type="base64Binary">
       <formal-name>Base64</formal-name>
-      <description>The Base64 alphabet in RFC 2045 - aligned with XSD.</description>
+      <description/>
       <json-value-key>value</json-value-key>
       <flag ref="filename"/>
       <flag ref="media-type"/>
@@ -719,8 +689,10 @@
       <formal-name>Description</formal-name>
       <description>A description supporting the parent item.</description>
    </define-field>
+
    <define-field name="remarks" as-type="markup-multiline">
       <formal-name>Remarks</formal-name>
       <description>Additional commentary on the parent item.</description>
    </define-field>
+
 </METASCHEMA>

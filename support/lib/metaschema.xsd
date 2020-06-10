@@ -51,9 +51,11 @@
         <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       </xs:choice>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-key"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-        type="m:local-flag-definition"/>
+      <xs:choice  minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="m:flag"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
+          type="m:local-flag-definition"/>
+      </xs:choice>
       <xs:element name="model" minOccurs="0" type="m:assembly-model"/>
       <xs:element minOccurs="0" name="constraint" type="m:assembly-constraint-type"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
@@ -88,9 +90,11 @@
       <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-key"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-value-key"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-        type="m:local-flag-definition"/>
+      <xs:choice  minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="m:flag"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
+          type="m:local-flag-definition"/>
+      </xs:choice>
       <xs:element minOccurs="0" name="constraint" type="m:model-constraint-type"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
@@ -136,9 +140,11 @@
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-key"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-value-key"/>
       <xs:element minOccurs="0" ref="m:group-as"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-        type="m:local-flag-definition"/>
+      <xs:choice  minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="m:flag"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
+          type="m:local-flag-definition"/>
+      </xs:choice>
       <xs:element name="model" minOccurs="0" type="m:assembly-model"/>
       <xs:element minOccurs="0" name="constraint" type="m:assembly-constraint-type"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
@@ -165,13 +171,11 @@
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-key"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-value-key"/>
       <xs:element minOccurs="0" ref="m:group-as"/>
-      <!--<xs:choice maxOccurs="unbounded" minOccurs="0">
-          <xs:element name="flag" type="m:local-flag-definition"/>
-          <xs:element name="flag" type="m:named-flag"/>
-        </xs:choice>-->
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-        type="m:local-flag-definition"/>
+      <xs:choice  minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="m:flag"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
+          type="m:local-flag-definition"/>
+      </xs:choice>
       <xs:element minOccurs="0" name="constraint" type="m:model-constraint-type"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
@@ -452,6 +456,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element name="use-name" minOccurs="0" type="xs:NCName"/>
+        <xs:element minOccurs="0" ref="m:remarks"/>
       </xs:sequence>
       <xs:attribute name="ref" use="required" type="xs:NCName"/>
       <xs:attribute name="required" type="m:boolean" default="no"/>
@@ -853,6 +858,7 @@
       <xs:enumeration value="ip-v6-address"/>
       <xs:enumeration value="uri"/>
       <xs:enumeration value="uri-reference"/>
+      <xs:enumeration value="uuid"/>
     </xs:restriction>
   </xs:simpleType>
 
