@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../support/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- OSCAL CATALOG METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
+<?xml-model href="../../build/metaschema/toolchains/oscal-m2/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-stylesheet type="text/xsl" href="metaschema-browser.xsl"?>
+<?xml-stylesheet type="text/css" href="../../build/metaschema/toolchains/oscal-m2/lib/metaschema-author.css"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:o="http://csrc.nist.gov/ns/oscal/example"
             xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd">
+            xmlns:o="http://csrc.nist.gov/ns/oscal/example"
+            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../build/metaschema/toolchains/oscal-m2/lib/metaschema.xsd"
+            root="catalog">
    <schema-name>OSCAL Control Catalog Format</schema-name>
    <schema-version>1.0.0-milestone3</schema-version>
    <short-name>oscal-catalog</short-name>
@@ -18,7 +21,6 @@
    <define-assembly name="catalog">
       <formal-name>Catalog</formal-name>
       <description>A collection of controls.</description>
-      <root-name>catalog</root-name>
       <flag ref="uuid" required="yes"/>
       <model>
          <assembly ref="metadata" min-occurs="1"/>
@@ -26,15 +28,13 @@
             <group-as name="parameters" in-json="ARRAY"/>
          </assembly>
          <assembly ref="control" max-occurs="unbounded">
-            <group-as name="controls" in-json="ARRAY"/>
+               <group-as name="controls" in-json="ARRAY"/>
          </assembly>
          <assembly ref="group" max-occurs="unbounded">
             <group-as name="groups" in-json="ARRAY"/>
          </assembly>
          <assembly ref="back-matter">
-            <remarks>
-               <p>Back matter including references and resources.</p>
-            </remarks>
+            <description>Back matter including references and resources.</description>
          </assembly>
       </model>
       <remarks>
@@ -53,6 +53,7 @@
          </catalog>
       </example>
    </define-assembly>
+   
    <define-assembly name="group">
       <formal-name>Control Group</formal-name>
       <description>A group of controls, or of groups of controls.</description>
@@ -99,6 +100,7 @@
          </group>
       </example>
    </define-assembly>
+   
    <define-assembly name="control">
       <formal-name>Control</formal-name>
       <description>A structured information object representing a security or privacy control. Each security or privacy control within the Catalog is defined by a distinct control instance.</description>
@@ -110,22 +112,16 @@
             <group-as name="parameters" in-json="ARRAY"/>
          </assembly>
          <!-- TODO: Need to be able to add valid values in context -->
-         <define-field name="prop" max-occurs="unbounded">
-            <formal-name>prop field</formal-name>
-            <description>prop field ... </description>
+         <field ref="prop" max-occurs="unbounded">
             <group-as name="properties" in-json="ARRAY"/>
-            <define-flag name="name">
-               <formal-name>name flag</formal-name>
-               <description>name flag ... </description>
-               <constraint>
-                  <allowed-values allow-other="yes">
-                     <enum value="label">A human-readable label for the parent context.</enum>
-                     <enum value="sort-id">An alternative identifier, whose value is easily sortable among other such values in the document.</enum>
-                     <enum value="status">The status of a <code>control</code>. For example, a value of 'Withdrawn' can indicate that the <code>control</code> has been withdrawn and should no longer be used.</enum>
-                  </allowed-values>
-               </constraint>
-            </define-flag>
-         </define-field>
+            <flag ref="name">
+               <allowed-values allow-other="yes">
+                  <enum value="label">A human-readable label for the parent context.</enum>
+                  <enum value="sort-id">An alternative identifier, whose value is easily sortable among other such values in the document.</enum>
+                  <enum value="status">The status of a <code>control</code>. For example, a value of 'Withdrawn' can indicate that the <code>control</code> has been withdrawn and should no longer be used.</enum>
+               </allowed-values>
+            </flag>
+         </field>
          <assembly ref="annotation" max-occurs="unbounded">
             <group-as name="annotations" in-json="ARRAY"/>
          </assembly>
@@ -142,7 +138,8 @@
          <any/>
       </model>
       <remarks>
-         <p>Controls may be grouped using <code>group</code>, and controls may be partitioned using <code>part</code> or further enhanced (extended) using <code>control</code>.</p>
+         <p>Controls may be grouped using <code>group</code>, and controls may be partitioned using
+        <code>part</code> or further enhanced (extended) using <code>control</code>.</p>
       </remarks>
       <example>
          <control xmlns="http://csrc.nist.gov/ns/oscal/example" id="x">
@@ -150,4 +147,5 @@
          </control>
       </example>
    </define-assembly>
+
 </METASCHEMA>
