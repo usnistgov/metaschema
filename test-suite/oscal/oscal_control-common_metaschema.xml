@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../support/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- OSCAL CATALOG METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
-<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:o="http://csrc.nist.gov/ns/oscal/example"
-            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd">
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
    <schema-name>OSCAL Control Catalog Format -- Common Models</schema-name>
    <schema-version>1.0.0-milestone3</schema-version>
    <short-name>oscal-catalog-common</short-name>
@@ -154,7 +150,9 @@
       </remarks>
       <example>
          <description>Multiple Parts with Different Organization-Specific Names</description>
-         <o:part name="statement" id="statement-A">
+         <o:part xmlns:o="http://csrc.nist.gov/ns/oscal/example"
+                 name="statement"
+                 id="statement-A">
             <o:part ns="https://fedramp.gov" name="status" id="statement-A-FedRAMP">Something FedRAMP Cares About</o:part>
             <o:part ns="https://defense.gov" name="status" id="statement-A-DoD">Something DoD Cares About</o:part>
          </o:part>
