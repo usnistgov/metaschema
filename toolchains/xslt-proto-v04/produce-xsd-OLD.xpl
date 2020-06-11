@@ -59,14 +59,14 @@
   
   <p:xslt name="make-xsd">
     <p:input port="stylesheet">
-      <p:document href="schema_gen/produce-xsd-OLD.xsl"/>
+      <p:document href="schema-gen/produce-xsd-OLD.xsl"/>
     </p:input>
   </p:xslt>
   
   <p:identity name="rewire-xsd"/>
   <!--<p:xslt name="rewire-xsd">
     <p:input port="stylesheet">
-      <p:document href="schema_gen/configure-namespaces.xsl"/>
+      <p:document href="schema-gen/configure-namespaces.xsl"/>
     </p:input>
   </p:xslt>-->
   
