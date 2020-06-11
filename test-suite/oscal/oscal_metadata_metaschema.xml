@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../support/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- OSCAL CATALOG METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
-<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:o="http://csrc.nist.gov/ns/oscal/example"
-            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd">
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
    <schema-name>OSCAL Document Metadata Description</schema-name>
    <schema-version>1.0.0-milestone3</schema-version>
    <short-name>oscal-metadata</short-name>
@@ -121,7 +117,7 @@
          <remarks>
             <p>The following is a contrived example to show the use of link, citation, and resource.</p>
          </remarks>
-         <o:profile>
+         <o:profile xmlns:o="http://csrc.nist.gov/ns/oscal/example">
             <o:metadata>
                <o:link rel="citation" href="#resource1">My citation</o:link>
             </o:metadata>
@@ -185,7 +181,7 @@
          <remarks>
             <p>The following is a contrived example to show the use of link, citation, and resource.</p>
          </remarks>
-         <o:oscal>
+         <o:oscal xmlns:o="http://csrc.nist.gov/ns/oscal/example">
             <o:link rel="reference" href="#resource1">My Hashed Resource</o:link>
         ...snip...
         <o:back-matter>
@@ -680,7 +676,7 @@
          <p>No mechanism is proposed to ensure that <code>id</code> values do not collide across different catalogs. Use profiling without <q>merge</q> to detect such clashes.</p>
       </remarks>
       <example>
-         <o:citation id="xyz2">Some <o:strong>citation</o:strong> of some sort</o:citation>
+         <o:citation xmlns:o="http://csrc.nist.gov/ns/oscal/example" id="xyz2">Some <o:strong>citation</o:strong> of some sort</o:citation>
       </example>
    </define-flag>
    <define-flag name="uuid" as-type="uuid">
