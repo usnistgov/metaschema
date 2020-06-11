@@ -51,13 +51,13 @@
   
   <p:xslt name="make-xsd">
     <p:input port="stylesheet">
-      <p:document href="schema_gen/make-metaschema-xsd.xsl"/>
+      <p:document href="schema-gen/make-metaschema-xsd.xsl"/>
     </p:input>
   </p:xslt>
   
   <p:xslt name="rewire-xsd">
     <p:input port="stylesheet">
-      <p:document href="schema_gen/configure-namespaces.xsl"/>
+      <p:document href="schema-gen/configure-namespaces.xsl"/>
     </p:input>
   </p:xslt>
   

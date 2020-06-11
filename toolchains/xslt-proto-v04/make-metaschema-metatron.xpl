@@ -46,7 +46,7 @@
   
   <p:xslt name="make-metatron">
     <p:input port="stylesheet">
-      <p:document href="schema_gen/make-metaschema-metatron.xsl"/>
+      <p:document href="schema-gen/make-metaschema-metatron.xsl"/>
     </p:input>
   </p:xslt>
   
