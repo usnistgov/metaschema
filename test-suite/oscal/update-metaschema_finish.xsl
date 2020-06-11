@@ -18,23 +18,30 @@
     
     <xsl:template match="processing-instruction()"/>
     
-    <xsl:template match="/">
+    <!--<xsl:template match="/">
         <xsl:text>&#xA;</xsl:text>
         <xsl:processing-instruction name="xml-model">href="../../support/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"</xsl:processing-instruction>
         <xsl:text>&#xA;</xsl:text>
         <xsl:apply-templates/>
+    </xsl:template>-->
+    
+    <xsl:template match="*">
+        <xsl:copy copy-namespaces="no">
+            <xsl:apply-templates select="node() | @*"/>
+        </xsl:copy>
     </xsl:template>
     
+    <xsl:template match="METASCHEMA/@xsi:schemaLocation"/>
     
-    <xsl:template match="METASCHEMA/@xsi:schemaLocation">
+    <!--<xsl:template match="METASCHEMA/@xsi:schemaLocation">
         <xsl:attribute name="xsi:schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd</xsl:attribute>
-    </xsl:template>
+    </xsl:template>-->
     
     
     <xsl:template match="description[2] | remarks[2]"/>
     
     <xsl:template match="METASCHEMA//*[not(self::example)][exists(remarks|example)]">
-        <xsl:copy>
+        <xsl:copy copy-namespaces="no">
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates select="node() except (remarks, example)"/>
             <xsl:apply-templates select="remarks, example"/>
@@ -43,7 +50,7 @@
 
     <xsl:template match="remarks">
         <xsl:if test="empty(following-sibling::remarks)">
-            <xsl:copy>
+            <xsl:copy copy-namespaces="no">
                 <xsl:apply-templates select="../remarks/node()"/>
             </xsl:copy>
         </xsl:if>

@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../support/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- ** NOTES **
 - Need to check latest FR SSP template for "Privacy Impact Designation".
   Was it dropped in latest template, or is it missing from schema?
 -->
 <!-- OSCAL Implementation Layer: System Security Plan (SSP) METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
-<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:o="http://csrc.nist.gov/ns/oscal/example"
-            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd">
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
    <schema-name>OSCAL System Security Plan (SSP) Format</schema-name>
    <schema-version>1.0.0-milestone3</schema-version>
    <short-name>oscal-ssp</short-name>
@@ -513,7 +509,7 @@
          <remarks>
             <p>The internal reference "#diagram1" points to an attached resource defined in the <code>back-matter</code> as a <code>resource</code>. The <code>media-type</code> indicates that the image is a Portable Network Graphics (PNG) image.</p>
          </remarks>
-         <o:diagram id="boundary-diagram-1">
+         <o:diagram xmlns:o="http://csrc.nist.gov/ns/oscal/example" id="boundary-diagram-1">
             <o:description>A boundary diagram.</o:description>
             <o:link rel="diagram" href="#diagram1" media-type="image/png"/>
          </o:diagram>

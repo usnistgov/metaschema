@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../support/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns:o="http://csrc.nist.gov/ns/oscal/1.0"
-            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd">
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
    <schema-name>OSCAL Implementation Component Format</schema-name>
    <schema-version>1.0.0-milestone3</schema-version>
    <short-name>oscal-component</short-name>
@@ -218,9 +214,9 @@
 -->
          <!-- TODO: Implement parameters -->
          <define-assembly name="responsible-role" max-occurs="unbounded">
-            <formal-name xmlns:o="http://csrc.nist.gov/ns/oscal/example">Responsible Role</formal-name>
-            <description xmlns:o="http://csrc.nist.gov/ns/oscal/example">A reference to one or more roles with responsibility for performing a function relative to the control.</description>
-            <json-key xmlns:o="http://csrc.nist.gov/ns/oscal/example" flag-name="role-id"/>
+            <formal-name>Responsible Role</formal-name>
+            <description>A reference to one or more roles with responsibility for performing a function relative to the control.</description>
+            <json-key flag-name="role-id"/>
             <group-as name="responsible-roles" in-json="BY_KEY"/>
             <define-flag required="yes" name="role-id" as-type="NCName">
                <formal-name>Role identifier</formal-name>
@@ -239,7 +235,7 @@
                   </allowed-values>
                </constraint>
             </define-flag>
-            <model xmlns:o="http://csrc.nist.gov/ns/oscal/example">
+            <model>
                <field ref="prop" max-occurs="unbounded">
                   <group-as name="properties" in-json="ARRAY"/>
                </field>
@@ -290,9 +286,9 @@
 -->
          <!-- TODO: Implement parameters -->
          <define-assembly name="responsible-role" max-occurs="unbounded">
-            <formal-name xmlns:o="http://csrc.nist.gov/ns/oscal/example">Responsible Role</formal-name>
-            <description xmlns:o="http://csrc.nist.gov/ns/oscal/example">A reference to one or more roles with responsibility for performing a function relative to the control.</description>
-            <json-key xmlns:o="http://csrc.nist.gov/ns/oscal/example" flag-name="role-id"/>
+            <formal-name>Responsible Role</formal-name>
+            <description>A reference to one or more roles with responsibility for performing a function relative to the control.</description>
+            <json-key flag-name="role-id"/>
             <group-as name="responsible-roles" in-json="BY_KEY"/>
             <define-flag required="yes" name="role-id" as-type="NCName">
                <formal-name>Role identifier</formal-name>
@@ -311,7 +307,7 @@
                   </allowed-values>
                </constraint>
             </define-flag>
-            <model xmlns:o="http://csrc.nist.gov/ns/oscal/example">
+            <model>
                <field ref="prop" max-occurs="unbounded">
                   <group-as name="properties" in-json="ARRAY"/>
                </field>
