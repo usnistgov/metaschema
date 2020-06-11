@@ -53,7 +53,7 @@
     
     
     <sch:pattern id="definitions-and-name-clashes">
-        <sch:rule context="m:flag | m:field | m:assembly">
+        <!--<sch:rule context="m:flag | m:field | m:assembly">
             <sch:let name="aka" value="nm:identifiers(.)"/>
             <sch:let name="def" value="nm:definition-for-reference(.)"/>
             <sch:assert test="exists($def) or $metaschema-is-abstract">No definition is given for <sch:name/> '<sch:value-of select="@ref"/>'.</sch:assert>
@@ -61,8 +61,7 @@
             <sch:let name="siblings" value="(../m:flag | ../m:define-flag | ancestor::m:model//m:field | ancestor::m:model//m:assembly | ancestor::m:model//define-field | ancestor::m:model//m:define-assembly) except ."/>
             <sch:let name="rivals" value="$siblings[nm:identifiers(.) = $aka]"/>
             <sch:assert test="empty($rivals)">Name clash on <sch:name/> using name '<sch:value-of select="$aka"/>'; clashes with neighboring <xsl:value-of select="$rivals/local-name()" separator=", "/></sch:assert>
-          
-        </sch:rule>
+        </sch:rule>-->
         
         <sch:rule context="m:METASCHEMA/m:define-assembly | m:METASCHEMA/m:define-field | m:METASCHEMA/m:define-flag">
             <sch:let name="references" value="nm:references-to-definition(.)"/>
@@ -85,10 +84,10 @@
         <sch:rule context="m:group-as">
             <sch:let name="name" value="@name"/>
             <sch:report test="../@max-occurs/number() = 1">"group-as" should not be given when max-occurs is 1.</sch:report>
-            <sch:let name="def" value="nm:definition-for-reference(parent::*)"/>
-            <sch:assert test="count(ancestor::m:model//(m:field | m:define-field | m:assembly | m:define-assembly)[nm:identifiers(.)=$name]) = 1">group-as @name is not unique within this model</sch:assert>
+            <sch:let name="def" value="parent::m:define-field | parent::m:define-assembly | nm:definition-for-reference(parent::*)"/>
+            <!--<sch:assert test="count(ancestor::m:model[1]//(m:field | m:define-field | m:assembly | m:define-assembly)[nm:identifiers(.)=$name]) = 1">group-as @name is not unique within this model</sch:assert>-->
             <!-- since definition-for-reference fails on an abstract metaschema we can't perform the json-key check there. -->
-            <sch:assert test="$metaschema-is-abstract or not(@in-json='BY_KEY') or $def/m:json-key/@flag-name=$def/(m:flag/@ref|m:define-flag/@name)">Cannot group by key since the definition of <sch:value-of select="name(..)"/> '<sch:value-of select="../@ref"/>' has no json-key specified. Consider adding a json-key to the '<sch:value-of select="../@ref"/>' definition, or using a different 'in-json' setting.</sch:assert>
+            <sch:assert test="$metaschema-is-abstract or not(@in-json='BY_KEY') or $def/m:json-key/@flag-name = $def/(m:flag/@ref|m:define-flag/@name)">Cannot group by key since the definition of <sch:value-of select="name(..)"/> '<sch:value-of select="../@ref"/>' has no json-key specified. Consider adding a json-key to the '<sch:value-of select="../@ref"/>' definition, or using a different 'in-json' setting.</sch:assert>
         </sch:rule>
         
         </sch:pattern>
@@ -124,6 +123,8 @@
         </sch:rule>
         
         <sch:rule context="m:json-value-key">
+            <sch:assert test="empty(@flag-name) or (../(m:flag|m:define-flag)/@name != @flag-name)"><sch:name/> as flag/<sch:value-of select="@flag-name"/> will be inoperative as the value will be given the field key -- no other flags are given</sch:assert>
+            <sch:assert test="exists(@flag-name) or exists(../m:flag|../m:define-flag)"><sch:name/> will be inoperative as the value will be given the field key -- no flags are given</sch:assert>
             <sch:report test="exists(@flag-name) and matches(.,'\S')">JSON value key may be set to a value or a flag's value, but not both.</sch:report>
             <sch:assert test="empty(@flag-name) or @flag-name = (../m:flag/@ref|../m:define-flag/@name)">flag '<sch:value-of select="@flag-name"/>' not found for JSON value key</sch:assert>
         </sch:rule>
