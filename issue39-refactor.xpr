@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="22.0">
+<project version="22.1">
     <meta>
         <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
-            <serialized version="22.0" xml:space="preserve">
+            <serialized version="22.1" xml:space="preserve">
                 <serializableOrderedMap>
                     <entry>
                         <String>document.type.use.grammar.cache</String>
@@ -24,6 +24,266 @@
                     <entry>
                         <String>scenario.associations</String>
                         <scenarioAssociation-array>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/oscal_catalog_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Produce MAPS for this metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_ssp_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_profile_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_poam_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_metadata_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_implementation-common_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_control-common_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_component_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_catalog_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_assessment-results_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_assessment-plan_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_assessment-common_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>toolchains/xslt-proto-v04/make-metaschema-xml-to-supermodel-xslt.xpl</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Test XML->JSON conversion on models-testdata.xml</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
                                     <String>toolchains/xslt-proto-v04/testing/models-testdata.xml</String>
@@ -106,26 +366,6 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/testing/tiny_definition-map.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Test XML->JSON conversion on tiny.xml</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
                                     <String>toolchains/xslt-proto-v04/testing/tiny_metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
@@ -151,46 +391,6 @@
                                 <field name="scenarioIds">
                                     <list>
                                         <String>Produce MAPS for this metaschema</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>toolchains/xslt-proto-v04/schema_gen/make-metaschema-xsd.xsl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Apply (this) XSLT to composed catalog metaschema (and open)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XML</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>toolchains/xslt-proto-v04/make-metaschema-xml-to-supermodel-xslt.xpl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Test XML->JSON conversion on models-testdata.xml</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -406,71 +606,11 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/converter-gen/supermodel-json-serializer.xsl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Apply (this) XSLT to supermodel example</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XML</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>toolchains/xslt-proto-v04/converter-gen/supermodel-xml-serializer.xsl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Apply (this) XSLT to supermodel example</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XML</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
                                     <String>test-suite/broken/implicit-local-constrain-override-metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
                                         <String>Produce MAPS for this metaschema</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>toolchains/xslt-proto-v04/make-metaschema-metatron.xpl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Update Everything Metatron</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -569,109 +709,6 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>test-suite/worked-example/everything_metaschema.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Update Everything Metatron</String>
-                                        <String>Update Everything Metaschema (composed metaschema + XSD)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/worked-example/exercise-everything.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Update Everything Metaschema (composed metaschema + XSD)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/worked-example/kitchen-drawer.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Update Everything Metaschema (composed metaschema + XSD)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/oscal/oscal_catalog_metaschema.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Compose (this) metaschema (v04 XProc)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>toolchains/xslt-proto-v04/compose/make-definition-map.xsl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Apply (this) XSLT to composed catalog metaschema (and open)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XML</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
                                     <String>test-suite/worked-example/everything_metaschema.xsd</String>
                                 </field>
                                 <field name="scenarioIds">
@@ -689,66 +726,6 @@
                                 <field name="scenarioStorageLocations">
                                     <list>
                                         <Byte>2</Byte>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>toolchains/xslt-proto-v04/compose/test-me.xsl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Apply (this) XSLT to (base) Everything metaschema (and open)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XML</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>toolchains/xslt-proto-v04/compose/build-definition-map.xsl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Apply (this) XSLT to (base) Everything metaschema (and open)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XML</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>toolchains/xslt-proto-v04/compose/build-model-map.xsl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Apply (this) XSLT to (base) Everything metaschema (and open)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XML</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
                                         <Byte>2</Byte>
                                     </list>
                                 </field>
@@ -800,26 +777,6 @@
                                 <field name="scenarioIds">
                                     <list>
                                         <String>Produce oscal catalog metaschema DOCS</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>toolchains/xslt-proto-v04/compose/metaschema-reduce2.xsl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Compose metaschema - kitchen drawer example (v04 XProc)</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -1021,841 +978,164 @@
                                     <String-array/>
                                 </field>
                             </scenario>
-                            <scenario>
-                                <field name="advancedOptionsMap">
-                                    <null/>
-                                </field>
-                                <field name="name">
-                                    <String>Apply (this) XSLT to (base) Everything metaschema</String>
-                                </field>
-                                <field name="baseURL">
-                                    <String></String>
-                                </field>
-                                <field name="footerURL">
-                                    <String></String>
-                                </field>
-                                <field name="fOPMethod">
-                                    <String>pdf</String>
-                                </field>
-                                <field name="fOProcessorName">
-                                    <String>Apache FOP</String>
-                                </field>
-                                <field name="headerURL">
-                                    <String></String>
-                                </field>
-                                <field name="inputXSLURL">
-                                    <String>${currentFileURL}</String>
-                                </field>
-                                <field name="inputXMLURL">
-                                    <String>${pdu}/test-suite/worked-example/everything_metaschema.xml</String>
-                                </field>
-                                <field name="defaultScenario">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="isFOPPerforming">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="type">
-                                    <String>XML</String>
-                                </field>
-                                <field name="saveAs">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="openInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="outputResource">
-                                    <null/>
-                                </field>
-                                <field name="openOtherLocationInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="locationToOpenInBrowserURL">
-                                    <null/>
-                                </field>
-                                <field name="openInEditor">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInHTMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInXMLPane">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="showInSVGPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInResultSetPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="useXSLTInput">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="xsltParams">
-                                    <list/>
-                                </field>
-                                <field name="cascadingStylesheets">
-                                    <String-array/>
-                                </field>
-                                <field name="xslTransformer">
-                                    <String>Saxon-PE</String>
-                                </field>
-                                <field name="extensionURLs">
-                                    <String-array/>
-                                </field>
-                            </scenario>
-                            <scenario>
-                                <field name="advancedOptionsMap">
-                                    <null/>
-                                </field>
-                                <field name="name">
-                                    <String>Apply (this) XSLT to (base) Everything metaschema (and open)</String>
-                                </field>
-                                <field name="baseURL">
-                                    <String></String>
-                                </field>
-                                <field name="footerURL">
-                                    <String></String>
-                                </field>
-                                <field name="fOPMethod">
-                                    <String>pdf</String>
-                                </field>
-                                <field name="fOProcessorName">
-                                    <String>Apache FOP</String>
-                                </field>
-                                <field name="headerURL">
-                                    <String></String>
-                                </field>
-                                <field name="inputXSLURL">
-                                    <String>${currentFileURL}</String>
-                                </field>
-                                <field name="inputXMLURL">
-                                    <String>${pdu}/test-suite/worked-example/everything_metaschema.xml</String>
-                                </field>
-                                <field name="defaultScenario">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="isFOPPerforming">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="type">
-                                    <String>XML</String>
-                                </field>
-                                <field name="saveAs">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="openInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="outputResource">
-                                    <String>${cfn}-everything-result.xml</String>
-                                </field>
-                                <field name="openOtherLocationInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="locationToOpenInBrowserURL">
-                                    <null/>
-                                </field>
-                                <field name="openInEditor">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="showInHTMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInXMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInSVGPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInResultSetPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="useXSLTInput">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="xsltParams">
-                                    <list/>
-                                </field>
-                                <field name="cascadingStylesheets">
-                                    <String-array/>
-                                </field>
-                                <field name="xslTransformer">
-                                    <String>Saxon-PE</String>
-                                </field>
-                                <field name="extensionURLs">
-                                    <String-array/>
-                                </field>
-                            </scenario>
-                            <scenario>
-                                <field name="advancedOptionsMap">
-                                    <null/>
-                                </field>
-                                <field name="name">
-                                    <String>Apply (this) XSLT to composed catalog metaschema (and open)</String>
-                                </field>
-                                <field name="baseURL">
-                                    <String></String>
-                                </field>
-                                <field name="footerURL">
-                                    <String></String>
-                                </field>
-                                <field name="fOPMethod">
-                                    <String>pdf</String>
-                                </field>
-                                <field name="fOProcessorName">
-                                    <String>Apache FOP</String>
-                                </field>
-                                <field name="headerURL">
-                                    <String></String>
-                                </field>
-                                <field name="inputXSLURL">
-                                    <String>${currentFileURL}</String>
-                                </field>
-                                <field name="inputXMLURL">
-                                    <String>${pdu}/test-suite/oscal/oscal_catalog_metaschema-COMPOSED.xml</String>
-                                </field>
-                                <field name="defaultScenario">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="isFOPPerforming">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="type">
-                                    <String>XML</String>
-                                </field>
-                                <field name="saveAs">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="openInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="outputResource">
-                                    <String>${cfn}-catalog-result.xml</String>
-                                </field>
-                                <field name="openOtherLocationInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="locationToOpenInBrowserURL">
-                                    <null/>
-                                </field>
-                                <field name="openInEditor">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="showInHTMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInXMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInSVGPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInResultSetPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="useXSLTInput">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="xsltParams">
-                                    <list/>
-                                </field>
-                                <field name="cascadingStylesheets">
-                                    <String-array/>
-                                </field>
-                                <field name="xslTransformer">
-                                    <String>Saxon-PE</String>
-                                </field>
-                                <field name="extensionURLs">
-                                    <String-array/>
-                                </field>
-                            </scenario>
-                            <scenario>
-                                <field name="advancedOptionsMap">
-                                    <null/>
-                                </field>
-                                <field name="name">
-                                    <String>Apply (this) XSLT to supermodel example</String>
-                                </field>
-                                <field name="baseURL">
-                                    <String></String>
-                                </field>
-                                <field name="footerURL">
-                                    <String></String>
-                                </field>
-                                <field name="fOPMethod">
-                                    <String>pdf</String>
-                                </field>
-                                <field name="fOProcessorName">
-                                    <String>Apache FOP</String>
-                                </field>
-                                <field name="headerURL">
-                                    <String></String>
-                                </field>
-                                <field name="inputXSLURL">
-                                    <String>${currentFileURL}</String>
-                                </field>
-                                <field name="inputXMLURL">
-                                    <String>${pdu}/test-suite/worked-examples/everything-metaschema/models-testdata-supermodel.xml</String>
-                                </field>
-                                <field name="defaultScenario">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="isFOPPerforming">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="type">
-                                    <String>XML</String>
-                                </field>
-                                <field name="saveAs">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="openInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="outputResource">
-                                    <null/>
-                                </field>
-                                <field name="openOtherLocationInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="locationToOpenInBrowserURL">
-                                    <null/>
-                                </field>
-                                <field name="openInEditor">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInHTMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInXMLPane">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="showInSVGPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInResultSetPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="useXSLTInput">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="xsltParams">
-                                    <list/>
-                                </field>
-                                <field name="cascadingStylesheets">
-                                    <String-array/>
-                                </field>
-                                <field name="xslTransformer">
-                                    <String>Saxon-PE</String>
-                                </field>
-                                <field name="extensionURLs">
-                                    <String-array/>
-                                </field>
-                            </scenario>
-                            <scenario>
-                                <field name="advancedOptionsMap">
-                                    <null/>
-                                </field>
-                                <field name="name">
-                                    <String>Apply this XSLT to (test) Models definition map</String>
-                                </field>
-                                <field name="baseURL">
-                                    <String></String>
-                                </field>
-                                <field name="footerURL">
-                                    <String></String>
-                                </field>
-                                <field name="fOPMethod">
-                                    <String>pdf</String>
-                                </field>
-                                <field name="fOProcessorName">
-                                    <String>Apache FOP</String>
-                                </field>
-                                <field name="headerURL">
-                                    <String></String>
-                                </field>
-                                <field name="inputXSLURL">
-                                    <String>${currentFileURL}</String>
-                                </field>
-                                <field name="inputXMLURL">
-                                    <String>${pdu}/test-suite/worked-examples/everything-metaschema/models-definition-map.xml</String>
-                                </field>
-                                <field name="defaultScenario">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="isFOPPerforming">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="type">
-                                    <String>XML</String>
-                                </field>
-                                <field name="saveAs">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="openInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="outputResource">
-                                    <null/>
-                                </field>
-                                <field name="openOtherLocationInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="locationToOpenInBrowserURL">
-                                    <null/>
-                                </field>
-                                <field name="openInEditor">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInHTMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInXMLPane">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="showInSVGPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInResultSetPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="useXSLTInput">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="xsltParams">
-                                    <list/>
-                                </field>
-                                <field name="cascadingStylesheets">
-                                    <String-array/>
-                                </field>
-                                <field name="xslTransformer">
-                                    <String>Saxon-PE</String>
-                                </field>
-                                <field name="extensionURLs">
-                                    <String-array/>
-                                </field>
-                            </scenario>
-                            <scenario>
-                                <field name="advancedOptionsMap">
-                                    <null/>
-                                </field>
-                                <field name="name">
-                                    <String>Refresh Everything XSD</String>
-                                </field>
-                                <field name="baseURL">
-                                    <String></String>
-                                </field>
-                                <field name="footerURL">
-                                    <String></String>
-                                </field>
-                                <field name="fOPMethod">
-                                    <String>pdf</String>
-                                </field>
-                                <field name="fOProcessorName">
-                                    <String>Apache FOP</String>
-                                </field>
-                                <field name="headerURL">
-                                    <String></String>
-                                </field>
-                                <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/schema_gen/make-metaschema-xsd.xsl</String>
-                                </field>
-                                <field name="inputXMLURL">
-                                    <String>${pdu}/test-suite/worked-example/everything_metaschema.xml</String>
-                                </field>
-                                <field name="defaultScenario">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="isFOPPerforming">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="type">
-                                    <String>XML</String>
-                                </field>
-                                <field name="saveAs">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="openInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="outputResource">
-                                    <String>${pd}/test-suite/worked-example/everything.xsd</String>
-                                </field>
-                                <field name="openOtherLocationInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="locationToOpenInBrowserURL">
-                                    <null/>
-                                </field>
-                                <field name="openInEditor">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInHTMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInXMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInSVGPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInResultSetPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="useXSLTInput">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="xsltParams">
-                                    <list/>
-                                </field>
-                                <field name="cascadingStylesheets">
-                                    <String-array/>
-                                </field>
-                                <field name="xslTransformer">
-                                    <String>Saxon-PE</String>
-                                </field>
-                                <field name="extensionURLs">
-                                    <String-array/>
-                                </field>
-                            </scenario>
                             <xprocScenario>
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
-                                            <field name="urls">
-                                                <String-array>
-                                                    <String>${pdu}/test-suite/worked-examples/everything-metaschema/models_metaschema.xml</String>
-                                                </String-array>
-                                            </field>
-                                        </xprocInputPort>
-                                    </xprocInputPort-array>
-                                </field>
-                                <field name="outputPorts">
-                                    <xprocOutputPort-array>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>a.echo-input</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>b.composed</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>c.abstract-model-map</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>d.unfolded-model-map</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>E.definition-map</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                    </xprocOutputPort-array>
-                                </field>
-                                <field name="xprocOptions">
-                                    <xprocOption-array/>
-                                </field>
-                                <field name="xprocParameters">
-                                    <xprocParameterPort-array>
-                                        <xprocParameterPort>
-                                            <field name="portName">
-                                                <String>parameters</String>
-                                            </field>
-                                            <field name="parameters">
-                                                <xprocParameter-array/>
-                                            </field>
-                                        </xprocParameterPort>
-                                        <xprocParameterPort>
-                                            <field name="portName">
-                                                <String>*</String>
-                                            </field>
-                                            <field name="parameters">
-                                                <xprocParameter-array/>
-                                            </field>
-                                        </xprocParameterPort>
-                                    </xprocParameterPort-array>
-                                </field>
-                                <field name="advancedOptionsMap">
-                                    <null/>
-                                </field>
-                                <field name="name">
-                                    <String>Apply (this) XProc to Models (test) metaschema</String>
-                                </field>
-                                <field name="baseURL">
-                                    <null/>
-                                </field>
-                                <field name="footerURL">
-                                    <null/>
-                                </field>
-                                <field name="fOPMethod">
-                                    <null/>
-                                </field>
-                                <field name="fOProcessorName">
-                                    <null/>
-                                </field>
-                                <field name="headerURL">
-                                    <null/>
-                                </field>
-                                <field name="inputXSLURL">
-                                    <String>${currentFileURL}</String>
-                                </field>
-                                <field name="inputXMLURL">
-                                    <String></String>
-                                </field>
-                                <field name="defaultScenario">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="isFOPPerforming">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="type">
-                                    <String>XPROC</String>
-                                </field>
-                                <field name="saveAs">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="openInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="outputResource">
-                                    <null/>
-                                </field>
-                                <field name="openOtherLocationInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="locationToOpenInBrowserURL">
-                                    <null/>
-                                </field>
-                                <field name="openInEditor">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInHTMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInXMLPane">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="showInSVGPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInResultSetPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="useXSLTInput">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="xsltParams">
-                                    <list/>
-                                </field>
-                                <field name="cascadingStylesheets">
-                                    <String-array/>
-                                </field>
-                                <field name="xslTransformer">
-                                    <String>Add-on for Calabash XProc Engine</String>
-                                </field>
-                                <field name="extensionURLs">
-                                    <String-array/>
-                                </field>
-                            </xprocScenario>
-                            <xprocScenario>
-                                <field name="inputPorts">
-                                    <xprocInputPort-array>
-                                        <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${pdu}/test-suite/oscal/oscal_catalog_metaschema.xml</String>
                                                 </String-array>
                                             </field>
+                                            <field name="portName">
+                                                <String>source</String>
+                                            </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
                                 </field>
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>_0_main-module</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>_1_collected</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>_2_reduced</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>_3_digested</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>_4_XSD</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>final</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>a.echo-input</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>b.composed</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c1.XSD-pre</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c2.XSD</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>f.final</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c.abstract-model-map</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>d.xml-model-map</String>
-                                            </field>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>d.xml-model-map</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -1969,13 +1249,13 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${currentFileURL}</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>source</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -1983,25 +1263,25 @@
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>_0_input</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>final</String>
-                                            </field>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>final</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -2115,13 +1395,13 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
-                                                    <String>${pdu}/test-suite/worked-example/everything_metaschema.xml</String>
+                                                    <String>${currentFileURL}</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>source</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -2129,80 +1409,58 @@
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>_0_input</String>
-                                            </field>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>a.echo-input</String>
                                             </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>final</String>
-                                            </field>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>b.modified</String>
                                             </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>_0_main-module</String>
-                                            </field>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>c.documented</String>
                                             </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>_1_collected</String>
-                                            </field>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>d.patched</String>
                                             </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>_2_reduced1</String>
-                                            </field>
                                             <field name="url">
-                                                <null/>
+                                                <String>../M3/${cfne}</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
-                                                <String>_3_reduced2</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>_4_digested</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
+                                                <String>f.final</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -2234,7 +1492,7 @@
                                     <null/>
                                 </field>
                                 <field name="name">
-                                    <String>Compose metaschema - kitchen drawer example (v04 XProc)</String>
+                                    <String>Convert v2 Metaschema to v3 Metaschema</String>
                                 </field>
                                 <field name="baseURL">
                                     <null/>
@@ -2252,7 +1510,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/metaschema-compose.xpl</String>
+                                    <String>${pdu}/test-suite/oscal/update-oscalM3-metaschema.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -2316,13 +1574,13 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${currentFileURL}</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>source</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -2330,47 +1588,47 @@
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>a.echo-input</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>b.composed</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c.json-schema-xml</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>f.json-schema</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${cfn}_JSON-SCHEMA.json</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>f.json-schema</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -2484,13 +1742,13 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${currentFileURL}</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>source</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -2498,113 +1756,113 @@
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>a.echo-input</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>b.composed</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c.abstract-model-map</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>d.unfolded-model-map</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>X1.xml-element-tree</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>J1.json-object-tree</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>e.models-only</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>F.declaration-map</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${cfn}_declaration-map.xml</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
+                                            <field name="portName">
+                                                <String>F.declaration-map</String>
+                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>X2.xml-model-html</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>J2.json-model-html</String>
-                                            </field>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>J2.json-model-html</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -2718,13 +1976,13 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${currentFileURL}</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>source</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -2732,47 +1990,47 @@
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>a.echo-input</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>b.composed</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c.metatron</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>f.final</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${cfn}_METATRON.sch</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>f.final</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -2886,13 +2144,13 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${currentFileURL}</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>source</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -2900,146 +2158,146 @@
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>a.echo-input</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>b.composed</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c.abstract-model-map</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>d.unfolded-model-map</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>X1.xml-element-tree</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>J1.json-object-tree</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>e.models-only</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>F.declaration-map</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${cfn}_declaration-map.xml</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
+                                            <field name="portName">
+                                                <String>F.declaration-map</String>
+                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>X2.xml-model-html</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>J2.json-model-html</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>E.definition-map</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>A.definition-map</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>C.xml-converter</String>
-                                            </field>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>C.xml-converter</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -3153,13 +2411,13 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${currentFileURL}</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>source</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -3167,58 +2425,58 @@
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>a.echo-input</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>b.composed</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c0.pre-XSD</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c1.XSD</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>f.final</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${cfn}_XML-SCHEMA.xsd</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>f.final</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -3332,13 +2590,13 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${pdu}/test-suite/oscal/oscal_catalog_metaschema.xml</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>source</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -3346,47 +2604,47 @@
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>a.echo-input</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>b.composed</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>X.xml-docs</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${pdu}/test-suite/oscal/catalog-xml-docs.html</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
+                                            <field name="portName">
+                                                <String>X.xml-docs</String>
+                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>J.json-docs</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${pdu}/test-suite/oscal/catalog-json-docs.html</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>J.json-docs</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -3500,13 +2758,13 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${pdu}/test-suite/oscal/oscal_catalog_metaschema.xml</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>source</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -3514,91 +2772,91 @@
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>a.echo-input</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>b.composed</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c.abstract-model-map</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>d.unfolded-model-map</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>X1.xml-element-tree</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>X2.xml-model-html</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${pdu}/test-suite/oscal/catalog-xml-map.html</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
+                                            <field name="portName">
+                                                <String>X2.xml-model-html</String>
+                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>J1.json-object-tree</String>
-                                            </field>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
+                                            <field name="portName">
+                                                <String>J1.json-object-tree</String>
+                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>J2.json-model-html</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${pdu}/test-suite/oscal/catalog-json-map.html</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>J2.json-model-html</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -3712,13 +2970,13 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${currentFileURL}</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>source</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -3835,23 +3093,23 @@
                                 <field name="inputPorts">
                                     <xprocInputPort-array>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>metaschema-source</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${pdu}/toolchains/xslt-proto-v04/testing/models_metaschema.xml</String>
                                                 </String-array>
                                             </field>
+                                            <field name="portName">
+                                                <String>metaschema-source</String>
+                                            </field>
                                         </xprocInputPort>
                                         <xprocInputPort>
-                                            <field name="portName">
-                                                <String>testdata-xml</String>
-                                            </field>
                                             <field name="urls">
                                                 <String-array>
                                                     <String>${pdu}/toolchains/xslt-proto-v04/testing/models-testdata.xml</String>
                                                 </String-array>
+                                            </field>
+                                            <field name="portName">
+                                                <String>testdata-xml</String>
                                             </field>
                                         </xprocInputPort>
                                     </xprocInputPort-array>
@@ -3859,124 +3117,124 @@
                                 <field name="outputPorts">
                                     <xprocOutputPort-array>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>a.echo-input</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>b.composed</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>c.abstract-model-map</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>d.unfolded-model-map</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>A.definition-map</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>C.xml-converter</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>S.testdata-supermodel</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${pdu}/toolchains/xslt-proto-v04/testing/testdata-supermodel.xml</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
+                                            <field name="portName">
+                                                <String>S.testdata-supermodel</String>
+                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
+                                            <field name="url">
+                                                <null/>
+                                            </field>
+                                            <field name="showInSequenceView">
+                                                <Boolean>true</Boolean>
+                                            </field>
                                             <field name="portName">
                                                 <String>_X1.testdata-xml-result</String>
                                             </field>
+                                        </xprocOutputPort>
+                                        <xprocOutputPort>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
                                             <field name="portName">
                                                 <String>S2.supermodel-with-markdown</String>
                                             </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>_J1.testdata-xpath-json-result</String>
-                                            </field>
                                             <field name="url">
                                                 <String>${pdu}/toolchains/xslt-proto-v04/testing/testdata-json-result.xml</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
                                             </field>
+                                            <field name="portName">
+                                                <String>_J1.testdata-xpath-json-result</String>
+                                            </field>
                                         </xprocOutputPort>
                                         <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>_J2.testdata-json-result</String>
-                                            </field>
                                             <field name="url">
                                                 <null/>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
+                                            </field>
+                                            <field name="portName">
+                                                <String>_J2.testdata-json-result</String>
                                             </field>
                                         </xprocOutputPort>
                                     </xprocOutputPort-array>
@@ -4027,608 +3285,6 @@
                                 </field>
                                 <field name="inputXSLURL">
                                     <String>${pdu}/toolchains/xslt-proto-v04/testing/test-xml-conversions.xpl</String>
-                                </field>
-                                <field name="inputXMLURL">
-                                    <String></String>
-                                </field>
-                                <field name="defaultScenario">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="isFOPPerforming">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="type">
-                                    <String>XPROC</String>
-                                </field>
-                                <field name="saveAs">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="openInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="outputResource">
-                                    <null/>
-                                </field>
-                                <field name="openOtherLocationInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="locationToOpenInBrowserURL">
-                                    <null/>
-                                </field>
-                                <field name="openInEditor">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInHTMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInXMLPane">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="showInSVGPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInResultSetPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="useXSLTInput">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="xsltParams">
-                                    <list/>
-                                </field>
-                                <field name="cascadingStylesheets">
-                                    <String-array/>
-                                </field>
-                                <field name="xslTransformer">
-                                    <String>Add-on for Calabash XProc Engine</String>
-                                </field>
-                                <field name="extensionURLs">
-                                    <String-array/>
-                                </field>
-                            </xprocScenario>
-                            <xprocScenario>
-                                <field name="inputPorts">
-                                    <xprocInputPort-array>
-                                        <xprocInputPort>
-                                            <field name="portName">
-                                                <String>metaschema-source</String>
-                                            </field>
-                                            <field name="urls">
-                                                <String-array>
-                                                    <String>${pdu}/toolchains/xslt-proto-v04/testing/tiny_metaschema.xml</String>
-                                                </String-array>
-                                            </field>
-                                        </xprocInputPort>
-                                        <xprocInputPort>
-                                            <field name="portName">
-                                                <String>testdata-xml</String>
-                                            </field>
-                                            <field name="urls">
-                                                <String-array>
-                                                    <String>${pdu}/toolchains/xslt-proto-v04/testing/tiny.xml</String>
-                                                </String-array>
-                                            </field>
-                                        </xprocInputPort>
-                                    </xprocInputPort-array>
-                                </field>
-                                <field name="outputPorts">
-                                    <xprocOutputPort-array>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>a.echo-input</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>b.composed</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>c.abstract-model-map</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>d.unfolded-model-map</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>A.definition-map</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>C.xml-converter</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>S.testdata-supermodel</String>
-                                            </field>
-                                            <field name="url">
-                                                <String>${pdu}/toolchains/xslt-proto-v04/testing/testdata-supermodel.xml</String>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>_X1.testdata-xml-result</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>S2.supermodel-with-markdown</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>_J1.testdata-xpath-json-result</String>
-                                            </field>
-                                            <field name="url">
-                                                <String>${pdu}/toolchains/xslt-proto-v04/testing/testdata-json-result.xml</String>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>_J2.testdata-json-result</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                    </xprocOutputPort-array>
-                                </field>
-                                <field name="xprocOptions">
-                                    <xprocOption-array/>
-                                </field>
-                                <field name="xprocParameters">
-                                    <xprocParameterPort-array>
-                                        <xprocParameterPort>
-                                            <field name="portName">
-                                                <String>parameters</String>
-                                            </field>
-                                            <field name="parameters">
-                                                <xprocParameter-array/>
-                                            </field>
-                                        </xprocParameterPort>
-                                        <xprocParameterPort>
-                                            <field name="portName">
-                                                <String>*</String>
-                                            </field>
-                                            <field name="parameters">
-                                                <xprocParameter-array/>
-                                            </field>
-                                        </xprocParameterPort>
-                                    </xprocParameterPort-array>
-                                </field>
-                                <field name="advancedOptionsMap">
-                                    <null/>
-                                </field>
-                                <field name="name">
-                                    <String>Test XML->JSON conversion on tiny.xml</String>
-                                </field>
-                                <field name="baseURL">
-                                    <null/>
-                                </field>
-                                <field name="footerURL">
-                                    <null/>
-                                </field>
-                                <field name="fOPMethod">
-                                    <null/>
-                                </field>
-                                <field name="fOProcessorName">
-                                    <null/>
-                                </field>
-                                <field name="headerURL">
-                                    <null/>
-                                </field>
-                                <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/testing/test-xml-conversions.xpl</String>
-                                </field>
-                                <field name="inputXMLURL">
-                                    <String></String>
-                                </field>
-                                <field name="defaultScenario">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="isFOPPerforming">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="type">
-                                    <String>XPROC</String>
-                                </field>
-                                <field name="saveAs">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="openInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="outputResource">
-                                    <null/>
-                                </field>
-                                <field name="openOtherLocationInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="locationToOpenInBrowserURL">
-                                    <null/>
-                                </field>
-                                <field name="openInEditor">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInHTMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInXMLPane">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="showInSVGPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInResultSetPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="useXSLTInput">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="xsltParams">
-                                    <list/>
-                                </field>
-                                <field name="cascadingStylesheets">
-                                    <String-array/>
-                                </field>
-                                <field name="xslTransformer">
-                                    <String>Add-on for Calabash XProc Engine</String>
-                                </field>
-                                <field name="extensionURLs">
-                                    <String-array/>
-                                </field>
-                            </xprocScenario>
-                            <xprocScenario>
-                                <field name="inputPorts">
-                                    <xprocInputPort-array>
-                                        <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
-                                            <field name="urls">
-                                                <String-array>
-                                                    <String>${pdu}/test-suite/worked-example/everything_metaschema.xml</String>
-                                                </String-array>
-                                            </field>
-                                        </xprocInputPort>
-                                    </xprocInputPort-array>
-                                </field>
-                                <field name="outputPorts">
-                                    <xprocOutputPort-array>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>b.composed</String>
-                                            </field>
-                                            <field name="url">
-                                                <String>${pdu}/test-suite/worked-example/everything_metaschema_COMPOSED.xml</String>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>f.final</String>
-                                            </field>
-                                            <field name="url">
-                                                <String>${pdu}/test-suite/worked-example/everything_metaschema_XML-SCHEMA.xsd</String>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>a.echo-input</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>c0.pre-XSD</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>c1.XSD</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                    </xprocOutputPort-array>
-                                </field>
-                                <field name="xprocOptions">
-                                    <xprocOption-array/>
-                                </field>
-                                <field name="xprocParameters">
-                                    <xprocParameterPort-array>
-                                        <xprocParameterPort>
-                                            <field name="portName">
-                                                <String>*</String>
-                                            </field>
-                                            <field name="parameters">
-                                                <xprocParameter-array/>
-                                            </field>
-                                        </xprocParameterPort>
-                                        <xprocParameterPort>
-                                            <field name="portName">
-                                                <String>parameters</String>
-                                            </field>
-                                            <field name="parameters">
-                                                <xprocParameter-array/>
-                                            </field>
-                                        </xprocParameterPort>
-                                    </xprocParameterPort-array>
-                                </field>
-                                <field name="advancedOptionsMap">
-                                    <null/>
-                                </field>
-                                <field name="name">
-                                    <String>Update Everything Metaschema (composed metaschema + XSD)</String>
-                                </field>
-                                <field name="baseURL">
-                                    <null/>
-                                </field>
-                                <field name="footerURL">
-                                    <null/>
-                                </field>
-                                <field name="fOPMethod">
-                                    <null/>
-                                </field>
-                                <field name="fOProcessorName">
-                                    <null/>
-                                </field>
-                                <field name="headerURL">
-                                    <null/>
-                                </field>
-                                <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-xsd.xpl</String>
-                                </field>
-                                <field name="inputXMLURL">
-                                    <String></String>
-                                </field>
-                                <field name="defaultScenario">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="isFOPPerforming">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="type">
-                                    <String>XPROC</String>
-                                </field>
-                                <field name="saveAs">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="openInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="outputResource">
-                                    <null/>
-                                </field>
-                                <field name="openOtherLocationInBrowser">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="locationToOpenInBrowserURL">
-                                    <null/>
-                                </field>
-                                <field name="openInEditor">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInHTMLPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInXMLPane">
-                                    <Boolean>true</Boolean>
-                                </field>
-                                <field name="showInSVGPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="showInResultSetPane">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="useXSLTInput">
-                                    <Boolean>false</Boolean>
-                                </field>
-                                <field name="xsltParams">
-                                    <list/>
-                                </field>
-                                <field name="cascadingStylesheets">
-                                    <String-array/>
-                                </field>
-                                <field name="xslTransformer">
-                                    <String>Add-on for Calabash XProc Engine</String>
-                                </field>
-                                <field name="extensionURLs">
-                                    <String-array/>
-                                </field>
-                            </xprocScenario>
-                            <xprocScenario>
-                                <field name="inputPorts">
-                                    <xprocInputPort-array>
-                                        <xprocInputPort>
-                                            <field name="portName">
-                                                <String>source</String>
-                                            </field>
-                                            <field name="urls">
-                                                <String-array>
-                                                    <String>${pdu}/test-suite/worked-example/everything_metaschema.xml</String>
-                                                </String-array>
-                                            </field>
-                                        </xprocInputPort>
-                                    </xprocInputPort-array>
-                                </field>
-                                <field name="outputPorts">
-                                    <xprocOutputPort-array>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>c.metatron</String>
-                                            </field>
-                                            <field name="url">
-                                                <String>${pdu}/test-suite/worked-example/everything-metaschema_METATRON.sch</String>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>a.echo-input</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>b.composed</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                        <xprocOutputPort>
-                                            <field name="portName">
-                                                <String>f.final</String>
-                                            </field>
-                                            <field name="url">
-                                                <null/>
-                                            </field>
-                                            <field name="showInSequenceView">
-                                                <Boolean>true</Boolean>
-                                            </field>
-                                        </xprocOutputPort>
-                                    </xprocOutputPort-array>
-                                </field>
-                                <field name="xprocOptions">
-                                    <xprocOption-array/>
-                                </field>
-                                <field name="xprocParameters">
-                                    <xprocParameterPort-array>
-                                        <xprocParameterPort>
-                                            <field name="portName">
-                                                <String>*</String>
-                                            </field>
-                                            <field name="parameters">
-                                                <xprocParameter-array/>
-                                            </field>
-                                        </xprocParameterPort>
-                                        <xprocParameterPort>
-                                            <field name="portName">
-                                                <String>parameters</String>
-                                            </field>
-                                            <field name="parameters">
-                                                <xprocParameter-array/>
-                                            </field>
-                                        </xprocParameterPort>
-                                    </xprocParameterPort-array>
-                                </field>
-                                <field name="advancedOptionsMap">
-                                    <null/>
-                                </field>
-                                <field name="name">
-                                    <String>Update Everything Metatron</String>
-                                </field>
-                                <field name="baseURL">
-                                    <null/>
-                                </field>
-                                <field name="footerURL">
-                                    <null/>
-                                </field>
-                                <field name="fOPMethod">
-                                    <null/>
-                                </field>
-                                <field name="fOProcessorName">
-                                    <null/>
-                                </field>
-                                <field name="headerURL">
-                                    <null/>
-                                </field>
-                                <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-metatron.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>

@@ -42,37 +42,12 @@
         <object>
             <xsl:apply-templates select="@name,@min-occurs,@max-occurs"/>
             <xsl:apply-templates mode="field-value" select="."/>
-            <xsl:apply-templates select="flag"/>
+            <xsl:apply-templates select="flag, value"/>
         </object>
     </xsl:template>
     
-    <xsl:template match="field" mode="field-value">
-        <string name="STRVALUE" min-occurs="0" max-occurs="1">
-            <xsl:apply-templates select="@as-type"/>
-        </string>
-    </xsl:template>
-    
-    <xsl:template match="field[@as-type='markup-line']" mode="field-value">
-        <string name="RICHTEXT" min-occurs="0" max-occurs="1">
-            <xsl:apply-templates select="@as-type"/>
-        </string>
-    </xsl:template>
-    
-    <xsl:template match="field[@as-type='markup-multiline']" mode="field-value">
-        <string name="PROSE" min-occurs="0" max-occurs="1">
-            <xsl:apply-templates select="@as-type"/>
-        </string>
-    </xsl:template>
-    
-    <xsl:template priority="2" match="field[matches(@json-value-key,'\S')]" mode="field-value">
-        <string name="{@json-value-key}" min-occurs="0" max-occurs="1">
-            <xsl:apply-templates select="@as-type"/>
-        </string>
-    </xsl:template>
-    
-    <!-- required so we have a value for the required implicit flag (whose value is designated in this name) -->
-    <xsl:template priority="3" match="field[matches(@json-value-flag,'\S')]" mode="field-value">
-        <string name="{ '{{' || @json-value-flag || '}}' }" min-occurs="1" max-occurs="1">
+    <xsl:template match="value">
+        <string name="{@key}" min-occurs="0" max-occurs="1">
             <xsl:apply-templates select="@as-type"/>
         </string>
     </xsl:template>
