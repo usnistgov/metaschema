@@ -48,7 +48,7 @@
         <define-assembly name="{@ref}">
             <xsl:copy-of select="@* except @ref"/>
             <xsl:apply-templates select="key('assembly-definition-for-ref',@ref,$metaschema-sources)/(formal-name | description)"/>
-            <xsl:apply-templates select="key('assembly-definition-for-ref',@ref,$metaschema-sources)/(json-key | json-value-key)"/>
+            <xsl:apply-templates select="key('assembly-definition-for-ref',@ref,$metaschema-sources)/json-key"/>
             <xsl:apply-templates select="group-as"/>
             <xsl:apply-templates select="flag"/>
             <xsl:apply-templates select="key('assembly-definition-for-ref',@ref,$metaschema-sources)/model"/>
@@ -56,9 +56,12 @@
         </define-assembly>
     </xsl:template>
     
+    <xsl:key name="field-definition-for-ref" match="/METASCHEMA/define-field" use="@name"/>
+    
     <xsl:template match="field[exists(* except (group-as | use-name | remarks))]">
         <define-field name="{(@name,@ref)[1]}">
             <xsl:copy-of select="@* except @ref"/>
+            <xsl:apply-templates select="key('field-definition-for-ref',@ref,$metaschema-sources)/(json-key | json-value-key)"/>
             <xsl:apply-templates/>
         </define-field>
     </xsl:template>

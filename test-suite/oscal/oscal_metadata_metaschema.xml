@@ -43,6 +43,7 @@
          <define-field name="prop" max-occurs="unbounded">
             <formal-name>prop field</formal-name>
             <description>prop field ... </description>
+            <json-value-key>value</json-value-key>
             <group-as name="properties" in-json="ARRAY"/>
             <define-flag name="name">
                <formal-name>name flag</formal-name>
@@ -144,6 +145,7 @@
          <define-field name="link" max-occurs="unbounded">
             <formal-name>link field</formal-name>
             <description>link field ... </description>
+            <json-value-key>text</json-value-key>
             <group-as name="links" in-json="ARRAY"/>
             <define-flag name="rel">
                <formal-name>rel flag</formal-name>
