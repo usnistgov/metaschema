@@ -90,6 +90,7 @@
             <xsl:attribute name="required">yes</xsl:attribute>
         </xsl:if>
     </xsl:template>
+    
     <xsl:template match="allowed-values">
         <constraint>
             <allowed-values>
