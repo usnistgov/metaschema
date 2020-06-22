@@ -361,21 +361,28 @@
     </xsl:template>
     
     <xsl:template priority="2" mode="property-name" match="assembly">
-        <xsl:apply-templates mode="#current" select="key('assembly-definition-by-name',@ref)"/>
+        <xsl:apply-templates mode="#current" select="key('assembly-definition-by-name',@ref)">
+            <xsl:with-param name="named" select="(group-as/@name,use-name,@name)[1]"/>
+        </xsl:apply-templates>
     </xsl:template>
     
     <xsl:template priority="2" mode="property-name" match="field">
-        <xsl:apply-templates mode="#current" select="key('field-definition-by-name',@ref)"/>
+        <xsl:apply-templates mode="#current" select="key('field-definition-by-name',@ref)">
+            <xsl:with-param name="named" select="(group-as/@name,use-name,@name)[1]"/>
+        </xsl:apply-templates>
     </xsl:template>
     
     <xsl:template priority="2" mode="property-name" match="flag">
-        <xsl:apply-templates mode="#current" select="key('flag-definition-by-name',@ref)"/>
+        <xsl:apply-templates mode="#current" select="key('flag-definition-by-name',@ref)">
+            <xsl:with-param name="named" select="(group-as/@name,use-name,@name)[1]"/>
+        </xsl:apply-templates>
     </xsl:template>
     
     <xsl:template priority="2" mode="property-name" match="define-field | define-assembly | define-flag">
-        <xsl:param name="named" select="(group-as/@name,root-name,use-name,@name)[1]"/>
+        <xsl:param name="named"/>
+        <xsl:param name="named-here" select="(group-as/@name,root-name,use-name,@name)[1]"/>
         <string>
-            <xsl:value-of select="$named"/>
+            <xsl:value-of select="($named,$named-here)[1]"/>
         </string>
     </xsl:template>
     
