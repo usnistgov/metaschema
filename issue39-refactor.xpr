@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="22.1">
     <meta>
-        <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
+        <filters directoryPatterns="" filePatterns="" positiveFilePatterns="*metaschema*" showHiddenFiles="false"/>
         <options>
             <serialized version="22.1" xml:space="preserve">
                 <serializableOrderedMap>
@@ -26,7 +26,7 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>test-suite/schema-generation/uuid/datatypes-uuid_metaschema.xml</String>
+                                    <String>test-suite/schema-generation/group-as/group-as-array_metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -51,6 +51,146 @@
                                 <field name="scenarioIds">
                                     <list>
                                         <String>Produce CSS for (this) metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/schema-generation/uuid/datatypes-uuid_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/schema-generation/allowed-values/allowed-values-basic_metaschema-m2.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/schema-generation/allowed-values/allowed-values-basic_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>toolchains/xslt-proto-v04/make-metaschema-json-schema.xpl</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Apply (this) XProc to OSCAL CATALOG metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/schema-generation/collapsible/collapsible-no-op_metaschema-m2.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/schema-generation/collapsible/collapsible_metaschema-m2.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/schema-generation/allowed-values/allowed-values-basic_metaschema-m3.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert v2 Metaschema to v3 Metaschema</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -147,26 +287,6 @@
                             <scenarioAssociation>
                                 <field name="url">
                                     <String>test-suite/oscal/oscal_assessment-results_metaschema.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/oscal/oscal_assessment-plan_metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -691,26 +811,6 @@
                                 <field name="scenarioIds">
                                     <list>
                                         <String>Produce Metatron for (this) metaschema (v04 XProc)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>toolchains/xslt-proto-v04/make-metaschema-json-schema.xpl</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Apply (this) XProc to OSCAL CATALOG metaschema</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -1694,7 +1794,7 @@
                                         </xprocOutputPort>
                                         <xprocOutputPort>
                                             <field name="url">
-                                                <String>../M3/${cfne}</String>
+                                                <String>${cfn}-m3.xml</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
