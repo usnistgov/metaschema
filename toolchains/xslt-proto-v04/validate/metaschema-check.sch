@@ -123,8 +123,7 @@
         </sch:rule>
         
         <sch:rule context="m:json-value-key">
-            <sch:assert test="empty(@flag-name) or (../(m:flag|m:define-flag)/@name != @flag-name)"><sch:name/> as flag/<sch:value-of select="@flag-name"/> will be inoperative as the value will be given the field key -- no other flags are given</sch:assert>
-            <sch:assert test="exists(@flag-name) or exists(../m:flag|../m:define-flag)"><sch:name/> will be inoperative as the value will be given the field key -- no flags are given</sch:assert>
+            <sch:assert test="empty(@flag-name) or (@flag-name != ../(m:flag/@ref | m:define-flag/@name) )"><sch:name/> as flag/<sch:value-of select="@flag-name"/> will be inoperative as the value will be given the field key -- no other flags are given <xsl:value-of select="../(m:flag|m:define-flag)/@ref" separator=", "/></sch:assert>
             <sch:report test="exists(@flag-name) and matches(.,'\S')">JSON value key may be set to a value or a flag's value, but not both.</sch:report>
             <sch:assert test="empty(@flag-name) or @flag-name = (../m:flag/@ref|../m:define-flag/@name)">flag '<sch:value-of select="@flag-name"/>' not found for JSON value key</sch:assert>
         </sch:rule>
