@@ -540,7 +540,7 @@
         <XSLT:template mode="md" match="li">
             <string>
                 <XSLT:for-each select="../ancestor::ul">
-                    <XSLT:text>&#32;&#32;</XSLT:text>
+                    <XSLT:text xml:space="preserve">&#32;&#32;</XSLT:text>
                 </XSLT:for-each>
                 <XSLT:text>* </XSLT:text>
                 <XSLT:apply-templates mode="md"/>
@@ -552,7 +552,7 @@
             <string/>
             <string>
                 <XSLT:for-each select="../ancestor::ul">
-                    <XSLT:text>&#32;&#32;</XSLT:text>
+                    <XSLT:text xml:space="preserve">&#32;&#32;</XSLT:text>
                 </XSLT:for-each>
                 <XSLT:text>1. </XSLT:text>
                 <XSLT:apply-templates mode="md"/>
