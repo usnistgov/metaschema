@@ -529,12 +529,12 @@
 
         <XSLT:template mode="md" priority="1" match="ul | ol">
             <XSLT:call-template name="conditional-lf"/>
-            <XSLT:apply-templates select="* mode="md"/>
+            <XSLT:apply-templates select="*" mode="md"/>
             <string/>
         </XSLT:template>
 
         <XSLT:template mode="md" match="ul//ul | ol//ol | ol//ul | ul//ol">
-            <XSLT:apply-templates select="* mode="md"/>
+            <XSLT:apply-templates select="*" mode="md"/>
         </XSLT:template>
 
         <XSLT:template mode="md" match="li">
