@@ -18,12 +18,14 @@
     
     <xsl:template match="processing-instruction()"/>
     
-    <!--<xsl:template match="/">
+    <xsl:variable as="xs:string" name="schema-dir">../../../toolchains/xslt-proto-v04/validate</xsl:variable>
+    
+    <xsl:template match="/">
         <xsl:text>&#xA;</xsl:text>
-        <xsl:processing-instruction name="xml-model">href="../../support/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"</xsl:processing-instruction>
+        <xsl:processing-instruction name="xml-model" expand-text="true">href="{ $schema-dir }/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"</xsl:processing-instruction>
         <xsl:text>&#xA;</xsl:text>
         <xsl:apply-templates/>
-    </xsl:template>-->
+    </xsl:template>
     
     <xsl:template match="*">
         <xsl:copy copy-namespaces="no">
@@ -31,11 +33,11 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="METASCHEMA/@xsi:schemaLocation"/>
+    <!--<xsl:template match="METASCHEMA/@xsi:schemaLocation"/>-->
     
-    <!--<xsl:template match="METASCHEMA/@xsi:schemaLocation">
-        <xsl:attribute name="xsi:schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../support/lib/metaschema.xsd</xsl:attribute>
-    </xsl:template>-->
+    <xsl:template match="METASCHEMA/@xsi:schemaLocation">
+        <xsl:attribute name="xsi:schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">{ $schema-dir }/metaschema.xsd</xsl:attribute>
+    </xsl:template>
     
     
     <xsl:template match="description[2] | remarks[2]"/>
