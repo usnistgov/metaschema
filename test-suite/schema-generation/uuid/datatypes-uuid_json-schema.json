@@ -22,7 +22,7 @@
                         {
                             "type": "array",
                             "items": {"$ref": "#/definitions/uuid-field"},
-                            "minItems": 2
+                            "minItems": 1
                         }
                     ]
                 }
@@ -41,5 +41,7 @@
     "properties": {
         "parent": {"$ref": "#/definitions/parent"}
     },
-    "required": ["parent"]
+    "required": ["parent"],
+    "additionalProperties" : false,
+    "maxProperties" : 1
 }

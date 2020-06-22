@@ -193,9 +193,9 @@
         <xsl:sequence select="$really-who/key('references-to-definition',$tag,$composed-metaschema)"/>
     </xsl:function>
     
-    <xsl:template mode="nm:get-references" match="m:define-assembly | m:define-field | m:define-flag">
+   <!-- <xsl:template mode="nm:get-references" match="m:define-assembly | m:define-field | m:define-flag">
         <xsl:variable name="tag" expand-text="true">:{ substring-after(local-name(.),'define-') => upper-case() }</xsl:variable>
-    </xsl:template>
+    </xsl:template>-->
     
     
     <xsl:function name="nm:sort" as="item()*">
