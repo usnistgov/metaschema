@@ -20,14 +20,14 @@
     <xsl:variable name="home" select="/"/>
     <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
 
-    <xsl:import href="../lib/metaschema-metaprocess.xsl"/>
+    <xsl:import href="metaschema-metaprocess.xsl"/>
     
     <!-- The $transformation-sequence declares transformations to be applied in order. -->
     <xsl:variable name="transformation-sequence">
-        <nm:transform version="3.0">../compose/metaschema-collect.xsl</nm:transform>
-        <nm:transform version="3.0">../compose/metaschema-reduce1.xsl</nm:transform>
-        <nm:transform version="3.0">../compose/metaschema-reduce2.xsl</nm:transform>
-        <nm:transform version="3.0">../compose/metaschema-digest.xsl</nm:transform>
+        <nm:transform version="3.0">metaschema-collect.xsl</nm:transform>
+        <nm:transform version="3.0">metaschema-reduce1.xsl</nm:transform>
+        <nm:transform version="3.0">metaschema-reduce2.xsl</nm:transform>
+        <nm:transform version="3.0">metaschema-digest.xsl</nm:transform>
     </xsl:variable>
     
     <xsl:function name="nm:compose-metaschema" as="document-node()?">
