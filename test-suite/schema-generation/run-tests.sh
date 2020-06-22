@@ -1,7 +1,6 @@
 #!/bin/bash
 
-
-if [ -z ${OSCAL_SCRIPT_INIT+x} ]; then
+if [ -z ${METASCHEMA_SCRIPT_INIT+x} ]; then
   source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/../../scripts/include/common-environment.sh"
 fi
 
