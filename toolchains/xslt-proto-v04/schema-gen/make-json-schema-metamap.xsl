@@ -112,9 +112,14 @@
     <!-- Flag declarations are all handled at the point of invocation -->
     <xsl:template match="define-flag"/>
     
+    <xsl:template name="give-id">
+      <string key="$id">#/definitions/{@name}</string>
+    </xsl:template>
+    
     <xsl:template match="define-assembly">
         <map key="{ (root-name, use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name, description"/>
+            <xsl:call-template name="give-id"/>
             <string key="type">object</string>
             <xsl:where-populated>
                 <map key="properties">
@@ -129,6 +134,7 @@
     <xsl:template match="define-field">
         <map key="{ (use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name, description"/>
+            <xsl:call-template name="give-id"/>
             <string key="type">object</string>
             <xsl:where-populated>
                 <map key="properties">
@@ -145,6 +151,7 @@
     <xsl:template match="define-field[exists(json-value-key/@flag-name)]">
         <map key="{ (use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name, description"/>
+            <xsl:call-template name="give-id"/>
             <string key="type">object</string>
             <xsl:where-populated>
                 <map key="properties">
@@ -180,6 +187,7 @@
     <xsl:template match="define-field[empty(flag|define-flag)]">
         <map key="{ (use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name, description"/>
+            <xsl:call-template name="give-id"/>
             <xsl:apply-templates select="." mode="object-type"/>
             <xsl:apply-templates select="constraint/allowed-values"/>
         </map>
@@ -674,6 +682,12 @@
             <string key="type">string</string>
             <string key="format">uri-reference</string>
             <!---->
+        </map>
+        <map key="uuid">
+            <!-- A Type 4 ('random' or 'pseudorandom' UUID per RFC 4122-->
+            <string key="type">string</string>
+            <!-- A sequence of 8-4-4-4-12 hex digits, with extra constraints in the 13th and 17-18th places for version 4-->
+            <string key="pattern">^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$</string>
         </map>
         <!-- Possibly add support for XSD types ID, IDREF, IDREFS, NCName, NMTOKENS ???        -->
     </xsl:variable>
