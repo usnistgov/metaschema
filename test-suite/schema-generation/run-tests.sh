@@ -8,8 +8,8 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/../../scripts/i
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/../../scripts/include/init-schematron.sh"
 
 # configuration
-UNIT_TESTS_DIR=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../test-suite/schema-generation")
-METASCHEMA_SCHEMA=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/oscal-m2/lib/metaschema.xsd")
+UNIT_TESTS_DIR=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../test-suite/schema-generation")  
+METASCHEMA_SCHEMA=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/xslt-proto-v04/validate/metaschema.xsd")
 DEBUG="false"
 
 # Option defaults
@@ -207,7 +207,7 @@ if [ "$VERBOSE" = "true" ]; then
 fi
 
 # compile the schematron
-metaschema_lib=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/oscal-m2/lib")
+metaschema_lib=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/xslt-proto-v04/validate")
 schematron="$metaschema_lib/metaschema-check.sch"
 compiled_schematron="${SCRATCH_DIR}/metaschema-schematron-compiled.xsl"
 
@@ -220,6 +220,12 @@ fi
 # the following is needed by the compiled template
 cp "${metaschema_lib}/metaschema-compose.xsl" "${SCRATCH_DIR}"
 cp "${metaschema_lib}/oscal-datatypes-check.xsl" "${SCRATCH_DIR}"
+cp "${metaschema_lib}/metaschema-validation-support.xsl" "${SCRATCH_DIR}"
+cp "${metaschema_lib}/metaschema-metaprocess.xsl" "${SCRATCH_DIR}"
+cp "${metaschema_lib}/metaschema-collect.xsl" "${SCRATCH_DIR}"
+cp "${metaschema_lib}/metaschema-reduce1.xsl" "${SCRATCH_DIR}"
+cp "${metaschema_lib}/metaschema-reduce2.xsl" "${SCRATCH_DIR}"
+cp "${metaschema_lib}/metaschema-digest.xsl" "${SCRATCH_DIR}"
 
 test_dirs=()
 if [ -n "$1" ]; then
