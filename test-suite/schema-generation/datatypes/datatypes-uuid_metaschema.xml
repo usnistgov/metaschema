@@ -1,35 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../toolchains/xslt-proto-v04/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- OSCAL CATALOG METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
-<?xml-model href="../../../toolchains/oscal-m2/lib/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<?xml-stylesheet type="text/css" href="../../../toolchains/oscal-m2/lib/metaschema-author.css"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../toolchains/oscal-m3/lib/metaschema.xsd"
- xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
- xmlns:o="http://csrc.nist.gov/ns/oscal/example"
- root="parent">
-  <schema-name>Metaschema Unit Test: UUID Datatype</schema-name>
-  <schema-version>1.0-milestone2</schema-version>
-  <short-name>metaschema-datatypes-uuid</short-name>
-  <namespace>http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri</namespace>
-
-  <define-assembly name="parent">
-    <formal-name>parent</formal-name>
-    <description>parent assembly</description>
-    <flag name="uuid-flag" as-type="uuid" required="yes">
-      <formal-name>Universally Unique Identifier Flag</formal-name>
-      <description>A version 4 UUID per RFC 4122.</description>
-    </flag>
-    <model>
-      <field ref="uuid-field" max-occurs="unbounded">
-        <group-as name="uuid-fields"/>
-      </field>
-    </model>
-  </define-assembly>
-
-  <define-field name="uuid-field" as-type="uuid">
+            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xsi:schemaLocation="../../../toolchains/xslt-proto-v04/validate/metaschema.xsd">
+   <schema-name>Metaschema Unit Test: UUID Datatype</schema-name>
+   <schema-version>1.0-milestone2</schema-version>
+   <short-name>metaschema-datatypes-uuid</short-name>
+   <namespace>http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri</namespace>
+   <define-assembly name="parent">
+      <formal-name>parent</formal-name>
+      <description>parent assembly</description>
+      <root-name>parent</root-name>
+      <define-flag name="uuid-flag" as-type="uuid" required="yes">
+         <formal-name>Universally Unique Identifier Flag</formal-name>
+         <description>A version 4 UUID per RFC 4122.</description>
+      </define-flag>
+      <model>
+         <field ref="uuid-field" max-occurs="unbounded">
+            <group-as name="uuid-fields"/>
+         </field>
+      </model>
+   </define-assembly>
+   <define-field name="uuid-field" as-type="uuid">
       <formal-name>Universally Unique Identifier Field</formal-name>
       <description>A version 4 UUID per RFC 4122.</description>
-  </define-field>
-  
+   </define-field>
 </METASCHEMA>
