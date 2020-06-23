@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:metaschema-datatypes-uuid="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri"
+           xmlns:oscal-prose="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri"
+           version="1.0-milestone2">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Metaschema Unit Test: UUID Datatype</m:schema-name>
+         <m:schema-version>1.0-milestone2</m:schema-version>
+         <m:short-name>metaschema-datatypes-uuid</m:short-name>
+         <m:root>parent</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="parent" type="metaschema-datatypes-uuid:parent-ASSEMBLY"/>
+   <xs:complexType name="parent-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>parent</m:formal-name>
+            <m:description>parent assembly</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>parent</b>: parent assembly</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="uuid-field"
+                     type="metaschema-datatypes-uuid:uuid-field-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uuid-flag"
+                    use="required"
+                    type="metaschema-datatypes-uuid:uuid">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Universally Unique Identifier Flag</m:formal-name>
+               <m:description>A version 4 UUID per RFC 4122.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Universally Unique Identifier Flag</b>: A version 4 UUID per RFC 4122.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="uuid-field-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Universally Unique Identifier Field</m:formal-name>
+            <m:description>A version 4 UUID per RFC 4122.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Universally Unique Identifier Field</b>: A version 4 UUID per RFC 4122.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="metaschema-datatypes-uuid:uuid"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:simpleType name="uuid">
+      <xs:annotation>
+         <xs:documentation>A Type 4 ('random' or 'pseudorandom' UUID per RFC 4122</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:whiteSpace value="collapse"/>
+         <xs:pattern value="[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}">
+            <xs:annotation>
+               <xs:documentation>A sequence of 8-4-4-4-12 hex digits, with extra constraints in the 13th and 17-18th places for version 4</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>

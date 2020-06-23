@@ -14,7 +14,8 @@
          <m:root>parent</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="parent" m:root="yes">
+   <xs:element name="parent" type="metaschema-group-as:parent-ASSEMBLY"/>
+   <xs:complexType name="parent-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>parent</m:formal-name>
@@ -23,56 +24,54 @@
          <xs:documentation>
             <b>parent</b>: parent assembly</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:sequence/>
-         <xs:attribute name="flag" type="xs:string">
-            <xs:annotation>
-               <xs:appinfo>
-                  <m:formal-name>Flag</m:formal-name>
-                  <m:description>A basic flag</m:description>
-               </xs:appinfo>
-               <xs:documentation>
-                  <b>Flag</b>: A basic flag</xs:documentation>
-            </xs:annotation>
-         </xs:attribute>
-         <xs:attribute name="flag-required" use="required" type="xs:string">
-            <xs:annotation>
-               <xs:appinfo>
-                  <m:formal-name>Required Flag</m:formal-name>
-                  <m:description>A basic required flag</m:description>
-               </xs:appinfo>
-               <xs:documentation>
-                  <b>Required Flag</b>: A basic required flag</xs:documentation>
-            </xs:annotation>
-         </xs:attribute>
-         <xs:attribute name="flag-constrained">
-            <xs:annotation>
-               <xs:appinfo>
-                  <m:formal-name>Constrained Flag</m:formal-name>
-                  <m:description>With decimal values</m:description>
-               </xs:appinfo>
-               <xs:documentation>
-                  <b>Constrained Flag</b>: With decimal values</xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-               <xs:restriction base="xs:decimal">
-                  <xs:enumeration value="1.0">
-                     <xs:annotation>
-                        <xs:documentation>
-                           <p>one-dot-oh</p>
-                        </xs:documentation>
-                     </xs:annotation>
-                  </xs:enumeration>
-                  <xs:enumeration value="1.1">
-                     <xs:annotation>
-                        <xs:documentation>
-                           <p>one-dot-one</p>
-                        </xs:documentation>
-                     </xs:annotation>
-                  </xs:enumeration>
-               </xs:restriction>
-            </xs:simpleType>
-         </xs:attribute>
-      </xs:complexType>
-   </xs:element>
+      <xs:sequence/>
+      <xs:attribute name="flag" type="xs:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Flag</m:formal-name>
+               <m:description>A basic flag</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Flag</b>: A basic flag</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="flag-required" use="required" type="xs:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Required Flag</m:formal-name>
+               <m:description>A basic required flag</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Required Flag</b>: A basic required flag</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="flag-constrained">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Constrained Flag</m:formal-name>
+               <m:description>With decimal values</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Constrained Flag</b>: With decimal values</xs:documentation>
+         </xs:annotation>
+         <xs:simpleType>
+            <xs:restriction base="xs:decimal">
+               <xs:enumeration value="1.0">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>one-dot-oh</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+               <xs:enumeration value="1.1">
+                  <xs:annotation>
+                     <xs:documentation>
+                        <p>one-dot-one</p>
+                     </xs:documentation>
+                  </xs:annotation>
+               </xs:enumeration>
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:attribute>
+   </xs:complexType>
 </xs:schema>

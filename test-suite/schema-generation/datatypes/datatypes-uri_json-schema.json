@@ -28,7 +28,7 @@
               { "type" : "array",
                 "items" : 
                 { "$ref" : "#/definitions/uri-field" },
-                "minItems" : 2 } ] },
+                "minItems" : 1 } ] },
           "uri-reference-fields" : 
           { "anyOf" : 
             [ 
@@ -37,7 +37,7 @@
               { "type" : "array",
                 "items" : 
                 { "$ref" : "#/definitions/uri-reference-field" },
-                "minItems" : 2 } ] } },
+                "minItems" : 1 } ] } },
         "required" : 
         [ "uri-flag",
           "uri-reference-flag" ],
@@ -57,4 +57,7 @@
     "properties" : 
     { "parent" : 
       { "$ref" : "#/definitions/parent" } },
-  "required": [ "parent" ] }
+    "required" : 
+    [ "parent" ],
+    "additionalProperties" : false,
+    "maxProperties" : 1 }

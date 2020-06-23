@@ -14,7 +14,8 @@
          <m:root>parent</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="parent" m:root="yes">
+   <xs:element name="parent" type="json-value-key-label:parent-ASSEMBLY"/>
+   <xs:complexType name="parent-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>parent</m:formal-name>
@@ -23,13 +24,14 @@
          <xs:documentation>
             <b>parent</b>: parent assembly</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element ref="json-value-key-label:link" minOccurs="0" maxOccurs="unbounded"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="link">
+      <xs:sequence>
+         <xs:element name="link"
+                     type="json-value-key-label:link-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="link-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Link</m:formal-name>
@@ -38,45 +40,43 @@
          <xs:documentation>
             <b>Link</b>: A reference to a local or remote resource</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:simpleContent>
-            <xs:extension base="xs:string">
-               <xs:attribute name="href"
-                             use="required"
-                             type="json-value-key-label:uri-reference">
-                  <xs:annotation>
-                     <xs:appinfo>
-                        <m:formal-name>hypertext reference</m:formal-name>
-                        <m:description>A link to a document or document fragment (actual, nominal or projected)</m:description>
-                     </xs:appinfo>
-                     <xs:documentation>
-                        <b>hypertext reference</b>: A link to a document or document fragment (actual, nominal or projected)</xs:documentation>
-                  </xs:annotation>
-               </xs:attribute>
-               <xs:attribute name="rel" type="xs:NCName">
-                  <xs:annotation>
-                     <xs:appinfo>
-                        <m:formal-name>Relation</m:formal-name>
-                        <m:description>Purpose of the link</m:description>
-                     </xs:appinfo>
-                     <xs:documentation>
-                        <b>Relation</b>: Purpose of the link</xs:documentation>
-                  </xs:annotation>
-               </xs:attribute>
-               <xs:attribute name="media-type" type="xs:string">
-                  <xs:annotation>
-                     <xs:appinfo>
-                        <m:formal-name>Media type</m:formal-name>
-                        <m:description>Describes the media type of a linked resource</m:description>
-                     </xs:appinfo>
-                     <xs:documentation>
-                        <b>Media type</b>: Describes the media type of a linked resource</xs:documentation>
-                  </xs:annotation>
-               </xs:attribute>
-            </xs:extension>
-         </xs:simpleContent>
-      </xs:complexType>
-   </xs:element>
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="href"
+                          use="required"
+                          type="json-value-key-label:uri-reference">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>hypertext reference</m:formal-name>
+                     <m:description>A link to a document or document fragment (actual, nominal or projected)</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>hypertext reference</b>: A link to a document or document fragment (actual, nominal or projected)</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="rel" type="xs:NCName">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Relation</m:formal-name>
+                     <m:description>Purpose of the link</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Relation</b>: Purpose of the link</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="media-type" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Media type</m:formal-name>
+                     <m:description>Describes the media type of a linked resource</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Media type</b>: Describes the media type of a linked resource</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
    <xs:simpleType name="uri-reference">
       <xs:annotation>
          <xs:documentation>A URI reference, such as a relative URL</xs:documentation>
