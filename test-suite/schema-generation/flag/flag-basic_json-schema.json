@@ -24,7 +24,7 @@
             "title" : "Constrained Flag",
             "description" : "With decimal values",
             "enum" : 
-            [ 1.0,
+            [ 1,
               1.1 ] } },
         "required" : 
         [ "flag-required" ],
@@ -32,4 +32,7 @@
     "properties" : 
     { "parent" : 
       { "$ref" : "#/definitions/parent" } },
-  "required": [ "parent" ] }
+    "required" : 
+    [ "parent" ],
+    "additionalProperties" : false,
+    "maxProperties" : 1 }
