@@ -14,7 +14,8 @@
          <m:root>parent</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="parent" m:root="yes">
+   <xs:element name="parent" type="metaschema-datatypes:parent-ASSEMBLY"/>
+   <xs:complexType name="parent-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>parent</m:formal-name>
@@ -23,55 +24,60 @@
          <xs:documentation>
             <b>parent</b>: parent assembly</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element ref="metaschema-datatypes:field-date" minOccurs="0" maxOccurs="1"/>
-            <xs:element ref="metaschema-datatypes:field-plaintext"
-                        minOccurs="0"
-                        maxOccurs="1"/>
-            <xs:element ref="metaschema-datatypes:field-flag-plaintext"
-                        minOccurs="0"
-                        maxOccurs="1"/>
-            <xs:element ref="metaschema-datatypes:field-richtext"
-                        minOccurs="0"
-                        maxOccurs="1"/>
-            <xs:element ref="metaschema-datatypes:field-flag-richtext"
-                        minOccurs="0"
-                        maxOccurs="1"/>
-            <xs:element name="field-prose" minOccurs="0" maxOccurs="1">
-               <xs:annotation>
-                  <xs:appinfo>
-                     <m:formal-name>Prose</m:formal-name>
-                     <m:description>Prose permits multiple paragraphs, lists, tables etc.</m:description>
-                  </xs:appinfo>
-                  <xs:documentation>
-                     <b>Prose</b>: Prose permits multiple paragraphs, lists, tables etc.</xs:documentation>
-               </xs:annotation>
-               <xs:complexType>
-                  <xs:group ref="metaschema-datatypes:PROSE"
-                            maxOccurs="unbounded"
-                            minOccurs="0"/>
-               </xs:complexType>
-            </xs:element>
-            <xs:element name="field-flag-prose" minOccurs="0" maxOccurs="1">
-               <xs:annotation>
-                  <xs:appinfo>
-                     <m:formal-name>Prose</m:formal-name>
-                     <m:description>Prose permits multiple paragraphs, lists, tables etc.</m:description>
-                  </xs:appinfo>
-                  <xs:documentation>
-                     <b>Prose</b>: Prose permits multiple paragraphs, lists, tables etc.</xs:documentation>
-               </xs:annotation>
-               <xs:complexType>
-                  <xs:group ref="metaschema-datatypes:PROSE"
-                            maxOccurs="unbounded"
-                            minOccurs="0"/>
-               </xs:complexType>
-            </xs:element>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="field-date">
+      <xs:sequence>
+         <xs:element name="field-date"
+                     type="metaschema-datatypes:field-date-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="field-plaintext"
+                     type="metaschema-datatypes:field-plaintext-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="field-flag-plaintext"
+                     type="metaschema-datatypes:field-flag-plaintext-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="field-richtext"
+                     type="metaschema-datatypes:field-richtext-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="field-flag-richtext"
+                     type="metaschema-datatypes:field-flag-richtext-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="field-prose" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+               <xs:appinfo>
+                  <m:formal-name>Prose</m:formal-name>
+                  <m:description>Prose permits multiple paragraphs, lists, tables etc.</m:description>
+               </xs:appinfo>
+               <xs:documentation>
+                  <b>Prose</b>: Prose permits multiple paragraphs, lists, tables etc.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:group ref="metaschema-datatypes:PROSE"
+                         maxOccurs="unbounded"
+                         minOccurs="0"/>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="field-flag-prose" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+               <xs:appinfo>
+                  <m:formal-name>Prose</m:formal-name>
+                  <m:description>Prose permits multiple paragraphs, lists, tables etc.</m:description>
+               </xs:appinfo>
+               <xs:documentation>
+                  <b>Prose</b>: Prose permits multiple paragraphs, lists, tables etc.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+               <xs:group ref="metaschema-datatypes:PROSE"
+                         maxOccurs="unbounded"
+                         minOccurs="0"/>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="field-date-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Date</m:formal-name>
@@ -80,13 +86,11 @@
          <xs:documentation>
             <b>Date</b>: With time zone</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:simpleContent>
-            <xs:extension base="metaschema-datatypes:date-with-timezone"/>
-         </xs:simpleContent>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="field-plaintext">
+      <xs:simpleContent>
+         <xs:extension base="metaschema-datatypes:date-with-timezone"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="field-plaintext-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Plain text</m:formal-name>
@@ -95,13 +99,11 @@
          <xs:documentation>
             <b>Plain text</b>: plain text, no markup</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:simpleContent>
-            <xs:extension base="xs:string"/>
-         </xs:simpleContent>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="field-flag-plaintext">
+      <xs:simpleContent>
+         <xs:extension base="xs:string"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="field-flag-plaintext-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Plain text</m:formal-name>
@@ -110,59 +112,37 @@
          <xs:documentation>
             <b>Plain text</b>: plain text, no markup</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:simpleContent>
-            <xs:extension base="xs:string">
-               <xs:attribute name="length" type="xs:positiveInteger">
-                  <xs:annotation>
-                     <xs:appinfo>
-                        <m:formal-name>Length</m:formal-name>
-                        <m:description>The length.</m:description>
-                     </xs:appinfo>
-                     <xs:documentation>
-                        <b>Length</b>: The length.</xs:documentation>
-                  </xs:annotation>
-               </xs:attribute>
-            </xs:extension>
-         </xs:simpleContent>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="field-richtext">
-      <xs:annotation>
-         <xs:appinfo>
-            <m:formal-name>Rich text</m:formal-name>
-            <m:description>Rich text supports markup</m:description>
-         </xs:appinfo>
-         <xs:documentation>
-            <b>Rich text</b>: Rich text supports markup</xs:documentation>
-      </xs:annotation>
-      <xs:complexType mixed="true">
-         <xs:group ref="metaschema-datatypes:everything-inline"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="field-flag-richtext">
-      <xs:annotation>
-         <xs:appinfo>
-            <m:formal-name>Rich text</m:formal-name>
-            <m:description>Rich text supports markup</m:description>
-         </xs:appinfo>
-         <xs:documentation>
-            <b>Rich text</b>: Rich text supports markup</xs:documentation>
-      </xs:annotation>
-      <xs:complexType mixed="true">
-         <xs:group ref="metaschema-datatypes:everything-inline"/>
-         <xs:attribute name="length" type="xs:positiveInteger">
-            <xs:annotation>
-               <xs:appinfo>
-                  <m:formal-name>Length</m:formal-name>
-                  <m:description>The length.</m:description>
-               </xs:appinfo>
-               <xs:documentation>
-                  <b>Length</b>: The length.</xs:documentation>
-            </xs:annotation>
-         </xs:attribute>
-      </xs:complexType>
-   </xs:element>
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="length" type="xs:positiveInteger">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Length</m:formal-name>
+                     <m:description>The length.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Length</b>: The length.</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType mixed="true" name="field-richtext-FIELD">
+      <xs:group ref="metaschema-datatypes:everything-inline"/>
+   </xs:complexType>
+   <xs:complexType mixed="true" name="field-flag-richtext-FIELD">
+      <xs:group ref="metaschema-datatypes:everything-inline"/>
+      <xs:attribute name="length" type="xs:positiveInteger">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Length</m:formal-name>
+               <m:description>The length.</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Length</b>: The length.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
    <xs:group name="PROSE">
       <xs:choice>
          <xs:element ref="oscal-prose:h1"/>

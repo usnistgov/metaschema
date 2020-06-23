@@ -25,7 +25,7 @@
                 "items" : 
                 { "$ref" : "#/definitions/uuid-field" } } ] } },
         "required" : 
-        [ "uuid-flag" ],
+        [ "" ],
         "additionalProperties" : false },
       "uuid-field" : 
       { "title" : "Universally Unique Identifier Field",

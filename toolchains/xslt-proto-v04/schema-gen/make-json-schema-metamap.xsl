@@ -224,7 +224,7 @@
         </xsl:variable>
         <xsl:variable name="nominal-type">
             <xsl:choose>
-                <xsl:when test="$type-declaration/*[@key='type']='integer'">number</xsl:when>
+                <xsl:when test="$type-declaration/*[@key='type']=('integer','number')">number</xsl:when>
                 <xsl:when test="$type-declaration/*[@key='type']='boolean'">boolean</xsl:when>
                 <xsl:otherwise>string</xsl:otherwise>
             </xsl:choose>
@@ -353,7 +353,7 @@
                         <map key="items">
                             <string key="type">string</string>
                         </map>
-                        <number key="minItems">2</number>
+                        <number key="minItems">1</number><!-- See Issue #536 -->
                     </map>
                 </array>
             </map>
@@ -382,7 +382,7 @@
         <xsl:param name="named"/>
         <xsl:param name="named-here" select="(group-as/@name,root-name,use-name,@name)[1]"/>
         <string>
-            <xsl:value-of select="($named,$named-here)[1]"/>
+            <xsl:value-of select="($named[matches(.,'\S')],$named-here)[1]"/>
         </string>
     </xsl:template>
     
@@ -448,14 +448,14 @@
             <map key="additionalProperties">
                 <array key="allOf">
                     <map>
-                        <!--<string key="type">object</string>-->
+                        <string key="type">object</string>
                         <xsl:apply-templates select="." mode="definition-or-reference"/>
                     </map>
-                    <!--<map>
+                    <map>
                         <map key="not">
                             <string key="type">string</string>
                         </map>
-                    </map>-->
+                    </map>
                 </array>
             </map>
         </map>
