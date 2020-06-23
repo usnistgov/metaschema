@@ -14,7 +14,8 @@
          <m:root>parent</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="parent" m:root="yes">
+   <xs:element name="parent" type="metaschema-datatypes-dateTime:parent-ASSEMBLY"/>
+   <xs:complexType name="parent-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>parent</m:formal-name>
@@ -23,28 +24,28 @@
          <xs:documentation>
             <b>parent</b>: parent assembly</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element ref="metaschema-datatypes-dateTime:field-date"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-            <xs:element ref="metaschema-datatypes-dateTime:child"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-         </xs:sequence>
-         <xs:attribute name="flag-date" use="required" type="xs:date">
-            <xs:annotation>
-               <xs:appinfo>
-                  <m:formal-name>Date Flag</m:formal-name>
-                  <m:description>date flag, time zone optional</m:description>
-               </xs:appinfo>
-               <xs:documentation>
-                  <b>Date Flag</b>: date flag, time zone optional</xs:documentation>
-            </xs:annotation>
-         </xs:attribute>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="child">
+      <xs:sequence>
+         <xs:element name="field-date"
+                     type="metaschema-datatypes-dateTime:field-date-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="child"
+                     type="metaschema-datatypes-dateTime:child-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="flag-date" use="required" type="xs:date">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Date Flag</m:formal-name>
+               <m:description>date flag, time zone optional</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Date Flag</b>: date flag, time zone optional</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="child-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>child</m:formal-name>
@@ -53,15 +54,14 @@
          <xs:documentation>
             <b>child</b>: child assembly</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element ref="metaschema-datatypes-dateTime:field-date"
-                        minOccurs="1"
-                        maxOccurs="1"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="field-date">
+      <xs:sequence>
+         <xs:element name="field-date"
+                     type="metaschema-datatypes-dateTime:field-date-FIELD"
+                     minOccurs="1"
+                     maxOccurs="1"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="field-date-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Date</m:formal-name>
@@ -70,10 +70,8 @@
          <xs:documentation>
             <b>Date</b>: Time zone optional</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:simpleContent>
-            <xs:extension base="xs:date"/>
-         </xs:simpleContent>
-      </xs:complexType>
-   </xs:element>
+      <xs:simpleContent>
+         <xs:extension base="xs:date"/>
+      </xs:simpleContent>
+   </xs:complexType>
 </xs:schema>

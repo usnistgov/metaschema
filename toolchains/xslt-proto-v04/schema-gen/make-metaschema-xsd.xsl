@@ -10,7 +10,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     
-<!-- Purpose: Produce an XSD Schema representing constraints declared in a netaschema -->
+<!-- Purpose: Produce an XSD Schema representing constraints declared in a metaschema -->
 <!-- Input:   A Metaschema -->
 <!-- Output:  An XSD, with embedded documentation -->
 
@@ -37,6 +37,7 @@
     <xsl:param name="debug" select="'no'"/>
     
     <!--MAIN ACTION HERE -->
+    
     
     <xsl:template match="/" name="build-schema">
         <xs:schema elementFormDefault="qualified" targetNamespace="{ $target-namespace }">

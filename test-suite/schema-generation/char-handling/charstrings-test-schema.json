@@ -41,4 +41,6 @@
         "type" : "string" } },
     "properties" : 
     { "examples" : 
-      { "$ref" : "#/definitions/examples" } } }
+      { "$ref" : "#/definitions/examples" } },
+    "additionalProperties" : false,
+    "maxProperties" : 1 }

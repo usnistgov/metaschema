@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parent xmlns="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/schema-generation/uuid/datatypes-uuid_metaschema_XML-SCHEMA.xsd" uuid-flag="7b5d9713-4488-4d71-8e77-85b0b185d71a">
+    <uuid-field>7b5d9713-4488-4d71-8e77-85b0b185d71a</uuid-field>
+    <uuid-field>xyz</uuid-field>
+</parent>

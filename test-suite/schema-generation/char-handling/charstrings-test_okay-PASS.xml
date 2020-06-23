@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <examples xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime charstrings-test-schema.xsd"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime charstrings-test_xml-schema.xsd"
  xmlns="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime">
   <charstring>Here's a string including punctuation ' " \ . $</charstring>
   <charstring>Here's a string with an ampersand &amp;</charstring>

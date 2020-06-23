@@ -14,7 +14,8 @@
          <m:root>parent</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="parent" m:root="yes">
+   <xs:element name="parent" type="metaschema-datatypes-dateTime:parent-ASSEMBLY"/>
+   <xs:complexType name="parent-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>parent</m:formal-name>
@@ -23,28 +24,28 @@
          <xs:documentation>
             <b>parent</b>: parent assembly</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element ref="metaschema-datatypes-dateTime:field-datetime-notz"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-            <xs:element ref="metaschema-datatypes-dateTime:child"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-         </xs:sequence>
-         <xs:attribute name="flag-datetime-notz" use="required" type="xs:dateTime">
-            <xs:annotation>
-               <xs:appinfo>
-                  <m:formal-name>Date and Time Flag</m:formal-name>
-                  <m:description>datetime flag</m:description>
-               </xs:appinfo>
-               <xs:documentation>
-                  <b>Date and Time Flag</b>: datetime flag</xs:documentation>
-            </xs:annotation>
-         </xs:attribute>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="child">
+      <xs:sequence>
+         <xs:element name="field-datetime-notz"
+                     type="metaschema-datatypes-dateTime:field-datetime-notz-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="child"
+                     type="metaschema-datatypes-dateTime:child-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="flag-datetime-notz" use="required" type="xs:dateTime">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Date and Time Flag</m:formal-name>
+               <m:description>datetime flag</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Date and Time Flag</b>: datetime flag</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="child-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>child</m:formal-name>
@@ -53,15 +54,14 @@
          <xs:documentation>
             <b>child</b>: child assembly</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element ref="metaschema-datatypes-dateTime:field-datetime-notz"
-                        minOccurs="1"
-                        maxOccurs="1"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="field-datetime-notz">
+      <xs:sequence>
+         <xs:element name="field-datetime-notz"
+                     type="metaschema-datatypes-dateTime:field-datetime-notz-FIELD"
+                     minOccurs="1"
+                     maxOccurs="1"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="field-datetime-notz-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Date and Time</m:formal-name>
@@ -70,10 +70,8 @@
          <xs:documentation>
             <b>Date and Time</b>: No time zone</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:simpleContent>
-            <xs:extension base="xs:dateTime"/>
-         </xs:simpleContent>
-      </xs:complexType>
-   </xs:element>
+      <xs:simpleContent>
+         <xs:extension base="xs:dateTime"/>
+      </xs:simpleContent>
+   </xs:complexType>
 </xs:schema>

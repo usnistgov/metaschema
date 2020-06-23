@@ -23,7 +23,7 @@
               { "type" : "array",
                 "items" : 
                 { "$ref" : "#/definitions/field-datetime-notz" },
-                "minItems" : 2 } ] },
+                "minItems" : 1 } ] },
           "children" : 
           { "anyOf" : 
             [ 
@@ -32,7 +32,7 @@
               { "type" : "array",
                 "items" : 
                 { "$ref" : "#/definitions/child" },
-                "minItems" : 2 } ] } },
+                "minItems" : 1 } ] } },
         "required" : 
         [ "flag-datetime-notz" ],
         "additionalProperties" : false },
@@ -56,4 +56,7 @@
     "properties" : 
     { "parent" : 
       { "$ref" : "#/definitions/parent" } },
-  "required": [ "parent" ] }
+    "required" : 
+    [ "parent" ],
+    "additionalProperties" : false,
+    "maxProperties" : 1 }
