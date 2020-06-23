@@ -14,7 +14,8 @@
          <m:root>parent</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="parent" m:root="yes">
+   <xs:element name="parent" type="metaschema-group-as:parent-ASSEMBLY"/>
+   <xs:complexType name="parent-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>parent</m:formal-name>
@@ -23,13 +24,14 @@
          <xs:documentation>
             <b>parent</b>: parent assembly</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element ref="metaschema-group-as:prop" minOccurs="0" maxOccurs="unbounded"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="prop">
+      <xs:sequence>
+         <xs:element name="prop"
+                     type="metaschema-group-as:prop-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="prop-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>prop</m:formal-name>
@@ -38,10 +40,8 @@
          <xs:documentation>
             <b>prop</b>: prop field</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:simpleContent>
-            <xs:extension base="xs:string"/>
-         </xs:simpleContent>
-      </xs:complexType>
-   </xs:element>
+      <xs:simpleContent>
+         <xs:extension base="xs:string"/>
+      </xs:simpleContent>
+   </xs:complexType>
 </xs:schema>

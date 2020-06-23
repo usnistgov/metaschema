@@ -1,57 +1,59 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "http://csrc.nist.gov/ns/metaschema/unit-test/collapsible-schema.json",
-  "$comment": "Metaschema Unit Test: collapsible: JSON Schema",
-  "type": "object",
-  "definitions": {
-    "parent": {
-      "title": "parent",
-      "description": "parent assembly",
-      "$id": "#/definitions/parent",
-      "type": "object",
-      "properties": {
-        "props": {
-          "anyOf": [
-            {"$ref": "#/definitions/prop"},
-            {
-              "type": "array",
-              "items": {"$ref": "#/definitions/prop"},
-              "minItems": 2
-            }
-          ]
-        }
-      },
-      "required": ["props"],
-      "additionalProperties": false
-    },
-    "prop": {
-      "title": "prop",
-      "description": "prop field",
-      "$id": "#/definitions/prop",
-      "type": "object",
-      "properties": {
-        "name": {
-          "title": "A simple flag",
-          "description": "A simpleflag",
-          "type": "string"
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://csrc.nist.gov/ns/metaschema/unit-test/collapsible-schema.json",
+    "$comment": "Metaschema Unit Test: collapsible: JSON Schema",
+    "type": "object",
+    "definitions": {
+        "parent": {
+            "title": "parent",
+            "description": "parent assembly",
+            "$id": "#/definitions/parent",
+            "type": "object",
+            "properties": {
+                "props": {
+                    "anyOf": [
+                        {"$ref": "#/definitions/prop"},
+                        {
+                            "type": "array",
+                            "items": {"$ref": "#/definitions/prop"},
+                            "minItems": 1
+                        }
+                    ]
+                }
+            },
+            "required": ["props"],
+            "additionalProperties": false
         },
-        "STRVALUE": {
-          "anyOf": [
-            {"type": "string"},
-            {
-              "type": "array",
-              "items": {"type": "string"},
-              "minItems": 2
-            }
-          ]
+        "prop": {
+            "title": "prop",
+            "description": "prop field",
+            "$id": "#/definitions/prop",
+            "type": "object",
+            "properties": {
+                "name": {
+                    "title": "A simple flag",
+                    "description": "A simpleflag",
+                    "type": "string"
+                },
+                "STRVALUE": {
+                    "anyOf": [
+                        {"type": "string"},
+                        {
+                            "type": "array",
+                            "items": {"type": "string"},
+                            "minItems": 1
+                        }
+                    ]
+                }
+            },
+            "required": ["STRVALUE"],
+            "additionalProperties": false
         }
-      },
-      "required": ["STRVALUE"],
-      "additionalProperties": false
-    }
-  },
-  "properties": {
-    "parent": {"$ref": "#/definitions/parent"}
-  },
-  "required": ["parent"]
+    },
+    "properties": {
+        "parent": {"$ref": "#/definitions/parent"}
+    },
+    "required": ["parent"],
+    "additionalProperties": false,
+    "maxProperties": 1
 }

@@ -14,7 +14,8 @@
          <m:root>examples</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="examples" m:root="yes">
+   <xs:element name="examples" type="metaschema-datatypes-dateTime:examples-ASSEMBLY"/>
+   <xs:complexType name="examples-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Examples</m:formal-name>
@@ -23,18 +24,18 @@
          <xs:documentation>
             <b>Examples</b>: Some character strings of different sorts</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element ref="metaschema-datatypes-dateTime:charstring"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-            <xs:element ref="metaschema-datatypes-dateTime:markupline"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="charstring">
+      <xs:sequence>
+         <xs:element name="charstring"
+                     type="metaschema-datatypes-dateTime:charstring-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="markupline"
+                     type="metaschema-datatypes-dateTime:markupline-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="charstring-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Character string</m:formal-name>
@@ -43,25 +44,13 @@
          <xs:documentation>
             <b>Character string</b>: String of characters</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:simpleContent>
-            <xs:extension base="xs:string"/>
-         </xs:simpleContent>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="markupline">
-      <xs:annotation>
-         <xs:appinfo>
-            <m:formal-name>Markup line</m:formal-name>
-            <m:description>Characters, and more</m:description>
-         </xs:appinfo>
-         <xs:documentation>
-            <b>Markup line</b>: Characters, and more</xs:documentation>
-      </xs:annotation>
-      <xs:complexType mixed="true">
-         <xs:group ref="metaschema-datatypes-dateTime:everything-inline"/>
-      </xs:complexType>
-   </xs:element>
+      <xs:simpleContent>
+         <xs:extension base="xs:string"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType mixed="true" name="markupline-FIELD">
+      <xs:group ref="metaschema-datatypes-dateTime:everything-inline"/>
+   </xs:complexType>
    <xs:element name="h1">
       <xs:complexType mixed="true">
          <xs:group ref="oscal-prose:inlines"/>

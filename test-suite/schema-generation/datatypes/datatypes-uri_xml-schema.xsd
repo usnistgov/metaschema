@@ -14,7 +14,8 @@
          <m:root>parent</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="parent" m:root="yes">
+   <xs:element name="parent" type="metaschema-datatypes-uri:parent-ASSEMBLY"/>
+   <xs:complexType name="parent-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>parent</m:formal-name>
@@ -23,40 +24,40 @@
          <xs:documentation>
             <b>parent</b>: parent assembly</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element ref="metaschema-datatypes-uri:uri-field"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-            <xs:element ref="metaschema-datatypes-uri:uri-reference-field"
-                        minOccurs="0"
-                        maxOccurs="unbounded"/>
-         </xs:sequence>
-         <xs:attribute name="uri-flag" use="required" type="metaschema-datatypes-uri:uri">
-            <xs:annotation>
-               <xs:appinfo>
-                  <m:formal-name>Universal Resource Identifier Flag</m:formal-name>
-                  <m:description>Per W3C</m:description>
-               </xs:appinfo>
-               <xs:documentation>
-                  <b>Universal Resource Identifier Flag</b>: Per W3C</xs:documentation>
-            </xs:annotation>
-         </xs:attribute>
-         <xs:attribute name="uri-reference-flag"
-                       use="required"
-                       type="metaschema-datatypes-uri:uri-reference">
-            <xs:annotation>
-               <xs:appinfo>
-                  <m:formal-name>Universal Resource Identifier Reference Flag</m:formal-name>
-                  <m:description>Per W3C, can be a relative URI</m:description>
-               </xs:appinfo>
-               <xs:documentation>
-                  <b>Universal Resource Identifier Reference Flag</b>: Per W3C, can be a relative URI</xs:documentation>
-            </xs:annotation>
-         </xs:attribute>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="uri-field">
+      <xs:sequence>
+         <xs:element name="uri-field"
+                     type="metaschema-datatypes-uri:uri-field-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="uri-reference-field"
+                     type="metaschema-datatypes-uri:uri-reference-field-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uri-flag" use="required" type="metaschema-datatypes-uri:uri">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Universal Resource Identifier Flag</m:formal-name>
+               <m:description>Per W3C</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Universal Resource Identifier Flag</b>: Per W3C</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="uri-reference-flag"
+                    use="required"
+                    type="metaschema-datatypes-uri:uri-reference">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Universal Resource Identifier Reference Flag</m:formal-name>
+               <m:description>Per W3C, can be a relative URI</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Universal Resource Identifier Reference Flag</b>: Per W3C, can be a relative URI</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="uri-field-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Universal Resource Identifier Flag</m:formal-name>
@@ -65,13 +66,11 @@
          <xs:documentation>
             <b>Universal Resource Identifier Flag</b>: Per W3C</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:simpleContent>
-            <xs:extension base="metaschema-datatypes-uri:uri"/>
-         </xs:simpleContent>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="uri-reference-field">
+      <xs:simpleContent>
+         <xs:extension base="metaschema-datatypes-uri:uri"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="uri-reference-field-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Universal Resource Identifier Flag</m:formal-name>
@@ -80,12 +79,10 @@
          <xs:documentation>
             <b>Universal Resource Identifier Flag</b>: Per W3C</xs:documentation>
       </xs:annotation>
-      <xs:complexType>
-         <xs:simpleContent>
-            <xs:extension base="metaschema-datatypes-uri:uri-reference"/>
-         </xs:simpleContent>
-      </xs:complexType>
-   </xs:element>
+      <xs:simpleContent>
+         <xs:extension base="metaschema-datatypes-uri:uri-reference"/>
+      </xs:simpleContent>
+   </xs:complexType>
    <xs:simpleType name="uri">
       <xs:annotation>
          <xs:documentation>A URI</xs:documentation>

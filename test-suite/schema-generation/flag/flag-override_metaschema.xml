@@ -71,7 +71,7 @@
          </define-field>
       </model>
    </define-assembly>
-   <define-field name="propA">
+   <!--<define-field name="propA">
       <formal-name>Property A</formal-name>
       <description>A property with a name.</description>
       <define-flag name="name">
@@ -99,5 +99,5 @@
             <enum value="Y">Y</enum>
          </allowed-values>
       </constraint>
-   </define-flag>
+   </define-flag>-->
 </METASCHEMA>
