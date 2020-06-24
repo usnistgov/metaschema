@@ -1,6 +1,6 @@
 # Metaschema refactoring
 
-xslt-proto-v04
+xslt-M4
 
 
 Multiple models: catalog, profile, ssp, components ... (RAR etc.)

@@ -26,6 +26,207 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
+                                    <String>test-suite/oscal/oscal_ssp_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Produce XSD for (this) metaschema (v04 XProc)</String>
+                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/oscal_profile_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Produce XSD for (this) metaschema (v04 XProc)</String>
+                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/oscal_poam_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Produce XSD for (this) metaschema (v04 XProc)</String>
+                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/oscal_catalog_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Produce XSD for (this) metaschema (v04 XProc)</String>
+                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/oscal_assessment-results_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Produce XSD for (this) metaschema (v04 XProc)</String>
+                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/oscal_component_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Produce XSD for (this) metaschema (v04 XProc)</String>
+                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/oscal_assessment-plan_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Produce XSD for (this) metaschema (v04 XProc)</String>
+                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/schema-generation/json-value-key/json-value-key-field_json-schema.json</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Augment JSON Schema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XML</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/schema-generation/json-value-key/json-value-key-label_json-schema.json</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Augment JSON Schema</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XML</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
                                     <String>test-suite/schema-generation/json-value-key/json-value-key-label_metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
@@ -606,7 +807,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/make-metaschema-json-schema.xpl</String>
+                                    <String>toolchains/xslt-M4/make-metaschema-json-schema.xpl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -666,7 +867,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/util/augment-json-schema.xsl</String>
+                                    <String>toolchains/xslt-M4/util/augment-json-schema.xsl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -707,46 +908,6 @@
                             <scenarioAssociation>
                                 <field name="url">
                                     <String>test-suite/schema-generation/uuid/datatypes-uuid_json-schema.json</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Augment JSON Schema</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XML</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/schema-generation/json-value-key/json-value-key-label_json-schema.json</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Augment JSON Schema</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XML</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/schema-generation/json-value-key/json-value-key-field_json-schema.json</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -866,26 +1027,6 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>test-suite/oscal/oscal_ssp_metaschema.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Produce CSS for (this) metaschema</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
                                     <String>test-suite/schema-generation/allowed-values/allowed-values-basic_metaschema-m2.xml</String>
                                 </field>
                                 <field name="scenarioIds">
@@ -971,106 +1112,6 @@
                                 <field name="scenarioIds">
                                     <list>
                                         <String>Convert v2 Metaschema to v3 Metaschema</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/oscal/oscal_catalog_metaschema.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/oscal/oscal_profile_metaschema.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/oscal/oscal_poam_metaschema.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/oscal/oscal_component_metaschema.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>test-suite/oscal/oscal_assessment-results_metaschema.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -1406,7 +1447,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/make-metaschema-xml-to-supermodel-xslt.xpl</String>
+                                    <String>toolchains/xslt-M4/make-metaschema-xml-to-supermodel-xslt.xpl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1426,7 +1467,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/testing/models-testdata.xml</String>
+                                    <String>toolchains/xslt-M4/testing/models-testdata.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1446,7 +1487,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/testing/models_metaschema.xml</String>
+                                    <String>toolchains/xslt-M4/testing/models_metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1466,7 +1507,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/converter-gen/produce-xml-converter.xsl</String>
+                                    <String>toolchains/xslt-M4/converter-gen/produce-xml-converter.xsl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1486,7 +1527,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/testing/test-xml-conversions.xpl</String>
+                                    <String>toolchains/xslt-M4/testing/test-xml-conversions.xpl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1506,7 +1547,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/testing/tiny_metaschema.xml</String>
+                                    <String>toolchains/xslt-M4/testing/tiny_metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1526,7 +1567,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/testing/tiny.xml</String>
+                                    <String>toolchains/xslt-M4/testing/tiny.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1546,7 +1587,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/make-metaschema-xml-to-json-xslt.xpl</String>
+                                    <String>toolchains/xslt-M4/make-metaschema-xml-to-json-xslt.xpl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1606,7 +1647,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/converter-gen/supermodel-to-json.xsl</String>
+                                    <String>toolchains/xslt-M4/converter-gen/supermodel-to-json.xsl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1626,7 +1667,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/schema_gen/json-schema-metamap.xsl</String>
+                                    <String>toolchains/xslt-M4/schema_gen/json-schema-metamap.xsl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1646,7 +1687,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/testing/test-metaschema-conversions.xpl</String>
+                                    <String>toolchains/xslt-M4/testing/test-metaschema-conversions.xpl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1706,7 +1747,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/metaschema-compose.xpl</String>
+                                    <String>toolchains/xslt-M4/metaschema-compose.xpl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1746,7 +1787,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/make-metaschema-abstract-map.xpl</String>
+                                    <String>toolchains/xslt-M4/make-metaschema-abstract-map.xpl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1852,7 +1893,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/document/json/json-docs-hugo-uswds.xsl</String>
+                                    <String>toolchains/xslt-M4/document/json/json-docs-hugo-uswds.xsl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1872,7 +1913,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/document/metaschema-common-html.xsl</String>
+                                    <String>toolchains/xslt-M4/document/metaschema-common-html.xsl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -1892,7 +1933,7 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>toolchains/xslt-proto-v04/document/xml/xml-docs-hugo-uswds.xsl</String>
+                                    <String>toolchains/xslt-M4/document/xml/xml-docs-hugo-uswds.xsl</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
@@ -2038,7 +2079,7 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/nist-metaschema-COMPOSE.xsl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/nist-metaschema-COMPOSE.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String>${currentFileURL}</String>
@@ -2121,10 +2162,10 @@
                                     <String></String>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/util/augment-json-schema.xsl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/util/augment-json-schema.xsl</String>
                                 </field>
                                 <field name="inputXMLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/util/augment-json-schema.xsl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/util/augment-json-schema.xsl</String>
                                 </field>
                                 <field name="defaultScenario">
                                     <Boolean>false</Boolean>
@@ -2559,7 +2600,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/metaschema-compose.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/metaschema-compose.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -2861,7 +2902,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-css.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/make-metaschema-css.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -3029,7 +3070,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-json-schema.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/make-metaschema-json-schema.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -3263,7 +3304,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-model-maps.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/make-metaschema-model-maps.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -3431,7 +3472,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-metatron.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/make-metaschema-metatron.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -3698,7 +3739,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-xml-to-supermodel-xslt.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/make-metaschema-xml-to-supermodel-xslt.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -3877,7 +3918,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-xsd.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/make-metaschema-xsd.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -4045,7 +4086,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-docs.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/make-metaschema-docs.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -4257,7 +4298,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-model-maps.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/make-metaschema-model-maps.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -4380,7 +4421,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/make-metaschema-sandbox.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/make-metaschema-sandbox.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
@@ -4446,7 +4487,7 @@
                                         <xprocInputPort>
                                             <field name="urls">
                                                 <String-array>
-                                                    <String>${pdu}/toolchains/xslt-proto-v04/testing/models_metaschema.xml</String>
+                                                    <String>${pdu}/toolchains/xslt-M4/testing/models_metaschema.xml</String>
                                                 </String-array>
                                             </field>
                                             <field name="portName">
@@ -4456,7 +4497,7 @@
                                         <xprocInputPort>
                                             <field name="urls">
                                                 <String-array>
-                                                    <String>${pdu}/toolchains/xslt-proto-v04/testing/models-testdata.xml</String>
+                                                    <String>${pdu}/toolchains/xslt-M4/testing/models-testdata.xml</String>
                                                 </String-array>
                                             </field>
                                             <field name="portName">
@@ -4535,7 +4576,7 @@
                                         </xprocOutputPort>
                                         <xprocOutputPort>
                                             <field name="url">
-                                                <String>${pdu}/toolchains/xslt-proto-v04/testing/testdata-supermodel.xml</String>
+                                                <String>${pdu}/toolchains/xslt-M4/testing/testdata-supermodel.xml</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
@@ -4568,7 +4609,7 @@
                                         </xprocOutputPort>
                                         <xprocOutputPort>
                                             <field name="url">
-                                                <String>${pdu}/toolchains/xslt-proto-v04/testing/testdata-json-result.xml</String>
+                                                <String>${pdu}/toolchains/xslt-M4/testing/testdata-json-result.xml</String>
                                             </field>
                                             <field name="showInSequenceView">
                                                 <Boolean>true</Boolean>
@@ -4635,7 +4676,7 @@
                                     <null/>
                                 </field>
                                 <field name="inputXSLURL">
-                                    <String>${pdu}/toolchains/xslt-proto-v04/testing/test-xml-conversions.xpl</String>
+                                    <String>${pdu}/toolchains/xslt-M4/testing/test-xml-conversions.xpl</String>
                                 </field>
                                 <field name="inputXMLURL">
                                     <String></String>
