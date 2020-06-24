@@ -9,7 +9,7 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)/../../scripts/i
 
 # configuration
 UNIT_TESTS_DIR=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../test-suite/schema-generation")  
-METASCHEMA_SCHEMA=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/xslt-proto-v04/validate/metaschema.xsd")
+METASCHEMA_SCHEMA=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/xslt-M4/validate/metaschema.xsd")
 DEBUG="false"
 
 # Option defaults
@@ -207,7 +207,7 @@ if [ "$VERBOSE" = "true" ]; then
 fi
 
 # compile the schematron
-metaschema_lib=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/xslt-proto-v04/validate")
+metaschema_lib=$(get_abs_path "${METASCHEMA_SCRIPT_DIR}/../toolchains/xslt-M4/validate")
 schematron="$metaschema_lib/metaschema-check.sch"
 compiled_schematron="${SCRATCH_DIR}/metaschema-schematron-compiled.xsl"
 
