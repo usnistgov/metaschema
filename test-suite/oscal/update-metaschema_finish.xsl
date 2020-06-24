@@ -18,7 +18,7 @@
     
     <xsl:template match="processing-instruction()"/>
     
-    <xsl:variable as="xs:string" name="schema-dir">../../../toolchains/xslt-proto-v04/validate</xsl:variable>
+    <xsl:variable as="xs:string" name="schema-dir">../../../toolchains/xslt-M4/validate</xsl:variable>
     
     <xsl:template match="/">
         <xsl:text>&#xA;</xsl:text>
