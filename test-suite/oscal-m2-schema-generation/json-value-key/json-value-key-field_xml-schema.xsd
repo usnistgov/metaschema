@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:json-value-key-field="http://csrc.nist.gov/ns/metaschema/unit-test/json-value-key-field"
+           xmlns:oscal-prose="http://csrc.nist.gov/ns/metaschema/unit-test/json-value-key-field"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/ns/metaschema/unit-test/json-value-key-field"
+           version="1.0-milestone1">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Metaschema Unit Test: json-value-key-field</m:schema-name>
+         <m:schema-version>1.0-milestone1</m:schema-version>
+         <m:short-name>json-value-key-field</m:short-name>
+         <m:root>parent</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="parent" m:root="yes">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>parent</m:formal-name>
+            <m:description>parent assembly</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>parent</b>: parent assembly</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="json-value-key-field:prop" minOccurs="0" maxOccurs="unbounded"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="prop">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Property</m:formal-name>
+            <m:description>A value with a name, attributed to the containing control, subcontrol, part,
+     or group.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Property</b>: A value with a name, attributed to the containing control, subcontrol, part,
+     or group.</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:simpleContent>
+            <xs:extension base="xs:string">
+               <xs:attribute name="name" use="required" type="xs:string">
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Name</m:formal-name>
+                        <m:description>Identifying the purpose and intended use of the property, part or other object.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Name</b>: Identifying the purpose and intended use of the property, part or other object.</xs:documentation>
+                  </xs:annotation>
+               </xs:attribute>
+               <xs:attribute name="id" type="xs:NCName">
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Identifier</m:formal-name>
+                        <m:description>Unique identifier of the containing object</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Identifier</b>: Unique identifier of the containing object</xs:documentation>
+                  </xs:annotation>
+               </xs:attribute>
+               <xs:attribute name="ns" type="xs:string">
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Namespace</m:formal-name>
+                        <m:description>A namespace qualifying the name.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Namespace</b>: A namespace qualifying the name.</xs:documentation>
+                  </xs:annotation>
+               </xs:attribute>
+               <xs:attribute name="class" type="xs:string">
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Class</m:formal-name>
+                        <m:description>Indicating the type or classification of the containing object</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Class</b>: Indicating the type or classification of the containing object</xs:documentation>
+                  </xs:annotation>
+               </xs:attribute>
+            </xs:extension>
+         </xs:simpleContent>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>
