@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri-schema.json",
+    "$comment": "Metaschema Unit Test: UUID Datatype: JSON Schema",
+    "type": "object",
+    "definitions": {
+        "parent": {
+            "title": "parent",
+            "description": "parent assembly",
+            "$id": "#/definitions/parent",
+            "type": "object",
+            "properties": {
+                "uuid-flag": {
+                    "title": "Universally Unique Identifier Flag",
+                    "description": "A version 4 UUID per RFC 4122.",
+                    "type": "string",
+                    "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
+                },
+                "uuid-fields": {
+                    "anyOf": [
+                        {"$ref": "#/definitions/uuid-field"},
+                        {
+                            "type": "array",
+                            "items": {"$ref": "#/definitions/uuid-field"},
+                            "minItems": 2
+                        }
+                    ]
+                }
+            },
+            "required": ["uuid-flag"],
+            "additionalProperties": false
+        },
+        "uuid-field": {
+            "title": "Universally Unique Identifier Field",
+            "description": "A version 4 UUID per RFC 4122.",
+            "$id": "#/definitions/uuid-field",
+            "type": "string",
+            "pattern": "^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$"
+        }
+    },
+    "properties": {
+        "parent": {"$ref": "#/definitions/parent"}
+    },
+    "required": ["parent"]
+}

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:metaschema-group-as="http://csrc.nist.gov/ns/metaschema/unit-test/group-as"
+           xmlns:oscal-prose="http://csrc.nist.gov/ns/metaschema/unit-test/group-as"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/ns/metaschema/unit-test/group-as"
+           version="1.0-milestone1">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Metaschema Unit Test: group-as</m:schema-name>
+         <m:schema-version>1.0-milestone1</m:schema-version>
+         <m:short-name>metaschema-group-as</m:short-name>
+         <m:root>parent</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="parent" m:root="yes">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>parent</m:formal-name>
+            <m:description>parent assembly</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>parent</b>: parent assembly</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element ref="metaschema-group-as:prop" minOccurs="0" maxOccurs="1"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="prop">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>prop</m:formal-name>
+            <m:description>prop field</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>prop</b>: prop field</xs:documentation>
+      </xs:annotation>
+      <xs:complexType>
+         <xs:simpleContent>
+            <xs:extension base="xs:string"/>
+         </xs:simpleContent>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>
