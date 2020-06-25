@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- ** NOTES **
 - Need to check latest FR SSP template for "Privacy Impact Designation".
   Was it dropped in latest template, or is it missing from schema?
 -->
 <!-- OSCAL Implementation Layer: System Security Plan (SSP) METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
-<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd">
    <schema-name>OSCAL System Security Plan (SSP) Format</schema-name>
    <schema-version>1.0.0-milestone3</schema-version>
    <short-name>oscal-ssp</short-name>
@@ -51,7 +54,10 @@
          </field>
          <field ref="system-name" min-occurs="1"/>
          <field ref="system-name-short"/>
-         <define-field name="description" min-occurs="1" in-xml="WITH_WRAPPER">
+         <define-field name="description"
+                       as-type="markup-multiline"
+                       min-occurs="1"
+                       in-xml="WITH_WRAPPER">
             <formal-name>description field</formal-name>
             <description>A free-text description of the system.</description>
          </define-field>
@@ -73,6 +79,9 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <flag ref="class"/>
          </define-field>
          <define-assembly name="annotation" max-occurs="unbounded">
             <formal-name>Annotation</formal-name>
@@ -87,6 +96,12 @@
                      <enum value="cloud-service-model">The associated value is one of: saas, paas, iaas, or other.</enum>
                   </allowed-values>
                </constraint>
+            </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <define-flag name="value" as-type="string">
+               <formal-name>Value</formal-name>
+               <description>Indicates the value of the characteristic.</description>
             </define-flag>
             <model>
                <field ref="remarks" in-xml="WITH_WRAPPER"/>
@@ -200,12 +215,15 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <flag ref="class"/>
          </define-field>
          <assembly ref="annotation" max-occurs="unbounded">
             <group-as name="annotations" in-json="ARRAY"/>
             <!-- TODO: Model other specific names? -->
          </assembly>
-         <define-field name="link" max-occurs="unbounded">
+         <define-field name="link" as-type="markup-line" max-occurs="unbounded">
             <formal-name>link field</formal-name>
             <description>link field ... </description>
             <json-value-key>text</json-value-key>
@@ -220,6 +238,8 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="href" required="yes"/>
+            <flag ref="media-type"/>
          </define-field>
          <assembly ref="information-type" min-occurs="1" max-occurs="unbounded">
             <group-as name="information-types" in-json="ARRAY"/>
@@ -231,7 +251,7 @@
       <description>Contains details about one information type that is stored, processed, or transmitted by the system, such as privacy information, and those defined in <a href="https://doi.org/10.6028/NIST.SP.800-60v2r1">NIST SP 800-60</a>.</description>
       <flag ref="id"/>
       <model>
-         <define-field name="title" min-occurs="1">
+         <define-field name="title" as-type="markup-line" min-occurs="1">
             <formal-name>title field</formal-name>
             <description>A human readable name for the information type. This title should be meaningful within the context of the system.</description>
          </define-field>
@@ -401,7 +421,7 @@
       <description>A description of another authorized system from which this system inherits capabilities that satisfy security requirements. Another term for this concept is a <em>common control provider</em>.</description>
       <flag ref="id"/>
       <model>
-         <define-field name="title" min-occurs="1">
+         <define-field name="title" as-type="markup-line" min-occurs="1">
             <formal-name>title field</formal-name>
             <description>A human readable name for the leveraged authorization in the context of the system.</description>
          </define-field>
@@ -413,7 +433,7 @@
             <group-as name="annotations" in-json="ARRAY"/>
             <!-- TODO: Model specific names? -->
          </assembly>
-         <define-field name="link" max-occurs="unbounded">
+         <define-field name="link" as-type="markup-line" max-occurs="unbounded">
             <formal-name>link field</formal-name>
             <description>link field ... </description>
             <json-value-key>text</json-value-key>
@@ -427,8 +447,10 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="href" required="yes"/>
+            <flag ref="media-type"/>
          </define-field>
-         <define-field name="party-uuid" min-occurs="1">
+         <define-field name="party-uuid" as-type="uuid" min-occurs="1">
             <formal-name>party-uuid field</formal-name>
             <description>A reference to the party that manages the leveraged system.</description>
          </define-field>
@@ -463,7 +485,7 @@
                <p>A visual depiction of the system's authorization boundary.</p>
             </remarks>
          </assembly>
-         <define-field name="remarks" in-xml="WITH_WRAPPER">
+         <define-field name="remarks" as-type="markup-multiline" in-xml="WITH_WRAPPER">
             <formal-name>remarks field</formal-name>
             <description>Commentary about the system's authorization boundary that enhances the diagram.</description>
          </define-field>
@@ -478,7 +500,7 @@
          <description>The identifier for this diagram.</description>
       </define-flag>
       <model>
-         <define-field name="description" in-xml="WITH_WRAPPER">
+         <define-field name="description" as-type="markup-multiline" in-xml="WITH_WRAPPER">
             <formal-name>description field</formal-name>
             <description>A description of the diagram (e.g., alternate text). This can be used to support compliance with requirements from Section 508 of the United States Workforce Rehabilitation Act of 1973.</description>
          </define-field>
@@ -486,7 +508,7 @@
             <group-as name="properties" in-json="ARRAY"/>
             <!-- TODO: Model specific names? -->
          </field>
-         <define-field name="link" max-occurs="unbounded">
+         <define-field name="link" as-type="markup-line" max-occurs="unbounded">
             <formal-name>link field</formal-name>
             <description>link field ... </description>
             <json-value-key>text</json-value-key>
@@ -500,9 +522,11 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="href" required="yes"/>
+            <flag ref="media-type"/>
          </define-field>
          <field ref="caption"/>
-         <define-field name="remarks" in-xml="WITH_WRAPPER">
+         <define-field name="remarks" as-type="markup-multiline" in-xml="WITH_WRAPPER">
             <formal-name>remarks field</formal-name>
             <description>Commentary about the diagram that enhances it.</description>
          </define-field>
@@ -635,6 +659,12 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <define-flag name="value" as-type="string">
+               <formal-name>Value</formal-name>
+               <description>Indicates the value of the characteristic.</description>
+            </define-flag>
             <model>
                <field ref="remarks" in-xml="WITH_WRAPPER"/>
             </model>
@@ -674,7 +704,7 @@
       <formal-name>Privilege</formal-name>
       <description>Identifies a specific system privilege held by the user, along with an associated description and/or rationale for the privilege.</description>
       <model>
-         <define-field name="title" min-occurs="1">
+         <define-field name="title" as-type="markup-line" min-occurs="1">
             <formal-name>title field</formal-name>
             <description>A human readable name for the privilege.</description>
          </define-field>
@@ -698,15 +728,18 @@
       </define-flag>
       <flag ref="component-type" required="yes"/>
       <model>
-         <define-field name="title" min-occurs="1">
+         <define-field name="title" as-type="markup-line" min-occurs="1">
             <formal-name>title field</formal-name>
             <description>A human readable name for the system component.</description>
          </define-field>
-         <define-field name="description" min-occurs="1" in-xml="WITH_WRAPPER">
+         <define-field name="description"
+                       as-type="markup-multiline"
+                       min-occurs="1"
+                       in-xml="WITH_WRAPPER">
             <formal-name>description field</formal-name>
             <description>A description of the component, including information about its function.</description>
          </define-field>
-         <define-field name="purpose">
+         <define-field name="purpose" as-type="markup-line">
             <formal-name>purpose field</formal-name>
             <description>A summary of the technological or business purpose of the component.</description>
          </define-field>
@@ -737,6 +770,9 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <flag ref="class"/>
             <remarks>
                <p>Some specific property names can be assigned to the component at large, or can be defined when a component is associated with an <code>inventory-item</code> within the <code>implemented-component</code> construct.</p>
             </remarks>
@@ -757,6 +793,12 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <define-flag name="value" as-type="string">
+               <formal-name>Value</formal-name>
+               <description>Indicates the value of the characteristic.</description>
+            </define-flag>
             <model>
                <field ref="remarks" in-xml="WITH_WRAPPER"/>
             </model>
@@ -764,7 +806,7 @@
                <p>Some specific annotation names can be assigned to the component at large, or can be defined when a component is associated with an <code>inventory-item</code> within the <code>implemented-component</code> construct.</p>
             </remarks>
          </define-assembly>
-         <define-field name="link" max-occurs="unbounded">
+         <define-field name="link" as-type="markup-line" max-occurs="unbounded">
             <formal-name>link field</formal-name>
             <description>link field ... </description>
             <json-value-key>text</json-value-key>
@@ -786,6 +828,8 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="href" required="yes"/>
+            <flag ref="media-type"/>
          </define-field>
          <define-assembly name="status" min-occurs="1">
             <formal-name>Status</formal-name>
@@ -881,7 +925,7 @@
          </remarks>
       </flag>
       <model>
-         <define-field name="title">
+         <define-field name="title" as-type="markup-line">
             <formal-name>title field</formal-name>
             <description>A human readable name for the protocol (e.g., Transport Layer Security).</description>
          </define-field>
@@ -993,6 +1037,9 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <flag ref="class"/>
          </define-field>
          <define-assembly name="annotation" max-occurs="unbounded">
             <formal-name>Annotation</formal-name>
@@ -1011,11 +1058,17 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <define-flag name="value" as-type="string">
+               <formal-name>Value</formal-name>
+               <description>Indicates the value of the characteristic.</description>
+            </define-flag>
             <model>
                <field ref="remarks" in-xml="WITH_WRAPPER"/>
             </model>
          </define-assembly>
-         <define-field name="link" max-occurs="unbounded">
+         <define-field name="link" as-type="markup-line" max-occurs="unbounded">
             <formal-name>link field</formal-name>
             <description>link field ... </description>
             <json-value-key>text</json-value-key>
@@ -1029,6 +1082,8 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="href" required="yes"/>
+            <flag ref="media-type"/>
          </define-field>
          <define-assembly name="responsible-party" max-occurs="unbounded">
             <formal-name>Responsible Party</formal-name>
@@ -1121,6 +1176,9 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <flag ref="class"/>
          </define-field>
          <define-assembly name="annotation" max-occurs="unbounded">
             <formal-name>Annotation</formal-name>
@@ -1139,11 +1197,17 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <define-flag name="value" as-type="string">
+               <formal-name>Value</formal-name>
+               <description>Indicates the value of the characteristic.</description>
+            </define-flag>
             <model>
                <field ref="remarks" in-xml="WITH_WRAPPER"/>
             </model>
          </define-assembly>
-         <define-field name="link" max-occurs="unbounded">
+         <define-field name="link" as-type="markup-line" max-occurs="unbounded">
             <formal-name>link field</formal-name>
             <description>link field ... </description>
             <json-value-key>text</json-value-key>
@@ -1157,6 +1221,8 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="href" required="yes"/>
+            <flag ref="media-type"/>
          </define-field>
          <define-assembly name="responsible-party" max-occurs="unbounded">
             <formal-name>Responsible Party</formal-name>
