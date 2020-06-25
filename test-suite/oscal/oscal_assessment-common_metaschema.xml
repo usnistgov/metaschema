@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd">
    <schema-name>OSCAL Assessment Layer Format -- Common Modules</schema-name>
    <schema-version>1.0.0-milestone3</schema-version>
    <short-name>oscal-assessment-common</short-name>
@@ -120,11 +123,13 @@
             <formal-name>include-control field</formal-name>
             <description>Identifies a specific control to include.</description>
             <group-as name="include-controls" in-json="ARRAY"/>
+            <flag ref="control-id" required="yes"/>
          </define-field>
          <define-field name="exclude-control" min-occurs="0" max-occurs="unbounded">
             <formal-name>exclude-control field</formal-name>
             <description>Identifies a specific control to include.</description>
             <group-as name="exclude-controls" in-json="ARRAY"/>
+            <flag ref="control-id" required="yes"/>
          </define-field>
          <field ref="remarks"
                 in-xml="WITH_WRAPPER"
@@ -159,11 +164,13 @@
             <formal-name>include-objective field</formal-name>
             <description>Identifies a specific control to include.</description>
             <group-as name="include-objectives" in-json="ARRAY"/>
+            <flag ref="objective-id" required="yes"/>
          </define-field>
          <define-field name="exclude-objective" min-occurs="0" max-occurs="unbounded">
             <formal-name>exclude-objective field</formal-name>
             <description>Identifies a specific control to include.</description>
             <group-as name="exclude-objectives" in-json="ARRAY"/>
+            <flag ref="objective-id" required="yes"/>
          </define-field>
          <field ref="remarks"
                 in-xml="WITH_WRAPPER"
@@ -569,7 +576,10 @@
          <field ref="activity-uuid" min-occurs="0" max-occurs="unbounded">
             <group-as name="activity-uuids" in-json="ARRAY"/>
          </field>
-         <define-field name="role-id" min-occurs="0" max-occurs="unbounded">
+         <define-field name="role-id"
+                       as-type="NCName"
+                       min-occurs="0"
+                       max-occurs="unbounded">
             <formal-name>role-id field</formal-name>
             <description>Identifies roles associated with performing this task.</description>
             <group-as name="role-ids" in-json="ARRAY"/>
@@ -621,7 +631,10 @@
                <p>Provided as means of extending the OSCAL syntax.</p>
             </remarks>
          </assembly>
-         <define-field name="role-id" min-occurs="0" max-occurs="unbounded">
+         <define-field name="role-id"
+                       as-type="NCName"
+                       min-occurs="0"
+                       max-occurs="unbounded">
             <formal-name>role-id field</formal-name>
             <description>Identifies roles associated with performing this activity.</description>
             <group-as name="role-ids" in-json="ARRAY"/>
@@ -661,7 +674,10 @@
                <p>Provided as means of extending the OSCAL syntax.</p>
             </remarks>
          </assembly>
-         <define-field name="role-id" min-occurs="0" max-occurs="unbounded">
+         <define-field name="role-id"
+                       as-type="NCName"
+                       min-occurs="0"
+                       max-occurs="unbounded">
             <formal-name>role-id field</formal-name>
             <description>Identifies roles associated with this activity exclusion.</description>
             <group-as name="role-ids" in-json="ARRAY"/>
@@ -702,11 +718,17 @@
                <p>Provided as means of extending the OSCAL syntax.</p>
             </remarks>
          </assembly>
-         <define-field name="start" min-occurs="1" max-occurs="1">
+         <define-field name="start"
+                       as-type="dateTime-with-timezone"
+                       min-occurs="1"
+                       max-occurs="1">
             <formal-name>start field</formal-name>
             <description>Date/time stamp identifying the start of the evidence collection reflected in these results.</description>
          </define-field>
-         <define-field name="end" min-occurs="1" max-occurs="1">
+         <define-field name="end"
+                       as-type="dateTime-with-timezone"
+                       min-occurs="1"
+                       max-occurs="1">
             <formal-name>end field</formal-name>
             <description>Date/time stamp identifying the end of the evidence collection reflected in these results. In a continuous motoring scenario, this may contain the same value as start if appropriate.</description>
          </define-field>
@@ -740,7 +762,10 @@
                <p>Provided as means of extending the OSCAL syntax.</p>
             </remarks>
          </assembly>
-         <define-field name="date-time-stamp" min-occurs="1" max-occurs="1">
+         <define-field name="date-time-stamp"
+                       as-type="dateTime-with-timezone"
+                       min-occurs="1"
+                       max-occurs="1">
             <formal-name>date-time-stamp field</formal-name>
             <description>Date/time stamp identifying when the finding information was collected.</description>
          </define-field>
@@ -847,6 +872,20 @@
             <formal-name>origin field</formal-name>
             <description>Identifies the source of the finding, such as a tool, interviewed person, or activity.</description>
             <group-as name="origins" in-json="ARRAY"/>
+            <flag ref="uuid-ref" required="yes"/>
+            <define-flag name="type" required="yes">
+               <formal-name>type flag</formal-name>
+               <description>type flag ... </description>
+               <constraint>
+                  <allowed-values allow-other="no">
+                     <enum value="tool">An assessment tool, defined in the assets section of the assessment plan or results.</enum>
+                     <enum value="test-method">A test method defined in the assessment-activities section of the assessment plan or results.</enum>
+                     <enum value="task">A task defined in the schedule of the assessment plan or results.</enum>
+                     <enum value="included-activity">An assessment activity defined in the assessment-activities section of the assessment plan or results.</enum>
+                     <enum value="other">The UUID points elsewhere in the this file or an imported file.</enum>
+                  </allowed-values>
+               </constraint>
+            </define-flag>
          </define-field>
          <assembly ref="relevant-evidence" min-occurs="0" max-occurs="unbounded">
             <group-as name="evidence-group" in-json="ARRAY"/>
@@ -1237,6 +1276,17 @@
             <formal-name>remediation-origin field</formal-name>
             <description>Points to the source of the recommendation</description>
             <group-as name="origins" in-json="ARRAY"/>
+            <flag ref="uuid-ref" required="yes"/>
+            <define-flag name="type">
+               <formal-name>type flag</formal-name>
+               <description>type flag ... </description>
+               <constraint>
+                  <allowed-values allow-other="yes">
+                     <enum value="party">The UUID of the person or organization who made the recommendation</enum>
+                     <enum value="tool">The UUID of the tool that made the recommendation</enum>
+                  </allowed-values>
+               </constraint>
+            </define-flag>
          </define-field>
          <assembly ref="required" min-occurs="0" max-occurs="unbounded">
             <group-as name="requirements" in-json="ARRAY"/>

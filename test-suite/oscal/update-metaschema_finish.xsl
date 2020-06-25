@@ -18,7 +18,7 @@
     
     <xsl:template match="processing-instruction()"/>
     
-    <xsl:variable as="xs:string" name="schema-dir">../../../toolchains/xslt-M4/validate</xsl:variable>
+    <xsl:variable as="xs:string" name="schema-dir">../../toolchains/xslt-M4/validate</xsl:variable>
     
     <xsl:template match="/">
         <xsl:text>&#xA;</xsl:text>
@@ -36,7 +36,7 @@
     <!--<xsl:template match="METASCHEMA/@xsi:schemaLocation"/>-->
     
     <xsl:template match="METASCHEMA/@xsi:schemaLocation">
-        <xsl:attribute name="xsi:schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">{ $schema-dir }/metaschema.xsd</xsl:attribute>
+        <xsl:attribute name="xsi:schemaLocation" namespace="http://www.w3.org/2001/XMLSchema-instance">http://csrc.nist.gov/ns/oscal/metaschema/1.0 { $schema-dir }/metaschema.xsd</xsl:attribute>
     </xsl:template>
     
     
