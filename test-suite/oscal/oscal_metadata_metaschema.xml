@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- OSCAL CATALOG METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
-<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd">
    <schema-name>OSCAL Document Metadata Description</schema-name>
    <schema-version>1.0.0-milestone3</schema-version>
    <short-name>oscal-metadata</short-name>
@@ -54,6 +57,9 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="id"/>
+            <flag ref="ns"/>
+            <flag ref="class"/>
          </define-field>
          <field ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
@@ -142,7 +148,7 @@
          <field ref="prop" max-occurs="unbounded">
             <group-as name="properties" in-json="ARRAY"/>
          </field>
-         <define-field name="link" max-occurs="unbounded">
+         <define-field name="link" as-type="markup-line" max-occurs="unbounded">
             <formal-name>link field</formal-name>
             <description>link field ... </description>
             <json-value-key>text</json-value-key>
@@ -156,6 +162,8 @@
                   </allowed-values>
                </constraint>
             </define-flag>
+            <flag ref="href" required="yes"/>
+            <flag ref="media-type"/>
          </define-field>
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
