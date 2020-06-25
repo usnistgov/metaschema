@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd">
    <schema-name>OSCAL Implementation Common Information</schema-name>
    <schema-version>1.0.0-milestone3</schema-version>
    <short-name>oscal-implementation-common</short-name>
