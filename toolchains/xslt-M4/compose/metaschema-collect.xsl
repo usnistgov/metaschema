@@ -31,14 +31,14 @@
     <xsl:template match="METASCHEMA" mode="acquire">
         <xsl:copy>
             <xsl:copy-of select="@* except @xsi:*"/>
-            <xsl:attribute name="module" select="document-uri(/)"/>
+            <xsl:attribute name="module" select="base-uri(.)"/>
             <xsl:apply-templates mode="#current"/>
         </xsl:copy>
     </xsl:template>
   
     <xsl:template match="import" mode="acquire">
         <xsl:param name="so-far" tunnel="yes" required="yes"/>
-        <xsl:variable name="uri" select="resolve-uri(@href,document-uri(/))"/>
+        <xsl:variable name="uri" select="resolve-uri(@href,base-uri(parent::METASCHEMA))"/>
         <xsl:choose>
             <xsl:when test="$uri = $so-far">
                 <xsl:comment expand-text="true">Warning: circular import of { $uri } skipped</xsl:comment>
