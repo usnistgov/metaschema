@@ -26,11 +26,31 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>test-suite/oscal/oscal_catalog_metaschema.xml</String>
+                                    <String>test-suite/schema-generation/flag/flag-basic_metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>Compose (this) metaschema (v04 XProc)</String>
+                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XPROC</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
+                                        <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/oscal/v1.0Milestone3/oscal_ssp_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Convert oscal-m2 Metaschema to xslt-M4 Metaschema</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -69,11 +89,11 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>test-suite/oscal/v1.0Milestone3/oscal_ssp_metaschema.xml</String>
+                                    <String>test-suite/oscal/mini_metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>Convert oscal-m2 Metaschema to xslt-M4 Metaschema</String>
+                                        <String>Compose (this) metaschema (v04 XProc)</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
@@ -89,11 +109,11 @@
                             </scenarioAssociation>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>test-suite/schema-generation/flag/flag-basic_metaschema.xml</String>
+                                    <String>test-suite/oscal/oscal_catalog_metaschema.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>Produce JSON Schema for (this) metaschema (v04 XProc)</String>
+                                        <String>Compose (this) metaschema (v04 XProc)</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
