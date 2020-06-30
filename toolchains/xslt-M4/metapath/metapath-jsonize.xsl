@@ -291,12 +291,16 @@
     <xsl:function name="m:jsonization" as="element()">
         <xsl:param name="metapath" as="xs:string" required="yes"/>
         <xsl:variable name="path-map" select="m:path-map($metapath)"/>
-        <!--<xsl:variable name="alternatives" as="xs:string*">
-            <xsl:apply-templates select="$path-map" mode="cast-path"/>
-        </xsl:variable>
-        <xsl:variable name="keepers" select="$alternatives[not(ends-with(.,'()')) or $diagnostic]"/>
-        <xsl:value-of select="string-join($keepers,' | ')"/>-->
-        <xsl:apply-templates select="$path-map" mode="cast-path"/>
+        <xsl:choose>
+            <xsl:when test="$path-map instance of element()">
+                <xsl:apply-templates select="$path-map" mode="cast-path"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <ERROR xsl:expand-text="true">(: PARSING '{$metapath}' RETURNS {$path-map => normalize-space() } :)</ERROR>
+            </xsl:otherwise>
+        </xsl:choose>
+        
+        
     </xsl:function>
     
     

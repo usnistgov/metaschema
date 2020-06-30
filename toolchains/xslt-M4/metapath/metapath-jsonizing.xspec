@@ -25,11 +25,20 @@
             <x:param>/</x:param>
         </x:call>
         <x:expect label="structure XPath to root">
-                <m:alternative xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
-                    <m:path>/</m:path>
-                </m:alternative>
-            </x:expect>
+            <m:alternative xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+                <m:path>/</m:path>
+            </m:alternative>
+        </x:expect>
     </x:scenario>
+    
+    <x:scenario label="Not a path">
+        <x:call function="m:jsonize-path">
+            <x:param>/(()))</x:param>
+        </x:call>
+        <x:expect label="An error report"
+            select="'(: PARSING ''/(()))'' RETURNS syntax error, found '')'' while expecting EOF at line 1, column 6: ...)... :)'"/>
+    </x:scenario>
+    
     
     <x:scenario label="Nominal document element">
         <x:call function="m:jsonize-path">
@@ -64,39 +73,28 @@
             select="'/j:map/j:map[@key=''EVERYTHING''][true()]'"/>
     </x:scenario>
     
-    <!--<x:scenario label="Path breakdown">
-        <x:context mode="cast-path">
-            <m:alternative xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
-                <m:path>/EVERYTHING[field-1only=''x'']</m:path>
-            </m:alternative>
-        </x:context>
-        <x:expect>
-            <boo/>
-        </x:expect>
-    </x:scenario>-->
-    
-    <!--<x:scenario label="Absolute path to document element, with predicate including a relative path">
+    <x:scenario label="Absolute path to document element, with predicate including a relative path">
         <x:call function="m:jsonize-path">
-            <x:param>/EVERYTHING[field-1only=''x'']</x:param>
+            <x:param>/EVERYTHING[field-1only='x']</x:param>
         </x:call>
         <x:expect label="within the predicate a relative path must also be cast"
             select="'/j:map/j:map[@key=''EVERYTHING''][j:string[@key=''field-1only'']=''x'']'"/>
-    </x:scenario>-->
+    </x:scenario>
 
-    <!--<x:scenario label="Absolute path showing two steps into a recursive structure">
+    <x:scenario label="Absolute path showing two steps into a recursive structure">
         <x:call function="m:jsonize-path">
             <x:param>/EVERYTHING/EVERYTHING</x:param>
         </x:call>
         <x:expect label="from the root, the first step isolates a singleton"
             select="'/j:map/j:map[@key=''EVERYTHING'']/j:array[@key=''everything-recursive'']/j:map'"/>
-    </x:scenario>-->
+    </x:scenario>
 
-    <!--<x:scenario label="Relative path showing three steps into a recursive structure">
+    <x:scenario label="Relative path showing three steps into a recursive structure">
         <x:call function="m:jsonize-path">
             <x:param>EVERYTHING/EVERYTHING/EVERYTHING</x:param>
         </x:call>
         <x:expect label="in a relative path each step shows all possibilities at that step"
             select="'(j:map[@key=''EVERYTHING''] | j:array[@key=''everything-recursive'']/j:map)/j:array[@key=''everything-recursive'']/j:map/j:array[@key=''everything-recursive'']/j:map'"/>
-    </x:scenario>-->
+    </x:scenario>
 
 </x:description>

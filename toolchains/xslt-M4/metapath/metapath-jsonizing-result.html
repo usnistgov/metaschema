@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>Test Report for C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl (passed: 7 / pending: 0 / failed: 0 / total: 7)</title>
+      <title>Test Report for C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl (passed: 11 / pending: 0 / failed: 0 / total: 11)</title>
       <style type="text/css">/****************************************************************************/
 /*  File:       test-report.css                                             */
 /*  Author:     Jeni Tennison                                               */
@@ -511,7 +511,7 @@ span.scenario-totals {float: right; text-align: right}
       <h1>Test Report</h1>
       <p>Stylesheet: <a href="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl">C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl</a></p>
       <p>XSpec: <a href="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonizing.xspec">C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonizing.xspec</a></p>
-      <p>Tested: 30 June 2020 at 16:42</p>
+      <p>Tested: 30 June 2020 at 17:11</p>
       <h2>Contents</h2>
       <table class="xspec">
          <colgroup>
@@ -524,10 +524,10 @@ span.scenario-totals {float: right; text-align: right}
          <thead>
             <tr>
                <th></th>
-               <th class="totals">passed: 7</th>
+               <th class="totals">passed: 11</th>
                <th class="totals">pending: 0</th>
                <th class="totals">failed: 0</th>
-               <th class="totals">total: 7</th>
+               <th class="totals">total: 11</th>
             </tr>
          </thead>
          <tbody>
@@ -553,28 +553,56 @@ span.scenario-totals {float: right; text-align: right}
                <th class="totals">1</th>
             </tr>
             <tr class="successful">
-               <th><a href="#top_scenario4">Nominal document element</a></th>
+               <th><a href="#top_scenario4">Not a path</a></th>
                <th class="totals">1</th>
                <th class="totals">0</th>
                <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
             <tr class="successful">
-               <th><a href="#top_scenario5">Absolute path to specified document element</a></th>
+               <th><a href="#top_scenario5">Nominal document element</a></th>
                <th class="totals">1</th>
                <th class="totals">0</th>
                <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
             <tr class="successful">
-               <th><a href="#top_scenario6">A path to a node not described in the definition map</a></th>
+               <th><a href="#top_scenario6">Absolute path to specified document element</a></th>
                <th class="totals">1</th>
                <th class="totals">0</th>
                <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
             <tr class="successful">
-               <th><a href="#top_scenario7">Absolute path to document element, with predicate</a></th>
+               <th><a href="#top_scenario7">A path to a node not described in the definition map</a></th>
+               <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
+               <th class="totals">1</th>
+            </tr>
+            <tr class="successful">
+               <th><a href="#top_scenario8">Absolute path to document element, with predicate</a></th>
+               <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
+               <th class="totals">1</th>
+            </tr>
+            <tr class="successful">
+               <th><a href="#top_scenario9">Absolute path to document element, with predicate including a relative path</a></th>
+               <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
+               <th class="totals">1</th>
+            </tr>
+            <tr class="successful">
+               <th><a href="#top_scenario10">Absolute path showing two steps into a recursive structure</a></th>
+               <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
+               <th class="totals">1</th>
+            </tr>
+            <tr class="successful">
+               <th><a href="#top_scenario11">Relative path showing three steps into a recursive structure</a></th>
                <th class="totals">1</th>
                <th class="totals">0</th>
                <th class="totals">0</th>
@@ -640,8 +668,27 @@ span.scenario-totals {float: right; text-align: right}
          </table>
       </div>
       <div id="top_scenario4">
-         <h2 class="successful">Nominal document element<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <h2 class="successful">Not a path<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
          <table class="xspec" id="table_scenario4">
+            <colgroup>
+               <col style="width:75%" />
+               <col style="width:25%" />
+            </colgroup>
+            <tbody>
+               <tr class="successful">
+                  <th>Not a path</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
+               </tr>
+               <tr class="successful">
+                  <td>An error report</td>
+                  <td>Success</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+      <div id="top_scenario5">
+         <h2 class="successful">Nominal document element<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario5">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
@@ -658,9 +705,9 @@ span.scenario-totals {float: right; text-align: right}
             </tbody>
          </table>
       </div>
-      <div id="top_scenario5">
+      <div id="top_scenario6">
          <h2 class="successful">Absolute path to specified document element<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
-         <table class="xspec" id="table_scenario5">
+         <table class="xspec" id="table_scenario6">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
@@ -677,9 +724,9 @@ span.scenario-totals {float: right; text-align: right}
             </tbody>
          </table>
       </div>
-      <div id="top_scenario6">
+      <div id="top_scenario7">
          <h2 class="successful">A path to a node not described in the definition map<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
-         <table class="xspec" id="table_scenario6">
+         <table class="xspec" id="table_scenario7">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
@@ -696,9 +743,9 @@ span.scenario-totals {float: right; text-align: right}
             </tbody>
          </table>
       </div>
-      <div id="top_scenario7">
+      <div id="top_scenario8">
          <h2 class="successful">Absolute path to document element, with predicate<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
-         <table class="xspec" id="table_scenario7">
+         <table class="xspec" id="table_scenario8">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
@@ -710,6 +757,63 @@ span.scenario-totals {float: right; text-align: right}
                </tr>
                <tr class="successful">
                   <td>logical predicates are preserved</td>
+                  <td>Success</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+      <div id="top_scenario9">
+         <h2 class="successful">Absolute path to document element, with predicate including a relative path<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario9">
+            <colgroup>
+               <col style="width:75%" />
+               <col style="width:25%" />
+            </colgroup>
+            <tbody>
+               <tr class="successful">
+                  <th>Absolute path to document element, with predicate including a relative path</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
+               </tr>
+               <tr class="successful">
+                  <td>within the predicate a relative path must also be cast</td>
+                  <td>Success</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+      <div id="top_scenario10">
+         <h2 class="successful">Absolute path showing two steps into a recursive structure<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario10">
+            <colgroup>
+               <col style="width:75%" />
+               <col style="width:25%" />
+            </colgroup>
+            <tbody>
+               <tr class="successful">
+                  <th>Absolute path showing two steps into a recursive structure</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
+               </tr>
+               <tr class="successful">
+                  <td>from the root, the first step isolates a singleton</td>
+                  <td>Success</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+      <div id="top_scenario11">
+         <h2 class="successful">Relative path showing three steps into a recursive structure<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario11">
+            <colgroup>
+               <col style="width:75%" />
+               <col style="width:25%" />
+            </colgroup>
+            <tbody>
+               <tr class="successful">
+                  <th>Relative path showing three steps into a recursive structure</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
+               </tr>
+               <tr class="successful">
+                  <td>in a relative path each step shows all possibilities at that step</td>
                   <td>Success</td>
                </tr>
             </tbody>
