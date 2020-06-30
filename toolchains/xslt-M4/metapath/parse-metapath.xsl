@@ -145,10 +145,22 @@
 
     <!-- for path a[x]/b/c[y][z] and prefix p, returns "exists(self::p:c:[p:y][p:z]/parent::p:b/ancestor::p:a[p:x]) "-->
     
+    <xsl:variable name="debug-serializer" as="element()">
+        <output:serialization-parameters
+            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
+            <output:method value="xml"/>
+            <output:version value="1.0"/>
+            <output:indent value="yes"/>
+        </output:serialization-parameters>
+    </xsl:variable>   
+    
+    
     <xsl:function name="m:rewrite-match-as-test" as="xs:string?">
         <xsl:param name="who" as="item()?"/>
         <xsl:param name="ns-prefix" as="xs:string"/>
         <xsl:variable name="alternatives" as="element()*" select="m:prefixed-step-map(string($who), $ns-prefix)"/>
+        
         <xsl:for-each-group select="$alternatives[exists(m:step/m:node)]" group-by="true()">
             <xsl:value-of>
                 <xsl:text>exists(</xsl:text>
@@ -169,7 +181,7 @@
         "a//b" becomes self::b/ancestor-or-self::*/parent::a -->
     
     <xsl:template priority="3" match="m:step[m:axis='attribute']" mode="invert-path">
-        <xsl:text expand-text="true">self::/attribute({ m:node })</xsl:text>
+        <xsl:text expand-text="true">self::attribute({ m:node })</xsl:text>
         <xsl:apply-templates mode="#current" select="m:filter"/>
     </xsl:template>
     
