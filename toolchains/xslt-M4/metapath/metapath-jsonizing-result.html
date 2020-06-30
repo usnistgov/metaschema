@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>Test Report for C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl (passed: 0 / pending: 0 / failed: 5 / total: 5)</title>
+      <title>Test Report for C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl (passed: 7 / pending: 0 / failed: 0 / total: 7)</title>
       <style type="text/css">/****************************************************************************/
 /*  File:       test-report.css                                             */
 /*  Author:     Jeni Tennison                                               */
@@ -147,9 +147,9 @@ dd pre, li pre {
 	}
 
 /* fonts */
-body {
+body, table {
 	font-family: sans-serif;
-	font-size: small;
+	font-size: 12px;
 	}
 
 h1, h2, h3, h4, h5, h6 {
@@ -157,12 +157,12 @@ h1, h2, h3, h4, h5, h6 {
 	}
 
 h1 {
-	font-size: 173%;
+	font-size: 1.7em;
 	font-weight: bold;
 	}
 
 h2 {
-	font-size: 144%;
+	font-size: 1.4em;
 	font-weight: bold;
 	}
 
@@ -201,12 +201,12 @@ div.example, .sidebar {
 
 .note, .link {
 	font-family: sans-serif;
-	font-size: 83%;
+	/*font-size: 83%;*/
 	}
 
 .example, .string, .rtf, .code, pre, code {
 	font-family: monospace;
-  font-size: 83%;
+  /*font-size: 83%;*/
 	}
 
 .boolean {
@@ -388,6 +388,7 @@ a {
 
 body > h2:first-of-type {
     background: inherit;
+    font-size: 1.7em;
     margin-bottom: 0;
 }
 
@@ -403,8 +404,8 @@ div > table > tbody > tr > th:first-child {
     color: #474747;
 }
 
-.xspec tbody th { font-weight: normal; font-size: 0.8em; border-top: 1px #666 solid; }
-.xspec tbody td { font-size: 0.8em; color: #262626; }
+.xspec tbody th { font-weight: normal; /*font-size: 0.8em;*/ border-top: 1px #666 solid; }
+.xspec tbody td { /*font-size: 0.8em;*/ color: #262626; }
 
 .successful { background-color: #CFC; }
 .pending { background-color: #EEE; color: #666; }
@@ -458,6 +459,25 @@ span.scenario-totals {float: right; text-align: right}
 	box-shadow: -0.5rem 0 0 0 #FC511D;
 }
 
+/* hint button */
+.xTestReport {
+	display: grid;
+	grid-template-areas:
+		"title title"
+		"table hint";
+	grid-template-columns: 1fr 1em;
+}
+.xTestReportTitle {
+	grid-area: title
+}
+.xTestReportHint {
+	grid-area: hint;
+	text-shadow: 1px 2px 3px gray;
+}
+.xspecResult {
+	grid-area: table;
+}
+
 /* ------------------------------------------------------------------------ */
 /*  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS COMMENT.               */
 /*                                                                          */
@@ -491,7 +511,7 @@ span.scenario-totals {float: right; text-align: right}
       <h1>Test Report</h1>
       <p>Stylesheet: <a href="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl">C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl</a></p>
       <p>XSpec: <a href="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonizing.xspec">C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/metapath/metapath-jsonizing.xspec</a></p>
-      <p>Tested: 21 May 2020 at 14:07</p>
+      <p>Tested: 30 June 2020 at 16:24</p>
       <h2>Contents</h2>
       <table class="xspec">
          <colgroup>
@@ -504,304 +524,196 @@ span.scenario-totals {float: right; text-align: right}
          <thead>
             <tr>
                <th></th>
-               <th class="totals">passed: 0</th>
+               <th class="totals">passed: 7</th>
                <th class="totals">pending: 0</th>
-               <th class="totals">failed: 5</th>
-               <th class="totals">total: 5</th>
+               <th class="totals">failed: 0</th>
+               <th class="totals">total: 7</th>
             </tr>
          </thead>
          <tbody>
-            <tr class="failed">
-               <th><a href="#top-level-scenario-d5e4">Path to root</a></th>
+            <tr class="successful">
+               <th><a href="#top_scenario1">Path to root</a></th>
+               <th class="totals">1</th>
                <th class="totals">0</th>
                <th class="totals">0</th>
                <th class="totals">1</th>
+            </tr>
+            <tr class="successful">
+               <th><a href="#top_scenario2">Path to root (structure)</a></th>
+               <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
+               <th class="totals">1</th>
+            </tr>
+            <tr class="successful">
+               <th><a href="#top_scenario3">Path to root (path map)</a></th>
+               <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
+               <th class="totals">1</th>
+            </tr>
+            <tr class="successful">
+               <th><a href="#top_scenario4">Nominal document element</a></th>
+               <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
-            <tr class="failed">
-               <th><a href="#top-level-scenario-d5e29">Nominal document element</a></th>
-               <th class="totals">0</th>
-               <th class="totals">0</th>
+            <tr class="successful">
+               <th><a href="#top_scenario5">Absolute path to specified document element</a></th>
                <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
-            <tr class="failed">
-               <th><a href="#top-level-scenario-d5e78">Absolute path to specified document element</a></th>
-               <th class="totals">0</th>
-               <th class="totals">0</th>
+            <tr class="successful">
+               <th><a href="#top_scenario6">A path to a node not described in the definition map</a></th>
                <th class="totals">1</th>
-               <th class="totals">1</th>
-            </tr>
-            <tr class="failed">
-               <th><a href="#top-level-scenario-d5e114">A path to a node not described in the definition map</a></th>
-               <th class="totals">0</th>
-               <th class="totals">0</th>
-               <th class="totals">1</th>
-               <th class="totals">1</th>
-            </tr>
-            <tr class="failed">
-               <th><a href="#top-level-scenario-d5e143">Absolute path to document element, with predicate</a></th>
                <th class="totals">0</th>
                <th class="totals">0</th>
                <th class="totals">1</th>
+            </tr>
+            <tr class="successful">
+               <th><a href="#top_scenario7">Absolute path to document element, with predicate</a></th>
+               <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
          </tbody>
       </table>
-      <div id="top-level-scenario-d5e4">
-         <h2 class="failed">Path to root<span class="scenario-totals">passed: 0 / pending: 0 / failed: 1 / total: 1</span></h2>
-         <table class="xspec" id="t-d5e4">
+      <div id="top_scenario1">
+         <h2 class="successful">Path to root<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario1">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
             </colgroup>
             <tbody>
-               <tr class="failed">
+               <tr class="successful">
                   <th>Path to root</th>
-                  <th>passed: 0 / pending: 0 / failed: 1 / total: 1</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
                </tr>
-               <tr class="failed">
-                  <td><a href="#test-d5e21">path to root</a></td>
-                  <td>Failure</td>
+               <tr class="successful">
+                  <td>path to root</td>
+                  <td>Success</td>
                </tr>
             </tbody>
          </table>
-         <div id="scenario-d5e4">
-            <h3>Path to root</h3>
-            <div id="test-d5e21">
-               <h4>path to root</h4>
-               <table class="xspecResult">
-                  <thead>
-                     <tr>
-                        <th>Result</th>
-                        <th>Expected Result</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <p>XPath <code class="diff">/element()</code> from:</p>
-                           <pre>&lt;<span class="diff">m:alternative</span> xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"&gt;
-   &lt;<span class="diff">m:path</span>&gt;<span class="diff">/j:map/</span>&lt;/m:path&gt;
-&lt;/m:alternative&gt;</pre>
-                        </td>
-                        <td>
-                           <pre>'/j:map'</pre>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-         </div>
       </div>
-      <div id="top-level-scenario-d5e29">
-         <h2 class="failed">Nominal document element<span class="scenario-totals">passed: 0 / pending: 0 / failed: 1 / total: 1</span></h2>
-         <table class="xspec" id="t-d5e29">
+      <div id="top_scenario2">
+         <h2 class="successful">Path to root (structure)<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario2">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
             </colgroup>
             <tbody>
-               <tr class="failed">
+               <tr class="successful">
+                  <th>Path to root (structure)</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
+               </tr>
+               <tr class="successful">
+                  <td>structured JSON path to root</td>
+                  <td>Success</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+      <div id="top_scenario3">
+         <h2 class="successful">Path to root (path map)<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario3">
+            <colgroup>
+               <col style="width:75%" />
+               <col style="width:25%" />
+            </colgroup>
+            <tbody>
+               <tr class="successful">
+                  <th>Path to root (path map)</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
+               </tr>
+               <tr class="successful">
+                  <td>structure XPath to root</td>
+                  <td>Success</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+      <div id="top_scenario4">
+         <h2 class="successful">Nominal document element<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario4">
+            <colgroup>
+               <col style="width:75%" />
+               <col style="width:25%" />
+            </colgroup>
+            <tbody>
+               <tr class="successful">
                   <th>Nominal document element</th>
-                  <th>passed: 0 / pending: 0 / failed: 1 / total: 1</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
                </tr>
-               <tr class="failed">
-                  <td><a href="#test-d5e70">the definition map indicates two possible objects at the root</a></td>
-                  <td>Failure</td>
+               <tr class="successful">
+                  <td>the definition map indicates two possible objects at the root</td>
+                  <td>Success</td>
                </tr>
             </tbody>
          </table>
-         <div id="scenario-d5e29">
-            <h3>Nominal document element</h3>
-            <div id="test-d5e70">
-               <h4>the definition map indicates two possible objects at the root</h4>
-               <table class="xspecResult">
-                  <thead>
-                     <tr>
-                        <th>Result</th>
-                        <th>Expected Result</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <p>XPath <code class="diff">/element()</code> from:</p>
-                           <pre>&lt;<span class="diff">m:alternative</span> xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"&gt;
-   &lt;<span class="diff">m:path</span>&gt;<span class="diff">/j:map/</span>&lt;<span class="diff">split</span> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"&gt;<span class="diff">(</span>&lt;<span class="diff">step</span>&gt;
-            &lt;<span class="diff">axis</span> /&gt;
-            &lt;<span class="diff">node</span>&gt;
-               &lt;<span class="diff">cast</span>&gt;<span class="diff">j:map[@key='EVERYTHING']</span>&lt;/cast&gt;
-            &lt;/node&gt;
-         &lt;/step&gt;<span class="diff"> | </span>&lt;<span class="diff">step</span>&gt;
-            &lt;<span class="diff">axis</span> /&gt;
-            &lt;<span class="diff">node</span>&gt;
-               &lt;<span class="diff">cast</span>&gt;<span class="diff">j:map[@key='ASSEMBLY-1ONLY']</span>&lt;/cast&gt;
-            &lt;/node&gt;
-         &lt;/step&gt;<span class="diff">)</span>&lt;/split&gt;
-   &lt;/m:path&gt;
-&lt;/m:alternative&gt;</pre>
-                        </td>
-                        <td>
-                           <pre>'/j:map/(j:map[@key=''EVERYTHING''] | j:map[@key=''ASSEMBLY-1ONLY''])'</pre>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-         </div>
       </div>
-      <div id="top-level-scenario-d5e78">
-         <h2 class="failed">Absolute path to specified document element<span class="scenario-totals">passed: 0 / pending: 0 / failed: 1 / total: 1</span></h2>
-         <table class="xspec" id="t-d5e78">
+      <div id="top_scenario5">
+         <h2 class="successful">Absolute path to specified document element<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario5">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
             </colgroup>
             <tbody>
-               <tr class="failed">
+               <tr class="successful">
                   <th>Absolute path to specified document element</th>
-                  <th>passed: 0 / pending: 0 / failed: 1 / total: 1</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
                </tr>
-               <tr class="failed">
-                  <td><a href="#test-d5e106">definition map indicates two possible roots</a></td>
-                  <td>Failure</td>
+               <tr class="successful">
+                  <td>definition map indicates two possible roots</td>
+                  <td>Success</td>
                </tr>
             </tbody>
          </table>
-         <div id="scenario-d5e78">
-            <h3>Absolute path to specified document element</h3>
-            <div id="test-d5e106">
-               <h4>definition map indicates two possible roots</h4>
-               <table class="xspecResult">
-                  <thead>
-                     <tr>
-                        <th>Result</th>
-                        <th>Expected Result</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <p>XPath <code class="diff">/element()</code> from:</p>
-                           <pre>&lt;<span class="diff">m:alternative</span> xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"&gt;
-   &lt;<span class="diff">m:path</span>&gt;<span class="diff">/j:map/</span>&lt;<span class="diff">step</span> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"&gt;
-         &lt;<span class="diff">axis</span> /&gt;
-         &lt;<span class="diff">node</span>&gt;
-            &lt;<span class="diff">cast</span>&gt;<span class="diff">j:map[@key='EVERYTHING']</span>&lt;/cast&gt;
-         &lt;/node&gt;
-      &lt;/step&gt;
-   &lt;/m:path&gt;
-&lt;/m:alternative&gt;</pre>
-                        </td>
-                        <td>
-                           <pre>'/j:map/j:map[@key=''EVERYTHING'']'</pre>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-         </div>
       </div>
-      <div id="top-level-scenario-d5e114">
-         <h2 class="failed">A path to a node not described in the definition map<span class="scenario-totals">passed: 0 / pending: 0 / failed: 1 / total: 1</span></h2>
-         <table class="xspec" id="t-d5e114">
+      <div id="top_scenario6">
+         <h2 class="successful">A path to a node not described in the definition map<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario6">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
             </colgroup>
             <tbody>
-               <tr class="failed">
+               <tr class="successful">
                   <th>A path to a node not described in the definition map</th>
-                  <th>passed: 0 / pending: 0 / failed: 1 / total: 1</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
                </tr>
-               <tr class="failed">
-                  <td><a href="#test-d5e135">produces a no-op (path to nothing)</a></td>
-                  <td>Failure</td>
+               <tr class="successful">
+                  <td>produces a no-op (path to nothing)</td>
+                  <td>Success</td>
                </tr>
             </tbody>
          </table>
-         <div id="scenario-d5e114">
-            <h3>A path to a node not described in the definition map</h3>
-            <div id="test-d5e135">
-               <h4>produces a no-op (path to nothing)</h4>
-               <table class="xspecResult">
-                  <thead>
-                     <tr>
-                        <th>Result</th>
-                        <th>Expected Result</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <p>XPath <code class="diff">/element()</code> from:</p>
-                           <pre>&lt;<span class="diff">m:alternative</span> xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"&gt;
-   &lt;<span class="diff">m:path</span>&gt;<span class="diff">/j:map/</span>&lt;<span class="diff">nope</span> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"&gt;<span class="diff">((: NOWHERE :))</span>&lt;/nope&gt;
-   &lt;/m:path&gt;
-&lt;/m:alternative&gt;</pre>
-                        </td>
-                        <td>
-                           <pre>'/j:map/()'</pre>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-         </div>
       </div>
-      <div id="top-level-scenario-d5e143">
-         <h2 class="failed">Absolute path to document element, with predicate<span class="scenario-totals">passed: 0 / pending: 0 / failed: 1 / total: 1</span></h2>
-         <table class="xspec" id="t-d5e143">
+      <div id="top_scenario7">
+         <h2 class="successful">Absolute path to document element, with predicate<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario7">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
             </colgroup>
             <tbody>
-               <tr class="failed">
+               <tr class="successful">
                   <th>Absolute path to document element, with predicate</th>
-                  <th>passed: 0 / pending: 0 / failed: 1 / total: 1</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
                </tr>
-               <tr class="failed">
-                  <td><a href="#test-d5e176">logical predicates are preserved</a></td>
-                  <td>Failure</td>
+               <tr class="successful">
+                  <td>logical predicates are preserved</td>
+                  <td>Success</td>
                </tr>
             </tbody>
          </table>
-         <div id="scenario-d5e143">
-            <h3>Absolute path to document element, with predicate</h3>
-            <div id="test-d5e176">
-               <h4>logical predicates are preserved</h4>
-               <table class="xspecResult">
-                  <thead>
-                     <tr>
-                        <th>Result</th>
-                        <th>Expected Result</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <p>XPath <code class="diff">/element()</code> from:</p>
-                           <pre>&lt;<span class="diff">m:alternative</span> xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"&gt;
-   &lt;<span class="diff">m:path</span>&gt;<span class="diff">/j:map/</span>&lt;<span class="diff">step</span> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"&gt;
-         &lt;<span class="diff">axis</span> /&gt;
-         &lt;<span class="diff">node</span>&gt;
-            &lt;<span class="diff">cast</span>&gt;<span class="diff">j:map[@key='EVERYTHING']</span>&lt;/cast&gt;
-         &lt;/node&gt;
-         &lt;<span class="diff">m:filter</span>&gt;<span class="diff">[</span>&lt;<span class="diff">m:function</span>&gt;<span class="diff">true()</span>&lt;/m:function&gt;<span class="diff">]</span>&lt;/m:filter&gt;
-      &lt;/step&gt;
-   &lt;/m:path&gt;
-&lt;/m:alternative&gt;</pre>
-                        </td>
-                        <td>
-                           <pre>'/j:map/j:map[@key=''EVERYTHING''][true()]'</pre>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-         </div>
       </div>
    </body>
 </html>

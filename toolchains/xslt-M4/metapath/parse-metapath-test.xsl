@@ -20,12 +20,13 @@
     <xsl:template match="/">
         <tests>
         <xsl:variable name="paths" as="element()*">
+            <path p="x">a/@b</path>
             <path p="a">a/child::b</path>
             <path p="b">a//b</path>
             <path p="p">a[x]//b/c[y][z]</path>
             <path p="q">child::a[x]/descendant-or-self::*/child::b/child::c[y][z]</path>
             
-            <path p="x">@type[.='boo']</path>
+            <!--<path p="x">@type[.='boo']</path>
             <path p="z">.//meta/creator[matches(@who,'\S')]</path>
             <path p="a">a[true()] | b[true()]/c</path>
             <path p="anthology">descendant::meta/creator</path>
@@ -39,7 +40,7 @@
             <path p="x" label="PI test">descendant::processing-instruction('boo')</path>
             
             
-            <!-- THESE SHOULD BREAK under reduced XPath (metapath): they are no longer permissible -->
+            <!-\- THESE SHOULD BREAK under reduced XPath (metapath): they are no longer permissible -\->
             <path p="d">short[count(z) > 1 (: comment :)]</path>
             <path p="b" label="union operator">line union phrase</path>
             <path p="b" label="except operator">line except phrase</path>
@@ -61,7 +62,7 @@
             <path p="p" label="Sequence">paragraph, figure</path>
             <path p="p" label="ForExpr">for $i in (1 to 10) return (1 div $i)</path>
             <path p="p" label="QuantifiedExpr">every $thing in (thing) satisfies ($thing='green')</path>
-            <path p="p" label="IfExpr">if (true()) then child::child else /</path>
+            <path p="p" label="IfExpr">if (true()) then child::child else /</path>-->
         </xsl:variable>
         <xsl:for-each select="$paths">
             <xsl:variable name="path" select="."/>
@@ -94,10 +95,13 @@
                 <target-exception>
                     <xsl:value-of select="m:rewrite-match-as-test($path,$path/@p)"/>
                 </target-exception>
-                <filtered>
-                    <!-- emits a sequence of steps, each with its NodeTest and filter (predicate) -->
+                <step-map>
+                    <xsl:sequence select="m:prefixed-step-map(string($path), $path/@p)"/>
+                </step-map>
+                <!--<filtered>
+                    <!-\- emits a sequence of steps, each with its NodeTest and filter (predicate) -\->
                     <xsl:sequence select="m:prefixed-step-map($path, $path/@p)"/>
-                </filtered>
+                </filtered>-->
                 
                 <!--<xsl:sequence xmlns:p="metapath01" select="p:parse-XPath($path)"/>-->
             </test>
