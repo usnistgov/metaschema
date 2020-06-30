@@ -321,6 +321,14 @@
         </xsl:apply-templates>
     </xsl:template>
     
+    <!-- Matches <path>/</path>   -->
+    <xsl:template mode="cast-path" as="node()*" priority="10" match="path[. = '/'][empty(*)]">
+        <xsl:param name="from" as="element()*"/>
+        <xsl:param name="starting" as="xs:boolean" select="false()"/>
+        <xsl:param name="relative" as="xs:boolean" select="true()"/>
+        <xsl:copy expand-text="true">/{$px}:map</xsl:copy>
+    </xsl:template>
+    
     <!-- An absolute path -->
     <xsl:template mode="cast-path" as="node()*" match="path[starts-with(.,'/')]">
         <xsl:param name="from" as="element()*"/>
@@ -328,14 +336,11 @@
         <xsl:param name="relative" as="xs:boolean" select="true()"/>
         <xsl:copy>
             <xsl:text expand-text="true">/{$px}:map</xsl:text>
-            <!-- if there is nothing but a path to the root, we stop -->
-            <xsl:if test="exists(node() except text()[1][.='/'])">
-                <xsl:apply-templates mode="#current" select="node()[1]">
-                    <xsl:with-param name="starting" select="true()"/>
-                    <!-- alerting the receiving template that we will start from the root -->
-                    <xsl:with-param name="relative" select="false()"/>
-                </xsl:apply-templates>
-            </xsl:if>
+            <xsl:apply-templates mode="#current" select="node()[1]">
+                <xsl:with-param name="starting" select="true()"/>
+                <!-- alerting the receiving template that we will start from the root -->
+                <xsl:with-param name="relative" select="false()"/>
+            </xsl:apply-templates>
         </xsl:copy>
         <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
             <xsl:with-param name="from"      select="$from"/>
