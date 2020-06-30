@@ -318,7 +318,7 @@
     
     <xsl:template match="*" mode="qualify-report">
 <!-- XXX   -->
-        <xsl:message expand-text="true">report qualification on { @id }?</xsl:message>
+        <!--<xsl:message expand-text="true">report qualification on { @id }?</xsl:message>-->
 <!-- context - different when @target is not (.,'value()')       -->
         <xsl:text>This </xsl:text>
     </xsl:template>
@@ -329,8 +329,10 @@
     
     
     <xsl:template match="allowed-values" mode="assertion">
+        
         <xsl:variable name="exception">
-            <xsl:if test="exists(m:condition(.))" expand-text="true">not({ m:condition(.) }) or </xsl:if>
+            <xsl:variable name="this-condition" select="m:condition(.)"/>
+            <xsl:if test="exists($this-condition)" expand-text="true">not({ $this-condition }) or </xsl:if>
         </xsl:variable>
         <xsl:variable name="value-sequence" select="(enum/@value ! ('''' || . || '''')) => string-join(', ')"/>
         <xsl:variable name="test" as="xs:string">
@@ -428,10 +430,8 @@
             <output:version value="1.0"/>
             <output:indent value="no"/>
         </output:serialization-parameters>
-    </xsl:variable>
-    
-    
-    
+    </xsl:variable>   
+
     <xsl:template match="flag[@ref]" mode="rule-context" as="xs:string">
         <xsl:value-of>
             <xsl:value-of select="ancestor::*/m:effective-name(.) ! m:prefixed(.)" separator="/"/>
@@ -554,15 +554,14 @@
         </xsl:variable>
         
         <!-- These two are independent - $when-conditions captures require/@when
-                                         $target-exception expresses ancestry given in @target -->
+                                         $ancestry-exception expresses ancestry given in @target -->
         <xsl:variable name="when-conditions" select="$whose/ancestor-or-self::*/@when ! ( $whose-context ! ('ancestor::' || . || '/') || . )"/>
-        
         <xsl:variable name="ancestor-names" select="$whose/(ancestor::define-flag | ancestor::define-field | ancestor::define-assembly) ! m:effective-name(.)" />
         <!-- stitching together a match pattern from ancestors + a given @target, with steps '/.' removed -->
         <xsl:variable name="path-from-global" select="string-join(($ancestor-names,$whose/@target),'/') => replace('/\.','')"/>
         
         <xsl:variable name="ancestry-condition" select="m:rewrite-match-as-test($path-from-global,$declaration-prefix)"/>
-        <!-- <xsl:message expand-text="true">{ $whose/@id }: { $path-from-global }</xsl:message> -->        
+
         <xsl:if test="exists(($when-conditions, $ancestry-condition))">
             <xsl:value-of select="string-join(($when-conditions, $ancestry-condition),' and ')"/>
         </xsl:if>
