@@ -281,7 +281,14 @@
     
     NB for any path, several or no JSONized paths may be returned - only paths viable in the metaschema (represented in the map) come back, but there can be multiple. -->
         
-    <xsl:function name="m:jsonize-path" as="element()">
+        
+    <xsl:function name="m:jsonize-path" as="xs:string">
+        <xsl:param name="metapath" as="xs:string" required="yes"/>
+        <xsl:value-of select="m:jsonization($metapath)"/>
+    </xsl:function>
+    
+    <!-- m:jsonization returns the path mapped step by step into JSON, as an XML element tree -->
+    <xsl:function name="m:jsonization" as="element()">
         <xsl:param name="metapath" as="xs:string" required="yes"/>
         <xsl:variable name="path-map" select="m:path-map($metapath)"/>
         <!--<xsl:variable name="alternatives" as="xs:string*">
@@ -291,6 +298,7 @@
         <xsl:value-of select="string-join($keepers,' | ')"/>-->
         <xsl:apply-templates select="$path-map" mode="cast-path"/>
     </xsl:function>
+    
     
     <!-- Casting a path requires a sibling traversal -->
     <!-- no tunneling of parameters (yet!) to prevent accidents... -->
@@ -312,7 +320,7 @@
             <xsl:with-param name="relative"  select="$relative"/>
         </xsl:apply-templates>
     </xsl:template>
-
+    
     <!-- An absolute path -->
     <xsl:template mode="cast-path" as="node()*" match="path[starts-with(.,'/')]">
         <xsl:param name="from" as="element()*"/>
@@ -320,11 +328,14 @@
         <xsl:param name="relative" as="xs:boolean" select="true()"/>
         <xsl:copy>
             <xsl:text expand-text="true">/{$px}:map</xsl:text>
-            <xsl:apply-templates mode="#current" select="node()[1]">
-                <xsl:with-param name="starting" select="true()"/>
-                <!-- alerting the receiving template that we will start from the root -->
-                <xsl:with-param name="relative" select="false()"/>
-            </xsl:apply-templates>
+            <!-- if there is nothing but a path to the root, we stop -->
+            <xsl:if test="exists(node() except text()[1][.='/'])">
+                <xsl:apply-templates mode="#current" select="node()[1]">
+                    <xsl:with-param name="starting" select="true()"/>
+                    <!-- alerting the receiving template that we will start from the root -->
+                    <xsl:with-param name="relative" select="false()"/>
+                </xsl:apply-templates>
+            </xsl:if>
         </xsl:copy>
         <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
             <xsl:with-param name="from"      select="$from"/>
