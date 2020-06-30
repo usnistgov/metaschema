@@ -189,7 +189,6 @@ Under 'widget'
         </model>
         <constraint>
             <require when="@type='quatrain'">
-                
                 <has-cardinality id="quatrain-cardinality-check" target="line" max-occurs="4" min-occurs="4"/>
             </require>
         </constraint>
@@ -205,19 +204,7 @@ Under 'widget'
         <description>May be metrical</description>
         <flag ref="feet"/>
         <flag ref="base"/>
-            <!--<xxxxconstraint>
-                <matches><!-\- All apply -\-></matches>
-                <allowed-values extends="yes" allow-other="yes">
-                    <enum value=""></enum>
-                </allowed-values>
-            </xxxxconstraint>-->
         
-        <constraint>
-            <!--<allowed-values target="" extends="">
-                <enum value=""></enum>
-            </allowed-values>-->
-            <has-cardinality target=""></has-cardinality>
-        </constraint>
     </define-field>
     
     <define-flag name="base">
