@@ -397,7 +397,7 @@
                      minOccurs="0"
                      maxOccurs="1"/>
       </xs:sequence>
-      <xs:attribute name="id" type="xs:NCName">
+      <xs:attribute name="id" use="required" type="xs:NCName">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>Identifier</m:formal-name>
@@ -431,7 +431,11 @@
             <b>Biographical info</b>: Gives basic facts or colorful detail.</xs:documentation>
       </xs:annotation>
       <xs:sequence>
-         <xs:element name="facts" minOccurs="0" maxOccurs="1">
+         <xs:element name="name"
+                     type="anthology:name-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="facts" minOccurs="0" maxOccurs="3">
             <xs:complexType>
                <xs:annotation>
                   <xs:appinfo>
