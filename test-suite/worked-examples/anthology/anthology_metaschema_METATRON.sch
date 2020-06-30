@@ -6,80 +6,64 @@
         queryBinding="xslt2">
    <ns prefix="m" uri="http://csrc.nist.gov/ns/oscal/metaschema/1.0"/>
    <ns prefix="anthology" uri="http://csrc.nist.gov/metaschema/ns/anthology"/>
+   <let name="silence-warnings" value="true()"/>
    <!-- INDEX DEFINITIONS AS KEY DECLARATIONS -->
-   <xsl:key name="distinct-keyword"
-            match="anthology:meta/anthology:keyword"
-            use="string(.)"/>
+   <xsl:key name="distinct-keyword" match="anthology:keyword" use="string(.)"/>
    <xsl:key name="creators-index"
             match="anthology:author-index/anthology:author"
             use="@id"/>
-   <let name="silence-warnings" value="true()"/>
+   <!-- RULES -->
    <pattern>
-      <rule context="anthology:meta/@date">
-               <!-- when ancestor::anthology:meta/@type='YYYY' and exists(.), @date should match regex '[1-9]\d?\d?\d?'-->
-         <assert test="not(ancestor::anthology:meta/@type='YYYY' and exists(.)) or matches(., '^[1-9]\d?\d?\d?$')">Where ancestor::anthology:meta/@type='YYYY' and exists(.), <name/> is expected to match regular expression '^[1-9]\d?\d?\d?$'
+      <rule context="@who">
+         <assert test="not(exists(self::attribute(who)/parent::anthology:creator/parent::anthology:meta/ancestor-or-self::node()/parent::anthology:ANTHOLOGY)) or matches(., '^#(\S+)$')">This <name/> is expected to match regular expression '^#(\S+)$'
             </assert>
       </rule>
-      <rule context="anthology:verse">
-            <!-- when ancestor::anthology:verse/@type='quatrain' and exists(self::anthology:line), anthology:line has cardinality:  at least 4  at most 4-->
+      <rule context="anthology:creator"><!--<index-has-key xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" name="creators-index" target=".//meta/creator[matches(@who,'\S')]" id="creators-index-ref"><key-field target="@who" pattern="#(\S+)"/></index-has-key>-->
+         <let name="lookup"
+              value="@who[matches(.,'^#(\S+)$')] ! replace(.,'^#(\S+)$','$1')"/>
+         <assert test="not(exists(self::anthology:creator[matches(@who,'\S')]/parent::anthology:meta/ancestor-or-self::node()/parent::anthology:ANTHOLOGY)) or exists(key('creators-index',$lookup,ancestor::anthology:ANTHOLOGY))"
+                 id="creators-index-ref">This <name/> is expected to correspond to an entry in the 'creators-index' index within the containing anthology:ANTHOLOGY[[See id#creators-index-ref]]</assert>
+      </rule>
+      <rule context="anthology:keyword"><!--<is-unique xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" name="distinct-keyword" target="."><key-field target="."/></is-unique>-->
+         <assert test="not(exists(self::anthology:keyword/parent::anthology:meta)) or count(key('distinct-keyword',string(.)))=1">This <name/> is expected to be unique.
+            </assert>
+      </rule>
+      <rule context="@type"><!--<allowed-values xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" id="type-check" target="@type"><enum value="YYYY">Four-digit year (CE)</enum></allowed-values>-->
+         <assert test="not(exists(self::attribute(type)/parent::anthology:meta)) or (. = ( 'YYYY' ))"
+                 id="type-check">This <name/> is expected to be (one of) 'YYYY', not '<value-of select="."/>'
+            [[See id#type-check]]</assert>
+      </rule>
+      <rule context="@date">
+         <assert test="not(ancestor::anthology:meta/@type='YYYY' and exists(self::attribute(date)/parent::anthology:meta)) or matches(., '^[1-9]\d?\d?\d?$')">This <name/> is expected to match regular expression '^[1-9]\d?\d?\d?$'
+            </assert>
+      </rule>
+      <rule context="@role"><!--<allowed-values xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" id="creator-type-check"><enum value="author">Author</enum><enum value="editor">Editor</enum><enum value="translator">Translator</enum></allowed-values>-->
+         <assert test="not(exists(self::anthology:role/parent::anthology:creator)) or (. = ( 'author', 'editor', 'translator' ))"
+                 id="creator-type-check">This <name/> is expected to be (one of) 'author', 'editor', 'translator', not '<value-of select="."/>'
+            [[See id#creator-type-check]]</assert>
+      </rule>
+      <rule context="anthology:verse"><!--<has-cardinality xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" id="quatrain-cardinality-check" target="line" max-occurs="4" min-occurs="4"/>-->
          <assert test="not(@type='quatrain') or count(anthology:line) eq 4"
                  id="quatrain-cardinality-check">Where @type='quatrain', <name/> is expected to have exactly 4 occurrences of anthology:line[[See id#quatrain-cardinality-check]]</assert>
       </rule>
-      <rule context="anthology:ANTHOLOGY//anthology:meta/anthology:creator/@who">
-            <!-- when exists(./ancestor::anthology:creator/ancestor::anthology:meta), .//anthology:meta/anthology:creator/@who should match regex '#(\S+)'-->
-         <assert test="not(exists(./ancestor::anthology:creator/ancestor::anthology:meta)) or matches(., '^#(\S+)$')">Where exists(./ancestor::anthology:creator/ancestor::anthology:meta), <name/> is expected to match regular expression '^#(\S+)$'
-            </assert>
-      </rule>
-      <rule context="anthology:ANTHOLOGY//anthology:meta/anthology:creator">
-        <!-- when exists(self::anthology:creator[matches(@who,'\S')]/ancestor::anthology:meta), .//anthology:meta/anthology:creator[matches(@who,'\S')] must correspond to an entry in the 'creators-index' index within the context of its ancestoranthology:ANTHOLOGY-->
-         <let name="lookup"
-              value="@who[matches(.,'^#(\S+)$')] ! replace(.,'^#(\S+)$','$1')"/>
-         <assert test="not(exists(self::anthology:creator[matches(@who,'\S')]/ancestor::anthology:meta)) or exists(key('creators-index',$lookup,ancestor::anthology:ANTHOLOGY))"
-                 id="creators-index-ref">Where exists(self::anthology:creator[matches(@who,'\S')]/ancestor::anthology:meta), <name/> is expected to correspond to an entry in the 'creators-index' index within the containing anthology:ANTHOLOGY[[See id#creators-index-ref]]</assert>
-      </rule>
-      <rule context="anthology:meta/anthology:keyword">
-        <!-- is unique-->
-         <assert test="count(key('distinct-keyword',string(.)))=1">
-            <name/> is expected to be unique.
-            </assert>
-      </rule>
-      <rule context="anthology:meta/@type">
-         <!-- when exists(.), allowed-values on @type: YYYY-->
-         <assert test="not(exists(.)) or (. = ( 'YYYY' ))" id="type-check">Where exists(.), <name/> is expected to be (one of) 'YYYY', not '<value-of select="."/>'
-            [[See id#type-check]]</assert>
-      </rule>
-      <rule context="anthology:creator/@role">
-         <!--allowed-values on : author, editor, translator-->
-         <assert test="(. = ( 'author', 'editor', 'translator' ))"
-                 id="creator-type-check">
-            <name/> is expected to be (one of) 'author', 'editor', 'translator', not '<value-of select="."/>'
-            [[See id#creator-type-check]]</assert>
-      </rule>
-      <rule context="anthology:line">
-         <!--!ERROR! lexical analysis failed while expecting [IntegerLiteral, DecimalLiteral, DoubleLiteral, StringLiteral, Wildcard, QName, S, '(', '+', '-', '.', '/', '//', '@', 'and', 'attribute', 'child', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'following', 'following-sibling', 'mod', 'namespace', 'node', 'or', 'processing-instruction', 'self', 'text'] at line 1, column 1: ...... has cardinality:  --></rule>
-      <rule context="anthology:dates/@birth">
-            <!-- when exists(.), @birth should take the form of datatype 'date'-->
-         <assert test="not(exists(.)) or m:datatype-validate(., 'date')">Where exists(.), <name/> is expected to take the form of datatype date'
-            </assert>
-      </rule>
-      <rule context="@base">
-         <!--allowed-values on : dactyl, anapest, trochee, iamb, mixed-->
-         <assert test="(. = ( 'dactyl', 'anapest', 'trochee', 'iamb', 'mixed' ))"
-                 id="versetype-enumerations-check">
-            <name/> is expected to be (one of) 'dactyl', 'anapest', 'trochee', 'iamb', 'mixed', not '<value-of select="."/>'
+      <rule context="@base"><!--<allowed-values xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" id="versetype-enumerations-check" allow-other="no"><enum value="dactyl">Dactylic</enum><enum value="anapest">Anapestic</enum><enum value="trochee">Trochaic</enum><enum value="iamb">Iambic</enum><enum value="mixed">Mixed</enum></allowed-values>-->
+         <assert test="not(exists(self::anthology:base)) or (. = ( 'dactyl', 'anapest', 'trochee', 'iamb', 'mixed' ))"
+                 id="versetype-enumerations-check">This <name/> is expected to be (one of) 'dactyl', 'anapest', 'trochee', 'iamb', 'mixed', not '<value-of select="."/>'
             [[See id#versetype-enumerations-check]]</assert>
       </rule>
       <rule context="@feet">
-            <!-- should match regex '[1-9]'-->
-         <assert test="matches(., '^[1-9]$')">
-            <name/> is expected to match regular expression '^[1-9]$'
+         <assert test="not(exists(self::anthology:feet)) or matches(., '^[1-9]$')">This <name/> is expected to match regular expression '^[1-9]$'
             </assert>
       </rule>
-      <rule context="anthology:dates">
-         <!--expect on : xs:date(@birth) < xs:date(@death)-->
-         <assert test="exists(self::node()[xs:date(@birth) &lt; xs:date(@death)])"
-                 id="chronology-check">
-            <name/> fails to pass evaluation of 'xs:date(@birth) &lt; xs:date(@death)'
+      <rule context="anthology:author"/>
+      <rule context="@id"/>
+      <rule context="@birth">
+         <assert test="not(exists(self::attribute(birth)/parent::anthology:dates)) or m:datatype-validate(., 'date')">Where exists(self::attribute(birth)/parent::anthology:dates), <name/> is expected to take the form of datatype date'
+            </assert>
+      </rule>
+      <rule context="anthology:dates"><!--<expect xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>-->
+         <assert test="not(exists(self::anthology:dates)) or exists(self::node()[xs:date(@birth) &lt; xs:date(@death)])"
+                 id="chronology-check">This <name/> fails to pass evaluation of 'xs:date(@birth) &lt; xs:date(@death)'
             [[See id#chronology-check]]</assert>
       </rule>
    </pattern>
