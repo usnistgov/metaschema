@@ -52,8 +52,12 @@
                      type="everything:markup-line-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
-         <xs:element name="field-groupable"
-                     type="everything:field-groupable-FIELD"
+         <xs:element name="field-simple-groupable"
+                     type="everything:field-simple-groupable-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+         <xs:element name="field-flagged-groupable"
+                     type="everything:field-flagged-groupable-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="wrapped-fields" minOccurs="0" maxOccurs="1">
@@ -136,7 +140,28 @@
             <b>FIELD-1ONLY</b>: field field-1only</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string"/>
+         <xs:extension base="xs:string">
+            <xs:attribute name="simple-flag" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Simple Flag</m:formal-name>
+                     <m:description>some string</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Simple Flag</b>: some string</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="integer-flag" type="xs:integer">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Integer Flag</m:formal-name>
+                     <m:description>an integer</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Integer Flag</b>: an integer</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
    <xs:complexType name="field-base64-FIELD">
@@ -165,17 +190,72 @@
          <xs:extension base="xs:boolean"/>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:complexType name="field-groupable-FIELD">
+   <xs:complexType name="field-simple-groupable-FIELD">
       <xs:annotation>
          <xs:appinfo>
-            <m:formal-name>FIELD-GROUPABLE</m:formal-name>
+            <m:formal-name>FIELD-SIMPLE-GROUPABLE</m:formal-name>
+            <m:description>simple field, groupable</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>FIELD-SIMPLE-GROUPABLE</b>: simple field, groupable</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="simple-flag" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Simple Flag</m:formal-name>
+                     <m:description>some string</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Simple Flag</b>: some string</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="integer-flag" type="xs:integer">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Integer Flag</m:formal-name>
+                     <m:description>an integer</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Integer Flag</b>: an integer</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="field-flagged-groupable-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>FIELD-FLAGGED-GROUPABLE</m:formal-name>
             <m:description>field field-groupable</m:description>
          </xs:appinfo>
          <xs:documentation>
-            <b>FIELD-GROUPABLE</b>: field field-groupable</xs:documentation>
+            <b>FIELD-FLAGGED-GROUPABLE</b>: field field-groupable</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string"/>
+         <xs:extension base="xs:string">
+            <xs:attribute name="flagged-date" type="xs:date">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Date flag</m:formal-name>
+                     <m:description>A flag for a date</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Date flag</b>: A flag for a date</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="flagged-decimal" type="xs:decimal">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Decimal flag</m:formal-name>
+                     <m:description>A flag with a decimal value</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Decimal flag</b>: A flag with a decimal value</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
    <xs:complexType name="field-wrappable-FIELD">
@@ -307,8 +387,8 @@
             <b>ASSEMBLY-GROUPABLE</b>: assembly assembly-groupable</xs:documentation>
       </xs:annotation>
       <xs:sequence>
-         <xs:element name="field-groupable"
-                     type="everything:field-groupable-FIELD"
+         <xs:element name="field-simple-groupable"
+                     type="everything:field-simple-groupable-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="assembly-groupable"

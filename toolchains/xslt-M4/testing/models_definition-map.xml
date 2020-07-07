@@ -13,6 +13,16 @@
              name="field-1only"
              key="field-1only"
              gi="field-1only">
+         <flag as-type="string"
+               scope="global"
+               name="simple-flag"
+               key="simple-flag"
+               gi="simple-flag"/>
+         <flag as-type="integer"
+               scope="global"
+               name="integer-flag"
+               key="integer-flag"
+               gi="integer-flag"/>
          <value as-type="string" key="STRVALUE"/>
       </field>
       <field scope="global"
@@ -44,6 +54,16 @@
          <field scope="global"
                 name="field-simple-groupable"
                 gi="field-simple-groupable">
+            <flag as-type="string"
+                  scope="global"
+                  name="simple-flag"
+                  key="simple-flag"
+                  gi="simple-flag"/>
+            <flag as-type="integer"
+                  scope="global"
+                  name="integer-flag"
+                  key="integer-flag"
+                  gi="integer-flag"/>
             <value as-type="string" key="STRVALUE"/>
          </field>
       </group>
@@ -108,6 +128,16 @@
                 name="field-1only"
                 key="field-1only"
                 gi="field-1only">
+            <flag as-type="string"
+                  scope="global"
+                  name="simple-flag"
+                  key="simple-flag"
+                  gi="simple-flag"/>
+            <flag as-type="integer"
+                  scope="global"
+                  name="integer-flag"
+                  key="integer-flag"
+                  gi="integer-flag"/>
             <value as-type="string" key="STRVALUE"/>
          </field>
          <assembly scope="global"
@@ -122,6 +152,16 @@
                <field scope="global"
                       name="field-simple-groupable"
                       gi="field-simple-groupable">
+                  <flag as-type="string"
+                        scope="global"
+                        name="simple-flag"
+                        key="simple-flag"
+                        gi="simple-flag"/>
+                  <flag as-type="integer"
+                        scope="global"
+                        name="integer-flag"
+                        key="integer-flag"
+                        gi="integer-flag"/>
                   <value as-type="string" key="STRVALUE"/>
                </field>
             </group>
@@ -202,6 +242,16 @@
              name="field-1only"
              key="field-1only"
              gi="field-1only">
+         <flag as-type="string"
+               scope="global"
+               name="simple-flag"
+               key="simple-flag"
+               gi="simple-flag"/>
+         <flag as-type="integer"
+               scope="global"
+               name="integer-flag"
+               key="integer-flag"
+               gi="integer-flag"/>
          <value as-type="string" key="STRVALUE"/>
       </field>
       <assembly scope="global"

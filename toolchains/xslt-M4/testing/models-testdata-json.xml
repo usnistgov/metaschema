@@ -1,6 +1,8 @@
 <map xmlns="http://www.w3.org/2005/xpath-functions">
    <map key="EVERYTHING">
-      <string key="field-1only">FIELD-1-ONLY</string>
+      <map key="field-1only">
+         <string key="STRVALUE">FIELD-1-ONLY</string>
+      </map>
       <string key="field-base64">1234abcd</string>
       <boolean key="field-boolean">true</boolean>
       <map key="field-named-value">
@@ -8,6 +10,20 @@
          <string key="CUSTOM-VALUE-KEY">FIELD-NAMED-VALUE</string>
       </map>
       <string key="markup-line">Here's some *markup*: make of it **what you will**! Even if it has ... \* funky characters \` ... and even an ![some picture](img.jpg)</string>
+      <array key="groupable-simple-fields">
+         <map>
+            <string key="integer-flag">1</string>
+            <string key="STRVALUE">field-groupable 1</string>
+         </map>
+         <map>
+            <string key="simple-flag">a</string>
+            <string key="STRVALUE">field-groupable 2</string>
+         </map>
+         <map>
+            <string key="integer-flag">3</string>
+            <string key="STRVALUE">field-groupable 3</string>
+         </map>
+      </array>
       <array key="wrapped-fields">
          <string>field-wrappable 1</string>
          <string>field-wrappable 2</string>
@@ -38,12 +54,50 @@ This is prose. All wrapped up.</string>
 
 Here we have unwrapped prose....</string>
       <map key="ASSEMBLY-1ONLY">
-         <string key="field-1only">ASSEMBLY-1-ONLY / FIELD-1-ONLY</string>
+         <map key="field-1only">
+            <string key="STRVALUE">ASSEMBLY-1-ONLY / FIELD-1-ONLY</string>
+         </map>
       </map>
       <array key="groupable-assemblies">
-         <map/>
-         <map/>
-         <map/>
+         <map>
+            <array key="groupable-simple-fields">
+               <map>
+                  <string key="STRVALUE">assembly-groupable 1 / field-groupable 1</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 1 / field-groupable 2</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 1 / field-groupable 3</string>
+               </map>
+            </array>
+         </map>
+         <map>
+            <array key="groupable-simple-fields">
+               <map>
+                  <string key="STRVALUE">assembly-groupable 2 / field-groupable 1</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 2 / field-groupable 2</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 2 / field-groupable 3</string>
+               </map>
+            </array>
+         </map>
+         <map>
+            <array key="groupable-simple-fields">
+               <map>
+                  <string key="STRVALUE">assembly-groupable 3 / field-groupable 1</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 3 / field-groupable 2</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 3 / field-groupable 3</string>
+               </map>
+            </array>
+         </map>
       </array>
       <array key="wrapped-assemblies">
          <map>
@@ -93,7 +147,9 @@ Here we have unwrapped prose....</string>
       </map>
       <array key="everything-recursive">
          <map>
-            <string key="field-1only">nested FIELD-1-ONLY</string>
+            <map key="field-1only">
+               <string key="STRVALUE">nested FIELD-1-ONLY</string>
+            </map>
          </map>
       </array>
    </map>
