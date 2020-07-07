@@ -177,7 +177,7 @@
     
     <!-- field points to its object -->
     <xsl:template match="field" mode="cast-node-test">
-        <cast>{$px}:map</cast>
+        <cast>{$px}:map{ @key ! ('[@key=''' || . || ''']') }</cast>
     </xsl:template>
     
     <!-- sometimes the field value sits on a dynamic flag -->
@@ -195,7 +195,7 @@
     <!-- otherwise a field value points to its value property -->
     <xsl:template match="field" mode="cast-value-path">
         <xsl:variable name="type">
-            <xsl:apply-templates select="." mode="object-type"/>
+            <xsl:apply-templates select="value" mode="object-type"/>
         </xsl:variable>
         <cast>{$px}:{$type}[@key='{value/@key}']</cast>
     </xsl:template>
@@ -224,7 +224,7 @@
     </xsl:template>
     
     <xsl:template match="*" mode="cast-node-test" expand-text="true">
-        <cast>OoopsFellThroughOn{ name() }</cast>
+        <!--<cast>OoopsFellThroughOn{ name() }</cast>-->
         <cast>{$px}:*[@key='{../@key}']</cast>
     </xsl:template>
     
@@ -296,11 +296,9 @@
                 <xsl:apply-templates select="$path-map" mode="cast-path"/>
             </xsl:when>
             <xsl:otherwise>
-                <ERROR xsl:expand-text="true">(: PARSING '{$metapath}' RETURNS {$path-map => normalize-space() } :)</ERROR>
+                <ERROR xsl:expand-text="true">(: PARSING '{$metapath}' RETURNS { normalize-space($path-map) } :)</ERROR>
             </xsl:otherwise>
         </xsl:choose>
-        
-        
     </xsl:function>
     
     
