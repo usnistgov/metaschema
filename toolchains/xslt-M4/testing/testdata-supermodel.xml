@@ -3,10 +3,7 @@
           gi="EVERYTHING"
           key="EVERYTHING"
           namespace="http://csrc.nist.gov/metaschema/ns/everything">
-   <field name="field-1only"
-          gi="field-1only"
-          in-json="SCALAR"
-          key="field-1only">
+   <field name="field-1only" gi="field-1only" key="field-1only">
       <value as-type="string" key="STRVALUE" in-json="string">FIELD-1-ONLY</value>
    </field>
    <field name="field-base64"
@@ -34,6 +31,29 @@
       <value as-type="markup-line" key="RICHTEXT" in-json="string">Here's some <em>markup</em>: make of it <strong>what you will</strong>! Even if it has ... * funky characters ` ... and even an <img alt="some picture" src="img.jpg"/>
       </value>
    </field>
+   <group in-json="SINGLETON_OR_ARRAY" key="groupable-simple-fields">
+      <field name="field-simple-groupable" gi="field-simple-groupable">
+         <flag as-type="integer"
+               name="integer-flag"
+               key="integer-flag"
+               gi="integer-flag">1</flag>
+         <value as-type="string" key="STRVALUE" in-json="string">field-groupable 1</value>
+      </field>
+      <field name="field-simple-groupable" gi="field-simple-groupable">
+         <flag as-type="string"
+               name="simple-flag"
+               key="simple-flag"
+               gi="simple-flag">a</flag>
+         <value as-type="string" key="STRVALUE" in-json="string">field-groupable 2</value>
+      </field>
+      <field name="field-simple-groupable" gi="field-simple-groupable">
+         <flag as-type="integer"
+               name="integer-flag"
+               key="integer-flag"
+               gi="integer-flag">3</flag>
+         <value as-type="string" key="STRVALUE" in-json="string">field-groupable 3</value>
+      </field>
+   </group>
    <group name="wrapped-fields"
           gi="wrapped-fields"
           group-json="ARRAY"
@@ -101,17 +121,50 @@
       </value>
    </field>
    <assembly name="assembly-1only" gi="ASSEMBLY-1ONLY" key="ASSEMBLY-1ONLY">
-      <field name="field-1only"
-             gi="field-1only"
-             in-json="SCALAR"
-             key="field-1only">
+      <field name="field-1only" gi="field-1only" key="field-1only">
          <value as-type="string" key="STRVALUE" in-json="string">ASSEMBLY-1-ONLY / FIELD-1-ONLY</value>
       </field>
    </assembly>
    <group in-json="SINGLETON_OR_ARRAY" key="groupable-assemblies">
-      <assembly name="assembly-groupable" gi="assembly-groupable"/>
-      <assembly name="assembly-groupable" gi="assembly-groupable"/>
-      <assembly name="assembly-groupable" gi="assembly-groupable"/>
+      <assembly name="assembly-groupable" gi="assembly-groupable">
+         <group in-json="SINGLETON_OR_ARRAY" key="groupable-simple-fields">
+            <field name="field-simple-groupable" gi="field-simple-groupable">
+               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 1 / field-groupable 1</value>
+            </field>
+            <field name="field-simple-groupable" gi="field-simple-groupable">
+               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 1 / field-groupable 2</value>
+            </field>
+            <field name="field-simple-groupable" gi="field-simple-groupable">
+               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 1 / field-groupable 3</value>
+            </field>
+         </group>
+      </assembly>
+      <assembly name="assembly-groupable" gi="assembly-groupable">
+         <group in-json="SINGLETON_OR_ARRAY" key="groupable-simple-fields">
+            <field name="field-simple-groupable" gi="field-simple-groupable">
+               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 2 / field-groupable 1</value>
+            </field>
+            <field name="field-simple-groupable" gi="field-simple-groupable">
+               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 2 / field-groupable 2</value>
+            </field>
+            <field name="field-simple-groupable" gi="field-simple-groupable">
+               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 2 / field-groupable 3</value>
+            </field>
+         </group>
+      </assembly>
+      <assembly name="assembly-groupable" gi="assembly-groupable">
+         <group in-json="SINGLETON_OR_ARRAY" key="groupable-simple-fields">
+            <field name="field-simple-groupable" gi="field-simple-groupable">
+               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 3 / field-groupable 1</value>
+            </field>
+            <field name="field-simple-groupable" gi="field-simple-groupable">
+               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 3 / field-groupable 2</value>
+            </field>
+            <field name="field-simple-groupable" gi="field-simple-groupable">
+               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 3 / field-groupable 3</value>
+            </field>
+         </group>
+      </assembly>
    </group>
    <group name="wrapped-assemblies"
           gi="wrapped-assemblies"
@@ -247,10 +300,7 @@
    </group>
    <group in-json="ARRAY" key="everything-recursive">
       <assembly name="everything" gi="EVERYTHING">
-         <field name="field-1only"
-                gi="field-1only"
-                in-json="SCALAR"
-                key="field-1only">
+         <field name="field-1only" gi="field-1only" key="field-1only">
             <value as-type="string" key="STRVALUE" in-json="string">nested FIELD-1-ONLY</value>
          </field>
       </assembly>

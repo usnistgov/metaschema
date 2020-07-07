@@ -7,9 +7,9 @@
     <field-boolean>true</field-boolean>
     <field-named-value id="fnv1">FIELD-NAMED-VALUE</field-named-value>
     <markup-line>Here's some <em>markup</em>: make of it <strong>what you will</strong>! Even if it has ... * funky characters ` ... and even an <img alt="some picture" src="img.jpg"/></markup-line>
-    <field-groupable>field-groupable 1</field-groupable>
-    <field-groupable>field-groupable 2</field-groupable>
-    <field-groupable>field-groupable 3</field-groupable>
+    <field-simple-groupable integer-flag="1">field-groupable 1</field-simple-groupable>
+    <field-simple-groupable simple-flag="a">field-groupable 2</field-simple-groupable>
+    <field-simple-groupable integer-flag="3">field-groupable 3</field-simple-groupable>
     <wrapped-fields>
         <field-wrappable>field-wrappable 1</field-wrappable>
         <field-wrappable>field-wrappable 2</field-wrappable>
@@ -32,19 +32,19 @@
         <field-1only>ASSEMBLY-1-ONLY / FIELD-1-ONLY</field-1only>
     </ASSEMBLY-1ONLY>
     <assembly-groupable>
-        <field-groupable>assembly-groupable 1 / field-groupable 1</field-groupable>
-        <field-groupable>assembly-groupable 1 / field-groupable 2</field-groupable>
-        <field-groupable>assembly-groupable 1 / field-groupable 3</field-groupable>
+        <field-simple-groupable>assembly-groupable 1 / field-groupable 1</field-simple-groupable>
+        <field-simple-groupable>assembly-groupable 1 / field-groupable 2</field-simple-groupable>
+        <field-simple-groupable>assembly-groupable 1 / field-groupable 3</field-simple-groupable>
     </assembly-groupable>
     <assembly-groupable>
-        <field-groupable>assembly-groupable 2 / field-groupable 1</field-groupable>
-        <field-groupable>assembly-groupable 2 / field-groupable 2</field-groupable>
-        <field-groupable>assembly-groupable 2 / field-groupable 3</field-groupable>
+        <field-simple-groupable>assembly-groupable 2 / field-groupable 1</field-simple-groupable>
+        <field-simple-groupable>assembly-groupable 2 / field-groupable 2</field-simple-groupable>
+        <field-simple-groupable>assembly-groupable 2 / field-groupable 3</field-simple-groupable>
     </assembly-groupable>
     <assembly-groupable>
-        <field-groupable>assembly-groupable 3 / field-groupable 1</field-groupable>
-        <field-groupable>assembly-groupable 3 / field-groupable 2</field-groupable>
-        <field-groupable>assembly-groupable 3 / field-groupable 3</field-groupable>
+        <field-simple-groupable>assembly-groupable 3 / field-groupable 1</field-simple-groupable>
+        <field-simple-groupable>assembly-groupable 3 / field-groupable 2</field-simple-groupable>
+        <field-simple-groupable>assembly-groupable 3 / field-groupable 3</field-simple-groupable>
     </assembly-groupable>
     <wrapped-assemblies>
         <assembly-wrappable>
