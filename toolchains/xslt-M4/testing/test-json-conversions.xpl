@@ -9,7 +9,7 @@
   <!-- Ports -->
   
   <p:input port="metaschema-source" primary="true"/>
-  <p:input port="testdata-xml"      primary="false"/>
+  <p:input port="testdata-json-xml"      primary="false"/>
   <p:input port="parameters" kind="parameter"/>
   
   <p:serialization port="a.echo-input" indent="true"/>
@@ -37,14 +37,14 @@
     <p:pipe        port="result"           step="definition-map"/>
   </p:output>
   
-  <p:serialization port="C.xml-converter" indent="true"/>
-  <p:output        port="C.xml-converter" primary="false">
-    <p:pipe        port="result"          step="make-xml-converter"/>
+  <p:serialization port="C.json-converter" indent="true"/>
+  <p:output        port="C.json-converter" primary="false">
+    <p:pipe        port="result"          step="make-json-converter"/>
   </p:output>
   
-  <p:serialization port="Q.testdata-xml-source" indent="true"/>
-  <p:output        port="Q.testdata-xml-source" primary="false">
-    <p:pipe port="testdata-xml" step="test-metaschema-conversions"/>
+  <p:serialization port="Q.testdata-json-xml-source" indent="true"/>
+  <p:output        port="Q.testdata-json-xml-source" primary="false">
+    <p:pipe port="testdata-json-xml" step="test-metaschema-conversions"/>
   </p:output>
   
   <p:serialization port="S.testdata-supermodel" indent="true"/>
@@ -52,26 +52,21 @@
     <p:pipe        port="result"                step="capture-supermodel"/>
   </p:output>
   
+  <p:serialization port="_J1.testdata-json-xml-result" indent="true"/>
+  <p:output        port="_J1.testdata-json-xml-result" primary="false">
+    <p:pipe        port="result" step="convert-supermodel-to-json-xml"/>
+  </p:output>
+   
+  <p:serialization port="_J2.testdata-xml-result" indent="true" method="text"/>
+  <p:output        port="_J2.testdata-xml-result" primary="false">
+    <p:pipe        port="result" step="serialize-json"/>
+  </p:output>
+
   <p:serialization port="_X1.testdata-xml-result" indent="true"/>
   <p:output        port="_X1.testdata-xml-result" primary="false">
     <p:pipe        port="result" step="convert-supermodel-to-xml"/>
   </p:output>
   
-  <p:serialization port="S2.supermodel-with-markdown" indent="true"/>
-  <p:output        port="S2.supermodel-with-markdown" primary="false">
-    <p:pipe        port="result" step="convert-prose-to-markdown"/>
-  </p:output>
-  
-  <p:serialization port="_J1.testdata-json-xml-result" indent="true"/>
-  <p:output        port="_J1.testdata-json-xml-result" primary="false">
-    <p:pipe        port="result" step="convert-supermodel-to-json-xml"/>
-  </p:output>
-  
-  <p:serialization port="_J2.testdata-json-result" indent="true" method="text"/>
-  <p:output        port="_J2.testdata-json-result" primary="false">
-    <p:pipe        port="result" step="serialize-json"/>
-  </p:output>
- 
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
@@ -108,56 +103,54 @@
     </p:input>
   </p:xslt>
   
-  <p:xslt name="make-xml-converter">
+  <p:identity name="make-json-converter"/>
+  <!--<p:xslt name="make-json-converter">
     <p:input port="stylesheet">
-      <p:document href="../converter-gen/produce-xml-converter.xsl"/>
+      <p:document href="../converter-gen/produce-json-converter.xsl"/>
     </p:input>
-  </p:xslt>
+  </p:xslt>-->
   
-  <p:xslt name="convert-xml-testdata">
+  <p:identity name="convert-json-testdata"/>
+  <!--<p:xslt name="convert-json-testdata">
     <p:input port="source">
-      <p:pipe port="testdata-xml" step="test-metaschema-conversions"/>
+      <p:pipe port="testdata-json-xml" step="test-metaschema-conversions"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:pipe step="make-xml-converter" port="result"/>
+      <p:pipe step="make-json-converter" port="result"/>
     </p:input>
-  </p:xslt>
+  </p:xslt>-->
   
-  <!-- Now going back downhill to XML -->
-  <p:xslt name="convert-supermodel-to-xml">
+  <!-- Now going back downhill to JSON -->
+  <p:identity name="convert-supermodel-to-json-xml"/>
+  <!--<p:xslt name="convert-supermodel-to-json-xml">
     <p:input port="stylesheet">
-      <p:document href="../converter-gen/supermodel-to-xml.xsl"/>
+      <p:document href="../converter-gen/supermodel-to-json-xml.xsl"/>
     </p:input>
-  </p:xslt>
+  </p:xslt>-->
+  
+  <!--<p:identity name="serialize-json"/>-->
+  <p:identity name="serialize-json"/>
+  <!--<p:xslt name="serialize-json">
+    <p:input port="stylesheet">
+      <p:document href="../lib/xpath-json-to-json.xsl"/>
+    </p:input>
+  </p:xslt>-->
   
   <p:sink/>
   
   <!-- The supermodel: extra step for debuggability -->
   <p:identity name="capture-supermodel">
     <p:input port="source">
-      <p:pipe port="result" step="convert-xml-testdata"/>
+      <p:pipe port="result" step="convert-json-testdata"/>
     </p:input>
   </p:identity>
   
-  <!-- Back downhill to JSON -->
-  <!--<p:identity  name="convert-prose-to-markdown"/>-->
-  <p:xslt name="convert-prose-to-markdown">
+  <!-- Back downhill to XML -->
+  <p:identity  name="convert-supermodel-to-xml"/>
+  <!--<p:xslt name="convert-supermodel-to-xml">
     <p:input port="stylesheet">
-      <p:document href="../converter-gen/supermodel-to-markdown.xsl"/>
+      <p:document href="../converter-gen/supermodel-to-xml.xsl"/>
     </p:input>
-  </p:xslt>
-  
-  <p:xslt name="convert-supermodel-to-json-xml">
-    <p:input port="stylesheet">
-      <p:document href="../converter-gen/supermodel-to-json.xsl"/>
-    </p:input>
-  </p:xslt>
-  
-  <!--<p:identity name="serialize-json"/>-->
-  <p:xslt name="serialize-json">
-    <p:input port="stylesheet">
-      <p:document href="../lib/xpath-json-to-json.xsl"/>
-    </p:input>
-  </p:xslt>
+  </p:xslt>-->
   
 </p:declare-step>
