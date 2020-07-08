@@ -57,24 +57,25 @@
             <!-- first we produce templates for (each) of the global definitions.-->
             <xsl:for-each-group select="//*[@scope = 'global'][not(@recursive='true')]"
                 group-by="string-join((local-name(), @name), ':')">
-                <!-- These are all the same so we do only one -->
-                <xsl:apply-templates select="current-group()[1]" mode="make-template">
-                    <xsl:with-param name="ilk" select="current-group()"/>
+                <!-- These are all the same so we do only one, but we pass in the group to construct the match -->
+                <xsl:apply-templates select="current-group()[1]" mode="make-template-for-global">
+                    <xsl:with-param name="team" tunnel="true" select="current-group()"/>
                 </xsl:apply-templates>
             </xsl:for-each-group>
 
-            <!-- next we produce templates for local definitions -->
+            <!-- next we produce templates for local definitions - a receiving template
+                 filters out the globals ... -->
             <xsl:apply-templates select=".//assembly | .//field | .//flag" mode="make-template-for-local"/>
 
             <!--finally, if needed, a template for copying prose across, stripping ns -->
-            <xsl:call-template name="cast-prose-template"/>
+            <xsl:call-template name="for-this-converter"/>
             
         </XSLT:stylesheet> 
     </xsl:template>
     
     
     <xsl:template name="xpath-namespace">
-        <xsl:attribute name="xpath-default-namespace" expand-text="true">{ $source-namespace }</xsl:attribute>
+        <xsl:attribute name="xpath-default-namespace" select="$source-namespace"/>
     </xsl:template>
     
     <xsl:template name="make-strip-space">
@@ -84,8 +85,20 @@
     <xsl:template name="initial-comment">
         <xsl:comment> METASCHEMA conversion stylesheet supports XML -> METASCHEMA/SUPERMODEL conversion </xsl:comment>
     </xsl:template>
+
+    <xsl:template name="provide-namespace">
+        <!-- iff at the top -->
+        <xsl:for-each select="parent::model" expand-text="true">
+            <!-- likewise the XSLT provides a namespace only if at the top -->
+            <XSLT:if test=". is /*">
+                <XSLT:attribute name="namespace">{ $source-namespace }</XSLT:attribute>
+                <!-- don't need unless we have a requirement to prefix in serialization: <XSLT:attribute name="prefix">{ $source-prefix }</XSLT:attribute>-->
+            </XSLT:if>
+        </xsl:for-each>
+    </xsl:template>
     
-    <xsl:template name="cast-prose-template">
+    <xsl:template name="for-this-converter">
+        <!-- For the XML converter, we need a generic template to cast prose contents into the supermodel namespace -->
         <xsl:if test="exists(//value[@as-type = ('markup-line', 'markup-multiline')])">
             <XSLT:template match="*" mode="cast-prose">
                 <XSLT:element name="{{ local-name() }}"
@@ -97,18 +110,16 @@
         </xsl:if>
     </xsl:template>
     
-
-
     <xsl:template match="*[@scope='global']" mode="make-template-for-local"/>
     
     <xsl:template match="*" mode="make-template-for-local">
-        <xsl:apply-templates select="." mode="make-template"/>
+        <xsl:apply-templates select="." mode="make-template-for-global"/>
     </xsl:template>
  
     <!-- no template for implicit wrappers on markup-multiline -->
-    <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-template"/>
+    <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-template-for-global"/>
         
-    <xsl:template match="*" mode="make-template">
+    <xsl:template match="*" mode="make-template-for-global">
         <xsl:variable name="matching">
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
@@ -117,6 +128,7 @@
             <!-- A parameter allows the call to drop the key, necessary for recursive
                 groups of elements also allowed at the root (at least) -->
             <XSLT:param name="with-key" select="true()"/>
+            <xsl:call-template name="comment-template"/>
             <xsl:element name="{ local-name() }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
                 <xsl:copy-of select="@* except (@key|@scope)"/>
                 <!--'SCALAR' marks fields that will be strings or data values, not maps (objects)
@@ -136,39 +148,34 @@
             </xsl:element>
         </XSLT:template>
         <!--Additionally we need templates for elements defined implicitly as wrappers for given assemblies or fields-->
-        <xsl:apply-templates select="parent::group[exists(@gi)]" mode="make-template"/>
+        <xsl:apply-templates select="parent::group[exists(@gi)]" mode="make-template-for-global"/>
     </xsl:template>
     
-    <xsl:template name="provide-namespace">
-        <!-- iff at the top -->
-        <xsl:for-each select="parent::model" expand-text="true">
-            <!-- likewise the XSLT provides a namespace only if at the top -->
-            <XSLT:if test=". is /*">
-                <XSLT:attribute name="namespace">{ $source-namespace }</XSLT:attribute>
-                <!-- don't need unless we have a requirement to prefix in serialization: <XSLT:attribute name="prefix">{ $source-prefix }</XSLT:attribute>-->
-            </XSLT:if>
-        </xsl:for-each>
-    </xsl:template>
-    
-    <xsl:template match="flag" mode="make-template">
+    <xsl:template match="flag" mode="make-template-for-global">
         <xsl:variable name="matching">
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
         <XSLT:template match="{ $matching}">
+            <xsl:call-template name="comment-template"/>
             <flag>
                 <xsl:copy-of select="@* except @scope"/>
-                <XSLT:value-of select="."/>     
+                <XSLT:value-of select="."/>
             </flag>
         </XSLT:template>
     </xsl:template>
     
     <xsl:template priority="11" match="flag" mode="make-xml-match">
-        <xsl:value-of>
-            <xsl:apply-templates select=".." mode="make-xml-match"/>
-            <xsl:text>/</xsl:text>
-            <xsl:value-of select="'@' || @gi"/>
-        </xsl:value-of>
-        
+        <xsl:param name="team" tunnel="true" select="."/>
+        <xsl:variable name="team-matches" as="xs:string*">
+            <xsl:for-each select="$team">
+                <xsl:value-of>
+                    <xsl:apply-templates select=".." mode="make-xml-match"/>
+                    <xsl:text>/@</xsl:text>
+                    <xsl:value-of select="@gi"/>
+                </xsl:value-of>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:value-of select="distinct-values($team-matches)" separator=" | "/>
     </xsl:template>
     
     <xsl:template priority="11" match="flag" mode="make-xml-step">
@@ -284,5 +291,8 @@
         <XSLT:value-of select="."/>
     </xsl:template>
     
+    <!-- stub for override   -->
+    <xsl:template name="comment-template"/>
+        
     
 </xsl:stylesheet>

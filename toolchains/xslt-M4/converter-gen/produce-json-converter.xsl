@@ -56,7 +56,12 @@
         <xsl:variable name="matching-xml">
             <xsl:apply-templates select="." mode="make-xml-match"/>
         </xsl:variable>
-        <xsl:text expand-text="true">(: { $matching-xml} :) { m:jsonize-path($matching-xml) }</xsl:text>
+        <!--<xsl:try select="m:jsonize-path($matching-xml)">
+            <xsl:catch>
+                <xsl:message expand-text="true" xmlns:err="http://www.w3.org/2005/xqt-errors">(On { @name }) { $matching-xml }: { $err:description }</xsl:message>
+            </xsl:catch>
+        </xsl:try>-->
+        <xsl:text expand-text="true"><!--(: { $matching-xml} :) -->{ m:jsonize-path($matching-xml) }</xsl:text>
         <!--<xsl:sequence select="m:jsonize-path($matching-xml)"/>-->
         
     </xsl:template>
@@ -71,7 +76,7 @@
     
     <!-- Overriding interface template -->
     <xsl:template match="*" mode="make-pull">
-        <pull who="{name()}[@key='{@key}']"/>
+        <XSLT:apply-templates select="*[@key='{@key}']"/>
         <!--<pull>
             <xsl:copy>
                 <xsl:copy-of select="@*"/>
@@ -80,6 +85,12 @@
         <!--<xsl:apply-templates select="." mode="make-xml-pull"/>-->
     </xsl:template>
     
-    
+    <xsl:template name="comment-template">
+        <xsl:comment expand-text="true">
+            <xsl:text> Cf XML match="</xsl:text>
+            <xsl:apply-templates select="." mode="make-xml-match"/>
+            <xsl:text>" </xsl:text>
+        </xsl:comment>
+    </xsl:template>
     
 </xsl:stylesheet>

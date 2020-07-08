@@ -88,6 +88,7 @@
             <!--<sch:assert test="count(ancestor::m:model[1]//(m:field | m:define-field | m:assembly | m:define-assembly)[nm:identifiers(.)=$name]) = 1">group-as @name is not unique within this model</sch:assert>-->
             <!-- since definition-for-reference fails on an abstract metaschema we can't perform the json-key check there. -->
             <sch:assert test="$metaschema-is-abstract or not(@in-json='BY_KEY') or $def/m:json-key/@flag-name = $def/(m:flag/@ref|m:define-flag/@name)">Cannot group by key since the definition of <sch:value-of select="name(..)"/> '<sch:value-of select="../@ref"/>' has no json-key specified. Consider adding a json-key to the '<sch:value-of select="../@ref"/>' definition, or using a different 'in-json' setting.</sch:assert>
+            <sch:assert test="(@in-json='ARRAY') or not(@in-xml='GROUPED')">When @in-xml='GROUPED', @in-json must be 'ARRAY'.</sch:assert>
         </sch:rule>
         
         </sch:pattern>

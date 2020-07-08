@@ -74,7 +74,7 @@
                 <group-as name="groupable-assemblies"/>
             </assembly>
             <assembly ref="assembly-wrappable" max-occurs="unbounded">
-                <group-as name="wrapped-assemblies" in-xml="GROUPED"/>
+                <group-as name="wrapped-assemblies" in-xml="GROUPED" in-json="ARRAY"/>
             </assembly>
             <assembly ref="assembly-by-key" max-occurs="unbounded">
                 <group-as name="keyed-assemblies" in-json="BY_KEY"/>
@@ -195,10 +195,10 @@
         <description>assembly assembly-wrappable</description>
         <model>
             <field ref="field-wrappable" max-occurs="unbounded">
-                <group-as name="wrapped-fields" in-xml="GROUPED"/>
+                <group-as name="wrapped-fields" in-xml="GROUPED" in-json="ARRAY"/>
             </field>
             <assembly ref="assembly-wrappable" max-occurs="unbounded">
-                <group-as name="wrapped-assemblies" in-xml="GROUPED"/>
+                <group-as name="wrapped-assemblies" in-xml="GROUPED" in-json="ARRAY"/>
             </assembly>
         </model>
         
