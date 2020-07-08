@@ -9,6 +9,7 @@
     exclude-result-prefixes="#all"
     expand-text="true">
     
+    <xsl:output indent="yes"/>
     <!-- xmlns:p="xpath20" -->
     <!--<xsl:import href="REx/xpath20.xslt"/>-->
     
@@ -60,13 +61,15 @@
         <!--<test>field-flagged-groupable</test>
         <test>field-dynamic-value-key</test>-->
         <!--<test>*/@color</test>-->
-        <test>field-by-key/@id</test>
-        <test>field-dynamic-value-key/@id</test>
+        <test>wrapped-assemblies</test>
+        <test>EVERYTHING/@id|field-named-value/@id</test>
+        
+        <!--<test>field-dynamic-value-key/@id</test>
         
         <test>field-1only/(value() + path)</test>
         
         <test>/EVERYTHING/(field-1only | field-named-value)</test>
-        <test>/*</test>
+        <test>/*</test>-->
         <!--<test>field-named-value/value()</test>-->
         
         <!--field with dynamic value key?-->
@@ -97,12 +100,12 @@
     
     <xsl:template match="test" mode="testing">
         <xsl:variable name="map" select="m:path-map(string(.))"/>
-        <test expr="{.}" expand="{string($map)}" json-path="{m:jsonize-path(.)}">
+        <test expr="{.}" expand="{string-join($map)}" json-path="{m:jsonize-path(.)}">
         <!--<test>-->
             <!--<xsl:apply-templates select="key('obj-by-gi',.,$definition-map)" mode="cast-node-test"/>-->
-            <!--<xsl:sequence select="m:jsonize-path(.)"/>
-            <xsl:sequence select="m:path-map(.)"/>-->
-            <!--<xsl:sequence select="p:parse-XPath(.)"/>-->
+            <!--<xsl:sequence select="m:jsonize-path(.)"/>-->
+            <xsl:sequence select="m:path-map(.)"/>
+            <xsl:sequence select="p:parse-XPath(.)"/>
         </test>
     </xsl:template>
     
@@ -118,9 +121,14 @@
         <cast>{$px}:array[@key='{../@key}']/{$px}:map</cast>
     </xsl:template>
     
+    <!-- Catches groups that are explicit in the XML -->
+    <xsl:template match="group[exists(@gi)]" mode="cast-node-test">
+        <cast>{$px}:array[@key='{@key}']</cast>
+    </xsl:template>
+    
     <!-- Catches assembly grouped as SINGLETON_OR_ARRAY -->
     <xsl:template match="group/assembly" mode="cast-node-test">
-        <cast>{$px}:assembly[@key='{../@key}']/{$px}:map</cast>
+        <cast>{$px}:array[@key='{../@key}']/{$px}:map</cast>
         <cast>{$px}:map[@key='{../@key}']</cast>
     </xsl:template>
     
@@ -220,11 +228,11 @@
         <xsl:variable name="not-value-filter">
             <xsl:text expand-text="true">[not(@key=({ string-join($not-value-flags ! ( '''' || . || ''''), ',' ) }))]</xsl:text>
         </xsl:variable>
-        <cast>{$px}:{$value-type}{ $not-value-filter[matches(.,'\S')]}</cast>
+        <cast>{$px}:{$value-type}{ $not-value-filter[matches(.,'\S')]}/@key</cast>
     </xsl:template>
     
     <xsl:template match="*" mode="cast-node-test" expand-text="true">
-        <!--<cast>OoopsFellThroughOn{ name() }</cast>-->
+        <cast>OoopsFellThroughOn { name() }</cast>
         <cast>{$px}:*[@key='{../@key}']</cast>
     </xsl:template>
     
@@ -267,7 +275,7 @@
     
     <xsl:template match="@as-type[. = $numeric-types]" mode="json-type">number</xsl:template>
        
-    <xsl:function name="m:path-map" as="node()">
+    <xsl:function name="m:path-map" as="node()*">
         <xsl:param name="expr"/>
         <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
         <xsl:apply-templates select="$parse.tree" mode="path-map"/>
@@ -288,11 +296,11 @@
     </xsl:function>
     
     <!-- m:jsonization returns the path mapped step by step into JSON, as an XML element tree -->
-    <xsl:function name="m:jsonization" as="element()">
+    <xsl:function name="m:jsonization" as="node()*">
         <xsl:param name="metapath" as="xs:string" required="yes"/>
         <xsl:variable name="path-map" select="m:path-map($metapath)"/>
         <xsl:choose>
-            <xsl:when test="$path-map instance of element()">
+            <xsl:when test="exists($path-map/*)">
                 <xsl:apply-templates select="$path-map" mode="cast-path"/>
             </xsl:when>
             <xsl:otherwise>

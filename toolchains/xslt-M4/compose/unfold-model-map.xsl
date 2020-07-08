@@ -17,7 +17,7 @@
     <xsl:template match="*[exists(@group-name)]">
         <group name="{@group-name}" in-xml="{ if (@group-xml='GROUPED') then 'SHOWN' else 'HIDDEN' }"
             max-occurs="1" min-occurs="{ if (@min-occurs='0') then '0' else '1'}">
-            <xsl:copy-of select="@json-key-flag | @group-json"/>
+            <xsl:copy-of select="@json-key-flag | @group-json | @recursive"/>
             <xsl:next-match/>
         </group>
     </xsl:template>
