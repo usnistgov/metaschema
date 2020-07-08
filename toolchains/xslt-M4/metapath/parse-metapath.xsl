@@ -91,6 +91,12 @@
 <!-- because the axis is expanded we switch the token   -->
     <xsl:template match="text()" mode="step-map"/>
     
+    <xsl:template match="XPath" mode="step-map">
+        <m:metapath>
+            <xsl:apply-templates mode="#current"/>
+        </m:metapath>
+    </xsl:template>
+    
     <xsl:template match="XPath/UnionExpr/UnaryExpr" mode="step-map">
         <m:alternative>
             <xsl:apply-templates mode="#current"/>
@@ -134,8 +140,6 @@
             <xsl:apply-templates mode="#current"/>
         </m:filter>
     </xsl:template>
-    
-    
     
     <xsl:template priority="2" match="Predicate/TOKEN" mode="step-map"/>
     
@@ -222,6 +226,13 @@
     <!-- Differences: text is not suppressed in step-map
            (slightly rewritten where paths are explicated)
       paths are kept, not only steps-->
+    
+    <xsl:template match="XPath" mode="path-map">
+        <m:metapath>
+            <xsl:apply-templates mode="#current"/>
+        </m:metapath>
+    </xsl:template>
+    
     <xsl:template match="XPath/UnionExpr/UnaryExpr" mode="path-map">
         <m:alternative>
             <xsl:apply-templates mode="#current"/>
