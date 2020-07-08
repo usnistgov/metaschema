@@ -2,6 +2,7 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" stylesheet="metapath-jsonize.xsl">
     <x:param name="definition-map" href="../testing/models_definition-map.xml"/>
+    
     <x:scenario label="Path to root">
         <x:call function="m:jsonize-path">
             <x:param>/</x:param>
@@ -9,14 +10,29 @@
         <x:expect label="path to root" select="'/j:map'"/>
     </x:scenario>
     
+    <x:scenario label="Problem case">
+        <x:call function="m:jsonize-path">
+            <x:param>wrapped-assemblies</x:param>
+        </x:call>
+        <x:expect label="structure XPath to root" select="'j:array[@key=''wrapped-assemblies'']/j:map | j:map[@key=''wrapped-assemblies'']'"/>
+    </x:scenario>
+    
+    <x:scenario label="Problem case">
+        <x:call function="m:jsonization">
+            <x:param>wrapped-assemblies</x:param>
+        </x:call>
+        <x:expect label="structure XPath to root" select="'j:array[@key=''wrapped-assemblies'']/j:map | j:map[@key=''wrapped-assemblies'']'"/>
+    </x:scenario>
+    
     <x:scenario label="Path to root (path map)">
         <x:call function="m:path-map">
             <x:param>/</x:param>
         </x:call>
         <x:expect label="structure XPath to root">
-            <m:alternative xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
-                <m:path>/</m:path>
-            </m:alternative>
+            <m:metapath xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+                <m:alternative>
+                    <m:path>/</m:path>
+                </m:alternative></m:metapath>
         </x:expect>
     </x:scenario>
     
@@ -25,9 +41,9 @@
             <x:param>/</x:param>
         </x:call>
         <x:expect label="structured JSONized XPath to root">
-            <m:alternative xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+            <m:metapath xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"><m:alternative>
                 <m:path>/j:map</m:path>
-            </m:alternative>
+            </m:alternative></m:metapath>
         </x:expect>
     </x:scenario>
     
@@ -61,7 +77,7 @@
         <x:call function="m:jsonize-path">
             <x:param>/EVERYTHING</x:param>
         </x:call>
-        <x:expect label="definition map indicates two possible roots"
+        <x:expect label="only one path for a root"
             select="'/j:map/j:map[@key=''EVERYTHING'']'"/>
     </x:scenario>
     
@@ -89,6 +105,57 @@
             select="'/j:map/j:map[@key=''EVERYTHING''][j:map[@key=''field-1only'']/j:string[@key=''STRVALUE'']=''x'']'"/>
     </x:scenario>
     
+    <x:scenario label="Relative path to flag (path map)">
+        <x:call function="m:path-map">
+            <x:param>EVERYTHING/@id</x:param>
+        </x:call>
+        <x:expect label="structure XPath to root">
+            <m:metapath xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+                <m:alternative>
+                    <m:path>
+                        <m:step>
+                            <m:axis>child::</m:axis>
+                            <m:node>EVERYTHING</m:node>
+                        </m:step>/<m:step>
+                            <m:axis>attribute::</m:axis>
+                            <m:node>id</m:node>
+                        </m:step>
+                    </m:path>
+                </m:alternative>
+            </m:metapath>
+        </x:expect>
+    </x:scenario>
+    
+    <x:scenario label="Compound path to flags (path map)">
+        <x:call function="m:path-map">
+            <x:param>EVERYTHING/@id|field-named-value/@id</x:param>
+        </x:call>
+        <x:expect label="structure XPath to root">
+            <m:metapath xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+                <m:alternative>
+                    <m:path>
+                        <m:step>
+                            <m:axis>child::</m:axis>
+                            <m:node>EVERYTHING</m:node>
+                        </m:step>/<m:step>
+                            <m:axis>attribute::</m:axis>
+                            <m:node>id</m:node>
+                        </m:step>
+                    </m:path>
+                </m:alternative>|<m:alternative>
+                    <m:path>
+                        <m:step>
+                            <m:axis>child::</m:axis>
+                            <m:node>field-named-value</m:node>
+                        </m:step>/<m:step>
+                            <m:axis>attribute::</m:axis>
+                            <m:node>id</m:node>
+                        </m:step>
+                    </m:path>
+                </m:alternative>
+            </m:metapath>
+        </x:expect>
+    </x:scenario>
     <!--<x:scenario label="Absolute path to document element, with predicate including a relative path (mapped structure)">
         <x:call function="m:jsonization">
             <x:param>/EVERYTHING[field-1only/value()='x']</x:param>
