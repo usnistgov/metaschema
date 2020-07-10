@@ -9,7 +9,6 @@
     exclude-result-prefixes="#all"
     expand-text="true">
     
-    <xsl:output indent="yes"/>
     <!-- xmlns:p="xpath20" -->
     <!--<xsl:import href="REx/xpath20.xslt"/>-->
     
@@ -249,17 +248,17 @@
     
 <!-- A field without such flags, becomes an object of its nominal type. -->
     <xsl:template match="field" mode="object-type">
-        <xsl:apply-templates select="value/@as-type" mode="json-type"/>
+        <xsl:apply-templates select="value/@as-type" mode="xpath-json-type"/>
     </xsl:template>
     
     <xsl:template match="flag | value" mode="object-type">
-        <xsl:apply-templates select="@as-type" mode="json-type"/>
+        <xsl:apply-templates select="@as-type" mode="xpath-json-type"/>
     </xsl:template>
     
     <!-- In the JSON representation all values are strings unless mapped otherwise. -->
-    <xsl:template match="@as-type" mode="json-type">string</xsl:template>
+    <xsl:template match="@as-type" mode="xpath-json-type">string</xsl:template>
     
-    <xsl:template match="@as-type[. = 'boolean']" mode="json-type">boolean</xsl:template>
+    <xsl:template match="@as-type[. = 'boolean']" mode="xpath-json-type">boolean</xsl:template>
     
     <xsl:variable name="integer-types" as="element()*">
         <type>integer</type>
@@ -267,13 +266,11 @@
         <type>nonNegativeInteger</type>
     </xsl:variable>
     
-    <xsl:template match="@as-type[. = $integer-types]" mode="json-type">integer</xsl:template>
-    
     <xsl:variable name="numeric-types" as="element()*">
         <type>decimal</type>
     </xsl:variable>
     
-    <xsl:template match="@as-type[. = $numeric-types]" mode="json-type">number</xsl:template>
+    <xsl:template match="@as-type[. = ($integer-types,$numeric-types)]" mode="xpath-json-type">number</xsl:template>
        
     <xsl:function name="m:path-map" as="node()*">
         <xsl:param name="expr"/>
