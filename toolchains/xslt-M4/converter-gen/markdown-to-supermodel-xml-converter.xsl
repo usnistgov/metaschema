@@ -18,7 +18,7 @@
         </xsl:call-template>
     </xsl:template>
     
-    <xsl:template name="run-tests">
+    <xsl:template name="run-tests" match="/">
         <!--<xsl:copy-of select="$tag-replacements"/>-->
         <!--<xsl:copy-of select="$examples"/>-->
         <xsl:call-template name="parse">
@@ -290,7 +290,7 @@
         
     <xsl:template match="text()" mode="infer-inlines">
         <xsl:variable name="markup">
-            <xsl:apply-templates select="$tag-replacements/rules">
+            <xsl:apply-templates select="$tag-replacements/rules" mode="replacements">
                 <xsl:with-param name="original" tunnel="yes" as="text()" select="."/>
             </xsl:apply-templates>
         </xsl:variable>
@@ -302,7 +302,7 @@
     
     <!-- Match 'rules' passing in $original to receive original back
         as a fully-replaced string. -->
-    <xsl:template match="rules" as="xs:string">
+    <xsl:template match="rules" as="xs:string" mode="replacements">
 
         <!-- Original is only provided for processing text nodes -->
         <xsl:param name="original" as="text()?" tunnel="yes"/>
@@ -313,7 +313,7 @@
             <xsl:on-completion select="$str"/>
             <xsl:next-iteration>
                 <xsl:with-param name="str">
-                    <xsl:apply-templates select=".">
+                    <xsl:apply-templates select="." mode="replacements">
                         <xsl:with-param name="str" select="$str"/>
                     </xsl:apply-templates>
                 </xsl:with-param>
@@ -321,7 +321,7 @@
         </xsl:iterate>
     </xsl:template>
 
-    <xsl:template match="replace" expand-text="true">
+    <xsl:template match="replace" expand-text="true"  mode="replacements">
         <xsl:param name="str" as="xs:string"/>
         <!--<xsl:value-of>replace({$str},{@match},{string(.)})</xsl:value-of>-->
 <!-- 's' sets dot-matches-all       -->
@@ -361,7 +361,7 @@
     
     
 
-    <xsl:variable name="tag-specification" as="element(tag-spec)">
+    <xsl:variable name="tag-specification" as="element(tag-spec)"  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
         <tag-spec>
             <!-- The XML notation represents the substitution by showing both delimiters and tags  -->
             <!-- Note that text contents are regex notation for matching so * must be \* -->
@@ -388,6 +388,8 @@
              it will be parsed and serialized -->
         <xsl:text>&lt;</xsl:text>
         <xsl:value-of select="local-name()"/>
+        <!-- forcing the namespace! -->
+        <xsl:text> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"</xsl:text>
         <!-- coercing the order to ensure correct formation of regegex       -->
         <xsl:apply-templates mode="#current" select="@*"/>
         <xsl:text>&gt;</xsl:text>
