@@ -29,5 +29,5 @@
         <xsl:apply-templates select="." mode="parse"/>-->
     </xsl:template>
     
-    <xsl:import href="md-oscal-converter.xsl"/>
+    <xsl:import href="markdown-to-supermodel-xml-converter.xsl"/>
 </xsl:stylesheet>
