@@ -10,6 +10,8 @@
     <field-simple-groupable integer-flag="1">field-groupable 1</field-simple-groupable>
     <field-simple-groupable simple-flag="a">field-groupable 2</field-simple-groupable>
     <field-simple-groupable integer-flag="3">field-groupable 3</field-simple-groupable>
+    <!--XXX make sure singleton-or-array works ... -->
+    <!--<field-flagged-groupable flagged-date="2020-07-07" flagged-decimal="3.14159">July 7 2020</field-flagged-groupable>-->
     <wrapped-fields>
         <field-wrappable>field-wrappable 1</field-wrappable>
         <field-wrappable>field-wrappable 2</field-wrappable>

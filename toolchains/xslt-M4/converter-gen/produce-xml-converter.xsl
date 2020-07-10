@@ -58,7 +58,7 @@
             <xsl:for-each-group select="//*[@scope = 'global'][not(@recursive='true')]"
                 group-by="string-join((local-name(), @name), ':')">
                 <!-- These are all the same so we do only one, but we pass in the group to construct the match -->
-                <xsl:apply-templates select="current-group()[1]" mode="make-template-for-global">
+                <xsl:apply-templates select="current-group()[1]" mode="make-template">
                     <xsl:with-param name="team" tunnel="true" select="current-group()"/>
                 </xsl:apply-templates>
             </xsl:for-each-group>
@@ -113,18 +113,24 @@
     <xsl:template match="*[@scope='global']" mode="make-template-for-local"/>
     
     <xsl:template match="*" mode="make-template-for-local">
-        <xsl:apply-templates select="." mode="make-template-for-global"/>
+        <xsl:apply-templates select="." mode="make-template">
+            <xsl:with-param name="local" select="true()"/>
+        </xsl:apply-templates>
     </xsl:template>
  
     <!-- no template for implicit wrappers on markup-multiline -->
-    <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-template-for-global"/>
+    <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-template"/>
         
-    <xsl:template match="*" mode="make-template-for-global">
+    <!--Invoke by name when we wish to override mode 'template-for-global' -->
+    <xsl:template match="*" mode="make-template" name="make-template">
         <xsl:variable name="matching">
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
         <xsl:variable name="json-key-flag-name" select="@json-key-flag"/>
         <XSLT:template match="{ $matching}">
+            <xsl:if test="not(@scope='global')">
+                <xsl:attribute name="priority" select="10"/>
+            </xsl:if>
             <!-- A parameter allows the call to drop the key, necessary for recursive
                 groups of elements also allowed at the root (at least) -->
             <XSLT:param name="with-key" select="true()"/>
@@ -144,25 +150,31 @@
                     </XSLT:if>
                 </xsl:if>
                 <xsl:call-template name="provide-namespace"/>
-                <xsl:apply-templates select="*" mode="make-pull"/>     
+                <xsl:apply-templates select="." mode="make-key-flag"/>
+                <xsl:apply-templates select="*" mode="make-pull"/>
             </xsl:element>
         </XSLT:template>
         <!--Additionally we need templates for elements defined implicitly as wrappers for given assemblies or fields-->
-        <xsl:apply-templates select="parent::group[exists(@gi)]" mode="make-template-for-global"/>
+        <xsl:apply-templates select="parent::group[exists(@gi)]" mode="make-template"/>
     </xsl:template>
     
-    <xsl:template match="flag" mode="make-template-for-global">
+    <xsl:template match="flag" mode="make-template">
         <xsl:variable name="matching">
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
         <XSLT:template match="{ $matching}">
             <xsl:call-template name="comment-template"/>
-            <flag>
+            <flag in-json="string">
                 <xsl:copy-of select="@* except @scope"/>
+                <!-- rewriting in-json where necessary -->
+                <xsl:apply-templates select="@as-type" mode="assign-json-type"/>
                 <XSLT:value-of select="."/>
             </flag>
         </XSLT:template>
     </xsl:template>
+    
+    <!-- In the XML, even a flag designated as a key is an attribute, so it will be produced without explicit instruction. -->
+    <xsl:template match="*" mode="make-key-flag"/>
     
     <xsl:template priority="11" match="flag" mode="make-xml-match">
         <xsl:param name="team" tunnel="true" select="."/>
@@ -245,19 +257,23 @@
     <xsl:template match="value" mode="make-xml-pull">
         <value>
             <xsl:copy-of select="@key | @key-flag | @as-type"/>
-            <xsl:apply-templates select="@as-type" mode="json-type"/>
+            <xsl:apply-templates select="@as-type" mode="assign-json-type"/>
             <xsl:apply-templates select="." mode="cast-value"/>
         </value>
     </xsl:template>
     
     <!-- In the JSON representation all values are strings unless mapped otherwise. -->
-    <xsl:template match="@as-type" mode="json-type">
+    <xsl:template match="@as-type" mode="assign-json-type">
         <xsl:attribute name="in-json">string</xsl:attribute>
     </xsl:template>
     
-    <xsl:template match="@as-type[.='boolean']" mode="json-type">
+    <xsl:template match="@as-type[.='boolean']" mode="assign-json-type">
         <xsl:attribute name="in-json">boolean</xsl:attribute>
     </xsl:template>
+    
+    
+    <!-- The following assign-json-type logic parallels mode 'xpath-json-type' in metapath-jsonize.xsl
+         these could be consolidated -->
     
     <xsl:variable name="integer-types" as="element()*">
         <type>integer</type>
@@ -265,15 +281,11 @@
         <type>nonNegativeInteger</type>
     </xsl:variable>
     
-    <xsl:template match="@as-type[.=$integer-types]" mode="json-type">
-        <xsl:attribute name="in-json">number</xsl:attribute>
-    </xsl:template>
-    
     <xsl:variable name="numeric-types" as="element()*">
         <type>decimal</type>
     </xsl:variable>
     
-    <xsl:template match="@as-type[.=$numeric-types]" mode="json-type">
+    <xsl:template match="@as-type[.=($integer-types,$numeric-types)]" mode="assign-json-type">
         <xsl:attribute name="in-json">number</xsl:attribute>
     </xsl:template>
     

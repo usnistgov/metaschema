@@ -57,15 +57,15 @@
     <p:pipe        port="result"                step="serialize-supermodel.1-as-json"/>
   </p:output>
   
-  <p:serialization port="i_supermodel.2-is-from-MIDWAY-xpath-json" indent="true"/>
-  <p:output        port="i_supermodel.2-is-from-MIDWAY-xpath-json" primary="false">
+  <p:serialization port="i1_raw-md-supermodel.2-is-from-MIDWAY-xpath-json" indent="true"/>
+  <p:output        port="i1_raw-md-supermodel.2-is-from-MIDWAY-xpath-json" primary="false">
     <p:pipe        port="result" step="convert-jsonified-testdata"/>
   </p:output>
   
-  <!--<p:serialization port="k_json-from-supermodel.2" indent="true"/>
-  <p:output        port="k_json-from-supermodel.2" primary="false">
-    <p:pipe        port="result" step="convert-prose-to-markdown"/>
-  </p:output>-->
+  <p:serialization port="i2_supermodel.2" indent="true"/>
+  <p:output        port="i2_supermodel.2" primary="false">
+    <p:pipe        port="result" step="convert-markdown-to-markup"/>
+  </p:output>
   
   <p:serialization port="k_xml-from-supermodel.2" indent="true"/>
   <p:output        port="k_xml-from-supermodel.2" primary="false">
@@ -184,13 +184,14 @@
     </p:input>
   </p:xslt>
   
+  
   <!-- Interpolating markup from the Markdown to produce a supermodel XML representation -->
   <p:identity name="supermodel-markdown-to-markup"/>
-  <!--<p:xslt name="markup-supermodel-markdown">
+  <p:xslt name="convert-markdown-to-markup">
     <p:input port="stylesheet">
-      <p:document href="../converter-gen/markdown-to-supermodel.xsl"/>
+      <p:document href="../converter-gen/markdown-to-supermodel-xml-converter.xsl"/>
     </p:input>
-  </p:xslt>-->
+  </p:xslt>
   
   <!-- Go back down hill to XML -->
   <p:xslt name="convert-json-supermodel-to-xml">

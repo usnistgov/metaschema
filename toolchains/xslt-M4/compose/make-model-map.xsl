@@ -150,6 +150,10 @@
     <xsl:template priority="3" match="define-field[exists(json-value-key/@flag-name)]" mode="value-key">
         <xsl:attribute name="key-flag" select="json-value-key/@flag-name"/>
     </xsl:template>
+
+    <!-- When a field has no flags not designated as a json-value-flag, it is 'naked'; its value is given without a key
+         (in target JSON it will be the value of a (scalar) property, not a value on a property of an object property. -->
+    <xsl:template mode="value-key" priority="2" match="define-field[empty(flag[not(@ref=../json-value-key/@flag-name)] | define-flag[not(@ref=../json-value-key/@flag-name)])]"/>
     
     <xsl:template priority="2" match="define-field[exists(json-value-key)]" mode="value-key">
         <xsl:attribute name="key" select="json-value-key"/>
@@ -163,6 +167,7 @@
         <xsl:attribute name="key" select="$markdown-multiline-label"/>
     </xsl:template>
     
+        
     <xsl:template match="define-field" mode="value-key">
         <xsl:attribute name="key" select="$string-value-label"/>
     </xsl:template>
