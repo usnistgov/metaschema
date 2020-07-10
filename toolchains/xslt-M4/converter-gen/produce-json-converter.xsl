@@ -14,11 +14,12 @@
 <!-- Input:   A Metaschema definition map -->
 <!-- Output:  An XSLT -->
 
+    <!-- Path conversion logic is here -->
+    <xsl:import href="../metapath/metapath-jsonize.xsl"/>
+
     <!-- Most of the logic is the same as the XML converter. -->
     <xsl:import href="produce-xml-converter.xsl"/>
     
-    <!-- Path conversion logic is here -->
-    <xsl:import href="../metapath/metapath-jsonize.xsl"/>
     
     <xsl:output indent="yes"/>
     
@@ -74,18 +75,107 @@
         <xsl:sequence select="m:jsonize-path($step-xml)"/>
     </xsl:template>
     
-    <!-- Overriding interface template -->
+    <!-- Overriding interface template in mode 'make-pull' -->
     <xsl:template match="*" mode="make-pull">
-        <XSLT:apply-templates select="*[@key='{@key}']"/>
-        <!--<pull>
-            <xsl:copy>
-                <xsl:copy-of select="@*"/>
-            </xsl:copy>
-        </pull>-->
-        <!--<xsl:apply-templates select="." mode="make-xml-pull"/>-->
+        <xsl:apply-templates select="." mode="make-json-pull"/>
     </xsl:template>
     
-    <xsl:template name="comment-template">
+    
+    
+    <xsl:template priority="2" match="value" mode="make-json-pull">
+        <XSLT:apply-templates select="." mode="get-value-property"/>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="make-json-pull">
+        <XSLT:apply-templates select="*[@key='{@key}']"/>
+    </xsl:template>
+    
+    
+    
+    <!-- overriding template in produce-xml-converter that suppresses template
+         production for an element not present in the XML: this time we want the field
+         (but must also hard-wire the match). -->
+    <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-template">
+        <XSLT:template match="{$px}:string[@key='{@key}']">
+            <field>
+                <xsl:copy-of select="@*"/>
+                <value>
+                    <xsl:copy-of select="value/@*"/>
+                    <xsl:apply-templates select="value/@as-type" mode="assign-json-type"/>
+                    <XSLT:value-of select="."/>
+                </value>
+            </field>
+        </XSLT:template>
+    </xsl:template>
+    
+    <!-- fields with @gi including markup-line and markup-multiline -->
+    <xsl:template match="field" mode="make-template">
+        <xsl:call-template name="make-template"/>
+        <xsl:variable name="matching">
+            <xsl:apply-templates select="." mode="make-match"/>
+        </xsl:variable>
+        <!-- now producing a template to produce a value node representing the value of the field-->
+        <XSLT:template match="{ $matching }" mode="get-value-property">
+            <!-- make a flag for the value key, when it's dynamic -->
+            <xsl:for-each select="flag[@name=../value/@key-flag]">
+                <flag>
+                    <xsl:copy-of select="@*"/>
+                    <XSLT:value-of select="*[not(@key=({ flag/@name ! ('''' || . || '''') => string-join(',') }))]/@key"/>
+                </flag>
+            </xsl:for-each>
+            <!-- and now make a value -->
+            <value>
+                <xsl:copy-of select="value/(@key | @key-flag | @as-type)"/>
+                <xsl:apply-templates select="value/@as-type" mode="assign-json-type"/>
+                <!-- traversing to child properties and keeping only the value property -->
+                <XSLT:apply-templates mode="keep-value-property"/>
+            </value>
+        </XSLT:template>
+    </xsl:template>
+    
+    
+    <!-- A field with no value key has its own value in the JSON, not on a property -->
+    <xsl:template match="field[empty(flag|value/@key)]" mode="make-template">
+        <xsl:call-template name="make-template"/>
+        <xsl:variable name="matching">
+            <xsl:apply-templates select="." mode="make-match"/>
+        </xsl:variable>
+        <!-- now producing a template to produce a value node representing the value of the field-->
+        <XSLT:template match="{ $matching }" mode="get-value-property">
+            <value>
+                <xsl:copy-of select="value/(@key | @key-flag | @as-type)"/>
+                <xsl:apply-templates select="value/@as-type" mode="assign-json-type"/>
+                <XSLT:value-of select="."/>
+            </value>
+        </XSLT:template>
+    </xsl:template>
+    
+    <!-- A field with a dynamic value key has a value with a @key-flag -->
+<!--    In addition to its default template, all flags are provided
+        with a filter to suppress it when fields retrieves its value.
+    Note that global flags can be on fields or assemblies so we must match
+    either (we are matching the first as proxy for all) -->
+    <xsl:template match="flag" mode="make-template">
+        <xsl:apply-imports/>
+        <xsl:variable name="matching">
+            <xsl:apply-templates select="." mode="make-match"/>
+        </xsl:variable>
+        <XSLT:template match="{ $matching}" mode="keep-value-property">
+            <xsl:comment> Property is a flag; dropped when grabbing values</xsl:comment>
+        </XSLT:template>
+    </xsl:template>
+    
+    <xsl:template match="*[@json-key-flag=flag/@name]" mode="make-key-flag">
+        <xsl:apply-templates select="flag[@name=../@json-key-flag]" mode="make-key-flag"/>
+    </xsl:template>
+    
+    <xsl:template match="flag" mode="make-key-flag">
+        <flag>
+            <xsl:copy-of select="@*"/>
+            <XSLT:value-of select="@key"/>
+        </flag>
+    </xsl:template>
+            <xsl:template name="comment-template">
         <xsl:comment expand-text="true">
             <xsl:text> Cf XML match="</xsl:text>
             <xsl:apply-templates select="." mode="make-xml-match"/>
@@ -93,4 +183,21 @@
         </xsl:comment>
     </xsl:template>
     
+    <xsl:template name="for-this-converter">
+        <!-- For the JSON converter, we provide templates (in two modes) to give us field values from the fields; this defaults them. -->
+       
+        <xsl:comment> by default, fields traverse their properties to find a value </xsl:comment>
+        <XSLT:template match="*" mode="get-value-property">
+            <XSLT:apply-templates mode="keep-value-property"/>
+        </XSLT:template>
+
+        <!-- anything without a better match (a property representing a flag) is kept as a value -->
+        <XSLT:template match="*" mode="keep-value-property">
+            <XSLT:value-of select="."/>
+        </XSLT:template>
+        
+        
+    </xsl:template>
+    <!--
+    -->
 </xsl:stylesheet>
