@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" stylesheet="metapath-jsonize.xsl">
-    <x:param name="definition-map" href="../testing/models_definition-map.xml"/>
+    <x:param name="definition-map" href="../testing/latest-definition-map.xml"/>
     
     <x:scenario label="Path to root">
         <x:call function="m:jsonize-path">
@@ -14,15 +14,17 @@
         <x:call function="m:jsonize-path">
             <x:param>wrapped-assemblies</x:param>
         </x:call>
-        <x:expect label="structure XPath to root" select="'j:array[@key=''wrapped-assemblies'']/j:map | j:map[@key=''wrapped-assemblies'']'"/>
+        <x:expect label="structure XPath to root" select="'j:array[@key=''wrapped-assemblies'']'"/>
+        <!-- to support json singleton-or-array -->
+        <!--<x:expect label="structure XPath to root" select="'j:array[@key=''wrapped-assemblies'']/j:{$type} | j:{$type}[@key=''wrapped-assemblies'']'"/>-->
     </x:scenario>
     
-    <x:scenario label="Problem case">
+    <!--<x:scenario label="Problem case">
         <x:call function="m:jsonization">
             <x:param>wrapped-assemblies</x:param>
         </x:call>
         <x:expect label="structure XPath to root" select="'j:array[@key=''wrapped-assemblies'']/j:map | j:map[@key=''wrapped-assemblies'']'"/>
-    </x:scenario>
+    </x:scenario>-->
     
     <x:scenario label="Path to root (path map)">
         <x:call function="m:path-map">
