@@ -52,8 +52,10 @@
     <nm:transform version="3.0">../compose/metaschema-reduce1.xsl</nm:transform>
     <nm:transform version="3.0">../compose/metaschema-reduce2.xsl</nm:transform>
     <nm:transform version="3.0">../compose/metaschema-digest.xsl</nm:transform>
+    <!-- composed metaschema -->
     
-    <nm:transform version="3.0">produce-xml-converter.xsl</nm:transform>
-    <nm:transform version="3.0">package-xml-converter.xsl</nm:transform>
+    <!-- definition map -->
+    <!--<nm:transform version="3.0">produce-xml-converter.xsl</nm:transform>-->
+    <!--<nm:transform version="3.0">package-xml-converter.xsl</nm:transform>-->
   </xsl:variable>
 </xsl:stylesheet>
