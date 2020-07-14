@@ -114,6 +114,7 @@
     </p:input>
   </p:xslt>
   
+  <!--<p:identity name="convert-xml-testdata"/>-->
   <p:xslt name="convert-xml-testdata">
     <p:input port="source">
       <p:pipe port="testdata-xml" step="test-metaschema-conversions"/>
@@ -124,6 +125,7 @@
   </p:xslt>
   
   <!-- Now going back downhill to XML -->
+  <!--<p:identity name="convert-supermodel-to-xml"/>-->
   <p:xslt name="convert-supermodel-to-xml">
     <p:input port="stylesheet">
       <p:document href="../converter-gen/supermodel-to-xml.xsl"/>
@@ -140,13 +142,14 @@
   </p:identity>
   
   <!-- Back downhill to JSON -->
-  <!--<p:identity  name="convert-prose-to-markdown"/>-->
-  <p:xslt name="convert-prose-to-markdown">
+  <p:identity  name="convert-prose-to-markdown"/>
+  <!--<p:xslt name="convert-prose-to-markdown">
     <p:input port="stylesheet">
       <p:document href="../converter-gen/supermodel-to-markdown.xsl"/>
     </p:input>
-  </p:xslt>
+  </p:xslt>-->
   
+  <!--<p:identity name="convert-supermodel-to-json-xml"/>-->
   <p:xslt name="convert-supermodel-to-json-xml">
     <p:input port="stylesheet">
       <p:document href="../converter-gen/supermodel-to-json.xsl"/>

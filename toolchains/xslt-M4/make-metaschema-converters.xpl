@@ -3,13 +3,12 @@
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  type="metaschema:make-metaschema-xml-to-supermodel-xslt"
-  name="make-metaschema-xml-to-supermodel-xslt">
+  type="metaschema:make-xml-map" name="make-xml-map">
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
   
-  <p:input port="source"     primary="true"/>
+  <p:input port="source" primary="true"/>
   <p:input port="parameters" kind="parameter"/>
   
   <p:serialization port="a.echo-input" indent="true"/>
@@ -32,14 +31,29 @@
     <p:pipe        port="result"               step="unfold-model-map"/>
   </p:output>
   
-  <p:serialization port="A.definition-map" indent="true"/>
-  <p:output        port="A.definition-map" primary="false">
-    <p:pipe        port="result"           step="definition-map"/>
+  <p:serialization port="E.definition-map" indent="true"/>
+  <p:output        port="E.definition-map" primary="false">
+    <p:pipe        port="result"        step="definition-map"/>
   </p:output>
   
-  <p:serialization port="C.xml-converter" indent="true"/>
-  <p:output        port="C.xml-converter" primary="false">
-    <p:pipe        port="result"          step="make-xml-converter"/>
+  <p:serialization port="X1.xml-element-tree" indent="true"/>
+  <p:output        port="X1.xml-element-tree" primary="false">
+    <p:pipe        port="result"              step="make-xml-element-tree"/>
+  </p:output>
+  
+  <p:serialization port="X2.xml-model-html" indent="false" method="xml" omit-xml-declaration="false"/>
+  <p:output        port="X2.xml-model-html" primary="false">
+    <p:pipe        port="result"            step="render-xml-model-map"/>
+  </p:output>
+  
+  <p:serialization port="J1.json-object-tree" indent="true"/>
+  <p:output        port="J1.json-object-tree" primary="false">
+    <p:pipe        port="result"              step="make-json-object-tree"/>
+  </p:output>
+  
+  <p:serialization port="J2.json-model-html" indent="false" method="xml" omit-xml-declaration="false"/>
+  <p:output        port="J2.json-model-html" primary="false">
+    <p:pipe        port="result"             step="render-json-model-map"/>
   </p:output>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
@@ -56,7 +70,7 @@
   
   <p:identity name="composed"/>
   
-  <!--<p:identity  name="make-model-map"/>-->
+  <!--<p:identity  name="render-xml-model-map"/>-->
   <p:xslt name="make-model-map">
     <p:input port="source">
       <p:pipe port="result" step="composed"/>
@@ -73,17 +87,43 @@
   </p:xslt>
   
   <p:xslt name="definition-map">
+    <p:input port="source">
+      <p:pipe port="result" step="unfold-model-map"/>
+    </p:input>
     <p:input port="stylesheet">
       <p:document href="compose/reduce-map.xsl"/>
     </p:input>
   </p:xslt>
   
-  <!--<p:identity name="make-xml-converter"/>-->
+  <p:sink/>
   
   <p:xslt name="make-xml-converter">
+    <p:input port="source">
+      <p:pipe port="result" step="unfold-model-map"/>
+    </p:input>
     <p:input port="stylesheet">
-      <p:document href="converter-gen/produce-xml-converter.xsl"/>
+      <p:document href="document/xml/element-tree.xsl"/>
     </p:input>
   </p:xslt>
   
+  
+  
+  <p:sink/>
+  
+  <p:xslt name="make-json-object-tree">
+    <p:input port="source">
+      <p:pipe port="result" step="unfold-model-map"/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="document/json/object-tree.xsl"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:xslt name="render-json-model-map">
+    <p:with-option name="initial-mode" select="QName('','make-page')"/>    
+    <p:input port="stylesheet">
+      <p:document href="document/json/object-map-html.xsl"/>
+    </p:input>
+  </p:xslt>
+
 </p:declare-step>

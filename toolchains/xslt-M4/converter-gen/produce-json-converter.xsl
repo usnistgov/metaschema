@@ -80,8 +80,6 @@
         <xsl:apply-templates select="." mode="make-json-pull"/>
     </xsl:template>
     
-    
-    
     <xsl:template priority="2" match="value" mode="make-json-pull">
         <XSLT:apply-templates select="." mode="get-value-property"/>
     </xsl:template>
@@ -90,8 +88,10 @@
         <XSLT:apply-templates select="*[@key='{@key}']"/>
     </xsl:template>
     
-    
-    
+    <xsl:template match="group/*[empty(@key)]" mode="make-json-pull">
+        <XSLT:apply-templates select="*"/>
+    </xsl:template>
+
     <!-- overriding template in produce-xml-converter that suppresses template
          production for an element not present in the XML: this time we want the field
          (but must also hard-wire the match). -->
@@ -141,7 +141,7 @@
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
         <!-- now producing a template to produce a value node representing the value of the field-->
-        <XSLT:template match="{ $matching }" mode="get-value-property">
+        <XSLT:template match="{ $matching }" mode="get-value-property" priority="{count(ancestor-or-self::*)}">
             <value>
                 <xsl:copy-of select="value/(@key | @key-flag | @as-type)"/>
                 <xsl:apply-templates select="value/@as-type" mode="assign-json-type"/>
@@ -160,8 +160,8 @@
         <xsl:variable name="matching">
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
-        <XSLT:template match="{ $matching}" mode="keep-value-property">
-            <xsl:comment> Property is a flag; dropped when grabbing values</xsl:comment>
+        <XSLT:template match="{ $matching}" mode="keep-value-property" priority="{count(ancestor-or-self::*)}">
+            <xsl:comment> Not keeping the flag here. </xsl:comment>
         </XSLT:template>
     </xsl:template>
     
