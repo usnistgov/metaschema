@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:XSLT="http://csrc.nist.gov/ns/oscal/metaschema/xslt-alias"
     
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    exclude-result-prefixes="xs math"
     version="3.0"
     xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
     
@@ -54,8 +52,9 @@
                 <!-\-<XSLT:output-character character="&#xE0000;" string="\"/>-\->
             </XSLT:character-map>-->
 
-            <!-- first we produce templates for (each) of the global definitions.-->
-            <xsl:for-each-group select="//*[@scope = 'global'][not(@recursive='true')]"
+            <!-- first we produce templates for (each) of the global definitions
+                 and for any flags thereon.-->
+            <xsl:for-each-group select="//*[@scope = 'global'][not(@recursive='true')]/( . | child::flag )"
                 group-by="string-join((local-name(), @name), ':')">
                 <!-- These are all the same so we do only one, but we pass in the group to construct the match -->
                 <xsl:apply-templates select="current-group()[1]" mode="make-template">
@@ -110,12 +109,12 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="*[@scope='global']" mode="make-template-for-local"/>
+    <xsl:template match="*[@scope='global']"      mode="make-template-for-local"/>
+    
+    <xsl:template priority="1" match="*[@scope='global']/flag" mode="make-template-for-local"/>
     
     <xsl:template match="*" mode="make-template-for-local">
-        <xsl:apply-templates select="." mode="make-template">
-            <xsl:with-param name="local" select="true()"/>
-        </xsl:apply-templates>
+        <xsl:apply-templates select="." mode="make-template"/>
     </xsl:template>
  
     <!-- no template for implicit wrappers on markup-multiline -->
@@ -129,7 +128,7 @@
         <xsl:variable name="json-key-flag-name" select="@json-key-flag"/>
         <XSLT:template match="{ $matching}">
             <xsl:if test="not(@scope='global')">
-                <xsl:attribute name="priority" select="10"/>
+                <xsl:attribute name="priority" select="count(ancestor-or-self::*)"/>
             </xsl:if>
             <!-- A parameter allows the call to drop the key, necessary for recursive
                 groups of elements also allowed at the root (at least) -->
@@ -163,7 +162,9 @@
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
         <XSLT:template match="{ $matching}">
-            <xsl:call-template name="comment-template"/>
+            <xsl:if test="not((.|..)/@scope='global')">
+                <xsl:attribute name="priority" select="count(ancestor-or-self::*)"/>
+            </xsl:if><xsl:call-template name="comment-template"/>
             <flag in-json="string">
                 <xsl:copy-of select="@* except @scope"/>
                 <!-- rewriting in-json where necessary -->
@@ -204,10 +205,13 @@
     
     <!-- Matches local declarations (only) -->
     <xsl:template match="*" mode="make-xml-match">
-        <xsl:for-each select="ancestor-or-self::*[@gi] except ancestor-or-self::*[@scope='global']/ancestor::*">
-            <xsl:if test="position() gt 1">/</xsl:if>
-            <xsl:apply-templates select="." mode="make-xml-step"/>
-        </xsl:for-each>
+        <xsl:value-of>
+            <xsl:for-each
+                select="ancestor-or-self::*[@gi]">
+                <xsl:if test="position() gt 1">/</xsl:if>
+                <xsl:apply-templates select="." mode="make-xml-step"/>
+            </xsl:for-each>
+        </xsl:value-of>
     </xsl:template>
 
     <!-- fallback should never match -->
@@ -215,6 +219,14 @@
         <pull who="{local-name()}">
             <xsl:copy-of select="@gi | @key"/>
         </pull>
+    </xsl:template>
+    
+    <xsl:template match="choice" mode="make-xml-pull make-json-pull">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template match="constraint" mode="make-xml-pull make-json-pull">
+       <!--    <xsl:copy-of select="."/>-->
     </xsl:template>
     
     <xsl:variable name="prose-elements">p | ul | ol | pre | h1 | h2 | h3 | h4 | h5 | h6 | table</xsl:variable>
