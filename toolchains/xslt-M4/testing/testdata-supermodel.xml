@@ -1,309 +1,166 @@
 <assembly xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"
-          name="everything"
-          gi="EVERYTHING"
-          key="EVERYTHING"
-          namespace="http://csrc.nist.gov/metaschema/ns/everything">
-   <field name="field-1only" gi="field-1only" key="field-1only">
-      <value as-type="string" key="STRVALUE" in-json="string">FIELD-1-ONLY</value>
-   </field>
-   <field name="field-base64"
-          gi="field-base64"
-          in-json="SCALAR"
-          key="field-base64">
-      <value as-type="base64Binary" in-json="string">1234abcd</value>
-   </field>
-   <field name="field-boolean"
-          gi="field-boolean"
-          in-json="SCALAR"
-          key="field-boolean">
-      <value as-type="boolean" in-json="boolean">true</value>
-   </field>
-   <field name="field-named-value"
-          gi="field-named-value"
-          key="field-named-value">
-      <flag as-type="string" name="id" key="id" gi="id">fnv1</flag>
-      <value as-type="string" key="CUSTOM-VALUE-KEY" in-json="string">FIELD-NAMED-VALUE</value>
-   </field>
-   <field name="markup-line"
-          gi="markup-line"
-          in-json="SCALAR"
-          key="markup-line">
-      <value as-type="markup-line" in-json="string">Here's some <em>markup</em>: make of it <strong>what you will</strong>! Even if it has ... * funky characters ` ... and even an <img alt="some picture" src="img.jpg"/>
-      </value>
-   </field>
-   <group in-json="SINGLETON_OR_ARRAY" key="groupable-simple-fields">
-      <field name="field-simple-groupable" gi="field-simple-groupable">
-         <flag as-type="integer"
-               name="integer-flag"
-               key="integer-flag"
-               gi="integer-flag">1</flag>
-         <value as-type="string" key="STRVALUE" in-json="string">field-groupable 1</value>
-      </field>
-      <field name="field-simple-groupable" gi="field-simple-groupable">
-         <flag as-type="string"
-               name="simple-flag"
-               key="simple-flag"
-               gi="simple-flag">a</flag>
-         <value as-type="string" key="STRVALUE" in-json="string">field-groupable 2</value>
-      </field>
-      <field name="field-simple-groupable" gi="field-simple-groupable">
-         <flag as-type="integer"
-               name="integer-flag"
-               key="integer-flag"
-               gi="integer-flag">3</flag>
-         <value as-type="string" key="STRVALUE" in-json="string">field-groupable 3</value>
-      </field>
-   </group>
-   <group name="wrapped-fields"
-          gi="wrapped-fields"
-          group-json="ARRAY"
-          key="wrapped-fields">
-      <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-         <value as-type="string" in-json="string">field-wrappable 1</value>
-      </field>
-      <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-         <value as-type="string" in-json="string">field-wrappable 2</value>
-      </field>
-      <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-         <value as-type="string" in-json="string">field-wrappable 3</value>
-      </field>
-   </group>
-   <group in-json="BY_KEY" key="keyed-fields">
-      <field name="field-by-key"
-             gi="field-by-key"
-             json-key-flag="id"
-             in-json="SCALAR">
-         <flag as-type="string" name="id" key="id" gi="id">fbk1</flag>
-         <value as-type="string" key="STRVALUE" in-json="string">field-by-key 1</value>
-      </field>
-      <field name="field-by-key"
-             gi="field-by-key"
-             json-key-flag="id"
-             in-json="SCALAR">
-         <flag as-type="string" name="id" key="id" gi="id">fbk2</flag>
-         <value as-type="string" key="STRVALUE" in-json="string">field-by-key 2</value>
-      </field>
-      <field name="field-by-key"
-             gi="field-by-key"
-             json-key-flag="id"
-             in-json="SCALAR">
-         <flag as-type="string" name="id" key="id" gi="id">fbk3</flag>
-         <value as-type="string" key="STRVALUE" in-json="string">field-by-key 3</value>
-      </field>
-   </group>
-   <group in-json="SINGLETON_OR_ARRAY" key="dynamic-value-key-fields">
-      <field name="field-dynamic-value-key" gi="field-dynamic-value-key">
-         <flag as-type="string" name="id" key="id" gi="id">fdvk1</flag>
-         <value as-type="string" key-flag="id" in-json="string">field-dynamic-value-key 1</value>
-      </field>
-      <field name="field-dynamic-value-key" gi="field-dynamic-value-key">
-         <flag as-type="string" name="id" key="id" gi="id">fdvk2</flag>
-         <value as-type="string" key-flag="id" in-json="string">field-dynamic-value-key 2</value>
-      </field>
-      <field name="field-dynamic-value-key" gi="field-dynamic-value-key">
-         <flag as-type="string" name="id" key="id" gi="id">fdvk3</flag>
-         <value as-type="string" key-flag="id" in-json="string">field-dynamic-value-key 3</value>
-      </field>
-   </group>
-   <field name="wrapped-prose"
-          gi="wrapped-prose"
-          in-json="SCALAR"
-          key="wrapped-prose">
-      <value as-type="markup-multiline" in-json="string">
-         <h1>Wrapped up prose</h1>
-         <p>This is prose. All wrapped up.</p>
-      </value>
-   </field>
-   <field in-json="SCALAR" name="loose-prose" key="loose-prose">
-      <value in-json="string" as-type="markup-multiline">
-         <h1>Unwrapped prose</h1>
-         <p>Here we have unwrapped prose....</p>
-      </value>
-   </field>
-   <assembly name="assembly-1only" gi="ASSEMBLY-1ONLY" key="ASSEMBLY-1ONLY">
-      <field name="field-1only" gi="field-1only" key="field-1only">
-         <value as-type="string" key="STRVALUE" in-json="string">ASSEMBLY-1-ONLY / FIELD-1-ONLY</value>
+          name="anthology"
+          gi="ANTHOLOGY"
+          key="ANTHOLOGY"
+          namespace="http://csrc.nist.gov/metaschema/ns/anthology">
+   <assembly name="meta" gi="meta" key="meta">
+      <group in-json="SINGLETON_OR_ARRAY" key="creators">
+         <field name="creator" gi="creator">
+            <flag in-json="string"
+                  as-type="string"
+                  name="role"
+                  key="role"
+                  gi="role">editor</flag>
+            <value as-type="string" key="STRVALUE" in-json="string">Wendell Piez</value>
+         </field>
+      </group>
+      <group in-json="SINGLETON_OR_ARRAY" key="keywords">
+         <field name="keyword" gi="keyword" in-json="SCALAR">
+            <value as-type="string" in-json="string">poetry</value>
+         </field>
+         <field name="keyword" gi="keyword" in-json="SCALAR">
+            <value as-type="string" in-json="string">verse</value>
+         </field>
+      </group>
+      <field name="remarks" gi="remarks" in-json="SCALAR" key="remarks">
+         <value as-type="markup-multiline" in-json="string">
+            <h1>Demo anthology</h1>
+            <p>Compiled for purposes of testing and demonstrating validations against constraints
+                defined by NIST Metaschema.</p>
+         </value>
       </field>
    </assembly>
-   <group in-json="SINGLETON_OR_ARRAY" key="groupable-assemblies">
-      <assembly name="assembly-groupable" gi="assembly-groupable">
-         <group in-json="SINGLETON_OR_ARRAY" key="groupable-simple-fields">
-            <field name="field-simple-groupable" gi="field-simple-groupable">
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 1 / field-groupable 1</value>
+   <group in-json="SINGLETON_OR_ARRAY" key="pieces">
+      <assembly name="piece" gi="piece">
+         <assembly name="meta" gi="meta" key="meta">
+            <group in-json="SINGLETON_OR_ARRAY" key="creators">
+               <field name="creator" gi="creator">
+                  <flag in-json="string"
+                        as-type="string"
+                        name="role"
+                        key="role"
+                        gi="role">author</flag>
+                  <flag in-json="string"
+                        as-type="string"
+                        name="who"
+                        key="who"
+                        gi="who">#w.h.auden</flag>
+                  <value as-type="string" key="STRVALUE" in-json="string">W.H. Auden</value>
+               </field>
+            </group>
+            <field name="date" gi="date" key="date">
+               <value as-type="string" key="STRVALUE" in-json="string">1954</value>
             </field>
-            <field name="field-simple-groupable" gi="field-simple-groupable">
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 1 / field-groupable 2</value>
-            </field>
-            <field name="field-simple-groupable" gi="field-simple-groupable">
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 1 / field-groupable 3</value>
-            </field>
-         </group>
-      </assembly>
-      <assembly name="assembly-groupable" gi="assembly-groupable">
-         <group in-json="SINGLETON_OR_ARRAY" key="groupable-simple-fields">
-            <field name="field-simple-groupable" gi="field-simple-groupable">
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 2 / field-groupable 1</value>
-            </field>
-            <field name="field-simple-groupable" gi="field-simple-groupable">
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 2 / field-groupable 2</value>
-            </field>
-            <field name="field-simple-groupable" gi="field-simple-groupable">
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 2 / field-groupable 3</value>
-            </field>
-         </group>
-      </assembly>
-      <assembly name="assembly-groupable" gi="assembly-groupable">
-         <group in-json="SINGLETON_OR_ARRAY" key="groupable-simple-fields">
-            <field name="field-simple-groupable" gi="field-simple-groupable">
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 3 / field-groupable 1</value>
-            </field>
-            <field name="field-simple-groupable" gi="field-simple-groupable">
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 3 / field-groupable 2</value>
-            </field>
-            <field name="field-simple-groupable" gi="field-simple-groupable">
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-groupable 3 / field-groupable 3</value>
-            </field>
-         </group>
-      </assembly>
-   </group>
-   <group name="wrapped-assemblies"
-          gi="wrapped-assemblies"
-          group-json="ARRAY"
-          key="wrapped-assemblies">
-      <assembly name="assembly-wrappable" gi="assembly-wrappable">
-         <group name="wrapped-fields"
-                gi="wrapped-fields"
-                group-json="ARRAY"
-                key="wrapped-fields">
-            <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-               <value as-type="string" in-json="string">assembly-wrappable 1 / field-wrappable 1</value>
-            </field>
-            <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-               <value as-type="string" in-json="string">assembly-wrappable 1 / field-wrappable 2</value>
-            </field>
-            <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-               <value as-type="string" in-json="string">assembly-wrappable 1 / field-wrappable 3</value>
-            </field>
-         </group>
-      </assembly>
-      <assembly name="assembly-wrappable" gi="assembly-wrappable">
-         <group name="wrapped-fields"
-                gi="wrapped-fields"
-                group-json="ARRAY"
-                key="wrapped-fields">
-            <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-               <value as-type="string" in-json="string">assembly-wrappable 2 / field-wrappable 1</value>
-            </field>
-            <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-               <value as-type="string" in-json="string">assembly-wrappable 2 / field-wrappable 2</value>
-            </field>
-            <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-               <value as-type="string" in-json="string">assembly-wrappable 2 / field-wrappable 3</value>
-            </field>
-         </group>
-      </assembly>
-      <assembly name="assembly-wrappable" gi="assembly-wrappable">
-         <group name="wrapped-fields"
-                gi="wrapped-fields"
-                group-json="ARRAY"
-                key="wrapped-fields">
-            <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-               <value as-type="string" in-json="string">assembly-wrappable 3 / field-wrappable 1</value>
-            </field>
-            <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-               <value as-type="string" in-json="string">assembly-wrappable 3 / field-wrappable 2</value>
-            </field>
-            <field name="field-wrappable" gi="field-wrappable" in-json="SCALAR">
-               <value as-type="string" in-json="string">assembly-wrappable 3 / field-wrappable 3</value>
-            </field>
-         </group>
+         </assembly>
+         <assembly name="verse" gi="verse" key="verse">
+            <flag in-json="string"
+                  as-type="string"
+                  name="type"
+                  key="type"
+                  gi="type">quatrain</flag>
+            <group in-json="SINGLETON_OR_ARRAY" key="lines">
+               <field name="line" gi="line">
+                  <flag in-json="number"
+                        as-type="integer"
+                        name="feet"
+                        key="feet"
+                        gi="feet">4</flag>
+                  <flag in-json="string"
+                        as-type="string"
+                        name="base"
+                        key="base"
+                        gi="base">trochee</flag>
+                  <value as-type="markup-line" key="RICHTEXT" in-json="string">Guard, Civility, with guns</value>
+               </field>
+               <field name="line" gi="line">
+                  <flag in-json="number"
+                        as-type="integer"
+                        name="feet"
+                        key="feet"
+                        gi="feet">4</flag>
+                  <flag in-json="string"
+                        as-type="string"
+                        name="base"
+                        key="base"
+                        gi="base">iamb</flag>
+                  <value as-type="markup-line" key="RICHTEXT" in-json="string">Your modes and your declensions:</value>
+               </field>
+               <field name="line" gi="line">
+                  <flag in-json="number"
+                        as-type="integer"
+                        name="feet"
+                        key="feet"
+                        gi="feet">4</flag>
+                  <flag in-json="string"
+                        as-type="string"
+                        name="base"
+                        key="base"
+                        gi="base">trochee</flag>
+                  <value as-type="markup-line" key="RICHTEXT" in-json="string">Any lout can spear with ease</value>
+               </field>
+               <field name="line" gi="line">
+                  <flag in-json="number"
+                        as-type="integer"
+                        name="feet"
+                        key="feet"
+                        gi="feet">4</flag>
+                  <flag in-json="string"
+                        as-type="string"
+                        name="base"
+                        key="base"
+                        gi="base">trochee</flag>
+                  <value as-type="markup-line" key="RICHTEXT" in-json="string">Singular Archimedes.</value>
+               </field>
+            </group>
+         </assembly>
       </assembly>
    </group>
-   <group in-json="BY_KEY" key="keyed-assemblies">
-      <assembly name="assembly-by-key" gi="assembly-by-key" json-key-flag="id">
-         <flag as-type="string" name="id" key="id" gi="id">abk1</flag>
-         <group in-json="BY_KEY" key="keyed-fields">
-            <field name="field-by-key"
-                   gi="field-by-key"
-                   json-key-flag="id"
-                   in-json="SCALAR">
-               <flag as-type="string" name="id" key="id" gi="id">abk1.fbk1</flag>
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-by-key 1 / field-by-key 1</value>
-            </field>
-            <field name="field-by-key"
-                   gi="field-by-key"
-                   json-key-flag="id"
-                   in-json="SCALAR">
-               <flag as-type="string" name="id" key="id" gi="id">abk1.fbk2</flag>
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-by-key 1 / field-by-key 2</value>
-            </field>
-            <field name="field-by-key"
-                   gi="field-by-key"
-                   json-key-flag="id"
-                   in-json="SCALAR">
-               <flag as-type="string" name="id" key="id" gi="id">abk1.fbk3</flag>
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-by-key 1 / field-by-key 3</value>
-            </field>
+   <assembly name="back" gi="back" key="back">
+      <assembly name="author-index" gi="author-index" key="author-index">
+         <group in-json="BY_KEY" key="authors">
+            <assembly name="author" gi="author" json-key-flag="id">
+               <flag in-json="string"
+                     as-type="NCName"
+                     name="id"
+                     key="id"
+                     gi="id">w.h.auden</flag>
+               <field name="name" gi="name" in-json="SCALAR" key="name">
+                  <value as-type="string" in-json="string">Wystan Hugh Auden</value>
+               </field>
+               <field name="dates" gi="dates" key="dates">
+                  <flag in-json="string"
+                        as-type="date"
+                        name="birth"
+                        key="birth"
+                        gi="birth">1907-02-21</flag>
+                  <flag in-json="string"
+                        as-type="date"
+                        name="death"
+                        key="death"
+                        gi="death">1973-09-29</flag>
+                  <value as-type="empty" key="range" in-json="string"/>
+               </field>
+               <assembly name="bio" gi="bio" key="bio">
+                  <group in-json="SINGLETON_OR_ARRAY" key="fact-statements">
+                     <assembly name="facts" gi="facts">
+                        <field name="dates" gi="dates" key="dates">
+                           <flag in-json="string"
+                                 as-type="date"
+                                 name="birth"
+                                 key="birth"
+                                 gi="birth">1907-02-21</flag>
+                           <flag in-json="string"
+                                 as-type="date"
+                                 name="death"
+                                 key="death"
+                                 gi="death">1973-09-29</flag>
+                           <value as-type="empty" key="range" in-json="string"/>
+                        </field>
+                     </assembly>
+                  </group>
+               </assembly>
+            </assembly>
          </group>
       </assembly>
-      <assembly name="assembly-by-key" gi="assembly-by-key" json-key-flag="id">
-         <flag as-type="string" name="id" key="id" gi="id">abk2</flag>
-         <group in-json="BY_KEY" key="keyed-fields">
-            <field name="field-by-key"
-                   gi="field-by-key"
-                   json-key-flag="id"
-                   in-json="SCALAR">
-               <flag as-type="string" name="id" key="id" gi="id">abk2.fbk1</flag>
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-by-key 1 / field-by-key 1</value>
-            </field>
-            <field name="field-by-key"
-                   gi="field-by-key"
-                   json-key-flag="id"
-                   in-json="SCALAR">
-               <flag as-type="string" name="id" key="id" gi="id">abk2.fbk2</flag>
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-by-key 1 / field-by-key 2</value>
-            </field>
-            <field name="field-by-key"
-                   gi="field-by-key"
-                   json-key-flag="id"
-                   in-json="SCALAR">
-               <flag as-type="string" name="id" key="id" gi="id">abk2.fbk3</flag>
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-by-key 1 / field-by-key 3</value>
-            </field>
-         </group>
-      </assembly>
-      <assembly name="assembly-by-key" gi="assembly-by-key" json-key-flag="id">
-         <flag as-type="string" name="id" key="id" gi="id">abk3</flag>
-         <group in-json="BY_KEY" key="keyed-fields">
-            <field name="field-by-key"
-                   gi="field-by-key"
-                   json-key-flag="id"
-                   in-json="SCALAR">
-               <flag as-type="string" name="id" key="id" gi="id">abk3.fbk1</flag>
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-by-key 1 / field-by-key 1</value>
-            </field>
-            <field name="field-by-key"
-                   gi="field-by-key"
-                   json-key-flag="id"
-                   in-json="SCALAR">
-               <flag as-type="string" name="id" key="id" gi="id">abk3.fbk2</flag>
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-by-key 1 / field-by-key 2</value>
-            </field>
-            <field name="field-by-key"
-                   gi="field-by-key"
-                   json-key-flag="id"
-                   in-json="SCALAR">
-               <flag as-type="string" name="id" key="id" gi="id">abk3.fbk3</flag>
-               <value as-type="string" key="STRVALUE" in-json="string">assembly-by-key 1 / field-by-key 3</value>
-            </field>
-         </group>
-      </assembly>
-   </group>
-   <group in-json="ARRAY" key="everything-recursive">
-      <assembly name="everything" gi="EVERYTHING">
-         <field name="field-1only" gi="field-1only" key="field-1only">
-            <value as-type="string" key="STRVALUE" in-json="string">nested FIELD-1-ONLY</value>
-         </field>
-      </assembly>
-   </group>
+   </assembly>
 </assembly>

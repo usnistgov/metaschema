@@ -13,15 +13,15 @@
     <xsl:mode on-no-match="shallow-copy"/>
     
     <xsl:template match="value[@as-type=('markup-line','markup-multiline')]">
-        <xsl:call-template name="parse">
+        <xsl:call-template name="parse-markdown">
             <xsl:with-param name="markdown-str" select="string(.)"/>
         </xsl:call-template>
     </xsl:template>
     
-    <xsl:template name="run-tests" match="/">
+    <xsl:template name="run-tests">
         <!--<xsl:copy-of select="$tag-replacements"/>-->
         <!--<xsl:copy-of select="$examples"/>-->
-        <xsl:call-template name="parse">
+        <xsl:call-template name="parse-markdown">
             <xsl:with-param name="markdown-str" select="string($examples)"/>
         </xsl:call-template>
         <!--<xsl:for-each select="$line-example">
@@ -59,7 +59,7 @@
     (we can ignore quotes as long as our markup has no attributes only elements)
     -->
     
-    <xsl:template name="parse">
+    <xsl:template name="parse-markdown">
         
 <!-- First, group according to ``` delimiters btw codeblocks and not
         within codeblock, escape & and < (only)

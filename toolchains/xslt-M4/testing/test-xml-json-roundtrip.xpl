@@ -133,18 +133,12 @@
   
   <!-- Back downhill to JSON -->
   
-  <!-- First, we markdownify the prose in the supermodel -->
-  <p:xslt name="convert-prose-to-markdown">
-    <p:input port="source">
-      <p:pipe port="result" step="convert-xml-testdata"/>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:document href="../converter-gen/supermodel-to-markdown.xsl"/>
-    </p:input>
-  </p:xslt>
   
   <!-- Now we map to XPath JSON -->
   <p:xslt name="convert-supermodel.1-to-json-xml">
+    <p:input port="source">
+      <p:pipe port="result" step="convert-xml-testdata"/>
+    </p:input>
     <p:input port="stylesheet">
       <p:document href="../converter-gen/supermodel-to-json.xsl"/>
     </p:input>
@@ -175,6 +169,11 @@
   <p:sink/>
   
   <!-- Applying the JSON converter, from the serialized JSON we produce the supermodel again -->
+  <!--<p:identity name="convert-jsonified-testdata">
+    <p:input port="source">
+      <p:pipe step="make-json-converter" port="result"/>
+    </p:input>
+  </p:identity>-->
   <p:xslt name="convert-jsonified-testdata">
     <p:input port="source">
       <p:pipe port="result" step="convert-supermodel.1-to-json-xml"/>
@@ -184,9 +183,7 @@
     </p:input>
   </p:xslt>
   
-  
-  <!-- Interpolating markup from the Markdown to produce a supermodel XML representation -->
-  <p:identity name="supermodel-markdown-to-markup"/>
+  <!--<p:identity name="convert-markdown-to-markup"/>-->
   <p:xslt name="convert-markdown-to-markup">
     <p:input port="stylesheet">
       <p:document href="../converter-gen/markdown-to-supermodel-xml-converter.xsl"/>
