@@ -163,7 +163,7 @@
     <xsl:function name="m:rewrite-match-as-test" as="xs:string?">
         <xsl:param name="who" as="item()?"/>
         <xsl:param name="ns-prefix" as="xs:string"/>
-        <xsl:variable name="alternatives" as="element()*" select="m:prefixed-step-map(string($who), $ns-prefix)"/>
+        <xsl:variable name="alternatives" as="element()*" select="m:prefixed-step-map(string($who), $ns-prefix)/*"/>
         
         <xsl:for-each-group select="$alternatives[exists(m:step/m:node)]" group-by="true()">
             <xsl:value-of>

@@ -515,6 +515,8 @@
         <xsl:variable name="target-path" as="xs:string">
             <xsl:apply-templates mode="okay-xpath" select="($whose/@target,'.')[1] => m:prefixed-path($declaration-prefix)"/>
         </xsl:variable>
+        
+        <!--JX-->
         <xsl:sequence select="$target-path[not(.=('.','value()'))]"/>
     </xsl:function>
     
@@ -555,13 +557,17 @@
         
         <!-- These two are independent - $when-conditions captures require/@when
                                          $ancestry-exception expresses ancestry given in @target -->
+        <!-- JX on @when -->
+        
         <xsl:variable name="when-conditions" select="$whose/ancestor-or-self::*/@when ! ( $whose-context ! ('ancestor::' || . || '/') || . )"/>
         <xsl:variable name="ancestor-names" select="$whose/(ancestor::define-flag | ancestor::define-field | ancestor::define-assembly) ! m:effective-name(.)" />
+        
         <!-- stitching together a match pattern from ancestors + a given @target, with steps '/.' removed -->
         <xsl:variable name="path-from-global" select="string-join(($ancestor-names,$whose/@target),'/') => replace('/\.','')"/>
+        <!--JX-->
         
         <xsl:variable name="ancestry-condition" select="m:rewrite-match-as-test($path-from-global,$declaration-prefix)"/>
-
+        
         <xsl:if test="exists(($when-conditions, $ancestry-condition))">
             <xsl:value-of select="string-join(($when-conditions, $ancestry-condition),' and ')"/>
         </xsl:if>
@@ -571,8 +577,9 @@
     <xsl:function name="m:wrapper-condition" as="xs:string?">
         <!-- Insulate XPath here -->
         <xsl:param name="whose" as="element()"/>
-        <xsl:variable name="predicates" select="$whose/ancestor-or-self::*/@when"/>
+        <xsl:variable name="predicates" select="$whose/ancestor-or-self::require/@when"/>
         
+        <!-- JX  -->
         <xsl:if test="exists($predicates)">
             <xsl:value-of select="string-join($predicates,' and ')"/>
         </xsl:if>
@@ -604,6 +611,7 @@
                 <xsl:sequence select="m:target-match(..) => replace('^(\./)+','')"/>
             </xsl:for-each>
         </xsl:variable>
+        <!-- JX -->
         <XSLT:key name="{@name}" match="{$context}" use="{m:key-value(.)}">
             <xsl:if test="count(m:key-field) gt 1">
                 <xsl:attribute name="composite">yes</xsl:attribute>
@@ -614,6 +622,7 @@
     <xsl:function name="m:key-value" as="xs:string">
         <xsl:param name="whose" as="element()"/>
         <!-- delimit values with '|' emitting 'string()' for any key-field with no @target or @target=('.','value()') -->
+        <!-- JX -->
         <xsl:value-of separator=",">
             <xsl:sequence select="$whose/m:key-field/@target/m:prefixed-path((.[not(.=('.','value()'))],'string(.)')[1],$declaration-prefix)"/>
         </xsl:value-of>
