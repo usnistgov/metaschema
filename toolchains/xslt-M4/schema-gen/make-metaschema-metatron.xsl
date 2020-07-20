@@ -123,7 +123,6 @@
         <rule context="{ $context }">
             <xsl:apply-templates mode="assertion" select="."/>
         </rule>
-        
     </xsl:template>
     
 <!-- When a @target is designated, the context is derived from the target,
