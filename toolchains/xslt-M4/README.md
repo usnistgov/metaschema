@@ -2,7 +2,7 @@
 
 An XSLT implementation of the metaschema toolchain for generating schemas, converters, and model documentation.
 
-ENTRY POINTS
+Typically any of these operations will combine several lower-level operations in a defined sequence.
 
 ## Generate schemas
 
