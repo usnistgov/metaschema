@@ -5,7 +5,8 @@ init_schematron() {
   source "${my_dir}/init-saxon.sh"
 
   if [[ -z "$SCHEMATRON_HOME" ]]; then
-      echo -e "${P_ERROR}SCHEMATRON_HOME is not set or is empty.${P_END} ${P_INFO}Please set SCHEMATRON_HOME to indicate the location of the schematron skeleton. The schematron skeleton can be cloned using git clone https://github.com/Schematron/schematron <schematron_home_dir>.${P_END}"
+    echo -e "${P_INFO}SCHEMATRON_HOME is not set or is empty.${P_END} ${P_INFO}Please set SCHEMATRON_HOME to indicate the location of the schematron skeleton. The schematron skeleton can be cloned using git clone https://github.com/Schematron/schematron <schematron_home_dir>.${P_END}"
+    SCHEMATRON_HOME="${my_dir}/../../support/schematron"
   fi
 
   SCHEMATRON_DIR="$SCHEMATRON_HOME/trunk/schematron/code"
