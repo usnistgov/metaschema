@@ -371,8 +371,8 @@
             <map key="additionalProperties">
                 <array key="allOf">
                     <map>
-                <string key="type">object</string>
-                <string key="$ref">#/definitions/{ @ref }</string>
+<!--                <string key="type">object</string>
+-->                <string key="$ref">#/definitions/{ @ref }</string>
                     </map>
                     <map>
                         <map key="not">
