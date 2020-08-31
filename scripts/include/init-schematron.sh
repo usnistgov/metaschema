@@ -5,7 +5,7 @@ init_schematron() {
   source "${my_dir}/init-saxon.sh"
 
   if [[ -z "$SCHEMATRON_HOME" ]]; then
-    echo -e "${P_INFO}SCHEMATRON_HOME is not set or is empty.${P_END} ${P_INFO}Please set SCHEMATRON_HOME to indicate the location of the schematron skeleton. The schematron skeleton can be cloned using git clone https://github.com/Schematron/schematron <schematron_home_dir>.${P_END}"
+#    echo -e "${P_INFO}SCHEMATRON_HOME is not set or is empty.${P_END} ${P_INFO}Please set SCHEMATRON_HOME to indicate the location of the schematron skeleton. The schematron skeleton can be cloned using git clone https://github.com/Schematron/schematron <schematron_home_dir>.${P_END}"
     SCHEMATRON_HOME="${my_dir}/../../support/schematron"
   fi
 
@@ -26,9 +26,10 @@ build_schematron() {
   xsl_transform "$SCHEMATRON_DIR/iso_svrl_for_xslt2.xsl" "-" "$compiled_schematron" "generate-paths=true diagnose=true allow-foreign=true"
   cmd_exitcode=$?
   if [ $cmd_exitcode -ne 0 ]; then
-      echo -e "${P_ERROR}Generating compiled Schematron failed for '$schematron'${P_END}"
+      echo -e "${P_ERROR}Generating compiled Schematron failed for '${P_END}$schematron${P_ERROR}'.${P_END}"
       return 1
   fi
+  echo -e "${P_INFO}Generated compiled Schematron '${P_END}$schematron${P_INFO}' as '${P_END}$compiled_schematron${P_INFO}'.${P_END}"
   return 0
 }
 

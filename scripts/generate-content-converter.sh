@@ -80,6 +80,11 @@ OTHER_ARGS=$@ # save the remaining args
 METASCHEMA="$1"
 GENERATED_CONVERTER="$2"
 
+if [ "$VERBOSE" == "true" ] && [ "$PPID" == "$$" ]; then
+  echo -e "${P_INFO}Using working directory:${P_END} ${WORKING_DIR}"
+  echo -e "${P_INFO}Using cache directory:${P_END} ${CACHE_DIR}"
+fi
+
 if [ -z "$METASCHEMA" ]; then
   >&2 echo -e "${P_ERROR}You must specify the Metaschema to generate the converter for.${P_END}"
   usage
@@ -91,11 +96,6 @@ if [ ! -f "$METASCHEMA" ]; then
   exit 2
 fi
 
-if [ "$VERBOSE" == "true" ] && [ "$PPID" == "$$" ]; then
-  echo -e "${P_INFO}Using working directory:${P_END} ${WORKING_DIR}"
-  echo -e "${P_INFO}Using cache directory:${P_END} ${CACHE_DIR}"
-fi
-
 # make sure working directory exists
 mkdir -p "$(dirname "$WORKING_DIR")"
 
@@ -105,7 +105,7 @@ if ! [[ "$GENERATE_SOURCE_FORMAT" =~ ^(xml|json)$ ]]; then
 fi
 
 if ! [[ "$GENERATE_TARGET_FORMAT" =~ ^(xml|json)$ ]]; then
-  >&2 echo -e "${P_ERROR}Invalid source format '${P_END}${GENERATE_TARGET_FORMAT}${P_ERROR}'.${P_END} Supported formats are: xml or json"
+  >&2 echo -e "${P_ERROR}Invalid target format '${P_END}${GENERATE_TARGET_FORMAT}${P_ERROR}'.${P_END} Supported formats are: xml or json"
   exit 4
 fi
 
