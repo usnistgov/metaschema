@@ -19,6 +19,7 @@
       <description>A collection of controls.</description>
       <root-name>catalog</root-name>
       <flag ref="uuid" required="yes"/>
+      
       <model>
          <assembly ref="metadata" min-occurs="1"/>
          <assembly ref="param" max-occurs="unbounded">
