@@ -53,6 +53,8 @@ div.OM-map p { margin: 0ex }
             </style>
    </xsl:template>
 
+   <xsl:template match="m:schema-name | m:schema-version"/>
+   
    <xsl:template match="m:element[empty(* except m:flag)]">
       <xsl:variable name="contents">
          <xsl:apply-templates select="." mode="contents"/>

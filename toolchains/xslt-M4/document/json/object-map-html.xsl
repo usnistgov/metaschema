@@ -57,6 +57,9 @@ details:not([open]) .show-closed { display: inline }
             </style>
    </xsl:template>
 
+   <xsl:template match="m:schema-name | m:schema-version"/>
+   
+   
 <!-- string object singleton-or-array array group-by-key -->
    
    <xsl:template match="m:string">
