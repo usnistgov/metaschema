@@ -740,7 +740,7 @@
             <description>A description of the component, including information about its function.</description>
          </define-field>
          <define-field name="purpose" as-type="markup-line">
-            <formal-name>purpose field</formal-name>
+            <formal-name>Purpose</formal-name>
             <description>A summary of the technological or business purpose of the component.</description>
          </define-field>
          <define-field name="prop" max-occurs="unbounded">
@@ -974,10 +974,10 @@
          </service>
       </example>
    </define-field>
-   <define-field name="purpose" as-type="markup-line">
+   <!--<define-field name="purpose" as-type="markup-line">
       <formal-name>Purpose</formal-name>
       <description>Describes the purpose for the service within the system.</description>
-   </define-field>
+   </define-field>-->
    <define-assembly name="system-inventory">
       <formal-name>System Inventory</formal-name>
       <description>A set of <code>inventory-item</code> entries that represent the managed inventory instances of the system.</description>
