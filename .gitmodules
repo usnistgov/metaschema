@@ -1,9 +1,9 @@
 [submodule "website/themes/uswds"]
 	path = website/themes/uswds
-	url = git@github.com:usnistgov/hugo-uswds.git
+	url = https://github.com/usnistgov/hugo-uswds.git
 	branch = master
 	update = rebase
 [submodule "support/schematron"]
 	path = support/schematron
-	url = git@github.com:usnistgov/schematron.git
+	url = https://github.com/usnistgov/schematron.git
 	branch = master
