@@ -116,23 +116,32 @@
       <string key="$id">#/definitions/{@name}</string>
     </xsl:template>
     
-    <xsl:template match="define-assembly">
+    <xsl:template priority="100" match="METASCHEMA/define-assembly">
         <map key="{ (root-name, use-name,@name)[1] }">
+            <xsl:next-match/>
+        </map>
+    </xsl:template>
+    
+    <xsl:template priority="100" match="METASCHEMA/define-field">
+        <map key="{ (use-name,@name)[1] }">
+            <xsl:next-match/>
+        </map>
+    </xsl:template>
+    
+    <xsl:template match="define-assembly">
             <xsl:apply-templates select="formal-name, description"/>
             <xsl:call-template name="give-id"/>
             <string key="type">object</string>
             <xsl:where-populated>
-                <map key="properties">
-                    <xsl:apply-templates select="." mode="properties"/>
-                </map>
+            <map key="properties">
+                <xsl:apply-templates select="." mode="properties"/>
+            </map>
             </xsl:where-populated>
             <xsl:call-template name="required-properties"/>
             <boolean key="additionalProperties">false</boolean>
-        </map>
     </xsl:template>
     
     <xsl:template match="define-field">
-        <map key="{ (use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name, description"/>
             <xsl:call-template name="give-id"/>
             <string key="type">object</string>
@@ -145,11 +154,9 @@
             <boolean key="additionalProperties">false</boolean>
             <!-- allowed-values only present on fields -->
             <xsl:apply-templates select="constraint/allowed-values"/>
-        </map>
     </xsl:template>
     
     <xsl:template match="define-field[exists(json-value-key/@flag-name)]">
-        <map key="{ (use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name, description"/>
             <xsl:call-template name="give-id"/>
             <string key="type">object</string>
@@ -164,8 +171,8 @@
                  key will not be controlled (since it will map to the value-key flag -->
             <xsl:variable name="value-key-name" select="json-value-key/@flag-name"/>
             <xsl:variable name="all-properties" select="flag[not(@ref = $value-key-name)] |
-                    define-flag[not(@name = $value-key-name)] |
-                    model//(field | assembly)"/>
+                define-flag[not(@name = $value-key-name)] |
+                model//(field | assembly)"/>
             <xsl:comment> we require an unspecified property, with any key, to carry the nominal value </xsl:comment>
             <number key="minProperties">
                 <xsl:value-of
@@ -178,19 +185,16 @@
             </number>
             <!-- allowed-values only present on fields -->
             <xsl:apply-templates select="constraint/allowed-values"/>
-        </map>
     </xsl:template>
     
     
     
     <!-- no flags means no properties; but it could be a string or scalar type not an object -->
     <xsl:template match="define-field[empty(flag|define-flag)]">
-        <map key="{ (use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name, description"/>
             <xsl:call-template name="give-id"/>
             <xsl:apply-templates select="." mode="object-type"/>
             <xsl:apply-templates select="constraint/allowed-values"/>
-        </map>
     </xsl:template>
     
     <xsl:template match="formal-name" mode="#all">
@@ -313,7 +317,7 @@
 
     <!-- properties of an assembly include its flags and assemblies and fields in its model -->
     <xsl:template match="define-assembly" mode="properties">
-        <xsl:apply-templates mode="declaration" select="flag | define-flag | model"/>
+        <xsl:apply-templates mode="define" select="flag | define-flag | model"/>
         <!-- to be excluded, flags assigned to be keys -->
         <!--<xsl:variable name="json-key-flag" select="json-key/@flag-name"/>
         <xsl:apply-templates mode="declaration"
@@ -324,7 +328,7 @@
     <xsl:template match="define-field" mode="properties">
         <!--<xsl:variable name="json-key-flag" select="json-key/@flag-name"/>
         <xsl:apply-templates mode="declaration" select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)]"/>-->
-        <xsl:apply-templates mode="declaration" select="flag | define-flag"/>
+        <xsl:apply-templates mode="define" select="flag | define-flag"/>
         <xsl:variable name="this-key" as="xs:string?">
             <xsl:apply-templates select="." mode="value-key"/>
         </xsl:variable>
@@ -336,11 +340,12 @@
     </xsl:template>
 
     <!-- A collapsible field is represented as an object containing
-         a string or an array of strings -->
-    <xsl:template match="define-field[@collapsible='yes']" mode="properties">
-        <!--<xsl:variable name="json-key-flag" select="json-key/@flag-name"/>
-        <xsl:apply-templates mode="declaration" select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)]"/>-->
-        <xsl:apply-templates mode="declaration" select="flag | define-flag"/>
+         a string or an array of strings
+    turned off for now until we reinstate collapsing into conversion scripts (2020-09-21) -->
+    <!--<xsl:template match="define-field[@collapsible='yes']" mode="properties">
+        <!-\-<xsl:variable name="json-key-flag" select="json-key/@flag-name"/>
+        <xsl:apply-templates mode="declaration" select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)]"/>-\->
+        <xsl:apply-templates mode="define" select="flag | define-flag"/>
         <xsl:variable name="this-key" as="xs:string?">
             <xsl:apply-templates select="." mode="value-key"/>
         </xsl:variable>
@@ -353,12 +358,12 @@
                         <map key="items">
                             <string key="type">string</string>
                         </map>
-                        <number key="minItems">1</number><!-- See Issue #536 -->
+                        <number key="minItems">1</number><!-\- See Issue #536 -\->
                     </map>
                 </array>
             </map>
         </xsl:if>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:template priority="2" mode="property-name" match="assembly">
         <xsl:apply-templates mode="#current" select="key('assembly-definition-by-name',@ref)">
@@ -406,9 +411,9 @@
     <!--A flag declared as a key or value key gets no declaration since it
     will not show up in the JSON as a separate property -->
     
-    <xsl:template mode="declaration" priority="5" match="define-flag[@name=../(json-value-key|json-key)/@flag-name] |
+    <xsl:template mode="define" priority="5" match="define-flag[@name=../(json-value-key|json-key)/@flag-name] |
         flag[@ref=../(json-value-key|json-key)/@flag-name]"/>
-            <xsl:template mode="declaration" match="flag">
+            <xsl:template mode="define" match="flag">
         <xsl:variable name="decl" select="key('flag-definition-by-name',@ref)"/>
         <map key="{ $decl/(use-name,@name)[1] }">
             <xsl:apply-templates select="$decl/(formal-name | description)"/>
@@ -425,7 +430,7 @@
         </map>
     </xsl:template>-->
     
-    <xsl:template mode="declaration" match="define-assembly/define-flag | define-field/define-flag">
+    <xsl:template mode="define" match="define-assembly/define-flag | define-field/define-flag">
         <map key="{ (use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name | description"/>
             <xsl:apply-templates select="." mode="object-type"/>
@@ -436,7 +441,7 @@
     <!-- irrespective of min-occurs and max-occurs, assemblies and fields designated
          with key flags are represented as objects, never arrays, as the key
          flag serves as a label -->
-    <xsl:template mode="declaration" priority="5"
+    <xsl:template mode="define" priority="5"
         match="define-assembly[group-as/@in-json='BY_KEY'][exists(json-key)] |
         define-field[group-as/@in-json='BY_KEY'][exists(json-key)] |
         assembly[group-as/@in-json='BY_KEY'][exists(key('assembly-definition-by-name',@ref)/json-key)] |
@@ -462,7 +467,7 @@
     </xsl:template>
     
     <!-- Always a map when max-occurs is 1 or implicit -->
-    <xsl:template mode="declaration" priority="4"
+    <xsl:template mode="define" priority="4"
         match="assembly[empty(@max-occurs) or number(@max-occurs) = 1] | define-assembly[empty(@max-occurs) or number(@max-occurs) = 1]">
         <xsl:variable name="decl" select="key('assembly-definition-by-name', @ref) | self::define-assembly"/>
         <map key="{ $decl/(root-name,use-name,@name)[1] }">
@@ -471,7 +476,7 @@
     </xsl:template>
     
     <!-- Always a map when max-occurs is 1 or implicit -->
-    <xsl:template mode="declaration" priority="4"
+    <xsl:template mode="define" priority="4"
         match="field[empty(@max-occurs) or number(@max-occurs) = 1] | define-field[empty(@max-occurs) or number(@max-occurs) = 1]">
         <xsl:variable name="decl" select="key('field-definition-by-name', @ref) | self::define-field"/>
         <map key="{ $decl/(root-name,use-name,@name)[1] }">
@@ -480,7 +485,7 @@
     </xsl:template>
     
     <!-- Otherwise, always an array when min-occurs is greater than 1 or whenever so designated -->
-    <xsl:template mode="declaration" priority="3" expand-text="yes"
+    <xsl:template mode="define" priority="3" expand-text="yes"
         match="*[number(@min-occurs) &gt; 1 ] | *[child::group-as/@in-json='ARRAY']">
         <map key="{ group-as/@name }">
             <string key="type">array</string>
@@ -498,7 +503,7 @@
     
     <!-- Now matching when min-occurs is 1 or less, max-occurs is more than 1,
          and group-as/@in-json is not 'BY-KEY' or 'ARRAY' ... -->
-    <xsl:template mode="declaration" match="assembly | field | define-assembly | define-field">
+    <xsl:template mode="define" match="assembly | field | define-assembly | define-field">
         <map key="{ group-as/@name }">
             <array key="anyOf">
                 <map>
@@ -520,6 +525,11 @@
     
     
     <xsl:template match="define-assembly | define-field | define-flag" mode="definition-or-reference">
+        <xsl:apply-templates select="."/>
+    </xsl:template>
+    
+    
+    <xsl:template match="model/define-assembly | model/define-field | model/define-flag" mode="definition-or-reference">
         <xsl:apply-templates select="."/>
     </xsl:template>
     
@@ -631,72 +641,76 @@
         match="map" use="@key"/>
     
     <xsl:variable name="datatypes" expand-text="false">
+        <dummy/>
+    </xsl:variable>
+        
+    <!--<xsl:variable name="datatypesX" expand-text="false">
         <map key="decimal">
             <string key="type">number</string>
             <string key="pattern">^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$</string>
         </map>
         <map key="date">
             <string key="type">string</string>
-            <!--<string key="format">date</string> JQ 'date' implementation does not permit time zone -->
+            <!-\-<string key="format">date</string> JQ 'date' implementation does not permit time zone -\->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
         <map key="dateTime">
             <string key="type">string</string>
-            <!--<string key="format">date-time</string> JQ 'date-time' implementation requires time zone -->
+            <!-\-<string key="format">date-time</string> JQ 'date-time' implementation requires time zone -\->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
         <map key="date-with-timezone">
             <string key="type">string</string>
-            <!--The xs:date with a required timezone.-->
+            <!-\-The xs:date with a required timezone.-\->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})$</string>
         </map>
         <map key="dateTime-with-timezone">
             <string key="type">string</string>
             <string key="format">date-time</string>
-            <!--The xs:dateTime with a required timezone.-->
+            <!-\-The xs:dateTime with a required timezone.-\->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$</string>
         </map>
         <map key="email">
             <string key="type">string</string>
             <string key="format">email</string>
-            <!---->
+            <!-\-\-\->
             <string key="pattern">^.+@.+</string>
         </map>
         <map key="ip-v4-address">
             <string key="type">string</string>
             <string key="format">ipv4</string>
-            <!--The ip-v4-address type specifies an IPv4 address in dot decimal notation.-->
+            <!-\-The ip-v4-address type specifies an IPv4 address in dot decimal notation.-\->
             <string key="pattern">^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$</string>
         </map>
         <map key="ip-v6-address">
             <string key="type">string</string>
             <string key="format">ipv6</string>
-            <!--The ip-v6-address type specifies an IPv6 address represented in 8 hextets separated by colons.This is based on the pattern provided here: https://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses with some customizations.-->
+            <!-\-The ip-v6-address type specifies an IPv6 address represented in 8 hextets separated by colons.This is based on the pattern provided here: https://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses with some customizations.-\->
             <string key="pattern">^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|[fF][eE]80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::([fF]{4}(:0{1,4}){0,1}:){0,1}((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]))$</string>
         </map>
         <map key="hostname">
             <string key="type">string</string>
             <string key="format">idn-hostname</string>
-            <!---->
+            <!-\-\-\->
             <string key="pattern">^.+$</string>
         </map>
         <map key="uri">
             <string key="type">string</string>
             <string key="format">uri</string>
-            <!---->
+            <!-\-\-\->
         </map>
         <map key="uri-reference">
             <string key="type">string</string>
             <string key="format">uri-reference</string>
-            <!---->
+            <!-\-\-\->
         </map>
         <map key="uuid">
-            <!-- A Type 4 ('random' or 'pseudorandom' UUID per RFC 4122-->
+            <!-\- A Type 4 ('random' or 'pseudorandom' UUID per RFC 4122-\->
             <string key="type">string</string>
-            <!-- A sequence of 8-4-4-4-12 hex digits, with extra constraints in the 13th and 17-18th places for version 4-->
+            <!-\- A sequence of 8-4-4-4-12 hex digits, with extra constraints in the 13th and 17-18th places for version 4-\->
             <string key="pattern">^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$</string>
         </map>
-        <!-- Possibly add support for XSD types ID, IDREF, IDREFS, NCName, NMTOKENS ???        -->
-    </xsl:variable>
+        <!-\- Possibly add support for XSD types ID, IDREF, IDREFS, NCName, NMTOKENS ???        -\->
+    </xsl:variable>-->
 
 </xsl:stylesheet>
