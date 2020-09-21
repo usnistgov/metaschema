@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<!-- OSCAL CATALOG METASCHEMA -->
+<!-- validate with XSD and Schematron (linked) -->
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xsi:schemaLocation="../../../toolchains/xslt-M4/validate/metaschema.xsd">
+   <schema-name>Metaschema Unit Test: group-as</schema-name>
+   <schema-version>1.0-milestone1</schema-version>
+   <short-name>metaschema-group-as</short-name>
+   <namespace>http://csrc.nist.gov/ns/metaschema/unit-test/group-as-singleton-or-array-optional</namespace>
+   <define-assembly name="parent">
+      <formal-name>parent</formal-name>
+      <description>parent assembly</description>
+      <root-name>parent</root-name>
+      <define-flag name="local-flag" as-type="string">
+         <formal-name>Flag defined locally</formal-name>
+         <description>Has a local definition</description>
+      </define-flag>
+      <flag ref="global-flag"/>
+      <model>
+         <define-field name="local-field" as-type="string">
+            <formal-name>Field defined locally</formal-name>
+            <description>Has a local definition</description>
+         </define-field>
+         <field ref="global-field"/>
+         <define-assembly name="local-assembly">
+            <formal-name>Assembly defined locally</formal-name>
+            <description>Has a local definition</description>
+            <model>
+               <define-field name="local-field2" as-type="string">
+                  <formal-name>Field defined locally</formal-name>
+                  <description>Has a local definition</description>
+               </define-field>
+               <field ref="global-field"/>
+            </model>
+         </define-assembly>
+         <assembly ref="global-assembly"/>
+      </model>
+   </define-assembly>   
+   <define-flag name="global-flag" as-type="string">
+      <formal-name>Flag defined globally</formal-name>
+      <description>Has a global definition</description>
+   </define-flag>
+   <define-field name="global-field" as-type="string">
+      <formal-name>Field defined globally</formal-name>
+      <description>Has a global definition</description>
+   </define-field>
+   <define-assembly name="global-assembly">
+      <formal-name>Assembly defined globally</formal-name>
+      <description>Has a global definition</description>
+      <model>
+         <define-field name="local-field2" as-type="string">
+            <formal-name>Field defined locally</formal-name>
+            <description>Has a local definition</description>
+         </define-field>
+         <field ref="global-field"/>
+      </model>
+   </define-assembly>
+</METASCHEMA>
