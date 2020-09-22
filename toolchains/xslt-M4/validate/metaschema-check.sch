@@ -53,7 +53,7 @@
     
     
     <sch:pattern id="definitions-and-name-clashes">
-        <!--<sch:rule context="m:flag | m:field | m:assembly">
+        <sch:rule context="m:flag | m:field | m:assembly">
             <sch:let name="aka" value="nm:identifiers(.)"/>
             <sch:let name="def" value="nm:definition-for-reference(.)"/>
             <sch:assert test="exists($def) or $metaschema-is-abstract">No definition is given for <sch:name/> '<sch:value-of select="@ref"/>'.</sch:assert>
@@ -61,7 +61,7 @@
             <sch:let name="siblings" value="(../m:flag | ../m:define-flag | ancestor::m:model//m:field | ancestor::m:model//m:assembly | ancestor::m:model//define-field | ancestor::m:model//m:define-assembly) except ."/>
             <sch:let name="rivals" value="$siblings[nm:identifiers(.) = $aka]"/>
             <sch:assert test="empty($rivals)">Name clash on <sch:name/> using name '<sch:value-of select="$aka"/>'; clashes with neighboring <xsl:value-of select="$rivals/local-name()" separator=", "/></sch:assert>
-        </sch:rule>-->
+        </sch:rule>
         
         <sch:rule context="m:METASCHEMA/m:define-assembly | m:METASCHEMA/m:define-field | m:METASCHEMA/m:define-flag">
             <sch:let name="references" value="nm:references-to-definition(.)"/>
