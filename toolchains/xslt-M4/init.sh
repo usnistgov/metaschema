@@ -45,7 +45,7 @@ generate_converter() {
   local source_format="$1"; shift
   local target_format="$1"; shift
 
-  local transform="${PROVIDER_RESOURCE_DIR}/${source_format}/produce-${source_format}-converter.xsl"
+  local transform="${PROVIDER_RESOURCE_DIR}/nist-metaschema-MAKE-${source_format^^}-TO-${target_format^^}-CONVERTER.xsl"
   local result=$(xsl_transform "$transform" "$metaschema" "$output_file" 2>&1)
   local cmd_exitcode=$?
   if [ $cmd_exitcode -ne 0 ]; then
