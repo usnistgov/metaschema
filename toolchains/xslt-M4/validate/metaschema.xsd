@@ -36,6 +36,18 @@
         </xs:simpleType>
       </xs:attribute>
     </xs:complexType>
+    <xs:unique name="unique-constraint-ids">
+      <xs:selector xpath=".//m:allowed-values|.//m:matches|.//m:index-has-key|.//m:is-unique|.//m:has-cardinality|.//m:expect|.//m:index"/>
+      <xs:field xpath="@id"/>
+    </xs:unique>
+    <xs:key name="key-index-constraint">
+      <xs:selector xpath=".//m:index|.//m:is-unique"/>
+      <xs:field xpath="@name"/>
+    </xs:key>
+    <xs:keyref name="keyref-index-has-key" refer="m:key-index-constraint">
+      <xs:selector xpath=".//m:index-has-key"/>
+      <xs:field xpath="@name"/>
+    </xs:keyref>
   </xs:element>
 
   <xs:complexType name="global-assembly-definition">
@@ -63,6 +75,7 @@
     </xs:sequence>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
     <xs:attribute name="module" type="xs:anyURI"/>
+    <xs:attribute name="scope" type="m:scope-type" default="global"/>
   </xs:complexType>
 
   <xs:complexType name="assembly-model">
@@ -103,6 +116,7 @@
     <xs:attribute name="collapsible" type="m:boolean" default="yes"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
     <xs:attribute name="module" type="xs:anyURI"/>
+    <xs:attribute name="scope" type="m:scope-type" default="global"/>
   </xs:complexType>
 
 
@@ -125,6 +139,7 @@
     <xs:attribute name="as-type" type="m:simple-datatypes" default="string"/>
     <!-- defined for composed (compiled) metaschemas -->
     <xs:attribute name="module" type="xs:anyURI"/>
+    <xs:attribute name="scope" type="m:scope-type" default="global"/>
   </xs:complexType>
 
   <xs:complexType name="local-assembly-definition">
@@ -464,6 +479,9 @@
   </xs:element>
 
   <xs:simpleType name="regex">
+    <xs:annotation>
+      <xs:documentation>A regex subset that is conformant to both https://www.w3.org/TR/xmlschema11-2/#regexes and https://www.ecma-international.org/ecma-262/11.0/index.html#sec-patterns.</xs:documentation>
+    </xs:annotation>
     <xs:restriction base="xs:string"/>
   </xs:simpleType>
 
@@ -597,7 +615,7 @@
   </xs:complexType>
 
   <xs:group name="model-constraints-group">
-    <xs:sequence>
+    <xs:choice>
       <xs:element name="allowed-values" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
           <xs:documentation>Constrains the allowed values for the flag or field referenced by the scope attribute.</xs:documentation>
@@ -694,17 +712,17 @@
         </xs:complexType>
       </xs:element>
       <xs:element minOccurs="0" ref="m:remarks"/>
-    </xs:sequence>
+    </xs:choice>
   </xs:group>
 
   <xs:complexType name="model-constraint-type">
-    <xs:sequence>
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
       <xs:group ref="m:model-constraints-group"/>
-    </xs:sequence>
+    </xs:choice>
   </xs:complexType>
 
   <xs:complexType name="assembly-constraint-type">
-    <xs:sequence>
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
       <xs:element name="index" type="m:index-constraint-type" minOccurs="0"
         maxOccurs="unbounded">
         <xs:annotation>
@@ -712,7 +730,7 @@
         </xs:annotation>
       </xs:element>
       <xs:group ref="m:model-constraints-group"/>
-    </xs:sequence>
+    </xs:choice>
     
   </xs:complexType>
 
@@ -879,6 +897,21 @@
     <xs:restriction base="xs:NCName">
       <xs:enumeration value="yes"/>
       <xs:enumeration value="no"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="scope-type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="local">
+        <xs:annotation>
+          <xs:documentation>This definition is only available in the context of the current metaschema.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="global">
+        <xs:annotation>
+          <xs:documentation>This definition will be made available to any metaschema that includes this one either directly or indirectly through a chain of imported metaschemas.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>
