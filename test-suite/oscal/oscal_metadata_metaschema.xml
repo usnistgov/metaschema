@@ -406,7 +406,7 @@
    
    
    <!-- ############################################### -->
-   <!-- # Back matter Assembly and related constructs # -->
+   <!-- # Back Matter Assembly and related constructs # -->
    <!-- ############################################### -->
    <define-assembly name="back-matter">
       <formal-name>Back matter</formal-name>
@@ -552,7 +552,7 @@
       </define-flag>
       <define-flag name="id" as-type="NCName">
          <formal-name>Property Identifier</formal-name>
-         <description>A unique identifier for a specific property instance.</description>
+         <description>A unique identifier for a specific property instance. This identifier's uniqueness is document scoped and is intended to be consistent for the same parameter across minor revisions of the document.</description>
       </define-flag>
       <!-- CHANGED: type to uri -->
       <define-flag name="ns" as-type="uri">
@@ -587,8 +587,8 @@
          <description>A textual label that uniquely identifies the subject of the annotations' value.</description>
       </define-flag>
       <define-flag name="id" as-type="NCName">
-         <formal-name>Identifier</formal-name>
-         <description>A unique identifier for a specific annotation instance.</description>
+         <formal-name>Annotation Identifier</formal-name>
+         <description>A unique identifier for a specific annotation instance. This identifier's uniqueness is document scoped and is intended to be consistent for the same parameter across minor revisions of the document.</description>
       </define-flag>
       <!-- CHANGED: type to uri -->
       <define-flag name="ns" as-type="uri">
