@@ -219,7 +219,10 @@
    <define-assembly name="information-type">
       <formal-name>Information Type</formal-name>
       <description>Contains details about one information type that is stored, processed, or transmitted by the system, such as privacy information, and those defined in <a href="https://doi.org/10.6028/NIST.SP.800-60v2r1">NIST SP 800-60</a>.</description>
-      <flag ref="id"/>
+      <define-flag name="uuid" as-type="uuid">
+         <formal-name>Information Type Universally Unique Identifier</formal-name>
+         <description>A globally unique identifier that can be used to reference this information type entry elsewhere in an OSCAL document. A UUID should be consistantly used for a given resource across revisions of the document.</description>
+      </define-flag>
       <model>
          <define-field name="title" as-type="markup-line" min-occurs="1">
             <formal-name>title field</formal-name>
@@ -389,7 +392,10 @@
    <define-assembly name="leveraged-authorization">
       <formal-name>Leveraged Authorization</formal-name>
       <description>A description of another authorized system from which this system inherits capabilities that satisfy security requirements. Another term for this concept is a <em>common control provider</em>.</description>
-      <flag ref="id"/>
+      <define-flag name="uuid" as-type="uuid" required="yes">
+         <formal-name>Leveraged Authorization Universally Unique Identifier</formal-name>
+         <description>A globally unique identifier that can be used to reference this leveraged authorization entry elsewhere in an OSCAL document. A UUID should be consistantly used for a given resource across revisions of the document.</description>
+      </define-flag>
       <model>
          <define-field name="title" as-type="markup-line" min-occurs="1">
             <formal-name>title field</formal-name>
@@ -737,6 +743,10 @@
                      <enum value="isa-title">Title of the Interconnection Security Agreement (ISA).</enum>
                      <enum value="isa-date">Date of the Interconnection Security Agreement (ISA).</enum>
                      <enum value="isa-remote-system-name">The name of the remote interconnected system.</enum>
+                     <!-- names related to inherited component -->
+                     <enum value="implementation-point">Reletave placement of component ('inteneral' or 'external') to the system.</enum>
+                     <enum value="leveraged-authorization-uuid">UUID of the related leveraged-authorization assembly in this SSP.</enum>
+                     <enum value="inherited-uuid">UUID of the component as it was assigned in the leveraged system's SSP.</enum>
                   </allowed-values>
                </constraint>
             </define-flag>
@@ -1102,9 +1112,9 @@
    <define-assembly name="implemented-component">
       <formal-name>Implemented Component</formal-name>
       <description>The set of componenets that are implemented in a given system inventory item.</description>
-      <json-key flag-name="component-id"/>
-      <define-flag required="yes" name="component-id" as-type="uuid">
-         <formal-name>Component Identifier Reference</formal-name>
+      <json-key flag-name="component-uuid"/>
+      <define-flag required="yes" name="component-uuid" as-type="uuid">
+         <formal-name>Component Universally Unique Identifier Reference</formal-name>
          <description>A reference to a component that is implemented as part of an inventory item.</description>
       </define-flag>
       <define-flag name="use">
@@ -1254,7 +1264,6 @@
       <flag ref="uuid" required="yes"/>
       <flag ref="control-id" required="yes"/>
       <model>
-         <field ref="description"/>
          <field ref="prop" max-occurs="unbounded">
             <group-as name="properties" in-json="ARRAY"/>
          </field>
@@ -1337,7 +1346,6 @@
       </flag>
       <flag ref="uuid" required="yes"/>
       <model>
-         <field ref="description"/>
          <field ref="prop" max-occurs="unbounded">
             <group-as name="properties" in-json="ARRAY"/>
          </field>
@@ -1402,9 +1410,9 @@
    <define-assembly name="by-component">
       <formal-name>Component Control Implementation</formal-name>
       <description>Defines how the referenced component implements a set of controls.</description>
-      <json-key flag-name="component-id"/>
-      <define-flag required="yes" name="component-id" as-type="uuid">
-         <formal-name>Component Reference</formal-name>
+      <json-key flag-name="component-uuid"/>
+      <define-flag required="yes" name="component-uuid" as-type="uuid">
+         <formal-name>Component Universally Unique Identifier Reference</formal-name>
          <description>A reference to the component that is implementing a given control or control statement.</description>
       </define-flag>
       <flag ref="uuid" required="yes"/>
@@ -1419,6 +1427,13 @@
          <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
             <!-- TODO: Model specific link relationships -->
+         </assembly>
+         <assembly ref="export" min-occurs="0" max-occurs="1" />
+         <assembly ref="inherited" min-occurs="0" max-occurs="unbounded">
+            <group-as name="inherited-group"/>
+         </assembly>
+         <assembly ref="satisfied" min-occurs="0" max-occurs="unbounded">
+            <group-as name="satisfied-group"/>
          </assembly>
          <define-assembly name="responsible-role" max-occurs="unbounded">
             <formal-name>Responsible Role</formal-name>
@@ -1461,6 +1476,141 @@
          <assembly ref="set-parameter" max-occurs="unbounded">
             <group-as name="parameter-settings" in-json="BY_KEY"/>
          </assembly>
+         <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
    </define-assembly>
+
+   <define-assembly name="export">
+      <formal-name>Export</formal-name>
+      <description>Identifies content intended for external consumption, such as with leveraged organizations.</description>
+      <model>
+         <field ref="description" min-occurs="0" max-occurs="1" in-xml="WITH_WRAPPER"/>
+         <field ref="property" max-occurs="unbounded">
+            <use-name>prop</use-name>
+            <group-as name="properties" in-json="ARRAY"/>
+         </field>
+         <assembly ref="annotation" max-occurs="unbounded">
+            <group-as name="annotations"/>
+         </assembly>
+         <assembly ref="link" max-occurs="unbounded">
+            <group-as name="links" in-json="ARRAY"/>
+            <!-- TODO: Model specific link relationships -->
+         </assembly>
+         <assembly ref="provided" min-occurs="0" max-occurs="unbounded">
+            <group-as name="provided-group"/>
+         </assembly>
+         <assembly ref="responsibility" min-occurs="0" max-occurs="unbounded">
+            <group-as name="responsibilities"/>
+         </assembly>
+         <field ref="remarks" in-xml="WITH_WRAPPER"/>
+      </model>
+   </define-assembly>
+   
+   <define-assembly name="provided">
+      <formal-name>Provided</formal-name>
+      <description>Describes a capability which may be inherited by a leveraging system.</description>
+      <flag ref="uuid" required="yes" />
+      <model>
+         <field ref="description" min-occurs="1" max-occurs="1" in-xml="WITH_WRAPPER"/>
+         <field ref="property" max-occurs="unbounded">
+            <use-name>prop</use-name>
+            <group-as name="properties" in-json="ARRAY"/>
+         </field>
+         <assembly ref="annotation" max-occurs="unbounded">
+            <group-as name="annotations"/>
+         </assembly>
+         <assembly ref="link" max-occurs="unbounded">
+            <group-as name="links" in-json="ARRAY"/>
+            <!-- TODO: Model specific link relationships -->
+         </assembly>
+         <assembly ref="responsible-role" min-occurs="0" max-occurs="unbounded">
+            <group-as name="responsible-roles" in-json="BY_KEY"/>
+         </assembly>
+         <field ref="remarks" in-xml="WITH_WRAPPER"/>
+      </model>
+   </define-assembly>
+   
+   <define-assembly name="responsibility">
+      <formal-name>Responsibility</formal-name>
+      <description>Describes a responsibiity imposed on a leveraging system.</description>
+      <flag ref="uuid" required="yes" />
+      <flag ref="provided-uuid" required="no" />
+      <model>
+         <field ref="description" min-occurs="1" max-occurs="1" in-xml="WITH_WRAPPER"/>
+         <field ref="property" max-occurs="unbounded">
+            <use-name>prop</use-name>
+            <group-as name="properties" in-json="ARRAY"/>
+         </field>
+         <assembly ref="annotation" max-occurs="unbounded">
+            <group-as name="annotations"/>
+         </assembly>
+         <assembly ref="link" max-occurs="unbounded">
+            <group-as name="links" in-json="ARRAY"/>
+            <!-- TODO: Model specific link relationships -->
+         </assembly>
+         <assembly ref="responsible-role" min-occurs="0" max-occurs="unbounded">
+            <group-as name="responsible-roles" in-json="BY_KEY"/>
+         </assembly>
+         <field ref="remarks" in-xml="WITH_WRAPPER"/>
+      </model>
+   </define-assembly>
+   
+   <define-assembly name="inherited">
+      <formal-name>Inherited</formal-name>
+      <description>Describes a responsibiity imposed on a leveraging system.</description>
+      <flag ref="uuid" required="yes" />
+      <flag ref="provided-uuid" required="no" />
+      <model>
+         <field ref="description" min-occurs="1" max-occurs="1" in-xml="WITH_WRAPPER"/>
+         <field ref="property" max-occurs="unbounded">
+            <use-name>prop</use-name>
+            <group-as name="properties" in-json="ARRAY"/>
+         </field>
+         <assembly ref="annotation" max-occurs="unbounded">
+            <group-as name="annotations"/>
+         </assembly>
+         <assembly ref="link" max-occurs="unbounded">
+            <group-as name="links" in-json="ARRAY"/>
+            <!-- TODO: Model specific link relationships -->
+         </assembly>
+         <assembly ref="responsible-role" min-occurs="0" max-occurs="unbounded">
+            <group-as name="responsible-roles" in-json="BY_KEY"/>
+         </assembly>
+      </model>
+   </define-assembly>
+   
+   <define-assembly name="satisfied">
+      <formal-name>Satisfied</formal-name>
+      <description>Describes how this system satisfies a responsibiity imposed by a leveraged system.</description>
+      <flag ref="uuid" required="yes" />
+      <flag ref="responsibility-uuid" required="no" />
+      <model>
+         <field ref="description" min-occurs="1" max-occurs="1" in-xml="WITH_WRAPPER"/>
+         <field ref="property" max-occurs="unbounded">
+            <use-name>prop</use-name>
+            <group-as name="properties" in-json="ARRAY"/>
+         </field>
+         <assembly ref="annotation" max-occurs="unbounded">
+            <group-as name="annotations"/>
+         </assembly>
+         <assembly ref="link" max-occurs="unbounded">
+            <group-as name="links" in-json="ARRAY"/>
+            <!-- TODO: Model specific link relationships -->
+         </assembly>
+         <assembly ref="responsible-role" min-occurs="0" max-occurs="unbounded">
+            <group-as name="responsible-roles" in-json="BY_KEY"/>
+         </assembly>
+         <field ref="remarks" in-xml="WITH_WRAPPER"/>
+      </model>
+   </define-assembly>
+   
+   <define-flag name="provided-uuid">
+      <formal-name>Provided UUID</formal-name>
+      <description>Identifies a 'provided' assembly associated with this assembly.</description>
+   </define-flag>
+   
+   <define-flag name="responsibility-uuid">
+      <formal-name>Provided UUID</formal-name>
+      <description>Identifies a 'provided' assembly associated with this assembly.</description>
+   </define-flag>
 </METASCHEMA>

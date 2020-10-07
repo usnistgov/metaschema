@@ -530,9 +530,9 @@
       <description>An attribute, characteristic, or quality of the containing object expressed as a namespace qualified name/value pair. The value of a property is a simple scalar value, which may be expressed as a list of values in some OSCAL formats.</description>
       <use-name>prop</use-name>
       <json-value-key>value</json-value-key>
-      <define-flag name="id" as-type="NCName">
-         <formal-name>Property Identifier</formal-name>
-         <description>A unique identifier for a specific property instance. This identifier's uniqueness is document scoped and is intended to be consistent for the same property across minor revisions of the document.</description>
+      <define-flag name="uuid" as-type="uuid">
+         <formal-name>Property Universally Unique Identifier</formal-name>
+         <description>A unique identifier that can be used to reference this property elsewhere in an OSCAL document. A UUID should be consistantly used for a given location across revisions of the document.</description>
       </define-flag>
       <define-flag name="name" required="yes">
          <formal-name>Property Name</formal-name>
@@ -572,9 +572,9 @@
          <formal-name>Annotated Property Name</formal-name>
          <description>A textual label that uniquely identifies a specific attribute, characteristic, or quality of the annotated property's containing object.</description>
       </define-flag>
-      <define-flag name="id" as-type="NCName">
-         <formal-name>Annotated Property Identifier</formal-name>
-         <description>A unique identifier for a specific property instance. This identifier's uniqueness is document scoped and is intended to be consistent for the same annotated property across minor revisions of the document.</description>
+      <define-flag name="uuid" as-type="uuid">
+         <formal-name>Annotated Property Universally Unique Identifier</formal-name>
+         <description>A unique identifier that can be used to reference this annotated property elsewhere in an OSCAL document. A UUID should be consistantly used for a given location across revisions of the document.</description>
       </define-flag>
       <!-- CHANGED: data type to uri -->
       <define-flag name="ns" as-type="uri">
