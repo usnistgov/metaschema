@@ -16,7 +16,10 @@
       <formal-name>Profile</formal-name>
       <description>Each OSCAL profile is defined by a Profile element</description>
       <root-name>profile</root-name>
-      <flag ref="uuid" required="yes"/>
+      <define-flag name="uuid" as-type="uuid" required="yes">
+         <formal-name>Catalog Universally Unique Identifier</formal-name>
+         <description>A globally unique identifier for this profile instance. This UUID should be changed when this document is revised.</description>
+      </define-flag>
       <model>
          <assembly ref="metadata" min-occurs="1"/>
          <assembly ref="import" min-occurs="1" max-occurs="unbounded">
@@ -33,13 +36,22 @@
    <define-assembly name="import">
       <formal-name>Import resource</formal-name>
       <description>An Import element designates a catalog, profile, or other resource to be included (referenced and potentially modified) by this profile.</description>
-      <flag ref="href" required="yes"/>
+      <define-flag name="href" as-type="uri-reference" required="yes">
+         <formal-name>Catalog or Profile Reference</formal-name>
+         <description>A resolvable URL reference to the base catalog or profile that this profile is tailoring.</description>
+         <remarks>
+            <p>The value of the <code>href</code> can be an internet resource, or a local reference using a fragment e.g. #fragment that points to a <code>back-matter</code> <code>resource</code> in the same document.</p>
+            <!-- TODO: Add a link to "within the scope of the containing OSCAL document" to point to documentation of identification scopes" -->
+            <p>If a local reference using a fragment is used, this will be indicated by a fragment "#" followed by an identifier which references an identified <code>resource</code> in the document's <code>back-matter</code> or another object that is within the scope of the containing OSCAL document.</p>
+            <p>If an internet resource is used, the <code>href</code> value will be an absolute or relative URI pointing to the location of the referenced resource. A relative URI will be resolved relative to the location of the document containing the link.</p>
+         </remarks>
+      </define-flag>
       <model>
          <assembly ref="include"/>
          <assembly ref="exclude"/>
       </model>
       <remarks>
-         <p>An <code>import</code> indicates a source whose controls are to be included (referenced and modified) in a profile. This source will either be a catalog whose controls are given (<q>by value</q>), or a profile with its own control imports (with possible settings.</p>
+         <p>A profile must be based on an existing OSCAL catalog or another OSCAL profile. An <code>import</code> indicates such a source whose controls are to be included (referenced and modified) in a profile. This source will either be a catalog whose controls are given (<q>by value</q>), or a profile with its own control imports.</p>
          <p>The contents of the <code>import</code> element indicate which controls from the source will be included. Controls may be either selected (using an <code>include</code> element) or de-selected (using an <code>exclude</code> element) from the source catalog or profile.</p>
          <p>When no <code>include</code> is given (whether an <code>exclude</code> is given or not), an <code>include</code>/<code>all</code> is assumed (that is, all controls will be included by default).</p>
       </remarks>
@@ -113,15 +125,31 @@
    </define-assembly>
    <define-assembly name="group">
       <formal-name>Control group</formal-name>
-      <description>As in catalogs, a group of (selected) controls or of groups of controls</description>
-      <flag ref="id"/>
-      <flag ref="class"/>
+      <description>A group of (selected) controls or of groups of controls</description>
+      <define-flag name="id" as-type="NCName">
+         <formal-name>Group Identifier</formal-name>
+         <description>A unique identifier for a specific group instance that can be used to reference the group within this and in other OSCAL documents. This identifier's uniqueness is document scoped and is intended to be consistent for the same group across minor revisions of the document.</description>
+      </define-flag>
+      <define-flag name="class" as-type="NCName">
+         <formal-name>Group Class</formal-name>
+         <description>A textual label that provides a sub-type or characterization of the group.</description>
+         <remarks>
+            <p>A <code>class</code> can be used in validation rules to express extra constraints over named items of a specific <code>class</code> value.</p>
+            <p>A <code>class</code> can also be used in an OSCAL profile as a means to target an alteration to control content.</p>
+         </remarks>
+      </define-flag>
       <model>
-         <field ref="title"/>
-         <assembly ref="param" max-occurs="unbounded">
+         <define-field name="title" as-type="markup-line" min-occurs="1">
+            <formal-name>Group Title</formal-name>
+            <description>A name given to the group, which may be used by a tool for display and navigation.</description>
+         </define-field>
+         <assembly ref="parameter" max-occurs="unbounded">
+            <!-- QUESTION: Why is this "param" and the plural form is "parameters"? -->
+            <use-name>param</use-name>
             <group-as name="parameters" in-json="ARRAY"/>
          </assembly>
-         <field ref="prop" max-occurs="unbounded">
+         <field ref="property" max-occurs="unbounded">
+            <use-name>prop</use-name>
             <group-as name="properties" in-json="ARRAY"/>
          </field>
          <assembly ref="part" max-occurs="unbounded">
@@ -132,22 +160,29 @@
                <group-as name="groups" in-json="ARRAY"/>
             </assembly>
             <field ref="call" max-occurs="unbounded">
+               <!-- QUESTION: Why is the singular "call" and the plural "id-selectors"? -->
                <group-as name="id-selectors" in-json="ARRAY"/>
             </field>
             <field ref="match" max-occurs="unbounded">
+               <!-- QUESTION: Why is the singular "match" and the plural "pattern-selectors"? -->
                <group-as name="pattern-selectors" in-json="ARRAY"/>
             </field>
          </choice>
       </model>
+      <remarks>
+         <p>This construct mirrors the same construct that exists in an OSCAL catalog.</p>
+      </remarks>
    </define-assembly>
    <define-assembly name="modify">
       <formal-name>Modify controls</formal-name>
       <description>Set parameters or amend controls in resolution</description>
       <model>
          <assembly ref="set-parameter" max-occurs="unbounded">
+            <!-- QUESTION: Why is the singular "set-parameter" and the plural "parameter-settings"? -->
             <group-as name="parameter-settings" in-json="BY_KEY"/>
          </assembly>
          <assembly ref="alter" max-occurs="unbounded">
+            <!-- QUESTION: Why is the singular "alter" and the plural "alterations"? -->
             <group-as name="alterations" in-json="ARRAY"/>
          </assembly>
       </model>
@@ -220,26 +255,52 @@
          <formal-name>Parameter ID</formal-name>
          <description>Indicates the value of the 'id' flag on a target parameter; i.e. which parameter to set</description>
       </define-flag>
-      <flag ref="class"/>
+      <define-flag name="class" as-type="NCName">
+         <formal-name>Parameter Class</formal-name>
+         <description>A textual label that provides a characterization of the parameter.</description>
+         <remarks>
+            <p>A <code>class</code> can be used in validation rules to express extra constraints over named items of a specific <code>class</code> value.</p>
+         </remarks>
+      </define-flag>
       <flag ref="depends-on"/>
       <model><!-- declarations tbf in the imported schema and to be aligned with it -->
-         <field ref="label"/>
-         <field ref="usage" max-occurs="unbounded">
-            <group-as name="descriptions" in-json="ARRAY"/>
+         <define-field name="label" as-type="markup-line">
+            <formal-name>Parameter Label</formal-name>
+            <description>A short, placeholder name for the parameter, which can be used as a subsitute for a <code>value</code> if no value is assigned.</description>
+            <remarks>
+               <p>The label value should be suitable for inline display in a rendered catalog.</p>
+            </remarks>
+         </define-field>
+         <field ref="parameter-usage" max-occurs="unbounded">
+            <use-name>usage</use-name>
+            <!-- CHANGED from "descriptions" to "usages" -->
+            <group-as name="usages" in-json="ARRAY"/>
          </field>
-         <field ref="constraint" max-occurs="unbounded">
+         <assembly ref="parameter-constraint" max-occurs="unbounded">
+            <use-name>constraint</use-name>
             <group-as name="constraints" in-json="ARRAY"/>
-         </field>
-         <assembly ref="guideline" max-occurs="unbounded">
-            <group-as name="guidance" in-json="ARRAY"/>
+         </assembly>
+         <assembly ref="parameter-guideline" max-occurs="unbounded">
+            <use-name>guideline</use-name>
+            <!-- CHANGED from "guidance" to "guidelines" -->
+            <group-as name="guidelines" in-json="ARRAY"/>
          </assembly>
          <choice>
-            <field ref="value"/>
-            <assembly ref="select"/>
+            <field ref="parameter-value" max-occurs="unbounded">
+               <!-- CHANGED cardinality to allow for multiple values -->
+               <use-name>value</use-name>
+               <group-as name="values" in-json="ARRAY"/>
+               <remarks>
+                  <p>Used to (re)define a parameter value.</p>
+               </remarks>
+            </field>
+            <assembly ref="parameter-selection">
+               <use-name>select</use-name>
+            </assembly>
          </choice>
-         <field ref="link" max-occurs="unbounded">
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
-         </field>
+         </assembly>
       </model>
    </define-assembly>
    <define-assembly name="alter">
@@ -305,19 +366,25 @@
          <description>Target location of the addition.</description>
       </define-flag>
       <model>
-         <field ref="title"/>
-         <assembly ref="param" max-occurs="unbounded">
+         <define-field name="title" as-type="markup-line">
+            <formal-name>Title Change</formal-name>
+            <description>A name given to the control, which may be used by a tool for display and navigation.</description>
+         </define-field>
+         <assembly ref="parameter" max-occurs="unbounded">
+            <!-- QUESTION: Why is this "param" and the plural form is "parameters"? -->
+            <use-name>param</use-name>
             <group-as name="parameters" in-json="ARRAY"/>
          </assembly>
-         <field ref="prop" max-occurs="unbounded">
+         <field ref="property" max-occurs="unbounded">
+            <use-name>prop</use-name>
             <group-as name="properties" in-json="ARRAY"/>
          </field>
          <assembly ref="annotation" max-occurs="unbounded">
             <group-as name="annotations" in-json="ARRAY"/>
          </assembly>
-         <field ref="link" max-occurs="unbounded">
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
-         </field>
+         </assembly>
          <assembly ref="part" max-occurs="unbounded">
             <group-as name="parts" in-json="ARRAY"/>
          </assembly>

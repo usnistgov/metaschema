@@ -6,6 +6,7 @@
 -->
 <!-- OSCAL Implementation Layer: System Security Plan (SSP) METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
+<!-- TODO: Need to update this model based on the changes that @brianrufgsa is making to support leveraged authorizations. -->
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
             xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd">
@@ -17,7 +18,7 @@
       <p>The OSCAL Control SSP format can be used to describe the information typically specified in a system security plan, such as those defined in NIST SP 800-18.</p>
       <p>The root of the OSCAL System Security Plan (SSP) format is <code>system-security-plan</code>.</p>
    </remarks>
-   <!-- IMPORT STATEMENTS -->
+
    <import href="oscal_metadata_metaschema.xml"/>
    <import href="oscal_implementation-common_metaschema.xml"/>
    <!-- TOP LEVEL ASSEMBLY -->
@@ -25,7 +26,10 @@
       <formal-name>System Security Plan (SSP)</formal-name>
       <description>A system security plan, such as those described in NIST SP 800-18</description>
       <root-name>system-security-plan</root-name>
-      <flag ref="uuid" required="yes"/>
+      <define-flag name="uuid" as-type="uuid" required="yes">
+         <formal-name>System Security Plan Universally Unique Identifier</formal-name>
+         <description>A globally unique identifier for this catalog instance. This UUID should be changed when this document is revised.</description>
+      </define-flag>
       <model>
          <assembly ref="metadata" min-occurs="1"/>
          <assembly ref="import-profile" min-occurs="1"/>
@@ -39,8 +43,16 @@
    <define-assembly name="import-profile">
       <formal-name>Import Profile</formal-name>
       <description>Used to import the OSCAL profile representing the system's control baseline.</description>
-      <flag ref="href" required="yes"/>
-      <model>
+      <define-flag name="href" as-type="uri-reference" required="yes">
+         <formal-name>Profile Reference</formal-name>
+         <description>A resolvable URL reference to the profile to use as the system's control baseline.</description>
+         <remarks>
+            <p>The value of the <code>href</code> can be an internet resource, or a local reference using a fragment e.g. #fragment that points to a <code>back-matter</code> <code>resource</code> in the same document.</p>
+            <!-- TODO: Add a link to "within the scope of the containing OSCAL document" to point to documentation of identification scopes" -->
+            <p>If a local reference using a fragment is used, this will be indicated by a fragment "#" followed by an identifier which references an identified <code>resource</code> in the document's <code>back-matter</code> or another object that is within the scope of the containing OSCAL document.</p>
+            <p>If an internet resource is used, the <code>href</code> value will be an absolute or relative URI pointing to the location of the referenced resource. A relative URI will be resolved relative to the location of the document containing the link.</p>
+         </remarks>
+      </define-flag>      <model>
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
    </define-assembly>
@@ -61,56 +73,17 @@
             <formal-name>description field</formal-name>
             <description>A free-text description of the system.</description>
          </define-field>
-         <define-field name="prop" max-occurs="unbounded">
-            <formal-name>prop field</formal-name>
-            <description>prop field ... </description>
-            <json-value-key>value</json-value-key>
+         <field ref="property" max-occurs="unbounded">
+            <use-name>prop</use-name>
             <group-as name="properties" in-json="ARRAY"/>
-            <define-flag name="name">
-               <formal-name>name flag</formal-name>
-               <description>name flag ... </description>
-               <constraint>
-                  <allowed-values allow-other="yes">
-                     <enum value="identity-assurance-level">A value of 1, 2, or 3 as defined by <a href="https://doi.org/10.6028/NIST.SP.800-63-3">SP 800-63-3</a>.</enum>
-                     <enum value="authenticator-assurance-level">A value of 1, 2, or 3 as defined by <a href="https://doi.org/10.6028/NIST.SP.800-63-3">SP 800-63-3</a>.</enum>
-                     <enum value="federation-assurance-level">A value of 1, 2, or 3 as defined by <a href="https://doi.org/10.6028/NIST.SP.800-63-3">SP 800-63-3</a>.</enum>
-                     <!--                  <enum value="minimum-x-assurance-level">A value of 1, 2, or 3, which is the minimum value of identity-assurance-level, authenticator-assurance-level, and federation-assurance-level.</enum>
--->
-                  </allowed-values>
-               </constraint>
-            </define-flag>
-            <flag ref="id"/>
-            <flag ref="ns"/>
-            <flag ref="class"/>
-         </define-field>
-         <define-assembly name="annotation" max-occurs="unbounded">
-            <formal-name>Annotation</formal-name>
-            <description>A name/value pair with optional explanatory remarks.</description>
+         </field>
+         <assembly ref="annotation" max-occurs="unbounded">
             <group-as name="annotations" in-json="ARRAY"/>
-            <define-flag name="name">
-               <formal-name>name flag</formal-name>
-               <description>name flag ... </description>
-               <constraint>
-                  <allowed-values allow-other="yes">
-                     <enum value="cloud-deployment-model">The associated value is one of: public-cloud, private-cloud, community-cloud, government-only-cloud, hybrid-cloud, or other.</enum>
-                     <enum value="cloud-service-model">The associated value is one of: saas, paas, iaas, or other.</enum>
-                  </allowed-values>
-               </constraint>
-            </define-flag>
-            <flag ref="id"/>
-            <flag ref="ns"/>
-            <define-flag name="value" as-type="string">
-               <formal-name>Value</formal-name>
-               <description>Indicates the value of the characteristic.</description>
-            </define-flag>
-            <model>
-               <field ref="remarks" in-xml="WITH_WRAPPER"/>
-            </model>
-         </define-assembly>
-         <field ref="link" max-occurs="unbounded">
+         </assembly>
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
             <!-- TODO: Model specific link relationships -->
-         </field>
+         </assembly>
          <field ref="date-authorized"/>
          <field ref="security-sensitivity-level" min-occurs="1"/>
          <assembly ref="system-information" min-occurs="1"/>
@@ -119,45 +92,55 @@
          <assembly ref="authorization-boundary" min-occurs="1"/>
          <assembly ref="network-architecture"/>
          <assembly ref="data-flow"/>
-         <define-assembly name="responsible-party" max-occurs="unbounded">
-            <formal-name>Responsible Party</formal-name>
-            <description>A reference to a set of organizations or persons that have responsibility for performing a referenced role relative to the parent context.</description>
-            <json-key flag-name="role-id"/>
+         <assembly ref="responsible-party" max-occurs="unbounded">
             <group-as name="responsible-parties" in-json="BY_KEY"/>
-            <define-flag required="yes" name="role-id" as-type="NCName">
-               <formal-name>Role identifier</formal-name>
-               <description>Indicates the role assigned to the responsible party.</description>
-               <constraint>
-                  <allowed-values allow-other="yes">
-                     <enum value="authorizing-official">The authorizing official for this system.</enum>
-                     <enum value="authorizing-official-poc">The authorizing official's designated point of contact (POC) for this system.</enum>
-                     <enum value="system-owner">The executive ultimately accountable for the system.</enum>
-                     <enum value="system-poc-management">The primary management-level point of contact (POC) for the system.</enum>
-                     <enum value="system-poc-technical">The primary technical point of contact (POC) for the system.</enum>
-                     <enum value="system-poc-other">Other point of contact (POC) for the system that is not the management or technical POC.</enum>
-                     <enum value="information-system-security-officer">The primary role responsible for ensuring the organization operates the system securely.</enum>
-                     <enum value="privacy-poc">The point of contact (POC) responsible for identifying privacy information within the system, and ensuring its protection if present.</enum>
-                  </allowed-values>
-               </constraint>
-            </define-flag>
-            <model>
-               <field ref="party-uuid" min-occurs="1" max-occurs="unbounded">
-                  <group-as name="party-uuids" in-json="ARRAY"/>
-               </field>
-               <field ref="prop" max-occurs="unbounded">
-                  <group-as name="properties" in-json="ARRAY"/>
-               </field>
-               <assembly ref="annotation" max-occurs="unbounded">
-                  <group-as name="annotations" in-json="ARRAY"/>
-               </assembly>
-               <field ref="link" max-occurs="unbounded">
-                  <group-as name="links" in-json="ARRAY"/>
-               </field>
-               <field ref="remarks" in-xml="WITH_WRAPPER"/>
-            </model>
-         </define-assembly>
+         </assembly>
          <field ref="remarks" in-xml="WITH_WRAPPER"/>
       </model>
+      <constraint>
+         <allowed-values target="property/@name" allow-other="yes">
+            <enum value="identity-assurance-level">A value of 1, 2, or 3 as defined by <a href="https://doi.org/10.6028/NIST.SP.800-63-3">SP 800-63-3</a>.</enum>
+            <enum value="authenticator-assurance-level">A value of 1, 2, or 3 as defined by <a href="https://doi.org/10.6028/NIST.SP.800-63-3">SP 800-63-3</a>.</enum>
+            <enum value="federation-assurance-level">A value of 1, 2, or 3 as defined by <a href="https://doi.org/10.6028/NIST.SP.800-63-3">SP 800-63-3</a>.</enum>
+         </allowed-values>
+         <allowed-values target="property[@name=('identity-assurance-level','authenticator-assurance-level','federation-assurance-level')]/value()">
+            <enum value="1">As defined by <a href="https://doi.org/10.6028/NIST.SP.800-63-3">SP 800-63-3</a>.</enum>
+            <enum value="2">As defined by <a href="https://doi.org/10.6028/NIST.SP.800-63-3">SP 800-63-3</a>.</enum>
+            <enum value="3">As defined by <a href="https://doi.org/10.6028/NIST.SP.800-63-3">SP 800-63-3</a>.</enum>
+         </allowed-values>
+         <allowed-values target="annotation/@name" allow-other="yes">
+            <enum value="cloud-deployment-model">The associated value is one of: public-cloud, private-cloud, community-cloud, government-only-cloud, hybrid-cloud, or other.</enum>
+            <enum value="cloud-service-model">The associated value is one of: saas, paas, iaas, or other.</enum>
+         </allowed-values>
+         <allowed-values target="property[@name='cloud-deployment-model']/value()">
+            <enum value="public-cloud">The public cloud deployment model as defined by <a href="https://doi.org/10.6028/NIST.SP.800-145">The NIST Definition of Cloud Computing</a>.</enum>
+            <enum value="private-cloud">The private cloud deployment model as defined by <a href="https://doi.org/10.6028/NIST.SP.800-145">The NIST Definition of Cloud Computing</a>.</enum>
+            <enum value="community-cloud">The community cloud deployment model as defined by <a href="https://doi.org/10.6028/NIST.SP.800-145">The NIST Definition of Cloud Computing</a>.</enum>
+            <!-- TODO: consider generalizing this in a way that applies to other usage contexts. -->
+            <enum value="government-only-cloud">TODO: define</enum>
+            <enum value="other">Any other type of cloud deployment model that is exclusive to the other choices.</enum>
+            <remarks>
+               <p>The hybrid cloud deployment model, as defined by <a href="https://doi.org/10.6028/NIST.SP.800-145">The NIST Definition of Cloud Computing</a>, can be supported by selecting two or more of the existing deployment models.</p>
+            </remarks>
+         </allowed-values>
+         <allowed-values target="property[@name='cloud-service-model']/value()">
+            <!-- QUESTION: Change case? -->
+            <enum value="saas">Software as a service (SaaS) cloud service model as defined by <a href="https://doi.org/10.6028/NIST.SP.800-145">The NIST Definition of Cloud Computing</a>.</enum>
+            <enum value="paas">Platform as a service (PaaS) cloud service model as defined by <a href="https://doi.org/10.6028/NIST.SP.800-145">The NIST Definition of Cloud Computing</a>.</enum>
+            <enum value="iaas">Infrastructure as a service (IaaS) cloud service model as defined by <a href="https://doi.org/10.6028/NIST.SP.800-145">The NIST Definition of Cloud Computing</a>.</enum>
+            <enum value="other">Any other type of cloud service model that is exclusive to the other choices.</enum>
+         </allowed-values>
+         <allowed-values target="responsible-party/@role-id" allow-other="yes">
+            <enum value="authorizing-official">The authorizing official for this system.</enum>
+            <enum value="authorizing-official-poc">The authorizing official's designated point of contact (POC) for this system.</enum>
+            <enum value="system-owner">The executive ultimately accountable for the system.</enum>
+            <enum value="system-poc-management">The primary management-level point of contact (POC) for the system.</enum>
+            <enum value="system-poc-technical">The primary technical point of contact (POC) for the system.</enum>
+            <enum value="system-poc-other">Other point of contact (POC) for the system that is not the management or technical POC.</enum>
+            <enum value="information-system-security-officer">The primary role responsible for ensuring the organization operates the system securely.</enum>
+            <enum value="privacy-poc">The point of contact (POC) responsible for identifying privacy information within the system, and ensuring its protection if present.</enum>
+         </allowed-values>
+      </constraint>
    </define-assembly>
    <define-field name="system-id" as-type="string">
       <formal-name>System Identification</formal-name>
@@ -200,51 +183,38 @@
       <formal-name>System Information</formal-name>
       <description>Contains details about all information types that are stored, processed, or transmitted by the system, such as privacy information, and those defined in <a href="https://doi.org/10.6028/NIST.SP.800-60v2r1">NIST SP 800-60</a>.</description>
       <model>
-         <define-field name="prop" max-occurs="unbounded">
-            <formal-name>prop field</formal-name>
-            <description>prop field ... </description>
-            <json-value-key>value</json-value-key>
+         <field ref="property" max-occurs="unbounded">
+            <use-name>prop</use-name>
             <group-as name="properties" in-json="ARRAY"/>
-            <define-flag name="name">
-               <formal-name>name flag</formal-name>
-               <description>name flag ... </description>
-               <constraint>
-                  <allowed-values allow-other="yes">
-                     <enum value="privacy-designation">Is this a privacy sensitive system? yes or no</enum>
-                     <!-- TODO: Model other specific names? -->
-                  </allowed-values>
-               </constraint>
-            </define-flag>
-            <flag ref="id"/>
-            <flag ref="ns"/>
-            <flag ref="class"/>
-         </define-field>
+         </field>
          <assembly ref="annotation" max-occurs="unbounded">
             <group-as name="annotations" in-json="ARRAY"/>
             <!-- TODO: Model other specific names? -->
          </assembly>
-         <define-field name="link" as-type="markup-line" max-occurs="unbounded">
-            <formal-name>link field</formal-name>
-            <description>link field ... </description>
-            <json-value-key>text</json-value-key>
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
-            <define-flag name="rel">
-               <formal-name>rel flag</formal-name>
-               <description>rel flag ... </description>
-               <constraint>
-                  <allowed-values allow-other="yes">
-                     <enum value="privacy-impact-assessment">A link to the privacy impact assessment.</enum>
-                     <!-- TODO: Model other specific link relationships? -->
-                  </allowed-values>
-               </constraint>
-            </define-flag>
-            <flag ref="href" required="yes"/>
-            <flag ref="media-type"/>
-         </define-field>
+         </assembly>
          <assembly ref="information-type" min-occurs="1" max-occurs="unbounded">
             <group-as name="information-types" in-json="ARRAY"/>
          </assembly>
       </model>
+      <constraint>
+         <allowed-values target="property/@name" allow-other="yes">
+            <enum value="privacy-designation">Is this a privacy sensitive system? yes or no</enum>
+         </allowed-values>
+         <allowed-values target="property[@name='privacy-designation']/value()">
+            <enum value="yes">The system is privacy sensitive.</enum>
+            <enum value="no">The system isnot privacy sensitive.</enum>
+         </allowed-values>
+         <allowed-values target="link/@rel">
+            <enum value="privacy-impact-assessment">A link to the privacy impact assessment.</enum>
+         </allowed-values>
+         <matches target="link[@rel='privacy-impact-assessment']/@href[starts-with(.,'#')]" datatype="uri-reference"/>
+         <index-has-key name="index-back-matter-resource" target="link[@rel='privacy-impact-assessment' and [starts-with(@href,'#')]]">
+            <key-field target="@href" pattern="#(.*)"/>
+         </index-has-key>
+         <matches target="link[@rel='privacy-impact-assessment']/@href[not(starts-with(.,'#'))]" datatype="uri"/>
+      </constraint>
    </define-assembly>
    <define-assembly name="information-type">
       <formal-name>Information Type</formal-name>
@@ -475,10 +445,10 @@
             <group-as name="annotations" in-json="ARRAY"/>
             <!-- TODO: Model specific names? -->
          </assembly>
-         <field ref="link" max-occurs="unbounded">
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
             <!-- TODO: Model specific link relationships? -->
-         </field>
+         </assembly>
          <assembly ref="diagram" max-occurs="unbounded">
             <group-as name="diagrams" in-json="BY_KEY"/>
             <remarks>
@@ -561,10 +531,10 @@
             <group-as name="annotations" in-json="ARRAY"/>
             <!-- TODO: Model specific names? -->
          </assembly>
-         <field ref="link" max-occurs="unbounded">
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
             <!-- TODO: Model specific link relationships? -->
-         </field>
+         </assembly>
          <assembly ref="diagram" max-occurs="unbounded">
             <group-as name="diagrams" in-json="BY_KEY"/>
          </assembly>
@@ -584,10 +554,10 @@
             <group-as name="annotations" in-json="ARRAY"/>
             <!-- TODO: Model specific names? -->
          </assembly>
-         <field ref="link" max-occurs="unbounded">
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
             <!-- TODO: Model specific link relationships? -->
-         </field>
+         </assembly>
          <assembly ref="diagram" max-occurs="unbounded">
             <group-as name="diagrams" in-json="BY_KEY"/>
          </assembly>
@@ -607,10 +577,10 @@
             <group-as name="annotations" in-json="ARRAY"/>
             <!-- TODO: Model specific names? -->
          </assembly>
-         <field ref="link" max-occurs="unbounded">
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
             <!-- TODO: Model specific link relationships? -->
-         </field>
+         </assembly>
          <assembly ref="leveraged-authorization" max-occurs="unbounded">
             <group-as name="leveraged-authorizations" in-json="ARRAY"/>
          </assembly>
@@ -669,10 +639,10 @@
                <field ref="remarks" in-xml="WITH_WRAPPER"/>
             </model>
          </define-assembly>
-         <field ref="link" max-occurs="unbounded">
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
             <!-- TODO: Model specific link relationships? -->
-         </field>
+         </assembly>
          <field ref="role-id" min-occurs="1" max-occurs="unbounded">
             <group-as name="role-ids" in-json="ARRAY"/>
          </field>
@@ -886,9 +856,9 @@
                <assembly ref="annotation" max-occurs="unbounded">
                   <group-as name="annotations" in-json="ARRAY"/>
                </assembly>
-               <field ref="link" max-occurs="unbounded">
+               <assembly ref="link" max-occurs="unbounded">
                   <group-as name="links" in-json="ARRAY"/>
-               </field>
+               </assembly>
                <field ref="party-uuid" max-occurs="unbounded">
                   <group-as name="party-ids" in-json="ARRAY"/>
                </field>
@@ -1256,9 +1226,9 @@
                <assembly ref="annotation" max-occurs="unbounded">
                   <group-as name="annotations" in-json="ARRAY"/>
                </assembly>
-               <field ref="link" max-occurs="unbounded">
+               <assembly ref="link" max-occurs="unbounded">
                   <group-as name="links" in-json="ARRAY"/>
-               </field>
+               </assembly>
                <field ref="remarks" in-xml="WITH_WRAPPER"/>
             </model>
             <remarks>
@@ -1294,10 +1264,10 @@
             <!-- TODO: add: status -->
             <!-- TODO: add: control-implementation -->
          </assembly>
-         <field ref="link" max-occurs="unbounded">
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
             <!-- TODO: Model specific link relationships -->
-         </field>
+         </assembly>
          <assembly ref="by-component" max-occurs="unbounded">
             <group-as name="by-components" in-json="BY_KEY"/>
          </assembly>
@@ -1335,9 +1305,9 @@
                <assembly ref="annotation" max-occurs="unbounded">
                   <group-as name="annotations" in-json="ARRAY"/>
                </assembly>
-               <field ref="link" max-occurs="unbounded">
+               <assembly ref="link" max-occurs="unbounded">
                   <group-as name="links" in-json="ARRAY"/>
-               </field>
+               </assembly>
                <field ref="party-uuid" max-occurs="unbounded">
                   <group-as name="party-ids" in-json="ARRAY"/>
                </field>
@@ -1374,10 +1344,10 @@
          <assembly ref="annotation" max-occurs="unbounded">
             <group-as name="annotations"/>
          </assembly>
-         <field ref="link" max-occurs="unbounded">
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
             <!-- TODO: Model specific link relationships -->
-         </field>
+         </assembly>
          <!--            <assembly ref="using"/>
 -->
          <!-- TODO: Implement parameters -->
@@ -1410,9 +1380,9 @@
                <assembly ref="annotation" max-occurs="unbounded">
                   <group-as name="annotations" in-json="ARRAY"/>
                </assembly>
-               <field ref="link" max-occurs="unbounded">
+               <assembly ref="link" max-occurs="unbounded">
                   <group-as name="links" in-json="ARRAY"/>
-               </field>
+               </assembly>
                <field ref="party-uuid" max-occurs="unbounded">
                   <group-as name="party-ids" in-json="ARRAY"/>
                </field>
@@ -1446,10 +1416,10 @@
          <assembly ref="annotation" max-occurs="unbounded">
             <group-as name="annotations" in-json="ARRAY"/>
          </assembly>
-         <field ref="link" max-occurs="unbounded">
+         <assembly ref="link" max-occurs="unbounded">
             <group-as name="links" in-json="ARRAY"/>
             <!-- TODO: Model specific link relationships -->
-         </field>
+         </assembly>
          <define-assembly name="responsible-role" max-occurs="unbounded">
             <formal-name>Responsible Role</formal-name>
             <description>A reference to one or more roles with responsibility for performing a function relative to the control.</description>
@@ -1479,9 +1449,9 @@
                <assembly ref="annotation" max-occurs="unbounded">
                   <group-as name="annotations" in-json="ARRAY"/>
                </assembly>
-               <field ref="link" max-occurs="unbounded">
+               <assembly ref="link" max-occurs="unbounded">
                   <group-as name="links" in-json="ARRAY"/>
-               </field>
+               </assembly>
                <field ref="party-uuid" max-occurs="unbounded">
                   <group-as name="party-ids" in-json="ARRAY"/>
                </field>
