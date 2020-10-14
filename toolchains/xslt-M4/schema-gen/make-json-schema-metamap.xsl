@@ -255,7 +255,7 @@
             <xsl:apply-templates mode="property-name"
                 select="flag[@required = 'yes'][not(@ref = $implicit-flags)] |
                         define-flag[@required = 'yes'][not(@name = $implicit-flags)] |
-                        model//*[@min-occurs &gt; 0]"/>
+                        model/(field|define-field|assembly|define-assembly)[@min-occurs &gt; 0]"/>
         </xsl:variable> 
         <xsl:if test="exists( $requirements )">
             <array key="required">
