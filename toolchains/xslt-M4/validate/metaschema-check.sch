@@ -56,7 +56,7 @@
         <sch:rule context="m:flag | m:field | m:assembly">
             <sch:let name="aka" value="nm:identifiers(.)"/>
             <sch:let name="def" value="nm:definition-for-reference(.)"/>
-            <sch:assert test="exists($def) or $metaschema-is-abstract">No definition is given for <sch:name/> '<sch:value-of select="@ref"/>'.</sch:assert>
+            <sch:assert test="exists($def)">No definition is given for <sch:name/> '<sch:value-of select="@ref"/>'.</sch:assert>
             <sch:assert test="exists($aka) or empty($def)"><sch:name/> has no name defined</sch:assert>
             <sch:let name="siblings" value="(../m:flag | ../m:define-flag | ancestor::m:model[1]/(.|m:choice)/m:field | ancestor::m:model[1]/(.|m:choice)/m:assembly | ancestor::m:model/(.|m:choice)/define-field | ancestor::m:model[1]/(.|m:choice)/m:define-assembly) except ."/>
             <sch:let name="rivals" value="$siblings[nm:identifiers(.) = $aka]"/>
@@ -66,6 +66,7 @@
         <sch:rule context="m:METASCHEMA/m:define-assembly | m:METASCHEMA/m:define-field | m:METASCHEMA/m:define-flag">
             <sch:let name="references" value="nm:references-to-definition(.)"/>
             <sch:report test="@name=(../*/@name except @name)">Definition for '<sch:value-of select="@name"/>' clashes in this metaschema: not a good idea.</sch:report>
+            <!--<sch:assert role="warning" test="exists($references | self::m:define-assembly/m:root-name) and ( not($metaschema-is-abstract or @scope='local') )">-->
             <sch:assert role="warning" test="exists($references | self::m:define-assembly/m:root-name) or $metaschema-is-abstract">Orphan <sch:value-of select="substring-after(local-name(),'define-')"/> '<sch:value-of select="@name"/>' is never used in the composed metaschema</sch:assert>
             
             <sch:assert test="not($references/m:group-as/@in-json='BY_KEY') or exists(m:json-key)"><sch:value-of select="substring-after(local-name(),
@@ -135,11 +136,11 @@
         </sch:rule>
         
         <sch:rule context="m:index | m:is-unique">
-            <sch:assert test="count(key('index-by-name',@name))=1">Only one index or uniqueness assertion may be named '<sch:value-of select="@name"/>'</sch:assert>
+            <sch:assert test="count(key('index-by-name',@name,$composed-metaschema))=1">Only one index or uniqueness assertion may be named '<sch:value-of select="@name"/>'</sch:assert>
         </sch:rule>
         
         <sch:rule context="m:index-has-key">
-            <sch:assert test="count(key('index-by-name',@name)/self::m:index)=1">No '<sch:value-of select="@name"/>' index is defined.</sch:assert>
+            <sch:assert test="count(key('index-by-name',@name,$composed-metaschema)/self::m:index)=1">No '<sch:value-of select="@name"/>' index is defined.</sch:assert>
         </sch:rule>
         
         <sch:rule context="m:key-field">
