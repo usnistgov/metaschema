@@ -15,8 +15,8 @@
     <xsl:variable name="show-warnings" as="xs:string">no</xsl:variable>
     <xsl:variable name="verbose" select="lower-case($show-warnings) = ('yes', 'y', '1', 'true')"/>
 
-    <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly[not(@scope='local')]" use="@name"/>
-    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field[not(@scope='local')]"    use="@name"/>
+    <xsl:key name="top-level-assembly-definition" match="METASCHEMA/define-assembly" use="@name"/>
+    <xsl:key name="top-level-field-definition"    match="METASCHEMA/define-field"    use="@name"/>
     
     <!-- ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== -->
     <!-- Pass Three: filter definitions (2) - keep only top-level definitions that are actually
@@ -99,7 +99,7 @@
     
     <xsl:template match="model[exists(@ref)]" mode="collect-assembly-references">
         <xsl:param name="assembly-refs" tunnel="yes" select="()"/>
-        <xsl:apply-templates select="key('global-assembly-definition',@ref)" mode="#current">
+        <xsl:apply-templates select="key('top-level-assembly-definition',@ref)" mode="#current">
             <xsl:with-param name="assembly-refs" tunnel="yes" select="$assembly-refs,string(@ref)"/>
         </xsl:apply-templates>
     </xsl:template>
@@ -108,7 +108,7 @@
         <xsl:param name="assembly-refs" tunnel="yes" select="()"/>
         <xsl:if test="not(@ref = $assembly-refs)">
             <xsl:sequence select="string(@ref)"/>
-            <xsl:apply-templates select="key('global-assembly-definition',@ref)" mode="#current">
+            <xsl:apply-templates select="key('top-level-assembly-definition',@ref)" mode="#current">
                 <xsl:with-param name="assembly-refs" tunnel="yes" select="$assembly-refs,string(@ref)"/>
             </xsl:apply-templates>
         </xsl:if>
@@ -126,13 +126,13 @@
     </xsl:template>
     
     <xsl:template match="model[exists(@ref)]" mode="collect-field-references">
-        <xsl:apply-templates select="key('global-assembly-definition',@ref)" mode="#current"/>
+        <xsl:apply-templates select="key('top-level-assembly-definition',@ref)" mode="#current"/>
     </xsl:template>
     
     <xsl:template match="assembly" mode="collect-field-references collect-flag-references">
         <xsl:param name="assembly-refs" tunnel="yes" select="()"/>
         <xsl:if test="not(@ref = $assembly-refs)">
-            <xsl:apply-templates select="key('global-assembly-definition',@ref)" mode="#current">
+            <xsl:apply-templates select="key('top-level-assembly-definition',@ref)" mode="#current">
                 <xsl:with-param name="assembly-refs" tunnel="yes" select="$assembly-refs,string(@ref)"/>
             </xsl:apply-templates>
         </xsl:if>
@@ -158,7 +158,7 @@
     
     <!-- Match for 'assembly' appears above -->
     <xsl:template match="field" mode="collect-flag-references">
-            <xsl:apply-templates select="key('global-field-definition',@ref)" mode="#current"/>        
+            <xsl:apply-templates select="key('top-level-field-definition',@ref)" mode="#current"/>        
     </xsl:template>
     
     <xsl:template match="flag" mode="collect-flag-references">
