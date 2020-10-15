@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:oscal-catalog="http://csrc.nist.gov/ns/metaschema/test"
+           xmlns:oscal-prose="http://csrc.nist.gov/ns/metaschema/test"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/ns/metaschema/test"
+           version="1.0.0-milestone3">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>OSCAL Control Catalog Format</m:schema-name>
+         <m:schema-version>1.0.0-milestone3</m:schema-version>
+         <m:short-name>oscal-catalog</m:short-name>
+         <m:remarks>
+            <p>For exercising Metaschema semantics with respect to modular assembly and composition.</p>
+         </m:remarks>
+         <m:root>root-assembly</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:complexType name="module-assembly-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Assembly defined in a module</m:formal-name>
+            <m:description>XXX</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Assembly defined in a module</b>: XXX</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="module-global-field"
+                     type="oscal-catalog:module-global-field-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="module-top-level-local-field"
+                     type="oscal-catalog:module-top-level-local-field-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="module-local-field" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Locally defined field</m:formal-name>
+                     <m:description>XXX</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Locally defined field</b>: XXX</xs:documentation>
+               </xs:annotation>
+               <xs:simpleContent>
+                  <xs:extension base="xs:string"/>
+               </xs:simpleContent>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="local-flag" type="xs:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Locally defined flag</m:formal-name>
+               <m:description>XXX</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Locally defined flag</b>: XXX</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="module-global-field-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Field, defined in a module (global by default)</m:formal-name>
+            <m:description>XXX</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Field, defined in a module (global by default)</b>: XXX</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="module-top-level-local-field-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Field, defined in a module as 'local'</m:formal-name>
+            <m:description>XXX</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Field, defined in a module as 'local'</b>: XXX</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:element name="root-assembly" type="oscal-catalog:root-ASSEMBLY"/>
+   <xs:complexType name="root-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Nominal root</m:formal-name>
+            <m:description>XXX</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Nominal root</b>: XXX</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="top-level-global-field"
+                     type="oscal-catalog:top-level-global-field-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="top-level-local-field"
+                     type="oscal-catalog:top-level-local-field-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="local-field" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Locally defined field</m:formal-name>
+                     <m:description>XXX</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Locally defined field</b>: XXX</xs:documentation>
+               </xs:annotation>
+               <xs:simpleContent>
+                  <xs:extension base="xs:string"/>
+               </xs:simpleContent>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="top-level-flag" type="xs:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Flag, defined at top level</m:formal-name>
+               <m:description>XXX</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Flag, defined at top level</b>: XXX</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="local-flag" type="xs:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Locally defined flag</m:formal-name>
+               <m:description>XXX</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Locally defined flag</b>: XXX</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="top-level-global-field-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Field, defined at top level (global by default)</m:formal-name>
+            <m:description>XXX</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Field, defined at top level (global by default)</b>: XXX</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string"/>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="top-level-local-field-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Field, defined at top level as 'local'</m:formal-name>
+            <m:description>XXX</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Field, defined at top level as 'local'</b>: XXX</xs:documentation>
+      </xs:annotation>
+      <xs:simpleContent>
+         <xs:extension base="xs:string"/>
+      </xs:simpleContent>
+   </xs:complexType>
+</xs:schema>
