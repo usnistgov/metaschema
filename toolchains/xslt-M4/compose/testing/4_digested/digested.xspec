@@ -2,10 +2,13 @@
 <x:description xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution" xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="../../metaschema-digest.xsl">
     
-<!-- metaschema-reduce1.xsl
-    
+<!-- metaschema-digest.xsl
+    - flattens modular structure
+    - marks definitions with their module of origin
+    - copies @as-type info for defaulting
+    - casts example markup into target namespace (as found in the metaschema)
     -->
-    <x:scenario label="Modular Assembly">
+    <x:scenario label="Working metaschema">
         <x:context href="../3_reduced2/working_metaschema-REDUCED2.xml" select="*" mode="digest" />
         <x:expect label="Basic metaschema composition" href="working_metaschema-DIGESTED.xml" select="*"/>
     </x:scenario>

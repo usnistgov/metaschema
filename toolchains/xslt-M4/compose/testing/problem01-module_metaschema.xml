@@ -24,6 +24,7 @@
       </define-flag>
       <model>
          <field ref="module-global-field"/>
+         <field ref="duplicate-global-field"/>
          <field ref="module-top-level-local-field"/>
          <define-field name="module-local-field">
             <formal-name>Locally defined field</formal-name>
@@ -31,6 +32,11 @@
          </define-field>
       </model>
    </define-assembly>
+   
+   <define-field name="duplicate-global-field" scope="local">
+      <formal-name>Field definition defined as a top-level local</formal-name>
+      <description>Congratulations for seeing this as a <em>local</em> definition on assembly <code>module-assembly</code>, in the composed metaschema.</description>
+   </define-field>
    
    <define-field name="module-global-field">
       <formal-name>Field, defined in a module (global by default)</formal-name>
