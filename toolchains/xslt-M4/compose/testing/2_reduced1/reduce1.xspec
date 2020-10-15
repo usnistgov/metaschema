@@ -4,10 +4,16 @@
     
 <!-- metaschema-reduce1.xsl
     
+    this filter should remove duplicated or overloaded definitions; that is,
+    definitions of the same name and type (assembly, field etc.) will be disambiguated by
+    keeping only the last one appearing (at the top level)
+    
+    test with competing (synonym) declarations for graceful override behavior
+    ensure that local and global definitions are propagated as necessary
     -->
-    <x:scenario label="Modular Assembly">
+    <x:scenario label="Working metaschema">
         <x:context href="../1_collected/working_metaschema-COLLECTED.xml" select="*"/>
-        <x:expect label="Basic metaschema composition" href="working_metaschema-REDUCED1.xml" select="*"/>
+        <x:expect label="Last definition is kept" href="working_metaschema-REDUCED1.xml" select="*"/>
     </x:scenario>
     
 </x:description>

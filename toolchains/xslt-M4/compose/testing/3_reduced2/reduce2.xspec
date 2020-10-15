@@ -4,8 +4,15 @@
     
 <!-- metaschema-reduce1.xsl
     
+    the old reduce2.xsl assumed that only assemblies marked for the root would be included in the composition.
+    
+    Question: is this now a no-op and can be discarded?
+    
+    Does the root filter need to be added back to the XSD and JSON pipelines?
+    (1. Mock up test case 2. examine XSD and JSON schema)
+
     -->
-    <x:scenario label="Modular Assembly">
+    <x:scenario label="Working metaschema">
         <x:context href="../2_reduced1/working_metaschema-REDUCED1.xml"/>
         <x:expect label="Basic metaschema composition" href="working_metaschema-REDUCED2.xml" select="*"/>
     </x:scenario>
