@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution" xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="../../metaschema-collect.xsl">
+    
+<!-- metaschema-collect.xsl does two things:
+    -  merges modular metaschemas into a single tree of metaschemas
+    -  intelligently refuses to revisit the same URI twice 
+    Unfortunately this makes it resistant to XSpec testing.
+    
+    TODO: extend unit testing to validate defense against revisit
+    
+    -->
+    <x:scenario label="Modular Assembly">
+        <!-- Mysteriously, sometimes select="*" makes XSpec problems go away, other times not. -->
+        <x:context href="../working_metaschema.xml"/>
+        <x:expect label="Basic metaschema composition" href="working_metaschema-COLLECTED.xml"/>
+    </x:scenario>
+    
+</x:description>
