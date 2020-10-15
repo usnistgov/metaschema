@@ -37,4 +37,12 @@
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
     </xsl:variable>
     
+    <xsl:function name="nm:compose-metaschema">
+        <xsl:param name="source" as="document-node()"/>
+        <xsl:call-template name="nm:process-pipeline">
+            <xsl:with-param name="source" select="$source"/>
+            <xsl:with-param name="sequence" select="$transformation-sequence"/>
+        </xsl:call-template>
+    </xsl:function>
+    
 </xsl:stylesheet>

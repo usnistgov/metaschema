@@ -10,10 +10,10 @@
     TODO: extend unit testing to validate defense against revisit
     
     -->
-    <x:scenario label="Modular Assembly">
+    <x:scenario label="Working metaschema">
         <!-- Mysteriously, sometimes select="*" makes XSpec problems go away, other times not. -->
         <x:context href="../working_metaschema.xml"/>
-        <x:expect label="Basic metaschema composition" href="working_metaschema-COLLECTED.xml"/>
+        <x:expect label="Modules collected, no loops" href="working_metaschema-COLLECTED.xml"/>
     </x:scenario>
     
 </x:description>
