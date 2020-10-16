@@ -32,12 +32,16 @@
                         <define-field name="local-field"/>
                     </model>
                 </define-assembly>
-                <define-field name="top-level-global-field"/>
-                <define-field name="top-level-global-field"/>
+                <define-field name="top-level-global-field">
+                    <formal-name>Discard me</formal-name>
+                </define-field>
+                <define-field name="top-level-global-field">
+                    <formal-name>Keep me</formal-name>
+                </define-field>
                 <define-flag name="top-level-flag"/>                
             </METASCHEMA>
         </x:context>
-        <x:expect label="Modules collected, no loops">
+        <x:expect label="Only the second 'top-level-global-field' is kept">
             <METASCHEMA module="...">
                 <define-assembly name="root">
                     <root-name>root-assembly</root-name>
@@ -49,7 +53,9 @@
                         <define-field name="local-field"/>
                     </model>
                 </define-assembly>
-                <define-field name="top-level-global-field"/>
+                <define-field name="top-level-global-field">
+                    <formal-name>Keep me</formal-name>
+                </define-field>
                 <define-flag name="top-level-flag"/>                
             </METASCHEMA>
         </x:expect>
