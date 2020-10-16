@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>Test Report for C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/metaschema-reduce1.xsl (passed: 0 / pending: 0 / failed: 1 / total: 1)</title>
+      <title>Test Report for C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/metaschema-reduce1.xsl (passed: 2 / pending: 0 / failed: 0 / total: 2)</title>
       <style type="text/css">/****************************************************************************/
 /*  File:       test-report.css                                             */
 /*  Author:     Jeni Tennison                                               */
@@ -511,7 +511,7 @@ span.scenario-totals {float: right; text-align: right}
       <h1>Test Report</h1>
       <p>Stylesheet: <a href="file:/C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/metaschema-reduce1.xsl">C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/metaschema-reduce1.xsl</a></p>
       <p>XSpec: <a href="file:/C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/testing/2_reduced1/reduce1.xspec">C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/testing/2_reduced1/reduce1.xspec</a></p>
-      <p>Tested: 15 October 2020 at 16:40</p>
+      <p>Tested: 16 October 2020 at 12:06</p>
       <h2>Contents</h2>
       <table class="xspec">
          <colgroup>
@@ -524,143 +524,66 @@ span.scenario-totals {float: right; text-align: right}
          <thead>
             <tr>
                <th></th>
-               <th class="totals">passed: 0</th>
+               <th class="totals">passed: 2</th>
                <th class="totals">pending: 0</th>
-               <th class="totals">failed: 1</th>
-               <th class="totals">total: 1</th>
+               <th class="totals">failed: 0</th>
+               <th class="totals">total: 2</th>
             </tr>
          </thead>
          <tbody>
-            <tr class="failed">
-               <th><a href="#top_scenario1">Modular Assembly</a></th>
+            <tr class="successful">
+               <th><a href="#top_scenario1">Working metaschema</a></th>
+               <th class="totals">1</th>
                <th class="totals">0</th>
                <th class="totals">0</th>
                <th class="totals">1</th>
+            </tr>
+            <tr class="successful">
+               <th><a href="#top_scenario2">Drop an extra</a></th>
+               <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
          </tbody>
       </table>
       <div id="top_scenario1">
-         <h2 class="failed">Modular Assembly<span class="scenario-totals">passed: 0 / pending: 0 / failed: 1 / total: 1</span></h2>
+         <h2 class="successful">Working metaschema<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
          <table class="xspec" id="table_scenario1">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
             </colgroup>
             <tbody>
-               <tr class="failed">
-                  <th>Modular Assembly</th>
-                  <th>passed: 0 / pending: 0 / failed: 1 / total: 1</th>
+               <tr class="successful">
+                  <th>Working metaschema</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
                </tr>
-               <tr class="failed">
-                  <td><a href="#scenario1-expect1">Basic metaschema composition</a></td>
-                  <td>Failure</td>
+               <tr class="successful">
+                  <td>Last definition is kept</td>
+                  <td>Success</td>
                </tr>
             </tbody>
          </table>
-         <div id="scenario1">
-            <h3>Modular Assembly</h3>
-            <div id="scenario1-expect1" class="xTestReport">
-               <h4 class="xTestReportTitle">Basic metaschema composition</h4>
-               <div class="xTestReportHint"><a href="https://github.com/xspec/xspec/wiki/Understanding-Test-Results" target="_blank" title="What does this report mean?">❔</a></div>
-               <table class="xspecResult">
-                  <thead>
-                     <tr>
-                        <th>Result</th>
-                        <th>Expected Result</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <p>XPath <code class="diff">/text()</code> from:</p>
-                           <pre><span class="diff">OSCAL TEST Format0.0oscal-testhttp://csrc.nist.gov/ns/metaschema/testFor exercising Metaschema semantics with respect to modular assembly and composition.OSCAL Control Catalog Format1.0.0-milestone3oscal-cataloghttp://csrc.nist.gov/ns/metaschema/testFor exercising Metaschema semantics with respect to modular assembly and composition.Assembly defined in a moduleXXXLocally defined flagXXXLocally defined fieldXXXField, defined in a module (global by default)XXXField, defined in a module as 'local'XXXNominal rootXXXroot-assemblyLocally defined flagXXXLocally defined fieldXXXField, defined at top level (global by default)XXXField, defined at top level as 'local'XXXFlag, defined at top levelXXX</span></pre>
-                        </td>
-                        <td>
-                           <p>XPath <code class="diff">/element()</code> from:</p>
-                           <pre>&lt;<span class="diff">METASCHEMA</span> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-            xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution"
-            <span class="diff">module</span>=<span class="diff">"file:/C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/testing/working_metaschema.xml"</span>&gt;
-   &lt;<span class="diff">schema-name</span>&gt;<span class="diff">OSCAL TEST Format</span>&lt;/schema-name&gt;
-   &lt;<span class="diff">schema-version</span>&gt;<span class="diff">0.0</span>&lt;/schema-version&gt;
-   &lt;<span class="diff">short-name</span>&gt;<span class="diff">oscal-test</span>&lt;/short-name&gt;
-   &lt;<span class="diff">namespace</span>&gt;<span class="diff">http://csrc.nist.gov/ns/metaschema/test</span>&lt;/namespace&gt;
-   &lt;<span class="diff">remarks</span>&gt;
-      &lt;<span class="diff">p</span>&gt;<span class="diff">For exercising Metaschema semantics with respect to modular assembly and composition.</span>&lt;/p&gt;
-   &lt;/remarks&gt;
-   &lt;<span class="diff">METASCHEMA</span> <span class="diff">abstract</span>=<span class="diff">"yes"</span>
-               <span class="diff">module</span>=<span class="diff">"file:/C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/testing/module_metaschema.xml"</span>&gt;
-      &lt;<span class="diff">schema-name</span>&gt;<span class="diff">OSCAL Control Catalog Format</span>&lt;/schema-name&gt;
-      &lt;<span class="diff">schema-version</span>&gt;<span class="diff">1.0.0-milestone3</span>&lt;/schema-version&gt;
-      &lt;<span class="diff">short-name</span>&gt;<span class="diff">oscal-catalog</span>&lt;/short-name&gt;
-      &lt;<span class="diff">namespace</span>&gt;<span class="diff">http://csrc.nist.gov/ns/metaschema/test</span>&lt;/namespace&gt;
-      &lt;<span class="diff">remarks</span>&gt;
-         &lt;<span class="diff">p</span>&gt;<span class="diff">For exercising Metaschema semantics with respect to modular assembly and composition.</span>&lt;/p&gt;
-      &lt;/remarks&gt;
-      &lt;<span class="diff">define-assembly</span> <span class="diff">name</span>=<span class="diff">"module-assembly"</span>&gt;
-         &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Assembly defined in a module</span>&lt;/formal-name&gt;
-         &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-         &lt;<span class="diff">define-flag</span> <span class="diff">name</span>=<span class="diff">"local-flag"</span>&gt;
-            &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Locally defined flag</span>&lt;/formal-name&gt;
-            &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-         &lt;/define-flag&gt;
-         &lt;<span class="diff">model</span>&gt;
-            &lt;<span class="diff">field</span> <span class="diff">ref</span>=<span class="diff">"module-global-field"</span> /&gt;
-            &lt;<span class="diff">field</span> <span class="diff">ref</span>=<span class="diff">"module-top-level-local-field"</span> /&gt;
-            &lt;<span class="diff">define-field</span> <span class="diff">name</span>=<span class="diff">"module-local-field"</span>&gt;
-               &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Locally defined field</span>&lt;/formal-name&gt;
-               &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-            &lt;/define-field&gt;
-         &lt;/model&gt;
-      &lt;/define-assembly&gt;
-      &lt;<span class="diff">define-field</span> <span class="diff">name</span>=<span class="diff">"module-global-field"</span>&gt;
-         &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Field, defined in a module (global by default)</span>&lt;/formal-name&gt;
-         &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-      &lt;/define-field&gt;
-      &lt;<span class="diff">define-field</span> <span class="diff">name</span>=<span class="diff">"module-top-level-local-field"</span>
-                    <span class="diff">scope</span>=<span class="diff">"local"</span>&gt;
-         &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Field, defined in a module as 'local'</span>&lt;/formal-name&gt;
-         &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-      &lt;/define-field&gt;
-   &lt;/METASCHEMA&gt;
-   &lt;<span class="diff">define-assembly</span> <span class="diff">name</span>=<span class="diff">"root"</span>&gt;
-      &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Nominal root</span>&lt;/formal-name&gt;
-      &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-      &lt;<span class="diff">root-name</span>&gt;<span class="diff">root-assembly</span>&lt;/root-name&gt;
-      &lt;<span class="diff">flag</span> <span class="diff">ref</span>=<span class="diff">"top-level-flag"</span> /&gt;
-      &lt;<span class="diff">define-flag</span> <span class="diff">name</span>=<span class="diff">"local-flag"</span>&gt;
-         &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Locally defined flag</span>&lt;/formal-name&gt;
-         &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-      &lt;/define-flag&gt;
-      &lt;<span class="diff">model</span>&gt;
-         &lt;<span class="diff">field</span> <span class="diff">ref</span>=<span class="diff">"top-level-global-field"</span> /&gt;
-         &lt;<span class="diff">field</span> <span class="diff">ref</span>=<span class="diff">"top-level-local-field"</span> /&gt;
-         &lt;<span class="diff">define-field</span> <span class="diff">name</span>=<span class="diff">"local-field"</span>&gt;
-            &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Locally defined field</span>&lt;/formal-name&gt;
-            &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-         &lt;/define-field&gt;
-      &lt;/model&gt;
-   &lt;/define-assembly&gt;
-   &lt;<span class="diff">define-field</span> <span class="diff">name</span>=<span class="diff">"top-level-global-field"</span>&gt;
-      &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Field, defined at top level (global by default)</span>&lt;/formal-name&gt;
-      &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-   &lt;/define-field&gt;
-   &lt;<span class="diff">define-field</span> <span class="diff">name</span>=<span class="diff">"top-level-local-field"</span>
-                 <span class="diff">scope</span>=<span class="diff">"local"</span>&gt;
-      &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Field, defined at top level as 'local'</span>&lt;/formal-name&gt;
-      &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-   &lt;/define-field&gt;
-   &lt;<span class="diff">define-flag</span> <span class="diff">name</span>=<span class="diff">"top-level-flag"</span>&gt;
-      &lt;<span class="diff">formal-name</span>&gt;<span class="diff">Flag, defined at top level</span>&lt;/formal-name&gt;
-      &lt;<span class="diff">description</span>&gt;<span class="diff">XXX</span>&lt;/description&gt;
-   &lt;/define-flag&gt;
-&lt;/METASCHEMA&gt;</pre>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-         </div>
+      </div>
+      <div id="top_scenario2">
+         <h2 class="successful">Drop an extra<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario2">
+            <colgroup>
+               <col style="width:75%" />
+               <col style="width:25%" />
+            </colgroup>
+            <tbody>
+               <tr class="successful">
+                  <th>Drop an extra</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
+               </tr>
+               <tr class="successful">
+                  <td>Modules collected, no loops</td>
+                  <td>Success</td>
+               </tr>
+            </tbody>
+         </table>
       </div>
    </body>
 </html>

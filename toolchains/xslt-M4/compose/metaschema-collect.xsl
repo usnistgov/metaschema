@@ -22,7 +22,9 @@
     <!-- ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== -->
     <!-- Aggregate metaschema imports without further processing anything.
          Trace nominal sources.
-         Defend against endless loops. -->
+         Defend against endless loops.
+    
+    Also expands top-level declarations marked scope='local' into local declarations, while removing them. -->
     
     <xsl:mode name="acquire" on-no-match="shallow-copy"/>
     
@@ -55,4 +57,30 @@
         </xsl:choose>
     </xsl:template>
         
+    <xsl:key name="top-level-local-assembly-definition-by-name"
+        match="METASCHEMA/define-assembly[@scope='local']" use="@name"/>
+    
+    <xsl:key name="top-level-local-field-definition-by-name"
+        match="METASCHEMA/define-field[@scope='local']" use="@name"/>
+    
+    <xsl:key name="top-level-local-flag-definition-by-name"
+        match="METASCHEMA/define-flag[@scope='local']" use="@name"/>
+    
+    <xsl:template mode="acquire" match="assembly[exists( key('top-level-local-assembly-definition-by-name',@ref) )]">
+        <xsl:copy-of select="key('top-level-local-assembly-definition-by-name',@ref) "/>
+    </xsl:template>
+    
+    <xsl:template mode="acquire" match="field[exists( key('top-level-local-field-definition-by-name',@ref) )]">
+        <xsl:copy-of select="key('top-level-local-field-definition-by-name',@ref) "/>
+    </xsl:template>
+    
+    <xsl:template mode="acquire" match="flag[exists( key('top-level-local-flag-definition-by-name',@ref) )]">
+        <xsl:copy-of select="key('top-level-local-flag-definition-by-name',@ref) "/>
+    </xsl:template>
+    
+    <xsl:template mode="acquire"
+        match="METASCHEMA/define-assembly[@scope='local'] |
+               METASCHEMA/define-field[@scope='local'] |
+               METASCHEMA/define-flag[@scope='local']"/>
+    
 </xsl:stylesheet>
