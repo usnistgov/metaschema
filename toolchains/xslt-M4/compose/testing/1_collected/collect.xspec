@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution" xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="../../metaschema-collect.xsl">
+    xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution" xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    stylesheet="../../metaschema-collect.xsl">
     
 <!-- metaschema-collect.xsl does two things:
     -  merges modular metaschemas into a single tree of metaschemas
@@ -15,5 +16,57 @@
         <x:context href="../working_metaschema.xml"/>
         <x:expect label="Modules collected, no loops" href="working_metaschema-COLLECTED.xml"/>
     </x:scenario>
+
+    <x:scenario label="Metaschema skeleton">
+        <!-- Mysteriously, sometimes select="*" makes XSpec problems go away, other times not. -->
+        <x:context mode="acquire">
+            <METASCHEMA module="...">
+                <define-assembly name="root">
+                    <root-name>root-assembly</root-name>
+                    <flag ref="top-level-flag"/>
+                    <define-flag name="local-flag">
+                        <formal-name>Locally defined flag</formal-name>
+                        <description>XXX</description>
+                    </define-flag>
+                    <model>
+                        <field ref="top-level-global-field"/>
+                        <field ref="top-level-local-field"/>
+                        <define-field name="local-field">
+                            <formal-name>Locally defined field</formal-name>
+                            <description>XXX</description>
+                        </define-field>
+                    </model>
+                </define-assembly>
+                <define-field name="top-level-global-field"/>
+                <define-field name="top-level-local-field" scope="local"/>
+                <define-flag name="top-level-flag"/>                
+            </METASCHEMA>
+        </x:context>
+        <x:expect label="Modules collected, no loops">
+            <METASCHEMA module="...">
+                <define-assembly name="root">
+                    <root-name>root-assembly</root-name>
+                    <flag ref="top-level-flag"/>
+                    <define-flag name="local-flag">
+                        <formal-name>Locally defined flag</formal-name>
+                        <description>XXX</description>
+                    </define-flag>
+                    <model>
+                        <field ref="top-level-global-field"/>
+                        <define-field name="top-level-local-field" scope="local"/>
+                        <define-field name="local-field">
+                            <formal-name>Locally defined field</formal-name>
+                            <description>XXX</description>
+                        </define-field>
+                    </model>
+                </define-assembly>
+                <define-field name="top-level-global-field"/>
+                
+                <define-flag name="top-level-flag"/>                
+            </METASCHEMA>
+            
+        </x:expect>
+    </x:scenario>
+    
     
 </x:description>

@@ -55,9 +55,9 @@
     <sch:pattern id="definitions-and-name-clashes">
         <sch:rule context="m:flag | m:field | m:assembly">
             <sch:let name="aka" value="nm:identifiers(.)"/>
-            <sch:let name="def" value="nm:definition-for-reference(.)"/>
+            <sch:let name="def" value="( nm:local-definition-for-reference(.), nm:definition-for-reference(.) )[1]"/>
             <sch:assert test="exists($def)">No definition is given for <sch:name/> '<sch:value-of select="@ref"/>'.</sch:assert>
-            <sch:assert test="exists($aka) or empty($def)"><sch:name/> has no name defined</sch:assert>
+            <sch:assert test="exists($aka) or empty($def)"><sch:name/> has no name defined (seeing <sch:value-of select="count($aka)"/> for <sch:value-of select="name($def)"/> <sch:value-of select="$def/@name"/>)</sch:assert>
             <sch:let name="siblings" value="(../m:flag | ../m:define-flag | ancestor::m:model[1]/(.|m:choice)/m:field | ancestor::m:model[1]/(.|m:choice)/m:assembly | ancestor::m:model/(.|m:choice)/define-field | ancestor::m:model[1]/(.|m:choice)/m:define-assembly) except ."/>
             <sch:let name="rivals" value="$siblings[nm:identifiers(.) = $aka]"/>
             <sch:assert test="empty($rivals)">Name clash on <sch:name/> using name '<sch:value-of select="$aka"/>'; clashes with neighboring <xsl:value-of select="$rivals/local-name()" separator=", "/></sch:assert>
@@ -96,7 +96,8 @@
     
     <sch:pattern id="flags_and_keys_and_datatypes">
         <sch:rule context="m:field | m:assembly">
-            <sch:let name="def" value="nm:definition-for-reference(.)"/>
+            <sch:let name="def" value="( nm:local-definition-for-reference(.), nm:definition-for-reference(.) )[1]"/>
+            <!--<sch:report test="exists(nm:local-definition-for-reference(.))"><sch:name/> ref=<sch:value-of select="@ref"/> has local definition</sch:report>-->
             <sch:assert test="empty($def) or (m:group-as/@in-json='BY_KEY') or empty($def/m:json-key)">Target definition for <sch:value-of select="@ref"/> designates a json key, so the invocation should have group-as/@in-json='BY_KEY'</sch:assert>
             <sch:assert test="matches(m:group-as/@name,'\S') or not((@max-occurs/number() gt 1) or (@max-occurs='unbounded'))">Unless @max-occurs is 1, a grouping name (group-as/@name) must be given</sch:assert>
 
@@ -186,6 +187,13 @@
         <xsl:sequence select="key('definition-for-reference',$tag,$composed-metaschema)"/>
     </xsl:function>
     
+    <xsl:function name="nm:local-definition-for-reference" as="element()?">
+        <xsl:param name="who" as="element()"/>
+        <xsl:variable name="really-who" select="$who/(self::m:assembly | self::m:field | self::m:flag)"/>
+        <xsl:variable name="tag" expand-text="true">{ $really-who/@ref }:{ local-name($really-who) => upper-case() }</xsl:variable>
+        <xsl:sequence select="key('definition-for-reference',$tag,$who/root())[@scope='local']"/>
+    </xsl:function>
+    
     <xsl:function name="nm:references-to-definition" as="element()*">
         <!-- expects define-assembly, define-field or define-flag -->
         <xsl:param name="who" as="element()"/>
@@ -215,17 +223,23 @@
     
     <xsl:template match="m:define-assembly | m:define-field | m:define-flag" mode="nm:get-identifiers">
         <xsl:sequence select="m:root-name,(m:use-name,@name)[1], m:group-as/@name"/>
+        <!--<xsl:message expand-text="true">{ @name }</xsl:message>-->
     </xsl:template>
     
-    <xsl:template match="m:assembly[exists(m:use-name)] |
+    <xsl:template priority="3" match="m:assembly[exists(m:use-name)] |
                          m:field[exists(m:use-name)] |
                          m:flag[exists(m:use-name)]" mode="nm:get-identifiers">
         <xsl:sequence select="m:use-name, m:group-as/@name"/>
     </xsl:template>
     
-    <xsl:template match="m:assembly | m:field | m:flag" mode="nm:get-identifiers">
+    <xsl:template priority="2" match="*[exists(nm:definition-for-reference(.))]" mode="nm:get-identifiers">
         <xsl:sequence select="m:group-as/@name"/>
         <xsl:apply-templates select="nm:definition-for-reference(.)" mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template priority="1" match="*[exists(nm:local-definition-for-reference(.))]" mode="nm:get-identifiers">
+        <xsl:sequence select="m:group-as/@name"/>
+        <xsl:apply-templates select="nm:local-definition-for-reference(.)" mode="#current"/>
     </xsl:template>
     
     <xsl:template match="*" mode="nm:get-identifiers"/>
