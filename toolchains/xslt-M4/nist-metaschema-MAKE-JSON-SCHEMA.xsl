@@ -30,7 +30,7 @@
     <xsl:variable name="transformation-sequence">
         <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
+        <!--<nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>-->
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
         <nm:transform version="3.0">schema-gen/make-json-schema-metamap.xsl</nm:transform>
         <nm:transform version="3.0">lib/xpath-json-to-json.xsl</nm:transform>
