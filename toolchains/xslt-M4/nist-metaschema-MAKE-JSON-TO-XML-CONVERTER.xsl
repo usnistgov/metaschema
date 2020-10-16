@@ -62,7 +62,7 @@
     <!-- first compose the metaschema -->
     <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
     <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
-    <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
+    <!--<nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>-->
     <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
     
     <!-- next produce definition map -->

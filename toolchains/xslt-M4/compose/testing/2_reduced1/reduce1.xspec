@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution" xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="../../metaschema-reduce1.xsl">
+    xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution"
+    xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    stylesheet="../../metaschema-reduce1.xsl">
     
 <!-- metaschema-reduce1.xsl
     
@@ -12,8 +14,45 @@
     ensure that local and global definitions are propagated as necessary
     -->
     <x:scenario label="Working metaschema">
-        <x:context href="../1_collected/working_metaschema-COLLECTED.xml" select="*"/>
+        <x:context href="../1_collected/working_metaschema-COLLECTED.xml" select="*" mode="keep-eligible"/>
         <x:expect label="Last definition is kept" href="working_metaschema-REDUCED1.xml" select="*"/>
+    </x:scenario>
+    
+    <x:scenario label="Drop an extra">
+        <!-- Mysteriously, sometimes select="*" makes XSpec problems go away, other times not. -->
+        <x:context mode="keep-eligible">
+            <METASCHEMA module="...">
+                <define-assembly name="root">
+                    <root-name>root-assembly</root-name>
+                    <flag ref="top-level-flag"/>
+                    <define-flag name="local-flag"/>
+                    <model>
+                        <field ref="top-level-global-field"/>
+                        <define-field name="top-level-local-field" scope="local"/>
+                        <define-field name="local-field"/>
+                    </model>
+                </define-assembly>
+                <define-field name="top-level-global-field"/>
+                <define-field name="top-level-global-field"/>
+                <define-flag name="top-level-flag"/>                
+            </METASCHEMA>
+        </x:context>
+        <x:expect label="Modules collected, no loops">
+            <METASCHEMA module="...">
+                <define-assembly name="root">
+                    <root-name>root-assembly</root-name>
+                    <flag ref="top-level-flag"/>
+                    <define-flag name="local-flag"/>
+                    <model>
+                        <field ref="top-level-global-field"/>
+                        <define-field name="top-level-local-field" scope="local"/>
+                        <define-field name="local-field"/>
+                    </model>
+                </define-assembly>
+                <define-field name="top-level-global-field"/>
+                <define-flag name="top-level-flag"/>                
+            </METASCHEMA>
+        </x:expect>
     </x:scenario>
     
 </x:description>

@@ -33,7 +33,7 @@
     <xsl:variable name="transformation-sequence">
         <nm:transform version="3.0">metaschema-collect.xsl</nm:transform>
         <nm:transform version="3.0">metaschema-reduce1.xsl</nm:transform>
-        <nm:transform version="3.0">metaschema-reduce2.xsl</nm:transform>
+        <!--<nm:transform version="3.0">metaschema-reduce2.xsl</nm:transform>-->
         <nm:transform version="3.0">metaschema-digest.xsl</nm:transform>
     </xsl:variable>
     
