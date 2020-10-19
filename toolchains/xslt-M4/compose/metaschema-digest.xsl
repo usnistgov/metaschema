@@ -82,7 +82,7 @@
     </xsl:template>
     
     <xsl:template name="mark-module">
-        <xsl:copy-of select="ancestor-or-self::METASCHEMA/@module"/>
+        <xsl:copy-of select="ancestor-or-self::METASCHEMA[1]/@module"/>
     </xsl:template>
 
 </xsl:stylesheet>
