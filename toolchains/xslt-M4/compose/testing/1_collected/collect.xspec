@@ -67,6 +67,74 @@
             
         </x:expect>
     </x:scenario>
+    <x:scenario label="Nested locals">
+        <!-- Mysteriously, sometimes select="*" makes XSpec problems go away, other times not. -->
+        <x:context mode="acquire">
+            <METASCHEMA module="...">
+                <define-assembly name="root">
+                    <root-name>root-assembly</root-name>
+                    <flag ref="top-level-flag"/>
+                    <define-flag name="local-flag">
+                        <formal-name>Locally defined flag</formal-name>
+                        <description>XXX</description>
+                    </define-flag>
+                    <model>
+                        <field ref="top-level-global-field"/>
+                        <field ref="top-level-local-field"/>
+                        <assembly ref="top-level-local-assembly"/>
+                        <define-field name="local-field">
+                            <formal-name>Locally defined field</formal-name>
+                            <description>XXX</description>
+                        </define-field>
+                    </model>
+                </define-assembly>
+                <define-field name="top-level-global-field"/>
+                <define-field name="top-level-local-field" scope="local">
+                    <formal-name>Included twice</formal-name>
+                </define-field>
+                <define-assembly name="top-level-local-assembly" scope="local">
+                    <model>
+                        <field ref="top-level-local-field"/>
+                        <!-- ??? infinite loop? <assembly ref="top-level-local-assembly"/>-->
+                    </model>
+                </define-assembly>
+                <define-flag name="top-level-flag"/>                
+            </METASCHEMA>
+        </x:context>
+        <x:expect label="Local definitions all expanded">
+            <METASCHEMA module="...">
+                <define-assembly name="root">
+                    <root-name>root-assembly</root-name>
+                    <flag ref="top-level-flag"/>
+                    <define-flag name="local-flag">
+                        <formal-name>Locally defined flag</formal-name>
+                        <description>XXX</description>
+                    </define-flag>
+                    <model>
+                        <field ref="top-level-global-field"/>
+                        <define-field name="top-level-local-field" scope="local">
+                            <formal-name>Included twice</formal-name>
+                        </define-field>
+                        <define-assembly name="top-level-local-assembly" scope="local">
+                            <model>
+                                <define-field name="top-level-local-field" scope="local">
+                                    <formal-name>Included twice</formal-name>
+                                </define-field>
+                            </model>
+                        </define-assembly>
+                        <define-field name="local-field">
+                            <formal-name>Locally defined field</formal-name>
+                            <description>XXX</description>
+                        </define-field>
+                    </model>
+                </define-assembly>
+                <define-field name="top-level-global-field"/>
+                
+                <define-flag name="top-level-flag"/>                
+            </METASCHEMA>
+            
+        </x:expect>
+    </x:scenario>
     
     
 </x:description>
