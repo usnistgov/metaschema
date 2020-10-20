@@ -49,7 +49,7 @@
       <li class="prose">Prose contents (paragraphs and lists)</li>
    </xsl:template>
 
-   <xsl:template match="m:allowed-values">
+   <xsl:template match="m:allowed-values" name="allowed-values">
       <xsl:choose>
         <xsl:when test="@allow-other and @allow-other='yes'">
           <p>The value may be locally defined, or one of the following:</p>
