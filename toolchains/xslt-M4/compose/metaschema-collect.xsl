@@ -67,15 +67,22 @@
         match="METASCHEMA/define-flag[@scope='local']" use="@name"/>
     
     <xsl:template mode="acquire" match="assembly[exists( key('top-level-local-assembly-definition-by-name',@ref) )]">
-        <xsl:copy-of select="key('top-level-local-assembly-definition-by-name',@ref) "/>
+        <xsl:apply-templates mode="expand" select="key('top-level-local-assembly-definition-by-name',@ref) "/>
     </xsl:template>
     
     <xsl:template mode="acquire" match="field[exists( key('top-level-local-field-definition-by-name',@ref) )]">
-        <xsl:copy-of select="key('top-level-local-field-definition-by-name',@ref) "/>
+        <xsl:apply-templates mode="expand" select="key('top-level-local-field-definition-by-name',@ref) "/>
     </xsl:template>
     
     <xsl:template mode="acquire" match="flag[exists( key('top-level-local-flag-definition-by-name',@ref) )]">
-        <xsl:copy-of select="key('top-level-local-flag-definition-by-name',@ref) "/>
+        <xsl:apply-templates mode="expand" select="key('top-level-local-flag-definition-by-name',@ref) "/>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="expand">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates mode="acquire"/>
+        </xsl:copy>
     </xsl:template>
     
     <xsl:template mode="acquire"
