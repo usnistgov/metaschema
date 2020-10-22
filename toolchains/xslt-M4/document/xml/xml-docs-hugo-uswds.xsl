@@ -12,6 +12,8 @@
    <!-- Input:   Metaschema -->
    <!-- Output:  HTML  -->
 
+   <xsl:mode on-no-match="text-only-copy"/>
+   
    <xsl:param name="schema-path" select="document-uri(/)"/>
 
    <xsl:variable name="metaschema-code" select="/*/short-name || '-xml'"/>
@@ -29,6 +31,8 @@
    <!-- Input:   Metaschema -->
    <!-- Output:  HTML  -->
    
+   <xsl:import href="../../metapath/parse-metapath.xsl"/>
+   
    <xsl:import href="../metaschema-htmldoc-xslt1.xsl"/>
    
    <xsl:variable name="home" select="/METASCHEMA"/>
@@ -36,7 +40,7 @@
    <xsl:variable name="all-references" select="//flag/@name | //model//*/@ref"/>
    
    <xsl:key name="definitions" match="/METASCHEMA/define-flag | /METASCHEMA/define-field | /METASCHEMA/define-assembly" use="@name"/>
-   <xsl:key name="references" match="flag"             use="@name | @ref"/>
+   <xsl:key name="references" match="flag"             use="@ref"/>
    <xsl:key name="references" match="field | assembly" use="@ref"/>
    
    <xsl:template match="/">
@@ -45,14 +49,14 @@
             <xsl:call-template name="css"/>
          </head>
          <body>
-            <section>
+            <!--<section>
                <xsl:for-each-group select="//constraint/(.|descendant::require)/(child::* except child::require)" group-by="m:path-key((@target,'.')[1])" expand-text="true">
                   <details>
                      <summary>Path key { current-grouping-key() }</summary>
                      <xsl:apply-templates select="current-group()" mode="build-index"/>
                   </details>
                </xsl:for-each-group> 
-            </section>
+            </section>-->
             <xsl:apply-templates/>
          </body>
       </html>
@@ -241,11 +245,6 @@
       </xsl:if>
    </xsl:template>
 
-   <xsl:function name="m:path-key" as="xs:string">
-      <xsl:param name="path" as="xs:string"/>
-      <xsl:sequence select="replace($path,'^.*/','') => replace('\[.*$','')"/>
-   </xsl:function>
-   
    <xsl:template match="define-flag" mode="make-definition">
       <div class="definition define-flag" id="{@name}">
          <xsl:call-template name="definition-header"/>
@@ -391,7 +390,8 @@
             <xsl:apply-templates select="." mode="requirement"/>
             <xsl:apply-templates select="if (description) then description else key('definitions', @ref)/description" mode="model"/>
          </p>
-         <xsl:apply-templates select="constraint"/>
+         <xsl:call-template name="display-constraints"/>
+         <!--<xsl:apply-templates select="constraint"/>-->
          <xsl:apply-templates select="remarks" mode="model"/>
          <!--<details>
             <summary><span class="usa-tag">Definition</span></summary>
@@ -442,32 +442,62 @@
                select="if (description) then description else key('definitions', @ref)/description"/>
          </p>
          <xsl:apply-templates select="remarks" mode="model"/>
+         <xsl:call-template name="display-constraints"/>
       </li>
    </xsl:template>
    
    <xsl:template match="constraint" expand-text="true">
-      <div class="constraint-set" style="background-color: pink; padding: 0.5em; margin: 0.5em; border: thin solid red">
+      <details class="constraint-set" style="background-color: pink; padding: 0.5em; margin: 0.5em; border: thin solid red">
          <xsl:variable name="constraints" select=".//allowed-values | .//matches | .//has-cardinality | .//is-unique | .//index-has-key"/>
-         <h4 class="h4"><span class="usa-tag">{ if (count($constraints) eq 1) then 'constraint' else 'constraints'}</span></h4>
-         <xsl:apply-templates/>
+         <summary class="h4"><span class="usa-tag">{ if (count($constraints) eq 1) then 'constraint' else 'constraints'}</span></summary>
+         <xsl:apply-templates select="$constraints"/>
+      </details>
+   </xsl:template>
+   
+   <xsl:template priority="2" match="has-cardinality | index-has-key | index | matches | allowed-values | has-cardinality" expand-text="true">
+      <xsl:variable name="step-context" select="m:constraint-key(.)"/>
+      <xsl:variable name="definition-context" select="string-join(ancestor::*/(root-name,use-name,@name)[1],'/')"/>
+      <div class="constraint" style="background-color: steelblue">
+         <p>Constraint: { local-name() }. Nominal target: <b>{ $step-context }</b>. Context: "{ $definition-context }".</p>
+         <p>Given target: { if (exists(@target)) then ('&quot;' || @target || '&quot;') else '[defaulted]' }.</p>
+         <p>Full context: { string-join(($definition-context,@target),'/') }</p>
+         
+         <xsl:next-match/>
       </div>
    </xsl:template>
    
-   <xsl:template match="constraint/*">
-      <div class="constraint">
-         <xsl:value-of select="local-name(),(@* ! ( local-name() || ':' || .))" separator=" "/>
+   <xsl:template priority="3" match="constraint//require">
          <xsl:apply-templates/>
-      </div>
    </xsl:template>
    
-   <xsl:template priority="2" match="require" expand-text="true">
-      <div class="requirement" style="padding: 0.5em; border: thin dotted black">
-         <p>When <code>{ @when}</code>:</p>
-         <xsl:apply-templates/>
-      </div>
-   </xsl:template>
+    
+    <xsl:key name="constraints-for-target" match="index | index-has-key | is-unique | has-cardinality | allowed-values | matches" use="m:constraint-key(.)"/>
    
-   <xsl:template priority="2" match="allowed-values[empty(@target) or @target=('.','value()')]">
+   <xsl:function name="m:constraint-key">
+      <xsl:param name="who" as="element()"/>
+      <!--<xsl:value-of select="local-name($who)"/>-->
+      <xsl:choose>
+         <xsl:when test="$who/@target=('.','value()')">
+            <xsl:sequence select="$who/ancestor::constraint/parent::*/(root-name,use-name,@name)[1]/normalize-space(.)"/>
+         </xsl:when>
+         <xsl:when test="empty($who/@target)">
+            <xsl:sequence select="$who/ancestor::constraint/parent::*/(root-name,use-name,@name)[1]/normalize-space(.)"/>
+         </xsl:when>
+         <xsl:when test="false()">boo</xsl:when>
+         <!--<xsl:otherwise>hoo</xsl:otherwise>-->
+         <xsl:otherwise>
+            <!--<xsl:sequence select="$who/@target/m:simple-step-map(string(.))"/>-->
+            <xsl:sequence select="$who/@target/m:simple-step-map(.)/m:alternative/m:step[exists(m:node)][last()]/m:node/string(.)"/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:function>
+   
+   <!--<xsl:function name="m:constraint-key" as="xs:string">
+      <xsl:param name="who" as="element()"/>
+      <xsl:text>boo</xsl:text>
+   </xsl:function>-->
+   
+   <!--<xsl:template priority="2" match="allowed-values[empty(@target) or @target=('.','value()')]">
       <xsl:choose expand-text="true">
          <xsl:when test="@allow-other and @allow-other='yes'">
             <p><span class="usa-tag">allowed value</span> The value may be locally defined, or one of the following:</p>
@@ -527,7 +557,9 @@
    
    <xsl:template priority="2" match="is-unique[exists(@target) or not(@target=('.','value()'))]" expand-text="true">
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
-      <p><span class="usa-tag">uniqueness constraint</span> In this scope, the value of target(s) <code>{ @target }</code> must be unique (i.e., occur only once)</p>
+      <p><span class="usa-tag">uniqueness constraint</span> In this scope, the key assigned target(s) <code>{ @target }</code>
+         <xsl:text> must be unique, as constructed from key field(s) </xsl:text>
+         <xsl:for-each select="key-field"><xsl:if test="position() gt 1">; </xsl:if><code><xsl:value-of select="@target"/></code></xsl:for-each></p>
    </xsl:template>
    
    <xsl:template priority="2" match="index-has-key[empty(@target) or @target=('.','value()')]" expand-text="true">
@@ -550,7 +582,7 @@
          <xsl:text> using keys constructed of key field(s) </xsl:text>
          <xsl:for-each select="key-field"><xsl:if test="position() gt 1">; </xsl:if><code><xsl:value-of select="@target"/></code></xsl:for-each>.</p>
       <xsl:apply-templates/>
-   </xsl:template>
+   </xsl:template>-->
    
    <xsl:template match="define-assembly | define-field">
       <li class="model-entry">
@@ -566,7 +598,8 @@
             <xsl:apply-templates mode="model"
                select="if (description) then description else key('definitions', @ref)/description"/>
          </p>
-         <xsl:apply-templates select="constraint"/>
+         <xsl:call-template name="display-constraints"/>
+         <!--<xsl:apply-templates select="constraint"/>-->
          <xsl:apply-templates select="remarks" mode="model"/>
          <!--<details>
             <summary><span class="usa-tag">Definition</span></summary>
@@ -599,11 +632,23 @@
                select="if (description) then description else key('definitions', @ref)/description"/>
          </p>
          <xsl:apply-templates select="remarks" mode="model"/>
+         <xsl:call-template name="display-constraints"/>
          <!--<details>
             <summary>Definition</summary>
             <xsl:apply-templates select="." mode="make-definition"/>
          </details>-->
       </li>
+   </xsl:template>
+   
+   <xsl:template name="display-constraints">
+      <xsl:variable name="field-name" select="(use-name,key('definitions',@ref)/(use-name,@name),@name)[1]"/>
+      <xsl:message expand-text="true">Displaying { count(key('constraints-for-target',$field-name)) } constraints for { $field-name } ({ name() })</xsl:message>
+      <xsl:for-each-group select="key('constraints-for-target',$field-name)" group-by="true()">
+         <details style="background-color: lemonchiffon; border: thin solid saddlebrown">
+            <summary>Constraints</summary>
+            <xsl:apply-templates select="current-group()"/>
+         </details>
+      </xsl:for-each-group>
    </xsl:template>  
    
    <xsl:template mode="make-definition" match="field | flag | assembly"/>

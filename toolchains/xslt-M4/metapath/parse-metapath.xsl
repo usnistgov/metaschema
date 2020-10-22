@@ -5,18 +5,7 @@
     exclude-result-prefixes="#all"
     version="3.0" xmlns:p="metapath02">
 
-
-<!-- XXX cleanup punchlist for when finished
-       check functions - any not being called? (remove)
-         (regression test everything after this)
-       reconsider names of functions and modes
-       cut all the commented code
-       add explanatory comments
-       any cosmetic reformatting
-       look at namespaces
-       
-    -->
-    
+   
     <xsl:import href="REx/metapath02.xslt"/>
 
     <xsl:output indent="yes"/>
