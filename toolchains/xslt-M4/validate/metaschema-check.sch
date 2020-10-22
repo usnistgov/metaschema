@@ -67,7 +67,7 @@
             <sch:let name="references" value="nm:references-to-definition(.)"/>
             <sch:report test="@name=(../*/@name except @name)">Definition for '<sch:value-of select="@name"/>' clashes in this metaschema: not a good idea.</sch:report>
             <!--<sch:assert role="warning" test="exists($references | self::m:define-assembly/m:root-name) and ( not($metaschema-is-abstract or @scope='local') )">-->
-            <sch:assert role="warning" test="exists($references | self::m:define-assembly/m:root-name) or $metaschema-is-abstract">Orphan <sch:value-of select="substring-after(local-name(),'define-')"/> '<sch:value-of select="@name"/>' is never used in the composed metaschema</sch:assert>
+            <sch:assert role="warning" test="exists($references | self::m:define-assembly/m:root-name) or $metaschema-is-abstract or (@scope='local')">Orphan <sch:value-of select="substring-after(local-name(),'define-')"/> '<sch:value-of select="@name"/>' is never used in the composed metaschema</sch:assert>
             
             <sch:assert test="not($references/m:group-as/@in-json='BY_KEY') or exists(m:json-key)"><sch:value-of select="substring-after(local-name(),
             'define-')"/> is assigned a json key, but no 'json-key' is given</sch:assert>
