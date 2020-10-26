@@ -31,7 +31,7 @@
    <!-- Input:   Metaschema -->
    <!-- Output:  HTML  -->
    
-   <xsl:import href="../../metapath/parse-metapath.xsl"/>
+   <xsl:import href="../../metapath/docs-metapath.xsl"/>
    
    <xsl:import href="../metaschema-htmldoc-xslt1.xsl"/>
    
@@ -457,11 +457,14 @@
    <xsl:template priority="2" match="has-cardinality | index-has-key | index | matches | allowed-values | has-cardinality" expand-text="true">
       <xsl:variable name="step-context" select="m:constraint-key(.)"/>
       <xsl:variable name="definition-context" select="string-join(ancestor::*/(root-name,use-name,@name)[1],'/')"/>
-      <div class="constraint" style="background-color: steelblue">
-         <p>Constraint: { local-name() }. Nominal target: <b>{ $step-context }</b>. Context: "{ $definition-context }".</p>
-         <p>Given target: { if (exists(@target)) then ('&quot;' || @target || '&quot;') else '[defaulted]' }.</p>
-         <p>Full context: { string-join(($definition-context,@target),'/') }</p>
-         
+      <div class="constraint" style="background-color: lavender; border: thin dotted black; padding: 0.3em; font-size: 90%">
+         <p>Constraint: <b>{ local-name() }</b>. Nominal target: <b>{ $step-context }</b>. Context: <code>{ $definition-context }</code>.</p>
+         <p><xsl:text>Given target:  </xsl:text>
+            <xsl:choose>
+               <xsl:when test="exists(@target)"><code>{ @target  }</code></xsl:when>
+               <xsl:otherwise>[defaulted]</xsl:otherwise>
+            </xsl:choose>.</p>
+         <p>Full context: <code>{ string-join(($definition-context,@target),'/') }</code></p>
          <xsl:next-match/>
       </div>
    </xsl:template>
@@ -472,6 +475,147 @@
    
     
     <xsl:key name="constraints-for-target" match="index | index-has-key | is-unique | has-cardinality | allowed-values | matches" use="m:constraint-key(.)"/>
+   
+<!-- Given as parameter a constraint element and a listing context, assesses whether
+     that constraint should apply in that context. If applicable, a single constraint
+     (the parameter itself) is returned; if it is not applicable an empty sequence is returned. -->
+   
+   <xsl:function name="m:constraints-for-listing" as="element()?">
+<!-- the constraint will be one of has-cardinality, matches, allowed-values etc. -->
+      <xsl:param name="constraint" as="element()"/>
+      <!--the context will be the metaschema definition context being documented: an element
+      'define-flag', 'define-field', 'define-assembly', 'flag', 'field' or 'assembly'
+      potentially nested inside other definitions-->
+      <xsl:param name="context" as="element()"/>
+<!-- lineage is the name of the context with its ancestors, however many there are (one or more),
+from ancestors down: a sequence of strings -->
+      <xsl:variable name="lineage" select="$context/ancestor-or-self::*/(root-name,use-name,@name)[1] ! string(.)"/>
+      
+      
+<!-- XXX instead of handling $lineage and the target path separately, make a single
+      path and then simply check it
+      xxx allowing for absolute paths! -->
+      <xsl:variable name="target-steps" select="$constraint/@target/m:simple-step-map(.)/m:alternative"/>
+      
+      <xsl:for-each select="$target-steps">
+         <!-- separate m:alternatives handled separately -->
+         <!--target-path may be a union (a|b) in context x/y this will become x/y/a | x/y/b
+      tried separately - only one of which (the a or b) will come back for any x/y/* -->
+         
+         <xsl:apply-templates mode="keep-constraint-in-context" select="$context">
+            <xsl:with-param name="constraint" select="$constraint" tunnel="true"/>
+            <xsl:with-param name="step-sequence" select="m:step"/>
+            <xsl:with-param name="name-stack" select="$lineage"/>
+         </xsl:apply-templates>
+      </xsl:for-each>
+      <xsl:if test="empty($target-steps)">
+         <!-- no target, so the name stack only has to match -->
+         <xsl:apply-templates mode="keep-constraint-in-context" select="$context">
+            <xsl:with-param name="step-sequence" select="()"/>
+            <xsl:with-param name="name-stack" select="$lineage"/>
+         </xsl:apply-templates>
+      </xsl:if>
+      
+   </xsl:function>
+   
+<!-- in mode 'keep-constraint-in-context', we fail if the names don't match; otherwise
+     if we're done, we send the constraint back; otherwise we continue.   -->
+   <xsl:template mode="keep-constraint-in-context" match="*">
+      <xsl:param name="constraint" as="element(constraint)" tunnel="true"/>
+      <xsl:param name="step-sequence" as="element(m:step)*"/>
+<!-- name-stack is the names of the context remaining to check  -->
+      <xsl:param name="name-stack" as="xs:string*"/>
+      <xsl:variable name="my-name" select="(root-name,use-name,@name)[1] ! string(.)"/>
+      <xsl:choose>
+         <!-- no name-stack means no more lineage to test           -->
+         <xsl:when test="empty($name-stack)">
+            <xsl:sequence select="$constraint"/>
+         </xsl:when>
+         <xsl:otherwise>
+      <xsl:choose>
+         <xsl:when test="empty($step-sequence)">
+            <!-- we are out of steps to crawl, so we are good, we can test lineage -->
+            <xsl:choose>
+               <xsl:when test="empty(ancestor::define-field | ancestor::define-field) and ($my-name = $name-stack[last()])">
+                  <xsl:sequence select="$constraint"/>
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:apply-templates select="(ancestor::define-field | ancestor::define-field)[last()]" mode="#current">
+                     <xsl:with-param name="step-sequence" select="$step-sequence except $step-sequence[last()]"/>
+                     <xsl:with-param name="name-stack" select="remove($name-stack,count($name-stack))"/>
+                     
+                  </xsl:apply-templates>
+               </xsl:otherwise>
+            </xsl:choose>
+         </xsl:when>
+         <xsl:otherwise>
+            <!--we have both steps, and a name stack; so we try to account for the entire
+            name stack using steps; if not we call ourself with no steps and the *remainder* name stack
+            to process -->
+            
+            
+         </xsl:otherwise>
+      </xsl:choose>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
+   
+   <!--<!-\-filter-on-step must fail if names don't match; continue testing names until all names in the name stack have matched; then the constraint comes back.-\->
+   
+   <!-\-when axis reaches down more than one step, any ancestry is fine, so we no longer need to check;
+   the constraint is simply returned-\-> 
+   <xsl:template priority="2" match="m:step[m:axis='descendant::'] | m:step[m:axis='descendant-or-self::']" mode="filter-on-step">
+      <xsl:param name="constraint" as="element(constraint)" tunnel="true"/>
+      <xsl:sequence select="$constraint"/>
+   </xsl:template>
+
+   <xsl:template priority="2" match="m:step[m:axis='child::'][m:wildcard='*']" mode="filter-on-step">
+      <xsl:param name="name-stack" as="xs:string*"/>
+      <xsl:param name="context" as="element()"/>
+      <xsl:param name="constraint" as="element(constraint)" tunnel="true"/>
+      <xsl:choose>
+         <!-\- any name is good -\->
+         <xsl:when test="count($name-stack) le 1">
+            <xsl:sequence select="$constraint"/>
+         </xsl:when>
+         <xsl:otherwise>
+         <!-\- having accounted child::*, we visit the next step back with a reduced name stack -\->
+            <xsl:apply-templates mode="#current" select="preceding-sibling::m:step[1]">
+               <xsl:with-param name="name-stack" select="remove($name-stack, count($name-stack))"/>
+               <xsl:with-param name="context"
+                  select="$context/(ancestor::define-field | ancestor::define-assembly)[last()]"/>
+            </xsl:apply-templates>
+<!-\- or if this is the last step, we revisit our context with the name-stack intact, but no steps           -\->
+            
+         </xsl:otherwise>
+         
+      </xsl:choose>
+      
+   </xsl:template>
+   
+   <xsl:template priority="2" match="m:step[m:axis='self::'][m:wildcard='*']" mode="filter-on-step">
+      <xsl:param name="name-stack" as="xs:string*"/>
+      <xsl:param name="context" as="element()"/>
+      <xsl:apply-templates mode="#current" select="preceding-sibling::m:step[1]">
+         <xsl:with-param name="name-stack" select="$name-stack"/>
+         <xsl:with-param name="context" select="$context"/>
+      </xsl:apply-templates>
+   </xsl:template>
+   
+   <xsl:template priority="2" match="m:step[m:axis='child::']" mode="filter-on-step">
+      <xsl:param name="name-stack" as="xs:string*"/>
+      <xsl:param name="context" as="element()"/>
+      <xsl:if test="m:node = $name-stack[last()]">
+      <xsl:apply-templates mode="#current" select="preceding-sibling::m:step[1]">
+         <xsl:with-param name="name-stack" select="remove($name-stack,count($name-stack))"/>
+         <xsl:with-param name="context" select="$context/(ancestor::define-field|ancestor::define-assembly)[last()]"/>
+      </xsl:apply-templates>
+      </xsl:if>
+   </xsl:template>
+   
+   -->
+   
+
    
    <xsl:function name="m:constraint-key">
       <xsl:param name="who" as="element()"/>
