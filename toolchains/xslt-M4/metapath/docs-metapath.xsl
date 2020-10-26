@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    exclude-result-prefixes="#all"
+    version="3.0" xmlns:p="metapath02">
+
+   
+    <xsl:import href="REx/metapath02.xslt"/>
+
+    <xsl:output indent="yes"/>
+
+    <xsl:mode on-no-match="shallow-skip"/>
+
+<!-- 1. reduce target paths to their minimized form accounting for axes, removing predicates etc.
+          cast wildcards 'node()' 'element()' and 'attribute' to '*'
+          normalize away child:: and attribute::
+          truncate for deeper descendancy
+          
+     2. for every reduced-target given for target, 
+          pass pairs of context and reduced-target to m:match-paths
+          any 'true' qualifies us as a match
+     
+    -->
+    
+    <xsl:variable as="xs:string" name="t">control[a=b]/part//./part/prop[@name='label'] | a/b//c</xsl:variable>
+    
+    <xsl:template match="/">
+        <OUT>
+            <xsl:for-each expand-text="true" select="m:reduce-alternatives($t)">
+                <path>{ . }</path>
+            </xsl:for-each>
+            <xsl:sequence select="m:reduce-path-expr($t)"/>
+            <xsl:sequence select="p:parse-XPath($t)"/>
+        </OUT>
+    </xsl:template>
+    
+    <xsl:function name="m:reduce-alternatives" as="xs:string*">
+        <xsl:param name="expr" as="xs:string"/>
+        <xsl:variable name="reduced-path" select="m:reduce-path-expr($expr)"/>
+        <xsl:apply-templates select="$reduced-path" mode="distill-path"/>
+    </xsl:function>
+    
+    <xsl:function name="m:reduce-path-expr" as="node()*">
+        <xsl:param name="expr" as="xs:string"/>
+        <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
+        <xsl:apply-templates select="$parse.tree" mode="reduce-path"/>
+    </xsl:function>
+    
+    <xsl:function name="m:match-paths" as="xs:boolean">
+        <xsl:param name="context-path" as="xs:string"/><!-- a/b/c -->
+        <xsl:param name="target-path"  as="xs:string"/><!-- a/b/c -->
+<!-- return true if the values as tokenized by '/' are coincident for all values in the shorter sequence       -->
+<!--        'a/b/c' matches 'a/b/c' 'b/c' 'c' 'z/a/b/c' but not 'a/d/c' -->
+        
+        <xsl:variable name="cs" select="tokenize($context-path,'/') => reverse()"/>
+        <xsl:variable name="ts" select="tokenize($target-path,'/')  => reverse()"/>
+        <!-- the count is the length of the shorter sequence -->
+        <xsl:variable name="count" select="(count($cs), count($ts)) => min()"/>
+        <!-- we are good if either context or target has '*' or if they are same -->
+        <xsl:sequence select="every $p in (1 to $count) satisfies
+            ( ($cs[$p],$ts[$p])='*' or $cs[$p]=$ts[$p] )"/>
+    </xsl:function>
+    
+    
+    <xsl:template mode="distill-path" match="m:alternative" as="xs:string">
+        <xsl:value-of separator="/">
+            <xsl:apply-templates select="m:step" mode="#current"/>
+        </xsl:value-of>
+    </xsl:template>
+    
+    <xsl:template mode="distill-path" match="m:step[(.|following-sibling::m:step)/m:axis='descendant-or-self']"/>
+    <xsl:template mode="distill-path" match="m:step[(following-sibling::m:step)/m:axis='descendant']"/>
+    <xsl:template mode="distill-path" match="m:step[m:axis='self']"/>
+    <xsl:template mode="distill-path" match="m:step[empty(*)]"/>
+    
+    <xsl:template mode="distill-path" match="m:step" as="xs:string">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template mode="distill-path" match="m:axis"/>
+    <xsl:template mode="distill-path" match="m:node[.='node()']">*</xsl:template>
+    
+    
+    <xsl:template mode="reduce-path" match="PredicateList"/>
+    
+<!-- because the axis is expanded we switch the token   -->
+    <!--<xsl:template match="text()" mode="reduce-path"/>-->
+    
+    <xsl:template match="XPath" mode="reduce-path">
+        <m:metapath>
+            <xsl:apply-templates mode="#current"/>
+        </m:metapath>
+    </xsl:template>
+    
+    <xsl:template match="XPath/UnionExpr/UnaryExpr" mode="reduce-path">
+        <m:alternative>
+            <xsl:apply-templates mode="#current"/>
+        </m:alternative>
+    </xsl:template>
+    
+    <xsl:template match="StepExpr" mode="reduce-path">
+        <xsl:if test="preceding-sibling::*[1]/self::TOKEN='//'">
+            <m:step>
+                <m:axis>descendant-or-self</m:axis>
+                <m:node>node()</m:node>
+            </m:step>
+        </xsl:if>
+        <m:step>
+            <xsl:if test="AxisStep/ForwardStep/AbbrevForwardStep[empty(TOKEN)]">
+                <m:axis>child</m:axis>
+            </xsl:if>
+            <xsl:apply-templates mode="#current"/>
+        </m:step>
+    </xsl:template>
+    
+    <xsl:template match="ForwardStep[AbbrevForwardStep/TOKEN='@']" mode="reduce-path">
+        <m:axis>attribute</m:axis>
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template match="ForwardStep[AbbrevForwardStep/TOKEN='.']" mode="reduce-path">
+        <m:axis>self</m:axis>
+        <m:node>node()</m:node>
+    </xsl:template>
+    
+    <xsl:template match="text()" mode="reduce-path"/>
+    
+    <xsl:template match="ForwardAxis" mode="reduce-path">
+        <m:axis>
+            <xsl:value-of select="TOKEN[not(.='::')]"/>
+        </m:axis>
+    </xsl:template>
+    
+    <xsl:template match="NodeTest" mode="reduce-path">
+        <m:node>
+            <xsl:value-of select="."/>
+        </m:node>
+    </xsl:template>
+    
+    
+    
+    <xsl:template priority="2" match="Predicate/TOKEN" mode="reduce-path"/>
+    
+   
+    <!-- for path a[x]/b/c[y][z] and prefix p, returns "exists(self::p:c:[p:y][p:z]/parent::p:b/ancestor::p:a[p:x]) "-->
+    
+    <xsl:variable name="debug-serializer" as="element()">
+        <output:serialization-parameters
+            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
+            <output:method value="xml"/>
+            <output:version value="1.0"/>
+            <output:indent value="yes"/>
+        </output:serialization-parameters>
+    </xsl:variable>   
+   
+<!-- functions:
+    m:reduced-paths yields target+ from target path
+      where target is a string '((\i\c*)+\/)(((\i\c*)+|\*)\/)*
+      e.g.
+        a1/a2/*/a4
+        
+    -->
+    
+   
+    
+
+</xsl:stylesheet>
