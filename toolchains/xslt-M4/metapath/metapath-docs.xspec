@@ -60,145 +60,152 @@
         <x:expect label="matching" select="true()"/>
     </x:scenario>
     
-    <!--<x:scenario label="Element, implicit child">
-        <x:call function="m:reduce-path">
+    <x:scenario label="Element, implicit child">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">element</x:param>
         </x:call>
-        <!-\- expect must be written as a string *with escaping* on @select b/c the function returns a string not a text node -\->
+        <!-- expect must be written as a string *with escaping* on @select b/c the function returns a string not a text node -->
         <x:expect label="target" select="'element'"/>
     </x:scenario>
     <x:scenario label="Element, explicit child">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">child::element</x:param>
             
         </x:call>
         <x:expect label="target" select="'element'"/>
     </x:scenario>
-    <x:scenario label="Already-prefixed element, explicit axis">
-        <x:call function="m:reduce-path">
+    <x:scenario label="Already-prefixed element, descendant">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">descendant::child:element</x:param>
             
         </x:call>
-        <x:expect label="target" select="'element'"/>
+        <x:expect label="target" select="'child:element'"/>
+    </x:scenario>
+    <x:scenario label="Already-prefixed element, descendant's descendant">
+        <x:call function="m:express-targets">
+            <x:param name="expr" as="xs:string">descendant::child:element/descendant::child:element</x:param>
+            
+        </x:call>
+        <x:expect label="target" select="'child:element'"/>
     </x:scenario>
     <x:scenario label="Attribute, abbreviated axis">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">@attribute</x:param>
             
         </x:call>
         <x:expect label="target" select="'attribute'"/>
     </x:scenario>
     <x:scenario label="Attribute, explicit axis">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">attribute::attr</x:param>
             
         </x:call>
         <x:expect label="target" select="'attr'"/>
     </x:scenario>
     <x:scenario label="Two steps">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">e1/e2</x:param>
             
         </x:call>
-<!-\- we want matches from
+<!-- we want matches from
             
             ^($n/)*
             
             e2, e1/e2, f1/e1/e2
-            not f1/e2        -\->
+            not f1/e2        -->
         <x:expect label="target" select="'e1/e2'"/>
     </x:scenario>
     <x:scenario label="One false step">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">e1//e2</x:param>
             
         </x:call>
         <x:expect label="target" select="'e2'"/>
     </x:scenario>
     <x:scenario label="Three steps">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">e1/e2/e3</x:param>
             
         </x:call>
         <x:expect label="target" select="'e1/e2/e3'"/>
     </x:scenario>
     <x:scenario label="An attribute on an element">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">e/@a</x:param>
             
         </x:call>
         <x:expect label="target" select="'e/a'"/>
     </x:scenario>
     <x:scenario label="Again, but with descendance (//) operator">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">child::e//attribute::a</x:param>
-            <!-\- descendant means any ancestor, so match x/y/z/@a matches any b//@a -\->
+            <!-- descendant means any ancestor, so match x/y/z/@a matches any b//@a -->
         </x:call>
         <x:expect label="target" select="'a'"/>
     </x:scenario>
     <x:scenario label="Element with positional predicate">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">child[10]</x:param>
-            <!-\- all predicates are wiped -\->
+            <!-- all predicates are wiped -->
         </x:call>
         <x:expect label="target" select="'child'"/>
     </x:scenario>
     <x:scenario label="Element with boolean predicate">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">child[true() or false()]</x:param>
             
         </x:call>
         <x:expect label="target" select="'child'"/>
     </x:scenario>
     <x:scenario label="Predicated element with function call in filter">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">child[string-length(.) > 10]</x:param>
             
         </x:call>
         <x:expect label="target" select="'child'"/>
     </x:scenario>
     <x:scenario label="Predicated element with function call and path expression in filter">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">child[count(child) > 10]</x:param>
             
         </x:call>
         <x:expect label="target" select="'child'"/>
     </x:scenario>
     <x:scenario label="Same, a little worse">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">child[count(descendant::descendant) > 10]</x:param>
             
         </x:call>
         <x:expect label="target" select="'child'"/>
     </x:scenario>
     <x:scenario label="More than one step">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">element//child[count(descendant::descendant) > 10]</x:param>
             
         </x:call>
         <x:expect label="target" select="'child'"/>
     </x:scenario>
     <x:scenario label="More than one filtered step">
-        <x:call function="m:reduce-path">
-            <x:param name="expr" as="xs:string">parent[@class='a']//child[count(descendant::descendant) > 10]</x:param>
+        <x:call function="m:express-targets">
+            <x:param name="expr" as="xs:string">parent[@class='a']/child[count(descendant::descendant) > 10]</x:param>
             
         </x:call>
         <x:expect label="target" select="'parent/child'"/>
     </x:scenario>
-    <x:scenario label="More than one filtered step">
-        <x:call function="m:reduce-path">
+    <x:scenario label="More than one filtered step, but descendance">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">element[@class='a']//child[count(descendant::descendant) > 10]</x:param>
             
         </x:call>
         <x:expect label="target" select="'child'"/>
     </x:scenario>
     <x:scenario label="Union">
-        <x:call function="m:reduce-path">
+        <x:call function="m:express-targets">
             <x:param name="expr" as="xs:string">e1 | e2 | e3/e4</x:param>
             
         </x:call>
         <x:expect label="target" select="'e1','e2','e3/e4'"/>
-    </x:scenario>-->
+    </x:scenario>
     
     
 </x:description>
