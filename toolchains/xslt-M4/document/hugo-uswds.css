@@ -72,14 +72,13 @@ pre {
 }
 
 .description {
-    font-size: 90%;
-    margin: 0.5em 0em
+    font-size: 80%;
+    margin: 0em 0em
 }
 
 .occurrence { font-family: sans-serif; font-size: 80%; font-style: italic }
 
-.remarks-group { margin-top: 1em
-}
+.remarks-group { }
 
 .remarks { padding-left: 1em; border-left: thin solid grey 
 }
@@ -95,6 +94,8 @@ pre {
 .model .model {
     margin-top: 0.5ex
 }
+
+.model-entry { }
 
 .field {
 }
