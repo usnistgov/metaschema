@@ -31,13 +31,6 @@ pre.json {
     padding: 0.5em
 }
 
-.define-assembly *,
-.define-field *,
-.define-flag * {
-    margin: 0em
-}
-
-
 pre {
     padding: 0.5em;
     background-color: gainsboro
@@ -72,6 +65,12 @@ pre {
 }
 
 .description {
+}
+
+.definition > .description { background-color: lightsteelblue; margin: 0.5em 0em;
+  border: thin solid midnightblue; padding: 0.5em; font-size: 90% }
+
+.model-entry .description {
     font-size: 80%;
     margin: 0em 0em
 }
