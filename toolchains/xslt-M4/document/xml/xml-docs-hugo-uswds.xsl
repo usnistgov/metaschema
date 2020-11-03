@@ -128,11 +128,11 @@
    </xsl:template>
    
    <xsl:template match="*" mode="link-here">
-      <a href="#local_{string-join(ancestor-or-self::*/@name,'-')}"><xsl:value-of select="m:use-name(.)"/></a>
+      <a href="#local_{string-join(ancestor-or-self::*/@name,'-')}" class="name-link"><xsl:value-of select="m:use-name(.)"/></a>
    </xsl:template>
    
    <xsl:template match="METASCHEMA/define-assembly | METASCHEMA/define-field" mode="link-here">
-      <a href="#global_{@name}"><xsl:value-of select="m:use-name(.)"/></a>
+      <a href="#global_{@name}" class="name-link"><xsl:value-of select="m:use-name(.)"/></a>
    </xsl:template>
    
    <xsl:template name="definition-header">
@@ -166,7 +166,7 @@
       <xsl:for-each-group select="remarks[not(@class != 'xml')]" group-by="true()">
          <div>
          <details class="remarks-group">
-            <summary class="h4"><span class="usa-tag">Remarks</span></summary>
+            <summary class="h4">Remarks</summary>
             <xsl:apply-templates select="current-group()"/>
          </details>
          </div>
@@ -211,9 +211,9 @@
          
          <xsl:text disable-output-escaping="true" xml:space="preserve">
 
-.model-descr {  margin-top: 0.5em; border-left: thin solid black;
+.model-descr {  margin-top: 0.2em; border-left: thin solid black;
        border-right: thin solid black;
-       border-top: thin dotted black; padding: 0.5em }
+       border-top: medium groove black; padding: 0.5em }
        
 .model-descr:focus { background-color: gainsboro }
 
@@ -229,10 +229,14 @@
 .deflink { font-style: italic; font-size: 80%; font-family: sans-serif }
 .deflink code { font-style: normal }
 
+.name-link { font-family: monospace; font-weight: bold }
+
 .description { background-color: aliceblue;
   border: thin solid midnightblue; padding: 0.5em; font-size: 90% }
 
 div.constraints * { margin: 0em }
+div.constraints div.constraint { margin-top: 0.5em }
+div.constraint  * { margin: 0em }
 
 .model-summary .description { 80% }
          </xsl:text>
@@ -439,17 +443,17 @@ div.constraints * { margin: 0em }
       </xsl:if>
       <div class="model-descr" tabindex="0" id="#local_{string-join(ancestor-or-self::*/(@name|@ref),'-')}">
          <div class="model-summary">
-            <span class="occurrence">
-               <!-- should be 'requirement' with mode 'requirement' for flags -->
-               <xsl:apply-templates select="self::flag | self::define-flag" mode="requirement"/>
-               <xsl:apply-templates select=". except (self::flag | self::define-flag)"
-                  mode="occurrence-code"/>
-            </span>
             <span class="usename">{ m:use-name(.) }</span>
             <span class="mtyp">
                <xsl:apply-templates select="." mode="metaschema-type"/>
                <xsl:if test="empty($definition)">&#xA0;</xsl:if>
             </span>
+            <span class="occurrence">
+               <!-- should be 'requirement' with mode 'requirement' for flags -->
+               <xsl:apply-templates select="self::flag | self::define-flag" mode="requirement"/>
+               <xsl:apply-templates select=". except (self::flag | self::define-flag)"
+                  mode="occurrence-code"/>
+            </span>            
             <span class="frmname">{ $definition/formal-name }{'&#xA0;'[empty($definition/formal-name)] }</span>
          </div>
          <xsl:apply-templates select="$definition/description"/>
@@ -680,14 +684,10 @@ div.constraints * { margin: 0em }
    <xsl:template name="display-constraints">
       <xsl:variable name="context" select="."/>
       <xsl:variable name="applicable-constraints" select="key('constraints-for-target',m:use-name(.))[m:include-constraint(.,$context)]"/>
-      <xsl:for-each-group select="$applicable-constraints" group-by="true()">
+      <xsl:for-each-group select="$applicable-constraints" group-by="true()" expand-text="true">
          <div class="constraints">
          <details>
-            <summary class="subhead">
-               <xsl:text>Applicable </xsl:text>
-               <xsl:value-of select="if (count(current-group()) eq 1) then 'constraint' else 'constraints'"/>
-               <xsl:text expand-text="true"> ({ count(current-group()) })</xsl:text>
-            </summary>
+            <summary class="subhead">Applicable { if (count(current-group()) eq 1) then 'constraint' else 'constraints' } ({ count(current-group()) })</summary>
             <xsl:apply-templates select="current-group()"/>
          </details>
          </div>
@@ -820,7 +820,7 @@ div.constraints * { margin: 0em }
 
    <xsl:template match="define-field" mode="representation-in-xml">
       <xsl:variable name="unwrapped-references" select=".[@in-xml='UNWRAPPED'] | key('references',@name)[@in-xml='UNWRAPPED']"/>
-      <p>An element<xsl:apply-templates select="." mode="metaschema-type"/></p>
+      <p>An element with a value of type <xsl:apply-templates select="." mode="metaschema-type"/></p>
 
       <xsl:if test="exists($unwrapped-references)">
          <p>
@@ -845,18 +845,16 @@ div.constraints * { margin: 0em }
    <xsl:template mode="metaschema-type" match="flag | define-flag | define-field">
       <xsl:variable name="given-type" select="(@as-type, key('definitions',@ref)/@as-type,'string')[1]"/>
       <xsl:text> </xsl:text>
-      <b>
-         <xsl:text>(</xsl:text>
          <a href="{$datatype-page}/#{(lower-case($given-type))}">
             <xsl:apply-templates mode="#current" select="$given-type"/>
          </a>
-         <xsl:text>)</xsl:text>
-      </b>
       <xsl:text> </xsl:text>
    </xsl:template>
 
-   <xsl:template mode="metaschema-type" match="define-assembly">(element)</xsl:template>
-
+   <xsl:template mode="metaschema-type" match="define-assembly">element</xsl:template>
+   
+   <xsl:template mode="metaschema-type" match="METASCHEMA/define-assembly"><a href="#global_{@name}">element (globally defined)</a></xsl:template>
+   
    <xsl:template match="*" mode="metaschema-type">
       <xsl:message>Matching <xsl:value-of select="local-name()"/></xsl:message>
    </xsl:template>
