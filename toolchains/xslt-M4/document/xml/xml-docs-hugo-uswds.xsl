@@ -128,7 +128,8 @@
    </xsl:template>
    
    <xsl:template match="*" mode="link-here">
-      <a href="#local_{string-join(ancestor-or-self::*/@name,'-')}" class="name-link"><xsl:value-of select="m:use-name(.)"/></a>
+      <!-- forcing names in top-down order     -->
+      <a href="#local_{string-join( (ancestor::*|.)/@name,'-')}" class="name-link"><xsl:value-of select="m:use-name(.)"/></a>
    </xsl:template>
    
    <xsl:template match="METASCHEMA/define-assembly | METASCHEMA/define-field" mode="link-here">
@@ -208,38 +209,6 @@
    <xsl:template name="css">
       <style type="text/css" class="doe">
          <xsl:sequence select="unparsed-text('../hugo-uswds.css','utf-8') ! replace(.,'#xD;','')"/>
-         
-         <xsl:text disable-output-escaping="true" xml:space="preserve">
-
-.model-descr {  margin-top: 0.2em; border-left: thin solid black;
-       border-right: thin solid black;
-       border-top: medium groove black; padding: 0.5em }
-       
-.model-descr:focus { background-color: gainsboro }
-
-.model-descr div { margin: 0.5em 0em }
-.model-summary { display: grid;
-      grid-template-columns: 1fr 1fr 1fr 3fr;
-      grid-gap: 0.5em; margin: 0em 0em 0.5em 0em }
-
-.usename { font-family: monospace }
-.frmname { font-family: sans-serif; font-weight: bold; font-size: 80% }
-.mtyp    { font-size: 80% }
-
-.deflink { font-style: italic; font-size: 80%; font-family: sans-serif }
-.deflink code { font-style: normal }
-
-.name-link { font-family: monospace; font-weight: bold }
-
-.description { background-color: aliceblue;
-  border: thin solid midnightblue; padding: 0.5em; font-size: 90% }
-
-div.constraints * { margin: 0em }
-div.constraints div.constraint { margin-top: 0.5em }
-div.constraint  * { margin: 0em }
-
-.model-summary .description { 80% }
-         </xsl:text>
       </style>
    </xsl:template>
    
@@ -291,7 +260,6 @@ div.constraint  * { margin: 0em }
                   <xsl:apply-templates select="." mode="link-here"/>
                </xsl:for-each-group>.</p>
          </xsl:for-each-group>
-         <xsl:apply-templates select="constraint"/>
          <xsl:call-template name="remarks-group"/>
          <xsl:call-template name="report-module"/>
       </div>
@@ -305,7 +273,6 @@ div.constraint  * { margin: 0em }
          <xsl:call-template name="appears-in"/>
          <xsl:call-template name="remarks-group"/>
          <xsl:call-template name="flags-for-field"/>
-         <xsl:call-template name="display-constraints"/>
          <xsl:apply-templates select="example"/>
          <xsl:call-template name="report-module"/>
       </div>
@@ -359,7 +326,6 @@ div.constraint  * { margin: 0em }
                </div>
          </xsl:for-each-group>
          <xsl:apply-templates select="model"/>
-         <xsl:apply-templates select="constraint"/>
          <xsl:apply-templates select="example"/>
          <xsl:call-template name="report-module"/>
       </div>
@@ -441,7 +407,7 @@ div.constraint  * { margin: 0em }
       <xsl:if test="empty($definition)">
          <xsl:message expand-text="true">Warning: no definition found for '{@ref}'</xsl:message>
       </xsl:if>
-      <div class="model-descr" tabindex="0" id="#local_{string-join(ancestor-or-self::*/(@name|@ref),'-')}">
+      <div class="model-descr" tabindex="0" id="#local_{string-join( (ancestor::* | .)/(@name|@ref),'-')}">
          <div class="model-summary">
             <span class="usename">{ m:use-name(.) }</span>
             <span class="mtyp">
@@ -484,7 +450,7 @@ div.constraint  * { margin: 0em }
                </div>
          </xsl:for-each-group>
          <xsl:apply-templates mode="make-contents" select="."/>
-         <xsl:call-template name="display-constraints"/>
+         <xsl:call-template name="display-applicable-constraints"/>
       </div>
    </xsl:template>
 
@@ -527,7 +493,7 @@ div.constraint  * { margin: 0em }
    
    <xsl:template priority="20" match="has-cardinality | index-has-key | index | matches | allowed-values | is-unique" expand-text="true">
       <xsl:variable name="step-context" select="m:constraint-key(.)"/>
-      <xsl:variable name="definition-context" select="string-join(ancestor::*/m:use-name(.),'/')"/>
+      <xsl:variable name="definition-context" select="string-join( (.. | ancestor::*)/m:use-name(.),'/')"/>
       <div class="constraint" style="background-color: lavender; border: thin dotted black; padding: 0.3em; font-size: 90%">
          <p>Constraint: <b>{ local-name() }</b>. Definition context: <code>{ $definition-context }</code>.</p>
          <xsl:for-each-group select="ancestor::require" group-by="true()">
@@ -594,13 +560,27 @@ div.constraint  * { margin: 0em }
       <xsl:text>boo</xsl:text>
    </xsl:function>-->
    
+   <xsl:template name="report-context" expand-text="true">
+      <xsl:text> Within the context </xsl:text>
+      <code>{ string-join( (.. | ancestor::*)/m:use-name(.),'/') }{ ancestor::require/@when ! ('[' || . || ']') }</code>
+      <xsl:text>, </xsl:text>
+   </xsl:template>
+   
    <xsl:template priority="2" match="allowed-values[empty(@target) or @target=('.','value()')]">
       <xsl:choose expand-text="true">
          <xsl:when test="@allow-other and @allow-other='yes'">
-            <p><span class="usa-tag">allowed value</span> The value may be locally defined, or one of the following:</p>
+            <p>
+               <span class="usa-tag">allowed value</span>
+               <xsl:call-template name="report-context"/>
+               <xsl:text> the value may be locally defined, or one of the following:</xsl:text>
+            </p>
          </xsl:when>
          <xsl:otherwise>
-            <p><span class="usa-tag">allowed value</span> The value must be one of the following:</p>
+            <p>
+               <span class="usa-tag">allowed value</span>
+               <xsl:call-template name="report-context"/>
+               <xsl:text> the value must be one of the following:</xsl:text>
+            </p>
          </xsl:otherwise>
       </xsl:choose>
       <ul>
@@ -612,10 +592,22 @@ div.constraint  * { margin: 0em }
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
       <xsl:choose expand-text="true">
          <xsl:when test="@allow-other and @allow-other='yes'">
-            <p><span class="usa-tag">allowed value</span> On target <code>{ @target }</code>, the value may be locally defined, or one of the following:</p>
+            <p>
+               <span class="usa-tag">allowed value</span>
+               <xsl:call-template name="report-context"/>
+               <xsl:text> on target </xsl:text>
+               <code>{ @target }</code>
+               <xsl:text>, the value may be locally defined, or one of the following:</xsl:text>
+            </p>
          </xsl:when>
          <xsl:otherwise>
-            <p><span class="usa-tag">allowed value</span> On target <code>{ @target }</code>, the value must be one of the following:</p>
+            <p>
+               <span class="usa-tag">allowed value</span>
+               <xsl:call-template name="report-context"/>
+               <xsl:text> on target </xsl:text>
+               <code>{ @target }</code>
+               <xsl:text>, the value must be one of the following:</xsl:text>
+            </p>
          </xsl:otherwise>
       </xsl:choose>
       <ul>
@@ -625,55 +617,55 @@ div.constraint  * { margin: 0em }
    
    <xsl:template priority="2" match="matches[@regex][empty(@target) or @target=('.','value()')]" expand-text="true">
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
-      <p><span class="usa-tag">match constraint</span> In this scope, the values must match the regular expression '{ @regex }'.</p>
+      <p><span class="usa-tag">match constraint</span><xsl:call-template name="report-context"/> the values must match the regular expression '{ @regex }'.</p>
    </xsl:template>
    
    <xsl:template priority="2" match="matches[@regex][exists(@target) and not(@target=('.','value()'))]" expand-text="true">
-      <p><span class="usa-tag">match constraint</span> In this scope, the value(s) of target(s) <code>{ @target }</code> must match the regular expression '{ @regex }'.</p>
+      <p><span class="usa-tag">match constraint</span><xsl:call-template name="report-context"/> the value(s) of target(s) <code>{ @target }</code> must match the regular expression '{ @regex }'.</p>
    </xsl:template>
    
    <xsl:template priority="2" match="matches[@datatype][empty(@target) or @target=('.','value()')]" expand-text="true">
-      <p><span class="usa-tag">match constraint</span> In this scope, the value must match the lexical form of the '{ @datatype }' data type.</p>
+      <p><span class="usa-tag">match constraint</span><xsl:call-template name="report-context"/> the value must match the lexical form of the '{ @datatype }' data type.</p>
    </xsl:template>
    
    <xsl:template priority="2" match="matches[@datatype][exists(@target) and not(@target=('.','value()'))]" expand-text="true">
-      <p><span class="usa-tag">match constraint</span> In this scope, the value(s) of target(s) <code>{ @target }</code> must match the lexical form of the '{ @datatype }' data type.</p>
+      <p><span class="usa-tag">match constraint</span><xsl:call-template name="report-context"/> the value(s) of target(s) <code>{ @target }</code> must match the lexical form of the '{ @datatype }' data type.</p>
    </xsl:template>
    
    <xsl:template priority="2" match="is-unique[empty(@target) or @target=('.','value()')]" expand-text="true">
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
-      <p><span class="usa-tag">uniqueness constraint</span> In this scope, the value must be unique (i.e., occur only once)</p>
+      <p><span class="usa-tag">uniqueness constraint</span><xsl:call-template name="report-context"/> the value must be unique (i.e., occur only once)</p>
    </xsl:template>
    
    <xsl:template priority="2" match="has-cardinality" expand-text="true">
-      <p><span class="usa-tag">cardinality constraint</span> Within this scope, the cardinality of <code>{ @target }</code> is constrained:
+      <p><span class="usa-tag">cardinality constraint</span><xsl:call-template name="report-context"/> the cardinality of <code>{ @target }</code> is constrained:
          minimum <b>{ (@min-occurs,0)[1] }</b>; maximum <b>{ (@max-occurs,'unbounded')[1]}</b>.</p>
    </xsl:template>
    
    <xsl:template priority="2" match="is-unique[exists(@target) or not(@target=('.','value()'))]" expand-text="true">
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
-      <p><span class="usa-tag">uniqueness constraint</span> In this scope, the key (index) value assigned to each target(s) <code>{ @target }</code>
+      <p><span class="usa-tag">uniqueness constraint</span><xsl:call-template name="report-context"/> the key (index) value assigned to each target(s) <code>{ @target }</code>
          <xsl:text> must be unique, as constructed from key field(s) </xsl:text>
          <xsl:for-each select="key-field"><xsl:if test="position() gt 1">; </xsl:if><code><xsl:value-of select="@target"/></code></xsl:for-each></p>
    </xsl:template>
    
    <xsl:template priority="2" match="index-has-key[empty(@target) or @target=('.','value()')]" expand-text="true">
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
-      <p><span class="usa-tag">indexing constraint</span> This value must correspond to a listing in the index <code>{ @name }</code>
+      <p><span class="usa-tag">indexing constraint</span><xsl:call-template name="report-context"/> this value must correspond to a listing in the index <code>{ @name }</code>
          <xsl:text> using a key constructed of key field(s) </xsl:text>
          <xsl:for-each select="key-field"><xsl:if test="position() gt 1">; </xsl:if><code><xsl:value-of select="@target"/></code></xsl:for-each>.</p>
       <xsl:apply-templates/>
    </xsl:template>
    
    <xsl:template priority="2" match="index-has-key[exists(@target) and not(@target=('.','value()'))]" expand-text="true">
-      <p><span class="usa-tag">indexing constraint</span> In this scope, any <code>{ @target }</code> must appear in the index <code>{ @name }</code>
+      <p><span class="usa-tag">indexing constraint</span><xsl:call-template name="report-context"/> any <code>{ @target }</code> must appear in the index <code>{ @name }</code>
          <xsl:text> using a key constructed of key field(s) </xsl:text>
          <xsl:for-each select="key-field"><xsl:if test="position() gt 1">; </xsl:if><code><xsl:value-of select="@target"/></code></xsl:for-each>.</p>
       <xsl:apply-templates/>
    </xsl:template>
    
    <xsl:template priority="2" match="index" expand-text="true">
-      <p><span class="usa-tag">index definition</span> For this scope, an index <code>{ @name }</code> shall list values returned by <code>{ @target}</code>
+      <p><span class="usa-tag">index definition</span><xsl:call-template name="report-context"/> an index <code>{ @name }</code> shall list values returned by <code>{ @target}</code>
          <xsl:text> using keys constructed of key field(s) </xsl:text>
          <xsl:for-each select="key-field"><xsl:if test="position() gt 1">; </xsl:if><code><xsl:value-of select="@target"/></code></xsl:for-each>.</p>
       <xsl:apply-templates/>
@@ -681,7 +673,7 @@ div.constraint  * { margin: 0em }
    
    
    
-   <xsl:template name="display-constraints">
+   <xsl:template name="display-applicable-constraints">
       <xsl:variable name="context" select="."/>
       <xsl:variable name="applicable-constraints" select="key('constraints-for-target',m:use-name(.))[m:include-constraint(.,$context)]"/>
       <xsl:for-each-group select="$applicable-constraints" group-by="true()" expand-text="true">
@@ -701,7 +693,7 @@ div.constraint  * { margin: 0em }
    <xsl:function name="m:include-constraint" as="xs:boolean">
       <xsl:param name="constraint" as="element()"/><!-- has-cardinality, matches, allowed-values etc -->
       <xsl:param name="context"    as="element()"/><!-- assembly, field, flag, define-assembly, define-field, define-flag -->
-      <xsl:variable name="context-path" select="string-join($context/ancestor-or-self::*/m:use-name(.),'/')"/>
+      <xsl:variable name="context-path" select="string-join($context/(ancestor::* | .) ! m:use-name(.),'/')"/>
       <xsl:variable name="constraint-context-path" select="string-join($constraint/ancestor-or-self::*/m:use-name(.),'/')"/>
       <xsl:variable name="constraint-targets" as="xs:string*">
          <xsl:choose>
@@ -713,9 +705,9 @@ div.constraint  * { margin: 0em }
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
-      <xsl:if test="contains($context-path,'responsible-party')">
-      <!--<xsl:message expand-text="true">on { name($constraint)}, testing { $context-path } against { string-join($constraint-targets,', ')}</xsl:message>-->
-      </xsl:if>
+      <!-- debugging <xsl:if test="contains($context-path,'control')">
+         <xsl:message expand-text="true">on { name($constraint)}, testing { $context-path } against { string-join($constraint-targets,', ')} getting { m:match-paths($constraint-targets[1],$context-path)}</xsl:message>
+      </xsl:if>-->
       <xsl:sequence select="some $t in $constraint-targets satisfies
          m:match-paths($t,$context-path)"/>
    </xsl:function>
