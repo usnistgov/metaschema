@@ -171,3 +171,35 @@ li.e_map {
     margin-right: .25rem;
     padding: 1px .5rem}
 
+
+/* following is all fairly improvised */
+
+.model-descr {  margin-top: 0.2em; border-left: thin solid black;
+       border-right: thin solid black;
+       border-top: medium groove black; padding: 0.5em }
+       
+.model-descr:focus { background-color: gainsboro }
+
+.model-descr div { margin: 0.5em 0em }
+.model-summary { display: grid;
+      grid-template-columns: 1fr 1fr 1fr 3fr;
+      grid-gap: 0.5em; margin: 0em 0em 0.5em 0em }
+
+.usename { font-family: monospace }
+.frmname { font-family: sans-serif; font-weight: bold; font-size: 80% }
+.mtyp    { font-size: 80% }
+
+.deflink { font-style: italic; font-size: 80%; font-family: sans-serif }
+.deflink code { font-style: normal }
+
+.name-link { font-family: monospace; font-weight: bold }
+
+.description { background-color: aliceblue;
+  border: thin solid midnightblue; padding: 0.5em; font-size: 90% }
+
+div.constraints * { margin: 0em }
+div.constraints div.constraint { margin-top: 0.5em }
+div.constraint  * { margin: 0em }
+
+.model-summary .description { 80% }
+
