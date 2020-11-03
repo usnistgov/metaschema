@@ -654,7 +654,6 @@
         <xs:annotation>
           <xs:documentation>Checks that the specified <code>key-field</code> values match a key in the index with the specified <code>name</code>.</xs:documentation>
         </xs:annotation>
-        
       </xs:element>
       <xs:element name="is-unique" type="m:index-constraint-type" minOccurs="0" maxOccurs="unbounded">
         <xs:annotation>
