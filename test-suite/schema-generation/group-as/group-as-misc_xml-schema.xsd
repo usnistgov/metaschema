@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:metaschema-group-as="http://csrc.nist.gov/ns/metaschema/unit-test/group-as-by-key"
+           xmlns:oscal-prose="http://csrc.nist.gov/ns/metaschema/unit-test/group-as-by-key"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/ns/metaschema/unit-test/group-as-by-key"
+           version="1.0-milestone1">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Metaschema Unit Test: group-as</m:schema-name>
+         <m:schema-version>1.0-milestone1</m:schema-version>
+         <m:short-name>metaschema-group-as</m:short-name>
+         <m:root>root</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="root" type="metaschema-group-as:root-ASSEMBLY"/>
+   <xs:complexType name="root-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Root</m:formal-name>
+            <m:description>...</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Root</b>: ...</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="information-type" minOccurs="1" maxOccurs="unbounded">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Information Type</m:formal-name>
+                     <m:description>Contains details about one information type that is stored, processed, or transmitted by the system, such as privacy information, and those defined in <m:a>NIST SP 800-60</m:a>.</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Information Type</b>: Contains details about one information type that is stored, processed, or transmitted by the system, such as privacy information, and those defined in NIST SP 800-60.</xs:documentation>
+               </xs:annotation>
+               <xs:sequence>
+                  <xs:element name="title" minOccurs="1" maxOccurs="1">
+                     <xs:complexType mixed="true">
+                        <xs:group ref="metaschema-group-as:everything-inline"/>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="description" minOccurs="1" maxOccurs="1">
+                     <xs:complexType mixed="true">
+                        <xs:group ref="metaschema-group-as:PROSE"/>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="information-type-id" minOccurs="0" maxOccurs="unbounded">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Information Type Identifier</m:formal-name>
+                              <m:description>An identifier qualified by the given identification <m:code>system</m:code> used, such as NIST SP 800-60.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Information Type Identifier</b>: An identifier qualified by the given identification system used, such as NIST SP 800-60.</xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleContent>
+                           <xs:extension base="xs:string">
+                              <xs:attribute name="system" use="required">
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Information Type Identification System</m:formal-name>
+                                       <m:description>Specifies the information type identification system used.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Information Type Identification System</b>: Specifies the information type identification system used.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:simpleType>
+                                    <xs:union memberTypes="xs:string">
+                                       <xs:simpleType>
+                                          <xs:restriction base="xs:string">
+                                             <xs:enumeration value="https://doi.org/10.6028/NIST.SP.800-60v2r1">
+                                                <xs:annotation>
+                                                   <xs:documentation>
+                                                      <p>Based on the
+                              section identifiers in NIST Special Publication 800-60 Volume II
+                              Revision 1</p>
+                                                   </xs:documentation>
+                                                </xs:annotation>
+                                             </xs:enumeration>
+                                          </xs:restriction>
+                                       </xs:simpleType>
+                                    </xs:union>
+                                 </xs:simpleType>
+                              </xs:attribute>
+                           </xs:extension>
+                        </xs:simpleContent>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="confidentiality-impact" minOccurs="1" maxOccurs="1">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Confidentiality Impact Level</m:formal-name>
+                              <m:description>The expected level of impact resulting from the unauthorized disclosure of information.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Confidentiality Impact Level</b>: The expected level of impact resulting from the unauthorized disclosure of information.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="base" minOccurs="0" maxOccurs="1">
+                              <xs:complexType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Base Level (Confidentiality, Integrity, or Availability)</m:formal-name>
+                                       <m:description>The prescribed base (Confidentiality, Integrity, or Availability) security impact level.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Base Level (Confidentiality, Integrity, or Availability)</b>: The prescribed base (Confidentiality, Integrity, or Availability) security impact level.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:simpleContent>
+                                    <xs:extension base="xs:string"/>
+                                 </xs:simpleContent>
+                              </xs:complexType>
+                           </xs:element>
+                           <xs:element name="selected" minOccurs="0" maxOccurs="1">
+                              <xs:complexType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Selected Level (Confidentiality, Integrity, or Availability)</m:formal-name>
+                                       <m:description>The selected (Confidentiality, Integrity, or Availability) security impact level.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Selected Level (Confidentiality, Integrity, or Availability)</b>: The selected (Confidentiality, Integrity, or Availability) security impact level.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:simpleContent>
+                                    <xs:extension base="xs:string"/>
+                                 </xs:simpleContent>
+                              </xs:complexType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="integrity-impact" minOccurs="1" maxOccurs="1">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Integrity Impact Level</m:formal-name>
+                              <m:description>The expected level of impact resulting from the unauthorized modification of information.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Integrity Impact Level</b>: The expected level of impact resulting from the unauthorized modification of information.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="base" minOccurs="0" maxOccurs="1">
+                              <xs:complexType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Base Level (Confidentiality, Integrity, or Availability)</m:formal-name>
+                                       <m:description>The prescribed base (Confidentiality, Integrity, or Availability) security impact level.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Base Level (Confidentiality, Integrity, or Availability)</b>: The prescribed base (Confidentiality, Integrity, or Availability) security impact level.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:simpleContent>
+                                    <xs:extension base="xs:string"/>
+                                 </xs:simpleContent>
+                              </xs:complexType>
+                           </xs:element>
+                           <xs:element name="selected" minOccurs="0" maxOccurs="1">
+                              <xs:complexType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Selected Level (Confidentiality, Integrity, or Availability)</m:formal-name>
+                                       <m:description>The selected (Confidentiality, Integrity, or Availability) security impact level.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Selected Level (Confidentiality, Integrity, or Availability)</b>: The selected (Confidentiality, Integrity, or Availability) security impact level.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:simpleContent>
+                                    <xs:extension base="xs:string"/>
+                                 </xs:simpleContent>
+                              </xs:complexType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+                  <xs:element name="availability-impact" minOccurs="1" maxOccurs="1">
+                     <xs:complexType>
+                        <xs:annotation>
+                           <xs:appinfo>
+                              <m:formal-name>Availability Impact Level</m:formal-name>
+                              <m:description>The expected level of impact resulting from the disruption of access to or use of information or the information system.</m:description>
+                           </xs:appinfo>
+                           <xs:documentation>
+                              <b>Availability Impact Level</b>: The expected level of impact resulting from the disruption of access to or use of information or the information system.</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                           <xs:element name="base" minOccurs="0" maxOccurs="1">
+                              <xs:complexType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Base Level (Confidentiality, Integrity, or Availability)</m:formal-name>
+                                       <m:description>The prescribed base (Confidentiality, Integrity, or Availability) security impact level.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Base Level (Confidentiality, Integrity, or Availability)</b>: The prescribed base (Confidentiality, Integrity, or Availability) security impact level.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:simpleContent>
+                                    <xs:extension base="xs:string"/>
+                                 </xs:simpleContent>
+                              </xs:complexType>
+                           </xs:element>
+                           <xs:element name="selected" minOccurs="0" maxOccurs="1">
+                              <xs:complexType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Selected Level (Confidentiality, Integrity, or Availability)</m:formal-name>
+                                       <m:description>The selected (Confidentiality, Integrity, or Availability) security impact level.</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Selected Level (Confidentiality, Integrity, or Availability)</b>: The selected (Confidentiality, Integrity, or Availability) security impact level.</xs:documentation>
+                                 </xs:annotation>
+                                 <xs:simpleContent>
+                                    <xs:extension base="xs:string"/>
+                                 </xs:simpleContent>
+                              </xs:complexType>
+                           </xs:element>
+                        </xs:sequence>
+                     </xs:complexType>
+                  </xs:element>
+               </xs:sequence>
+               <xs:attribute name="uuid" type="metaschema-group-as:uuid">
+                  <xs:annotation>
+                     <xs:appinfo>
+                        <m:formal-name>Information Type Universally Unique Identifier</m:formal-name>
+                        <m:description>A globally unique identifier that can be used to reference this information type entry elsewhere in an OSCAL document. A UUID should be consistantly used for a given resource across revisions of the document.</m:description>
+                     </xs:appinfo>
+                     <xs:documentation>
+                        <b>Information Type Universally Unique Identifier</b>: A globally unique identifier that can be used to reference this information type entry elsewhere in an OSCAL document. A UUID should be consistantly used for a given resource across revisions of the document.</xs:documentation>
+                  </xs:annotation>
+               </xs:attribute>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:group name="PROSE">
+      <xs:choice>
+         <xs:element ref="oscal-prose:h1"/>
+         <xs:element ref="oscal-prose:h2"/>
+         <xs:element ref="oscal-prose:h3"/>
+         <xs:element ref="oscal-prose:h4"/>
+         <xs:element ref="oscal-prose:h5"/>
+         <xs:element ref="oscal-prose:h6"/>
+         <xs:element ref="oscal-prose:p"/>
+         <xs:element ref="oscal-prose:ul"/>
+         <xs:element ref="oscal-prose:ol"/>
+         <xs:element ref="oscal-prose:pre"/>
+         <xs:element ref="oscal-prose:table"/>
+      </xs:choice>
+   </xs:group>
+   <xs:element name="h1">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h2">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h3">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h4">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h5">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="h6">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:inlines"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="p">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:everything-inline"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="pre">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ol">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:li"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="li">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:everything-inline"/>
+            <xs:element ref="oscal-prose:ol"/>
+            <xs:element ref="oscal-prose:ul"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ul">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:li"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="table">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:tr"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="tr">
+      <xs:complexType>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:td"/>
+            <xs:element maxOccurs="unbounded" ref="oscal-prose:th"/>
+         </xs:choice>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="th">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:everything-inline"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="td">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:everything-inline"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:group name="everything-inline">
+      <xs:sequence>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:group ref="oscal-prose:special"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:group>
+   <xs:group name="mix">
+      <xs:sequence>
+         <xs:group minOccurs="0" maxOccurs="unbounded" ref="oscal-prose:inlines"/>
+      </xs:sequence>
+   </xs:group>
+   <xs:group name="inlines">
+      <xs:sequence>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:q"/>
+            <xs:element ref="oscal-prose:code"/>
+            <xs:element ref="oscal-prose:em"/>
+            <xs:element ref="oscal-prose:i"/>
+            <xs:element ref="oscal-prose:strong"/>
+            <xs:element ref="oscal-prose:b"/>
+            <xs:element ref="oscal-prose:sub"/>
+            <xs:element ref="oscal-prose:sup"/>
+            <xs:element ref="oscal-prose:img"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:group>
+   <xs:element name="q">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:code"/>
+            <xs:element ref="oscal-prose:em"/>
+            <xs:element ref="oscal-prose:i"/>
+            <xs:element ref="oscal-prose:b"/>
+            <xs:element ref="oscal-prose:strong"/>
+            <xs:element ref="oscal-prose:sub"/>
+            <xs:element ref="oscal-prose:sup"/>
+         </xs:choice>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="code">
+      <xs:complexType mixed="true">
+         <xs:group ref="oscal-prose:mix"/>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="strong">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="em">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="i">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="b">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:group ref="oscal-prose:mix"/>
+            <xs:element ref="oscal-prose:a"/>
+         </xs:choice>
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="sub">
+      <xs:complexType mixed="true">
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="sup">
+      <xs:complexType mixed="true">
+         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="img">
+      <xs:complexType>
+         <xs:attribute name="alt"/>
+         <xs:attribute name="src" use="required" type="xs:anyURI"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="a">
+      <xs:complexType mixed="true">
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:q"/>
+            <xs:element ref="oscal-prose:code"/>
+            <xs:element name="em">
+               <xs:complexType mixed="true">
+                  <xs:attributeGroup ref="oscal-prose:optionalClass"/>
+               </xs:complexType>
+            </xs:element>
+         </xs:choice>
+         <xs:attribute name="href"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:group name="special">
+      <xs:sequence>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element ref="oscal-prose:insert"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:group>
+   <xs:element name="insert">
+      <xs:complexType>
+         <xs:attribute name="param-id" use="required" type="xs:NCName"/>
+      </xs:complexType>
+   </xs:element>
+   <xs:attributeGroup name="requiredClass"/>
+   <xs:attributeGroup name="optionalClass"/>
+   <xs:attributeGroup name="hrefAttr">
+      <xs:attribute name="href"/>
+   </xs:attributeGroup>
+   <xs:simpleType name="uuid">
+      <xs:annotation>
+         <xs:documentation>A Type 4 ('random' or 'pseudorandom' UUID per RFC 4122</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:whiteSpace value="collapse"/>
+         <xs:pattern value="[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}">
+            <xs:annotation>
+               <xs:documentation>A sequence of 8-4-4-4-12 hex digits, with extra constraints in the 13th and 17-18th places for version 4</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>
