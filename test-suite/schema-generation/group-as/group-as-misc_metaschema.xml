@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<!-- OSCAL CATALOG METASCHEMA -->
+<!-- validate with XSD and Schematron (linked) -->
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+   xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../toolchains/xslt-M4/validate/metaschema.xsd">
+   <schema-name>Metaschema Unit Test: group-as</schema-name>
+   <schema-version>1.0-milestone1</schema-version>
+   <short-name>metaschema-group-as</short-name>
+   <namespace>http://csrc.nist.gov/ns/metaschema/unit-test/group-as-by-key</namespace>
+   
+   <!-- Metaschema exposes a bug repaired Nov 4 2020 produced by group-as[@in-json='BY_KEY']  -->
+   
+   <define-assembly name="root">
+      <formal-name>Root</formal-name>
+      <description>...</description>
+      <root-name>root</root-name>
+      <model>
+         <define-assembly name="information-type" min-occurs="1" max-occurs="unbounded">
+            <formal-name>Information Type</formal-name>
+            <description>Contains details about one information type that is stored, processed, or
+               transmitted by the system, such as privacy information, and those defined in <a
+                  href="https://doi.org/10.6028/NIST.SP.800-60v2r1">NIST SP
+               800-60</a>.</description>
+            <group-as name="information-types" in-json="ARRAY"/>
+
+            <define-flag name="uuid" as-type="uuid">
+               <formal-name>Information Type Universally Unique Identifier</formal-name>
+               <description>A globally unique identifier that can be used to reference this
+                  information type entry elsewhere in an OSCAL document. A UUID should be
+                  consistantly used for a given resource across revisions of the
+                  document.</description>
+            </define-flag>
+            <model>
+               <define-field name="title" as-type="markup-line" min-occurs="1">
+                  <formal-name>title field</formal-name>
+                  <description>A human readable name for the information type. This title should be
+                     meaningful within the context of the system.</description>
+               </define-field>
+               <define-field name="description" as-type="markup-multiline" min-occurs="1"
+                  in-xml="WITH_WRAPPER">
+                  <formal-name>Information Type Description</formal-name>
+                  <description>A summary of how this information type is used within the
+                     system.</description>
+               </define-field>
+               <define-field name="information-type-id" as-type="string" max-occurs="unbounded">
+                  <formal-name>Information Type Identifier</formal-name>
+                  <description>An identifier qualified by the given identification
+                     <code>system</code> used, such as NIST SP 800-60.</description>
+                  <json-key flag-name="system"/>
+                  <json-value-key>id</json-value-key>
+                  <group-as name="information-type-ids" in-json="BY_KEY"/>
+                  <define-flag required="yes" name="system">
+                     <formal-name>Information Type Identification System</formal-name>
+                     <description>Specifies the information type identification system
+                        used.</description>
+                     <constraint>
+                        <allowed-values allow-other="yes">
+                           <enum value="https://doi.org/10.6028/NIST.SP.800-60v2r1">Based on the
+                              section identifiers in NIST Special Publication 800-60 Volume II
+                              Revision 1</enum>
+                        </allowed-values>
+                     </constraint>
+                  </define-flag>
+                  <remarks>
+                     <p>The current allowed values are based on those identified in <a
+                           href="https://doi.org/10.6028/NIST.SP.800-60v2r1">NIST SP 800-60 Volume
+                           2</a>
+                     </p>
+                  </remarks>
+               </define-field>
+               <!--<field ref="property" max-occurs="unbounded">
+            <use-name>prop</use-name>
+            <group-as name="properties" in-json="ARRAY"/>
+         </field>-->
+               <!-- <assembly ref="annotation" max-occurs="unbounded">
+            <group-as name="annotations" in-json="ARRAY"/>
+         </assembly>-->
+               <!--<assembly ref="link" max-occurs="unbounded">
+            <group-as name="links" in-json="ARRAY"/>
+         </assembly>-->
+               <define-assembly name="confidentiality-impact" min-occurs="1">
+                  <formal-name>Confidentiality Impact Level</formal-name>
+                  <description>The expected level of impact resulting from the unauthorized
+                     disclosure of information.</description>
+                  <model>
+                     <!--<field ref="property" max-occurs="unbounded">
+                  <use-name>prop</use-name>
+                  <group-as name="properties" in-json="ARRAY"/>
+               </field>
+               <assembly ref="annotation" max-occurs="unbounded">
+                  <group-as name="annotations" in-json="ARRAY"/>
+               </assembly>
+               <assembly ref="link" max-occurs="unbounded">
+                  <group-as name="links" in-json="ARRAY"/>
+               </assembly>-->
+                     <field ref="base"/>
+                     <field ref="selected"/>
+
+                  </model>
+               </define-assembly>
+               <define-assembly name="integrity-impact" min-occurs="1">
+                  <formal-name>Integrity Impact Level</formal-name>
+                  <description>The expected level of impact resulting from the unauthorized
+                     modification of information.</description>
+                  <model>
+                     <!--<field ref="property" max-occurs="unbounded">
+                  <use-name>prop</use-name>
+                  <group-as name="properties" in-json="ARRAY"/>
+               </field>
+               <assembly ref="annotation" max-occurs="unbounded">
+                  <group-as name="annotations" in-json="ARRAY"/>
+               </assembly>
+               <assembly ref="link" max-occurs="unbounded">
+                  <group-as name="links" in-json="ARRAY"/>
+               </assembly>-->
+                     <field ref="base"/>
+                     <field ref="selected"/>
+
+                  </model>
+               </define-assembly>
+               <define-assembly name="availability-impact" min-occurs="1">
+                  <formal-name>Availability Impact Level</formal-name>
+                  <description>The expected level of impact resulting from the disruption of access
+                     to or use of information or the information system.</description>
+                  <model>
+                     <!--<field ref="property" max-occurs="unbounded">
+                  <use-name>prop</use-name>
+                  <group-as name="properties" in-json="ARRAY"/>
+               </field>
+               <assembly ref="annotation" max-occurs="unbounded">
+                  <group-as name="annotations" in-json="ARRAY"/>
+               </assembly>
+               <assembly ref="link" max-occurs="unbounded">
+                  <group-as name="links" in-json="ARRAY"/>
+               </assembly>-->
+                     <field ref="base"/>
+                     <field ref="selected"/>
+
+                  </model>
+               </define-assembly>
+            </model>
+         </define-assembly>
+      </model>
+   </define-assembly>
+   <define-field name="base" as-type="string" scope="local">
+      <formal-name>Base Level (Confidentiality, Integrity, or Availability)</formal-name>
+      <description>The prescribed base (Confidentiality, Integrity, or Availability) security impact
+         level.</description>
+   </define-field>
+   <define-field name="selected" as-type="string" scope="local">
+      <formal-name>Selected Level (Confidentiality, Integrity, or Availability)</formal-name>
+      <description>The selected (Confidentiality, Integrity, or Availability) security impact
+         level.</description>
+   </define-field>
+</METASCHEMA>
