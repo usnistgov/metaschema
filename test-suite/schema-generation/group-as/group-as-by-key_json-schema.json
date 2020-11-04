@@ -16,8 +16,7 @@
             "additionalProperties" : 
             { "allOf" : 
               [ 
-                { "type" : "object",
-                  "$ref" : "#/definitions/prop" },
+                { "$ref" : "#/definitions/prop" },
                 
                 { "not" : 
                   { "type" : "string" } } ] } } },

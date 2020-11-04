@@ -31,10 +31,21 @@
                      type="oscal-catalog:module-global-field-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
-         <xs:element name="module-top-level-local-field"
-                     type="oscal-catalog:module-top-level-local-field-FIELD"
-                     minOccurs="0"
-                     maxOccurs="1"/>
+         <xs:element name="module-top-level-local-field" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Field, defined in a module as 'local'</m:formal-name>
+                     <m:description>XXX</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Field, defined in a module as 'local'</b>: XXX</xs:documentation>
+               </xs:annotation>
+               <xs:simpleContent>
+                  <xs:extension base="xs:string"/>
+               </xs:simpleContent>
+            </xs:complexType>
+         </xs:element>
          <xs:element name="module-local-field" minOccurs="0" maxOccurs="1">
             <xs:complexType>
                <xs:annotation>
@@ -75,19 +86,6 @@
          <xs:extension base="xs:string"/>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:complexType name="module-top-level-local-field-FIELD">
-      <xs:annotation>
-         <xs:appinfo>
-            <m:formal-name>Field, defined in a module as 'local'</m:formal-name>
-            <m:description>XXX</m:description>
-         </xs:appinfo>
-         <xs:documentation>
-            <b>Field, defined in a module as 'local'</b>: XXX</xs:documentation>
-      </xs:annotation>
-      <xs:simpleContent>
-         <xs:extension base="xs:string"/>
-      </xs:simpleContent>
-   </xs:complexType>
    <xs:element name="root-assembly" type="oscal-catalog:root-ASSEMBLY"/>
    <xs:complexType name="root-ASSEMBLY">
       <xs:annotation>
@@ -103,10 +101,21 @@
                      type="oscal-catalog:top-level-global-field-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
-         <xs:element name="top-level-local-field"
-                     type="oscal-catalog:top-level-local-field-FIELD"
-                     minOccurs="0"
-                     maxOccurs="1"/>
+         <xs:element name="top-level-local-field" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Field, defined at top level as 'local'</m:formal-name>
+                     <m:description>XXX</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Field, defined at top level as 'local'</b>: XXX</xs:documentation>
+               </xs:annotation>
+               <xs:simpleContent>
+                  <xs:extension base="xs:string"/>
+               </xs:simpleContent>
+            </xs:complexType>
+         </xs:element>
          <xs:element name="local-field" minOccurs="0" maxOccurs="1">
             <xs:complexType>
                <xs:annotation>
@@ -152,19 +161,6 @@
          </xs:appinfo>
          <xs:documentation>
             <b>Field, defined at top level (global by default)</b>: XXX</xs:documentation>
-      </xs:annotation>
-      <xs:simpleContent>
-         <xs:extension base="xs:string"/>
-      </xs:simpleContent>
-   </xs:complexType>
-   <xs:complexType name="top-level-local-field-FIELD">
-      <xs:annotation>
-         <xs:appinfo>
-            <m:formal-name>Field, defined at top level as 'local'</m:formal-name>
-            <m:description>XXX</m:description>
-         </xs:appinfo>
-         <xs:documentation>
-            <b>Field, defined at top level as 'local'</b>: XXX</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
          <xs:extension base="xs:string"/>
