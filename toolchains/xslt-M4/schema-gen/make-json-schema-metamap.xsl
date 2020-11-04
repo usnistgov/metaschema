@@ -453,7 +453,6 @@
             <map key="additionalProperties">
                 <array key="allOf">
                     <map>
-                        <string key="type">object</string>
                         <xsl:apply-templates select="." mode="definition-or-reference"/>
                     </map>
                     <map>
@@ -640,77 +639,77 @@
     <xsl:key name="datatypes-by-name" xpath-default-namespace="http://www.w3.org/2005/xpath-functions"
         match="map" use="@key"/>
     
-    <xsl:variable name="datatypes" expand-text="false">
+    <!--<xsl:variable name="datatypes" expand-text="false">
         <dummy/>
-    </xsl:variable>
+    </xsl:variable>-->
         
-    <!--<xsl:variable name="datatypesX" expand-text="false">
+    <xsl:variable name="datatypes" expand-text="false">
         <map key="decimal">
             <string key="type">number</string>
             <string key="pattern">^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$</string>
         </map>
         <map key="date">
             <string key="type">string</string>
-            <!-\-<string key="format">date</string> JQ 'date' implementation does not permit time zone -\->
+            <!--<string key="format">date</string> JQ 'date' implementation does not permit time zone -->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
         <map key="dateTime">
             <string key="type">string</string>
-            <!-\-<string key="format">date-time</string> JQ 'date-time' implementation requires time zone -\->
+            <!--<string key="format">date-time</string> JQ 'date-time' implementation requires time zone -->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
         <map key="date-with-timezone">
             <string key="type">string</string>
-            <!-\-The xs:date with a required timezone.-\->
+            <!--The xs:date with a required timezone.-->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})$</string>
         </map>
         <map key="dateTime-with-timezone">
             <string key="type">string</string>
             <string key="format">date-time</string>
-            <!-\-The xs:dateTime with a required timezone.-\->
+            <!--The xs:dateTime with a required timezone.-->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$</string>
         </map>
         <map key="email">
             <string key="type">string</string>
             <string key="format">email</string>
-            <!-\-\-\->
+            <!---->
             <string key="pattern">^.+@.+</string>
         </map>
         <map key="ip-v4-address">
             <string key="type">string</string>
             <string key="format">ipv4</string>
-            <!-\-The ip-v4-address type specifies an IPv4 address in dot decimal notation.-\->
+            <!--The ip-v4-address type specifies an IPv4 address in dot decimal notation.-->
             <string key="pattern">^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$</string>
         </map>
         <map key="ip-v6-address">
             <string key="type">string</string>
             <string key="format">ipv6</string>
-            <!-\-The ip-v6-address type specifies an IPv6 address represented in 8 hextets separated by colons.This is based on the pattern provided here: https://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses with some customizations.-\->
+            <!--The ip-v6-address type specifies an IPv6 address represented in 8 hextets separated by colons.This is based on the pattern provided here: https://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses with some customizations.-->
             <string key="pattern">^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|[fF][eE]80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::([fF]{4}(:0{1,4}){0,1}:){0,1}((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]))$</string>
         </map>
         <map key="hostname">
             <string key="type">string</string>
             <string key="format">idn-hostname</string>
-            <!-\-\-\->
+            <!---->
             <string key="pattern">^.+$</string>
         </map>
         <map key="uri">
             <string key="type">string</string>
             <string key="format">uri</string>
-            <!-\-\-\->
+            <!---->
         </map>
         <map key="uri-reference">
             <string key="type">string</string>
             <string key="format">uri-reference</string>
-            <!-\-\-\->
+            <!---->
         </map>
         <map key="uuid">
-            <!-\- A Type 4 ('random' or 'pseudorandom' UUID per RFC 4122-\->
+            <!-- A Type 4 ('random' or 'pseudorandom' UUID per RFC 4122-->
             <string key="type">string</string>
-            <!-\- A sequence of 8-4-4-4-12 hex digits, with extra constraints in the 13th and 17-18th places for version 4-\->
+            <!-- A sequence of 8-4-4-4-12 hex digits, with extra constraints in the 13th and 17-18th places for version 4-->
             <string key="pattern">^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$</string>
         </map>
-        <!-\- Possibly add support for XSD types ID, IDREF, IDREFS, NCName, NMTOKENS ???        -\->
-    </xsl:variable>-->
+        <!-- Possibly add support for XSD types ID, IDREF, IDREFS, NCName, NMTOKENS ???        -->
+    </xsl:variable>
 
 </xsl:stylesheet>
