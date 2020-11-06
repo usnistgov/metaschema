@@ -276,16 +276,17 @@
     </xs:sequence>
   </xs:group>
 
-  <xs:element name="description">
+  <xs:complexType name="markup-line" mixed="true">
+    <xs:group ref="m:markup-elements"/>
+  </xs:complexType>
+
+  <xs:element name="description" type="m:markup-line">
     <xs:annotation>
       <xs:documentation>A short description of the data construct, to be inserted into
         documentation. Unlike 'formal-name' this should not simply repeat what is readily
         discernible from a tag (element name or JSON label), but say a little more about
         it.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true">
-      <xs:group ref="m:markup-elements"/>
-    </xs:complexType>
   </xs:element>
 
   <xs:element name="remarks">
@@ -294,17 +295,24 @@
       documentation of an assembly, field or flag.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="m:p"/>
-      </xs:sequence>
-      <xs:attribute name="class" type="xs:NMTOKENS">
-        <xs:annotation>
-          <xs:documentation>Mark as 'XML' for XML-only or 'JSON' for JSON-only remarks.</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="module" type="xs:anyURI"/>
+      <xs:complexContent>
+        <xs:extension base="m:markup-multiline">
+          <xs:attribute name="class" type="xs:NMTOKENS">
+            <xs:annotation>
+              <xs:documentation>Mark as 'XML' for XML-only or 'JSON' for JSON-only remarks.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="module" type="xs:anyURI"/>
+        </xs:extension>
+      </xs:complexContent>
     </xs:complexType>
   </xs:element>
+
+  <xs:complexType name="markup-multiline">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" ref="m:p"/>
+    </xs:sequence>
+  </xs:complexType>    
 
   <xs:element name="schema-name">
     <xs:annotation>
@@ -439,23 +447,23 @@
     <xs:annotation>
       <xs:documentation>An enumerated value for a flag or field. The value is indicated by the 'value' attribute while the element contents describe the intended semantics for documentation.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true">
-      <xs:group ref="m:markup-elements"/>
-      <xs:attribute name="value" use="required" type="xs:string">
-        <xs:annotation>
-          <xs:documentation>A value recognized for a flag or field.</xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="m:markup-line">
+          <xs:attribute name="value" use="required" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>A value recognized for a flag or field.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="p">
+  <xs:element name="p" type="m:markup-line">
     <xs:annotation>
       <xs:documentation>A paragraph or paragraph fragment, in documentation.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true">
-      <xs:group ref="m:markup-elements"/>
-    </xs:complexType>
   </xs:element>
 
   <xs:element name="a">
