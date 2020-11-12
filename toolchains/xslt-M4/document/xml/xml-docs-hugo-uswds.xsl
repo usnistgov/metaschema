@@ -12,10 +12,26 @@
    <!-- Input:   Metaschema -->
    <!-- Output:  HTML  -->
 
+
+<!-- TO DO:
+   hide list of attributes on section title when "Attributes" is expanded
+   expand Remarks to be open on page load (closable)
+   
+   into Hugo
+     generate and provide to Hugo 'partial' file
+     update CSS and test binding
+   next integrate into CI/CD script
+   
+   -->
+   
+   
    <xsl:mode on-no-match="text-only-copy"/>
    
    <xsl:param name="schema-path" select="document-uri(/)"/>
-
+   
+<!--  XXX TO DO XXX -->
+   <xsl:param name="content-converter-path" select="'#'"/>
+   
    <xsl:variable name="metaschema-code" select="/*/short-name || '-xml'"/>
 
    <xsl:variable name="datatype-page" as="xs:string">../../datatypes</xsl:variable>
@@ -97,6 +113,13 @@
                <a href="{$schema-path}">
                   <xsl:value-of select="replace($schema-path,'^.*/','')"/></a>
             </p>
+            <p><span class="usa-tag">JSON to XML content converter</span>
+               <xsl:text> </xsl:text>
+               <a href="{$content-converter-path}">
+                  <xsl:value-of select="replace($content-converter-path,'^.*/','')"/></a>
+               (<a href="?">How do I use the converter to convert OSCAL JSON to XML?</a>)
+            </p>
+            
             <xsl:apply-templates select="* except $definitions"/>
          </div>
          <xsl:apply-templates select="child::define-assembly | child::define-field" mode="make-definition">
@@ -111,7 +134,7 @@
    
    <xsl:template match="METASCHEMA/namespace">
       <p>
-         <span class="label">XML namespace</span>
+         <span class="usa-tag">XML namespace</span>
          <xsl:text> </xsl:text>
          <code>
             <xsl:apply-templates/>
