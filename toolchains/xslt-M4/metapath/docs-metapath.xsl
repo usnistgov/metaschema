@@ -36,7 +36,7 @@
     </xsl:variable>
     
 <!-- Run this XSLT on itself to see test results -->
-    <xsl:template match="/">
+    <xsl:template match="/" mode="test">
         <test-results>
             <IN>
             <xsl:copy-of select="$tests[m:any-match(@context,@target)]"/>

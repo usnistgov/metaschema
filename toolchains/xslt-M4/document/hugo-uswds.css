@@ -1,3 +1,11 @@
+
+/* integrate into schema-docs.scss
+ *   review and port over rules not already there
+ *   check against generated data set for orphan rules (no longer used)
+ *   look at spacing, font family settings for Hugo/USWDS
+ *   compare in different browsers (and debug details/summary)
+ *   summary { cursor: pointer } */
+
 html,
 body {
 }
@@ -201,5 +209,5 @@ div.constraints * { margin: 0em }
 div.constraints div.constraint { margin-top: 0.5em }
 div.constraint  * { margin: 0em }
 
-.model-summary .description { 80% }
+.model-summary .description { font-size: 80% }
 

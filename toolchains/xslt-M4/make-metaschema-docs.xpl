@@ -20,7 +20,7 @@
     <p:pipe        port="result"     step="composed"/>
   </p:output>
   
-  <!--<p:serialization port="c.abstract-model-map" indent="true"/>
+  <p:serialization port="c.abstract-model-map" indent="true"/>
   <p:output        port="c.abstract-model-map" primary="false">
     <p:pipe        port="result" step="make-model-map"/>
   </p:output>
@@ -28,7 +28,7 @@
   <p:serialization port="d.unfolded-model-map" indent="true"/>
   <p:output        port="d.unfolded-model-map" primary="false">
     <p:pipe        port="result" step="unfold-model-map"/>
-  </p:output>-->
+  </p:output>
   
   <p:serialization port="X.xml-docs" indent="true"/>
   <p:output        port="X.xml-docs" primary="false">

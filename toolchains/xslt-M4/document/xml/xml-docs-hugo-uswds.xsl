@@ -59,7 +59,7 @@
    <xsl:key name="references" match="flag"             use="@ref"/>
    <xsl:key name="references" match="field | assembly" use="@ref"/>
    
-   <xsl:template match="/">
+   <xsl:template match="/" mode="standalone">
       <html>
          <head>
             <xsl:call-template name="css"/>
@@ -694,17 +694,18 @@
       <xsl:apply-templates/>
    </xsl:template>
    
-   
-   
    <xsl:template name="display-applicable-constraints">
       <xsl:variable name="context" select="."/>
       <xsl:variable name="applicable-constraints" select="key('constraints-for-target',m:use-name(.))[m:include-constraint(.,$context)]"/>
       <xsl:for-each-group select="$applicable-constraints" group-by="true()" expand-text="true">
          <div class="constraints">
-         <details>
-            <summary class="subhead">Applicable { if (count(current-group()) eq 1) then 'constraint' else 'constraints' } ({ count(current-group()) })</summary>
-            <xsl:apply-templates select="current-group()"/>
-         </details>
+            <xsl:apply-templates select="$applicable-constraints/self::allowed-values"/>
+            <xsl:for-each-group select="$applicable-constraints except $applicable-constraints/self::allowed-values" group-by="true()">
+               <details>
+                  <summary class="subhead">Applicable { if (count(current-group()) eq 1) then 'constraint' else 'constraints' } ({ count(current-group()) })</summary>
+                  <xsl:apply-templates select="current-group()"/>
+               </details>
+            </xsl:for-each-group>
          </div>
       </xsl:for-each-group>
    </xsl:template>  
@@ -759,7 +760,9 @@
       </p>
    </xsl:template>
 
-   <xsl:template match="example">
+   <xsl:template match="example"/>
+   
+   <xsl:template match="example" mode="dev">
       <xsl:variable name="example-no" select="'example' || count(.|preceding-sibling::example)"/>
       <div class="example usa-accordion">
          <h3>
@@ -780,7 +783,7 @@
          </div>
       </div>
    </xsl:template>
-
+   
    <xsl:template match="text()[not(matches(.,'\S'))]" mode="serialize">
       <xsl:param name="hot" select="false()"/>
       <xsl:if test="$hot">

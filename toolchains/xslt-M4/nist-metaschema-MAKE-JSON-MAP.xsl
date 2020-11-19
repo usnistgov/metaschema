@@ -13,8 +13,8 @@
     
     -->
 
-    <xsl:output method="xml" indent="yes"/>
-
+    <xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>
+    
     <!-- Turning $trace to 'on' will
          - emit runtime messages with each transformation, and
          - retain nm:ERROR and nm:WARNING messages in results. -->
