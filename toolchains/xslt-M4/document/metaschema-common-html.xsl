@@ -28,7 +28,7 @@
     <xsl:key name="references" match="flag"             use="@name | @ref"/>
     <xsl:key name="references" match="field | assembly" use="@ref"/>
     
-    <xsl:template match="/">
+    <xsl:template match="/" mode="standalone">
         <html>
             <head>
                 <xsl:call-template name="css"/>

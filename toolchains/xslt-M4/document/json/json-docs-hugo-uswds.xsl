@@ -479,7 +479,9 @@
       </p>
    </xsl:template>
 
-      <xsl:template match="example">
+   <xsl:template match="example"/>
+   
+   <xsl:template match="example" mode="dev">
       <xsl:variable name="example-no" select="'example' || count(.|preceding-sibling::example)"/>
       <div class="example usa-accordion">
          <h3 class="usa-accordion__heading">

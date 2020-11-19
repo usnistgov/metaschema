@@ -41,7 +41,7 @@
     <p:pipe        port="result"              step="make-xml-element-tree"/>
   </p:output>
   
-  <p:serialization port="X2.xml-model-html" indent="false" method="xml" omit-xml-declaration="false"/>
+  <p:serialization port="X2.xml-model-html" indent="true" method="xml" omit-xml-declaration="false"/>
   <p:output        port="X2.xml-model-html" primary="false">
     <p:pipe        port="result"            step="render-xml-model-map"/>
   </p:output>
@@ -51,7 +51,7 @@
     <p:pipe        port="result"              step="make-json-object-tree"/>
   </p:output>
   
-  <p:serialization port="J2.json-model-html" indent="false" method="xml" omit-xml-declaration="false"/>
+  <p:serialization port="J2.json-model-html" indent="true" method="xml" omit-xml-declaration="false"/>
   <p:output        port="J2.json-model-html" primary="false">
     <p:pipe        port="result"             step="render-json-model-map"/>
   </p:output>
