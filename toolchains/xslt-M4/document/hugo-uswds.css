@@ -24,6 +24,8 @@ pre.json {
     color: darkblue
 }
 
+summary { display: list-item }
+
 .METASCHEMA {
 }
 

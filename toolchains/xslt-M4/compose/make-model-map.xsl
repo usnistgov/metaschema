@@ -126,7 +126,7 @@
             <xsl:for-each select="self::flag">
                 <xsl:attribute name="scope">global</xsl:attribute>
             </xsl:for-each>
-            <xsl:attribute name="name" select="(@name,@ref)[1]"/>
+            <xsl:attribute name="name" select="(use-name,@name,@ref)[1]"/>
             <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
             <xsl:attribute name="as-type">string</xsl:attribute>
             <xsl:apply-templates select="@*" mode="build"/>
