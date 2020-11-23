@@ -20,9 +20,14 @@
     
     <xsl:template match="assembly | field | group">
         <element>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:variable name="using-name" select="(@root-name[../parent::map],@use-name,@name)[1]"/>
+            <xsl:apply-templates select="$using-name,@min-occurs,@max-occurs,@as-type"/>
             <xsl:apply-templates/>
         </element>
+    </xsl:template>
+    
+    <xsl:template match="@root-name | @use-name | @name">
+        <xsl:attribute name="name" select="string(.)"/>
     </xsl:template>
     
     <xsl:template match="group[@in-xml='HIDDEN']">

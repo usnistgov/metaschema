@@ -203,14 +203,6 @@
       </a>
    </xsl:template>
    
-   <!--<xsl:template mode="tag" match="@name">
-         <code class="tagging"><xsl:value-of select="."/></code>   
-      </xsl:template>
-      
-      <xsl:template mode="tag" match="root-name | use-name">
-         <code class="tagging"><xsl:value-of select="."/></code>   
-      </xsl:template>-->
-   
    
    <!--<xsl:variable name="github-base" as="xs:string">https://github.com/usnistgov/OSCAL/tree/master</xsl:variable>-->
    
@@ -449,7 +441,7 @@
          <xsl:apply-templates mode="make-link-to-global" select="."/>
          <xsl:for-each-group group-by="true()" select="(.|$definition)/remarks">
             <div class="remarks-group">
-               <details>
+               <details open="open">
                   <summary class="subhead">Remarks</summary>
                   <xsl:apply-templates select="current-group()"/>
                </details>
