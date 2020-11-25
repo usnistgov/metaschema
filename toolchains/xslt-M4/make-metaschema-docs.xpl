@@ -20,7 +20,7 @@
     <p:pipe        port="result"     step="composed"/>
   </p:output>
   
-  <p:serialization port="c.abstract-model-map" indent="true"/>
+  <!--<p:serialization port="c.abstract-model-map" indent="true"/>
   <p:output        port="c.abstract-model-map" primary="false">
     <p:pipe        port="result" step="make-model-map"/>
   </p:output>
@@ -28,7 +28,7 @@
   <p:serialization port="d.unfolded-model-map" indent="true"/>
   <p:output        port="d.unfolded-model-map" primary="false">
     <p:pipe        port="result" step="unfold-model-map"/>
-  </p:output>
+  </p:output>-->
   
   <p:serialization port="X.xml-docs" indent="true"/>
   <p:output        port="X.xml-docs" primary="false">
@@ -62,9 +62,9 @@
     <p:input port="stylesheet">
       <p:document href="compose/make-model-map.xsl"/>
     </p:input>
-  </p:xslt>-->
+  </p:xslt>
   
-  <!--<p:xslt name="unfold-model-map">
+  <p:xslt name="unfold-model-map">
     <p:input port="stylesheet">
       <p:document href="compose/unfold-model-map.xsl"/>
     </p:input>
@@ -76,19 +76,25 @@
     </p:input>
   </p:xslt>-->
   
+  <!--<p:identity name="produce-xml-docs"/>-->
+    
   <p:xslt name="produce-xml-docs">
-    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
+    <p:with-option name="initial-mode" select="QName('','make-page')"/>
     <p:input port="stylesheet">
       <p:document href="document/xml/xml-docs-hugo-uswds.xsl"/>
     </p:input>
-    
   </p:xslt>
   
   <p:sink/>
   
+  <!--<p:identity name="produce-json-docs">
+    <p:input port="source">
+      <p:pipe port="result" step="composed"/>
+    </p:input>
+  </p:identity>-->
   
   <p:xslt name="produce-json-docs">
-    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->    
+    <p:with-option name="initial-mode" select="QName('','make-page')"/>    
     <p:input port="source">
       <p:pipe port="result" step="composed"/>
     </p:input>

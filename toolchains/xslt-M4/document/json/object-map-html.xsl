@@ -9,7 +9,7 @@
 
    <xsl:variable as="xs:string" name="path-to-docs" select="'../xml-schema/'"/>
 
-   <xsl:output indent="yes" method="html"/>
+   <xsl:output omit-xml-declaration="true"/>
 
    <xsl:template match="/" mode="make-page">
       <html lang="en">
@@ -75,7 +75,7 @@ details:not([open]) .show-closed { display: inline }
    </xsl:template>
    
    <xsl:template name="line-marker">
-      <span class="OM-lit"> &#x25AA; </span>
+      <!--<span class="OM-lit"> &#x25AA; </span>-->
       <!--<span class="OM-lit">- </span>-->
    </xsl:template>
    
@@ -181,6 +181,7 @@ details:not([open]) .show-closed { display: inline }
          </span>
       </span>
    </xsl:template>
+   
    <xsl:template match="m:array | m:singleton-or-array" mode="close-delimit">
       <xsl:text>]</xsl:text>
    </xsl:template>
