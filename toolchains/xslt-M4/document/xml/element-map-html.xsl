@@ -9,7 +9,7 @@
 
    <xsl:variable as="xs:string" name="path-to-docs" select="'../xml-schema/'"/>
 
-   <xsl:output indent="yes" method="html"/>
+   <xsl:output omit-xml-declaration="true"/>
 
    <xsl:template match="/" mode="make-page">
       <html lang="en">
@@ -79,7 +79,7 @@ div.OM-map p { margin: 0ex }
    </xsl:template>
    
    <xsl:template name="line-marker">
-      <!-- bullet --><span class="OM-lit"> &#x25AA; </span>
+      <!-- bullet --><!--<span class="OM-lit"> &#x25AA; </span>-->
        <!--em dash --><!--<span class="OM-lit">— </span>-->
       <!--<span class="OM-lit">&#x25AC; </span>-->
    </xsl:template>
