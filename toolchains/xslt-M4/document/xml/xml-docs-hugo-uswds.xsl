@@ -129,7 +129,8 @@
    </xsl:template>
    
    <xsl:template match="description">
-      <p class="description">
+      <xsl:variable name="is-global" select="exists(parent::*/parent::METASCHEMA)"/>
+      <p class="description{ ' global'[$is-global]}">
          <!--<span class="usa-tag">Description</span>
          <xsl:text> </xsl:text>-->
          <xsl:apply-templates/>
@@ -146,29 +147,32 @@
    </xsl:template>
    
    <xsl:template name="definition-header">
-      <xsl:param name="using-names" select="
-         if (exists(root-name)) then (root-name,use-name) else (if (exists(use-name)) then use-name else key('references',@name)/(use-name,@ref)[1])"/>
-      <header class="definition-header">
+      <xsl:param name="using-names"
+         select="if (exists(root-name)) then (root-name, use-name)
+            else (if (exists(use-name)) then use-name
+               else key('references', @name)/(use-name, @ref)[1])"/>
+      <div class="definition-header">
          <xsl:call-template name="cross-links"/>
-         <xsl:apply-templates select="formal-name" mode="header"/>
-         <h2 id="global_{@name}_head">
-            <xsl:for-each-group select="$using-names" group-by="string(.)">
-               <xsl:if test="position() gt 1">, </xsl:if>
-               <span class="usename">
-                  <xsl:value-of select="current-grouping-key()"/>
-               </span>
-            </xsl:for-each-group>
+         <h2 class="toc1" id="global_{@name}_head">
+            <span class="defining">
+               <xsl:for-each-group select="$using-names" group-by="string(.)">
+                  <xsl:if test="position() gt 1">, </xsl:if>
+                  <span class="usename">
+                     <xsl:value-of select="current-grouping-key()"/>
+                  </span>
+               </xsl:for-each-group>
+            </span>
          </h2>
-      </header>
-      
-   </xsl:template>
-   
-   <xsl:template match="formal-name" mode="header">
-      <p>
-         <span class="usa-tag">Name</span>
-         <xsl:text> </xsl:text>
-         <span class="formal-name"><xsl:apply-templates/></span>
-      </p>
+         <xsl:for-each select="formal-name">
+            <p>
+               <span class="usa-tag">formal name</span>
+               <xsl:text> </xsl:text>
+               <span class="frmname">
+                  <xsl:apply-templates/>
+               </span>
+            </p>
+         </xsl:for-each>
+      </div>
    </xsl:template>
    
    <xsl:template name="remarks-group">
@@ -432,13 +436,15 @@
    
    <xsl:template match="*[exists(@ref)]" mode="model-description" expand-text="true">
       <xsl:variable name="definition" select="key('definitions', @ref)"/>
+      <xsl:variable name="is-a-flag" select="exists(self::flag)"/>
+      <xsl:variable name="too-deep" select="exists(ancestor::model[2])"/>
       <xsl:if test="empty($definition)">
          <xsl:message>NO DEFINITION FOUND FOR { local-name() }</xsl:message>
       </xsl:if>
       <div class="model-descr" tabindex="0"
          id="#local_{string-join( ancestor-or-self::*/(@name|@ref),'-')}">
          <div class="model-summary">
-            <h3 id="#local_{string-join( ancestor-or-self::*/(@name|@ref),'-')}_head" class="usename">{ m:use-name(.) }</h3>
+            <h3 class="usename{ ' toc2'[not($is-a-flag) and not($too-deep)] }" id="#local_{string-join( ancestor-or-self::*/(@name|@ref),'-')}_head">{ m:use-name(.) }</h3>
             <span class="mtyp">
                <xsl:apply-templates select="." mode="metaschema-type"/>
                <xsl:if test="empty($definition)">&#xA0;</xsl:if>
@@ -453,7 +459,6 @@
                }{'&#xA0;'[empty($definition/formal-name)] }</span>
          </div>
          <xsl:apply-templates select="$definition/description"/>
-         <xsl:apply-templates mode="make-link-to-global" select="."/>
          <xsl:for-each-group group-by="true()" select="remarks">
             <div class="remarks-group">
                <details open="open">
@@ -471,35 +476,24 @@
             </div>
          </xsl:for-each-group>
          
-         <xsl:for-each-group select="$definition/(define-flag | flag)" group-by="true()">
-            <div class="attributes">
-               <details open="open">
-                  <summary class="subhead">
-                     <xsl:text>{ if (count(current-group()) eq 1) then 'Attribute' else 'Attributes' } ({ count(current-group()) }): </xsl:text>
-                     <xsl:for-each select="current-group()">
-                        <xsl:if test="not(position() eq 1)">, </xsl:if>
-                        <code>{ m:use-name(.) }</code>
-                     </xsl:for-each>
-                  </summary>
-                  <ul>
-                     <xsl:apply-templates select="current-group()">
-                        <xsl:with-param name="make-page-links" tunnel="true" select="false()"/>
-                     </xsl:apply-templates>
-                  </ul>
-               </details>
-            </div>
-         </xsl:for-each-group>
+         <xsl:call-template name="display-attributes">
+            <xsl:with-param name="definition" select="$definition"/>
+         </xsl:call-template>
+         <xsl:apply-templates mode="make-link-to-global" select="."/>
          <!--<xsl:apply-templates mode="make-contents" select="."/>-->
          <xsl:call-template name="display-applicable-constraints"/>
       </div>
    </xsl:template>
    
-   
+      
    <xsl:template match="define-assembly | define-field | define-flag" mode="model-description" expand-text="true">
       <xsl:variable name="definition" select="."/>
+      <xsl:variable name="is-local" select="empty(parent::METASCHEMA)"/>
+      <xsl:variable name="too-deep" select="exists(ancestor::model[2])"/>
+      <xsl:variable name="is-a-flag" select="exists(self::define-flag)"/>
       <div class="model-descr" tabindex="0" id="#local_{string-join( ancestor-or-self::*/@name,'-')}">
-         <div class="model-summary">
-            <h3 id="#local_{string-join( ancestor-or-self::*/@name,'-')}_head" class="usename">{ m:use-name(.) }</h3>
+         <div class="model-summary{ ' definition-header'[$is-local] }">
+            <h3 class="usename{ ' toc2'[not($is-a-flag) and not($too-deep)] }" id="#local_{string-join( ancestor-or-self::*/@name,'-')}_head">{ m:use-name(.) }</h3>
             <span class="mtyp">
                <xsl:apply-templates select="." mode="metaschema-type"/>
                <xsl:if test="empty($definition)">&#xA0;</xsl:if>
@@ -512,13 +506,6 @@
             </span>            
             <span class="frmname">{ $definition/formal-name }{'&#xA0;'[empty($definition/formal-name)] }</span>
          </div>
-         <!-- For local definitions only -->
-         <xsl:if test="exists((.|..)/parent::model)">
-            <div class="definition-header">
-               <xsl:apply-templates select="formal-name" mode="header"/>
-               <h4><span class="usename">{ m:use-name(.) }</span></h4>
-            </div>
-         </xsl:if>
          <xsl:apply-templates select="$definition/description"/>
          <xsl:apply-templates mode="make-link-to-global" select="."/>
          <xsl:for-each-group group-by="true()" select="remarks">
@@ -529,34 +516,44 @@
                </details>
             </div>
          </xsl:for-each-group>    
+   
+         <xsl:call-template name="display-attributes">
+            <xsl:with-param name="definition" select="$definition"/>
+         </xsl:call-template>
          
-         <xsl:for-each-group select="$definition/(define-flag | flag)" group-by="true()">
-               <div class="attributes">
-                  <details open="open">
-                     <summary  class="subhead">
-                        <xsl:text>{ if (count(current-group()) eq 1) then 'Attribute' else 'Attributes' } ({ count(current-group()) }): </xsl:text>
-                     <xsl:for-each select="current-group()">
-                        <xsl:if test="not(position() eq 1)">, </xsl:if>
-                        <code>{ m:use-name(.) }</code>
-                     </xsl:for-each></summary>
-                  <ul>
-                     <xsl:apply-templates select="current-group()">
-                        <xsl:with-param name="make-page-links" tunnel="true" select="false()"/>
-                     </xsl:apply-templates>
-                  </ul>
-                  </details>
-               </div>
-         </xsl:for-each-group>
+         
          <xsl:apply-templates mode="make-contents" select="."/>
          <xsl:call-template name="display-applicable-constraints"/>
       </div>
    </xsl:template>
    
+   <xsl:template name="display-attributes">
+      <xsl:param name="definition"/>
+      <xsl:for-each-group select="$definition/(define-flag | flag)" group-by="true()" expand-text="true">
+         <div class="attributes">
+            <details open="open">
+               <summary  class="subhead">
+                  <xsl:text>{ if (count(current-group()) eq 1) then 'Attribute' else 'Attributes' } ({ count(current-group()) }): </xsl:text>
+                  <xsl:for-each select="current-group()">
+                     <xsl:if test="not(position() eq 1)">, </xsl:if>
+                     <code>{ m:use-name(.) }</code>
+                  </xsl:for-each></summary>
+               <ul>
+                  <xsl:apply-templates select="current-group()">
+                     <xsl:with-param name="make-page-links" tunnel="true" select="false()"/>
+                  </xsl:apply-templates>
+               </ul>
+            </details>
+         </div>
+      </xsl:for-each-group>
+   </xsl:template>
+   
+   
    <xsl:template match="flag | define-flag | define-field | define-assembly" mode="make-link-to-global"/>
    
    <xsl:template match="*" mode="make-link-to-global" expand-text="true">
       <div class="deflink">
-         <a href="#global_{@ref}">Link to <code>{ m:use-name(.) }</code> global definition</a>
+         <a href="#global_{@ref}">Link to <code>{ m:use-name(.) }</code> global definition to see contents.</a>
       </div>
    </xsl:template>
    
@@ -589,30 +586,7 @@
       </details>
    </xsl:template>
    
-   <xsl:template priority="20" match="has-cardinality | index-has-key | index | matches | allowed-values | is-unique" expand-text="true">
-      <xsl:variable name="step-context" select="m:constraint-key(.)"/>
-      <xsl:variable name="definition-context" select="string-join( (.. | ancestor::*)/m:use-name(.),'/')"/>
-      <div class="constraint">
-         <!--<p>Constraint: <b>{ local-name() }</b>. Definition context: <code>{ $definition-context }</code>.</p>
-         <xsl:for-each-group select="ancestor::require" group-by="true()">
-            <p>
-               <xsl:text>Contingency: apply this constraint when the context has </xsl:text>
-               <xsl:call-template name="and-code-sequence">
-                  <xsl:with-param name="what" select="current-group()/@when"/>
-               </xsl:call-template>
-            </p>
-         </xsl:for-each-group>
-         <xsl:if test="exists(@target)">
-            <p><xsl:text>Given target:  </xsl:text>
-               <xsl:choose>
-                  <xsl:when test="exists(@target)"><code>{ @target  }</code></xsl:when>
-                  <xsl:otherwise>[defaulted]</xsl:otherwise>
-               </xsl:choose>.</p>
-            <p>Full target: <code>{ string-join(($definition-context,@target),'/') }</code></p>
-         </xsl:if>-->
-         <xsl:next-match/>
-      </div>
-   </xsl:template>
+   
    
    <xsl:template name="and-code-sequence">
       <xsl:param name="what" as="item()*"/>
@@ -659,107 +633,145 @@
    </xsl:function>-->
    
    <xsl:template match="*" mode="report-context" expand-text="true">
-      <span class="usa-tag">context</span>
-      <code>{ string-join( (.. | ancestor::*)/m:use-name(.),'/') }{ ancestor::require/@when ! ('[' || . || ']') }</code>
+      <code>
+         <xsl:for-each select="ancestor::define-field | ancestor::define-assembly">
+            <xsl:if test="exists(ancestor::define-field | ancestor::define-assembly)">/</xsl:if>
+            <xsl:value-of select="m:use-name(.)"/>
+         </xsl:for-each>
+         <xsl:for-each select="ancestor::define-flag">
+            <xsl:if test="exists(ancestor::define-field | ancestor::define-assembly)">/</xsl:if>
+            <xsl:text>@</xsl:text>
+            <xsl:value-of select="m:use-name(.)"/>
+         </xsl:for-each>
+         <xsl:for-each select="ancestor::require">[{@when}]</xsl:for-each>
+         <xsl:apply-templates select="." mode="report-target"/>
+      </code>
    </xsl:template>
    
-   <xsl:template match="*" mode="report-target" expand-text="true">
-      <span class="usa-tag">target</span>
-      <code>{ @target }</code>
+   <xsl:template match="*" mode="report-target">
+      <xsl:text>/</xsl:text>
+      <xsl:value-of select="@target"/>
    </xsl:template>
+   
+   <xsl:template priority="3" mode="report-target" match="has-cardinality"/>
    
    <xsl:template priority="2" mode="report-target" match="*[empty(@target) or @target=('.','value()')]"/>
-      
+   
    <xsl:template priority="2" match="allowed-values" expand-text="true">
       <xsl:variable name="enums" select="enum"/>
-      <p>
-         <xsl:apply-templates select="." mode="report-context"/>
-         <xsl:apply-templates select="." mode="report-target"/>
-         <xsl:text>: </xsl:text>
-         <span class="usa-tag">allowed value{ 's'[count($enums) gt 1] }</span>
-         <xsl:for-each select="enum">
-            <xsl:if test="position() gt 1"> | </xsl:if>
-            <strong>{ @value }</strong>
-         </xsl:for-each>
-      </p>
-      <xsl:choose expand-text="true">
-            <xsl:when test="@allow-other and @allow-other='yes'">
-               <p>The value may be locally defined, or { 'one of '[count($enums) gt 1] }the following ({count($enums)}):</p>
-         </xsl:when>
-         <xsl:otherwise>
-            <p>The value must be one of the following ({count(enum)}):</p>
-         </xsl:otherwise>
-      </xsl:choose>
-      <ul>
-         <xsl:apply-templates/>
-      </ul>   
+      <div class="constraint">
+         <p>
+            <span class="usa-tag">constraint</span>
+            <xsl:apply-templates select="." mode="report-context"/>
+            <span class="cnstr-tag">allowed value{ 's'[count($enums) gt 1] }</span>
+            <xsl:for-each select="enum">
+               <xsl:if test="position() gt 1"> | </xsl:if>
+               <strong>{ @value }</strong>
+            </xsl:for-each>
+         </p>
+         <xsl:choose expand-text="true">
+            <xsl:when test="@allow-other and @allow-other = 'yes'">
+               <p>The value may be locally defined, or { 'one of '[count($enums) gt 1] }the
+                  following ({count($enums)}):</p>
+            </xsl:when>
+            <xsl:otherwise>
+               <p>The value must be one of the following ({count(enum)}):</p>
+            </xsl:otherwise>
+         </xsl:choose>
+         <ul>
+            <xsl:apply-templates/>
+         </ul>
+      </div>
    </xsl:template>
    
-   <xsl:template priority="2" match="matches[@regex][empty(@target) or @target=('.','value()')]" expand-text="true">
+   <xsl:template priority="2" match="matches[@regex]" expand-text="true">
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
-      <p><span class="usa-tag">match constraint</span>
-         <xsl:apply-templates select="." mode="report-context"/>
-         <xsl:text expand-text="true"> the values must match the regular expression '{ @regex }'.</xsl:text></p>
+      <div class="constraint">
+         <p>
+            <span class="usa-tag">constraint</span>
+          <xsl:apply-templates select="." mode="report-context"/>
+            <span class="cnstr-tag">match</span>
+         <xsl:text expand-text="true"> a target (value) must match the regular expression '{ @regex }'.</xsl:text></p>
+      </div>
    </xsl:template>
    
-   <xsl:template priority="2" match="matches[@regex][exists(@target) and not(@target=('.','value()'))]" expand-text="true">
-      <p><span class="usa-tag">match constraint</span><xsl:apply-templates select="." mode="report-context"/>
-         the value(s) of target(s) <code>{ @target }</code> must match the regular expression '{ @regex }'.</p>
+   
+   <xsl:template priority="2" match="matches[@datatype]" expand-text="true">
+      <div class="constraint">
+         <p>
+            <span class="usa-tag">constraint</span>
+            <xsl:apply-templates select="." mode="report-context"/>
+            <span class="cnstr-tag">match</span>
+         <xsl:text>the target value must match the lexical form of the '{ @datatype }' data type.</xsl:text></p>
+      </div>
    </xsl:template>
    
-   <xsl:template priority="2" match="matches[@datatype][empty(@target) or @target=('.','value()')]" expand-text="true">
-      <p><span class="usa-tag">match constraint</span><xsl:apply-templates select="." mode="report-context"/>
-         the value must match the lexical form of the '{ @datatype }' data type.</p>
-   </xsl:template>
-   
-   <xsl:template priority="2" match="matches[@datatype][exists(@target) and not(@target=('.','value()'))]" expand-text="true">
-      <p><span class="usa-tag">match constraint</span><xsl:apply-templates select="." mode="report-context"/>
-         the value(s) of target(s) <code>{ @target }</code> must match the lexical form of the '{ @datatype }' data type.</p>
-   </xsl:template>
-   
-   <xsl:template priority="2" match="is-unique[empty(@target) or @target=('.','value()')]" expand-text="true">
+   <xsl:template priority="2" match="is-unique">
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
-      <p><span class="usa-tag">uniqueness constraint</span><xsl:apply-templates select="." mode="report-context"/>
-         the value must be unique (i.e., occur only once)</p>
+      <div class="constraint">
+         <p>
+            <span class="usa-tag">constraint</span>
+            <xsl:apply-templates select="." mode="report-context"/>
+            <span class="cnstr-tag">uniqueness rule</span>
+           <xsl:text>: any target value must be unique (i.e., occur only once)</xsl:text>
+         </p>
+      </div>
    </xsl:template>
    
    <xsl:template priority="2" match="has-cardinality" expand-text="true">
-      <p><span class="usa-tag">cardinality constraint</span><xsl:apply-templates select="." mode="report-context"/>
-         the cardinality of <code>{ @target }</code> is constrained:
-         minimum <b>{ (@min-occurs,0)[1] }</b>; maximum <b>{ (@max-occurs,'unbounded')[1]}</b>.</p>
+      <div class="constraint">
+         <p>
+            <span class="usa-tag">constraint</span>
+            <xsl:apply-templates select="." mode="report-context"/>
+            <span class="cnstr-tag">cardinality rule</span>
+            <xsl:text> the cardinality of  </xsl:text>
+            <code>{ @target }</code>
+            <xsl:text> is constrained: </xsl:text>
+            <b>{ (@min-occurs,0)[1] }</b>
+            <xsl:text>; maximum </xsl:text>
+            <b>{ (@max-occurs,'unbounded')[1]}</b>.</p>
+      </div>
    </xsl:template>
    
-   <xsl:template priority="2" match="is-unique[exists(@target) or not(@target=('.','value()'))]" expand-text="true">
+   <xsl:template priority="2" match="index-has-key" expand-text="true">
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
-      <p><span class="usa-tag">uniqueness constraint</span><xsl:apply-templates select="." mode="report-context"/>
-         the key (index) value assigned to each target(s) <code>{ @target }</code>
-         <xsl:text> must be unique, as constructed from key field(s) </xsl:text>
-         <xsl:for-each select="key-field"><xsl:if test="position() gt 1">; </xsl:if><code><xsl:value-of select="@target"/></code></xsl:for-each></p>
-   </xsl:template>
-   
-   <xsl:template priority="2" match="index-has-key[empty(@target) or @target=('.','value()')]" expand-text="true">
-      <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
-      <p><span class="usa-tag">indexing constraint</span><xsl:apply-templates select="." mode="report-context"/>
-         this value must correspond to a listing in the index <code>{ @name }</code>
-         <xsl:text> using a key constructed of key field(s) </xsl:text>
-         <xsl:for-each select="key-field"><xsl:if test="position() gt 1">; </xsl:if><code><xsl:value-of select="@target"/></code></xsl:for-each>.</p>
-      <xsl:apply-templates/>
-   </xsl:template>
-   
-   <xsl:template priority="2" match="index-has-key[exists(@target) and not(@target=('.','value()'))]" expand-text="true">
-      <p><span class="usa-tag">indexing constraint</span><xsl:apply-templates select="." mode="report-context"/>
-         any <code>{ @target }</code> must appear in the index <code>{ @name }</code>
-         <xsl:text> using a key constructed of key field(s) </xsl:text>
-         <xsl:for-each select="key-field"><xsl:if test="position() gt 1">; </xsl:if><code><xsl:value-of select="@target"/></code></xsl:for-each>.</p>
-      <xsl:apply-templates/>
+      <div class="constraint">
+         <p>
+            <span class="usa-tag">constraint</span>
+            <xsl:apply-templates select="." mode="report-context"/>
+            <span class="cnstr-tag">index rule</span>
+            <xsl:text>this value must correspond to a listing in the index </xsl:text>
+              <code>{ @name }</code>
+            <xsl:text> using a key constructed of key field(s) </xsl:text>
+            <xsl:for-each select="key-field">
+               <xsl:if test="position() gt 1">; </xsl:if>
+               <code>
+                  <xsl:value-of select="@target"/>
+               </code>
+            </xsl:for-each>
+         </p>
+      </div>
    </xsl:template>
    
    <xsl:template priority="2" match="index" expand-text="true">
-      <p><span class="usa-tag">index definition</span><xsl:apply-templates select="." mode="report-context"/>
-         an index <code>{ @name }</code> shall list values returned by <code>{ @target}</code>
-         <xsl:text> using keys constructed of key field(s) </xsl:text>
-         <xsl:for-each select="key-field"><xsl:if test="position() gt 1">; </xsl:if><code><xsl:value-of select="@target"/></code></xsl:for-each>.</p>
-      <xsl:apply-templates/>
+      <div class="constraint">
+         <p>
+            <span class="usa-tag">constraint</span>
+            <xsl:apply-templates select="." mode="report-context"/>
+            <span class="cnstr-tag">index definition</span>
+            <xsl:text> an index </xsl:text>
+            <code>{ @name }</code>
+            <xsl:text> shall list values returned by targets </xsl:text>
+            <code>{ @target }</code>
+            <xsl:text> using keys constructed of key field(s) </xsl:text>
+            <xsl:for-each select="key-field">
+               <xsl:if test="position() gt 1">; </xsl:if>
+               <code>
+                  <xsl:value-of select="@target"/>
+               </code>
+            </xsl:for-each>
+         </p>
+      </div>
    </xsl:template>
    
    <xsl:template name="display-applicable-constraints">
@@ -901,22 +913,23 @@
 
 
    <xsl:template match="define-flag" mode="representation-in-xml">
-      <p>An attribute<xsl:apply-templates select="." mode="metaschema-type"/></p>
+      <p>An attribute <xsl:apply-templates select="." mode="metaschema-type"/>.</p>
    </xsl:template>
 
    <xsl:template match="define-field" mode="representation-in-xml">
-      <xsl:variable name="unwrapped-references" select=".[@in-xml='UNWRAPPED'] | key('references',@name)[@in-xml='UNWRAPPED']"/>
+      <xsl:variable name="unwrapped-occurrences" select=".[@in-xml='UNWRAPPED'] | key('references',@name)[@in-xml='UNWRAPPED']"/>
       <xsl:variable name="my-type">
          <xsl:apply-templates select="." mode="metaschema-type"/>
-      </xsl:variable><p>An element with a value of type <xsl:sequence select="$my-type"></xsl:sequence>.</p>
-      <xsl:if test="string($my-type)='markup-multiline'">
+      </xsl:variable>
+      <p>An element with a value of type <xsl:sequence select="$my-type"/>.</p>
+      <xsl:if test="normalize-space($my-type)='markup-multiline'">
       <p>As such, this element permits an <em>block-level HTML markup</em> subset, syntactically well-formed as XML (i.e. following XML syntax rules), including HTML elements <code>p</code>, <code>ul</code>, <code>ol</code> and others, along with a simple subset of inline <q>face</q> markup such as bold and italics. This format is designed for the relatively unconstrained capture of simple <q>free text</q>, i.e. without formatting or <q>decoration</q> that might serve as ad-hoc and uncontrolled semantic encoding not subject to detection, regularization or validation.</p>
       <p>This data construct is designed to be minimalistic for purposes of ease of development and interchange. It will not fit all operational scenarios; when <xsl:apply-templates select="." mode="metaschema-type"/> is not adequate for purposes of necessary (informational) fidelity to information encoded in source formats (and subsequently converted into OSCAL), alternative strategies are available for such data capture. Users and stakeholders who expose requirements in this area are encouraged to provide feedback and request guidance.</p>
       </xsl:if>
-      <xsl:if test="exists($unwrapped-references)">
+      <xsl:if test="exists($unwrapped-occurrences)">
          <p>
             <xsl:text>When appearing in </xsl:text>
-            <xsl:for-each select="distinct-values($unwrapped-references/ancestor::model/../@name)">
+            <xsl:for-each select="distinct-values($unwrapped-occurrences/ancestor::model/m:use-name(..))">
                <xsl:if test="position() gt 1 and last() ne 2">, </xsl:if>
                <xsl:if test="position() gt 1 and position() eq last()"> or </xsl:if>
                <a href="#{ . }" xsl:expand-text="true">{ . }</a>
@@ -934,17 +947,15 @@
 
 
    <xsl:template mode="metaschema-type" match="flag | define-flag | define-field">
-      <xsl:variable name="given-type" select="(@as-type, key('definitions',@ref)/@as-type,'string')[1]"/>
-      <xsl:text> </xsl:text>
-         <a href="{$datatype-page}/#{(lower-case($given-type))}">
-            <xsl:apply-templates mode="#current" select="$given-type"/>
-         </a>
-      <xsl:text> </xsl:text>
+      <xsl:variable name="given-type" select="(@as-type, key('definitions', @ref)/@as-type, 'string')[1]"/>
+      <a href="{$datatype-page}/#{(lower-case($given-type))}">
+         <xsl:apply-templates mode="#current" select="$given-type"/>
+      </a>
    </xsl:template>
 
    <xsl:template mode="metaschema-type" match="define-assembly">element</xsl:template>
    
-   <xsl:template mode="metaschema-type" match="METASCHEMA/define-assembly"><a href="#global_{@name}">element (globally defined)</a></xsl:template>
+   <xsl:template mode="metaschema-type" match="METASCHEMA/define-assembly"><a href="#global_{@name}">element (globally&#xA0;defined)</a></xsl:template>
    
    <xsl:template match="*" mode="metaschema-type">
       <xsl:message>Matching <xsl:value-of select="local-name()"/></xsl:message>
@@ -964,8 +975,13 @@
       </summary>
    </xsl:template>
    
-   <xsl:template match="define-assembly | define-field | define-flag" mode="read-context">
+   <xsl:template match="define-assembly | define-field" mode="read-context">
       <xsl:if test="position() gt 1">/</xsl:if>
+      <xsl:apply-templates select="@name"/>
+   </xsl:template>
+   
+   <xsl:template match="define-flag" mode="read-context">
+      <xsl:if test="position() gt 1">/@</xsl:if>
       <xsl:apply-templates select="@name"/>
    </xsl:template>
    

@@ -66,9 +66,9 @@ details:not([open]) .show-closed { display: inline }
       <p class="OM-entry">
          <xsl:call-template name="line-marker"/>
          <xsl:apply-templates select="." mode="json-key"/>
+         <xsl:call-template name="cardinality-note"/>
          <xsl:text>: </xsl:text>
          <xsl:apply-templates select="." mode="contents"/>
-         <xsl:call-template name="cardinality-note"/>
          <xsl:if test="not(position() eq last())">
             <span class="OM-lit">,</span></xsl:if>
       </p>
@@ -81,14 +81,17 @@ details:not([open]) .show-closed { display: inline }
    
    <xsl:template match="m:object">
       <details class="OM-entry">
+         <xsl:for-each select="parent::m:map">
+            <xsl:attribute name="open">open</xsl:attribute>
+         </xsl:for-each>
          <summary>
             <xsl:apply-templates select="." mode="json-key"/>
-            <xsl:call-template name="cardinality-note"/>
+            <xsl:call-template name="cardinality-note"/> 
             <xsl:text>: </xsl:text>
             <span class="OM-lit">
-               <xsl:text>{ </xsl:text>
+               <xsl:text>{</xsl:text>
                <span class="show-closed">
-                  <xsl:text>... }</xsl:text>
+                  <xsl:text> &#8230; }</xsl:text>
                   <xsl:if test="not(position() eq last())">, </xsl:if>
                </span>
             </span>
@@ -108,9 +111,13 @@ details:not([open]) .show-closed { display: inline }
          <p>
             <xsl:apply-templates select="." mode="json-key"/>
             <xsl:call-template name="cardinality-note"/>
-            <xsl:if test="not(empty(*))">
+               <xsl:if test="not(empty(*))">
                <xsl:text>: </xsl:text>
-               <span class="OM-lit"> {</span>
+               <span class="OM-lit"> { </span>
+               <!--<span class="show-closed">
+                  <xsl:text> &#8230; }</xsl:text>
+                  <xsl:if test="not(position() eq last())">, </xsl:if>
+               </span>-->
             </xsl:if>
          </p>
          <xsl:if test="not(empty(*))">
@@ -129,11 +136,12 @@ details:not([open]) .show-closed { display: inline }
       <details class="OM-entry">
          <summary>
             <xsl:apply-templates select="." mode="json-key"/>
-            <xsl:text>: </xsl:text>
             <xsl:call-template name="cardinality-note"/>
+            <xsl:text>: </xsl:text>
             
-            <xsl:apply-templates select="." mode="open-delimit"/>
-                       
+            <xsl:apply-templates select="." mode="open-delimit">
+               <xsl:with-param name="has-subsequent" select="not(position() eq last())"/>
+            </xsl:apply-templates>
          </summary>
          <xsl:apply-templates select="." mode="contents"/>
          <p>
@@ -151,20 +159,21 @@ details:not([open]) .show-closed { display: inline }
       </a>
    </xsl:template>
    
-   <xsl:template match="m:array/* | m:singleton-or-array/*" mode="json-key">
-      <span class="OM-lit">'<a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }"><xsl:value-of select="@name"/></a>' <xsl:value-of select="local-name()"/>s</span>
+   <xsl:template match="m:array/* | m:singleton-or-array/*" mode="json-key" expand-text="true">
+      <span class="OM-lit"><a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }">{ (@key,use-name,@name)[1] }</a> { local-name() }</span>
    </xsl:template>
    
-   <xsl:template priority="2" match="*[exists(@json-key-flag)]"  mode="json-key">
-      <span class="OM-lit">{{ <xsl:value-of select="@json-key-flag"/>}} ('<a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }"><xsl:value-of select="@name"/></a>' <xsl:value-of select="local-name()"/>s)</span>
+   <xsl:template priority="2" match="*[exists(@json-key-flag)]"  mode="json-key" expand-text="true">
+      <span class="OM-lit"><a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }">{ (@key,use-name,@name)[1] }</a> { local-name() }s, keyed by { @json-key-flag}</span>
    </xsl:template>
    
    <xsl:template match="m:object" mode="open-delimit">
+      <xsl:variable as="xs:boolean" name="has-subsequent" select="false()"/>
       <span class="OM-lit">
          <xsl:text> { </xsl:text>
       <span class="show-closed">
-         <xsl:text>... }</xsl:text>
-         <xsl:if test="not(position() eq last())">, </xsl:if>
+         <xsl:text>&#8230; }</xsl:text>
+         <xsl:if test="$has-subsequent">, </xsl:if>
       </span>
       </span>
    </xsl:template>
@@ -173,11 +182,12 @@ details:not([open]) .show-closed { display: inline }
    </xsl:template>
    
    <xsl:template match="m:array | m:singleton-or-array" mode="open-delimit">
+      <xsl:param as="xs:boolean" name="has-subsequent" select="false()"/>
       <span class="OM-lit">
          <xsl:text> [ </xsl:text>
          <span class="show-closed">
-            <xsl:text>... ]</xsl:text>
-            <xsl:if test="not(position() eq last())">, </xsl:if>
+            <xsl:text>&#8230; ]</xsl:text>
+            <xsl:if test="$has-subsequent">, </xsl:if>
          </span>
       </span>
    </xsl:template>
@@ -201,23 +211,27 @@ details:not([open]) .show-closed { display: inline }
       </div>
    </xsl:template>
    
+   <xsl:template mode="contents" match="m:string[matches(@as-type,'\S')]" expand-text="true">
+      <span class="OM-datatype"><a href="../../datatypes/#{@as-type}">"{ @as-type }"</a></span>
+   </xsl:template>
+   
+   <xsl:variable name="unquoted-types" select="'boolean','integer','positiveInteger','nonNegativeInteger'"/>
+   
+   <xsl:template priority="2" mode="contents" match="m:string[@as-type=$unquoted-types]" expand-text="true">
+      <span class="OM-datatype"><a href="../../datatypes/#{@as-type}">{ @as-type }</a></span>
+   </xsl:template>
+   
    <xsl:template mode="contents" match="m:string">
-      <span class="OM-datatype">string</span>
+      <span class="OM-datatype">"string"</span>
    </xsl:template>
    
-   <xsl:template mode="contents" match="m:string[matches(@as-type,'\S')]">
-      <span class="OM-datatype">
-         <xsl:value-of select="@as-type"/>
-      </span>
-   </xsl:template>
-   
-   <xsl:template mode="contents" match="m:array | m:object | m:singleton-or-array | m:group-by-key">
+  <xsl:template mode="contents" match="m:array | m:object | m:singleton-or-array | m:group-by-key">
       <div class="OM-map">
          <xsl:apply-templates select="*"/>
       </div>
    </xsl:template>
    
-   <xsl:template priority="4" mode="contents" match="m:element[@as-type='markup-line']">
+   <xsl:template priority="4" mode="contents" match="m:string[@as-type='markup-line']">
       <span class="OM-datatype">Text and inline Markdown notation</span>
    </xsl:template>
    
@@ -237,13 +251,13 @@ details:not([open]) .show-closed { display: inline }
    <xsl:template mode="occurrence-code" match="*">
       <xsl:variable name="minOccurs" select="(@min-occurs,'0')[1]"/>
       <xsl:variable name="maxOccurs" select="(@max-occurs,'1')[1] ! (if (. eq 'unbounded') then '&#x221e;' else .)"/>
-      <xsl:text>[</xsl:text>
+      <xsl:text>(</xsl:text>
       <xsl:choose>
          <xsl:when test="$minOccurs = $maxOccurs" expand-text="true">{ $minOccurs }</xsl:when>
          <xsl:when test="number($maxOccurs) = number($minOccurs) + 1" expand-text="true">{ $minOccurs } or { $maxOccurs }</xsl:when>
          <xsl:otherwise expand-text="true">{ $minOccurs } to { $maxOccurs }</xsl:otherwise>
       </xsl:choose>
-      <xsl:text>]</xsl:text>
+      <xsl:text>)</xsl:text>
    </xsl:template>
 
 

@@ -25,7 +25,7 @@
     <xsl:template match="define-assembly | define-field" mode="build">
         <xsl:param name="minOccurs" select="(@min-occurs,'0')[1]"/>
         <xsl:param name="maxOccurs" select="(@max-occurs,'1')[1]"/>
-        <xsl:param name="use-name" select="use-name"/>
+        <xsl:param name="using-name" select="(root-name, use-name,@name)[1]"/>
         <xsl:param name="group-name" select="group-as/@name"/>
         <xsl:param name="group-json" select="group-as/@in-json"/>
         <xsl:param name="group-xml" select="group-as/@in-xml"/>
@@ -50,7 +50,7 @@
             <xsl:for-each select="$group-json"><!-- ARRAY (default), SINGLETON_OR_ARRAY, BY_KEY --> 
                 <xsl:attribute name="group-json" select="."/>
             </xsl:for-each>
-            <xsl:for-each select="root-name | ($use-name, child::use-name)[1]">
+            <xsl:for-each select="$using-name">
                 <xsl:attribute name="{ local-name() }" select="."/>
             </xsl:for-each>
             <xsl:apply-templates select="json-key" mode="build"/>
@@ -107,6 +107,7 @@
             <xsl:with-param name="group-json" select="group-as/@in-json"/>
             <xsl:with-param name="group-xml" select="group-as/@in-xml"/>
             <xsl:with-param name="in-xml" select="@in-xml"/>
+            <xsl:with-param name="using-name" select="use-name"/>
         </xsl:apply-templates>
     </xsl:template>
     
@@ -118,6 +119,7 @@
             <xsl:with-param name="group-json" select="group-as/@in-json"/>
             <xsl:with-param name="group-xml" select="group-as/@in-xml"/>
             <xsl:with-param name="in-xml" select="@in-xml"/>
+            <xsl:with-param name="using-name" select="use-name"/>
         </xsl:apply-templates>
     </xsl:template>
     
