@@ -99,10 +99,8 @@
             <xsl:apply-templates/>
         </string>
     </xsl:template>
+
+    <xsl:template match="constraint" mode="#all"/>
     
-    <xsl:template match="constraint"/>
-    <!--<xsl:template match="field[@as-type='markup-multiline'][@in-xml='UNWRAPPED']">
-        <unwrapped-prose-sequence/>
-    </xsl:template>-->
     
 </xsl:stylesheet>
