@@ -67,20 +67,29 @@
         match="METASCHEMA/define-flag[@scope='local']" use="@name"/>
     
     <xsl:template mode="acquire" match="assembly[exists( key('top-level-local-assembly-definition-by-name',@ref) )]">
-        <xsl:apply-templates mode="expand" select="key('top-level-local-assembly-definition-by-name',@ref) "/>
+        <xsl:apply-templates mode="expand" select="key('top-level-local-assembly-definition-by-name',@ref) ">
+            <xsl:with-param name="from" select="."/>
+        </xsl:apply-templates>
     </xsl:template>
     
     <xsl:template mode="acquire" match="field[exists( key('top-level-local-field-definition-by-name',@ref) )]">
-        <xsl:apply-templates mode="expand" select="key('top-level-local-field-definition-by-name',@ref) "/>
+        <xsl:apply-templates mode="expand" select="key('top-level-local-field-definition-by-name',@ref) ">
+            <xsl:with-param name="from" select="."/>
+        </xsl:apply-templates>
     </xsl:template>
     
     <xsl:template mode="acquire" match="flag[exists( key('top-level-local-flag-definition-by-name',@ref) )]">
-        <xsl:apply-templates mode="expand" select="key('top-level-local-flag-definition-by-name',@ref) "/>
+        <xsl:apply-templates mode="expand" select="key('top-level-local-flag-definition-by-name',@ref) ">
+            <xsl:with-param name="from" select="."/>
+        </xsl:apply-templates>
     </xsl:template>
     
     <xsl:template match="*" mode="expand">
+        <xsl:param name="from" select="()"/>
         <xsl:copy>
+            <xsl:copy-of select="$from/@* except $from/@ref"/>
             <xsl:copy-of select="@*"/>
+            <xsl:apply-templates mode="acquire" select="$from/*"/>
             <xsl:apply-templates mode="acquire"/>
         </xsl:copy>
     </xsl:template>
