@@ -46,8 +46,8 @@
         </attribute>
     </xsl:template>
     
-    <xsl:template priority="2" match="field[@as-type='markup-multiline'][@in-xml='UNWRAPPED']">
-        <block-sequence/>
+    <xsl:template priority="2" match="field[@in-xml='UNWRAPPED'][value/@as-type='markup-multiline']">
+        <xsl:apply-templates/>
     </xsl:template>
     
     <xsl:template match="field[@as-type='markup-multiline']">
@@ -56,8 +56,8 @@
             <xsl:apply-templates/>
             <block-sequence/>
         </element>
-        
     </xsl:template>
+    
     
     <xsl:template match="constraint"/>
     
