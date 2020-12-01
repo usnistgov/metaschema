@@ -153,7 +153,7 @@
                else key('references', @name)/(use-name, @ref)[1])"/>
       <div class="definition-header">
          <xsl:call-template name="cross-links"/>
-         <h2 class="toc1" id="global_{@name}_head">
+         <h2 class="toc1" id="global_{@name}_h2">
             <span class="defining">
                <xsl:for-each-group select="$using-names" group-by="string(.)">
                   <xsl:if test="position() gt 1">, </xsl:if>
@@ -391,7 +391,13 @@
    
 <!-- list item templates  -->
    
-   <xsl:template match="flag | define-flag | field | define-field | assembly | define-assembly">
+   <xsl:template match="flag | define-flag">
+      <li class="model-entry">
+         <xsl:call-template name="model-description"/>
+      </li>
+   </xsl:template>
+   
+   <xsl:template match="field | define-field | assembly | define-assembly">
       <li class="model-entry">
          <xsl:call-template name="model-description"/>
       </li>
@@ -435,16 +441,23 @@
    </xsl:template>
    
    <xsl:template match="*[exists(@ref)]" mode="model-description" expand-text="true">
+      <xsl:param    name="make-page-links" tunnel="true" select="true()"/>
       <xsl:variable name="definition" select="key('definitions', @ref)"/>
       <xsl:variable name="is-a-flag" select="exists(self::flag)"/>
       <xsl:variable name="too-deep" select="exists(ancestor::model[2])"/>
       <xsl:if test="empty($definition)">
          <xsl:message>NO DEFINITION FOUND FOR { local-name() }</xsl:message>
       </xsl:if>
-      <div class="model-descr" tabindex="0"
-         id="#local_{string-join( ancestor-or-self::*/(@name|@ref),'-')}">
+      <div class="model-descr" tabindex="0">
          <div class="model-summary">
-            <h3 class="usename{ ' toc2'[not($is-a-flag) and not($too-deep)] }" id="#local_{string-join( ancestor-or-self::*/(@name|@ref),'-')}_head">{ m:use-name(.) }</h3>
+            <h3 class="usename{ ' toc2'[$make-page-links and not($is-a-flag) and not($too-deep)] }">
+               <xsl:if test="$make-page-links">
+                  <xsl:attribute name="id" select="'#local_' || string-join(ancestor-or-self::*/(@name|@ref), '-') || '_ref-h3'"/>
+               </xsl:if>
+               <xsl:value-of select="m:use-name(.)"/>
+            </h3>
+            <!--<h3 class="usename{ ' toc2'[not($is-a-flag) and not($too-deep)] }" id="#local_{string-join( ancestor-or-self::*/(@name|@ref),'-')}_ref-h3">{ m:use-name(.) }</h3>-->
+            <!--<h3 class="usename{ ' toc2'[not($is-a-flag) and not($too-deep)] }">{ m:use-name(.) }</h3>-->
             <span class="mtyp">
                <xsl:apply-templates select="." mode="metaschema-type"/>
                <xsl:if test="empty($definition)">&#xA0;</xsl:if>
@@ -487,13 +500,22 @@
    
       
    <xsl:template match="define-assembly | define-field | define-flag" mode="model-description" expand-text="true">
+      <xsl:param    name="make-page-links" tunnel="true" select="true()"/>
       <xsl:variable name="definition" select="."/>
       <xsl:variable name="is-local" select="empty(parent::METASCHEMA)"/>
       <xsl:variable name="too-deep" select="exists(ancestor::model[2])"/>
       <xsl:variable name="is-a-flag" select="exists(self::define-flag)"/>
-      <div class="model-descr" tabindex="0" id="#local_{string-join( ancestor-or-self::*/@name,'-')}">
+      <div class="model-descr" tabindex="0">
+         <xsl:if test="$make-page-links">
+            <xsl:attribute name="id" select="'#local_' || string-join( ancestor-or-self::*/@name,'-')"/>
+         </xsl:if>
          <div class="model-summary{ ' definition-header'[$is-local] }">
-            <h3 class="usename{ ' toc2'[not($is-a-flag) and not($too-deep)] }" id="#local_{string-join( ancestor-or-self::*/@name,'-')}_head">{ m:use-name(.) }</h3>
+            <h3 class="usename{ ' toc2'[$make-page-links and not($is-a-flag) and not($too-deep)] }">
+               <xsl:if test="$make-page-links">
+                  <xsl:attribute name="id" select="'#local_' || string-join(ancestor-or-self::*/@name, '-') || '_def-h3'"/>
+               </xsl:if>
+               <xsl:value-of select="m:use-name(.)"/>
+            </h3>
             <span class="mtyp">
                <xsl:apply-templates select="." mode="metaschema-type"/>
                <xsl:if test="empty($definition)">&#xA0;</xsl:if>
@@ -528,7 +550,7 @@
    </xsl:template>
    
    <xsl:template name="display-attributes">
-      <xsl:param name="definition"/>
+      <xsl:param name="definition" select="."/>
       <xsl:for-each-group select="$definition/(define-flag | flag)" group-by="true()" expand-text="true">
          <div class="attributes">
             <details open="open">
@@ -900,8 +922,6 @@
       <xsl:value-of select="local-name(.)"/>
       <xsl:text>&gt;</xsl:text>
    </xsl:template>
-
-
 
   <!-- mode as-example filters metaschema elements from elements representing examples -->
    <xsl:template match="m:*" xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"

@@ -21,6 +21,9 @@
     <xsl:template match="assembly | field | group">
         <element>
             <xsl:variable name="using-name" select="(@root-name[../parent::map],@use-name,@name)[1]"/>
+            <xsl:if test="@scope='global'">
+                <xsl:attribute name="id" select="'global_' || @name"/>
+            </xsl:if>
             <xsl:apply-templates select="$using-name,@min-occurs,@max-occurs,@as-type"/>
             <xsl:apply-templates/>
         </element>
