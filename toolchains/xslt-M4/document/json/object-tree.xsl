@@ -74,7 +74,10 @@
     </xsl:template>
     
     <xsl:template match="group[exists(@json-key-flag)]/*">
-        <object key="[[{@json-key-flag}]]">
+        <!-- escaping out for consumption by Hugo -->
+        <xsl:variable as="xs:string" name="o">{</xsl:variable>
+        <xsl:variable as="xs:string" name="c">}</xsl:variable>
+        <object key="{ $o || @json-key-flag || $c }">
             <xsl:apply-templates select="@min-occurs,@max-occurs,@as-type"/>
             <xsl:apply-templates/>
         </object>
