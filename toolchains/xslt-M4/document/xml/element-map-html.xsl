@@ -5,9 +5,13 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
-   <xsl:param as="xs:string" name="model-label">oscal-catalog-xml</xsl:param>
+   
+   <xsl:variable as="xs:string" name="model-label" select="string(/map/@prefix)"/>
 
    <xsl:variable as="xs:string" name="path-to-docs" select="'../xml-schema/'"/>
+
+<!--http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-model-map/
+http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-schema/-->
 
    <xsl:output omit-xml-declaration="true"/>
 
@@ -66,9 +70,7 @@ div.OM-map p { margin: 0ex }
          <span class="sq">
          <span class="nobr">
             <xsl:text>&lt;</xsl:text>
-            <a class="OM-name" href="{ $path-to-docs }#{ $model-label}_{ @name }">
-               <xsl:value-of select="@name"/>
-            </a>
+            <xsl:apply-templates select="." mode="linked-name"/>
          </span>
          <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
          <xsl:if test="not(matches($contents, '\S'))">/</xsl:if>
@@ -94,9 +96,7 @@ div.OM-map p { margin: 0ex }
          <span class="OM-sq">
             <span class="nobr">
                <xsl:text>&lt;</xsl:text>
-               <a class="OM-name" href="{ $path-to-docs }#{ $model-label}_{ @name }">
-                  <xsl:value-of select="@name"/>
-               </a>
+               <xsl:apply-templates select="." mode="linked-name"/>
             </span>
             <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
             <xsl:text>&gt;</xsl:text>
@@ -108,6 +108,17 @@ div.OM-map p { margin: 0ex }
             </span>
          </span>
       </p>
+   </xsl:template>
+
+
+   <xsl:template match="*[exists(@id)]" mode="linked-name">
+      <a class="OM-name" href="{ $path-to-docs }#{ @id }">
+         <xsl:value-of select="@name"/>
+      </a>
+   </xsl:template> 
+   
+   <xsl:template match="*" mode="linked-name">
+      <xsl:value-of select="@name"/>
    </xsl:template> 
    
    <xsl:template match="m:element[exists(m:element)]  | m:element[m:value/@as-type='markup-multiline']">
@@ -125,9 +136,7 @@ div.OM-map p { margin: 0ex }
             <span class="sq">
                <span class="nobr">
                   <xsl:text>&lt;</xsl:text>
-                  <a class="OM-name" href="{ $path-to-docs }#{ $model-label}_{ @name }">
-                     <xsl:value-of select="@name"/>
-                  </a>
+                  <xsl:apply-templates select="." mode="linked-name"/>
                </span>
                <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
                <xsl:text>&gt;</xsl:text>
@@ -153,9 +162,7 @@ div.OM-map p { margin: 0ex }
    <xsl:template match="m:attribute" mode="as-attribute">
       <xsl:text> </xsl:text>
       <span class="nobr">
-         <a class="OM-name" href="{ $path-to-docs }#{ $model-label}_{ @link }">
-            <xsl:value-of select="@name"/>
-         </a>
+         <xsl:apply-templates select="." mode="linked-name"/>
          <xsl:text>="</xsl:text>
          <span class="OM-datatype">
             <xsl:value-of select="(@as-type, 'string')[1]"/>

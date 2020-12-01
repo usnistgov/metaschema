@@ -212,7 +212,7 @@ details:not([open]) .show-closed { display: inline }
    </xsl:template>
    
    <xsl:template mode="contents" match="m:string[matches(@as-type,'\S')]" expand-text="true">
-      <span class="OM-datatype"><a href="../../datatypes/#{@as-type}">"{ @as-type }"</a></span>
+      <span class="OM-datatype"><a href="../../datatypes/#{@as-type}">{ @as-type }</a></span>
    </xsl:template>
    
    <xsl:variable name="unquoted-types" select="'boolean','integer','positiveInteger','nonNegativeInteger'"/>
@@ -222,7 +222,7 @@ details:not([open]) .show-closed { display: inline }
    </xsl:template>
    
    <xsl:template mode="contents" match="m:string">
-      <span class="OM-datatype">"string"</span>
+      <span class="OM-datatype">string</span>
    </xsl:template>
    
   <xsl:template mode="contents" match="m:array | m:object | m:singleton-or-array | m:group-by-key">
