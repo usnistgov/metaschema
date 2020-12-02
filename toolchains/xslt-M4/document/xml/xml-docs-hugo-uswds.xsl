@@ -796,18 +796,19 @@
       </div>
    </xsl:template>
    
+   <!-- Only display allowed-values for now -->
    <xsl:template name="display-applicable-constraints">
       <xsl:variable name="context" select="."/>
       <xsl:variable name="applicable-constraints" select="key('constraints-for-target',m:use-name(.))[m:include-constraint(.,$context)]"/>
       <xsl:for-each-group select="$applicable-constraints" group-by="true()" expand-text="true">
          <div class="constraints">
             <xsl:apply-templates select="$applicable-constraints/self::allowed-values"/>
-            <xsl:for-each-group select="$applicable-constraints except $applicable-constraints/self::allowed-values" group-by="true()">
+            <!--<xsl:for-each-group select="$applicable-constraints except $applicable-constraints/self::allowed-values" group-by="true()">
                <details>
                   <summary class="subhead">Applicable { if (count(current-group()) eq 1) then 'constraint' else 'constraints' } ({ count(current-group()) })</summary>
                   <xsl:apply-templates select="current-group()"/>
                </details>
-            </xsl:for-each-group>
+            </xsl:for-each-group>-->
          </div>
       </xsl:for-each-group>
    </xsl:template>  

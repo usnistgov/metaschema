@@ -88,6 +88,22 @@ div.OM-map p { margin: 0ex }
       </p>
    </xsl:template>
    
+   <xsl:template match="m:element[@as-type='empty']">
+      <p class="OM-entry">
+         <span class="sq">
+            <xsl:call-template name="cardinality-note"/>
+         </span>
+         <span class="OM-sq">
+            <span class="nobr">
+               <xsl:text>&lt;</xsl:text>
+               <xsl:apply-templates select="." mode="linked-name"/>
+            </span>
+            <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
+            <xsl:text>/&gt;</xsl:text>
+         </span>
+      </p>
+   </xsl:template>
+   
    <xsl:template match="m:element">
       <p class="OM-entry">
          <span class="sq">
@@ -109,7 +125,7 @@ div.OM-map p { margin: 0ex }
          </span>
       </p>
    </xsl:template>
-
+   
 
    <xsl:template match="*[exists(@id)]" mode="linked-name">
       <a class="OM-name" href="{ $path-to-docs }#{ @id }">
@@ -173,7 +189,7 @@ div.OM-map p { margin: 0ex }
    
    <xsl:template priority="5" match="m:attribute"/>
    
-   <xsl:template priority="5" mode="contents" match="m:element[exists(m:element)]">
+   <xsl:template priority="5" mode="contents" match="m:element[exists(descendant::m:element)]">
       <div class="OM-map">
          <xsl:apply-templates/>
       </div>
