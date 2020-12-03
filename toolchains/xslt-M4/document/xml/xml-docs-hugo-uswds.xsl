@@ -442,6 +442,7 @@
    
    <xsl:template match="*[exists(@ref)]" mode="model-description" expand-text="true">
       <xsl:param    name="make-page-links" tunnel="true" select="true()"/>
+      <xsl:param    name="make-model-links" tunnel="true" select="true()"/>
       <xsl:variable name="definition" select="key('definitions', @ref)"/>
       <xsl:variable name="is-a-flag" select="exists(self::flag)"/>
       <xsl:variable name="too-deep" select="exists(ancestor::model[2])"/>
@@ -450,8 +451,8 @@
       </xsl:if>
       <div class="model-descr" tabindex="0">
          <div class="model-summary">
-            <h3 class="usename{ ' toc2'[$make-page-links and not($is-a-flag) and not($too-deep)] }">
-               <xsl:if test="$make-page-links">
+            <h3 class="usename{ ' toc2'[$make-model-links and not($is-a-flag) and not($too-deep)] }">
+               <xsl:if test="$make-model-links">
                   <xsl:attribute name="id" select="'#local_' || string-join(ancestor-or-self::*/(@name|@ref), '-') || '_ref-h3'"/>
                </xsl:if>
                <xsl:value-of select="m:use-name(.)"/>
@@ -472,6 +473,7 @@
                }{'&#xA0;'[empty($definition/formal-name)] }</span>
          </div>
          <xsl:apply-templates select="$definition/description"/>
+         <xsl:apply-templates mode="make-link-to-global" select="."/>
          <xsl:for-each-group group-by="true()" select="remarks">
             <div class="remarks-group">
                <details open="open">
@@ -492,26 +494,25 @@
          <xsl:call-template name="display-attributes">
             <xsl:with-param name="definition" select="$definition"/>
          </xsl:call-template>
-         <xsl:apply-templates mode="make-link-to-global" select="."/>
          <!--<xsl:apply-templates mode="make-contents" select="."/>-->
          <xsl:call-template name="display-applicable-constraints"/>
       </div>
    </xsl:template>
-   
       
    <xsl:template match="define-assembly | define-field | define-flag" mode="model-description" expand-text="true">
       <xsl:param    name="make-page-links" tunnel="true" select="true()"/>
+      <xsl:param    name="make-model-links" tunnel="true" select="true()"/>
       <xsl:variable name="definition" select="."/>
       <xsl:variable name="is-local" select="empty(parent::METASCHEMA)"/>
       <xsl:variable name="too-deep" select="exists(ancestor::model[2])"/>
       <xsl:variable name="is-a-flag" select="exists(self::define-flag)"/>
       <div class="model-descr" tabindex="0">
-         <xsl:if test="$make-page-links">
+         <xsl:if test="$make-model-links">
             <xsl:attribute name="id" select="'#local_' || string-join( ancestor-or-self::*/@name,'-')"/>
          </xsl:if>
          <div class="model-summary{ ' definition-header'[$is-local] }">
-            <h3 class="usename{ ' toc2'[$make-page-links and not($is-a-flag) and not($too-deep)] }">
-               <xsl:if test="$make-page-links">
+            <h3 class="usename{ ' toc2'[$make-model-links and not($is-a-flag) and not($too-deep)] }">
+               <xsl:if test="$make-model-links">
                   <xsl:attribute name="id" select="'#local_' || string-join(ancestor-or-self::*/@name, '-') || '_def-h3'"/>
                </xsl:if>
                <xsl:value-of select="m:use-name(.)"/>
@@ -1013,12 +1014,11 @@
       </code>
    </xsl:template>
    
-   
-   <xsl:function name="m:use-name" as="node()?">
+   <xsl:function name="m:use-name" as="xs:string?">
       <xsl:param name="who" as="element()"/>
-      <xsl:sequence
-         select="$who/(self::define-assembly|self::define-field|self::define-flag|self::assembly|self::field|self::flag)/
-         (root-name, use-name, key('definitions',@ref)/(root-name, use-name, @name), @name, @ref)[1]"/>
+      <xsl:variable name="definition" select="($who/key('definitions',@ref),$who)[1]"/>
+      <xsl:value-of
+         select="($who/self::any/'(ANY)', $who/root-name, $who/use-name, $definition/root-name, $definition/use-name, $definition/@name, '-')[1]"/>
    </xsl:function>
    
 </xsl:stylesheet>
