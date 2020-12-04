@@ -42,6 +42,9 @@
             <xsl:apply-templates select="@*" mode="build"/>
             <xsl:attribute name="min-occurs" select="$minOccurs"/>
             <xsl:attribute name="max-occurs" select="$maxOccurs"/>
+            <xsl:if test="exists(root-name) and not(@name=$visited)">
+                <xsl:attribute name="min-occurs" select="'1'"/>
+            </xsl:if>
             <xsl:for-each select="$in-xml"><!-- UNWRAPPED or WITH_WRAPPER - supports unwrapped markup-multiline fields -->
                 <xsl:attribute name="in-xml" select="."/>
             </xsl:for-each>
@@ -53,6 +56,9 @@
             </xsl:for-each>
             <xsl:for-each select="$using-name">
                 <xsl:attribute name="{ local-name() }" select="."/>
+            </xsl:for-each>
+            <xsl:for-each select="formal-name">
+                <xsl:attribute name="formal-name" select="string(.)"/>
             </xsl:for-each>
             <xsl:apply-templates select="json-key" mode="build"/>
             <xsl:for-each select="$group-name">

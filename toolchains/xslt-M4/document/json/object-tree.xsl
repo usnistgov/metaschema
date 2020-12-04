@@ -40,7 +40,7 @@
     
     <xsl:template match="field">
         <object>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs"/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@formal-name"/>
             <xsl:apply-templates mode="field-value" select="."/>
             <xsl:apply-templates select="flag, value"/>
         </object>
@@ -54,21 +54,21 @@
     
     <xsl:template match="field[empty(flag)]">
         <string>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
             <xsl:apply-templates/>
         </string>
     </xsl:template>
     
     <xsl:template match="group">
         <singleton-or-array>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
             <xsl:apply-templates/>
         </singleton-or-array>
     </xsl:template>
     
     <xsl:template match="group[exists(@json-key-flag)]">
         <object property-key="{@json-key-flag}">
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@formal-name,@formal-name"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
@@ -78,14 +78,14 @@
         <xsl:variable as="xs:string" name="o">{</xsl:variable>
         <xsl:variable as="xs:string" name="c">}</xsl:variable>
         <object key="{ $o || @json-key-flag || $c }">
-            <xsl:apply-templates select="@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@min-occurs,@max-occurs,@as-type,@formal-name"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
     
     <xsl:template priority="3" match="group[exists(@json-key-flag)]/field[not(flag/@name != @json-key-flag)]">
         <string name="[[{@json-key-flag}]]">
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
             <xsl:apply-templates/>
         </string>
     </xsl:template>
@@ -98,7 +98,7 @@
     
     <xsl:template match="flag">
         <string>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
             <xsl:apply-templates/>
         </string>
     </xsl:template>

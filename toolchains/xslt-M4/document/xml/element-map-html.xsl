@@ -59,74 +59,8 @@ div.OM-map p { margin: 0ex }
 
    <xsl:template match="m:schema-name | m:schema-version"/>
    
-   <xsl:template match="m:element[empty(* except m:flag)]">
-      <xsl:variable name="contents">
-         <xsl:apply-templates select="." mode="contents"/>
-      </xsl:variable>
-      <p class="OM-entry">
-         <span class="sq">
-         <xsl:call-template name="cardinality-note"/>
-         </span>
-         <span class="sq">
-         <span class="nobr">
-            <xsl:text>&lt;</xsl:text>
-            <xsl:apply-templates select="." mode="linked-name"/>
-         </span>
-         <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
-         <xsl:if test="not(matches($contents, '\S'))">/</xsl:if>
-         <xsl:text>></xsl:text>
-         <xsl:if test="matches($contents, '\S')">
-            <xsl:sequence select="$contents"/>
-            <span class="nobr">
 
-               <xsl:text>&lt;/</xsl:text>
-               <xsl:value-of select="@name"/>
-               <xsl:text>></xsl:text>
-            </span>
-         </xsl:if>
-         </span>
-      </p>
-   </xsl:template>
    
-   <xsl:template match="m:element[@as-type='empty']">
-      <p class="OM-entry">
-         <span class="sq">
-            <xsl:call-template name="cardinality-note"/>
-         </span>
-         <span class="OM-sq">
-            <span class="nobr">
-               <xsl:text>&lt;</xsl:text>
-               <xsl:apply-templates select="." mode="linked-name"/>
-            </span>
-            <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
-            <xsl:text>/&gt;</xsl:text>
-         </span>
-      </p>
-   </xsl:template>
-   
-   <xsl:template match="m:element">
-      <p class="OM-entry">
-         <span class="sq">
-            <xsl:call-template name="cardinality-note"/>
-         </span>
-         <span class="OM-sq">
-            <span class="nobr">
-               <xsl:text>&lt;</xsl:text>
-               <xsl:apply-templates select="." mode="linked-name"/>
-            </span>
-            <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
-            <xsl:text>&gt;</xsl:text>
-            <xsl:apply-templates select="." mode="contents"/>
-            <span class="nobr">
-               <xsl:text>&lt;/</xsl:text>
-               <xsl:value-of select="@name"/>
-               <xsl:text>></xsl:text>
-            </span>
-         </span>
-      </p>
-   </xsl:template>
-   
-
    <xsl:template match="*[exists(@id)]" mode="linked-name">
       <a class="OM-name" href="{ $path-to-docs }#{ @id }">
          <xsl:value-of select="@name"/>
@@ -137,7 +71,8 @@ div.OM-map p { margin: 0ex }
       <xsl:value-of select="@name"/>
    </xsl:template> 
    
-   <xsl:template match="m:element[exists(m:element)]  | m:element[m:value/@as-type='markup-multiline']">
+   <!-- XXX make a variant for empty elements -->
+   <xsl:template match="m:element">
       <!--<xsl:variable name="contents">
          <xsl:apply-templates select="." mode="contents"/>
       </xsl:variable>-->
@@ -157,7 +92,7 @@ div.OM-map p { margin: 0ex }
                <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
                <xsl:text>&gt;</xsl:text>
                <span class="show-closed">
-                  <xsl:text> &#8230; </xsl:text>
+                  <xsl:apply-templates select="." mode="summary-contents"/>
                   <span class="nobr">
                      <xsl:text>&lt;/</xsl:text>
                      <xsl:value-of select="@name"/>
@@ -167,13 +102,60 @@ div.OM-map p { margin: 0ex }
             </span>
          </summary>
          <xsl:apply-templates select="." mode="contents"/>
-         <p class="indented nobr">
+         <xsl:if test="exists(m:element)">
+            <p class="close-tag nobr">
                <xsl:text>&lt;/</xsl:text>
-            <xsl:value-of select="@name"/>
-            <xsl:text>></xsl:text>
-         </p>
+               <xsl:value-of select="@name"/>
+               <xsl:text>></xsl:text>
+            </p>
+         </xsl:if>
       </details>
    </xsl:template>
+ 
+   <!--<xsl:template match="m:element[empty(* except m:flag)]">
+      <xsl:variable name="contents">
+         <xsl:apply-templates select="." mode="contents"/>
+      </xsl:variable>
+      <p class="OM-entry">
+         <span class="sq">
+            <xsl:call-template name="cardinality-note"/>
+         </span>
+         <span class="sq">
+            <span class="nobr">
+               <xsl:text>&lt;</xsl:text>
+               <xsl:apply-templates select="." mode="linked-name"/>
+            </span>
+            <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
+            <xsl:if test="not(matches($contents, '\S'))">/</xsl:if>
+            <xsl:text>></xsl:text>
+            <xsl:if test="matches($contents, '\S')">
+               <xsl:sequence select="$contents"/>
+               <span class="nobr">
+                  
+                  <xsl:text>&lt;/</xsl:text>
+                  <xsl:value-of select="@name"/>
+                  <xsl:text>></xsl:text>
+               </span>
+            </xsl:if>
+         </span>
+      </p>
+   </xsl:template>
+   
+   <xsl:template match="m:element[m:value/@as-type='empty']">
+      <p class="OM-entry">
+         <span class="sq">
+            <xsl:call-template name="cardinality-note"/>
+         </span>
+         <span class="OM-sq">
+            <span class="nobr">
+               <xsl:text>&lt;</xsl:text>
+               <xsl:apply-templates select="." mode="linked-name"/>
+            </span>
+            <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
+            <xsl:text>/&gt;</xsl:text>
+         </span>
+      </p>
+   </xsl:template>-->
    
    <xsl:template match="m:attribute" mode="as-attribute">
       <xsl:text> </xsl:text>
@@ -189,10 +171,19 @@ div.OM-map p { margin: 0ex }
    
    <xsl:template priority="5" match="m:attribute"/>
    
-   <xsl:template priority="5" mode="contents" match="m:element[exists(descendant::m:element)]">
+   <xsl:template priority="5" mode="contents" match="m:element[exists(descendant::m:element)]" expand-text="true">
       <div class="OM-map">
+         <p class="OM-map-name frmname">{ (@formal-name,'&#xA0;')[1] }</p>
          <xsl:apply-templates/>
       </div>
+   </xsl:template>
+   
+   <xsl:template mode="contents" match="m:element[matches(m:value/@as-type,'\S')]" expand-text="true">
+      <p class="OM-map-name"><span class="frmname">{ (@formal-name,'&#xA0;')[1] }</span> element with a value of type <span class="OM-datatype">
+         <xsl:value-of select="m:value/@as-type"/>
+      </span></p>
+      <xsl:apply-templates mode="#current"/>
+      <p>&lt;/{ @name }></p>
    </xsl:template>
    
    <xsl:template match="m:choice">
@@ -210,32 +201,32 @@ div.OM-map p { margin: 0ex }
       </div>
    </xsl:template>
    
-   <xsl:template priority="3" mode="contents" match="m:value[matches(@as-type,'\S')][empty(* except m:flag)]">
-      <span class="OM-datatype">
-         <xsl:value-of select="@as-type"/>
-      </span>
-   </xsl:template>
+<!-- this info already shows so we can drop it here:  -->
+   <xsl:template priority="3" mode="contents" match="m:value[matches(@as-type,'\S')][empty(* except m:flag)]"/>
    
    <xsl:template priority="4" mode="contents" match="m:value[@as-type='markup-line']">
-      <span class="OM-datatype">Text and inline markup including <code>&lt;em></code>, <code>&lt;strong></code>, <code>&lt;code></code> and the like</span>
+      <p class="OM-lit">Text and inline markup including <code>&lt;em></code>, <code>&lt;strong></code>, <code>&lt;code></code> and the like.</p>
    </xsl:template>
    
    <xsl:template priority="4" mode="contents #default" match="m:value[@as-type='markup-multiline']">
-      <p>
-         <span class="sq">
-            <span class="OM-cardinality">[0 to &#x221e;]</span>
-         </span>
-      <span class="sq OM-datatype">Block-level markup including <code>&lt;p></code>, <code>&lt;ul></code>, <code>&lt;ol></code> and a few other (markdown-compatible) HTML-flavored elements.</span>
-      </p>
+      <p class="OM-lit">
+         Block-level markup including <code>&lt;p></code>, <code>&lt;ul></code>, <code>&lt;ol></code> and a few other (markdown-compatible) HTML-flavored elements.</p>
    </xsl:template>
    
-   <xsl:template mode="contents" match="m:element[matches(@as-type,'\S')]">
-      <span class="OM-datatype">
-         <xsl:value-of select="@as-type"/>
-      </span>
+   <xsl:template mode="summary-contents" match="m:element[empty(m:element) and exists(m:value)]" expand-text="true">
+      <span class="OM-datatype">{ (value/@as-type,'string')[1] }</span>
    </xsl:template>
-
-
+   
+   <!-- XXX -->
+   <xsl:template mode="summary-contents" match="m:element[empty(m:element) and empty(m:value)]">
+      <xsl:text> (empty) </xsl:text>
+   </xsl:template>
+   
+   <xsl:template mode="summary-contents" match="m:element[exists(m:element)]">
+      <xsl:text> &#8230; </xsl:text>
+   </xsl:template>
+   
+   
    <xsl:template name="cardinality-note">
       <span class="OM-cardinality">
          <xsl:apply-templates select="." mode="occurrence-code"/>
