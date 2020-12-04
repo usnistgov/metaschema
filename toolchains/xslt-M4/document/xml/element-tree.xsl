@@ -24,7 +24,7 @@
             <xsl:if test="@scope='global'">
                 <xsl:attribute name="id" select="'global_' || @name"/>
             </xsl:if>
-            <xsl:apply-templates select="$using-name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="$using-name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
             <xsl:apply-templates/>
         </element>
     </xsl:template>
