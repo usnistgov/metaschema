@@ -1199,7 +1199,6 @@
       </code>
    </xsl:template>
 
-
    <xsl:function name="m:use-name" as="xs:string?">
       <xsl:param name="who" as="element()"/>
       <xsl:variable name="definition" select="($who/key('definitions', @ref,$home), $who)[1]"/>

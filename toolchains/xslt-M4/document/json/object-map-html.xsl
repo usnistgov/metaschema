@@ -59,19 +59,28 @@ details:not([open]) .show-closed { display: inline }
 
    <xsl:template match="m:schema-name | m:schema-version"/>
    
-   
-<!-- string object singleton-or-array array group-by-key -->
+   <!-- string object singleton-or-array array group-by-key -->
    
    <xsl:template match="m:string">
-      <p class="OM-entry">
-         <xsl:call-template name="line-marker"/>
-         <xsl:apply-templates select="." mode="json-key"/>
-         <xsl:call-template name="cardinality-note"/>
-         <xsl:text>: </xsl:text>
-         <xsl:apply-templates select="." mode="contents"/>
-         <xsl:if test="not(position() eq last())">
-            <span class="OM-lit">,</span></xsl:if>
-      </p>
+      <details class="OM-entry">
+         <summary>
+            <xsl:call-template name="cardinality-note"/>
+            <xsl:apply-templates select="." mode="json-key"/>
+            <xsl:text>: </xsl:text>
+            <xsl:apply-templates select="." mode="contents"/>
+            <xsl:if test="not(position() eq last())">
+               <span class="OM-lit show-closed">,</span>
+            </xsl:if>
+         </summary>
+         <p class="OM-map-name">
+            <xsl:for-each select="@formal-name" expand-text="true">
+               <span class="frmname">{ . }</span>
+            </xsl:for-each>
+            <xsl:if test="not(position() eq last())">
+               <span class="OM-lit">,</span>
+            </xsl:if>
+         </p>
+      </details>
    </xsl:template>
    
    <xsl:template name="line-marker">
@@ -85,8 +94,8 @@ details:not([open]) .show-closed { display: inline }
             <xsl:attribute name="open">open</xsl:attribute>
          </xsl:for-each>
          <summary>
-            <xsl:apply-templates select="." mode="json-key"/>
             <xsl:call-template name="cardinality-note"/> 
+            <xsl:apply-templates select="." mode="json-key"/>
             <xsl:text>: </xsl:text>
             <span class="OM-lit">
                <xsl:text>{</xsl:text>
@@ -96,6 +105,11 @@ details:not([open]) .show-closed { display: inline }
                </span>
             </span>
          </summary>
+         <p class="OM-map-name">
+            <xsl:for-each select="@formal-name" expand-text="true">
+               <span class="frmname">{ . }</span>
+            </xsl:for-each>
+         </p>
          <xsl:apply-templates select="." mode="contents"/>
          <p>
             <span class="OM-lit">
@@ -109,9 +123,9 @@ details:not([open]) .show-closed { display: inline }
    <xsl:template match="m:array/m:object | m:singleton-or-array/m:object | m:object[empty(*)]">
       <div class="OM-entry">
          <p>
-            <xsl:apply-templates select="." mode="json-key"/>
             <xsl:call-template name="cardinality-note"/>
-               <xsl:if test="not(empty(*))">
+            <xsl:apply-templates select="." mode="json-key"/>
+            <xsl:if test="not(empty(*))">
                <xsl:text>: </xsl:text>
                <span class="OM-lit"> { </span>
                <!--<span class="show-closed">
@@ -120,14 +134,19 @@ details:not([open]) .show-closed { display: inline }
                </span>-->
             </xsl:if>
          </p>
-         <xsl:if test="not(empty(*))">
-         <xsl:apply-templates select="." mode="contents"/>
-         <p>
-            <span class="OM-lit">
-               <xsl:text> }</xsl:text>
-               <xsl:if test="not(position() eq last())">, </xsl:if>
-            </span>
+         <p class="OM-map-name">
+            <xsl:for-each select="@formal-name" expand-text="true">
+               <span class="frmname">{ . }</span>
+            </xsl:for-each>
          </p>
+         <xsl:if test="not(empty(*))">
+            <xsl:apply-templates select="." mode="contents"/>
+            <p>
+               <span class="OM-lit">
+                  <xsl:text> }</xsl:text>
+                  <xsl:if test="not(position() eq last())">, </xsl:if>
+               </span>
+            </p>
          </xsl:if>
       </div>
    </xsl:template>
@@ -135,8 +154,8 @@ details:not([open]) .show-closed { display: inline }
    <xsl:template match="m:array | m:singleton-or-array">
       <details class="OM-entry">
          <summary>
-            <xsl:apply-templates select="." mode="json-key"/>
             <xsl:call-template name="cardinality-note"/>
+            <xsl:apply-templates select="." mode="json-key"/>
             <xsl:text>: </xsl:text>
             
             <xsl:apply-templates select="." mode="open-delimit">
@@ -160,11 +179,22 @@ details:not([open]) .show-closed { display: inline }
    </xsl:template>
    
    <xsl:template match="m:array/* | m:singleton-or-array/*" mode="json-key" expand-text="true">
-      <span class="OM-lit"><a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }">{ (@key,use-name,@name)[1] }</a> { local-name() }</span>
+      <span class="OM-lit">
+         <a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }">{ (@key,use-name,@name)[1] }</a>
+         <xsl:text> { local-name()} </xsl:text>
+         <xsl:for-each select="@formal-name">
+            <span class="frmname">{ . }</span>
+         </xsl:for-each>
+      </span>
    </xsl:template>
    
    <xsl:template priority="2" match="*[exists(@json-key-flag)]"  mode="json-key" expand-text="true">
-      <span class="OM-lit"><a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }">{ (@key,use-name,@name)[1] }</a> { local-name() }s, keyed by { @json-key-flag}</span>
+      <span class="OM-lit">
+         <a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }">{ (@key,use-name,@name)[1] }</a>
+         <xsl:text> { local-name()}s </xsl:text>
+         <xsl:for-each select="@formal-name">(<span class="frmname">{ . }</span>)</xsl:for-each>
+         <xsl:text>, keyed by { @json-key-flag }</xsl:text>
+      </span>
    </xsl:template>
    
    <xsl:template match="m:object" mode="open-delimit">
@@ -246,18 +276,19 @@ details:not([open]) .show-closed { display: inline }
       <span class="OM-cardinality">
          <xsl:apply-templates select="." mode="occurrence-code"/>
       </span>
+      <xsl:text> </xsl:text>
    </xsl:template>
 
    <xsl:template mode="occurrence-code" match="*">
       <xsl:variable name="minOccurs" select="(@min-occurs,'0')[1]"/>
       <xsl:variable name="maxOccurs" select="(@max-occurs,'1')[1] ! (if (. eq 'unbounded') then '&#x221e;' else .)"/>
-      <xsl:text>(</xsl:text>
+      <xsl:text>[</xsl:text>
       <xsl:choose>
          <xsl:when test="$minOccurs = $maxOccurs" expand-text="true">{ $minOccurs }</xsl:when>
          <xsl:when test="number($maxOccurs) = number($minOccurs) + 1" expand-text="true">{ $minOccurs } or { $maxOccurs }</xsl:when>
          <xsl:otherwise expand-text="true">{ $minOccurs } to { $maxOccurs }</xsl:otherwise>
       </xsl:choose>
-      <xsl:text>)</xsl:text>
+      <xsl:text>]</xsl:text>
    </xsl:template>
 
 
