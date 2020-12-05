@@ -67,12 +67,14 @@ details:not([open]) .show-closed { display: inline }
       <details class="OM-entry">
          <summary>
             <xsl:call-template name="cardinality-note"/>
+            <span class="sq">
             <xsl:apply-templates select="." mode="json-key"/>
             <xsl:text>: </xsl:text>
             <xsl:apply-templates select="." mode="inline-link-to"/>
             <xsl:if test="not(position() eq last())">
                <span class="OM-lit show-closed">,</span>
             </xsl:if>
+            </span>
          </summary>
          <div class="OM-map">
             <xsl:apply-templates select="." mode="contents">
@@ -94,6 +96,7 @@ details:not([open]) .show-closed { display: inline }
          </xsl:for-each>
          <summary>
             <xsl:call-template name="cardinality-note"/> 
+            <span class="sq">
             <xsl:apply-templates select="." mode="json-key"/>
             <xsl:text>: </xsl:text>
             <span class="OM-lit">
@@ -102,6 +105,7 @@ details:not([open]) .show-closed { display: inline }
                   <xsl:text> &#8230; }</xsl:text>
                   <xsl:if test="not(position() eq last())">, </xsl:if>
                </span>
+            </span>
             </span>
          </summary>
          <div class="OM-map">
@@ -157,12 +161,14 @@ details:not([open]) .show-closed { display: inline }
       <details class="OM-entry">
          <summary>
             <xsl:call-template name="cardinality-note"/>
-            <xsl:apply-templates select="." mode="json-key"/>
-            <xsl:text>: </xsl:text>
-            
-            <xsl:apply-templates select="." mode="open-delimit">
-               <xsl:with-param name="has-subsequent" select="not(position() eq last())"/>
-            </xsl:apply-templates>
+            <span class="sq">
+               <xsl:apply-templates select="." mode="json-key"/>
+               <xsl:text>: </xsl:text>
+
+               <xsl:apply-templates select="." mode="open-delimit">
+                  <xsl:with-param name="has-subsequent" select="not(position() eq last())"/>
+               </xsl:apply-templates>
+            </span>
          </summary>
          <div class="OM-map">
             
@@ -268,13 +274,6 @@ details:not([open]) .show-closed { display: inline }
       </div>
    </xsl:template>
    
-   <xsl:template mode="contents" match="m:string[@as-type=('integer','positiveInteger','nonNegativeInteger')]">
-      <p>
-         <xsl:call-template name="datatype-link"/>
-         <xsl:text> value, expressed as a number.</xsl:text>
-      </p>
-   </xsl:template>
-   
    <xsl:template name="datatype-link">
       <xsl:text expand-text="true">{ if (matches(@as-type,'^(a|e|i|o|A|E|I|O|NC)')) then 'an ' else 'a '}</xsl:text>
       <xsl:apply-templates select="." mode="inline-link-to"/>
@@ -295,12 +294,17 @@ details:not([open]) .show-closed { display: inline }
       <xsl:text> value, expressed as a string</xsl:text>
    </xsl:template>
   
-   <xsl:template mode="content-gloss" match="m:string[@as-type='boolean']" expand-text="true">
+   <xsl:template mode="content-gloss" match="m:string[@as-type=('string','boolean')]">
       <p> value</p>
    </xsl:template>
    
+   <xsl:template mode="contents" match="m:string[@as-type=('integer','positiveInteger','nonNegativeInteger')]">
+         <xsl:text> value, expressed as a number</xsl:text>
+   </xsl:template>
+   
+   
    <xsl:template mode="content-gloss" match="m:string[@as-type='markup-line']">
-      <xsl:text> value (text with formatting expressed as inline (Markdown) notation, including inline links and emphasis)</xsl:text>
+      <xsl:text> value (text with formatting expressed as inline Markdown notation, including inline links and emphasis)</xsl:text>
    </xsl:template>
    
    <xsl:template mode="content-gloss" match="m:string[@as-type='markup-multiline']">
