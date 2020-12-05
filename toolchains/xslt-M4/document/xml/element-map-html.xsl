@@ -90,14 +90,19 @@ div.OM-map p { margin: 0ex }
                   <xsl:apply-templates select="." mode="linked-name"/>
                </span>
                <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
+               <xsl:if test="empty(*)">
+                  <span class="show-closed">/</span>
+               </xsl:if>
                <xsl:text>&gt;</xsl:text>
                <span class="show-closed">
                   <xsl:apply-templates select="." mode="summary-contents"/>
+                  <xsl:if test="not(empty(*))">
                   <span class="nobr">
                      <xsl:text>&lt;/</xsl:text>
                      <xsl:value-of select="(@gi,@name)[1]"/>
                      <xsl:text>></xsl:text>
                   </span>
+                  </xsl:if>
                </span>
             </span>
          </summary>
@@ -186,6 +191,16 @@ div.OM-map p { margin: 0ex }
       <span class="frmname">{ . }</span>
    </xsl:template>
    
+   <xsl:template mode="contents" match="m:element[empty(.//m:element) and empty(m:value)]" expand-text="true">
+      <p class="OM-map-name">
+         <xsl:apply-templates select="@formal-name"/>
+         <xsl:text>, an empty element</xsl:text>
+      </p>
+      <xsl:apply-templates mode="#current"/>
+      <p>&lt;/{ (@gi,@name)[1] }></p>
+   </xsl:template>
+   
+   
    <xsl:template mode="contents" match="m:element[matches(m:value/@as-type,'\S')]" expand-text="true">
       <p class="OM-map-name">
          <xsl:apply-templates select="@formal-name"/>
@@ -229,11 +244,9 @@ div.OM-map p { margin: 0ex }
    </xsl:template>
    
    <!-- XXX -->
-   <xsl:template mode="summary-contents" match="m:element[empty(m:element) and empty(m:value)]">
-      <xsl:text> (empty) </xsl:text>
-   </xsl:template>
+   <xsl:template mode="summary-contents" match="m:element[empty(.//m:element) and empty(m:value)]"/>
    
-   <xsl:template mode="summary-contents" match="m:element[exists(m:element)]">
+   <xsl:template mode="summary-contents" match="m:element">
       <xsl:text> &#8230; </xsl:text>
    </xsl:template>
    
