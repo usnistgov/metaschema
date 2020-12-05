@@ -21,11 +21,12 @@
     
     <xsl:key name="global-assemblies" match="METASCHEMA/define-assembly" use="@name"/>
     <xsl:key name="global-fields"     match="METASCHEMA/define-field"    use="@name"/>
+    <xsl:key name="global-flags"      match="METASCHEMA/define-flag"     use="@name"/>
     
     <xsl:template match="define-assembly | define-field" mode="build">
         <xsl:param name="minOccurs" select="(@min-occurs,'0')[1]"/>
         <xsl:param name="maxOccurs" select="(@max-occurs,'1')[1]"/>
-        <xsl:param name="using-name" select="(root-name, use-name,@name)[1]"/>
+        <xsl:param name="using-name" select="()"/>
         <xsl:param name="group-name" select="group-as/@name"/>
         <xsl:param name="group-json" select="group-as/@in-json"/>
         <xsl:param name="group-xml" select="group-as/@in-xml"/>
@@ -40,6 +41,7 @@
                 <xsl:attribute name="recursive">true</xsl:attribute>
             </xsl:if>
             <xsl:apply-templates select="@*" mode="build"/>
+            <xsl:attribute name="gi" select="($using-name, root-name, use-name,@name)[1]"/>
             <xsl:attribute name="min-occurs" select="$minOccurs"/>
             <xsl:attribute name="max-occurs" select="$maxOccurs"/>
             <xsl:if test="exists(root-name) and not(@name=$visited)">
@@ -53,9 +55,6 @@
             </xsl:for-each>
             <xsl:for-each select="$group-json"><!-- ARRAY (default), SINGLETON_OR_ARRAY, BY_KEY --> 
                 <xsl:attribute name="group-json" select="."/>
-            </xsl:for-each>
-            <xsl:for-each select="$using-name">
-                <xsl:attribute name="{ local-name() }" select="."/>
             </xsl:for-each>
             <xsl:for-each select="formal-name">
                 <xsl:attribute name="formal-name" select="string(.)"/>
@@ -78,6 +77,25 @@
             <xsl:apply-templates select="constraint" mode="build"/>
         </xsl:element>
     </xsl:template>
+    
+    <xsl:template match="define-flag" mode="build">
+        <xsl:param name="required" select="@required='yes'"/>
+        <xsl:param name="using-name" select="(use-name,@name)[1]"/>
+        <flag max-occurs="1" min-occurs="{if ($required) then 1 else 0}" as-type="string">
+            <xsl:apply-templates select="@*" mode="build"/>
+            <xsl:for-each select="parent::METASCHEMA">
+                <xsl:attribute name="scope">global</xsl:attribute>
+            </xsl:for-each>
+            <xsl:attribute name="name" select="(use-name,@name,@ref)[1]"/>
+            <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
+            <xsl:attribute name="as-type">string</xsl:attribute>
+            <xsl:for-each select="formal-name">
+                <xsl:attribute name="formal-name" select="string(.)"/>
+            </xsl:for-each>
+            <xsl:apply-templates select="constraint" mode="build"/>
+        </flag>
+    </xsl:template>
+    
     
     <xsl:template mode="build" match="json-value-key[matches(@flag-name,'\S')]">
         <xsl:attribute name="json-value-flag" select="@flag-name"/>
@@ -130,17 +148,16 @@
         </xsl:apply-templates>
     </xsl:template>
     
-    <xsl:template match="flag | define-flag" mode="build">
-        <flag max-occurs="1" min-occurs="{if (@required='yes') then 1 else 0}" as-type="string">
-            <xsl:for-each select="self::flag">
-                <xsl:attribute name="scope">global</xsl:attribute>
-            </xsl:for-each>
-            <xsl:attribute name="name" select="(use-name,@name,@ref)[1]"/>
-            <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
-            <xsl:attribute name="as-type">string</xsl:attribute>
-            <xsl:apply-templates select="@*" mode="build"/>
-            <xsl:apply-templates select="constraint" mode="build"/>
-        </flag>
+    <xsl:template mode="build" match="flag">
+        <xsl:apply-templates mode="build" select="key('global-flags', @ref)">
+            <xsl:with-param name="minOccurs" select="(@min-occurs,'0')[1]"/>
+            <xsl:with-param name="maxOccurs" select="(@max-occurs,'1')[1]"/>
+            <xsl:with-param name="group-name" select="group-as/@name"/>
+            <xsl:with-param name="group-json" select="group-as/@in-json"/>
+            <xsl:with-param name="group-xml" select="group-as/@in-xml"/>
+            <xsl:with-param name="in-xml" select="@in-xml"/>
+            <xsl:with-param name="using-name" select="(use-name,@ref)[1]"/>
+        </xsl:apply-templates>
     </xsl:template>
     
     <xsl:template match="constraint" mode="build">

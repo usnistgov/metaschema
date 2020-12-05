@@ -63,12 +63,12 @@ div.OM-map p { margin: 0ex }
    
    <xsl:template match="*[exists(@id)]" mode="linked-name">
       <a class="OM-name" href="{ $path-to-docs }#{ @id }">
-         <xsl:value-of select="@name"/>
+         <xsl:value-of select="(@gi,@name)[1]"/>
       </a>
    </xsl:template> 
    
    <xsl:template match="*" mode="linked-name">
-      <xsl:value-of select="@name"/>
+      <xsl:value-of select="(@gi,@name)[1]"/>
    </xsl:template> 
    
    <!-- XXX make a variant for empty elements -->
@@ -95,7 +95,7 @@ div.OM-map p { margin: 0ex }
                   <xsl:apply-templates select="." mode="summary-contents"/>
                   <span class="nobr">
                      <xsl:text>&lt;/</xsl:text>
-                     <xsl:value-of select="@name"/>
+                     <xsl:value-of select="(@gi,@name)[1]"/>
                      <xsl:text>></xsl:text>
                   </span>
                </span>
@@ -105,7 +105,7 @@ div.OM-map p { margin: 0ex }
          <xsl:if test="exists(m:element)">
             <p class="close-tag nobr">
                <xsl:text>&lt;/</xsl:text>
-               <xsl:value-of select="@name"/>
+               <xsl:value-of select="(@gi,@name)[1]"/>
                <xsl:text>></xsl:text>
             </p>
          </xsl:if>
@@ -183,7 +183,7 @@ div.OM-map p { margin: 0ex }
          <xsl:value-of select="m:value/@as-type"/>
       </span></p>
       <xsl:apply-templates mode="#current"/>
-      <p>&lt;/{ @name }></p>
+      <p>&lt;/{ (@gi,@name)[1] }></p>
    </xsl:template>
    
    <xsl:template match="m:choice">

@@ -24,7 +24,7 @@
             <xsl:if test="@scope='global'">
                 <xsl:attribute name="id" select="'global_' || @name"/>
             </xsl:if>
-            <xsl:apply-templates select="$using-name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
+            <xsl:apply-templates select="$using-name,@min-occurs,@max-occurs,@as-type,@formal-name,@gi"/>
             <xsl:apply-templates/>
         </element>
     </xsl:template>
@@ -45,7 +45,7 @@
     
     <xsl:template match="flag">
         <attribute>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@gi"/>
         </attribute>
     </xsl:template>
     
@@ -55,7 +55,7 @@
     
     <xsl:template match="field[@as-type='markup-multiline']">
         <element>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@gi"/>
             <xsl:apply-templates/>
             <block-sequence/>
         </element>
