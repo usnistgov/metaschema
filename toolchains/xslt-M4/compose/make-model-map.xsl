@@ -79,16 +79,16 @@
     </xsl:template>
     
     <xsl:template match="define-flag" mode="build">
+        <xsl:param name="given-type" select="()"/>
         <xsl:param name="required" select="@required='yes'"/>
         <xsl:param name="using-name" select="(use-name,@name)[1]"/>
-        <flag max-occurs="1" min-occurs="{if ($required) then 1 else 0}" as-type="string">
+        <flag max-occurs="1" min-occurs="{if ($required) then 1 else 0}" as-type="{ ($given-type,@as-type, 'string')[1] }">
             <xsl:apply-templates select="@*" mode="build"/>
             <xsl:for-each select="parent::METASCHEMA">
                 <xsl:attribute name="scope">global</xsl:attribute>
             </xsl:for-each>
             <xsl:attribute name="name" select="(use-name,@name,@ref)[1]"/>
             <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
-            <xsl:attribute name="as-type">string</xsl:attribute>
             <xsl:for-each select="formal-name">
                 <xsl:attribute name="formal-name" select="string(.)"/>
             </xsl:for-each>
@@ -115,8 +115,8 @@
         <xsl:copy-of select="."/>
     </xsl:template>
     
-    <!-- dropped in build mode b/c picked up by calling template -->
-    <xsl:template match="define-field/@as-type" mode="build"/>
+    
+    <!--<xsl:template match="define-field/@as-type" mode="build"/>-->
     
     <xsl:template match="choice" mode="build">
         <choice>
@@ -157,6 +157,7 @@
             <xsl:with-param name="group-xml" select="group-as/@in-xml"/>
             <xsl:with-param name="in-xml" select="@in-xml"/>
             <xsl:with-param name="using-name" select="(use-name,@ref)[1]"/>
+            <xsl:with-param name="given-type" select="@as-type"/>
         </xsl:apply-templates>
     </xsl:template>
     
