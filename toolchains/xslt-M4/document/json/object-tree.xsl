@@ -33,7 +33,7 @@
       
     <xsl:template match="assembly">
         <object>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs"/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@formal-name"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
@@ -54,8 +54,7 @@
     
     <xsl:template match="field[empty(flag)]">
         <string>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
-            <xsl:apply-templates/>
+            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@formal-name,value/@as-type"/>
         </string>
     </xsl:template>
     
