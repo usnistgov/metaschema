@@ -173,13 +173,24 @@ div.OM-map p { margin: 0ex }
    
    <xsl:template priority="5" mode="contents" match="m:element[exists(descendant::m:element)]" expand-text="true">
       <div class="OM-map">
-         <p class="OM-map-name frmname">{ (@formal-name,'&#xA0;')[1] }</p>
+         <xsl:for-each select="@formal-name">
+            <p class="OM-map-name">
+               <xsl:apply-templates select="."/>
+            </p>
+         </xsl:for-each>
          <xsl:apply-templates/>
       </div>
    </xsl:template>
    
+   <xsl:template match="@formal-name" expand-text="true">
+      <span class="frmname">{ . }</span>
+   </xsl:template>
+   
    <xsl:template mode="contents" match="m:element[matches(m:value/@as-type,'\S')]" expand-text="true">
-      <p class="OM-map-name"><span class="frmname">{ (@formal-name,'&#xA0;')[1] }</span> element with a value of type <span class="OM-datatype">
+      <p class="OM-map-name">
+         <xsl:apply-templates select="@formal-name"/>
+         <xsl:text>element with a value of type </xsl:text>
+         <span class="OM-datatype">
          <xsl:value-of select="m:value/@as-type"/>
       </span></p>
       <xsl:apply-templates mode="#current"/>
