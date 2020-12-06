@@ -90,24 +90,22 @@ div.OM-map p { margin: 0ex }
                   <xsl:apply-templates select="." mode="linked-name"/>
                </span>
                <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
-               <xsl:if test="empty(*)">
-                  <span class="show-closed">/</span>
-               </xsl:if>
+               <xsl:if test="empty(* except m:attribute)">/</xsl:if>
                <xsl:text>&gt;</xsl:text>
-               <span class="show-closed">
-                  <xsl:apply-templates select="." mode="summary-contents"/>
-                  <xsl:if test="not(empty(*))">
-                  <span class="nobr">
-                     <xsl:text>&lt;/</xsl:text>
-                     <xsl:value-of select="(@gi,@name)[1]"/>
-                     <xsl:text>></xsl:text>
+               <xsl:if test="exists(* except m:attribute)">
+                  <span class="show-closed">
+                     <xsl:apply-templates select="." mode="summary-contents"/>
+                     <span class="nobr">
+                        <xsl:text>&lt;/</xsl:text>
+                        <xsl:value-of select="(@gi, @name)[1]"/>
+                        <xsl:text>></xsl:text>
+                     </span>
                   </span>
-                  </xsl:if>
-               </span>
+               </xsl:if>
             </span>
          </summary>
          <xsl:apply-templates select="." mode="contents"/>
-         <xsl:if test="exists(m:element)">
+         <xsl:if test="exists(* except m:attribute)">
             <p class="close-tag nobr">
                <xsl:text>&lt;/</xsl:text>
                <xsl:value-of select="(@gi,@name)[1]"/>
@@ -204,12 +202,11 @@ div.OM-map p { margin: 0ex }
    <xsl:template mode="contents" match="m:element[matches(m:value/@as-type,'\S')]" expand-text="true">
       <p class="OM-map-name">
          <xsl:apply-templates select="@formal-name"/>
-         <xsl:text>element with a value of type </xsl:text>
+         <xsl:text> element with a value of type </xsl:text>
          <span class="OM-datatype">
          <xsl:value-of select="m:value/@as-type"/>
       </span></p>
       <xsl:apply-templates mode="#current"/>
-      <p>&lt;/{ (@gi,@name)[1] }></p>
    </xsl:template>
    
    <xsl:template match="m:choice">
