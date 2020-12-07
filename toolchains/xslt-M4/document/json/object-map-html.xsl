@@ -12,6 +12,7 @@
    <xsl:output omit-xml-declaration="true" indent="no"/>
 
    <xsl:variable name="datatype-page">../../datatypes</xsl:variable>
+   
    <xsl:template match="/" mode="make-page">
       <html lang="en">
          <head>
@@ -24,6 +25,7 @@
    </xsl:template>
    
    <xsl:template match="/" name="make-map">
+      <!--<call-template name="legend"/>-->
       <div class="OM-map">
          <xsl:apply-templates select="/*"/>
       </div>
@@ -66,15 +68,20 @@ details:not([open]) .show-closed { display: inline }
       <xsl:variable name="last-appearing" select="position() eq last()"/>
       <details class="OM-entry">
          <summary>
-            <xsl:call-template name="cardinality-note"/>
-            <span class="sq">
-            <xsl:apply-templates select="." mode="json-key"/>
-            <xsl:text>: </xsl:text>
-            <xsl:apply-templates select="." mode="inline-link-to"/>
-            <xsl:if test="not(position() eq last())">
-               <span class="OM-lit show-closed">,</span>
-            </xsl:if>
-            </span>
+            <!--<div class="OM-flex">-->
+               <span class="sq">
+                  <xsl:apply-templates select="." mode="json-key"/>
+                  <xsl:call-template name="cardinality-note"/>
+                  <xsl:text>: </xsl:text>
+                  <xsl:apply-templates select="." mode="inline-link-to"/>
+                  <xsl:if test="not(position() eq last())">
+                     <span class="OM-lit show-closed">,</span>
+                  </xsl:if>
+               </span>
+            <!--<span class="sq cardinality">
+               <xsl:call-template name="cardinality-note"/>
+            </span>-->
+            <!--</div>-->
          </summary>
          <div class="OM-map">
             <xsl:apply-templates select="." mode="contents">
@@ -95,24 +102,29 @@ details:not([open]) .show-closed { display: inline }
             <xsl:attribute name="open">open</xsl:attribute>
          </xsl:for-each>
          <summary>
-            <xsl:call-template name="cardinality-note"/> 
-            <span class="sq">
-            <xsl:apply-templates select="." mode="json-key"/>
-            <xsl:text>: </xsl:text>
-            <span class="OM-lit">
-               <xsl:text>{</xsl:text>
-               <span class="show-closed">
-                  <xsl:text> &#8230; }</xsl:text>
-                  <xsl:if test="not(position() eq last())">, </xsl:if>
+            <!--<div class="OM-flex">-->
+               <span class="sq">
+                  <xsl:apply-templates select="." mode="json-key"/>
+                  <xsl:call-template name="cardinality-note"/>
+                  <xsl:text>: </xsl:text>
+                  <span class="OM-lit">
+                     <xsl:text>{</xsl:text>
+                     <span class="show-closed">
+                        <xsl:text> &#8230; }</xsl:text>
+                        <xsl:if test="not(position() eq last())">, </xsl:if>
+                     </span>
+                  </span>
                </span>
-            </span>
-            </span>
+               <!--<span class="sq cardinality">
+                  <xsl:call-template name="cardinality-note"/>
+               </span>-->
+            <!--</div>-->
          </summary>
          <div class="OM-map">
-         <p class="OM-map-name">
+         <!--<p class="OM-map-name">
             <xsl:apply-templates select="@formal-name"/>
             <xsl:text>, an object with properties</xsl:text>
-         </p>
+         </p>-->
          <xsl:apply-templates select="." mode="contents"/>
          <p>
             <span class="OM-lit">
@@ -131,9 +143,9 @@ details:not([open]) .show-closed { display: inline }
    <xsl:template match="m:array/m:object | m:singleton-or-array/m:object | m:object[empty(*)]">
       <div class="OM-entry">
          <p>
-            <xsl:call-template name="cardinality-note"/>
-            <xsl:text> </xsl:text>
             <xsl:apply-templates select="." mode="json-key"/>
+            <xsl:text> </xsl:text>
+            <xsl:call-template name="cardinality-note"/>
             <xsl:if test="not(empty(*))">
                <span class="OM-lit"> { </span>
                <!--<span class="show-closed">
@@ -141,10 +153,11 @@ details:not([open]) .show-closed { display: inline }
                   <xsl:if test="not(position() eq last())">, </xsl:if>
                </span>-->
             </xsl:if>
+            
          </p>
-         <p class="OM-map-name">
+         <!--<p class="OM-map-name">
             <xsl:apply-templates select="@formal-name"/>
-         </p>
+         </p>-->
          <xsl:if test="not(empty(*))">
             <xsl:apply-templates select="." mode="contents"/>
             <p>
@@ -160,15 +173,20 @@ details:not([open]) .show-closed { display: inline }
    <xsl:template match="m:array | m:singleton-or-array">
       <details class="OM-entry">
          <summary>
-            <xsl:call-template name="cardinality-note"/>
-            <span class="sq">
-               <xsl:apply-templates select="." mode="json-key"/>
-               <xsl:text>: </xsl:text>
+            <!--<div class="OM-flex">-->
+               <span class="sq">
+                  <xsl:apply-templates select="." mode="json-key"/>
+                  <xsl:call-template name="cardinality-note"/>
+                  <xsl:text>: </xsl:text>
 
-               <xsl:apply-templates select="." mode="open-delimit">
-                  <xsl:with-param name="has-subsequent" select="not(position() eq last())"/>
-               </xsl:apply-templates>
-            </span>
+                  <xsl:apply-templates select="." mode="open-delimit">
+                     <xsl:with-param name="has-subsequent" select="not(position() eq last())"/>
+                  </xsl:apply-templates>
+               </span>
+            <!--<span class="sq cardinality">
+               <xsl:call-template name="cardinality-note"/>
+            </span>-->
+            <!--</div>-->
          </summary>
          <div class="OM-map">
             
@@ -275,17 +293,18 @@ details:not([open]) .show-closed { display: inline }
    </xsl:template>
    
    <xsl:template name="datatype-link">
-      <xsl:text expand-text="true">{ if (matches(@as-type,'^(a|e|i|o|A|E|I|O|NC)')) then 'an ' else 'a '}</xsl:text>
+      <xsl:text expand-text="true">{ if (matches(@as-type,'^(a|e|i|o|A|E|I|O|NC)')) then 'An ' else 'A '}</xsl:text>
       <xsl:apply-templates select="." mode="inline-link-to"/>
+      <xsl:text> value</xsl:text>
    </xsl:template>
    
    <xsl:template mode="contents" match="m:string">
       <xsl:param name="with-comma" select="false()"/>
       <p class="OM-map-name OM-lit">
-         <xsl:apply-templates select="@formal-name"/>
-         <xsl:text>: </xsl:text>
+         <!--<xsl:apply-templates select="@formal-name"/>
+         <xsl:text>: </xsl:text>-->
          <xsl:call-template name="datatype-link"/>
-         <xsl:apply-templates select="." mode="content-gloss"/>
+         <!--<xsl:apply-templates select="." mode="content-gloss"/>-->
          <xsl:if test="$with-comma">,</xsl:if>
       </p>
    </xsl:template>
@@ -298,7 +317,7 @@ details:not([open]) .show-closed { display: inline }
       <p> value</p>
    </xsl:template>
    
-   <xsl:template mode="contents" match="m:string[@as-type=('integer','positiveInteger','nonNegativeInteger')]">
+   <xsl:template mode="content-gloss" match="m:string[@as-type=('integer','positiveInteger','nonNegativeInteger')]">
          <xsl:text> value, expressed as a number</xsl:text>
    </xsl:template>
    
@@ -313,10 +332,10 @@ details:not([open]) .show-closed { display: inline }
    
    <xsl:template name="cardinality-note">
       <xsl:text> </xsl:text>
-      <span class="sq OM-cardinality">
+      <span class="OM-cardinality">
          <xsl:apply-templates select="." mode="occurrence-code"/>
       </span>
-      <xsl:text> </xsl:text>
+      <!--<xsl:text> </xsl:text>-->
    </xsl:template>
 
    <xsl:template mode="occurrence-code" match="*">
