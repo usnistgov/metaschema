@@ -274,10 +274,10 @@ div.OM-map p { margin: 0ex }
    
    
    <xsl:template name="cardinality-note">
+      <xsl:text> </xsl:text>
       <span class="OM-cardinality">
          <xsl:apply-templates select="." mode="occurrence-code"/>
       </span>
-      <xsl:text> </xsl:text>
    </xsl:template>
 
    <xsl:template mode="occurrence-code" match="*">

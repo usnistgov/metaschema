@@ -492,7 +492,7 @@
          </xsl:for-each-group>
          
          <xsl:call-template name="display-attributes">
-            <xsl:with-param name="definition" select="$definition"/>
+            <xsl:with-param name="definition" tunnel="true" select="$definition"/>
          </xsl:call-template>
          <!--<xsl:apply-templates mode="make-contents" select="."/>-->
          <xsl:call-template name="display-applicable-constraints"/>
@@ -541,7 +541,7 @@
          </xsl:for-each-group>    
    
          <xsl:call-template name="display-attributes">
-            <xsl:with-param name="definition" select="$definition"/>
+            <xsl:with-param name="definition" tunnel="true" select="$definition"/>
          </xsl:call-template>
          
          
@@ -551,7 +551,7 @@
    </xsl:template>
    
    <xsl:template name="display-attributes">
-      <xsl:param name="definition" select="."/>
+      <xsl:param name="definition" tunnel="yes" select="."/>
       <xsl:for-each-group select="$definition/(define-flag | flag)" group-by="true()" expand-text="true">
          <div class="attributes">
             <details open="open">
@@ -562,6 +562,7 @@
                      <code>{ m:use-name(.) }</code>
                   </xsl:for-each></summary>
                <ul>
+                  <!-- tunneling $definition -->
                   <xsl:apply-templates select="current-group()">
                      <xsl:with-param name="make-page-links" tunnel="true" select="false()"/>
                   </xsl:apply-templates>
