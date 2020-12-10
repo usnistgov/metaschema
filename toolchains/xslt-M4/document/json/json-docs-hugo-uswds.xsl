@@ -349,9 +349,10 @@
          </xsl:for-each>
          <xsl:apply-templates mode="appears-in" select="."/>
          <xsl:call-template name="remarks-group"/>
-         <xsl:for-each-group
-            select="define-flag | flag | model/(* except any) | choice/(* except any)"
-            group-by="true()" expand-text="true">
+         <xsl:variable name="for-properties" select="flag | define-flag |
+            (model//* except
+            (model//group-as|model//choice|model//all|model//define-field//*|model//define-assembly//*|model//assembly//*|model//field//* ) )"/>
+         <xsl:for-each-group select="$for-properties" group-by="true()" expand-text="true">
             <div class="model properties">
                <h4 class="subhead">{ if (count(current-group()) eq 1) then 'Property' else
                   'Properties' } ({ count(current-group()) })</h4>
@@ -659,7 +660,8 @@
    <xsl:template name="display-properties">
       <xsl:param name="definition" select="."/>
       <xsl:variable name="for-properties" select="flag | define-flag |
-         (model//* except (model//group-as|model//choice|model//all|model//define-field//*|model//define-assembly//* ) )"/>
+         (model//* except
+           (model//group-as|model//choice|model//all|model//define-field//*|model//define-assembly//*|model//assembly//*|model//field//* ) )"/>
       <xsl:for-each-group select="$for-properties" group-by="true()" expand-text="true">
          <div class="properties">
             <details open="open">
