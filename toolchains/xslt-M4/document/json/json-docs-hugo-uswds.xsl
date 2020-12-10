@@ -31,7 +31,7 @@
 
    <xsl:variable name="metaschema-code" select="/*/short-name || '-json'"/>
 
-   <xsl:variable name="datatype-page" as="xs:string">../../datatypes</xsl:variable>
+   <xsl:variable name="datatype-page" as="xs:string">../../../datatypes</xsl:variable>
 
    <xsl:strip-space elements="*"/>
 
@@ -171,6 +171,7 @@
          <xsl:call-template name="cross-links"/>
          <h2 class="toc1" id="global_{@name}_h2">
             <span class="defining">
+               <xsl:message expand-text="true">{ string-join($singular-names,' ' ) }</xsl:message>
                <xsl:for-each-group select="$singular-names" group-by="string(.)">
                   <xsl:if test="position() gt 1">, </xsl:if>
                   <span class="usename">
@@ -312,7 +313,7 @@
             <xsl:apply-templates select="." mode="get-field-value-name"/>
          </xsl:variable>
          <xsl:variable as="element()?" name="value-property-proxy" expand-text="true">
-            <xsl:if test="exists($showing-flags)">
+            <xsl:if test="exists($showing-flags) and not(@as-type='empty')">
                <m:define-flag name="{$value-name}">
                   <xsl:copy-of select="@as-type"/>
                   <m:formal-name>{ formal-name } Value</m:formal-name>
@@ -477,7 +478,7 @@
       <xsl:variable name="too-deep"
          select="exists(ancestor::model[2] | (parent::define-field | parent::define-assembly)/ancestor::model)"/>
       <div class="model-summary">
-         <h3 class="usename{ ' toc2'[not($too-deep)] }"
+         <h3 class="modeling usename{ ' toc2'[not($too-deep)] }"
             id="#gen_{string-join(ancestor-or-self::*/@name, '-') }_def-h3">
             <xsl:value-of select="group-as/@name"/>
          </h3>
@@ -532,9 +533,7 @@
                   else
                      'h3'"/>
             <xsl:element name="{$head-gi}">
-               <xsl:attribute name="class" expand-text="true">modeling { ' usename'[not($grouped)]
-                  }{ ' toc2'[not($grouped or $too-deep)] }</xsl:attribute>
-               <xsl:attribute name="class" expand-text="true">{ 'usename toc2'[not($grouped or
+               <xsl:attribute name="class" expand-text="true">modeling usename{ ' toc2'[not($grouped or
                   $too-deep)] }</xsl:attribute>
                <xsl:if test="not($grouped)">
                   <xsl:attribute name="id"
@@ -659,15 +658,16 @@
 
    <xsl:template name="display-properties">
       <xsl:param name="definition" select="."/>
-      <xsl:for-each-group select="define-flag | flag | model/(* except any) | choice/(* except any)"
-         group-by="true()" expand-text="true">
+      <xsl:variable name="for-properties" select="flag | define-flag |
+         (model//* except (model//group-as|model//choice|model//all|model//define-field//*|model//define-assembly//* ) )"/>
+      <xsl:for-each-group select="$for-properties" group-by="true()" expand-text="true">
          <div class="properties">
             <details open="open">
                <summary class="subhead">
                   <xsl:text>{ if (count(current-group()) eq 1) then 'Property' else 'Properties' } ({ count(current-group()) }): </xsl:text>
                   <xsl:for-each select="current-group()">
                      <xsl:if test="not(position() eq 1)">, </xsl:if>
-                     <code>{ m:use-name(.) }</code>
+                     <code>{ (m:use-name(.),@name,@ref,local-name())[1] }</code>
                   </xsl:for-each>
                </summary>
                <ul>
@@ -1045,6 +1045,20 @@
    <!-- json type identifiers so far: object, string, numeric value, boolean value
    but we never get objects for flags, only for assemblies or fields with flags
    -->
+   <xsl:template priority="2" match="define-flag[@as-type='empty'] | define-field[@as-type='empty']"
+      mode="representation-in-json">
+      <xsl:variable name="json-object-type">
+         <xsl:apply-templates select="." mode="json-type"/>
+      </xsl:variable>
+      <xsl:variable name="datatype">
+         <xsl:apply-templates select="." mode="metaschema-type"/>
+      </xsl:variable>
+      <p>
+         <xsl:text>An empty property (no value).</xsl:text>
+      </p>
+      <xsl:apply-templates select="." mode="type-annotation"/>
+   </xsl:template>
+   
    <xsl:template match="define-flag | define-field[empty(flag | define-flag)]"
       mode="representation-in-json">
       <xsl:variable name="json-object-type">
@@ -1062,7 +1076,7 @@
       </p>
       <xsl:apply-templates select="." mode="type-annotation"/>
    </xsl:template>
-
+   
    <xsl:template match="define-field" mode="representation-in-json">
       <xsl:apply-templates select="." mode="type-annotation"/>
    </xsl:template>
@@ -1202,8 +1216,17 @@
    <xsl:function name="m:use-name" as="xs:string?">
       <xsl:param name="who" as="element()"/>
       <xsl:variable name="definition" select="($who/key('definitions', @ref,$home), $who)[1]"/>
-      <xsl:sequence
+      <xsl:variable name="using-name"
          select="($who/self::any/'ANY', $who/root-name, $who/use-name, $definition/root-name, $definition/use-name, $definition/@name)[1]"/>
+      <!--<xsl:if test="$who/self::field/@ref='all'">
+         <xsl:message expand-text="true">seeing 'all'; m:use-name is { $using-name }</xsl:message>
+      </xsl:if>
+      <xsl:if test="empty($using-name)">
+         <xsl:message expand-text="true">not seeing a usable name on { local-name($who) || ' ' || $who/(@name|@ref)}</xsl:message>
+      </xsl:if>-->
+      
+      <xsl:sequence select="$using-name"/>
+      
       <!--<xsl:sequence
          select="$who/(self::define-assembly|self::define-field|self::define-flag|self::assembly|self::field|self::flag)/
          (root-name, key('definitions',@ref)/root-name, @name, @ref)[1]"/>
