@@ -34,7 +34,7 @@
    
    <xsl:variable name="metaschema-code" select="/*/short-name || '-xml'"/>
 
-   <xsl:variable name="datatype-page" as="xs:string">../../datatypes</xsl:variable>
+   <xsl:variable name="datatype-page" as="xs:string">../../../datatypes</xsl:variable>
 
    <xsl:strip-space elements="*"/>
 
