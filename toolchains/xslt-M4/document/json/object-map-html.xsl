@@ -66,8 +66,8 @@ details:not([open]) .show-closed { display: inline }
    
    <xsl:template match="m:string">
       <xsl:variable name="last-appearing" select="position() eq last()"/>
-      <details class="OM-entry">
-         <summary>
+      <div class="OM-entry">
+         <p class="OM-line">
             <!--<div class="OM-flex">-->
                <span class="sq">
                   <xsl:apply-templates select="." mode="json-key"/>
@@ -75,20 +75,15 @@ details:not([open]) .show-closed { display: inline }
                   <xsl:text>: </xsl:text>
                   <xsl:apply-templates select="." mode="inline-link-to"/>
                   <xsl:if test="not(position() eq last())">
-                     <span class="OM-lit show-closed">,</span>
+                     <span class="OM-lit">,</span>
                   </xsl:if>
                </span>
             <!--<span class="sq cardinality">
                <xsl:call-template name="cardinality-note"/>
             </span>-->
             <!--</div>-->
-         </summary>
-         <div class="OM-map">
-            <xsl:apply-templates select="." mode="contents">
-               <xsl:with-param name="with-comma" select="not($last-appearing)"/>
-            </xsl:apply-templates>
-         </div>
-      </details>
+         </p>
+      </div>
    </xsl:template>
    
    <xsl:template name="line-marker">

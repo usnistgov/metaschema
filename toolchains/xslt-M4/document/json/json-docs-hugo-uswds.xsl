@@ -272,10 +272,10 @@
 
    <xsl:template name="cross-links">
       <xsl:param name="make-page-links" select="false()" tunnel="true"/>
-      <xsl:variable name="schema-base" select="replace($metaschema-code, '-xml$', '')"/>
+      <!--<xsl:variable name="schema-base" select="replace($metaschema-code, '-xml$', '')"/>-->
       <xsl:if test="$make-page-links">
          <div class="crosslink">
-            <a href="../xml-schema/#{$schema-base}-schema_{ @name }">
+            <a href="../json-schema/#global_{@name}">
                <button class="schema-link">Switch to XML</button>
             </a>
          </div>
@@ -350,8 +350,7 @@
          <xsl:apply-templates mode="appears-in" select="."/>
          <xsl:call-template name="remarks-group"/>
          <xsl:variable name="for-properties" select="flag | define-flag |
-            (model//* except
-            (model//group-as|model//choice|model//all|model//define-field//*|model//define-assembly//*|model//assembly//*|model//field//* ) )"/>
+            model/(.|choice)/( define-field | define-assembly | field | assembly )"/>
          <xsl:for-each-group select="$for-properties" group-by="true()" expand-text="true">
             <div class="model properties">
                <h4 class="subhead">{ if (count(current-group()) eq 1) then 'Property' else
@@ -660,8 +659,7 @@
    <xsl:template name="display-properties">
       <xsl:param name="definition" select="."/>
       <xsl:variable name="for-properties" select="flag | define-flag |
-         (model//* except
-           (model//group-as|model//choice|model//all|model//define-field//*|model//define-assembly//*|model//assembly//*|model//field//* ) )"/>
+         model/(.|choice)/( define-field | define-assembly | field | assembly )"/>
       <xsl:for-each-group select="$for-properties" group-by="true()" expand-text="true">
          <div class="properties">
             <details open="open">

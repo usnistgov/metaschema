@@ -242,10 +242,10 @@
 
    <xsl:template name="cross-links">
       <xsl:param name="make-page-links" select="false()" tunnel="true"/>
-      <xsl:variable name="schema-base" select="replace($metaschema-code,'-xml$','')"/>
+      <!--<xsl:variable name="schema-base" select="replace($metaschema-code,'-xml$','')"/>-->
       <xsl:if test="$make-page-links">
       <div class="crosslink">
-         <a href="../json-schema/#{$schema-base}-json_{ @name}">
+         <a href="../json-schema/#global_{@name}">
             <button class="schema-link">Switch to JSON</button>
          </a>
       </div>
@@ -609,8 +609,6 @@
          <xsl:apply-templates select="$constraints"/>
       </details>
    </xsl:template>
-   
-   
    
    <xsl:template name="and-code-sequence">
       <xsl:param name="what" as="item()*"/>
