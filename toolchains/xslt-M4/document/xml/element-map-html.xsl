@@ -83,8 +83,6 @@ div.OM-map p { margin: 0ex }
       <span class="OM-datatype"><a href="{$datatype-page}/#{$type}">{ $type }</a></span>
    </xsl:template>
    
-   
-   <!-- XXX make a variant for empty elements -->
    <xsl:template match="m:element">
       <!--<xsl:variable name="contents">
          <xsl:apply-templates select="." mode="contents"/>
@@ -95,31 +93,8 @@ div.OM-map p { margin: 0ex }
          </xsl:for-each>
          <summary>
             <!--<div class="OM-flex">-->
-               <span class="sq">
-               <span class="nobr">
-                  <xsl:text>&lt;</xsl:text>
-                  <xsl:apply-templates select="." mode="linked-name"/>
-               </span>
-               <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
-               <xsl:if test="empty(* except m:attribute)">/</xsl:if>
-               <xsl:text>&gt;</xsl:text>
-               <xsl:if test="exists(* except m:attribute)">
-                  <span class="show-closed">
-                     <xsl:apply-templates select="." mode="summary-contents"/>
-                     <span class="nobr">
-                        <xsl:text>&lt;/</xsl:text>
-                        <xsl:value-of select="(@gi, @name)[1]"/>
-                        <xsl:text>></xsl:text>
-                     </span>
-                  </span>
-               </xsl:if>
-            </span>
-            <span class="sq cardinality">
-               <xsl:call-template name="cardinality-note"/>
-            </span>
-            
+               <xsl:call-template name="summary-line-content"/>
             <!--</div>-->
-            
          </summary>
          <xsl:apply-templates select="." mode="contents"/>
          <xsl:if test="exists(* except m:attribute)">
@@ -130,6 +105,45 @@ div.OM-map p { margin: 0ex }
             </p>
          </xsl:if>
       </details>
+   </xsl:template>
+
+   <xsl:template match="m:element[empty(* except (m:attribute|m:value))]">
+      <!--<xsl:variable name="contents">
+         <xsl:apply-templates select="." mode="contents"/>
+      </xsl:variable>-->
+      <div class="OM-entry">
+         <p class="OM-line">
+            <!--<div class="OM-flex">-->
+            <xsl:call-template name="summary-line-content"/>
+            <!--</div>-->
+         </p>
+      </div>
+   </xsl:template>
+   
+   
+   <xsl:template name="summary-line-content">
+      <span class="sq">
+         <span class="nobr">
+            <xsl:text>&lt;</xsl:text>
+            <xsl:apply-templates select="." mode="linked-name"/>
+         </span>
+         <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
+         <xsl:if test="empty(* except m:attribute)">/</xsl:if>
+         <xsl:text>&gt;</xsl:text>
+         <xsl:if test="exists(* except m:attribute)">
+            <span class="show-closed">
+               <xsl:apply-templates select="." mode="summary-contents"/>
+               <span class="nobr">
+                  <xsl:text>&lt;/</xsl:text>
+                  <xsl:value-of select="(@gi, @name)[1]"/>
+                  <xsl:text>></xsl:text>
+               </span>
+            </span>
+         </xsl:if>
+      </span>
+      <span class="sq cardinality">
+         <xsl:call-template name="cardinality-note"/>
+      </span>
    </xsl:template>
  
    <!--<xsl:template match="m:element[empty(* except m:flag)]">
