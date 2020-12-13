@@ -226,12 +226,16 @@ div.OM-map p { margin: 0ex }
      <!-- <p>&lt;/{ (@gi,@name)[1] }></p>-->
    </xsl:template>
    
-   
    <xsl:template match="*" mode="datatype-link">
       <xsl:variable name="type" select="(@as-type,'string')[1]"/>
-      <xsl:text expand-text="true">{ if (matches($type,'^(a|e|i|o|A|E|I|O|NC)')) then 'An ' else 'A '}</xsl:text>
+      <xsl:text expand-text="true">{ if (matches($type,'^(a|e|i|o|A|E|I|O|NC)')) then 'an ' else 'a '}</xsl:text>
       <xsl:apply-templates select="." mode="linked-datatype"/>
       <xsl:text> value</xsl:text>
+   </xsl:template>
+   
+   <xsl:template match="*[@as-type='markup-multiline']" mode="datatype-link">
+      <xsl:text>One or more blocks of text: </xsl:text>
+      <xsl:next-match/>
    </xsl:template>
    
    <xsl:template mode="contents" match="m:element[exists(m:value)]" expand-text="true">

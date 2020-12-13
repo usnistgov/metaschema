@@ -78,10 +78,6 @@ details:not([open]) .show-closed { display: inline }
                      <span class="OM-lit">,</span>
                   </xsl:if>
                </span>
-            <!--<span class="sq cardinality">
-               <xsl:call-template name="cardinality-note"/>
-            </span>-->
-            <!--</div>-->
          </p>
       </div>
    </xsl:template>
@@ -197,31 +193,37 @@ details:not([open]) .show-closed { display: inline }
       </details>
    </xsl:template>
    
-   <xsl:template match="*" mode="json-key">
-      <a class="OM-name" href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }">
+   <xsl:template match="*[exists(@id)]" mode="json-key">
+      <a class="OM-name" href="{ $path-to-docs }#{ @id }">
          <xsl:value-of select="(@key,@name)[1]"/>
       </a>
    </xsl:template>
    
-   <xsl:template match="m:array/*" mode="json-key">
+   <xsl:template match="*" mode="json-key">
+      <xsl:value-of select="(@key,@name)[1]"/>
+   </xsl:template>
+   
+   <xsl:template priority="3" match="m:array/*" mode="json-key">
       <span class="OM-lit">
-         <xsl:text>Array members</xsl:text>
-         <a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }">{ (@key,use-name,@name)[1] }</a>
+         <xsl:text>An array of </xsl:text>
+         <xsl:next-match/>
          <xsl:text expand-text="true"> { local-name() }{ if (@max-occurs != '1') then 's' else '' }</xsl:text>
       </span>
    </xsl:template>
    
-   <xsl:template match="m:singleton-or-array/*" mode="json-key" expand-text="true">
+   <xsl:template priority="3" match="m:singleton-or-array/*" mode="json-key" expand-text="true">
          <span class="OM-lit">
             <xsl:text>Array members, or a singleton </xsl:text>
-            <a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }">{ (@key,use-name,@name)[1] }</a>
+            <span class="OM-name">
+               <xsl:value-of select="(@key,use-name,@name)[1]"/>
+            </span>
             <xsl:text expand-text="true"> { local-name() }</xsl:text>
          </span>
    </xsl:template>
    
    <xsl:template priority="2" match="*[exists(@json-key-flag)]"  mode="json-key" expand-text="true">
       <span class="OM-lit">
-         <a href="{ $path-to-docs }#{ $model-label}_{ (@link,@key,@name)[1] }">{ (@key,use-name,@name)[1] }</a>
+         <xsl:next-match/>
          <xsl:text> { local-name()}s </xsl:text>
          <xsl:text>, keyed by their </xsl:text>
          <span class="OM-name">{ @json-key-flag }</span>
