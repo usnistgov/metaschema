@@ -41,7 +41,8 @@
                 <xsl:attribute name="recursive">true</xsl:attribute>
             </xsl:if>
             <xsl:apply-templates select="@*" mode="build"/>
-            <xsl:attribute name="gi" select="($using-name, root-name, use-name,@name)[1]"/>
+            <xsl:attribute name="gi"  select="($using-name, root-name, use-name,@name)[1]"/>
+            <xsl:attribute name="key" select="($using-name, root-name, use-name,@name)[1]"/>
             <xsl:attribute name="min-occurs" select="$minOccurs"/>
             <xsl:attribute name="max-occurs" select="$maxOccurs"/>
             <xsl:if test="exists(root-name) and not(@name=$visited)">
@@ -81,13 +82,14 @@
     <xsl:template match="define-flag" mode="build">
         <xsl:param name="given-type" select="()"/>
         <xsl:param name="required" select="@required='yes'"/>
-        <xsl:param name="using-name" select="(use-name,@name)[1]"/>
+        <xsl:param name="using-name" select="()"/>
         <flag max-occurs="1" min-occurs="{if ($required) then 1 else 0}" as-type="{ ($given-type,@as-type, 'string')[1] }">
             <xsl:apply-templates select="@*" mode="build"/>
             <xsl:for-each select="parent::METASCHEMA">
                 <xsl:attribute name="scope">global</xsl:attribute>
             </xsl:for-each>
-            <xsl:attribute name="name" select="(use-name,@name,@ref)[1]"/>
+            <xsl:attribute name="gi" select="($using-name,use-name,@name,@ref)[1]"/>
+            <xsl:attribute name="key" select="($using-name,use-name,@name,@ref)[1]"/>
             <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
             <xsl:for-each select="formal-name">
                 <xsl:attribute name="formal-name" select="string(.)"/>
@@ -180,7 +182,7 @@
 
     <!-- When a field has no flags not designated as a json-value-flag, it is 'naked'; its value is given without a key
          (in target JSON it will be the value of a (scalar) property, not a value on a property of an object property. -->
-    <xsl:template mode="value-key" priority="2" match="define-field[empty(flag[not(@ref=../json-value-key/@flag-name)] | define-flag[not(@ref=../json-value-key/@flag-name)])]"/>
+    <xsl:template mode="value-key" priority="3" match="define-field[empty(flag[not(@ref=../json-value-key/@flag-name)] | define-flag[not(@ref=../json-value-key/@flag-name)])]"/>
     
     <xsl:template priority="2" match="define-field[exists(json-value-key)]" mode="value-key">
         <xsl:attribute name="key" select="json-value-key"/>

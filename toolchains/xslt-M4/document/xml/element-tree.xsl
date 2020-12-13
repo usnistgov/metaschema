@@ -57,7 +57,6 @@
         <element>
             <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@gi"/>
             <xsl:apply-templates/>
-            <block-sequence/>
         </element>
     </xsl:template>
     
