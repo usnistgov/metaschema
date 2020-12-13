@@ -181,7 +181,7 @@
          <xsl:sequence select="$def-single-name[empty($references) or exists($references/group-as)]"
          />
       </xsl:variable>
-      <xsl:variable name="group-names" select="group-as/@name, $references/group-as/@name"/>
+      <!--<xsl:variable name="group-names" select="group-as/@name, $references/group-as/@name"/>-->
       <div class="definition-header">
          <xsl:call-template name="cross-links"/>
          <h2 class="toc1" id="global_{@name}_h2">
@@ -202,11 +202,6 @@
                   <xsl:apply-templates/>
                </span>
             </xsl:for-each>
-            <xsl:for-each-group select="$group-names" group-by="string(.)" expand-text="true">
-               <xsl:text> </xsl:text>
-               <span class="usa-tag">grouped as</span>
-               <span class="frmname">{ current-grouping-key() }</span>
-            </xsl:for-each-group>
          </p>
       </div>
    </xsl:template>
@@ -310,6 +305,7 @@
                </xsl:for-each-group>.</p>
          </xsl:for-each-group>
          <xsl:call-template name="remarks-group"/>
+         <xsl:call-template name="display-applicable-constraints"/>
          <xsl:call-template name="report-module"/>
       </div>
    </xsl:template>
@@ -330,26 +326,35 @@
          </xsl:variable>
          <xsl:variable as="element()?" name="value-property-proxy" expand-text="true">
             <xsl:if test="exists($showing-flags) and not(@as-type='empty')">
-               <m:define-flag name="{$value-name}">
+               <m:define-flag name="{$value-name}" value-proxy="true" required="yes">
                   <xsl:copy-of select="@as-type"/>
                   <m:formal-name>{ formal-name } Value</m:formal-name>
                   <xsl:apply-templates select="." mode="get-field-value-description"/>
                </m:define-flag>
             </xsl:if>
          </xsl:variable>
-         <xsl:for-each-group select="$value-property-proxy, $showing-flags" group-by="true()" expand-text="true">
-            <div class="model properties">
-               <h4 class="subhead">{ if (count(current-group()) eq 1) then 'Property' else 'Properties'
-                  } ({ count(current-group()) })</h4>
-               <ul>
-                  <xsl:apply-templates select="current-group()">
-                     <xsl:with-param name="make-page-links" tunnel="true" select="false()"/>
-                  </xsl:apply-templates>
-               </ul>
-            </div>
-         </xsl:for-each-group>
-         
+         <xsl:if test="exists($value-property-proxy | $showing-flags)">
+         <div class="model properties">
+            <h4 class="subhead">
+               <xsl:choose>
+                  <xsl:when test="empty($showing-flags)">Property</xsl:when>
+                  <xsl:otherwise>Properties</xsl:otherwise>
+               </xsl:choose>
+            </h4>
+            <ul>
+               <xsl:apply-templates select="$value-property-proxy">
+                  <xsl:with-param name="proxy-of" tunnel="true" select="."/>
+                  <xsl:with-param name="make-page-links" tunnel="true" select="false()"/>
+               </xsl:apply-templates>
+               <xsl:apply-templates select="$showing-flags">
+                  <xsl:with-param name="make-page-links" tunnel="true" select="false()"/>
+               </xsl:apply-templates>
+            </ul>
+         </div>
+         </xsl:if>
          <!--<xsl:call-template name="flags-for-field"/>-->
+         <!-- Applicable constraints are produced by $value-property-proxy -->
+         <!--<xsl:call-template name="display-applicable-constraints"/>-->
          <xsl:apply-templates select="example"/>
          <xsl:call-template name="report-module"/>
       </div>
@@ -380,6 +385,7 @@
                </ul>
             </div>
          </xsl:for-each-group>
+         <xsl:call-template name="display-applicable-constraints"/>
          <xsl:apply-templates select="example"/>
          <xsl:call-template name="report-module"/>
       </div>
@@ -596,7 +602,7 @@
             <xsl:with-param name="definition" select="$definition"/>
          </xsl:call-template>
          <!--<xsl:apply-templates mode="make-contents" select="."/>-->
-         <xsl:call-template name="display-applicable-constraints"/>
+         <!--<xsl:call-template name="display-applicable-constraints"/>-->
       </div>
    </xsl:template>
 
@@ -615,6 +621,9 @@
 
    <xsl:template match="define-assembly | define-field | define-flag" mode="model-description"
       expand-text="true">
+      <!-- when matching a define-flag produced dynamically as a value proxy (flag), $proxy-of
+           is provided to indicate the node whose value this (define-flag) proxies. -->
+      <xsl:param name="proxy-of" select="()" tunnel="true"/>
       <xsl:param name="link-context" tunnel="true" required="yes"/>
       <xsl:variable name="definition" select="."/>
       <xsl:variable name="grouped" select="exists(group-as)"/>
@@ -671,7 +680,12 @@
          </xsl:call-template>
 
          <!--<xsl:apply-templates mode="make-contents" select="."/>-->
-         <xsl:call-template name="display-applicable-constraints"/>
+        <!-- <xsl:if test="exists($proxy-of)">
+            <xsl:message expand-text="true">seeing proxy-of: { local-name($proxy-of) } { $proxy-of/@name }</xsl:message>
+         </xsl:if>-->
+         <xsl:call-template name="display-applicable-constraints">
+            <xsl:with-param name="context" select="($proxy-of,.)[1]"/>
+         </xsl:call-template>
       </div>
    </xsl:template>
 
@@ -952,9 +966,15 @@
 
    <!-- Only display allowed-values for now -->
    <xsl:template name="display-applicable-constraints">
-      <xsl:variable name="context" select="."/>
+      <xsl:param name="context" select="."/>
       <xsl:variable name="applicable-constraints"
-         select="key('constraints-for-target', m:use-name(.), $home)[m:include-constraint(., $context)]"/>
+         select="$context/key('constraints-for-target', m:use-name(.), $home)[m:include-constraint(., $context)]"/>
+      <!-- debug <xsl:if test="@name='property'">
+         <xsl:message expand-text="true">{ local-name(.) } { m:use-name(.) } { count($applicable-constraints) }</xsl:message>
+         <xsl:for-each select="$applicable-constraints/self::allowed-values">
+            <xsl:message expand-text="true">{ serialize(.) }</xsl:message>
+         </xsl:for-each>
+      </xsl:if>-->
       <xsl:for-each-group select="$applicable-constraints/self::allowed-values" group-by="true()"
          expand-text="true">
          <div class="constraints">

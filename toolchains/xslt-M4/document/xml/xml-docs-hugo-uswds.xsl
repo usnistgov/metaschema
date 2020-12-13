@@ -317,9 +317,9 @@
       <div class="definition define-field" id="global_{@name}">
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="formal-name | description"/>
-         <xsl:apply-templates mode="representation-in-xml" select="."/>
          <xsl:call-template name="appears-in"/>
          <xsl:call-template name="remarks-group"/>
+         <xsl:apply-templates mode="representation-in-xml" select="."/>
          <xsl:call-template name="flags-for-field"/>
          <xsl:apply-templates select="example"/>
          <xsl:call-template name="report-module"/>
@@ -374,6 +374,8 @@
          </xsl:for-each-group>
          <xsl:apply-templates select="model"/>
          <xsl:apply-templates select="example"/>
+         <!-- will be a no-op until we have constraints besides allowed-values -->
+         <xsl:call-template name="display-applicable-constraints"/>
          <xsl:call-template name="report-module"/>
       </div>
    </xsl:template>
@@ -441,13 +443,6 @@
    
    <xsl:template match="field | define-field | assembly | define-assembly">
       <li class="model-entry">
-         <xsl:call-template name="model-description"/>
-      </li>
-   </xsl:template>
-   
-   <xsl:template match="define-field[@as-type='markup-multiline'][@in-xml='UNWRAPPED']">
-      <li class="model-entry">
-         <p>An optional sequence of prose (markup) elements including <code>p</code>, lists, tables and headers (<code>h1-h6</code>).</p>
          <xsl:call-template name="model-description"/>
       </li>
    </xsl:template>
@@ -553,7 +548,7 @@
             </xsl:otherwise>
          </xsl:choose>
          
-         <xsl:call-template name="display-applicable-constraints"/>
+         <!--<xsl:call-template name="display-applicable-constraints"/>-->
       </div>
    </xsl:template>
       
@@ -564,6 +559,8 @@
       <xsl:variable name="is-local" select="empty(parent::METASCHEMA)"/>
       <xsl:variable name="too-deep" select="exists(ancestor::model[2])"/>
       <xsl:variable name="is-a-flag" select="exists(self::define-flag)"/>
+      <xsl:variable name="is-unwrapped" select="@in-xml='UNWRAPPED'"/>
+      
       <div class="model-descr" tabindex="0">
          <xsl:if test="$make-model-links">
             <xsl:attribute name="id" select="'#local_' || string-join( ancestor-or-self::*/@name,'-')"/>
@@ -573,7 +570,12 @@
                <xsl:if test="$make-model-links">
                   <xsl:attribute name="id" select="'#local_' || string-join(ancestor-or-self::*/@name, '-') || '_def-h3'"/>
                </xsl:if>
-               <xsl:value-of select="m:use-name(.)"/>
+               <xsl:choose>
+                  <xsl:when test="$is-unwrapped"><em>{{block text}}</em></xsl:when>
+                  <xsl:otherwise>
+                     <xsl:value-of select="m:use-name(.)"/>
+                  </xsl:otherwise>
+               </xsl:choose>
             </h3>
             <span class="mtyp">
                <xsl:apply-templates select="." mode="metaschema-type"/>
@@ -692,10 +694,9 @@
          <xsl:apply-templates/>
    </xsl:template>
    
-    
-    <xsl:key name="constraints-for-target" match="index | index-has-key | is-unique | has-cardinality | allowed-values | matches" use="m:constraint-key(.)"/>
-   
 
+   <xsl:key name="constraints-for-target"
+      match="index | index-has-key | is-unique | has-cardinality | allowed-values | matches" use="m:constraint-key(.)"/>
    
 <!-- For multiple targets are given there could be multiple keys -->
    <xsl:function name="m:constraint-key" as="xs:string*">
@@ -879,15 +880,17 @@
       </xsl:for-each-group>
    </xsl:template>  
    
-<!-- key 'constraints-for-target' is too greedy: for a reference appearing in a local definition,
-     the definition context can exclude constraints that are defined to apply to the node in other contexts.
-     This filter returns 'true' pairwise for any constraint and context-indicating element (whether definition or reference),
+<!-- This filter returns 'true' pairwise for any constraint and context-indicating element (whether definition or reference),
      when the two overlap. This must account for when constraints designate multiple targets. -->
    <xsl:function name="m:include-constraint" as="xs:boolean">
       <xsl:param name="constraint" as="element()"/><!-- has-cardinality, matches, allowed-values etc -->
       <xsl:param name="context"    as="element()"/><!-- assembly, field, flag, define-assembly, define-field, define-flag -->
       <xsl:variable name="context-path" select="string-join($context/(ancestor::* | .) ! m:use-name(.),'/')"/>
+      <!-- /METASCHEMA/define-field name='prop' will be 'prop'
+           /METASCHEMA/define-assembly[@name='control']/define-assembly[@name='part']/field[@name='prop']
+           will be 'control/part/prop' -->
       <xsl:variable name="constraint-context-path" select="string-join($constraint/ancestor-or-self::*/m:use-name(.),'/')"/>
+      <!-- /METASCHEMA/define-assembly[@name='control']/constraint/allowed-values[@target='.//prop'] => 'control' -->
       <xsl:variable name="constraint-targets" as="xs:string*">
          <xsl:choose>
             <xsl:when test="empty($constraint/@target)">
@@ -1013,6 +1016,12 @@
       <p>As such, this element permits an <em>block-level HTML markup</em> subset, syntactically well-formed as XML (i.e. following XML syntax rules), including HTML elements <code>p</code>, <code>ul</code>, <code>ol</code> and others, along with a simple subset of inline <q>face</q> markup such as bold and italics. This format is designed for the relatively unconstrained capture of simple <q>free text</q>, i.e. without formatting or <q>decoration</q> that might serve as ad-hoc and uncontrolled semantic encoding not subject to detection, regularization or validation.</p>
       <p>This data construct is designed to be minimalistic for purposes of ease of development and interchange. It will not fit all operational scenarios; when <xsl:apply-templates select="." mode="metaschema-type"/> is not adequate for purposes of necessary (informational) fidelity to information encoded in source formats (and subsequently converted into OSCAL), alternative strategies are available for such data capture. Users and stakeholders who expose requirements in this area are encouraged to provide feedback and request guidance.</p>
       </xsl:if>
+      <xsl:where-populated>
+         <details>
+            <summary>Constraints that may apply to the data value of this element (in context):</summary>
+            <xsl:call-template name="display-applicable-constraints"/>
+         </details>
+      </xsl:where-populated>
       <xsl:if test="exists($unwrapped-occurrences)">
          <p>
             <xsl:text>When appearing in </xsl:text>
