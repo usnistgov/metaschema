@@ -52,39 +52,17 @@
 
    <xsl:variable name="all-references" select="//flag/@name | //model//*/@ref"/>
 
-   <xsl:key name="definitions"
-      match="/METASCHEMA/define-flag | /METASCHEMA/define-field | /METASCHEMA/define-assembly"
-      use="@name"/>
-
-   <xsl:key name="references" match="flag" use="@ref"/>
-   <xsl:key name="references" match="field | assembly" use="@ref"/>
+   <xsl:key name="assembly-definitions" match="/METASCHEMA/define-assembly" use="@name"/>
+   <xsl:key name="field-definitions"    match="/METASCHEMA/define-field"    use="@name"/>
+   <xsl:key name="flag-definitions"     match="/METASCHEMA/define-flag"     use="@name"/>
+   
+   <xsl:key name="assembly-references"  match="assembly" use="@ref"/>
+   <xsl:key name="field-references"     match="field"    use="@ref"/>
+   <xsl:key name="flag-references"      match="flag"     use="@ref"/>
 
    <xsl:key name="using-name"
       match="flag | field | assembly | define-flag | define-field | define-assembly"
       use="m:use-name(.)"/>
-
-   <xsl:variable name="file-map" as="map(xs:string, text())">
-      <xsl:map>
-         <xsl:map-entry key="'oscal-catalog'">catalog</xsl:map-entry>
-         <xsl:map-entry key="'oscal-profile'">profile</xsl:map-entry>
-         <xsl:map-entry key="'oscal-component'">component</xsl:map-entry>
-         <xsl:map-entry key="'oscal-ssp'">ssp</xsl:map-entry>
-         <xsl:map-entry key="'oscal-poam'">poam</xsl:map-entry>
-         <xsl:map-entry key="'oscal-ap'">assessment-plan</xsl:map-entry>
-         <xsl:map-entry key="'oscal-ar'">assessment-result</xsl:map-entry>
-      </xsl:map>
-   </xsl:variable>
-
-   <xsl:template match="short-name" mode="schema-link" expand-text="true">
-      <a href="https://pages.nist.gov/OSCAL/artifacts/json/schema/oscal_{$file-map(.)}_schema.json"
-         >oscal_{$file-map(string(.))}_schema.json</a>
-   </xsl:template>
-
-   <xsl:template match="short-name" mode="converter-link" expand-text="true">
-      <a
-         href="https://pages.nist.gov/OSCAL/artifacts/xml/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl"
-         >oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a>
-   </xsl:template>
 
    <xsl:template match="/" mode="make-page">
       <html>
@@ -110,9 +88,10 @@
    <xsl:template match="METASCHEMA">
       <xsl:variable name="definitions" select="define-assembly | define-field | define-flag"/>
       <div class="{$metaschema-code ! replace(.,'.*-','') }-docs">
-         <!--<xsl:apply-templates select="short-name" mode="schema-link"/>
-             <xsl:apply-templates select="short-name" mode="converter-link"/>-->
-         <xsl:apply-templates select="* except $definitions"/>
+         <xsl:apply-templates select="* except (remarks|$definitions)"/>
+         <xsl:apply-templates select="short-name" mode="schema-link"/>
+         <xsl:apply-templates select="short-name" mode="converter-link"/>
+         <xsl:apply-templates select="remarks"/>
          <xsl:apply-templates select="child::define-assembly | child::define-field"
             mode="make-definition">
             <xsl:sort select="m:use-name(.)"/>
@@ -121,8 +100,16 @@
       </div>
    </xsl:template>
 
-   <xsl:template match="METASCHEMA/schema-name"/>
-
+   <xsl:template match="METASCHEMA/short-name"/>
+   
+   <xsl:template match="METASCHEMA/schema-name">
+      <p>
+         <span class="usa-tag">OSCAL model</span>
+         <xsl:text> </xsl:text>
+         <xsl:apply-templates/>
+      </p>
+   </xsl:template>
+   
    <xsl:template match="METASCHEMA/namespace"/>
    <!--<xsl:template match="METASCHEMA/namespace">
       <p>
@@ -134,6 +121,31 @@
       </p>
    </xsl:template>-->
 
+   <xsl:variable name="file-map" as="map(xs:string, text())">
+      <xsl:map>
+         <xsl:map-entry key="'oscal-catalog'"  >catalog</xsl:map-entry>
+         <xsl:map-entry key="'oscal-profile'"  >profile</xsl:map-entry>
+         <xsl:map-entry key="'oscal-component'">component</xsl:map-entry>
+         <xsl:map-entry key="'oscal-ssp'"      >ssp</xsl:map-entry>
+         <xsl:map-entry key="'oscal-poam'"     >poam</xsl:map-entry>
+         <xsl:map-entry key="'oscal-ap'"       >assessment-plan</xsl:map-entry>
+         <xsl:map-entry key="'oscal-ar'"       >assessment-results</xsl:map-entry>
+      </xsl:map>
+   </xsl:variable>
+   
+   <xsl:template match="short-name" mode="schema-link" expand-text="true">
+      <p>
+         <span class="usa-tag">JSON Schema</span>
+         <a href="https://pages.nist.gov/OSCAL/artifacts/json/schema/oscal_{$file-map(.)}_schema.json">oscal_{$file-map(string(.))}_schema.json</a>
+      </p>
+   </xsl:template>
+   
+   <xsl:template match="short-name" mode="converter-link" expand-text="true">
+      <p>
+         <span class="usa-tag">XML to JSON converter</span>
+         <a href="https://pages.nist.gov/OSCAL/artifacts/xml/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl">oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a> <a href="#">(How do I use the converter to convert OSCAL XML to JSON?)</a>
+      </p>
+   </xsl:template>
    <xsl:template match="description">
       <xsl:variable name="is-global" select="exists(parent::*/parent::METASCHEMA)"/>
       <p class="description{ ' global'[$is-global]}">
@@ -157,7 +169,10 @@
    </xsl:template>
 
    <xsl:template name="definition-header">
-      <xsl:variable name="references" select="key('references', @name)"/>
+      <xsl:variable name="references"
+         select="self::define-flag/key('flag-references', @name) |
+         self::define-field/key('field-references', @name) |
+         self::define-assembly/key('assembly-references', @name)"/>
       <xsl:variable name="singular-names" as="node()*">
          <xsl:variable name="def-single-name" select="(root-name, use-name, @name)[1]"/>
          <xsl:for-each select="$references[empty(group-as)]">
@@ -171,7 +186,6 @@
          <xsl:call-template name="cross-links"/>
          <h2 class="toc1" id="global_{@name}_h2">
             <span class="defining">
-               <xsl:message expand-text="true">{ string-join($singular-names,' ' ) }</xsl:message>
                <xsl:for-each-group select="$singular-names" group-by="string(.)">
                   <xsl:if test="position() gt 1">, </xsl:if>
                   <span class="usename">
@@ -275,7 +289,7 @@
       <!--<xsl:variable name="schema-base" select="replace($metaschema-code, '-xml$', '')"/>-->
       <xsl:if test="$make-page-links">
          <div class="crosslink">
-            <a href="../json-schema/#global_{@name}">
+            <a href="../xml-schema/#global_{@name}">
                <button class="schema-link">Switch to XML</button>
             </a>
          </div>
@@ -287,7 +301,7 @@
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="description"/>
          <xsl:apply-templates select="." mode="representation-in-json"/>
-         <xsl:for-each-group select="key('references', @name)/parent::*" group-by="true()">
+         <xsl:for-each-group select="key('flag-references', @name)/parent::*" group-by="true()">
             <p><xsl:text>This property appears on: </xsl:text>
                <xsl:for-each-group select="current-group()" group-by="@name">
                   <xsl:if test="position() gt 1 and last() ne 2">, </xsl:if>
@@ -303,7 +317,9 @@
    <xsl:template match="define-field" mode="make-definition">
       <xsl:variable name="showing-flags" select="(define-flag | flag)[not(@name=../json-value-key/@flag-name)]"/>
       <div class="definition define-field" id="global_{@name}">
-         <xsl:call-template name="definition-header"/>
+         <xsl:call-template name="definition-header">
+            <xsl:with-param name="make-page-links" tunnel="true" select="true()"/>
+         </xsl:call-template>
          <xsl:apply-templates select="formal-name | description"/>
          <xsl:apply-templates mode="representation-in-json" select="."/>
          <xsl:apply-templates mode="appears-in" select="."/>
@@ -341,7 +357,9 @@
 
    <xsl:template match="define-assembly" mode="make-definition">
       <div class="definition define-assembly" id="global_{@name}">
-         <xsl:call-template name="definition-header"/>
+         <xsl:call-template name="definition-header">
+            <xsl:with-param name="make-page-links" tunnel="true" select="true()"/>
+         </xsl:call-template>
          <xsl:apply-templates select="formal-name | description"/>
          <xsl:for-each select="root-name">
             <h5><code xsl:expand-text="true">{ . }</code> is a root (containing) object for this
@@ -370,9 +388,9 @@
    <xsl:template match="*" mode="appears-in"/>
       
    <xsl:template match="/METASCHEMA/*" mode="appears-in">
-      <xsl:variable name="flag-references" select="key('references', @name)/self::flag"/>
-      <xsl:variable name="field-references" select="key('references', @name)/self::field"/>
-      <xsl:variable name="assembly-references" select="key('references', @name)/self::assembly"/>
+      <xsl:variable name="flag-references" select="key('flag-references', @name)/self::flag"/>
+      <xsl:variable name="field-references" select="key('field-references', @name)/self::field"/>
+      <xsl:variable name="assembly-references" select="key('assembly-references', @name)/self::assembly"/>
       <xsl:variable name="references"
          select="$flag-references | $field-references | $assembly-references"/>
       <xsl:variable name="homonyms"
@@ -517,7 +535,8 @@
       <xsl:param name="link-context" tunnel="true" required="yes"/>
       <!--<xsl:param    name="link-context" tunnel="true" select="ancestor::model[1]/parent::define-assembly | parent::define-field | parent::define-assembly)"/>-->
       <xsl:variable name="grouped" select="exists(group-as)"/>
-      <xsl:variable name="definition" select="key('definitions', @ref)"/>
+      <xsl:variable name="definition" select="key('assembly-definitions', self::assembly/@ref) |
+         key('field-definitions', self::field/@ref) | key('flag-definitions', self::flag/@ref)"/>
       <xsl:variable name="is-a-flag" select="exists(self::flag)"/>
       <xsl:variable name="too-deep"
          select="exists(ancestor::model[2] | (parent::define-field | parent::define-assembly)/ancestor::model)"/>
@@ -815,19 +834,19 @@
       <xsl:variable name="enums" select="enum"/>
       <div class="constraint">
          <p>
-            <xsl:apply-templates select="." mode="report-context"/>
             <span class="cnstr-tag">allowed value{ 's'[count($enums) gt 1] }</span>
-            <span class="gloss">
+            <xsl:text> for </xsl:text>
+            <xsl:apply-templates select="." mode="report-context"/>
+            <!-- insert for a hidden box <span class="gloss">
                <xsl:for-each select="enum">
                   <xsl:if test="position() gt 1"> | </xsl:if>
                   <strong>{ @value }</strong>
                </xsl:for-each>
-            </span>
+            </span>-->
          </p>
          <xsl:choose expand-text="true">
             <xsl:when test="@allow-other and @allow-other = 'yes'">
-               <p>The value <b>may be locally defined,</b> or { 'one of '[count($enums) gt 1] }the
-                  following:</p>
+               <p>The value <b>may be locally defined,</b> or { 'one of '[count($enums) gt 1] }the following:</p>
             </xsl:when>
             <xsl:otherwise>
                <p>The value <b>must be</b> { 'one of '[count($enums) gt 1] } the following:</p>
@@ -1137,19 +1156,29 @@
          provide feedback and request guidance.</p>
    </xsl:template>
    
-   <xsl:template match="field | assembly" mode="metaschema-type">
-      <xsl:apply-templates select="key('definitions', @ref)" mode="#current"/>
+   <xsl:template match="field" mode="metaschema-type">
+      <xsl:apply-templates select="key('field-definitions', @ref)" mode="#current"/>
    </xsl:template>
-
-   <xsl:template mode="metaschema-type"
-      match="flag | define-flag | define-field[empty(flag | define-flag)]">
-      <xsl:variable name="given-type"
-         select="(@as-type, key('definitions', @ref, $home)/@as-type, 'string')[1]"/>
+   
+   <xsl:template match="assembly" mode="metaschema-type">
+      <xsl:apply-templates select="key('assembly-definitions', @ref)" mode="#current"/>
+   </xsl:template>
+   
+   <xsl:template mode="metaschema-type" match="define-field[empty(flag | define-flag)]">
+      <xsl:variable name="given-type" select="(@as-type, 'string')[1]"/>
       <a href="{$datatype-page}/#{(lower-case($given-type))}">
          <xsl:apply-templates mode="#current" select="$given-type"/>
       </a>
    </xsl:template>
-
+   
+   <xsl:template mode="metaschema-type" match="flag | define-flag">
+      <xsl:variable name="given-type"
+         select="(@as-type, key('flag-definitions', @ref, $home)/@as-type, 'string')[1]"/>
+      <a href="{$datatype-page}/#{(lower-case($given-type))}">
+         <xsl:apply-templates mode="#current" select="$given-type"/>
+      </a>
+   </xsl:template>
+   
    <xsl:variable name="numeric-types"
       select="'boolean', 'integer', 'positiveInteger', 'nonNegativeInteger'"/>
 
@@ -1157,22 +1186,39 @@
       >object</xsl:template>
    
    <xsl:template mode="json-type" match="*[exists(@ref)]">
-      <xsl:apply-templates mode="#current" select="key('definitions',@ref,$home)"/>
+      <xsl:variable name="definition" select="key('assembly-definitions', self::assembly/@ref,$home) |
+         key('field-definitions', self::field/@ref,$home) | key('flag-definitions', self::flag/@ref,$home)"/>
+      <xsl:apply-templates mode="#current" select="$definition"/>
    </xsl:template>
    
    <xsl:template mode="json-type" match="*">object</xsl:template>
    
+   
+   <!--<xsl:variable name="definition" select="key('assembly-definitions', self::assembly/@ref) |
+      key('field-definitions', self::field/@ref) | key('flag-definitions', self::flag/@ref)"/>
+   -->
+   
    <xsl:template mode="json-type"
-      match="flag | define-flag | define-field[empty(flag | define-flag)]">
-      <xsl:variable name="given-type"
-         select="(@as-type, key('definitions', @ref)/@as-type, 'string')[1]"/>
+      match="define-field[empty(flag | define-flag)]">
+      <xsl:variable name="given-type" select="(@as-type, 'string')[1]"/>      
       <xsl:choose>
          <xsl:when test="$given-type = 'boolean'">boolean value</xsl:when>
          <xsl:when test="$given-type = $numeric-types">numeric value</xsl:when>
          <xsl:otherwise>string</xsl:otherwise>
       </xsl:choose>
    </xsl:template>
-
+   
+   <xsl:template mode="json-type"
+      match="flag | define-flag">
+      <xsl:variable name="given-type"
+         select="(@as-type, key('flag-definitions', @ref)/@as-type, 'string')[1]"/>
+      <xsl:choose>
+         <xsl:when test="$given-type = 'boolean'">boolean value</xsl:when>
+         <xsl:when test="$given-type = $numeric-types">numeric value</xsl:when>
+         <xsl:otherwise>string</xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
+   
    <xsl:template mode="metaschema-type" match="METASCHEMA/define-assembly">
       <a href="#global_{@name}">object (globally&#xA0;defined)</a>
    </xsl:template>
@@ -1215,9 +1261,10 @@
 
    <xsl:function name="m:use-name" as="xs:string?">
       <xsl:param name="who" as="element()"/>
-      <xsl:variable name="definition" select="($who/key('definitions', @ref,$home), $who)[1]"/>
+      <xsl:variable name="definition" select="$who/self::assembly/key('assembly-definitions', @ref) |
+         $who/self::field/key('field-definitions', @ref) | $who/self::flag/key('flag-definitions',@ref)"/>
       <xsl:variable name="using-name"
-         select="($who/self::any/'ANY', $who/root-name, $who/use-name, $definition/root-name, $definition/use-name, $definition/@name)[1]"/>
+         select="($who/self::any/'ANY', $who/root-name, $who/use-name, $definition/root-name, $definition/use-name, $definition/@name,$who/@name)[1]"/>
       <!--<xsl:if test="$who/self::field/@ref='all'">
          <xsl:message expand-text="true">seeing 'all'; m:use-name is { $using-name }</xsl:message>
       </xsl:if>
@@ -1225,6 +1272,9 @@
          <xsl:message expand-text="true">not seeing a usable name on { local-name($who) || ' ' || $who/(@name|@ref)}</xsl:message>
       </xsl:if>-->
       
+      <!--<xsl:if test="exists($who/(self::field|self::assembly|self::flag)) and empty($definition">
+         <xsl:message expand-text="true">no use name for { $who/local-name() }</xsl:message>
+      </xsl:if>-->
       <xsl:sequence select="$using-name"/>
       
       <!--<xsl:sequence

@@ -16,7 +16,7 @@
    
    <xsl:template match="m:METASCHEMA/m:schema-version">
       <p>
-         <span class="usa-tag">Schema version</span>
+         <span class="usa-tag">Version</span>
          <xsl:text> </xsl:text>
          <xsl:apply-templates/>
       </p>
