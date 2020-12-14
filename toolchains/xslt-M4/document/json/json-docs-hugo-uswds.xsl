@@ -143,7 +143,7 @@
    <xsl:template match="short-name" mode="converter-link" expand-text="true">
       <p>
          <span class="usa-tag">XML to JSON converter</span>
-         <a href="https://pages.nist.gov/OSCAL/artifacts/xml/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl">oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a> <a href="https://github.com/usnistgov/OSCAL/tree/master/json#converting-oscal-xml-content-to-json">(How do I use the converter to convert OSCAL XML to JSON?)</a>
+         <a href="https://pages.nist.gov/OSCAL/artifacts/json/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl">oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a> <a href="https://github.com/usnistgov/OSCAL/tree/master/json#converting-oscal-xml-content-to-json">(How do I use the converter to convert OSCAL XML to JSON?)</a>
       </p>
    </xsl:template>
    <xsl:template match="description">

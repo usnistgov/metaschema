@@ -529,7 +529,7 @@
 
   <xs:complexType name="define-flag-constraints-type">
     <xs:sequence>
-      <xs:choice>
+      <xs:choice maxOccurs="unbounded">
         <xs:element minOccurs="0" name="allowed-values" type="m:allowed-values-type">
           <xs:annotation>
             <xs:documentation>Constrains the allowed values for the flag.</xs:documentation>
@@ -538,6 +538,11 @@
         <xs:element name="matches" type="m:matches-constraint-type">
           <xs:annotation>
             <xs:documentation>Constrains the allowed values based on the provided regex pattern.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="index-has-key" type="m:index-constraint-type" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:documentation>Checks that the specified <code>key-field</code> values match a key in the index with the specified <code>name</code>.</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:choice>
