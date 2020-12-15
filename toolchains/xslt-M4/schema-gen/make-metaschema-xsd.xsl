@@ -162,15 +162,43 @@
         </xs:element>
     </xsl:template>
     
+    <xsl:template match="define-field[empty(flag|define-flag)]">
+        <xs:simpleType>
+            <xsl:call-template name="name-global-field-type"/>
+            <xsl:apply-templates select="." mode="annotated"/>
+            <xsl:variable name="datatype">
+                <xsl:choose>
+                    <!--<xsl:when test="exists(constraint/allowed-values)">
+                        <xsl:value-of select="concat(@name,'-FIELD-VALUE-ENUMERATION')"/>
+                    </xsl:when>-->
+                    <xsl:when test="exists(@as-type)">
+                        <xsl:value-of select="@as-type"/>
+                    </xsl:when>
+                    <xsl:otherwise>string</xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+            <xs:restriction base="xs:string">
+                <!-- replace @base with correct base for type -->
+                <xsl:call-template name="assign-datatype">
+                    <xsl:with-param name="assign-to-attribute">base</xsl:with-param>
+                    <xsl:with-param name="datatype" select="$datatype"/>
+                </xsl:call-template>
+            </xs:restriction>
+        </xs:simpleType>
+        <!--<xsl:apply-templates select="constraint/allowed-values">
+            <xsl:with-param name="simpletype-name" select="@name || '-FIELD-VALUE-ENUMERATION'"/>
+        </xsl:apply-templates>-->
+    </xsl:template>
+    
     <xsl:template match="define-field">
         <xs:complexType>
             <xsl:call-template name="name-global-field-type"/>
             <xsl:apply-templates select="." mode="annotated"/>
             <xsl:variable name="datatype">
                 <xsl:choose>
-                    <xsl:when test="exists(constraint/allowed-values)">
+                    <!--<xsl:when test="exists(constraint/allowed-values)">
                         <xsl:value-of select="concat(@name,'-FIELD-VALUE-ENUMERATION')"/>
-                    </xsl:when>
+                    </xsl:when>-->
                     <xsl:when test="exists(@as-type)">
                         <xsl:value-of select="@as-type"/>
                     </xsl:when>
@@ -188,9 +216,9 @@
                     </xs:extension>
                 </xs:simpleContent>
         </xs:complexType>
-        <xsl:apply-templates select="constraint/allowed-values">
+        <!--<xsl:apply-templates select="constraint/allowed-values">
             <xsl:with-param name="simpletype-name" select="@name || '-FIELD-VALUE-ENUMERATION'"/>
-        </xsl:apply-templates>
+        </xsl:apply-templates>-->
     </xsl:template>
     
     <xsl:template name="name-global-field-type">
@@ -348,24 +376,24 @@
         <xsl:variable name="decl" select="key('global-flag-by-name',@ref)"/>
         <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
         <xsl:variable name="datatype" select="(@as-type,$decl/@as-type,'string')[1]"/>
-        <xsl:variable name="value-list" select="(constraint/allowed-values,key('global-flag-by-name',@ref)/constraint/allowed-values)[1]"/>
+        <!--<xsl:variable name="value-list" select="(constraint/allowed-values,key('global-flag-by-name',@ref)/constraint/allowed-values)[1]"/>-->
         <xs:attribute name="{ $gi }">
             
             <xsl:if test="(@required='yes') or (@name=(../json-key/@flag-name,../json-value-key/@flag-name))">
                 <xsl:attribute name="use">required</xsl:attribute>
             </xsl:if>
             <!-- annotate as datatype or string unless an exclusive value-list is given -->
-            <xsl:if test="empty($value-list)">
+            <!--<xsl:if test="empty($value-list)">-->
                 <!-- overriding string datatype on attribute -->
                 <xsl:call-template name="assign-datatype">
                     <xsl:with-param name="datatype" select="$datatype"/>
                 </xsl:call-template>
-            </xsl:if>
+            <!--</xsl:if>-->
             <xsl:apply-templates select="$decl" mode="annotated"/>
             
-            <xsl:apply-templates select="$value-list">
+            <!--<xsl:apply-templates select="$value-list">
                 <xsl:with-param name="datatype" select="$datatype"/>
-            </xsl:apply-templates>
+            </xsl:apply-templates>-->
         </xs:attribute>
     </xsl:template>
     
@@ -373,21 +401,21 @@
     <xsl:template match="define-assembly/define-flag | define-field/define-flag">
         <xsl:variable name="gi" select="(use-name,@name)[1]"/>
         <xsl:variable name="datatype" select="(@as-type,'string')[1]"/>
-        <xsl:variable name="value-list" select="constraint/allowed-values"/>
+        <!--<xsl:variable name="value-list" select="constraint/allowed-values"/>-->
         <xs:attribute name="{ $gi }">
             <xsl:if test="(@required='yes') or (@name=(../json-key/@flag-name,../json-value-key/@flag-name))">
                 <xsl:attribute name="use">required</xsl:attribute>
             </xsl:if>
-            <xsl:if test="empty($value-list)">
+            <!--<xsl:if test="empty($value-list)">-->
                 <!-- overriding string datatype on attribute -->
                 <xsl:call-template name="assign-datatype">
                     <xsl:with-param name="datatype" select="$datatype"/>
                 </xsl:call-template>
-            </xsl:if>
+            <!--</xsl:if>-->
             <xsl:apply-templates select="." mode="annotated"/>
-            <xsl:apply-templates select="$value-list">
+            <!--<xsl:apply-templates select="$value-list">
                 <xsl:with-param name="datatype" select="$datatype"/>
-            </xsl:apply-templates>
+            </xsl:apply-templates>-->
         </xs:attribute>
     </xsl:template>
     
