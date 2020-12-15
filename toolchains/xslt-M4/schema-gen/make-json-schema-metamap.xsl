@@ -117,13 +117,13 @@
     </xsl:template>
     
     <xsl:template priority="100" match="METASCHEMA/define-assembly">
-        <map key="{ (root-name, use-name,@name)[1] }">
+        <map key="{ $composed-metaschema/*/short-name }-{ @name }">
             <xsl:next-match/>
         </map>
     </xsl:template>
     
     <xsl:template priority="100" match="METASCHEMA/define-field">
-        <map key="{ (use-name,@name)[1] }">
+        <map key="{ $composed-metaschema/*/short-name }-{ @name }">
             <xsl:next-match/>
         </map>
     </xsl:template>
