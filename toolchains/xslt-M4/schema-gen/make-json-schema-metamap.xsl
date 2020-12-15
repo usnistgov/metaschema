@@ -415,7 +415,7 @@
         flag[@ref=../(json-value-key|json-key)/@flag-name]"/>
             <xsl:template mode="define" match="flag">
         <xsl:variable name="decl" select="key('flag-definition-by-name',@ref)"/>
-        <map key="{ $decl/(use-name,@name)[1] }">
+        <map key="{ (use-name,$decl/use-name,$decl/@name)[1] }">
             <xsl:apply-templates select="$decl/(formal-name | description)"/>
             <xsl:apply-templates select="." mode="object-type"/>
             <xsl:apply-templates select="$decl/constraint/allowed-values"/>    
@@ -469,7 +469,7 @@
     <xsl:template mode="define" priority="4"
         match="assembly[empty(@max-occurs) or number(@max-occurs) = 1] | define-assembly[empty(@max-occurs) or number(@max-occurs) = 1]">
         <xsl:variable name="decl" select="key('assembly-definition-by-name', @ref) | self::define-assembly"/>
-        <map key="{ $decl/(root-name,use-name,@name)[1] }">
+        <map key="{ (use-name,$decl/use-name,$decl/@name)[1] }">
             <xsl:apply-templates select="." mode="definition-or-reference"/>
         </map>
     </xsl:template>
@@ -478,7 +478,7 @@
     <xsl:template mode="define" priority="4"
         match="field[empty(@max-occurs) or number(@max-occurs) = 1] | define-field[empty(@max-occurs) or number(@max-occurs) = 1]">
         <xsl:variable name="decl" select="key('field-definition-by-name', @ref) | self::define-field"/>
-        <map key="{ $decl/(root-name,use-name,@name)[1] }">
+        <map key="{ (use-name,$decl/use-name,$decl/@name)[1] }">
             <xsl:apply-templates select="." mode="definition-or-reference"/>
         </map>
     </xsl:template>
@@ -534,17 +534,17 @@
     
     <xsl:template match="flag" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('flag-definition-by-name',@ref)"/>
-        <string key="$ref">#/definitions/{ $definition/(use-name,@name)[1] }</string>
+        <string key="$ref">#/definitions/{ $definition/@name }</string>
     </xsl:template>
     
     <xsl:template match="field" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('field-definition-by-name',@ref)"/>
-        <string key="$ref">#/definitions/{ $definition/(use-name,@name)[1] }</string>
+        <string key="$ref">#/definitions/{ $definition/@name }</string>
     </xsl:template>
     
     <xsl:template match="assembly" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('assembly-definition-by-name',@ref)"/>
-        <string key="$ref">#/definitions/{ $definition/(root-name,use-name,@name)[1] }</string>
+        <string key="$ref">#/definitions/{ $definition/@name }</string>
     </xsl:template>
     
     <!--  elements that fall through are made objects in case they have properties  -->
