@@ -217,7 +217,7 @@
     <xsl:template priority="5" match="define-field[@as-type='markup-multiline']">
             <xs:complexType mixed="true">
                 <xsl:call-template name="name-global-field-type"/>
-                <xs:group ref="{$declaration-prefix}:PROSE"/>
+                <xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>
                 <xsl:apply-templates select="define-flag | flag"/>
             </xs:complexType>
     </xsl:template>
@@ -319,6 +319,11 @@
     </xsl:template>
     
     <!-- TODO XXX switch default behavior ...   -->
+    
+    <xsl:template priority="11" match="model//define-field[@in-xml='UNWRAPPED'][@as-type='markup-multiline']">
+        <xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+    </xsl:template>
+    
     <!-- No wrapper, just prose elements -->
     <xsl:template match="field[@in-xml='UNWRAPPED'][key('global-field-by-name',@ref)/@as-type='markup-multiline']">
         <xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>
@@ -326,7 +331,9 @@
     
     <!-- With wrapper -->
     <xsl:template match="field[not(@in-xml='UNWRAPPED')][key('global-field-by-name',@ref)/@as-type='markup-multiline']">
-        <xs:element name="{@ref}"
+        <xsl:variable name="decl" select="key('global-field-by-name',@ref)"/>
+        <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
+        <xs:element name="{ $gi }"
             minOccurs="{ if (exists(@min-occurs)) then @min-occurs else 0 }"
             maxOccurs="{ if (exists(@max-occurs)) then @max-occurs else 1 }">
             <xsl:apply-templates select="key('global-field-by-name',@ref)" mode="annotated"/>
@@ -339,9 +346,10 @@
     
     <xsl:template match="flag">
         <xsl:variable name="decl" select="key('global-flag-by-name',@ref)"/>
+        <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
         <xsl:variable name="datatype" select="(@as-type,$decl/@as-type,'string')[1]"/>
         <xsl:variable name="value-list" select="(constraint/allowed-values,key('global-flag-by-name',@ref)/constraint/allowed-values)[1]"/>
-        <xs:attribute name="{@ref}">
+        <xs:attribute name="{ $gi }">
             
             <xsl:if test="(@required='yes') or (@name=(../json-key/@flag-name,../json-value-key/@flag-name))">
                 <xsl:attribute name="use">required</xsl:attribute>
@@ -363,9 +371,10 @@
     
     
     <xsl:template match="define-assembly/define-flag | define-field/define-flag">
+        <xsl:variable name="gi" select="(use-name,@name)[1]"/>
         <xsl:variable name="datatype" select="(@as-type,'string')[1]"/>
         <xsl:variable name="value-list" select="constraint/allowed-values"/>
-        <xs:attribute name="{ @name }">
+        <xs:attribute name="{ $gi }">
             <xsl:if test="(@required='yes') or (@name=(../json-key/@flag-name,../json-value-key/@flag-name))">
                 <xsl:attribute name="use">required</xsl:attribute>
             </xsl:if>
