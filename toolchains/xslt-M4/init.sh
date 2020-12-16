@@ -65,15 +65,18 @@ convert_content() {
   local target_format="$1"; shift
   local xslt_converter="$1"; shift
 
+  local cmd_exitcode=0
   if [ "$source_format" == "xml" ] && [ "$target_format" == "json" ]; then
     result=$(xsl_transform "$xslt_converter" "$source_file" "$output_file" 2>&1)
+    cmd_exitcode=$?
   elif [ "$source_format" == "json" ] && [ "$target_format" == "xml" ]; then
     result=$(xsl_transform "$xslt_converter" "" "$output_file" "-it" "json-file=${source_file}" 2>&1)
+    cmd_exitcode=$?
   else
     >&2 echo -e "${P_ERROR}Conversion from ${source_format^^} to ${target_format^^} is not supported.${P_END}"
     exit 2
   fi
 
   echo "$result"
-  return $?;
+  return $cmd_exitcode;
 }
