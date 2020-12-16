@@ -107,7 +107,7 @@
       <xsl:text>&#xA;</xsl:text>
       <xsl:comment> XML to JSON conversion: Supermodel serialization as JSON
         including markdown production </xsl:comment>
-      <xsl:apply-templates mode="package-converter" select="document('supermodel-to-json.xsl')/xsl:*/( xsl:variable | xsl:template )"/>
+      <xsl:apply-templates mode="package-converter" select="document('converter-gen/supermodel-to-json.xsl')/xsl:*/( xsl:variable | xsl:template )"/>
     </xsl:copy>
   </xsl:template>
  
