@@ -65,7 +65,8 @@
     <nm:transform version="3.0">compose/unfold-model-map.xsl</nm:transform>
     <nm:transform version="3.0">compose/reduce-map.xsl</nm:transform>
     
-    <!--<nm:transform version="3.0">produce-xml-converter.xsl</nm:transform>-->
+    <nm:transform version="3.0">converter-gen/produce-xml-converter.xsl</nm:transform>
+    
   </xsl:variable>
   
   <xsl:variable name="metaschema-source" select="/"/>

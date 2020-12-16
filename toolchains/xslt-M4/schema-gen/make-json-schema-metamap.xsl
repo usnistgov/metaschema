@@ -116,17 +116,14 @@
       <string key="$id">#/definitions/{@name}</string>
     </xsl:template>
     
-    <xsl:template priority="100" match="METASCHEMA/define-assembly">
-        <map key="{ $composed-metaschema/*/short-name }-{ @name }">
+    
+    <xsl:template priority="100" match="METASCHEMA/define-assembly | METASCHEMA/define-field">
+        <!-- XXX add module identifier -->
+        <map key="{ @name }">
             <xsl:next-match/>
         </map>
     </xsl:template>
     
-    <xsl:template priority="100" match="METASCHEMA/define-field">
-        <map key="{ $composed-metaschema/*/short-name }-{ @name }">
-            <xsl:next-match/>
-        </map>
-    </xsl:template>
     
     <xsl:template match="define-assembly">
             <xsl:apply-templates select="formal-name, description"/>
