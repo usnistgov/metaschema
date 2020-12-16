@@ -122,7 +122,7 @@
       produce=supermodel produces intermediate (internal) 'supermodel' format</xsl:comment>
     <xsl:text>&#xA;</xsl:text>
     <xsl:comment> Parameter setting 'json-indent=yes' produces JSON indented using the internal serializer</xsl:comment>
-    <XSLT:param name="file" as="xs:string"/>
+    <XSLT:param name="file" as="xs:string?"/>
     <XSLT:param name="produce" as="xs:string">json</XSLT:param>
     <!-- set to 'xdm-json-xml' or 'xpath' for XPath JSON XML
                 'supermodel' to produce supermodel intermediate -->
@@ -136,13 +136,15 @@
       </XSLT:map>
     </XSLT:variable>
     
+    <XSLT:variable name="source-xml" select="/"/>
+      
     <XSLT:template match="/" name="from-xml">
       <!-- Take source to be JSON in XPath 3.1 (XDM) representation -->
       <XSLT:param name="source">
         <XSLT:choose>
           <xsl:comment> evaluating $file as URI relative to nominal source directory </xsl:comment>
           <XSLT:when test="exists($file)">
-            <XSLT:try select="$file ! document(.,/)" xmlns:err="http://www.w3.org/2005/xqt-errors">
+            <XSLT:try select="$file ! document(.,$source-xml)" xmlns:err="http://www.w3.org/2005/xqt-errors">
               <XSLT:catch expand-text="true">
                 <nm:ERROR code="{{ $err:code }}">{ $err:description }</nm:ERROR>
               </XSLT:catch>
@@ -155,7 +157,7 @@
       </XSLT:param>
       <!-- first step produces supermodel from input XML -->
       <XSLT:variable name="supermodel">
-        <XSLT:apply-templates select="$source"/>
+        <XSLT:apply-templates select="$source/*"/>
       </XSLT:variable>
       <XSLT:choose>
         <XSLT:when test="$produce = 'supermodel'">
@@ -165,19 +167,30 @@
           <XSLT:variable name="new-json-xml">
             <XSLT:apply-templates select="$supermodel" mode="write-json"/>
           </XSLT:variable>
-          <XSLT:when test="matches($produce,('xpath|xdm|xml')'">
-            <XSLT:sequence select="$new-json-xml"/>
-          </XSLT:when>
-          <XSLT:otherwise>
-            <XSLT:try select="xml-to-json($new-json-xml,$write-options)" xmlns:err="http://www.w3.org/2005/xqt-errors">
-              <XSLT:catch>
-                <nm:ERROR code="{{ $err:code }}">{ $err:description }</nm:ERROR>
-              </XSLT:catch>
-            </XSLT:try>  
-          </XSLT:otherwise>
+            <XSLT:choose>
+              <XSLT:when test="matches($produce,('xpath|xdm|xml'))">
+                <XSLT:sequence select="$new-json-xml"/>
+              </XSLT:when>
+              <XSLT:otherwise>
+                <XSLT:try select="xml-to-json($new-json-xml, $write-options)"
+                  xmlns:err="http://www.w3.org/2005/xqt-errors">
+                  <XSLT:catch>
+                    <nm:ERROR code="{{ $err:code }}">{ $err:description }</nm:ERROR>
+                  </XSLT:catch>
+                </XSLT:try>
+              </XSLT:otherwise>
+            </XSLT:choose>
         </XSLT:otherwise>
       </XSLT:choose>   
     </XSLT:template>
   </xsl:variable>
+  
+  <xsl:template match="xsl:template" mode="package-converter">
+    <xsl:copy>
+      <xsl:copy-of select="@*"/>
+      <xsl:copy-of select="ancestor::*/@xpath-default-namespace"/>
+      <xsl:apply-templates mode="#current"/>
+    </xsl:copy>
+  </xsl:template>
   
 </xsl:stylesheet>
