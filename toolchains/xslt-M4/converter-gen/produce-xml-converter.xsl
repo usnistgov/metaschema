@@ -203,8 +203,8 @@
         <xsl:value-of select="@gi"/>
     </xsl:template>
     
-    <!-- Matches local declarations (only) -->
-    <xsl:template match="*" mode="make-xml-match">
+    <!-- Matches local declarations (only), but callable for globals when needed -->
+    <xsl:template match="*" mode="make-xml-match" name="make-full-context-match">
         <xsl:value-of>
             <xsl:for-each
                 select="ancestor-or-self::*[@gi]">

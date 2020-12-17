@@ -60,6 +60,7 @@
         <!--<test>field-flagged-groupable</test>
         <test>field-dynamic-value-key</test>-->
         <!--<test>*/@color</test>-->
+        <test>catalog//group//part</test>
         <test>catalog//group//control/param/select/choice</test>
         <!--<test>catalog//control/title</test>-->
         <test>nowhere</test>

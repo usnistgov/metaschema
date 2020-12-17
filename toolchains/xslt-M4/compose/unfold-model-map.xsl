@@ -14,6 +14,9 @@
     <!-- Moved up to new 'group' parent -->
     <xsl:template match="@group-json | @group-xml | @group-name"/>
     
+<!-- Removing from objects not to be keyed -->
+    <xsl:template match="*[exists(@group-name)][@group-json='ARRAY']/@key"/>
+    
     <xsl:template match="*[exists(@group-name)]">
         <group name="{@group-name}" in-xml="{ if (@group-xml='GROUPED') then 'SHOWN' else 'HIDDEN' }"
             max-occurs="1" min-occurs="{ if (@min-occurs='0') then '0' else '1'}">

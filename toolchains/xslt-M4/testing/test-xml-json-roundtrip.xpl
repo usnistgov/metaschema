@@ -58,7 +58,7 @@
     <p:pipe        port="result" step="convert-supermodel.1-to-xml"/>
   </p:output>
   
-  <p:serialization port="h_MIDWAY_supermodel.1-as-xpath-json" indent="false"/>
+  <p:serialization port="h_MIDWAY_supermodel.1-as-xpath-json" indent="true"/>
   <p:output        port="h_MIDWAY_supermodel.1-as-xpath-json" primary="false">
     <p:pipe        port="result"                step="convert-supermodel.1-to-json-xml"/>
   </p:output>
@@ -190,7 +190,7 @@
       </p:input>
     </p:xslt>
     
-    <!--<p:identity name="convert-markdown-to-markup"/>-->
+<!--    <p:identity name="convert-markdown-to-markup"/>-->
     <p:xslt name="convert-markdown-to-markup">
       <p:input port="stylesheet">
         <p:document href="../converter-gen/markdown-to-supermodel-xml-converter.xsl"/>
