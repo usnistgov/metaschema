@@ -41,7 +41,9 @@
                 <xsl:attribute name="recursive">true</xsl:attribute>
             </xsl:if>
             <xsl:apply-templates select="@*" mode="build"/>
-            <xsl:attribute name="gi"  select="($using-name, root-name, use-name,@name)[1]"/>
+            <xsl:if test="not(@in-xml='UNWRAPPED')">
+              <xsl:attribute name="gi"  select="($using-name, root-name, use-name,@name)[1]"/>
+            </xsl:if>
             <xsl:attribute name="key" select="($using-name, root-name, use-name,@name)[1]"/>
             <xsl:attribute name="min-occurs" select="$minOccurs"/>
             <xsl:attribute name="max-occurs" select="$maxOccurs"/>

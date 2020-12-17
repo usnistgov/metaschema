@@ -62,7 +62,7 @@
                 <xsl:message expand-text="true" xmlns:err="http://www.w3.org/2005/xqt-errors">(On { @name }) { $matching-xml }: { $err:description }</xsl:message>
             </xsl:catch>
         </xsl:try>-->
-        <xsl:text expand-text="true"><!--(: { $matching-xml} :) -->{ m:jsonize-path($matching-xml) }</xsl:text>
+        <xsl:text expand-text="true">(: { $matching-xml } :) { m:jsonize-path($matching-xml) }</xsl:text>
         <!--<xsl:sequence select="m:jsonize-path($matching-xml)"/>-->
         
     </xsl:template>
