@@ -150,11 +150,28 @@
     </xsl:template>
     
     <xsl:template match="value[@as-type='markup-multiline']" mode="cast-data">
-        <xsl:variable name="lines" as="element(string)*" xpath-default-namespace="http://www.w3.org/2005/xpath-functions">
+        <xsl:variable name="lines" as="node()*">
             <xsl:apply-templates select="*" mode="md"/>
         </xsl:variable>
-        <xsl:value-of select="$lines" separator="&#xA;"/>
+        <!--<xsl:variable name="lines" as="item()*">
+            <xsl:apply-templates select="*" mode="md"/>
+        </xsl:variable>-->
+        <!--<xsl:if test="exists($lines except $lines/self::*:string)">
+            <xsl:message expand-text="true">{ ($lines except $lines/self::*:string) ! serialize(.) }</xsl:message>
+        </xsl:if>-->
+        <xsl:value-of select="$lines/self::*" separator="&#xA;"/>
     </xsl:template>
+    
+    <!--<xsl:template match="value[@as-type='markup-multiline']/*" mode="md" priority="100">
+        <xsl:variable name="mine">
+          <xsl:next-match/>
+        </xsl:variable>
+        <xsl:if test="empty($mine/*) or true()">
+            <xsl:message expand-text="true">{ local-name() }</xsl:message>
+            
+        </xsl:if>
+        <xsl:sequence select="$mine"/>
+    </xsl:template>-->
     
     <xsl:template name="conditional-lf">
         <xsl:variable name="predecessor"
@@ -162,6 +179,13 @@
         <xsl:if test="exists($predecessor)">
             <string/>
         </xsl:if>
+    </xsl:template>
+    
+    <xsl:template mode="md" match="text()[empty(ancestor::pre)]">
+        <xsl:variable name="escaped">
+        <xsl:value-of select="replace(., '([`~\^\*&quot;])', '\\$1')"/>
+        </xsl:variable>
+        <xsl:value-of select="replace($escaped,'\s+',' ')"/>
     </xsl:template>
     
     <xsl:template mode="md" match="text()">

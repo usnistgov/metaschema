@@ -12,10 +12,24 @@
 
     <xsl:mode on-no-match="shallow-copy"/>
     
-    <xsl:template match="value[@as-type=('markup-line','markup-multiline')]">
-        <xsl:call-template name="parse-markdown">
-            <xsl:with-param name="markdown-str" select="string(.)"/>
-        </xsl:call-template>
+    <xsl:template match="value[@as-type=('markup-line')]">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:value-of>
+                <xsl:call-template name="parse-markdown">
+                    <xsl:with-param name="markdown-str" select="string(.)"/>
+                </xsl:call-template>
+            </xsl:value-of>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="value[@as-type=('markup-multiline')]">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:call-template name="parse-markdown">
+                <xsl:with-param name="markdown-str" select="string(.)"/>
+            </xsl:call-template>
+        </xsl:copy>
     </xsl:template>
     
     <xsl:template name="run-tests">

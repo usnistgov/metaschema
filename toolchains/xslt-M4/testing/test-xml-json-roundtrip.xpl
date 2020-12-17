@@ -12,13 +12,23 @@
   <p:input port="testdata-xml"      primary="false"/>
   <p:input port="parameters" kind="parameter"/>
   
-  <p:serialization port="composed-metaschema" indent="true"/>
-  <p:output        port="composed-metaschema" primary="false">
+  <p:serialization port="a.composed-metaschema" indent="true"/>
+  <p:output        port="a.composed-metaschema" primary="false">
     <p:pipe        port="result"       step="metaschema-composed"/>
   </p:output>
   
-  <p:serialization port="definition-model" indent="true"/>
-  <p:output        port="definition-model" primary="false">
+  <p:serialization port="b.initial-model-map" indent="true"/>
+  <p:output        port="b.initial-model-map" primary="false">
+    <p:pipe        port="result"           step="make-model-map"/>
+  </p:output>
+  
+  <p:serialization port="c.unfolded-model-map" indent="true"/>
+  <p:output        port="c.unfolded-model-map" primary="false">
+    <p:pipe        port="result"           step="unfold-model-map"/>
+  </p:output>
+  
+  <p:serialization port="d.definition-model" indent="true"/>
+  <p:output        port="d.definition-model" primary="false">
     <p:pipe        port="result"           step="definition-map"/>
   </p:output>
   
@@ -42,12 +52,13 @@
     <p:pipe        port="result"          step="convert-xml-testdata"/>
   </p:output>
   
+  
   <p:serialization port="h_MIDWAY_supermodel.1-as-xml" indent="true"/>
   <p:output        port="h_MIDWAY_supermodel.1-as-xml" primary="false">
     <p:pipe        port="result" step="convert-supermodel.1-to-xml"/>
   </p:output>
   
-  <p:serialization port="h_MIDWAY_supermodel.1-as-xpath-json" indent="true"/>
+  <p:serialization port="h_MIDWAY_supermodel.1-as-xpath-json" indent="false"/>
   <p:output        port="h_MIDWAY_supermodel.1-as-xpath-json" primary="false">
     <p:pipe        port="result"                step="convert-supermodel.1-to-json-xml"/>
   </p:output>
@@ -111,6 +122,7 @@
     </p:input>
   </p:xslt>
   
+  <!--<p:identity name="convert-xml-testdata"/>-->
   <p:xslt name="convert-xml-testdata">
     <p:input port="source">
       <p:pipe port="testdata-xml" step="test-roundtrip-conversions"/>
@@ -120,81 +132,77 @@
     </p:input>
   </p:xslt>
   
-  <p:identity name="capture-supermodel.1"/>
+    <p:identity name="capture-supermodel.1"/>
+    
+    <!-- Now going back downhill to XML -->
+    <p:xslt name="convert-supermodel.1-to-xml">
+      <p:input port="stylesheet">
+        <p:document href="../converter-gen/supermodel-to-xml.xsl"/>
+      </p:input>
+    </p:xslt>
+    
+    <p:sink/>
+    
+    <!-- Back downhill to JSON -->
+    
+    
+    <!-- Now we map to XPath JSON -->
+    <p:xslt name="convert-supermodel.1-to-json-xml">
+      <p:input port="source">
+        <p:pipe port="result" step="convert-xml-testdata"/>
+      </p:input>
+      <p:input port="stylesheet">
+        <p:document href="../converter-gen/supermodel-to-json.xsl"/>
+      </p:input>
+    </p:xslt>
+    
+    <!-- Finally we serialize to ensure JSONness -->
+    <p:xslt name="serialize-supermodel.1-as-json">
+      <p:input port="stylesheet">
+        <p:document href="../lib/xpath-json-to-json.xsl"/>
+      </p:input>
+    </p:xslt>
+    
+    <p:sink/>
+    
+    <!-- Now to test the JSON to XML conversion - back around -->
+    
+    <!-- Producing the JSON to supermodel converter -->
+    <p:xslt name="make-json-converter">
+      <p:input port="source">
+        <p:pipe port="result" step="definition-map"/>
+      </p:input>
+      <p:input port="stylesheet">
+        <p:document href="../converter-gen/produce-json-converter.xsl"/>
+      </p:input>
+    </p:xslt>
+    
+    <p:sink/>
+    
+    <!-- Applying the JSON converter, from the serialized JSON we produce the supermodel again -->
+    
+    <p:xslt name="convert-jsonified-testdata">
+      <p:input port="source">
+        <p:pipe port="result" step="convert-supermodel.1-to-json-xml"/>
+      </p:input>
+      <p:input port="stylesheet">
+        <p:pipe step="make-json-converter" port="result"/>
+      </p:input>
+    </p:xslt>
+    
+    <!--<p:identity name="convert-markdown-to-markup"/>-->
+    <p:xslt name="convert-markdown-to-markup">
+      <p:input port="stylesheet">
+        <p:document href="../converter-gen/markdown-to-supermodel-xml-converter.xsl"/>
+      </p:input>
+    </p:xslt>
+    
+    <!-- Go back down hill to XML -->
+    <p:xslt name="convert-json-supermodel-to-xml">
+      <p:input port="stylesheet">
+        <p:document href="../converter-gen/supermodel-to-xml.xsl"/>
+      </p:input>
+    </p:xslt>
+    
   
-  <!-- Now going back downhill to XML -->
-  <p:xslt name="convert-supermodel.1-to-xml">
-    <p:input port="stylesheet">
-      <p:document href="../converter-gen/supermodel-to-xml.xsl"/>
-    </p:input>
-  </p:xslt>
-  
-  <p:sink/>
-  
-  <!-- Back downhill to JSON -->
-  
-  
-  <!-- Now we map to XPath JSON -->
-  <p:xslt name="convert-supermodel.1-to-json-xml">
-    <p:input port="source">
-      <p:pipe port="result" step="convert-xml-testdata"/>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:document href="../converter-gen/supermodel-to-json.xsl"/>
-    </p:input>
-  </p:xslt>
-  
-  <!-- Finally we serialize to ensure JSONness -->
-  <!--<p:identity name="serialize-json"/>-->
-  <p:xslt name="serialize-supermodel.1-as-json">
-    <p:input port="stylesheet">
-      <p:document href="../lib/xpath-json-to-json.xsl"/>
-    </p:input>
-  </p:xslt>
- 
-  <p:sink/>
- 
-  <!-- Now to test the JSON to XML conversion - back around -->
-  
-  <!-- Producing the JSON to supermodel converter -->
-  <p:xslt name="make-json-converter">
-    <p:input port="source">
-      <p:pipe port="result" step="definition-map"/>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:document href="../converter-gen/produce-json-converter.xsl"/>
-    </p:input>
-  </p:xslt>
-  
-  <p:sink/>
-  
-  <!-- Applying the JSON converter, from the serialized JSON we produce the supermodel again -->
-  <!--<p:identity name="convert-jsonified-testdata">
-    <p:input port="source">
-      <p:pipe step="make-json-converter" port="result"/>
-    </p:input>
-  </p:identity>-->
-  <p:xslt name="convert-jsonified-testdata">
-    <p:input port="source">
-      <p:pipe port="result" step="convert-supermodel.1-to-json-xml"/>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:pipe step="make-json-converter" port="result"/>
-    </p:input>
-  </p:xslt>
-  
-  <!--<p:identity name="convert-markdown-to-markup"/>-->
-  <p:xslt name="convert-markdown-to-markup">
-    <p:input port="stylesheet">
-      <p:document href="../converter-gen/markdown-to-supermodel-xml-converter.xsl"/>
-    </p:input>
-  </p:xslt>
-  
-  <!-- Go back down hill to XML -->
-  <p:xslt name="convert-json-supermodel-to-xml">
-    <p:input port="stylesheet">
-      <p:document href="../converter-gen/supermodel-to-xml.xsl"/>
-    </p:input>
-  </p:xslt>
-
 </p:declare-step>
