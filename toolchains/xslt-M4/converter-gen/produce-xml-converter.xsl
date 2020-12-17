@@ -126,7 +126,7 @@
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
         <xsl:variable name="json-key-flag-name" select="@json-key-flag"/>
-        <XSLT:template match="{ $matching}">
+        <XSLT:template match="{ $matching }">
             <xsl:if test="not(@scope='global')">
                 <xsl:attribute name="priority" select="count(ancestor-or-self::*)"/>
             </xsl:if>
@@ -209,6 +209,7 @@
             <xsl:for-each
                 select="ancestor-or-self::*[@gi]">
                 <xsl:if test="position() gt 1">/</xsl:if>
+                <xsl:if test="@name = .//@name[../@recursive='true']">/</xsl:if>
                 <xsl:apply-templates select="." mode="make-xml-step"/>
             </xsl:for-each>
         </xsl:value-of>
@@ -250,6 +251,10 @@
         </xsl:variable>
         <XSLT:apply-templates select="{$path}"/>
     </xsl:template>
+    
+    <!--<xsl:template match="field[@as-type='markup-multiline'][@in-xml='UNWRAPPED']" priority="10" mode="make-xml-pull">
+        <xsl:apply-templates/>
+    </xsl:template>-->
     
 <!-- A group with no @gi does not appear as an element in the XML source, so when
      sourcing from XML, we have to group its children as a group. -->
