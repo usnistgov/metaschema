@@ -62,7 +62,7 @@
                 <xsl:message expand-text="true" xmlns:err="http://www.w3.org/2005/xqt-errors">(On { @name }) { $matching-xml }: { $err:description }</xsl:message>
             </xsl:catch>
         </xsl:try>-->
-        <xsl:text expand-text="true">(: { $matching-xml } :) { m:jsonize-path($matching-xml) }</xsl:text>
+        <xsl:text expand-text="true">{ m:jsonize-path($matching-xml) }</xsl:text>
         <!--<xsl:sequence select="m:jsonize-path($matching-xml)"/>-->
         
     </xsl:template>
@@ -84,9 +84,22 @@
         <XSLT:apply-templates select="." mode="get-value-property"/>
     </xsl:template>
     
+    <!-- fallback should never match -->
     <xsl:template match="*" mode="make-json-pull">
+        <pull who="{local-name()}">
+            <xsl:copy-of select="@gi | @key"/>
+        </pull>
+    </xsl:template>
+    
+    <xsl:template match="*[matches(@key,'\S')]" mode="make-json-pull">
         <XSLT:apply-templates select="*[@key='{@key}']"/>
     </xsl:template>
+    
+    <xsl:template match="choice" mode="make-xml-pull make-json-pull">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
+    
+    <xsl:template match="constraint" mode="make-json-pull"/>
     
     <xsl:template match="group/*[empty(@key)]" mode="make-json-pull">
         <XSLT:apply-templates select="*"/>
@@ -96,7 +109,13 @@
          production for an element not present in the XML: this time we want the field
          (but must also hard-wire the match). -->
     <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-template">
-        <XSLT:template match="{$px}:string[@key='{@key}']">
+        <xsl:variable name="parent-xml-context">
+            <xsl:for-each select="ancestor::*[exists(@gi)][1]">
+              <xsl:call-template name="make-full-context-match"/>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:comment expand-text="true"> matching markup-multiline value for { $parent-xml-context }</xsl:comment>
+        <XSLT:template priority="{count(ancestor::*/@gi)}" match="{ m:jsonize-path($parent-xml-context) }/{ $px }:string[@key='{@key}']">
             <field>
                 <xsl:copy-of select="@*"/>
                 <value>
@@ -115,6 +134,7 @@
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
         <!-- now producing a template to produce a value node representing the value of the field-->
+        <xsl:comment> matching <xsl:apply-templates select="." mode="make-xml-match"/></xsl:comment>
         <XSLT:template match="{ $matching }" mode="get-value-property">
             <!-- make a flag for the value key, when it's dynamic -->
             <xsl:for-each select="flag[@name=../value/@key-flag]">
@@ -175,9 +195,10 @@
             <XSLT:value-of select="@key"/>
         </flag>
     </xsl:template>
-            <xsl:template name="comment-template">
+
+    <xsl:template name="comment-template">
         <xsl:comment expand-text="true">
-            <xsl:text> Cf XML match="</xsl:text>
+            <xsl:text> XML match="</xsl:text>
             <xsl:apply-templates select="." mode="make-xml-match"/>
             <xsl:text>" </xsl:text>
         </xsl:comment>
