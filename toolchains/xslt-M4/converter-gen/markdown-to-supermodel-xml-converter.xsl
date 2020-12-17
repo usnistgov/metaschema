@@ -375,7 +375,7 @@
     
     
 
-    <xsl:variable name="tag-specification" as="element(tag-spec)"  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
+    <xsl:variable name="tag-specification" as="element()"  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
         <tag-spec>
             <!-- The XML notation represents the substitution by showing both delimiters and tags  -->
             <!-- Note that text contents are regex notation for matching so * must be \* -->

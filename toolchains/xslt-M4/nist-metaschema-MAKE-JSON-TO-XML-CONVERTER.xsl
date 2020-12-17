@@ -6,6 +6,7 @@
   xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"
   xmlns:XSLT="http://csrc.nist.gov/ns/oscal/metaschema/xslt-alias"
   exclude-result-prefixes="#all"
+  
   version="3.0">
 
 
@@ -98,6 +99,7 @@
 
   <xsl:template match="xsl:stylesheet | xsl:transform" mode="package-converter">
     <xsl:copy copy-namespaces="true">
+      <xsl:attribute name="xpath-default-namespace">http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel</xsl:attribute>
       <xsl:copy-of select="@*"/>
       <xsl:text>&#xA;</xsl:text>
       <xsl:comment> JSON to XML conversion: pipeline </xsl:comment>
@@ -113,19 +115,17 @@
       <xsl:text>&#xA;</xsl:text>
       <xsl:comment> JSON to XML conversion: Markdown to markup inferencing </xsl:comment>
       
-      <xsl:copy-of select="document('markdown-to-supermodel-xml-converter.xsl')/xsl:*/
-        ( xsl:call-template[@name='parse'] | xsl:*[@mode] | xsl:variable[not(matches(@name,'example'))] )"/>
-      
+      <xsl:apply-templates mode="package-converter" select="document('converter-gen/markdown-to-supermodel-xml-converter.xsl')/xsl:*/( xsl:* except xsl:output )"/>
       
       <xsl:text>&#xA;</xsl:text>
       <xsl:comment> JSON to XML conversion: Supermodel serialization as XML </xsl:comment>
-      <xsl:apply-templates mode="package-converter" select="document('supermodel-to-xml.xsl')/xsl:*/( xsl:* except xsl:output )"/>
+      <xsl:apply-templates mode="package-converter" select="document('converter-gen/supermodel-to-xml.xsl')/xsl:*/( xsl:* except xsl:output )"/>
     </xsl:copy>
   </xsl:template>
  
-  <xsl:template mode="package-converter"
+  <!--<xsl:template mode="package-converter"
     match="xsl:template[value/@as-type=('markup-line','markup-multiline')][@mode='get-value-property']">
-    <xsl:message>boo!</xsl:message>
+    <!-\-<xsl:message>boo!</xsl:message>-\->
     <XSLT:template match="{ @match }" mode="get-value-property">
       <value as-type="markup-multiline" in-json="string">
         <XSLT:call-template name="parse-markdown">
@@ -133,22 +133,35 @@
         </XSLT:call-template>
       </value>
     </XSLT:template>
-  </xsl:template>
+  </xsl:template>-->
   
   <xsl:template mode="package-converter"
     match="xsl:template[@mode=('write-xml','cast-prose')]/xsl:element/@namespace">
     <xsl:attribute name="namespace" select="$metaschema-source/*/namespace" xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"/>
   </xsl:template>
   
+  <xsl:template mode="package-converter" match="xsl:template[@name='run-tests']"/>
+  <xsl:template mode="package-converter" match="xsl:variable[@name='examples']"/>
+  
+  <xsl:template mode="package-converter" match="xsl:template[@match=('value[@as-type=(''markup-line'')]','value[@as-type=(''markup-multiline'')]')]">
+    <xsl:copy copy-namespaces="no">
+      <xsl:attribute name="mode">cast-md</xsl:attribute>
+      <xsl:attribute name="xpath-default-namespace">http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel</xsl:attribute>
+      <xsl:copy-of select="@*"/>
+      <xsl:copy-of select="*"/>
+    </xsl:copy>
+  </xsl:template>
   
   
- <!--<xsl:template match=""-->
   <xsl:variable name="transformation-architecture">
     <xsl:text>&#xA;</xsl:text>
     <xsl:comment> Processing architecture </xsl:comment>
-    <XSLT:param name="file" as="xs:string"/>
+    <xsl:comment> $file should be a URI, absolute or relative to the XSLT transformation</xsl:comment>
+    <XSLT:param name="file" as="xs:anyURI?"/>
+    <xsl:comment> Pass in $produce=supermodel to produce OSCAL M4 supermodel intermediate format </xsl:comment>
     <XSLT:param name="produce" as="xs:string">xml</XSLT:param><!-- set to 'supermodel' to produce supermodel intermediate -->
-    
+  
+<!--  -->
     <XSLT:template name="from-json">
       <XSLT:if test="not(unparsed-text-available($file))" expand-text="true">
         <nm:ERROR>No file found at { $file }</nm:ERROR>
@@ -164,13 +177,15 @@
       </XSLT:call-template>
     </XSLT:template>
     
+    <XSLT:mode name="cast-md" on-no-match="shallow-copy"/>
+    
     <XSLT:template match="/" name="from-xdm-json-xml" expand-text="true">
       <!-- Take source to be JSON in XPath 3.1 (XDM) representation -->
       <XSLT:param name="source">
         <XSLT:choose>
-          <xsl:comment> evaluating { $file } as URI relative to nominal source directory</xsl:comment>
+          <xsl:comment> evaluate { $file } as URI (absolute or relative to stylesheet)</xsl:comment>
           <XSLT:when test="exists($file)">
-            <XSLT:try select="$file ! document(.,/)" xmlns:err="http://www.w3.org/2005/xqt-errors">
+            <XSLT:try select="document($file)" xmlns:err="http://www.w3.org/2005/xqt-errors">
               <XSLT:catch>
                 <nm:ERROR code="{{ $err:code }}">{ $err:description }</nm:ERROR>
               </XSLT:catch>
@@ -181,12 +196,16 @@
           </XSLT:otherwise>
         </XSLT:choose>
       </XSLT:param>
-      <XSLT:if test="$source/j:map" expand-text="true">
-        <nm:ERROR>No XPath (XML) JSON found at { $file } - syntax of http://www.w3.org/2005/xpath-functions</nm:ERROR>
+      <XSLT:if test="empty($source/j:map)" expand-text="true">
+        <nm:ERROR>No XPath (XML) JSON found at { $file } - using syntax of http://www.w3.org/2005/xpath-functions</nm:ERROR>
       </XSLT:if>
-      <!-- first step produces supermodel from input JSON including Markdown to markup conversion -->
+      <!-- first step produces supermodel from input JSON except for Markdown to markup conversion -->
+      <XSLT:variable name="near-supermodel">
+        <XSLT:apply-templates select="$source/*"/>
+      </XSLT:variable>
+      
       <XSLT:variable name="supermodel">
-        <XSLT:apply-templates select="$source"/>
+        <XSLT:apply-templates select="$near-supermodel/*" mode="cast-md"/>
       </XSLT:variable>
       <XSLT:choose>
         <XSLT:when test="$produce = 'supermodel'">
