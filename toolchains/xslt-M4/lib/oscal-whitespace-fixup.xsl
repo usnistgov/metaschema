@@ -30,10 +30,6 @@
         <xsl:value-of select="."/>
     </xsl:template>
 
-    <xsl:template match="p//text() | li//text() | td//text() | th//text()">
-        <xsl:value-of select="replace(.,'\s+',' ')"/>
-    </xsl:template>
-
     <xsl:template priority="3" match="p/descendant::text()[last()] 
         | li/descendant::text()[last()]
         | td/descendant::text()[last()]
@@ -44,7 +40,7 @@
         <xsl:sequence select="replace($so-far,'\s+$','')"/>
     </xsl:template>
 
-    <xsl:template priority="3" match="p/descendant::text()[1]
+    <xsl:template priority="2" match="p/descendant::text()[1]
         | li/descendant::text()[1]
         | td/descendant::text()[1]
         | th/descendant::text()[1]">
@@ -54,7 +50,10 @@
         <xsl:sequence select="replace($so-far,'^\s+','')"/>
     </xsl:template>
     
-    
+    <xsl:template match="p//text() | li//text() | td//text() | th//text()">
+        <xsl:value-of select="replace(.,'\s+',' ')"/>
+    </xsl:template>
+
     <!--<xsl:template priority="10" match="p//text()[m:first-text(.,ancestor::p[1])] [m:last-text(.,ancestor::p[1])]
         | li//text()[m:first-text(.,ancestor::li[1])] [m:last-text(.,ancestor::li[1])]
         | td//text()[m:first-text(.,ancestor::td[1])] [m:last-text(.,ancestor::td[1])]
