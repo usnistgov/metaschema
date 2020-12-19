@@ -268,7 +268,7 @@
     
     <xsl:template mode="md" match="li">
         <string>
-            <xsl:for-each select="../ancestor::ul">
+            <xsl:for-each select="(../ancestor::ul | ../ancestor::ol)">
                 <xsl:text>&#32;&#32;</xsl:text>
             </xsl:for-each>
             <xsl:text>* </xsl:text>
@@ -279,7 +279,7 @@
     
     <xsl:template mode="md" match="ol/li">
         <string>
-            <xsl:for-each select="../ancestor::ol">
+            <xsl:for-each select="(../ancestor::ul | ../ancestor::ol)">
                 <xsl:text xml:space="preserve">&#32;&#32;</xsl:text>
             </xsl:for-each>
             <xsl:text>1. </xsl:text>

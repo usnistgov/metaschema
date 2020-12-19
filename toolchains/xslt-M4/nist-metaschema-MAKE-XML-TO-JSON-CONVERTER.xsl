@@ -9,7 +9,7 @@
   version="3.0">
 
 
-    <xsl:output indent="yes"/>
+  <xsl:output indent="yes"/>
 
   <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
   
@@ -165,7 +165,7 @@
         </XSLT:when>
         <XSLT:otherwise>
           <XSLT:variable name="new-json-xml">
-            <XSLT:apply-templates select="$supermodel" mode="write-json"/>
+            <XSLT:apply-templates select="$supermodel/*" mode="write-json"/>
           </XSLT:variable>
             <XSLT:choose>
               <XSLT:when test="matches($produce,('xpath|xdm|xml'))">
