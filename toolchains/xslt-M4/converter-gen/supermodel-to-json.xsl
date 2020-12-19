@@ -159,7 +159,8 @@
         <!--<xsl:if test="exists($lines except $lines/self::*:string)">
             <xsl:message expand-text="true">{ ($lines except $lines/self::*:string) ! serialize(.) }</xsl:message>
         </xsl:if>-->
-        <xsl:value-of select="$lines/self::*" separator="&#xA;"/>
+        <!--<xsl:copy-of select="$lines"/>-->
+        <xsl:value-of select="$lines/self::* => string-join('&#xA;')"/>
     </xsl:template>
     
     <!--<xsl:template match="value[@as-type='markup-multiline']/*" mode="md" priority="100">
@@ -277,9 +278,8 @@
     <!-- Since XProc doesn't support character maps we do this in XSLT -   -->
     
     <xsl:template mode="md" match="ol/li">
-        <string/>
         <string>
-            <xsl:for-each select="../ancestor::ul">
+            <xsl:for-each select="../ancestor::ol">
                 <xsl:text xml:space="preserve">&#32;&#32;</xsl:text>
             </xsl:for-each>
             <xsl:text>1. </xsl:text>
