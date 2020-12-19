@@ -243,7 +243,7 @@
     </xsl:template>
     
     <xsl:template priority="5" match="define-field[@as-type='markup-multiline']">
-            <xs:complexType mixed="true">
+            <xs:complexType>
                 <xsl:call-template name="name-global-field-type"/>
                 <xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>
                 <xsl:apply-templates select="define-flag | flag"/>
