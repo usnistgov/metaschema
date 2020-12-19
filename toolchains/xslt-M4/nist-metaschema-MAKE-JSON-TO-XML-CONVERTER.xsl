@@ -154,6 +154,7 @@
   
   
   <xsl:variable name="transformation-architecture">
+    <XSLT:output indent="true"/>
     <xsl:text>&#xA;</xsl:text>
     <xsl:comment> Processing architecture </xsl:comment>
     <xsl:comment> $file should be a URI, absolute or relative to the XSLT transformation</xsl:comment>
