@@ -167,7 +167,6 @@
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
-    <xs:attribute name="as-type" type="m:field-types" default="string"/>
     <xs:attribute name="collapsible" type="m:boolean" default="yes"/>
     <xs:attributeGroup ref="m:cardinality-specification"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
