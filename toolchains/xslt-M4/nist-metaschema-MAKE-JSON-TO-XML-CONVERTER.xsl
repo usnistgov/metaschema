@@ -115,7 +115,7 @@
       <xsl:text>&#xA;</xsl:text>
       <xsl:comment> JSON to XML conversion: Markdown to markup inferencing </xsl:comment>
       
-      <xsl:apply-templates mode="package-converter" select="document('converter-gen/markdown-to-supermodel-xml-converter.xsl')/xsl:*/( xsl:* except xsl:output )"/>
+      <xsl:apply-templates mode="package-converter" select="document('converter-gen/markdown-to-supermodel-xml-converter.xsl')/xsl:*/( xsl:* except (xsl:output | xsl:mode) )"/>
       
       <xsl:text>&#xA;</xsl:text>
       <xsl:comment> JSON to XML conversion: Supermodel serialization as XML </xsl:comment>
@@ -217,6 +217,11 @@
         </XSLT:otherwise>
       </XSLT:choose>   
     </XSLT:template>
+    
+    <XSLT:template match="/j:map[empty(@key)]" priority="10">
+      <XSLT:apply-templates/>
+    </XSLT:template>
+    
   </xsl:variable>
   
 </xsl:stylesheet>
