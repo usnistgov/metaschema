@@ -170,7 +170,7 @@
       <XSLT:call-template name="from-xdm-json-xml">
         <XSLT:with-param name="source">
           <XSLT:try select="unparsed-text($file) ! json-to-xml(.)" xmlns:err="http://www.w3.org/2005/xqt-errors">
-            <XSLT:catch>
+            <XSLT:catch expand-text="true">
               <nm:ERROR code="{{ $err:code }}">{{ $err:description }}</nm:ERROR>
             </XSLT:catch>
           </XSLT:try>
@@ -187,7 +187,7 @@
           <xsl:comment> evaluate { $file } as URI (absolute or relative to stylesheet)</xsl:comment>
           <XSLT:when test="exists($file)">
             <XSLT:try select="document($file)" xmlns:err="http://www.w3.org/2005/xqt-errors">
-              <XSLT:catch>
+              <XSLT:catch expand-text="true">
                 <nm:ERROR code="{{ $err:code }}">{ $err:description }</nm:ERROR>
               </XSLT:catch>
             </XSLT:try>    
