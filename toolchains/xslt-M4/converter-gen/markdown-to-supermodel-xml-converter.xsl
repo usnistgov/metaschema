@@ -99,6 +99,7 @@
         <xsl:variable name="blocks">
             <xsl:for-each-group select="tokenize($str, '\n')"
                 group-starting-with=".[matches(., '^```')]">
+                <!-- odd groups are code if the first one has code, otherwise evens -->
                 <xsl:variable name="this-is-code" select="not((position() mod 2) + number($starts-with-code))"/>
                 <p><!-- Adding an attribute flag when this is a code block, code='code' -->
                     <xsl:if test="$this-is-code">
@@ -114,6 +115,7 @@
         <xsl:variable name="rough-blocks">
             <xsl:apply-templates select="$blocks" mode="parse-block"/>
         </xsl:variable>
+        <!-- for debugging <xsl:copy-of select="$rough-blocks"/> -->
         <xsl:variable name="flat-structures">
             <xsl:apply-templates select="$rough-blocks" mode="mark-structures"/>
         </xsl:variable>
@@ -142,12 +144,10 @@
     <!-- Matches blocks marked as code  -->
     <xsl:template mode="parse-block" priority="1" match="p[exists(@code)]" expand-text="true">
         <pre>
-            <code>
-                <xsl:for-each select="@code[not(.='code')]">
-                    <xsl:attribute name="class">language-{.}</xsl:attribute>
-                </xsl:for-each>
-                <xsl:value-of select="string(.)"/>
-            </code>
+            <xsl:for-each select="@code[not(.='code')]">
+                <xsl:attribute name="class">language-{.}</xsl:attribute>
+            </xsl:for-each>
+            <xsl:value-of select="string(.)"/>
         </pre>
     </xsl:template>
     
@@ -155,7 +155,8 @@
     <xsl:template mode="parse-block" match="p" expand-text="true">
         <xsl:for-each select="tokenize(string(.),'\n\s*\n')[normalize-space(.)]">
             <p>
-                <xsl:value-of select="replace(.,'^\s*\n','')"/>
+                <!-- trimming leading and trailing whitespace here -->
+                <xsl:value-of select="replace(.,'(^\s*\n|\s+$)','')"/>
             </p>
         </xsl:for-each>
     </xsl:template>
@@ -485,7 +486,13 @@
     
     <xsl:variable name="line-example" xml:space="preserve"> { insertion } </xsl:variable>
     
-     <xsl:variable name="examples" xml:space="preserve">
+     <xsl:variable name="examples"><p>Here is something to ponder:
+  
+```
+[code goes here]
+```
+        
+        </p> 
         <p>**Markdown** and even " quoted text" and **more markdown** with a [good link](#abc) and a [(choppy link)](#s1.2)</p>
          <p>**See the FedRAMP Documents page under Key Cloud Service Provider (CSP) Documents> Vulnerability Scanning Requirements** ([https://www.FedRAMP.gov/documents/](https://www.FedRAMP.gov/documents/))</p>
          <p>**See the FedRAMP Documents page under Key Cloud Service Provider\n\t\t\t\t\t\t\t\t(CSP) Documents> Vulnerability Scanning Requirements** ([https://www.FedRAMP.gov/documents/](https://www.FedRAMP.gov/documents/))</p>
