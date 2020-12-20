@@ -124,18 +124,18 @@
         </xsl:element>
     </xsl:template>
     
-    <xsl:template match="field[@in-json='SCALAR'][empty(@key)]/value" mode="write-json">
-        <!-- A value given on a scalar field with no key gets no key either -->
+    <!--<xsl:template match="field[@in-json='SCALAR'][empty(@key)]/value" mode="write-json">
+        <!-\- A value given on a scalar field with no key gets no key either -\->
         <xsl:element name="{@in-json}" namespace="http://www.w3.org/2005/xpath-functions">
             <xsl:apply-templates mode="#current"/>
         </xsl:element>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:template match="value" mode="write-json">
         <xsl:variable name="key-flag-name" select="@key-flag"/>
         <xsl:element name="{(@in-json[matches(.,'\S')],'string')[1]}"
             namespace="http://www.w3.org/2005/xpath-functions">
-            <xsl:attribute name="key"
+            <xsl:copy-of
                 select="(../flag[@key=$key-flag-name],parent::field[@in-json = 'SCALAR']/@key, @key)[1]"/>
             <xsl:apply-templates select="." mode="cast-data"/>
         </xsl:element>
@@ -145,6 +145,21 @@
         <xsl:value-of select="."/>
     </xsl:template>
     
+    <!--<xsl:template match="value[@as-type='markup-line']" mode="write-json">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates select="." mode="cast-data"/>
+        </xsl:copy>
+    </xsl:template>
+    
+    <xsl:template match="value[@as-type='markup-multiline']" mode="write-json">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:apply-templates select="." mode="cast-data"/>
+        </xsl:copy>
+    </xsl:template>
+    -->
+    
     <xsl:template match="value[@as-type='markup-line']" mode="cast-data">
         <xsl:apply-templates mode="md"/>
     </xsl:template>
@@ -153,13 +168,6 @@
         <xsl:variable name="lines" as="node()*">
             <xsl:apply-templates select="*" mode="md"/>
         </xsl:variable>
-        <!--<xsl:variable name="lines" as="item()*">
-            <xsl:apply-templates select="*" mode="md"/>
-        </xsl:variable>-->
-        <!--<xsl:if test="exists($lines except $lines/self::*:string)">
-            <xsl:message expand-text="true">{ ($lines except $lines/self::*:string) ! serialize(.) }</xsl:message>
-        </xsl:if>-->
-        <!--<xsl:copy-of select="$lines"/>-->
         <xsl:value-of select="$lines/self::* => string-join('&#xA;')"/>
     </xsl:template>
     
