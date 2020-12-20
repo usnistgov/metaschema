@@ -128,7 +128,9 @@
                 'supermodel' to produce supermodel intermediate -->
     <XSLT:param name="json-indent" as="xs:string">no</XSLT:param>
     
-    <XSLT:output omit-xml-declaration="true"/>
+    <xsl:comment> NB the output method is XML but serialized JSON is written with disable-output-escaping (below)
+     permitting inspection of intermediate results without changing the serialization method.</xsl:comment>
+    <XSLT:output omit-xml-declaration="true" method="xml"/>
     
     <XSLT:variable name="write-options" as="map(*)">
       <XSLT:map>
@@ -159,6 +161,7 @@
       <XSLT:variable name="supermodel">
         <XSLT:apply-templates select="$source/*"/>
       </XSLT:variable>
+      <XSLT:variable name="result">
       <XSLT:choose>
         <XSLT:when test="$produce = 'supermodel'">
           <XSLT:sequence select="$supermodel"/>
@@ -174,7 +177,7 @@
               <XSLT:otherwise>
                 <XSLT:try select="xml-to-json($new-json-xml, $write-options)"
                   xmlns:err="http://www.w3.org/2005/xqt-errors">
-                  <XSLT:catch>
+                  <XSLT:catch expand-text="true">
                     <nm:ERROR code="{{ $err:code }}">{ $err:description }</nm:ERROR>
                   </XSLT:catch>
                 </XSLT:try>
@@ -182,6 +185,11 @@
             </XSLT:choose>
         </XSLT:otherwise>
       </XSLT:choose>   
+      </XSLT:variable>
+      <XSLT:sequence select="$result/*"/>
+      <XSLT:if test="matches($result,'\S') and empty($result/*)">
+        <XSLT:value-of select="$result" disable-output-escaping="true"/>
+      </XSLT:if>
     </XSLT:template>
   </xsl:variable>
   

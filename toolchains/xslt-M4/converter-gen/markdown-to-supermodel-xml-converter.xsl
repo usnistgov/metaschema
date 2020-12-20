@@ -12,14 +12,14 @@
 
     <xsl:mode on-no-match="shallow-copy"/>
     
+    <!-- The templates are the same, but kept separate to enable calling them in separately. -->
     <xsl:template match="value[@as-type=('markup-line')]">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:value-of>
-                <xsl:call-template name="parse-markdown">
-                    <xsl:with-param name="markdown-str" select="string(.)"/>
-                </xsl:call-template>
-            </xsl:value-of>
+            <!-- if this is valid only a single p comes back but who can tell? -->
+            <xsl:call-template name="parse-markdown-line">
+                <xsl:with-param name="markdown-str" select="string(.)"/>
+            </xsl:call-template>
         </xsl:copy>
     </xsl:template>
     
@@ -72,6 +72,15 @@
     i.e. < and & to &lt; and &amp;
     (we can ignore quotes as long as our markup has no attributes only elements)
     -->
+    
+    
+    <xsl:template name="parse-markdown-line">
+        <xsl:param name="markdown-str" as="xs:string" required="yes"/>
+        <xsl:variable name="str-as-textnode">
+            <xsl:value-of select="string($markdown-str) => replace('\\n','&#xA;')"/>
+        </xsl:variable>
+        <xsl:apply-templates select="$str-as-textnode" mode="infer-inlines"/>
+    </xsl:template>
     
     <xsl:template name="parse-markdown">
         
@@ -385,7 +394,7 @@
             <img         alt="!\[{{$noclosebracket}}\]" src="\({{$nocloseparen}}\)"/>
             <insert param-id="\{{\{{{{$nws}}\}}\}}"/>
             
-            <a href="\[{{$nocloseparen}}\]">\(<text not="\)"/>\)</a>
+            <a href="\[{{$noclosebracket}}\]">\(<text not="\)"/>\)</a>
             <code>`<text/>`</code>
             <strong>
                 <em>\*\*\*<text/>\*\*\*</em>
@@ -477,7 +486,7 @@
     <xsl:variable name="line-example" xml:space="preserve"> { insertion } </xsl:variable>
     
      <xsl:variable name="examples" xml:space="preserve">
-        <p>**Markdown** and even " quoted text" and **more markdown**</p>
+        <p>**Markdown** and even " quoted text" and **more markdown** with a [good link](#abc) and a [(choppy link)](#s1.2)</p>
          <p>**See the FedRAMP Documents page under Key Cloud Service Provider (CSP) Documents> Vulnerability Scanning Requirements** ([https://www.FedRAMP.gov/documents/](https://www.FedRAMP.gov/documents/))</p>
          <p>**See the FedRAMP Documents page under Key Cloud Service Provider\n\t\t\t\t\t\t\t\t(CSP) Documents> Vulnerability Scanning Requirements** ([https://www.FedRAMP.gov/documents/](https://www.FedRAMP.gov/documents/))</p>
         <p>
