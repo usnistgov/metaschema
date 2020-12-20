@@ -333,12 +333,11 @@
     <xs:complexType mixed="true"/>
   </xs:element>
 
-  <xs:element name="short-name">
+  <xs:element name="short-name" type="xs:NCName">
     <xs:annotation>
       <xs:documentation>A short (code) name to be used for the metaschema, for example as a constituent of names assigned to
         derived artifacts such as schemas and conversion utilities.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true"/>
   </xs:element>
 
   <xs:element name="import">
