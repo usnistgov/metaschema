@@ -125,7 +125,7 @@
       <xsl:map>
          <xsl:map-entry key="'oscal-catalog'"  >catalog</xsl:map-entry>
          <xsl:map-entry key="'oscal-profile'"  >profile</xsl:map-entry>
-         <xsl:map-entry key="'oscal-component'">component</xsl:map-entry>
+         <xsl:map-entry key="'oscal-component-definition'">component</xsl:map-entry>
          <xsl:map-entry key="'oscal-ssp'"      >ssp</xsl:map-entry>
          <xsl:map-entry key="'oscal-poam'"     >poam</xsl:map-entry>
          <xsl:map-entry key="'oscal-ap'"       >assessment-plan</xsl:map-entry>

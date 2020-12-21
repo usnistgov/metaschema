@@ -74,7 +74,7 @@
    JSON To XML|XML to JSON Converter: {blah]
    
    <p><span class="usa-tag">Schema download</span> <a href="/artifacts/xml/schema/oscal_catalog_schema.xsd">oscal_catalog_schema.xsd</a></p>
-<p><span class="usa-tag">JSON to XML content converter</span>  <a href="/artifacts/xml/converter/oscal_catalog_json-to-xml-converter.xsl">oscal_catalog_json-to-xml-converter.</a></p>
+<p><span class="usa-tag">JSON to XML content converter</span>  <a href="/artifacts/xml/convert/oscal_catalog_json-to-xml-converter.xsl">oscal_catalog_json-to-xml-converter.</a></p>
 <p>(<a href="?">How do I use the converter to convert OSCAL JSON to XML?</a>)</p>
 
    
@@ -144,7 +144,7 @@
       <xsl:map>
          <xsl:map-entry key="'oscal-catalog'"  >catalog</xsl:map-entry>
          <xsl:map-entry key="'oscal-profile'"  >profile</xsl:map-entry>
-         <xsl:map-entry key="'oscal-component'">component</xsl:map-entry>
+         <xsl:map-entry key="'oscal-component-definition'">component</xsl:map-entry>
          <xsl:map-entry key="'oscal-ssp'"      >ssp</xsl:map-entry>
          <xsl:map-entry key="'oscal-poam'"     >poam</xsl:map-entry>
          <xsl:map-entry key="'oscal-ap'"       >assessment-plan</xsl:map-entry>
