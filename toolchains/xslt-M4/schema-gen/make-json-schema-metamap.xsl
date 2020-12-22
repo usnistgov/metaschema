@@ -63,23 +63,7 @@
         <number key="maxProperties">1</number>
     </xsl:template>
     
-    <!--
-    "oneOf": [
-        {
-            "properties": {
-                "ANYTHING": {"$ref": "#/definitions/ANYTHING"}
-            },
-            "required": [ "ANYTHING" ]
-        },
-        {
-            "properties": {
-                "EVERYTHING": {"$ref": "#/definitions/EVERYTHING"}
-            },
-            "required": [ "EVERYTHING" ]
-        }
-    ]
-    
-    -->
+   
     <xsl:template priority="2" match="/METASCHEMA[count(define-assembly/root-name) > 1]" mode="require-a-root">
         <array key="oneOf">
             <xsl:for-each select="define-assembly[exists(root-name)]">
@@ -95,7 +79,7 @@
     <xsl:template match="define-assembly" mode="root-requirement">
         <map key="properties">
             <map key="{root-name}">
-                <string key="$ref">#/definitions/{ root-name }</string>
+                <xsl:apply-templates select="." mode="make-ref"/>
             </map>
         </map>
         <array key="required">
@@ -113,7 +97,11 @@
     <xsl:template match="define-flag"/>
     
     <xsl:template name="give-id">
-      <string key="$id">#/definitions/{@name}</string>
+        <string key="$id">#/definitions/{ generate-id() }-{@name}</string>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="make-ref">
+        <string key="$ref">#/definitions/{ generate-id() }-{@name}</string>
     </xsl:template>
     
     
@@ -531,17 +519,17 @@
     
     <xsl:template match="flag" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('flag-definition-by-name',@ref)"/>
-        <string key="$ref">#/definitions/{ $definition/@name }</string>
+        <xsl:apply-templates select="$definition" mode="make-ref"/>
     </xsl:template>
     
     <xsl:template match="field" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('field-definition-by-name',@ref)"/>
-        <string key="$ref">#/definitions/{ $definition/@name }</string>
+        <xsl:apply-templates select="$definition" mode="make-ref"/>
     </xsl:template>
     
     <xsl:template match="assembly" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('assembly-definition-by-name',@ref)"/>
-        <string key="$ref">#/definitions/{ $definition/@name }</string>
+        <xsl:apply-templates select="$definition" mode="make-ref"/>
     </xsl:template>
     
     <!--  elements that fall through are made objects in case they have properties  -->
