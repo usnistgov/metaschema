@@ -19,33 +19,33 @@
       <formal-name>Nominal root</formal-name>
       <description>XXX</description>
       <root-name>root-assembly</root-name>
-      <flag ref="top-level-flag"/>
-      <define-flag name="local-flag">
-         <formal-name>Locally defined flag</formal-name>
+      <flag ref="global-flag"/>      
+      <define-flag name="inline-flag">
+         <formal-name>Flag defined inline on root-assembly</formal-name>
          <description>XXX</description>
       </define-flag>
       <model>
-         <field ref="top-level-global-field"/>
-         <field ref="top-level-local-field"/>
-         <define-field name="local-field">
-            <formal-name>Locally defined field</formal-name>
+         <field ref="global-field"/>
+         <field ref="local-field"/>
+         <define-field name="inline-field">
+            <formal-name>Field defined inline on root-assembly</formal-name>
             <description>XXX</description>
          </define-field>
       </model>
    </define-assembly>
    
-   <define-field name="top-level-global-field">
+   <define-field name="global-field">
       <formal-name>Field, defined at top level (global by default)</formal-name>
       <description>XXX</description>
    </define-field>
    
-   <define-field name="top-level-local-field" scope="local">
-      <formal-name>Field, defined at top level as 'local'</formal-name>
+   <define-field name="local-field" scope="local">
+      <formal-name>Field, defined in module 'oscal-test' at top level as 'local'</formal-name>
       <description>XXX</description>
    </define-field>
    
-   <define-flag name="top-level-flag">
-      <formal-name>Flag, defined at top level</formal-name>
+   <define-flag name="global-flag">
+      <formal-name>Flag, defined globally</formal-name>
       <description>XXX</description>
    </define-flag>
    

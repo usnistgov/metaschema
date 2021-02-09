@@ -63,23 +63,7 @@
         <number key="maxProperties">1</number>
     </xsl:template>
     
-    <!--
-    "oneOf": [
-        {
-            "properties": {
-                "ANYTHING": {"$ref": "#/definitions/ANYTHING"}
-            },
-            "required": [ "ANYTHING" ]
-        },
-        {
-            "properties": {
-                "EVERYTHING": {"$ref": "#/definitions/EVERYTHING"}
-            },
-            "required": [ "EVERYTHING" ]
-        }
-    ]
-    
-    -->
+   
     <xsl:template priority="2" match="/METASCHEMA[count(define-assembly/root-name) > 1]" mode="require-a-root">
         <array key="oneOf">
             <xsl:for-each select="define-assembly[exists(root-name)]">
@@ -95,7 +79,7 @@
     <xsl:template match="define-assembly" mode="root-requirement">
         <map key="properties">
             <map key="{root-name}">
-                <string key="$ref">#/definitions/{ root-name }</string>
+                <xsl:apply-templates select="." mode="make-ref"/>
             </map>
         </map>
         <array key="required">
@@ -113,17 +97,27 @@
     <xsl:template match="define-flag"/>
     
     <xsl:template name="give-id">
-      <string key="$id">#/definitions/{@name}</string>
+        <string key="$id">
+            <xsl:apply-templates mode="make-definition-id" select="."/>
+        </string>
     </xsl:template>
     
+    <xsl:template match="*" mode="make-ref">
+        <string key="$ref">
+            <xsl:apply-templates mode="make-definition-id" select="."/>
+        </string>
+    </xsl:template>
     
+    <xsl:template match="*" mode="make-definition-id">
+        <xsl:variable name="lineage" select="ancestor-or-self::*/@name"/>
+        <xsl:text>#/definitions/{ $lineage }</xsl:text>
+    </xsl:template>
+
     <xsl:template priority="100" match="METASCHEMA/define-assembly | METASCHEMA/define-field">
-        <!-- XXX add module identifier -->
         <map key="{ @name }">
             <xsl:next-match/>
         </map>
     </xsl:template>
-    
     
     <xsl:template match="define-assembly">
             <xsl:apply-templates select="formal-name, description"/>
@@ -531,17 +525,17 @@
     
     <xsl:template match="flag" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('flag-definition-by-name',@ref)"/>
-        <string key="$ref">#/definitions/{ $definition/@name }</string>
+        <xsl:apply-templates select="$definition" mode="make-ref"/>
     </xsl:template>
     
     <xsl:template match="field" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('field-definition-by-name',@ref)"/>
-        <string key="$ref">#/definitions/{ $definition/@name }</string>
+        <xsl:apply-templates select="$definition" mode="make-ref"/>
     </xsl:template>
     
     <xsl:template match="assembly" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('assembly-definition-by-name',@ref)"/>
-        <string key="$ref">#/definitions/{ $definition/@name }</string>
+        <xsl:apply-templates select="$definition" mode="make-ref"/>
     </xsl:template>
     
     <!--  elements that fall through are made objects in case they have properties  -->
@@ -652,7 +646,7 @@
         </map>
         <map key="dateTime">
             <string key="type">string</string>
-            <!--<string key="format">date-time</string> JQ 'date-time' implementation requires time zone -->
+            <!--<string key="format">date-time</string> JQ/AJV 'date-time' implementations require time zone--> 
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
         <map key="date-with-timezone">
