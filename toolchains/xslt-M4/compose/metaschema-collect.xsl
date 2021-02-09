@@ -5,6 +5,7 @@
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     exclude-result-prefixes="xs math m xsi"
     version="3.0">
 
@@ -33,7 +34,8 @@
     <xsl:template match="METASCHEMA" mode="acquire">
         <xsl:copy>
             <xsl:copy-of select="@* except @xsi:*"/>
-            <xsl:attribute name="module" select="base-uri(.)"/>
+            <xsl:attribute name="module" select="short-name"/>
+            <xsl:attribute name="src" select="base-uri(.)"/>
             <xsl:apply-templates mode="#current"/>
         </xsl:copy>
     </xsl:template>
@@ -56,47 +58,42 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-        
-    <xsl:key name="top-level-local-assembly-definition-by-name"
-        match="METASCHEMA/define-assembly[@scope='local']" use="@name"/>
-    
-    <xsl:key name="top-level-local-field-definition-by-name"
-        match="METASCHEMA/define-field[@scope='local']" use="@name"/>
-    
-    <xsl:key name="top-level-local-flag-definition-by-name"
-        match="METASCHEMA/define-flag[@scope='local']" use="@name"/>
-    
-    <xsl:template mode="acquire" match="assembly[exists( key('top-level-local-assembly-definition-by-name',@ref) )]">
-        <xsl:apply-templates mode="expand" select="key('top-level-local-assembly-definition-by-name',@ref) ">
-            <xsl:with-param name="from" select="."/>
-        </xsl:apply-templates>
-    </xsl:template>
-    
-    <xsl:template mode="acquire" match="field[exists( key('top-level-local-field-definition-by-name',@ref) )]">
-        <xsl:apply-templates mode="expand" select="key('top-level-local-field-definition-by-name',@ref) ">
-            <xsl:with-param name="from" select="."/>
-        </xsl:apply-templates>
-    </xsl:template>
-    
-    <xsl:template mode="acquire" match="flag[exists( key('top-level-local-flag-definition-by-name',@ref) )]">
-        <xsl:apply-templates mode="expand" select="key('top-level-local-flag-definition-by-name',@ref) ">
-            <xsl:with-param name="from" select="."/>
-        </xsl:apply-templates>
-    </xsl:template>
-    
-    <xsl:template match="*" mode="expand">
-        <xsl:param name="from" select="()"/>
+  
+    <!-- Rewriting name on module-local definitions by prepending the given value with '{ module-short-name }-'
+         Also adding use-name if none is given -->
+    <xsl:template mode="acquire"
+        match="METASCHEMA/define-assembly[@scope='local'] |
+               METASCHEMA/define-field[@scope='local']    |
+               METASCHEMA/define-flag[@scope='local']">
         <xsl:copy>
-            <xsl:copy-of select="$from/@* except $from/@ref"/>
             <xsl:copy-of select="@*"/>
-            <xsl:apply-templates mode="acquire" select="$from/*"/>
-            <xsl:apply-templates mode="acquire"/>
+            <xsl:attribute name="name" expand-text="true">{ ../short-name }-{ @name }</xsl:attribute>
+            <xsl:variable name="earlier" select="formal-name | description | root-name | use-name"/>
+            <xsl:apply-templates mode="#current" select="$earlier"/>
+            <xsl:if test="empty(use-name)" expand-text="true">
+                <use-name>{ @name }</use-name>
+            </xsl:if>
+            <xsl:apply-templates mode="#current" select="child::* except $earlier"/>
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template mode="acquire"
+ <!-- Same at the other end - references to module-local definitions are relabeled correspondingly
+      (to disambiguate from others of the same name in other modules) -->
+    
+    <xsl:key name="top-level-local-definition-by-name" use="@name"
         match="METASCHEMA/define-assembly[@scope='local'] |
-               METASCHEMA/define-field[@scope='local'] |
-               METASCHEMA/define-flag[@scope='local']"/>
+               METASCHEMA/define-field[@scope='local']    |
+               METASCHEMA/define-flag[@scope='local']" />
+    
+    <xsl:template mode="acquire" match="model//*[exists( key('top-level-local-definition-by-name',@ref) )]">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:attribute name="ref" expand-text="true">{ ancestor::METASCHEMA[1]/short-name }-{ @ref }</xsl:attribute>
+            <xsl:if test="empty(use-name)" expand-text="true">
+                <use-name>{ @ref }</use-name>
+            </xsl:if>
+            <xsl:apply-templates mode="#current"/>
+        </xsl:copy>
+    </xsl:template>
     
 </xsl:stylesheet>

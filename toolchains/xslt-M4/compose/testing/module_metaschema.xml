@@ -8,35 +8,36 @@
    abstract="yes">
    <schema-name>OSCAL TEST Format Module</schema-name>
    <schema-version>0.0</schema-version>
-   <short-name>oscal-test</short-name>
+   <short-name>oscal-test-m1</short-name>
    <namespace>http://csrc.nist.gov/ns/metaschema/test</namespace>
   
    <define-assembly name="module-assembly">
       <formal-name>Assembly defined in a module</formal-name>
       <description>XXX</description>
       <!--<flag ref="top-level-flag"/>-->
-      <define-flag name="local-flag">
-         <formal-name>Locally defined flag</formal-name>
+      <define-flag name="inline-flag">
+         <formal-name>Flag defined inline</formal-name>
          <description>XXX</description>
       </define-flag>
       <model>
-         <field ref="module-global-field"/>
-         <field ref="module-top-level-local-field"/>
-         <define-field name="module-local-field">
+         <field ref="global-field"/>
+         <field ref="local-field"/>
+         <define-field name="inline-field">
             <formal-name>Locally defined field</formal-name>
             <description>XXX</description>
          </define-field>
       </model>
    </define-assembly>
    
-   <define-field name="module-global-field">
-      <formal-name>Field, defined in a module (global by default)</formal-name>
+   <define-field name="global-field">
+      <formal-name>Field, defined in module 'oscal-test-m1' (global by default)</formal-name>
       <description>XXX</description>
    </define-field>
    
-   <define-field name="module-top-level-local-field" scope="local">
-      <formal-name>Field, defined in a module as 'local', should appear as 'local'</formal-name>
+   <define-field name="local-field" scope="local">
+      <formal-name>Field, defined in module 'oscal-test-m1' as local</formal-name>
       <description>ZZZ</description>
-   </define-field> 
+   </define-field>
+   
    
 </METASCHEMA>
