@@ -110,7 +110,7 @@
     
     <xsl:template match="*" mode="make-definition-id">
         <xsl:variable name="lineage" select="ancestor-or-self::*/@name"/>
-        <xsl:text>#/definitions/{ $lineage }</xsl:text>
+        <xsl:text>#/definitions/{ $lineage => string-join('-') }</xsl:text>
     </xsl:template>
 
     <xsl:template priority="100" match="METASCHEMA/define-assembly | METASCHEMA/define-field">
