@@ -43,7 +43,7 @@ validate_json() {
     set -- "$@" "-d" "${instance_file}"
   fi
 
-  ajv "$@" "${extra_params[@]}"
+  ajv "-c" "ajv-formats" "$@" "${extra_params[@]}"
   exitcode=$?
   if [ "$exitcode" -ne 0 ]; then
       if [ "$exitcode" -gt 1 ]; then
