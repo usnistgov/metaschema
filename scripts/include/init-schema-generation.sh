@@ -30,7 +30,7 @@ validate_schema() {
     cmd_exitcode=$?
     ;;
   json)
-    result=$(validate_json "${METASCHEMA_SCRIPT_DIR}/../support/json/json-schema-schema.json" "$schema_file")
+    result=$(validate_json_schema "$schema_file")
     cmd_exitcode=$?
     ;;
   *)
