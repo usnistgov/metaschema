@@ -19,6 +19,35 @@ init_validation() {
 #  fi
 #}
 
+validate_json_schema() {
+#  check_json_cli
+
+  local schema_file="$1"; shift
+  local extra_params=($@)
+
+#  local classpath=$(JARS=("$JSON_CLI_HOME"/*.jar); IFS=:; echo -e "${JARS[*]}")
+
+  set --
+
+  if [ -z "$schema_file" ]; then
+      echo -e "${P_ERROR}The JSON schema must be provided as the first argument.${P_END}"
+  else
+    set -- "$@" "-s" "${schema_file}"
+  fi
+
+  ajv compile "-c" "ajv-formats" "$@" "${extra_params[@]}"
+  exitcode=$?
+  if [ "$exitcode" -ne 0 ]; then
+      if [ "$exitcode" -gt 1 ]; then
+          echo -e "${P_ERROR}Error running ajv.${P_END}"
+      else
+          echo -e "${instance_file} is invalid."
+      fi
+      return $exitcode
+  fi
+  return 0
+}
+
 validate_json() {
 #  check_json_cli
 
