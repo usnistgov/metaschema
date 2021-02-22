@@ -185,6 +185,10 @@
                   <xs:group ref="ανθ:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
                </xs:complexType>
             </xs:element>
+            <xs:element name="include"
+                        type="ανθ:include-ASSEMBLY"
+                        minOccurs="0"
+                        maxOccurs="1"/>
          </xs:choice>
       </xs:sequence>
    </xs:complexType>
@@ -272,6 +276,20 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
+   <xs:complexType name="include-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Include other</m:formal-name>
+            <m:description>Some other sort of markup altogether</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Include other</b>: Some other sort of markup altogether</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:any namespace="##other" processContents="lax"/>
+      </xs:sequence>
+      <xs:attribute name="lang" type="xs:string"/>
+   </xs:complexType>
    <xs:complexType name="back-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
@@ -324,6 +342,7 @@
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="bio" type="ανθ:bio-ASSEMBLY" minOccurs="0" maxOccurs="1"/>
+         <xs:any namespace="##other" processContents="lax"/>
       </xs:sequence>
       <xs:attribute name="id" use="required" type="xs:NCName">
          <xs:annotation>

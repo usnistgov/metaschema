@@ -1,0 +1,156 @@
+<map xmlns="http://www.w3.org/2005/xpath-functions">
+   <map key="EVERYTHING">
+      <map key="field-1only">
+         <string key="STRVALUE">FIELD-1-ONLY</string>
+      </map>
+      <string key="field-base64">1234abcd</string>
+      <boolean key="field-boolean">true</boolean>
+      <map key="field-named-value">
+         <string key="id">fnv1</string>
+         <string key="CUSTOM-VALUE-KEY">FIELD-NAMED-VALUE</string>
+      </map>
+      <string key="markup-line">Here's some *markup*: make of it **what you will**! Even if it has ... \* funky characters \` ... and even an ![some picture](img.jpg)</string>
+      <array key="groupable-simple-fields">
+         <map>
+            <number key="integer-flag">1</number>
+            <string key="STRVALUE">field-groupable 1</string>
+         </map>
+         <map>
+            <string key="simple-flag">a</string>
+            <string key="STRVALUE">field-groupable 2</string>
+         </map>
+         <map>
+            <number key="integer-flag">3</number>
+            <string key="STRVALUE">field-groupable 3</string>
+         </map>
+      </array>
+      <array key="wrapped-fields">
+         <string>field-wrappable 1</string>
+         <string>field-wrappable 2</string>
+         <string>field-wrappable 3</string>
+      </array>
+      <map key="keyed-fields">
+         <string key="fbk1">field-by-key 1</string>
+         <string key="fbk2">field-by-key 2</string>
+         <string key="fbk3">field-by-key 3</string>
+      </map>
+      <array key="dynamic-value-key-fields">
+         <map>
+            <string key="fdvk1">field-dynamic-value-key 1</string>
+         </map>
+         <map>
+            <string key="fdvk2">field-dynamic-value-key 2</string>
+         </map>
+         <map>
+            <string key="fdvk3">field-dynamic-value-key 3</string>
+         </map>
+      </array>
+      <string key="wrapped-prose">
+# Wrapped up prose
+
+This is prose. All wrapped up.</string>
+      <string key="loose-prose">
+# Unwrapped prose
+
+Here we have unwrapped prose....</string>
+      <map key="ASSEMBLY-1ONLY">
+         <map key="field-1only">
+            <string key="STRVALUE">ASSEMBLY-1-ONLY / FIELD-1-ONLY</string>
+         </map>
+      </map>
+      <array key="groupable-assemblies">
+         <map>
+            <array key="groupable-simple-fields">
+               <map>
+                  <string key="STRVALUE">assembly-groupable 1 / field-groupable 1</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 1 / field-groupable 2</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 1 / field-groupable 3</string>
+               </map>
+            </array>
+         </map>
+         <map>
+            <array key="groupable-simple-fields">
+               <map>
+                  <string key="STRVALUE">assembly-groupable 2 / field-groupable 1</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 2 / field-groupable 2</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 2 / field-groupable 3</string>
+               </map>
+            </array>
+         </map>
+         <map>
+            <array key="groupable-simple-fields">
+               <map>
+                  <string key="STRVALUE">assembly-groupable 3 / field-groupable 1</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 3 / field-groupable 2</string>
+               </map>
+               <map>
+                  <string key="STRVALUE">assembly-groupable 3 / field-groupable 3</string>
+               </map>
+            </array>
+         </map>
+      </array>
+      <array key="wrapped-assemblies">
+         <map>
+            <array key="wrapped-fields">
+               <string>assembly-wrappable 1 / field-wrappable 1</string>
+               <string>assembly-wrappable 1 / field-wrappable 2</string>
+               <string>assembly-wrappable 1 / field-wrappable 3</string>
+            </array>
+         </map>
+         <map>
+            <array key="wrapped-fields">
+               <string>assembly-wrappable 2 / field-wrappable 1</string>
+               <string>assembly-wrappable 2 / field-wrappable 2</string>
+               <string>assembly-wrappable 2 / field-wrappable 3</string>
+            </array>
+         </map>
+         <map>
+            <array key="wrapped-fields">
+               <string>assembly-wrappable 3 / field-wrappable 1</string>
+               <string>assembly-wrappable 3 / field-wrappable 2</string>
+               <string>assembly-wrappable 3 / field-wrappable 3</string>
+            </array>
+         </map>
+      </array>
+      <map key="keyed-assemblies">
+         <map key="abk1">
+            <map key="keyed-fields">
+               <string key="abk1.fbk1">assembly-by-key 1 / field-by-key 1</string>
+               <string key="abk1.fbk2">assembly-by-key 1 / field-by-key 2</string>
+               <string key="abk1.fbk3">assembly-by-key 1 / field-by-key 3</string>
+            </map>
+         </map>
+         <map key="abk2">
+            <map key="keyed-fields">
+               <string key="abk2.fbk1">assembly-by-key 1 / field-by-key 1</string>
+               <string key="abk2.fbk2">assembly-by-key 1 / field-by-key 2</string>
+               <string key="abk2.fbk3">assembly-by-key 1 / field-by-key 3</string>
+            </map>
+         </map>
+         <map key="abk3">
+            <map key="keyed-fields">
+               <string key="abk3.fbk1">assembly-by-key 1 / field-by-key 1</string>
+               <string key="abk3.fbk2">assembly-by-key 1 / field-by-key 2</string>
+               <string key="abk3.fbk3">assembly-by-key 1 / field-by-key 3</string>
+            </map>
+         </map>
+      </map>
+      <array key="everything-recursive">
+         <map>
+            <map key="field-1only">
+               <string key="STRVALUE">nested FIELD-1-ONLY</string>
+            </map>
+         </map>
+      </array>
+   </map>
+</map>

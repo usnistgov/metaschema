@@ -120,7 +120,9 @@
           "verse" : 
           { "$ref" : "#/definitions/verse" },
           "prose" : 
-          { "$ref" : "#/definitions/prose" } },
+          { "$ref" : "#/definitions/prose" },
+          "include" : 
+          { "$ref" : "#/definitions/include" } },
         "additionalProperties" : false },
       "verse" : 
       { "title" : "Verse",
@@ -201,6 +203,15 @@
         "description" : "Short prose or an excerpt",
         "$id" : "#/definitions/prose",
         "type" : "string" },
+      "include" : 
+      { "title" : "Include other",
+        "description" : "Some other sort of markup altogether",
+        "$id" : "#/definitions/include",
+        "type" : "object",
+        "properties" : 
+        { "lang" : 
+          { "type" : "string" } },
+        "additionalProperties" : true },
       "back" : 
       { "title" : "Back matter",
         "description" : "Indexes and appurtenances",
@@ -248,7 +259,7 @@
                 { "$ref" : "#/definitions/publication" } } ] },
           "bio" : 
           { "$ref" : "#/definitions/bio" } },
-        "additionalProperties" : false },
+        "additionalProperties" : true },
       "name" : 
       { "title" : "Name",
         "description" : "A personal or place name",

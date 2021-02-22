@@ -288,6 +288,10 @@
         </xs:sequence>
     </xsl:template>
     
+    <xsl:template match="any">
+        <xs:any namespace="##other" processContents="lax"/>
+    </xsl:template>
+    
     <!--<xsl:template priority="10" match="model[exists(@ref)]">
         <xsl:apply-templates select="key('global-assembly-by-name',@ref)/model"/>
     </xsl:template>-->

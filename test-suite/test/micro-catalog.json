@@ -1,0 +1,11 @@
+{
+	"catalog": {
+	    "uuid": "00000000-0000-4000-8000-000000000000",
+	    "metadata": {
+	        "title": "test",
+	        "oscal-version": "1.0.0-rc1",
+	        "last-modified": "2021-02-08T13:31:32.793-05:00",
+	        "version": "1.0"
+	    }
+	}
+}

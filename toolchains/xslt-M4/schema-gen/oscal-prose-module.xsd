@@ -13,16 +13,16 @@
   <xs:group name="blockElementGroup">
     <xs:sequence>
       <xs:choice minOccurs="1" maxOccurs="unbounded">
-        <xs:element name="h1" type="blockElementType"/>
-        <xs:element name="h2" type="blockElementType"/>
-        <xs:element name="h3" type="blockElementType"/>
-        <xs:element name="h4" type="blockElementType"/>
-        <xs:element name="h5" type="blockElementType"/>
-        <xs:element name="h6" type="blockElementType"/>
-        <xs:element name="p"  type="blockElementType"/>
-        <xs:element name="ul" type="listType"/>
-        <xs:element name="ol" type="listType"/>
-        <xs:element name="pre" type="preformattedType"/>
+        <xs:element name="h1"    type="blockElementType"/>
+        <xs:element name="h2"    type="blockElementType"/>
+        <xs:element name="h3"    type="blockElementType"/>
+        <xs:element name="h4"    type="blockElementType"/>
+        <xs:element name="h5"    type="blockElementType"/>
+        <xs:element name="h6"    type="blockElementType"/>
+        <xs:element name="p"     type="blockElementType"/>
+        <xs:element name="ul"    type="listType"/>
+        <xs:element name="ol"    type="listType"/>
+        <xs:element name="pre"   type="preformattedType"/>
         <xs:element name="table" type="tableType"/>
         <!-- TODO: need to add support for blockquote, which can contain block elements. usnistgov/metaschema#70 -->
       </xs:choice>

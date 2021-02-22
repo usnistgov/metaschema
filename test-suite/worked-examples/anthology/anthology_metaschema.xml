@@ -164,10 +164,11 @@ Under 'widget'
         <formal-name>Piece</formal-name>
         <description>A single anthologized piece; poetry or prose, entire or excerpted</description>
         <model>
-            <assembly ref="meta"/>
+            <assembly ref="meta" min-occurs="0"/>
             <choice>
                 <assembly ref="verse"/>
                 <field ref="prose" in-xml="WITH_WRAPPER"/>
+                <assembly ref="include"/>
             </choice>
         </model>
     </define-assembly>
@@ -249,6 +250,15 @@ Under 'widget'
         <description>Short prose or an excerpt</description>
     </define-field>
     
+    <define-assembly name="include">
+        <formal-name>Include other</formal-name>
+        <description>Some other sort of markup altogether</description>
+        <define-flag name="lang"/>
+        <model>
+            <any/>
+        </model>
+    </define-assembly>
+    
     <define-assembly name="back">
         <formal-name>Back matter</formal-name>
         <description>Indexes and appurtenances</description>
@@ -287,6 +297,7 @@ Under 'widget'
                 <group-as name="publications"/>
             </field>
             <assembly ref="bio"/>
+            <any/>
         </model>
     </define-assembly>
     

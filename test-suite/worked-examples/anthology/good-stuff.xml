@@ -29,6 +29,11 @@
             <line base="trochee" feet="4">Singular Archimedes.</line>
         </verse>
     </piece>
+    <piece>
+        <include>
+            <html:h1 xmlns:html="h1">Header</html:h1>
+        </include>
+    </piece>
     <back>
         <author-index>
             <author id="w.h.auden">
