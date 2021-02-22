@@ -91,6 +91,11 @@ Under 'widget'
         </constraint>
    </define-assembly>
     
+    <define-field name="redundant">
+        <formal-name>Extra</formal-name>
+        <description>Discard me</description>
+    </define-field>
+    
     <define-flag name="id" as-type="NCName">
         <formal-name>Identifier</formal-name>
         <description>A distinct code</description>
@@ -253,7 +258,10 @@ Under 'widget'
     <define-assembly name="include">
         <formal-name>Include other</formal-name>
         <description>Some other sort of markup altogether</description>
-        <define-flag name="lang"/>
+        <define-flag name="lang">
+            <formal-name>Language</formal-name>
+            <description>Describing the notation used</description>
+        </define-flag>
         <model>
             <any/>
         </model>

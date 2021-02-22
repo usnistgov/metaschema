@@ -15,12 +15,13 @@
     <xsl:variable name="show-warnings" as="xs:string">no</xsl:variable>
     <xsl:variable name="verbose" select="lower-case($show-warnings) = ('yes', 'y', '1', 'true')"/>
 
-    <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly[not(@scope='local')]" use="@name"/>
-    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field[not(@scope='local')]"    use="@name"/>
+    <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly" use="@name"/>
+    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field"    use="@name"/>
+    
     
     <!-- ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== -->
     <!-- Pass Three: filter definitions (2) - keep only top-level definitions that are actually
-         called by references in the models.
+         called by references in the models descending from assemblies with root-name.
          
          Note that we ignore flag definitions, which can stay,
          since all flag definitions are rewritten into local declarations,
@@ -30,8 +31,8 @@
     <xsl:mode on-no-match="shallow-copy"/>
     
     <xsl:variable name="assembly-references" as="xs:string*">
-        <xsl:for-each select="//METASCHEMA/define-assembly[not(@scope='local')]">
-                <xsl:sequence select="string(@name)"/>
+        <xsl:for-each select="/METASCHEMA/define-assembly[exists(root-name)]">
+            <xsl:sequence select="string(@name)"/>
             <xsl:apply-templates select="model" mode="collect-assembly-references">
                 <xsl:with-param name="assembly-refs" tunnel="yes" select="string(@name)"/>
             </xsl:apply-templates>
@@ -39,13 +40,13 @@
     </xsl:variable>
     
     <xsl:variable name="field-references" as="xs:string*">
-        <xsl:apply-templates select="//METASCHEMA/define-assembly[not(@scope='local')]" mode="collect-field-references">
+        <xsl:apply-templates select="/METASCHEMA/define-assembly[exists(root-name)]" mode="collect-field-references">
             <xsl:with-param name="field-refs" tunnel="yes" select="()"/>
         </xsl:apply-templates>
     </xsl:variable>
     
     <xsl:variable name="flag-references" as="xs:string*">
-        <xsl:apply-templates select="//METASCHEMA/define-assembly[not(@scope='local')]" mode="collect-flag-references">
+        <xsl:apply-templates select="/METASCHEMA/define-assembly[exists(root-name)]" mode="collect-flag-references">
             <xsl:with-param name="flag-refs" tunnel="yes" select="()"/>
         </xsl:apply-templates>
     </xsl:variable>
@@ -85,7 +86,8 @@
         </xsl:call-template>
     </xsl:template>
 
-    <!-- 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 -->       <!-- Modes collecting sets of strings naming definitions
+    <!-- 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 -->
+    <!-- Modes collecting sets of strings naming definitions
      we actually need, by traversing the definitions tree from the declared root;
      recursive models are accounted for. -->
     
@@ -97,12 +99,12 @@
         <xsl:apply-templates select=".//assembly" mode="#current"/>
     </xsl:template>
     
-    <xsl:template match="model[exists(@ref)]" mode="collect-assembly-references">
+    <!--<xsl:template match="model[exists(@ref)]" mode="collect-assembly-references">
         <xsl:param name="assembly-refs" tunnel="yes" select="()"/>
         <xsl:apply-templates select="key('global-assembly-definition',@ref)" mode="#current">
             <xsl:with-param name="assembly-refs" tunnel="yes" select="$assembly-refs,string(@ref)"/>
         </xsl:apply-templates>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:template match="assembly" mode="collect-assembly-references">
         <xsl:param name="assembly-refs" tunnel="yes" select="()"/>
@@ -123,10 +125,6 @@
     <xsl:template match="model" mode="collect-field-references">
         <xsl:apply-templates select=".//field" mode="#current"/>
         <xsl:apply-templates select=".//assembly" mode="#current"/>
-    </xsl:template>
-    
-    <xsl:template match="model[exists(@ref)]" mode="collect-field-references">
-        <xsl:apply-templates select="key('global-assembly-definition',@ref)" mode="#current"/>
     </xsl:template>
     
     <xsl:template match="assembly" mode="collect-field-references collect-flag-references">
