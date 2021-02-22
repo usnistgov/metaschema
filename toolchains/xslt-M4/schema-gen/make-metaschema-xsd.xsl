@@ -55,7 +55,7 @@
             <xsl:apply-templates select="$metaschema/METASCHEMA/*"/>
             
             <xsl:if test="$metaschema//@as-type = ('markup-line', 'markup-multiline')">
-                <xsl:if test="$metaschema//@as-type = 'markup-multiline'">
+                <!--<xsl:if test="$metaschema//@as-type = 'markup-multiline'">
                     <xs:group name="PROSE">
                         <xs:choice>
                             <xs:element ref="oscal-prose:h1"/>
@@ -71,7 +71,7 @@
                             <xs:element ref="oscal-prose:table"/>
                         </xs:choice>
                     </xs:group>
-                </xsl:if>
+                </xsl:if>-->
                 <xsl:apply-templates mode="acquire-prose" select="document('oscal-prose-module.xsd')"/>
             </xsl:if>
             <xsl:variable name="all-types" select="$metaschema//@as-type"/>
@@ -237,16 +237,25 @@
     <xsl:template priority="5" match="define-field[@as-type='markup-line']">
             <xs:complexType mixed="true">
                 <xsl:call-template name="name-global-field-type"/>
-                <xs:group ref="{$declaration-prefix}:everything-inline"/>
+                <!--<xs:group ref="{$declaration-prefix}:everything-inline"/>-->
+                <xs:complexContent>
+                    <xs:extension base="{$declaration-prefix}:markupLineType">
+                        
                 <xsl:apply-templates select="define-flag | flag"/>
+                    </xs:extension>
+                </xs:complexContent>
             </xs:complexType>
     </xsl:template>
     
     <xsl:template priority="5" match="define-field[@as-type='markup-multiline']">
             <xs:complexType>
                 <xsl:call-template name="name-global-field-type"/>
-                <xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>
-                <xsl:apply-templates select="define-flag | flag"/>
+                <!--<xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>-->
+                <xs:complexContent>
+                    <xs:extension base="{$declaration-prefix}:markupMultilineType">
+                        <xsl:apply-templates select="define-flag | flag"/>
+                    </xs:extension>
+                </xs:complexContent>
             </xs:complexType>
     </xsl:template>
     
@@ -349,12 +358,13 @@
     <!-- TODO XXX switch default behavior ...   -->
     
     <xsl:template priority="11" match="model//define-field[@in-xml='UNWRAPPED'][@as-type='markup-multiline']">
-        <xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+        <xs:group ref="{$declaration-prefix}:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+        <!--<xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>-->
     </xsl:template>
     
     <!-- No wrapper, just prose elements -->
     <xsl:template match="field[@in-xml='UNWRAPPED'][key('global-field-by-name',@ref)/@as-type='markup-multiline']">
-        <xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+        <xs:group ref="{$declaration-prefix}:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
     </xsl:template>
     
     <!-- With wrapper -->
@@ -366,7 +376,8 @@
             maxOccurs="{ if (exists(@max-occurs)) then @max-occurs else 1 }">
             <xsl:apply-templates select="key('global-field-by-name',@ref)" mode="annotated"/>
             <xs:complexType>
-              <xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+                <xs:group ref="{$declaration-prefix}:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+              <!--<xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>-->
             </xs:complexType>
         </xs:element>
     </xsl:template>
@@ -497,14 +508,16 @@
     
     <xsl:mode name="acquire-prose" on-no-match="shallow-copy"/>
     
-    <xsl:template match="comment() | processing-instruction()" mode="acquire-prose"/>
-    
     <xsl:template match="xs:schema" mode="acquire-prose">
             <xsl:apply-templates mode="#current"/>
     </xsl:template>
     
-    <!-- dropping top level (placeholder) 'prose' element declaration and its complexType -->
-    <xsl:template match="xs:schema/xs:element[@name='prose'] | xs:schema/xs:complexType[@name='prose']" mode="acquire-prose"/>
+    <xsl:template match="@ref | @type | @base" mode="acquire-prose">
+        <xsl:attribute name="{ name() }">
+            <xsl:if test="not(matches(.,':'))" expand-text="true">{ $declaration-prefix }:</xsl:if>
+            <xsl:text expand-text="true">{ string(.) }</xsl:text>
+        </xsl:attribute>
+    </xsl:template>
     
     <xsl:mode name="copy" on-no-match="shallow-copy"/>
     

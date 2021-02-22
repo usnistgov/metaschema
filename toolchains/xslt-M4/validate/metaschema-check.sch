@@ -155,7 +155,6 @@
         <sch:rule context="m:define-assembly | m:define-field | m:define-flag">
             <sch:assert role="warning" test="exists(m:formal-name)">Formal name missing from <sch:name/></sch:assert>
             <sch:assert role="warning" test="exists(m:description)">Short description missing from <sch:name/></sch:assert>
-            <sch:assert role="warning" test="empty(self::m:define-assembly) or exists(m:model)">model missing from <sch:name/></sch:assert>
         </sch:rule>
         
         <sch:rule context="m:p | m:li | m:pre">

@@ -281,8 +281,8 @@ Under 'widget'
         <json-key flag-name="id"/>
         <flag ref="id" required="yes"/>
         <model>
-            <field ref="name"/>
-            <field ref="dates"/>
+            <field    ref="name"/>
+            <assembly ref="dates"/>
             <field ref="publication" max-occurs="unbounded" min-occurs="0">
                 <group-as name="publications"/>
             </field>
@@ -307,13 +307,13 @@ Under 'widget'
                 <description>Structured data</description>
                 <group-as name="fact-statements"/>
                 <model>
-                    <field ref="dates"/>
+                    <assembly ref="dates"/>
                     <define-assembly name="residence" max-occurs="unbounded">
                         <formal-name>Residency</formal-name>
                         <description>A range of values in time-space</description>
                         <group-as name="residences"/>
                         <model>
-                            <define-field name="dates" as-type="empty">
+                            <define-assembly name="dates">
                                 <formal-name>Dates</formal-name>
                                 <description>Start to end</description>
                                 <define-flag name="start" as-type="date">
@@ -323,7 +323,7 @@ Under 'widget'
                                     <formal-name>End</formal-name>
                                     <description>When concluded or abandoned</description>
                                 </define-flag>
-                            </define-field>
+                            </define-assembly>
                             <!--<assembly ref="address"/>-->
                         </model>
                     </define-assembly>
@@ -343,10 +343,9 @@ Under 'widget'
         </model>
     </define-assembly>
     
-    <define-field name="dates" as-type="empty">
+    <define-assembly name="dates">
         <formal-name>Dates</formal-name>
         <description>As a range (birth-death) or floruit</description>
-        <json-value-key>range</json-value-key>
         <!--nb: the Schematron does not presently validate datatypes on definitions only on constraint/matches-->
         <define-flag name="birth" as-type="date">
             <formal-name>Birth date</formal-name>
@@ -366,7 +365,8 @@ Under 'widget'
             <matches id="birth-matches-date-datatype" target="@birth" datatype="date"/>
             <expect id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>
         </constraint>
-    </define-field>
+    </define-assembly>
+    
     <define-field name="publication">
         <formal-name>Publication</formal-name>
         <description>A publication attributed to an author</description>

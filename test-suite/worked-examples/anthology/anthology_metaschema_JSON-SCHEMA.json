@@ -4,7 +4,7 @@
     "$comment" : "Anthology Metaschema: JSON Schema",
     "type" : "object",
     "definitions" : 
-    { "ANTHOLOGY" : 
+    { "anthology" : 
       { "title" : "Anthology",
         "description" : "A collection of literary excerpts",
         "$id" : "#/definitions/anthology",
@@ -50,20 +50,18 @@
           "keywords" : 
           { "anyOf" : 
             [ 
-              { "keyword" : 
-                { "title" : "Key word",
-                  "description" : "A string",
-                  "$id" : "#/definitions/keyword",
-                  "type" : "string" } },
+              { "title" : "Key word",
+                "description" : "A string",
+                "$id" : "#/definitions/meta-keyword",
+                "type" : "string" },
               
               { "type" : "array",
                 "minItems" : 1,
                 "items" : 
-                { "keyword" : 
-                  { "title" : "Key word",
-                    "description" : "A string",
-                    "$id" : "#/definitions/keyword",
-                    "type" : "string" } } } ] },
+                { "title" : "Key word",
+                  "description" : "A string",
+                  "$id" : "#/definitions/meta-keyword",
+                  "type" : "string" } } ] },
           "remarks" : 
           { "$ref" : "#/definitions/remarks" } },
         "additionalProperties" : false },
@@ -224,8 +222,7 @@
             "additionalProperties" : 
             { "allOf" : 
               [ 
-                { "type" : "object",
-                  "$ref" : "#/definitions/author" },
+                { "$ref" : "#/definitions/author" },
                 
                 { "not" : 
                   { "type" : "string" } } ] } } },
@@ -275,10 +272,75 @@
           "fact-statements" : 
           { "anyOf" : 
             [ 
-              { "facts" : 
+              { "title" : "Facts",
+                "description" : "Structured data",
+                "$id" : "#/definitions/bio-facts",
+                "type" : "object",
+                "properties" : 
+                { "dates" : 
+                  { "$ref" : "#/definitions/dates" },
+                  "residences" : 
+                  { "anyOf" : 
+                    [ 
+                      { "title" : "Residency",
+                        "description" : "A range of values in time-space",
+                        "$id" : "#/definitions/bio-facts-residence",
+                        "type" : "object",
+                        "properties" : 
+                        { "dates" : 
+                          { "title" : "Dates",
+                            "description" : "Start to end",
+                            "$id" : "#/definitions/bio-facts-residence-dates",
+                            "type" : "object",
+                            "properties" : 
+                            { "start" : 
+                              { "title" : "Start",
+                                "description" : "When initiated",
+                                "type" : "string",
+                                "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+                              "end" : 
+                              { "title" : "End",
+                                "description" : "When concluded or abandoned",
+                                "type" : "string",
+                                "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
+                            "additionalProperties" : false } },
+                        "additionalProperties" : false },
+                      
+                      { "type" : "array",
+                        "minItems" : 1,
+                        "items" : 
+                        { "title" : "Residency",
+                          "description" : "A range of values in time-space",
+                          "$id" : "#/definitions/bio-facts-residence",
+                          "type" : "object",
+                          "properties" : 
+                          { "dates" : 
+                            { "title" : "Dates",
+                              "description" : "Start to end",
+                              "$id" : "#/definitions/bio-facts-residence-dates",
+                              "type" : "object",
+                              "properties" : 
+                              { "start" : 
+                                { "title" : "Start",
+                                  "description" : "When initiated",
+                                  "type" : "string",
+                                  "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+                                "end" : 
+                                { "title" : "End",
+                                  "description" : "When concluded or abandoned",
+                                  "type" : "string",
+                                  "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
+                              "additionalProperties" : false } },
+                          "additionalProperties" : false } } ] } },
+                "additionalProperties" : false },
+              
+              { "type" : "array",
+                "maxItems" : 3,
+                "minItems" : 1,
+                "items" : 
                 { "title" : "Facts",
                   "description" : "Structured data",
-                  "$id" : "#/definitions/facts",
+                  "$id" : "#/definitions/bio-facts",
                   "type" : "object",
                   "properties" : 
                   { "dates" : 
@@ -286,148 +348,71 @@
                     "residences" : 
                     { "anyOf" : 
                       [ 
-                        { "residence" : 
-                          { "title" : "Residency",
-                            "description" : "A range of values in time-space",
-                            "$id" : "#/definitions/residence",
-                            "type" : "object",
-                            "properties" : 
-                            { "dates" : 
-                              { "dates" : 
-                                { "title" : "Dates",
-                                  "description" : "Start to end",
-                                  "$id" : "#/definitions/dates",
-                                  "type" : "object",
-                                  "properties" : 
-                                  { "start" : 
-                                    { "title" : "Start",
-                                      "description" : "When initiated",
-                                      "type" : "string",
-                                      "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
-                                    "end" : 
-                                    { "title" : "End",
-                                      "description" : "When concluded or abandoned",
-                                      "type" : "string",
-                                      "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
-                                  "additionalProperties" : false } } },
-                            "additionalProperties" : false } },
+                        { "title" : "Residency",
+                          "description" : "A range of values in time-space",
+                          "$id" : "#/definitions/bio-facts-residence",
+                          "type" : "object",
+                          "properties" : 
+                          { "dates" : 
+                            { "title" : "Dates",
+                              "description" : "Start to end",
+                              "$id" : "#/definitions/bio-facts-residence-dates",
+                              "type" : "object",
+                              "properties" : 
+                              { "start" : 
+                                { "title" : "Start",
+                                  "description" : "When initiated",
+                                  "type" : "string",
+                                  "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+                                "end" : 
+                                { "title" : "End",
+                                  "description" : "When concluded or abandoned",
+                                  "type" : "string",
+                                  "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
+                              "additionalProperties" : false } },
+                          "additionalProperties" : false },
                         
                         { "type" : "array",
                           "minItems" : 1,
                           "items" : 
-                          { "residence" : 
-                            { "title" : "Residency",
-                              "description" : "A range of values in time-space",
-                              "$id" : "#/definitions/residence",
-                              "type" : "object",
-                              "properties" : 
-                              { "dates" : 
-                                { "dates" : 
-                                  { "title" : "Dates",
-                                    "description" : "Start to end",
-                                    "$id" : "#/definitions/dates",
-                                    "type" : "object",
-                                    "properties" : 
-                                    { "start" : 
-                                      { "title" : "Start",
-                                        "description" : "When initiated",
-                                        "type" : "string",
-                                        "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
-                                      "end" : 
-                                      { "title" : "End",
-                                        "description" : "When concluded or abandoned",
-                                        "type" : "string",
-                                        "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
-                                    "additionalProperties" : false } } },
-                              "additionalProperties" : false } } } ] } },
-                  "additionalProperties" : false } },
-              
-              { "type" : "array",
-                "maxItems" : 3,
-                "minItems" : 1,
-                "items" : 
-                { "facts" : 
-                  { "title" : "Facts",
-                    "description" : "Structured data",
-                    "$id" : "#/definitions/facts",
-                    "type" : "object",
-                    "properties" : 
-                    { "dates" : 
-                      { "$ref" : "#/definitions/dates" },
-                      "residences" : 
-                      { "anyOf" : 
-                        [ 
-                          { "residence" : 
-                            { "title" : "Residency",
-                              "description" : "A range of values in time-space",
-                              "$id" : "#/definitions/residence",
-                              "type" : "object",
-                              "properties" : 
-                              { "dates" : 
-                                { "dates" : 
-                                  { "title" : "Dates",
-                                    "description" : "Start to end",
-                                    "$id" : "#/definitions/dates",
-                                    "type" : "object",
-                                    "properties" : 
-                                    { "start" : 
-                                      { "title" : "Start",
-                                        "description" : "When initiated",
-                                        "type" : "string",
-                                        "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
-                                      "end" : 
-                                      { "title" : "End",
-                                        "description" : "When concluded or abandoned",
-                                        "type" : "string",
-                                        "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
-                                    "additionalProperties" : false } } },
-                              "additionalProperties" : false } },
-                          
-                          { "type" : "array",
-                            "minItems" : 1,
-                            "items" : 
-                            { "residence" : 
-                              { "title" : "Residency",
-                                "description" : "A range of values in time-space",
-                                "$id" : "#/definitions/residence",
+                          { "title" : "Residency",
+                            "description" : "A range of values in time-space",
+                            "$id" : "#/definitions/bio-facts-residence",
+                            "type" : "object",
+                            "properties" : 
+                            { "dates" : 
+                              { "title" : "Dates",
+                                "description" : "Start to end",
+                                "$id" : "#/definitions/bio-facts-residence-dates",
                                 "type" : "object",
                                 "properties" : 
-                                { "dates" : 
-                                  { "dates" : 
-                                    { "title" : "Dates",
-                                      "description" : "Start to end",
-                                      "$id" : "#/definitions/dates",
-                                      "type" : "object",
-                                      "properties" : 
-                                      { "start" : 
-                                        { "title" : "Start",
-                                          "description" : "When initiated",
-                                          "type" : "string",
-                                          "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
-                                        "end" : 
-                                        { "title" : "End",
-                                          "description" : "When concluded or abandoned",
-                                          "type" : "string",
-                                          "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
-                                      "additionalProperties" : false } } },
-                                "additionalProperties" : false } } } ] } },
-                    "additionalProperties" : false } } } ] },
+                                { "start" : 
+                                  { "title" : "Start",
+                                    "description" : "When initiated",
+                                    "type" : "string",
+                                    "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
+                                  "end" : 
+                                  { "title" : "End",
+                                    "description" : "When concluded or abandoned",
+                                    "type" : "string",
+                                    "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
+                                "additionalProperties" : false } },
+                            "additionalProperties" : false } } ] } },
+                  "additionalProperties" : false } } ] },
           "colorful-details" : 
-          { "colorful-details" : 
-            { "title" : "Colorful details",
-              "description" : "Unstructured data",
-              "$id" : "#/definitions/colorful-details",
-              "type" : "object",
-              "properties" : 
-              { "dates" : 
-                { "dates" : 
-                  { "title" : "Dates",
-                    "description" : "This time, a string, so \"Lincoln's Birthday\" is a date.",
-                    "$id" : "#/definitions/dates",
-                    "type" : "string" } },
-                "remarks" : 
-                { "$ref" : "#/definitions/remarks" } },
-              "additionalProperties" : false } } },
+          { "title" : "Colorful details",
+            "description" : "Unstructured data",
+            "$id" : "#/definitions/bio-colorful-details",
+            "type" : "object",
+            "properties" : 
+            { "dates" : 
+              { "title" : "Dates",
+                "description" : "This time, a string, so \"Lincoln's Birthday\" is a date.",
+                "$id" : "#/definitions/bio-colorful-details-dates",
+                "type" : "string" },
+              "remarks" : 
+              { "$ref" : "#/definitions/remarks" } },
+            "additionalProperties" : false } },
         "additionalProperties" : false },
       "dates" : 
       { "title" : "Dates",
@@ -449,11 +434,7 @@
           { "title" : "Floruit date",
             "description" : "Do not use along with both birth and death",
             "type" : "string",
-            "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" },
-          "range" : 
-          { "type" : "string" } },
-        "required" : 
-        [ "range" ],
+            "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
         "additionalProperties" : false },
       "publication" : 
       { "title" : "Publication",
@@ -473,7 +454,7 @@
         "additionalProperties" : false } },
     "properties" : 
     { "ANTHOLOGY" : 
-      { "$ref" : "#/definitions/ANTHOLOGY" } },
+      { "$ref" : "#/definitions/anthology" } },
     "required" : 
     [ "ANTHOLOGY" ],
     "additionalProperties" : false,
