@@ -227,13 +227,6 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template priority="5" match="define-field[@as-type='empty']">
-        <xs:complexType>
-            <xsl:call-template name="name-global-field-type"/>
-            <xsl:apply-templates select="define-flag | flag"/>
-        </xs:complexType>
-    </xsl:template>
-    
     <xsl:template priority="5" match="define-field[@as-type='markup-line']">
             <xs:complexType mixed="true">
                 <xsl:call-template name="name-global-field-type"/>
@@ -260,7 +253,6 @@
     </xsl:template>
     
     <xsl:template priority="6" match="METASCHEMA/define-field[@as-type='markup-multiline'][not(@in-xml='WITH_WRAPPER')]"/>
-    
 
    <!-- Flags become attributes; this schema defines them all locally. -->
     <xsl:template match="define-flag"/>

@@ -325,7 +325,7 @@
             <xsl:apply-templates select="." mode="get-field-value-name"/>
          </xsl:variable>
          <xsl:variable as="element()?" name="value-property-proxy" expand-text="true">
-            <xsl:if test="exists($showing-flags) and not(@as-type='empty')">
+            <xsl:if test="exists($showing-flags)">
                <m:define-flag name="{$value-name}" value-proxy="true" required="yes">
                   <xsl:copy-of select="@as-type"/>
                   <m:formal-name>{ formal-name } Value</m:formal-name>
@@ -1079,25 +1079,6 @@
    <xsl:template match="m:*" xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
       mode="as-example"/>
 
-
-
-   <!-- json type identifiers so far: object, string, numeric value, boolean value
-   but we never get objects for flags, only for assemblies or fields with flags
-   -->
-   <xsl:template priority="2" match="define-flag[@as-type='empty'] | define-field[@as-type='empty']"
-      mode="representation-in-json">
-      <xsl:variable name="json-object-type">
-         <xsl:apply-templates select="." mode="json-type"/>
-      </xsl:variable>
-      <xsl:variable name="datatype">
-         <xsl:apply-templates select="." mode="metaschema-type"/>
-      </xsl:variable>
-      <p>
-         <xsl:text>An empty property (no value).</xsl:text>
-      </p>
-      <xsl:apply-templates select="." mode="type-annotation"/>
-   </xsl:template>
-   
    <xsl:template match="define-flag | define-field[empty(flag | define-flag)]"
       mode="representation-in-json">
       <xsl:variable name="json-object-type">

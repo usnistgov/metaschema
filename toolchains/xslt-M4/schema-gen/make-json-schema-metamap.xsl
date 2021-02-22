@@ -172,7 +172,7 @@
             </number>
             <number key="maxProperties">
                 <xsl:value-of
-                    select="count($all-properties | self::define-field[not(@as = 'empty')])"/>
+                    select="count($all-properties | self::define-field)"/>
             </number>
             <!-- allowed-values only present on fields -->
             <xsl:apply-templates select="constraint/allowed-values"/>
@@ -292,10 +292,6 @@
     <xsl:template match="define-field[@as-type='markup-multiline']" mode="value-key">
         <xsl:value-of select="$markdown-multiline-label"/>
     </xsl:template>
-    
-<!-- empty fields have no values, hence no value keys; by producing nothing
-        this template sees to it no declaration for it is produced either. -->
-    <xsl:template match="define-field[@as-type='empty']" mode="value-key"/>
         
     <xsl:template priority="2" match="define-field[matches(json-value-key,'\S')]" mode="value-key">
         <xsl:value-of select="json-value-key"/>

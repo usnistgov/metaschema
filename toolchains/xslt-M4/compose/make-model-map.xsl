@@ -35,7 +35,9 @@
         <xsl:variable name="type" select="replace(local-name(),'^define\-','')"/>
         
         <xsl:element name="{ $type }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
-            <xsl:copy-of select="@as-type[.='empty']"/>
+            <xsl:for-each select="self::define-assembly[empty(model)]">
+                <xsl:attribute name="as-type">empty</xsl:attribute>
+            </xsl:for-each>
             <xsl:attribute name="scope" select="if (exists(parent::METASCHEMA)) then 'global' else 'local'"/>
             <xsl:if test="@name = $visited">
                 <xsl:attribute name="recursive">true</xsl:attribute>
@@ -71,7 +73,7 @@
                 <xsl:apply-templates select="model" mode="build">
                     <xsl:with-param name="visited" tunnel="true" select="$visited, string(@name)"/>
                 </xsl:apply-templates>
-                <xsl:for-each select="self::define-field[not(@as-type='empty')]">
+                <xsl:for-each select="self::define-field">
                     <value as-type="{(@as-type,'string')[1]}">
                         <xsl:apply-templates select="." mode="value-key"/>
                     </value>
