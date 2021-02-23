@@ -254,7 +254,7 @@
         </xsl:if>
         <boolean key="additionalProperties">
             <xsl:choose>
-                <xsl:when test="exists(model//any)">true</xsl:when>
+                <xsl:when test="exists(model/(.|choice)/any)">true</xsl:when>
                 <xsl:otherwise>false</xsl:otherwise>
             </xsl:choose>
         </boolean>
@@ -383,18 +383,8 @@
         </string>
     </xsl:template>
     
-    <!--<xsl:template match="flag[exists(@name)]" mode="property-name">
-        <string>
-            <xsl:value-of select="@name"/>
-        </string>
-    </xsl:template>-->
-    
-<!-- Not yet implemented -->
+    <!-- Handled by template 'require-or-allow' -->
     <xsl:template match="any" mode="property-name"/>
-    
-    <!--<xsl:template match="prose" mode="property-name">
-        <string>prose</string>
-    </xsl:template>-->
     
     <xsl:template match="model | choice" priority="2" mode="property-name">
         <xsl:apply-templates mode="#current"/>
