@@ -25,10 +25,10 @@
     <p:pipe port="result" step="reduce1"/>
   </p:output>
 
-  <!--<p:serialization port="_3_reduced2" indent="true"/>
+  <p:serialization port="_3_reduced2" indent="true"/>
   <p:output        port="_3_reduced2" primary="false">
     <p:pipe port="result" step="reduce2"/>
-  </p:output>-->
+  </p:output>
 
   <p:serialization port="_3_digested" indent="true"/>
   <p:output port="_3_digested" primary="false">
@@ -57,11 +57,11 @@
     </p:input>
   </p:xslt>
   
-  <!-- No longer filtering definitions reachable from nominal root <p:xslt name="reduce2">
+   No longer filtering definitions reachable from nominal root <p:xslt name="reduce2">
     <p:input port="stylesheet">
       <p:document href="metaschema-reduce2.xsl"/>
     </p:input>
-  </p:xslt>-->
+  </p:xslt>
   
   <p:xslt name="digest">
     <p:input port="stylesheet">

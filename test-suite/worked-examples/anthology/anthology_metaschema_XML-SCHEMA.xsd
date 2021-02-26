@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-           xmlns:anthology="http://csrc.nist.gov/metaschema/ns/anthology"
+           xmlns:ανθ="http://csrc.nist.gov/metaschema/ns/anthology"
            xmlns:oscal-prose="http://csrc.nist.gov/metaschema/ns/anthology"
            elementFormDefault="qualified"
            targetNamespace="http://csrc.nist.gov/metaschema/ns/anthology"
@@ -10,14 +10,14 @@
       <xs:appinfo>
          <m:schema-name>Anthology Metaschema</m:schema-name>
          <m:schema-version>1.0</m:schema-version>
-         <m:short-name>anthology</m:short-name>
+         <m:short-name>ανθ</m:short-name>
          <m:remarks>
             <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
          </m:remarks>
          <m:root>ANTHOLOGY</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="ANTHOLOGY" type="anthology:anthology-ASSEMBLY"/>
+   <xs:element name="ANTHOLOGY" type="ανθ:anthology-ASSEMBLY"/>
    <xs:complexType name="anthology-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
@@ -29,15 +29,15 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="meta"
-                     type="anthology:meta-ASSEMBLY"
+                     type="ανθ:meta-ASSEMBLY"
                      minOccurs="1"
                      maxOccurs="1"/>
          <xs:element name="piece"
-                     type="anthology:piece-ASSEMBLY"
+                     type="ανθ:piece-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="back"
-                     type="anthology:back-ASSEMBLY"
+                     type="ανθ:back-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
       </xs:sequence>
@@ -63,15 +63,12 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="creator"
-                     type="anthology:creator-FIELD"
+                     type="ανθ:creator-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
-         <xs:element name="date"
-                     type="anthology:date-FIELD"
-                     minOccurs="0"
-                     maxOccurs="1"/>
+         <xs:element name="date" type="ανθ:date-FIELD" minOccurs="0" maxOccurs="1"/>
          <xs:element name="keyword" minOccurs="0" maxOccurs="unbounded">
-            <xs:complexType>
+            <xs:simpleType>
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>Key word</m:formal-name>
@@ -80,10 +77,8 @@
                   <xs:documentation>
                      <b>Key word</b>: A string</xs:documentation>
                </xs:annotation>
-               <xs:simpleContent>
-                  <xs:extension base="xs:string"/>
-               </xs:simpleContent>
-            </xs:complexType>
+               <xs:restriction base="xs:string"/>
+            </xs:simpleType>
          </xs:element>
          <xs:element name="remarks" minOccurs="0" maxOccurs="1">
             <xs:annotation>
@@ -95,7 +90,7 @@
                   <b>Remarks</b>: Pertinent information of any kind.</xs:documentation>
             </xs:annotation>
             <xs:complexType>
-               <xs:group ref="anthology:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+               <xs:group ref="ανθ:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
             </xs:complexType>
          </xs:element>
       </xs:sequence>
@@ -135,7 +130,7 @@
       </xs:annotation>
       <xs:simpleContent>
          <xs:extension base="xs:string">
-            <xs:attribute name="role" use="required">
+            <xs:attribute name="role" use="required" type="xs:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>Role</m:formal-name>
@@ -144,31 +139,6 @@
                   <xs:documentation>
                      <b>Role</b>: Contribution of the creator</xs:documentation>
                </xs:annotation>
-               <xs:simpleType>
-                  <xs:restriction base="xs:string">
-                     <xs:enumeration value="author">
-                        <xs:annotation>
-                           <xs:documentation>
-                              <p>Author</p>
-                           </xs:documentation>
-                        </xs:annotation>
-                     </xs:enumeration>
-                     <xs:enumeration value="editor">
-                        <xs:annotation>
-                           <xs:documentation>
-                              <p>Editor</p>
-                           </xs:documentation>
-                        </xs:annotation>
-                     </xs:enumeration>
-                     <xs:enumeration value="translator">
-                        <xs:annotation>
-                           <xs:documentation>
-                              <p>Translator</p>
-                           </xs:documentation>
-                        </xs:annotation>
-                     </xs:enumeration>
-                  </xs:restriction>
-               </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="who" type="xs:string">
                <xs:annotation>
@@ -194,12 +164,12 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="meta"
-                     type="anthology:meta-ASSEMBLY"
+                     type="ανθ:meta-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:choice>
             <xs:element name="verse"
-                        type="anthology:verse-ASSEMBLY"
+                        type="ανθ:verse-ASSEMBLY"
                         minOccurs="0"
                         maxOccurs="1"/>
             <xs:element name="prose" minOccurs="0" maxOccurs="1">
@@ -212,9 +182,13 @@
                      <b>Prose</b>: Short prose or an excerpt</xs:documentation>
                </xs:annotation>
                <xs:complexType>
-                  <xs:group ref="anthology:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+                  <xs:group ref="ανθ:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
                </xs:complexType>
             </xs:element>
+            <xs:element name="include"
+                        type="ανθ:include-ASSEMBLY"
+                        minOccurs="0"
+                        maxOccurs="1"/>
          </xs:choice>
       </xs:sequence>
    </xs:complexType>
@@ -230,11 +204,11 @@
       <xs:sequence>
          <xs:choice>
             <xs:element name="line"
-                        type="anthology:line-FIELD"
+                        type="ανθ:line-FIELD"
                         minOccurs="0"
                         maxOccurs="unbounded"/>
             <xs:element name="stanza"
-                        type="anthology:stanza-ASSEMBLY"
+                        type="ανθ:stanza-ASSEMBLY"
                         minOccurs="0"
                         maxOccurs="unbounded"/>
          </xs:choice>
@@ -251,66 +225,30 @@
       </xs:attribute>
    </xs:complexType>
    <xs:complexType mixed="true" name="line-FIELD">
-      <xs:group ref="anthology:everything-inline"/>
-      <xs:attribute name="feet" type="xs:integer">
-         <xs:annotation>
-            <xs:appinfo>
-               <m:formal-name>Meter count(feet)</m:formal-name>
-               <m:description>Count of metrical feet (dimeter, trimeter, tetrameter etc) represented as a natural number</m:description>
-            </xs:appinfo>
-            <xs:documentation>
-               <b>Meter count(feet)</b>: Count of metrical feet (dimeter, trimeter, tetrameter etc) represented as a natural number</xs:documentation>
-         </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="base">
-         <xs:annotation>
-            <xs:appinfo>
-               <m:formal-name>Base meter</m:formal-name>
-               <m:description>Identifies the base metrical type, if any</m:description>
-            </xs:appinfo>
-            <xs:documentation>
-               <b>Base meter</b>: Identifies the base metrical type, if any</xs:documentation>
-         </xs:annotation>
-         <xs:simpleType>
-            <xs:restriction base="xs:string">
-               <xs:enumeration value="dactyl">
-                  <xs:annotation>
-                     <xs:documentation>
-                        <p>Dactylic</p>
-                     </xs:documentation>
-                  </xs:annotation>
-               </xs:enumeration>
-               <xs:enumeration value="anapest">
-                  <xs:annotation>
-                     <xs:documentation>
-                        <p>Anapestic</p>
-                     </xs:documentation>
-                  </xs:annotation>
-               </xs:enumeration>
-               <xs:enumeration value="trochee">
-                  <xs:annotation>
-                     <xs:documentation>
-                        <p>Trochaic</p>
-                     </xs:documentation>
-                  </xs:annotation>
-               </xs:enumeration>
-               <xs:enumeration value="iamb">
-                  <xs:annotation>
-                     <xs:documentation>
-                        <p>Iambic</p>
-                     </xs:documentation>
-                  </xs:annotation>
-               </xs:enumeration>
-               <xs:enumeration value="mixed">
-                  <xs:annotation>
-                     <xs:documentation>
-                        <p>Mixed</p>
-                     </xs:documentation>
-                  </xs:annotation>
-               </xs:enumeration>
-            </xs:restriction>
-         </xs:simpleType>
-      </xs:attribute>
+      <xs:complexContent>
+         <xs:extension base="ανθ:markupLineType">
+            <xs:attribute name="feet" type="xs:integer">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Meter count(feet)</m:formal-name>
+                     <m:description>Count of metrical feet (dimeter, trimeter, tetrameter etc) represented as a natural number</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Meter count(feet)</b>: Count of metrical feet (dimeter, trimeter, tetrameter etc) represented as a natural number</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="base" type="xs:string">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>Base meter</m:formal-name>
+                     <m:description>Identifies the base metrical type, if any</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>Base meter</b>: Identifies the base metrical type, if any</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:complexContent>
    </xs:complexType>
    <xs:complexType name="stanza-ASSEMBLY">
       <xs:annotation>
@@ -323,7 +261,7 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="line"
-                     type="anthology:line-FIELD"
+                     type="ανθ:line-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
       </xs:sequence>
@@ -338,6 +276,20 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
+   <xs:complexType name="include-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Include other</m:formal-name>
+            <m:description>Some other sort of markup altogether</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Include other</b>: Some other sort of markup altogether</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:any namespace="##other" processContents="lax"/>
+      </xs:sequence>
+      <xs:attribute name="lang" type="xs:string"/>
+   </xs:complexType>
    <xs:complexType name="back-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
@@ -349,7 +301,7 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="author-index"
-                     type="anthology:author-index-ASSEMBLY"
+                     type="ανθ:author-index-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
       </xs:sequence>
@@ -365,7 +317,7 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="author"
-                     type="anthology:author-ASSEMBLY"
+                     type="ανθ:author-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
       </xs:sequence>
@@ -380,22 +332,17 @@
             <b>Author</b>: A single author cited in the anthology, with relevant info</xs:documentation>
       </xs:annotation>
       <xs:sequence>
-         <xs:element name="name"
-                     type="anthology:name-FIELD"
-                     minOccurs="0"
-                     maxOccurs="1"/>
+         <xs:element name="name" type="ανθ:name-FIELD" minOccurs="0" maxOccurs="1"/>
          <xs:element name="dates"
-                     type="anthology:dates-FIELD"
+                     type="ανθ:dates-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="publication"
-                     type="anthology:publication-FIELD"
+                     type="ανθ:publication-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
-         <xs:element name="bio"
-                     type="anthology:bio-ASSEMBLY"
-                     minOccurs="0"
-                     maxOccurs="1"/>
+         <xs:element name="bio" type="ανθ:bio-ASSEMBLY" minOccurs="0" maxOccurs="1"/>
+         <xs:any namespace="##other" processContents="lax"/>
       </xs:sequence>
       <xs:attribute name="id" use="required" type="xs:NCName">
          <xs:annotation>
@@ -408,7 +355,7 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   <xs:complexType name="name-FIELD">
+   <xs:simpleType name="name-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Name</m:formal-name>
@@ -417,10 +364,8 @@
          <xs:documentation>
             <b>Name</b>: A personal or place name</xs:documentation>
       </xs:annotation>
-      <xs:simpleContent>
-         <xs:extension base="xs:string"/>
-      </xs:simpleContent>
-   </xs:complexType>
+      <xs:restriction base="xs:string"/>
+   </xs:simpleType>
    <xs:complexType name="bio-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
@@ -432,7 +377,7 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="name"
-                     type="anthology:name-FIELD"
+                     type="ανθ:name-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="facts" minOccurs="0" maxOccurs="3">
@@ -447,7 +392,7 @@
                </xs:annotation>
                <xs:sequence>
                   <xs:element name="dates"
-                              type="anthology:dates-FIELD"
+                              type="ανθ:dates-ASSEMBLY"
                               minOccurs="0"
                               maxOccurs="1"/>
                   <xs:element name="residence" minOccurs="0" maxOccurs="unbounded">
@@ -463,6 +408,14 @@
                         <xs:sequence>
                            <xs:element name="dates" minOccurs="0" maxOccurs="1">
                               <xs:complexType>
+                                 <xs:annotation>
+                                    <xs:appinfo>
+                                       <m:formal-name>Dates</m:formal-name>
+                                       <m:description>Start to end</m:description>
+                                    </xs:appinfo>
+                                    <xs:documentation>
+                                       <b>Dates</b>: Start to end</xs:documentation>
+                                 </xs:annotation>
                                  <xs:attribute name="start" type="xs:date">
                                     <xs:annotation>
                                        <xs:appinfo>
@@ -503,7 +456,7 @@
                </xs:annotation>
                <xs:sequence>
                   <xs:element name="dates" minOccurs="0" maxOccurs="1">
-                     <xs:complexType>
+                     <xs:simpleType>
                         <xs:annotation>
                            <xs:appinfo>
                               <m:formal-name>Dates</m:formal-name>
@@ -512,10 +465,8 @@
                            <xs:documentation>
                               <b>Dates</b>: This time, a string, so "Lincoln's Birthday" is a date.</xs:documentation>
                         </xs:annotation>
-                        <xs:simpleContent>
-                           <xs:extension base="xs:string"/>
-                        </xs:simpleContent>
-                     </xs:complexType>
+                        <xs:restriction base="xs:string"/>
+                     </xs:simpleType>
                   </xs:element>
                   <xs:element name="remarks" minOccurs="0" maxOccurs="1">
                      <xs:annotation>
@@ -527,7 +478,7 @@
                            <b>Remarks</b>: Pertinent information of any kind.</xs:documentation>
                      </xs:annotation>
                      <xs:complexType>
-                        <xs:group ref="anthology:PROSE" maxOccurs="unbounded" minOccurs="0"/>
+                        <xs:group ref="ανθ:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
                      </xs:complexType>
                   </xs:element>
                </xs:sequence>
@@ -535,7 +486,15 @@
          </xs:element>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="dates-FIELD">
+   <xs:complexType name="dates-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Dates</m:formal-name>
+            <m:description>As a range (birth-death) or floruit</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Dates</b>: As a range (birth-death) or floruit</xs:documentation>
+      </xs:annotation>
       <xs:attribute name="birth" type="xs:date">
          <xs:annotation>
             <xs:appinfo>
@@ -591,243 +550,149 @@
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:group name="PROSE">
-      <xs:choice>
-         <xs:element ref="oscal-prose:h1"/>
-         <xs:element ref="oscal-prose:h2"/>
-         <xs:element ref="oscal-prose:h3"/>
-         <xs:element ref="oscal-prose:h4"/>
-         <xs:element ref="oscal-prose:h5"/>
-         <xs:element ref="oscal-prose:h6"/>
-         <xs:element ref="oscal-prose:p"/>
-         <xs:element ref="oscal-prose:ul"/>
-         <xs:element ref="oscal-prose:ol"/>
-         <xs:element ref="oscal-prose:pre"/>
-         <xs:element ref="oscal-prose:table"/>
+   <xs:complexType name="markupLineType" mixed="true">
+      <xs:group ref="ανθ:mixedInlineMarkupGroup"/>
+   </xs:complexType>
+   <xs:complexType name="markupMultilineType">
+      <xs:group ref="ανθ:blockElementGroup"/>
+   </xs:complexType>
+   <xs:group name="blockElementGroup">
+      <xs:sequence>
+         <xs:choice minOccurs="1" maxOccurs="unbounded">
+            <xs:element name="h1" type="ανθ:blockElementType"/>
+            <xs:element name="h2" type="ανθ:blockElementType"/>
+            <xs:element name="h3" type="ανθ:blockElementType"/>
+            <xs:element name="h4" type="ανθ:blockElementType"/>
+            <xs:element name="h5" type="ανθ:blockElementType"/>
+            <xs:element name="h6" type="ανθ:blockElementType"/>
+            <xs:element name="p" type="ανθ:blockElementType"/>
+            <xs:element name="ul" type="ανθ:listType"/>
+            <xs:element name="ol" type="ανθ:listType"/>
+            <xs:element name="pre" type="ανθ:preformattedType"/>
+            <xs:element name="table" type="ανθ:tableType"/>
+            <!-- TODO: need to add support for blockquote, which can contain block elements. usnistgov/metaschema#70 -->
+         </xs:choice>
+      </xs:sequence>
+   </xs:group>
+   <!--
+    headers: phrase inline markup, a, insert (phrase)
+    p: phrase inline markup, a, insert, img (phrase+img)
+    li: phrase inline markup, a, insert, img (phrase+img)
+    pre: phrase inline markup, a, insert (phrase)
+    td th: phrase inline markup, a, insert, img (phrase+img)
+  -->
+   <xs:complexType name="blockElementType" mixed="true">
+      <xs:group ref="ανθ:phraseInlineMarkupGroup"/>
+   </xs:complexType>
+   <xs:complexType name="headingType" mixed="true">
+      <xs:complexContent>
+         <xs:extension base="ανθ:blockElementType">
+            <xs:annotation>
+               <xs:documentation>The content model is the same as blockElementType, but line endings need
+            to be preserved, since this is preformatted.</xs:documentation>
+            </xs:annotation>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="preformattedType" mixed="true">
+      <xs:complexContent>
+         <xs:extension base="ανθ:blockElementType">
+            <xs:annotation>
+               <xs:documentation>The content model is the same as blockElementType, but line endings need
+            to be preserved, since this is preformatted.</xs:documentation>
+            </xs:annotation>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="listType">
+      <xs:sequence>
+         <xs:element name="li"
+                     type="ανθ:listItemType"
+                     minOccurs="1"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="listItemType" mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="ανθ:mixedInlineMarkupGroup"/>
+         <xs:element name="ul" type="ανθ:listType"/>
+         <xs:element name="ol" type="ανθ:listType"/>
       </xs:choice>
-   </xs:group>
-   <xs:element name="h1">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="h2">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="h3">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="h4">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="h5">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="h6">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="p">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:everything-inline"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="pre">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="ol">
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element maxOccurs="unbounded" ref="oscal-prose:li"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="li">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:everything-inline"/>
-            <xs:element ref="oscal-prose:ol"/>
-            <xs:element ref="oscal-prose:ul"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="ul">
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element maxOccurs="unbounded" ref="oscal-prose:li"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="table">
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element maxOccurs="unbounded" ref="oscal-prose:tr"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="tr">
-      <xs:complexType>
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element maxOccurs="unbounded" ref="oscal-prose:td"/>
-            <xs:element maxOccurs="unbounded" ref="oscal-prose:th"/>
-         </xs:choice>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="th">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:everything-inline"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="td">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:everything-inline"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:group name="everything-inline">
+   </xs:complexType>
+   <xs:complexType name="tableType">
+      <xs:sequence>
+         <xs:element maxOccurs="unbounded" name="tr" type="ανθ:tableRowType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="tableRowType"><!-- QUESTION: Should we allow TH and TD to be mixed? -->
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:element name="td" type="ανθ:tableCellType" maxOccurs="unbounded"/>
+         <xs:element name="th" type="ανθ:tableCellType" maxOccurs="unbounded"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="tableCellType" mixed="true">
+      <xs:group ref="ανθ:mixedInlineMarkupGroup"/>
+      <!-- TODO: consider adding a choice between the inline or paragraphs. We need to figure out what is supported in Markdown. -->
+      <xs:attribute name="align" type="ανθ:alignType" default="left"/>
+      <!-- TODO: need to add support for alignment. usnistgov/metaschema#70 -->
+   </xs:complexType>
+   <xs:simpleType name="alignType">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="left"/>
+         <xs:enumeration value="center"/>
+         <xs:enumeration value="right"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <!-- note mix does not include anchors, which do not come for free -->
+   <xs:group name="mixedInlineMarkupGroup">
       <xs:sequence>
          <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:group ref="oscal-prose:special"/>
-            <xs:element ref="oscal-prose:a"/>
+            <xs:group ref="ανθ:phraseInlineMarkupGroup"/>
+            <xs:element name="img" type="ανθ:imageType"/>
          </xs:choice>
       </xs:sequence>
    </xs:group>
-   <xs:group name="mix">
-      <xs:sequence>
-         <xs:group minOccurs="0" maxOccurs="unbounded" ref="oscal-prose:inlines"/>
-      </xs:sequence>
-   </xs:group>
-   <xs:group name="inlines">
+   <xs:group name="phraseInlineMarkupGroup">
       <xs:sequence>
          <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element ref="oscal-prose:q"/>
-            <xs:element ref="oscal-prose:code"/>
-            <xs:element ref="oscal-prose:em"/>
-            <xs:element ref="oscal-prose:i"/>
-            <xs:element ref="oscal-prose:strong"/>
-            <xs:element ref="oscal-prose:b"/>
-            <xs:element ref="oscal-prose:sub"/>
-            <xs:element ref="oscal-prose:sup"/>
-            <xs:element ref="oscal-prose:img"/>
+            <xs:element name="code" type="ανθ:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="em" type="ανθ:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="i" type="ανθ:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="b" type="ανθ:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="strong" type="ανθ:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="sub" type="ανθ:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="sup" type="ανθ:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="q" type="ανθ:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="insert" type="ανθ:insertType"/>
+            <xs:element name="a" type="ανθ:anchorType"/>
          </xs:choice>
       </xs:sequence>
    </xs:group>
-   <xs:element name="q">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element ref="oscal-prose:code"/>
-            <xs:element ref="oscal-prose:em"/>
-            <xs:element ref="oscal-prose:i"/>
-            <xs:element ref="oscal-prose:b"/>
-            <xs:element ref="oscal-prose:strong"/>
-            <xs:element ref="oscal-prose:sub"/>
-            <xs:element ref="oscal-prose:sup"/>
-         </xs:choice>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="code">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:mix"/>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="strong">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="em">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="i">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="b">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="sub">
-      <xs:complexType mixed="true">
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="sup">
-      <xs:complexType mixed="true">
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="img">
-      <xs:complexType>
-         <xs:attribute name="alt"/>
-         <xs:attribute name="src" use="required" type="xs:anyURI"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="a">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element ref="oscal-prose:q"/>
-            <xs:element ref="oscal-prose:code"/>
-            <xs:element name="em">
-               <xs:complexType mixed="true">
-                  <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-               </xs:complexType>
-            </xs:element>
-         </xs:choice>
-         <xs:attribute name="href"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:group name="special">
-      <xs:sequence>
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element ref="oscal-prose:insert"/>
-         </xs:choice>
-      </xs:sequence>
-   </xs:group>
-   <xs:element name="insert">
-      <xs:complexType>
-         <xs:attribute name="param-id" use="required" type="xs:NCName"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:attributeGroup name="requiredClass"/>
-   <xs:attributeGroup name="optionalClass"/>
-   <xs:attributeGroup name="hrefAttr">
-      <xs:attribute name="href"/>
-   </xs:attributeGroup>
+   <xs:complexType name="inlineMarkupType" mixed="true">
+      <xs:group ref="ανθ:phraseInlineMarkupGroup"/>
+   </xs:complexType>
+   <xs:complexType name="imageType">
+      <xs:attribute name="alt" type="xs:string"/>
+      <xs:attribute name="src" use="required" type="xs:anyURI"/>
+   </xs:complexType>
+   <xs:complexType name="anchorType" mixed="true">
+      <xs:group ref="ανθ:phraseInlineMarkupGroup"/>
+      <xs:attribute name="href" type="xs:anyURI"/>
+   </xs:complexType>
+   <!--
+    A value to be assigned by responder via parameter
+    (a parameter must be available)
+  -->
+   <xs:complexType name="insertType">
+      <xs:attribute name="param-id" use="required" type="xs:NCName"/>
+   </xs:complexType>
+   <!--
+    Within a selection, a choice - tbd
+    unlike 'value', choice may have inline stuff as well as 'assign' elements
+    choice = element choice { (assign | mix)* }
+  -->
+   <!--
+    IDs are required everywhere for now
+    idAttr      = attribute id { xsd:ID }
+  -->
 </xs:schema>

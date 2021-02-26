@@ -63,7 +63,23 @@
         <number key="maxProperties">1</number>
     </xsl:template>
     
-   
+    <!--
+    "oneOf": [
+        {
+            "properties": {
+                "ANYTHING": {"$ref": "#/definitions/ANYTHING"}
+            },
+            "required": [ "ANYTHING" ]
+        },
+        {
+            "properties": {
+                "EVERYTHING": {"$ref": "#/definitions/EVERYTHING"}
+            },
+            "required": [ "EVERYTHING" ]
+        }
+    ]
+    
+    -->
     <xsl:template priority="2" match="/METASCHEMA[count(define-assembly/root-name) > 1]" mode="require-a-root">
         <array key="oneOf">
             <xsl:for-each select="define-assembly[exists(root-name)]">
@@ -79,7 +95,7 @@
     <xsl:template match="define-assembly" mode="root-requirement">
         <map key="properties">
             <map key="{root-name}">
-                <xsl:apply-templates select="." mode="make-ref"/>
+                <string key="$ref">#/definitions/{ root-name }</string>
             </map>
         </map>
         <array key="required">
@@ -97,27 +113,17 @@
     <xsl:template match="define-flag"/>
     
     <xsl:template name="give-id">
-        <string key="$id">
-            <xsl:apply-templates mode="make-definition-id" select="."/>
-        </string>
+      <string key="$id">#/definitions/{@name}</string>
     </xsl:template>
     
-    <xsl:template match="*" mode="make-ref">
-        <string key="$ref">
-            <xsl:apply-templates mode="make-definition-id" select="."/>
-        </string>
-    </xsl:template>
     
-    <xsl:template match="*" mode="make-definition-id">
-        <xsl:variable name="lineage" select="ancestor-or-self::*/@name"/>
-        <xsl:text>#/definitions/{ $lineage => string-join('-') }</xsl:text>
-    </xsl:template>
-
     <xsl:template priority="100" match="METASCHEMA/define-assembly | METASCHEMA/define-field">
+        <!-- XXX add module identifier -->
         <map key="{ @name }">
             <xsl:next-match/>
         </map>
     </xsl:template>
+    
     
     <xsl:template match="define-assembly">
             <xsl:apply-templates select="formal-name, description"/>
@@ -128,7 +134,8 @@
                 <xsl:apply-templates select="." mode="properties"/>
             </map>
             </xsl:where-populated>
-        <xsl:call-template name="require-or-allow"/>
+            <xsl:call-template name="required-properties"/>
+            <boolean key="additionalProperties">false</boolean>
     </xsl:template>
     
     <xsl:template match="define-field">
@@ -140,8 +147,8 @@
                     <xsl:apply-templates select="." mode="properties"/>
                 </map>
             </xsl:where-populated>
-            <xsl:call-template name="require-or-allow"/>
-            
+            <xsl:call-template name="required-properties"/>
+            <boolean key="additionalProperties">false</boolean>
             <!-- allowed-values only present on fields -->
             <xsl:apply-templates select="constraint/allowed-values"/>
     </xsl:template>
@@ -155,7 +162,7 @@
                     <xsl:apply-templates select="." mode="properties"/>
                 </map>
             </xsl:where-populated>
-            <xsl:call-template name="require-or-allow"/>
+            <xsl:call-template name="required-properties"/>
             
             <!-- calculating required properties to allow for a single property whose
                  key will not be controlled (since it will map to the value-key flag -->
@@ -171,7 +178,7 @@
             </number>
             <number key="maxProperties">
                 <xsl:value-of
-                    select="count($all-properties | self::define-field)"/>
+                    select="count($all-properties | self::define-field[not(@as = 'empty')])"/>
             </number>
             <!-- allowed-values only present on fields -->
             <xsl:apply-templates select="constraint/allowed-values"/>
@@ -229,7 +236,7 @@
         </xsl:element>
     </xsl:template>
     
-    <xsl:template name="require-or-allow">
+    <xsl:template name="required-properties">
         <xsl:variable name="requirements" as="element()*">
             <!-- A value string is always required except on empty fields -->
             <xsl:variable name="value-property">
@@ -252,12 +259,6 @@
                 <xsl:copy-of select="$requirements"/>
             </array>
         </xsl:if>
-        <boolean key="additionalProperties">
-            <xsl:choose>
-                <xsl:when test="exists(model/(.|choice)/any)">true</xsl:when>
-                <xsl:otherwise>false</xsl:otherwise>
-            </xsl:choose>
-        </boolean>
     </xsl:template>
     
     <!--<xsl:template name="string-or-array-of-strings">
@@ -297,6 +298,10 @@
     <xsl:template match="define-field[@as-type='markup-multiline']" mode="value-key">
         <xsl:value-of select="$markdown-multiline-label"/>
     </xsl:template>
+    
+<!-- empty fields have no values, hence no value keys; by producing nothing
+        this template sees to it no declaration for it is produced either. -->
+    <xsl:template match="define-field[@as-type='empty']" mode="value-key"/>
         
     <xsl:template priority="2" match="define-field[matches(json-value-key,'\S')]" mode="value-key">
         <xsl:value-of select="json-value-key"/>
@@ -383,8 +388,18 @@
         </string>
     </xsl:template>
     
-    <!-- Handled by template 'require-or-allow' -->
+    <!--<xsl:template match="flag[exists(@name)]" mode="property-name">
+        <string>
+            <xsl:value-of select="@name"/>
+        </string>
+    </xsl:template>-->
+    
+<!-- Not yet implemented -->
     <xsl:template match="any" mode="property-name"/>
+    
+    <!--<xsl:template match="prose" mode="property-name">
+        <string>prose</string>
+    </xsl:template>-->
     
     <xsl:template match="model | choice" priority="2" mode="property-name">
         <xsl:apply-templates mode="#current"/>
@@ -516,17 +531,17 @@
     
     <xsl:template match="flag" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('flag-definition-by-name',@ref)"/>
-        <xsl:apply-templates select="$definition" mode="make-ref"/>
+        <string key="$ref">#/definitions/{ $definition/@name }</string>
     </xsl:template>
     
     <xsl:template match="field" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('field-definition-by-name',@ref)"/>
-        <xsl:apply-templates select="$definition" mode="make-ref"/>
+        <string key="$ref">#/definitions/{ $definition/@name }</string>
     </xsl:template>
     
     <xsl:template match="assembly" mode="definition-or-reference">
         <xsl:variable name="definition" select="key('assembly-definition-by-name',@ref)"/>
-        <xsl:apply-templates select="$definition" mode="make-ref"/>
+        <string key="$ref">#/definitions/{ $definition/@name }</string>
     </xsl:template>
     
     <!--  elements that fall through are made objects in case they have properties  -->
@@ -637,7 +652,7 @@
         </map>
         <map key="dateTime">
             <string key="type">string</string>
-            <!--<string key="format">date-time</string> JQ/AJV 'date-time' implementations require time zone--> 
+            <!--<string key="format">date-time</string> JQ 'date-time' implementation requires time zone -->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
         <map key="date-with-timezone">

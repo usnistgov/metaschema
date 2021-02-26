@@ -15,13 +15,16 @@
     <xsl:variable name="show-warnings" as="xs:string">no</xsl:variable>
     <xsl:variable name="verbose" select="lower-case($show-warnings) = ('yes', 'y', '1', 'true')"/>
 
-    <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly[not(@scope='local')]" use="@name"/>
-    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field[not(@scope='local')]"    use="@name"/>
-    
+    <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly" use="@name"/>
+    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field"    use="@name"/>
     
     <!-- ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== -->
-    <!-- Pass Four: filter definitions again to keep only definitions
-         reachable from definitions defined with a root-name.
+    <!-- Pass Three: filter definitions (2) - keep only top-level definitions that are actually
+         called by references in the models.
+         
+         Note that we ignore flag definitions, which can stay,
+         since all flag definitions are rewritten into local declarations,
+         so all top-level flag definitions will be dropped in any case.
     -->
     
     <xsl:mode on-no-match="shallow-copy"/>

@@ -897,7 +897,7 @@
     <xs:union memberTypes="m:simple-datatypes">
       <xs:simpleType>
         <xs:restriction base="xs:string">
-          <xs:enumeration value="empty"/>
+          <!--<xs:enumeration value="empty"/>-->
           <xs:enumeration value="markup-line"/>
           <xs:enumeration value="markup-multiline"/>
         </xs:restriction>

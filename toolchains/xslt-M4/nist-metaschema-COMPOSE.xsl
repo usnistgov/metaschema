@@ -31,10 +31,16 @@
     
     <!-- The $transformation-sequence declares transformations to be applied in order. -->
     <xsl:variable name="transformation-sequence">
+        
+<!-- Collects metaschema modules and renames definitions scoped locally to their modules -->
         <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
+<!-- Removes overwritten definitions (imported but subsequently rewritten) -->
         <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
-        <!--<nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>-->
+<!-- Removes unused definitions (not descended from an assembly defined for the root) -->
+        <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
+<!-- Flattens, normalizes and (to come) expands examples -->
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
+        
     </xsl:variable>
     
     <xsl:function name="nm:compose-metaschema">
