@@ -21,7 +21,9 @@
     
     <!-- Interface template for override -->
     <xsl:template match="*" mode="make-match" as="xs:string">
-        <xsl:apply-templates select="." mode="make-xml-match"/>
+        <xsl:value-of>
+          <xsl:apply-templates select="." mode="make-xml-match"/>
+        </xsl:value-of>
     </xsl:template>
     
     <!-- Interface template for override -->
@@ -52,24 +54,56 @@
                 <!-\-<XSLT:output-character character="&#xE0000;" string="\"/>-\->
             </XSLT:character-map>-->
 
-            <!-- first we produce templates for (each) of the global definitions
-                 and for any flags thereon.-->
-            <xsl:for-each-group select="//*[@scope = 'global'][not(@recursive='true')]/( . | child::flag )"
-                group-by="string-join((local-name(), @name), ':')">
-                <!-- These are all the same so we do only one, but we pass in the group to construct the match -->
+            <!-- first we produce templates for (each) of the global definitions in their combinations
+                 (definition name and name-in-use) -->
+            
+            <!--XXX refactor all this for legibility -->
+            <xsl:for-each-group select=".//assembly[@scope = 'global'][not(@recursive='true')]"
+                group-by="@gi">
+                <xsl:variable name="aliased" select="count(distinct-values(current-group()/@name)) gt 1"/>
+                <xsl:for-each-group select="current-group()" group-by="@name">
+                    <!-- but we also break by type name since we have aliases (different type, same use-name) -->
+                    <xsl:apply-templates select="current-group()[1]" mode="make-template">
+                        <xsl:with-param name="team" tunnel="true" select="current-group()"/>
+                        <xsl:with-param name="aliased" tunnel="true" select="$aliased"/>
+                    </xsl:apply-templates>
+                </xsl:for-each-group>
+            </xsl:for-each-group>
+            <xsl:for-each-group select=".//field[@scope = 'global']"
+                group-by="@gi">
+                <xsl:variable name="aliased" select="count(distinct-values(current-group()/@name)) gt 1"/>
+                <xsl:for-each-group select="current-group()" group-by="@name">
+                    <!-- but we also break by type name since we have aliases (different type, same use-name) -->
+                    <xsl:apply-templates select="current-group()[1]" mode="make-template">
+                        <xsl:with-param name="team" tunnel="true" select="current-group()"/>
+                        <xsl:with-param name="aliased" tunnel="true" select="$aliased"/>
+                    </xsl:apply-templates>
+                </xsl:for-each-group>
+            </xsl:for-each-group>
+            
+            <!-- again, this time for (all) flags, also discriminating by data type -->
+            <xsl:for-each-group select=".//flag" group-by="string-join((@name, @as-type, @gi), ':')">
                 <xsl:apply-templates select="current-group()[1]" mode="make-template">
                     <xsl:with-param name="team" tunnel="true" select="current-group()"/>
                 </xsl:apply-templates>
             </xsl:for-each-group>
-
+            
             <!-- next we produce templates for local definitions - a receiving template
                  filters out the globals ... -->
-            <xsl:apply-templates select=".//assembly | .//field | .//flag" mode="make-template-for-local"/>
+            <xsl:apply-templates select=".//assembly | .//field" mode="make-template-for-inline-definition"/>
 
             <!--finally, if needed, a template for copying prose across, stripping ns -->
             <xsl:call-template name="for-this-converter"/>
             
         </XSLT:stylesheet> 
+    </xsl:template>
+    
+<!-- For any combination of node type (assembly or field), @name, @gi we make a template, plus
+     another for any that are recursive ... we have to specify them so that templates matching these
+     do not collapse on each other when they have the same element names -->
+    <xsl:template name="make-templates-for-type">
+        
+        
     </xsl:template>
     
     
@@ -109,11 +143,9 @@
         </xsl:if>
     </xsl:template>
     
-    <xsl:template match="*[@scope='global']"      mode="make-template-for-local"/>
+    <xsl:template match="*[@scope='global']" mode="make-template-for-inline-definition"/>
     
-    <xsl:template priority="1" match="*[@scope='global']/flag" mode="make-template-for-local"/>
-    
-    <xsl:template match="*" mode="make-template-for-local">
+    <xsl:template match="*" mode="make-template-for-inline-definition">
         <xsl:apply-templates select="." mode="make-template"/>
     </xsl:template>
  
@@ -122,6 +154,7 @@
         
     <!--Invoke by name when we wish to override mode 'template-for-global' -->
     <xsl:template match="*" mode="make-template" name="make-template">
+        <xsl:param name="team" tunnel="true" select="."/>
         <xsl:variable name="matching">
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
@@ -141,10 +174,10 @@
                 <xsl:if test="self::field[empty(flag[not(@key=$json-key-flag-name)])]">
                     <xsl:attribute name="in-json">SCALAR</xsl:attribute>
                 </xsl:if>
-                <xsl:if test="exists(@key)">
+                <xsl:if test="exists($team/@key)">
                     <XSLT:if test="$with-key">
                         <XSLT:attribute name="key">
-                            <xsl:value-of select="@key"/>
+                            <xsl:value-of select="($team/@key)[1]"/>
                         </XSLT:attribute>
                     </XSLT:if>
                 </xsl:if>
@@ -164,7 +197,8 @@
         <XSLT:template match="{ $matching}">
             <xsl:if test="not((.|..)/@scope='global')">
                 <xsl:attribute name="priority" select="count(ancestor-or-self::*)"/>
-            </xsl:if><xsl:call-template name="comment-template"/>
+            </xsl:if>
+            <xsl:call-template name="comment-template"/>
             <flag in-json="string">
                 <xsl:copy-of select="@* except @scope"/>
                 <!-- rewriting in-json where necessary -->
@@ -177,14 +211,24 @@
     <!-- In the XML, even a flag designated as a key is an attribute, so it will be produced without explicit instruction. -->
     <xsl:template match="*" mode="make-key-flag"/>
     
+    
+    
     <xsl:template priority="11" match="flag" mode="make-xml-match">
         <xsl:param name="team" tunnel="true" select="."/>
+        <xsl:variable name="me" select="."/>
         <xsl:variable name="team-matches" as="xs:string*">
             <xsl:for-each select="$team">
                 <xsl:value-of>
-                    <xsl:apply-templates select=".." mode="make-xml-match"/>
-                    <xsl:text>/@</xsl:text>
-                    <xsl:value-of select="@gi"/>
+<!-- when the parent recurses, its match comes back with a '|' which we have to break out -->
+                    <xsl:variable name="parent-match">
+                        <xsl:apply-templates select=".." mode="make-xml-match"/>
+                    </xsl:variable>
+                    <xsl:for-each select="tokenize($parent-match,'\s*\|\s*')">
+                        <xsl:if test="position() gt 1"> | </xsl:if>
+                        <xsl:sequence select="."/>
+                        <xsl:text>/</xsl:text>
+                        <xsl:apply-templates select="$me" mode="make-xml-step"/>                        
+                    </xsl:for-each>
                 </xsl:value-of>
             </xsl:for-each>
         </xsl:variable>
@@ -194,10 +238,111 @@
     <xsl:template priority="11" match="flag" mode="make-xml-step">
         <xsl:value-of select="'@' || @gi"/>
     </xsl:template>
+
+    <!--<xsl:template priority="20" match="*[@recursive='true']" mode="make-xml-match">
+        <xsl:variable name="r">
+            <xsl:apply-templates select="ancestor::*[@name = current()/@name][1]"
+                mode="make-xml-match"/>
+            <xsl:text expand-text="true">//</xsl:text>
+            <xsl:next-match/>
+        </xsl:variable>
+        <xsl:message expand-text="true">{ $r }</xsl:message>
+        <xsl:sequence select="$r"/>
+    </xsl:template>-->
     
-    <xsl:template priority="10" match="*[@scope='global'] | group[*/@scope='global']" mode="make-xml-match make-xml-step">
-        <xsl:value-of select="@gi"/>
+    
+    <!--a   a//a
+    
+    b1/a b1/a//a 
+    b2/a b2/a//a
+    b3/a (when a does not recurse inside b3)-->
+    
+
+    <xsl:template priority="10" match="*[@scope = 'global'] | group[*/@scope = 'global']" mode="make-xml-match">
+        <xsl:param name="aliased" tunnel="true" select="false()"/>
+        <xsl:param name="team" tunnel="true" select="."/>
+        <xsl:variable name="me" select="."/>
+        
+        <xsl:choose>
+            <xsl:when test="$aliased">
+                <xsl:for-each select="$team/ancestor::*[exists(@gi)][1]">
+                    <xsl:if test="position() gt 1"> | </xsl:if>
+                    <xsl:call-template name="make-recurring-match">
+                        <xsl:with-param name="me" select="$me"/>
+                        <xsl:with-param name="prepend">
+                            <xsl:apply-templates mode="make-xml-step" select="."/>
+                            <xsl:text>/</xsl:text>
+                        </xsl:with-param>
+                    </xsl:call-template>
+                </xsl:for-each>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="make-recurring-match">
+                    <xsl:with-param name="me" select="$me"/>
+                </xsl:call-template>
+            </xsl:otherwise>
+                
+        </xsl:choose>
+        
+        <!--<xsl:variable name="contexts" as="xs:string+">
+            <xsl:choose>
+                <xsl:when test="$aliased">
+                    <xsl:for-each-group select="$team/ancestor::*[exists(@gi)][1]" group-by="@gi">
+                        <xsl:value-of>
+                            <xsl:value-of select="current-grouping-key()"/>
+                            <xs:text>/</xs:text>
+                            <xsl:apply-templates mode="make-xml-step" select="$me"/>
+                        </xsl:value-of>
+                    </xsl:for-each-group>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates mode="make-xml-step" select="$me"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:for-each select="$contexts">
+            <xsl:if test="position() gt 1"> | </xsl:if>
+            <xsl:sequence select="."/>
+            <xsl:if test=""
+        </xsl:for-each>-->
+        
     </xsl:template>
+    
+    <xsl:template name="make-recurring-match">
+        <xsl:param name="me"/>
+        <xsl:param name="prepend"/>
+        <xsl:sequence select="$prepend"/>
+        <xsl:apply-templates mode="make-xml-step" select="$me"/>
+        <xsl:if test="$me/@name = $me/descendant::*[@recursive = 'true']/@name">
+            <xsl:text> | </xsl:text>
+            <xsl:sequence select="$prepend"/>
+            <xsl:apply-templates mode="make-xml-step" select="$me"/>
+            <xsl:text>/</xsl:text>
+            <xsl:if test="$me/@name = $me/child::*/descendant::*[@recursive = 'true']/@name"
+                >/</xsl:if>
+            <xsl:apply-templates mode="make-xml-step" select="$me"/>
+        </xsl:if>
+    </xsl:template>
+    
+    <!--<xsl:template priority="10" match="*[@scope = 'global'] | group[*/@scope = 'global']" mode="make-xml-step">
+        <xsl:param name="aliased" tunnel="true" select="false()"/>
+        <xsl:param name="team" tunnel="true" select="."/>
+        <xsl:variable name="me" select="."/>
+        <xsl:choose>
+            <!-\- when an assembly or field definition has an alias, we must distinguish which ones we want -\->
+            <xsl:when test="$aliased">
+                <xsl:for-each-group select="$team/ancestor::*[exists(@gi)][1]" group-by="@gi">
+                    <xsl:if test="position() gt 1"> | </xsl:if>
+                    <xsl:value-of select="current-grouping-key()"/>
+                    <xs:text>/</xs:text>
+                    <xsl:value-of select="$me/@gi"/>
+                </xsl:for-each-group>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="@gi"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>-->
     
     <xsl:template match="*[exists(@gi)]" mode="make-xml-step">
         <xsl:value-of select="@gi"/>

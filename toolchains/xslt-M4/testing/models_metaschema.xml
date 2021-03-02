@@ -47,6 +47,12 @@
         <flag ref="id"/>
         <model>
             <field ref="field-1only"/>
+            <field ref="overloaded">
+                <use-name>overloaded1</use-name>
+            </field>
+            <field ref="overloaded">
+                <use-name>overloaded2</use-name>
+            </field>
             <field ref="field-base64"/>
             <field ref="field-boolean"/>
             <field ref="field-named-value"/>
@@ -69,6 +75,14 @@
             <field ref="wrapped-prose" in-xml="WITH_WRAPPER"/>
             <field ref="loose-prose" in-xml="UNWRAPPED"/>
             
+            <assembly ref="assembly-empty"/>
+            <assembly ref="assembly-empty-grouped" max-occurs="unbounded">
+                <group-as name="empty-assembly-group"/>
+            </assembly>
+            <assembly ref="assembly-alias1">
+                <use-name>alias</use-name>
+            </assembly>
+            
             <assembly ref="assembly-1only"/>
             <assembly ref="assembly-groupable" max-occurs="unbounded">
                 <group-as name="groupable-assemblies"/>
@@ -85,6 +99,13 @@
         </model>
     </define-assembly>
 
+    <define-field name="overloaded">
+        <formal-name>OVERLOADED</formal-name>
+        <description>Overloaded field</description>
+        <flag ref="simple-flag"/>
+        <flag ref="integer-flag"/>
+    </define-field>
+    
     <define-field name="field-1only">
         <formal-name>FIELD-1ONLY</formal-name>
         <description>field field-1only</description>
@@ -167,6 +188,18 @@
         <description>field loose-prose</description>
     </define-field>
     
+    <define-assembly name="assembly-empty">
+        <formal-name>ASSEMBLY-EMPTY</formal-name>
+        <description>assembly assembly-empty</description>
+        <flag ref="id" required="yes"/>
+    </define-assembly>
+    
+    <define-assembly name="assembly-empty-grouped">
+        <formal-name>ASSEMBLY-EMPTY-GROUPED</formal-name>
+        <description>assembly assembly-empty-grouped</description>
+        <flag ref="id" required="yes"/>
+    </define-assembly>
+    
     <define-assembly name="assembly-1only">
         <formal-name>ASSEMBLY-1ONLY</formal-name>
         <description>assembly assembly-1only</description>
@@ -174,6 +207,27 @@
         <model>
             <field ref="field-1only"/>
             <assembly ref="assembly-1only"/>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="assembly-alias1">
+        <formal-name>ASSEMBLY-ALIASED 1</formal-name>
+        <description>first aliased assembly (has a name conflict)</description>
+        <model>
+            <field ref="field-1only"/>
+            <assembly ref="assembly-1only"/>
+            <assembly ref="assembly-alias2">
+                <use-name>alias</use-name>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="assembly-alias2">
+        <formal-name>ASSEMBLY-ALIASED 2</formal-name>
+        <description>second aliased assembly (has a name conflict)</description>
+        <model>
+            <assembly ref="assembly-1only"/>
+            <field ref="field-1only"/>
         </model>
     </define-assembly>
     

@@ -289,7 +289,7 @@
     </xsl:template>
     
     <xsl:template match="any">
-        <xs:any namespace="##other" processContents="lax"/>
+        <xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
     </xsl:template>
     
     <!--<xsl:template priority="10" match="model[exists(@ref)]">
