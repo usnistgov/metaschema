@@ -97,9 +97,12 @@
     <xsl:template match="define-flag"/>
     
     <xsl:template name="give-id">
-        <string key="$id">
-            <xsl:apply-templates mode="make-definition-id" select="."/>
-        </string>
+        <!-- Only marking top-level not inline definitions -->
+        <xsl:if test="exists(parent::METASCHEMA)">
+            <string key="$id">
+                <xsl:apply-templates mode="make-definition-id" select="."/>
+            </string>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="*" mode="make-ref">

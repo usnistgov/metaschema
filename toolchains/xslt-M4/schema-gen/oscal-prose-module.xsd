@@ -12,7 +12,7 @@
 
   <xs:group name="blockElementGroup">
     <xs:sequence>
-      <xs:choice minOccurs="1" maxOccurs="unbounded">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="h1"    type="blockElementType"/>
         <xs:element name="h2"    type="blockElementType"/>
         <xs:element name="h3"    type="blockElementType"/>

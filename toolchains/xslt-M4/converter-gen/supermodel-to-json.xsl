@@ -136,7 +136,7 @@
         <xsl:element name="{(@in-json[matches(.,'\S')],'string')[1]}"
             namespace="http://www.w3.org/2005/xpath-functions">
             <xsl:copy-of
-                select="(../flag[@key=$key-flag-name],parent::field[@in-json = 'SCALAR']/@key, @key)[1]"/>
+                select="((../flag[@key=$key-flag-name],parent::field[@in-json = 'SCALAR'])/@key, @key)[1]"/>
             <xsl:apply-templates select="." mode="cast-data"/>
         </xsl:element>
     </xsl:template>
@@ -171,16 +171,6 @@
         <xsl:value-of select="$lines/self::* => string-join('&#xA;')"/>
     </xsl:template>
     
-    <!--<xsl:template match="value[@as-type='markup-multiline']/*" mode="md" priority="100">
-        <xsl:variable name="mine">
-          <xsl:next-match/>
-        </xsl:variable>
-        <xsl:if test="empty($mine/*) or true()">
-            <xsl:message expand-text="true">{ local-name() }</xsl:message>
-            
-        </xsl:if>
-        <xsl:sequence select="$mine"/>
-    </xsl:template>-->
     
     <xsl:template name="conditional-lf">
         <xsl:variable name="predecessor"

@@ -27,9 +27,9 @@
     </xsl:template>
     
     <xsl:template priority="2" match="s:flag" mode="write-xml">
-        <xsl:attribute name="{@gi}">
-            <xsl:value-of select="."/>
-        </xsl:attribute>
+       <xsl:attribute name="{@gi}">
+           <xsl:value-of select="."/>
+       </xsl:attribute>
     </xsl:template>
     
     <xsl:template match="*" mode="cast-prose">
