@@ -142,20 +142,21 @@
    
    <xsl:variable name="file-map" as="map(xs:string, text())">
       <xsl:map>
-         <xsl:map-entry key="'oscal-catalog'"  >catalog</xsl:map-entry>
-         <xsl:map-entry key="'oscal-profile'"  >profile</xsl:map-entry>
-         <xsl:map-entry key="'oscal-component-definition'">component</xsl:map-entry>
-         <xsl:map-entry key="'oscal-ssp'"      >ssp</xsl:map-entry>
-         <xsl:map-entry key="'oscal-poam'"     >poam</xsl:map-entry>
-         <xsl:map-entry key="'oscal-ap'"       >assessment-plan</xsl:map-entry>
-         <xsl:map-entry key="'oscal-ar'"       >assessment-results</xsl:map-entry>
+         <xsl:map-entry key="'oscal-catalog'"  >oscal_catalog</xsl:map-entry>
+         <xsl:map-entry key="'oscal-profile'"  >oscal_profile</xsl:map-entry>
+         <xsl:map-entry key="'oscal-component-definition'">oscal_component</xsl:map-entry>
+         <xsl:map-entry key="'oscal-ssp'"      >oscal_ssp</xsl:map-entry>
+         <xsl:map-entry key="'oscal-poam'"     >oscal_poam</xsl:map-entry>
+         <xsl:map-entry key="'oscal-ap'"       >oscal_assessment-plan</xsl:map-entry>
+         <xsl:map-entry key="'oscal-ar'"       >oscal_assessment-results</xsl:map-entry>
+         <xsl:map-entry key="'test-model'"     >test-model</xsl:map-entry>
       </xsl:map>
    </xsl:variable>
    
    <xsl:template match="short-name" mode="schema-link" expand-text="true">
       <p>
          <span class="usa-tag">XML Schema</span>
-         <a href="https://pages.nist.gov/OSCAL/artifacts/xml/schema/oscal_{$file-map(.)}_schema.xsd">oscal_{$file-map(string(.))}_schema.xsd</a>
+         <a href="https://pages.nist.gov/OSCAL/artifacts/xml/schema/oscal_{$file-map(.)}_schema.xsd">{$file-map(string(.))}_schema.xsd</a>
       </p>
    </xsl:template>
    
