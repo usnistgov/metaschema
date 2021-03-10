@@ -48,19 +48,18 @@ In this command, `\!indent=true` is bash for `!indent=true`.
 
 Syntax summary:
 
-| argument |  |  |
+| argument | use for | note |
 |--|--|--|
-| `-s:file` | XML source |  |
-| `-json:file` | JSON source | alternative to `-s`* |
-| `-xsl:file` | XSLT | or compiled SEF JSON |
-| `-o:file` | output | result target and base URI for `xsl:result-document` |
+| `-s:file` | XML source | A file or URI |
+| `-json:file` | JSON source | Alternative to `-s`* |
+| `-xsl:file` | XSLT | Or compiled SEF JSON |
+| `-o:file` | output | Result target and base URI for `xsl:result-document` |
 | `-im:mode` | initial mode |  |
 | `-it:template` | initial template |  |
 | `param=value` | XSLT runtime parameter |  |
-| `!param=value` | output parameter | provides or overrides `xsl:output` setting |
+| `!param=value` | output parameter | Provides or overrides `xsl:output` setting |
 
-
-One of `-s`, `-json`, `-it` or `-nogo` must be used, and `-s` and `-json` (XML or JSON source) are mutually exclusive.
+\* One of `-s`, `-json`, `-it` or `-nogo` must be used, and `-s` and `-json` (XML or JSON source) are mutually exclusive.
 
 See docs for more and for hints: https://www.saxonica.com/saxon-js/documentation/index.html#!nodejs/command-line
 
@@ -68,11 +67,11 @@ For serialization settings:
 
 ## How to compile into SEF from CL
 
-The same docs have the arguments for compiling XSLT into SEF:
+The same docs have the arguments for compiling XSLT into SEF (Saxon Executable Format?), a JSON application format:
 
-* `-export:filename` export the XSLT as (compiled JSON) SEF - use suffix `.json`
-* `-nogo` Don't run the transformation: only compile it
+* `-export:file` export the XSLT as (compiled JSON) SEF - use suffix `.json`
+* `-nogo` Don't run the transformation; only compile it (producing SEF JSON)
 
-The resulting json file, a compiled transformation specification, can be applied to XML (or JSON) data from within scripts.
+The resulting JSON file, a compiled transformation specification, can be applied to XML (or JSON) data from within scripts.
 
-*Coming: How to invoke XSLT programmatically*
+***Coming soon: How to invoke XSLT programmatically***
