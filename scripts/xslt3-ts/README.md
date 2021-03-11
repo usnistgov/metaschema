@@ -37,7 +37,7 @@ The processor should return
 #### XSLT processor/version report
 
 ```bash
-xslt3 -s:processor-version.xsl -xsl:processor-version.xsl \!indent=true
+$ xslt3 -s:processor-version.xsl -xsl:processor-version.xsl \!indent=true
 ```
 
 Should return HTML reporting Saxon-JS (version 2.1 or later) from Saxonica.
@@ -48,7 +48,7 @@ In this command, `\!indent=true` is bash for `!indent=true`.
 
 Syntax summary:
 
-| argument | use for | note |
+| argument | purpose/use | (note) |
 |--|--|--|
 | `-s:file` | XML source | A file or URI |
 | `-json:file` | JSON source | Alternative to `-s`* |
@@ -61,9 +61,7 @@ Syntax summary:
 
 \* One of `-s`, `-json`, `-it` or `-nogo` must be used, and `-s` and `-json` (XML or JSON source) are mutually exclusive.
 
-See docs for more and for hints: https://www.saxonica.com/saxon-js/documentation/index.html#!nodejs/command-line
-
-For serialization settings:
+See SaxonJS documentation for more and for hints: https://www.saxonica.com/saxon-js/documentation/index.html#!nodejs/command-line
 
 ## How to compile into SEF from CL
 
