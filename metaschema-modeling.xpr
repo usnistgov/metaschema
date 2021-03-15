@@ -10,23 +10,40 @@
                         <scenarioAssociation-array>
                             <scenarioAssociation>
                                 <field name="url">
-                                    <String>test-suite/docs-models/models_metaschema.xml</String>
+                                    <String>test-suite/oscal/v1.0rc1/oscal_profile_metaschema-COMPOSED.xml</String>
                                 </field>
                                 <field name="scenarioIds">
                                     <list>
-                                        <String>Produce HTML model maps for (this) metaschema</String>
-                                        <String>Produce HTML documentation for (this) metaschema</String>
+                                        <String>Produce XSD (v04 XSLT) - silent</String>
                                     </list>
                                 </field>
                                 <field name="scenarioTypes">
                                     <list>
-                                        <String>XPROC</String>
-                                        <String>XPROC</String>
+                                        <String>XSL</String>
                                     </list>
                                 </field>
                                 <field name="scenarioStorageLocations">
                                     <list>
                                         <Byte>2</Byte>
+                                    </list>
+                                </field>
+                            </scenarioAssociation>
+                            <scenarioAssociation>
+                                <field name="url">
+                                    <String>test-suite/docs-models/models_metaschema.xml</String>
+                                </field>
+                                <field name="scenarioIds">
+                                    <list>
+                                        <String>Produce XSD (v04 XSLT) - silent</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioTypes">
+                                    <list>
+                                        <String>XSL</String>
+                                    </list>
+                                </field>
+                                <field name="scenarioStorageLocations">
+                                    <list>
                                         <Byte>2</Byte>
                                     </list>
                                 </field>
@@ -569,26 +586,6 @@
                                 <field name="scenarioTypes">
                                     <list>
                                         <String>XSL</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioStorageLocations">
-                                    <list>
-                                        <Byte>2</Byte>
-                                    </list>
-                                </field>
-                            </scenarioAssociation>
-                            <scenarioAssociation>
-                                <field name="url">
-                                    <String>../OSCAL/src/metaschema/oscal_catalog_metaschema.xml</String>
-                                </field>
-                                <field name="scenarioIds">
-                                    <list>
-                                        <String>Build JSON Schema - diagnostic XProc</String>
-                                    </list>
-                                </field>
-                                <field name="scenarioTypes">
-                                    <list>
-                                        <String>XPROC</String>
                                     </list>
                                 </field>
                                 <field name="scenarioStorageLocations">
@@ -2708,6 +2705,7 @@
         <folder name="OSCAL">
             <folder path="../OSCAL/content/"/>
             <folder path="../OSCAL/src/metaschema/"/>
+            <folder path="../OSCAL/xml/schema/"/>
         </folder>
         <folder path="."/>
     </projectTree>

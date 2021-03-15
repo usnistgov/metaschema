@@ -229,6 +229,7 @@
 
     <xsl:template priority="5" match="define-field[@as-type='markup-line']">
             <xs:complexType mixed="true">
+                <xsl:apply-templates select="." mode="annotated"/>
                 <xsl:call-template name="name-global-field-type"/>
                 <!--<xs:group ref="{$declaration-prefix}:everything-inline"/>-->
                 <xs:complexContent>
@@ -241,7 +242,8 @@
     </xsl:template>
     
     <xsl:template priority="5" match="define-field[@as-type='markup-multiline']">
-            <xs:complexType>
+        <xsl:apply-templates select="." mode="annotated"/>
+        <xs:complexType>
                 <xsl:call-template name="name-global-field-type"/>
                 <!--<xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>-->
                 <xs:complexContent>

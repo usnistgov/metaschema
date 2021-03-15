@@ -67,6 +67,8 @@
             <field ref="wrapped-prose" in-xml="WITH_WRAPPER"/>
             <field ref="loose-prose" in-xml="UNWRAPPED"/>
             
+            <assembly ref="assembly-with-inlines"/>
+            
             <assembly ref="assembly-empty"/>
             <assembly ref="assembly-empty-grouped" max-occurs="unbounded">
                 <group-as name="empty-assembly-group"/>
@@ -112,7 +114,7 @@
     </define-field>
     
     <define-field name="field-boolean" as-type="boolean">
-        <formal-name>FIELD-BOOLEAN</formal-name>
+        <formal-name>Boolean typed field</formal-name>
         <description>field field-boolean</description>
     </define-field>
     
@@ -203,6 +205,26 @@
         </model>
     </define-assembly>
     
+    <define-assembly name="assembly-with-inlines">
+        <formal-name>Assembly with inline definitions</formal-name>
+        <description>Inline definitions have their own metadata too.</description>
+        <model>
+            <field ref="field-1only"/>
+            <assembly ref="assembly-1only"/>
+            <assembly ref="assembly-alias2">
+                <use-name>alias</use-name>
+            </assembly>
+            <define-assembly name="inline-assembly">
+                <formal-name>Inline assembly</formal-name>
+                <description>Assembly whose definition is inline</description>
+            </define-assembly>
+            <define-assembly name="inline-aliased-assemby">
+                <formal-name>An inline assembly named 'alias'</formal-name>
+                <description>Assembly whose definition is inline, but whose name is 'alias'</description>
+            </define-assembly>
+        </model>
+    </define-assembly>
+    
     <define-assembly name="assembly-alias1">
         <formal-name>Aliased assembly - outer</formal-name>
         <description>first aliased assembly (has a name conflict)</description>
@@ -217,7 +239,7 @@
     </define-assembly>
     
     <define-assembly name="assembly-alias2">
-        <formal-name>Aliased assembly - innter</formal-name>
+        <formal-name>Aliased assembly - inner</formal-name>
         <description>second aliased assembly (has a name conflict) appears only in the context of its parent of the same name.</description>
         <model>
             <assembly ref="assembly-1only"/>
