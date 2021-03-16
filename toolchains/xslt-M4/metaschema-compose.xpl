@@ -30,8 +30,8 @@
     <p:pipe port="result" step="reduce2"/>
   </p:output>
 
-  <p:serialization port="_3_digested" indent="true"/>
-  <p:output port="_3_digested" primary="false">
+  <p:serialization port="_4_digested" indent="true"/>
+  <p:output port="_4_digested" primary="false">
     <p:pipe port="result" step="digest"/>
   </p:output>
   
