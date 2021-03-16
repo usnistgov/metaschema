@@ -80,12 +80,28 @@
  <!-- Same at the other end - references to module-local definitions are relabeled correspondingly
       (to disambiguate from others of the same name in other modules) -->
     
-    <xsl:key name="top-level-local-definition-by-name" use="@name"
-        match="METASCHEMA/define-assembly[@scope='local'] |
-               METASCHEMA/define-field[@scope='local']    |
-               METASCHEMA/define-flag[@scope='local']" />
+    <xsl:key name="top-level-local-assembly-definition-by-name" use="@name"
+        match="METASCHEMA/define-assembly[@scope='local']" />
     
-    <xsl:template mode="acquire" match="model//*[exists( key('top-level-local-definition-by-name',@ref) )]">
+    <xsl:key name="top-level-local-field-definition-by-name" use="@name"
+        match="METASCHEMA/define-field[@scope='local']" />
+    
+    <xsl:key name="top-level-local-flag-definition-by-name" use="@name"
+        match="METASCHEMA/define-flag[@scope='local']" />
+    
+    <xsl:template mode="acquire" match="assembly[exists( key('top-level-local-assembly-definition-by-name',@ref) )]">
+        <xsl:call-template name="rewrite-local-reference"/>
+    </xsl:template>
+    
+    <xsl:template mode="acquire" match="field[exists( key('top-level-local-field-definition-by-name',@ref) )]">
+        <xsl:call-template name="rewrite-local-reference"/>
+    </xsl:template>
+    
+    <xsl:template mode="acquire" match="flag[exists( key('top-level-local-flag-definition-by-name',@ref) )]">
+        <xsl:call-template name="rewrite-local-reference"/>
+    </xsl:template>
+    
+    <xsl:template name="rewrite-local-reference">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
             <xsl:attribute name="ref" expand-text="true">{ ancestor::METASCHEMA[1]/short-name }-{ @ref }</xsl:attribute>

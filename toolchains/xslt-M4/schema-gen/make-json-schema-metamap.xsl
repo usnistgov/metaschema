@@ -116,8 +116,14 @@
         <xsl:text>#/definitions/{ $lineage => string-join('-') }</xsl:text>
     </xsl:template>
 
-    <xsl:template priority="100" match="METASCHEMA/define-assembly | METASCHEMA/define-field">
-        <map key="{ @name }">
+    <xsl:template priority="100" match="METASCHEMA/define-assembly">
+        <map key="{ $composed-metaschema/*/short-name }-{ @name }">
+            <xsl:next-match/>
+        </map>
+    </xsl:template>
+    
+    <xsl:template priority="100" match="METASCHEMA/define-field">
+        <map key="{ $composed-metaschema/*/short-name }-{ @name }">
             <xsl:next-match/>
         </map>
     </xsl:template>
