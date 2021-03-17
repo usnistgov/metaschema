@@ -5,7 +5,7 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
-   
+   <xsl:output indent="yes"/>
    <xsl:variable as="xs:string" name="model-label" select="string(/map/@prefix)"/>
 
    <xsl:variable as="xs:string" name="path-to-docs" select="'../xml-schema/'"/>
@@ -122,15 +122,16 @@ div.OM-map p { margin: 0ex }
    
    
    <xsl:template name="summary-line-content">
+      <xsl:variable name="recurses" select="@id=ancestor::*/@id"/>
       <span class="sq">
          <span class="nobr">
             <xsl:text>&lt;</xsl:text>
             <xsl:apply-templates select="." mode="linked-name"/>
          </span>
          <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
-         <xsl:if test="empty(* except m:attribute)">/</xsl:if>
+         <xsl:if test="empty(* except m:attribute) and not($recurses)">/</xsl:if>
          <xsl:text>&gt;</xsl:text>
-         <xsl:if test="exists(* except m:attribute)">
+         <xsl:if test="exists(* except m:attribute) or $recurses">
             <span class="show-closed">
                <xsl:apply-templates select="." mode="summary-contents"/>
                <span class="nobr">
@@ -270,14 +271,18 @@ div.OM-map p { margin: 0ex }
       <xsl:apply-templates select="m:value" mode="linked-datatype"/>
    </xsl:template>
    
-   <!--<xsl:template priority="4" mode="contents" match="m:value[@as-type='markup-line']">
-      <!-\-<p class="OM-lit">Text and inline markup including <code>&lt;em></code>, <code>&lt;strong></code>, <code>&lt;code></code> and the like.</p>-\->
+   <xsl:template priority="4" mode="contents" match="m:value[@as-type='markup-line']">
+      <div class="OM-entry">
+         <p class="OM-line OM-lit OM-gloss"> Text and inline markup including <code>&lt;insert></code> <code>&lt;em></code>, <code>&lt;strong></code>, <code>&lt;code></code>. </p>
+      </div>
    </xsl:template>
    
    <xsl:template priority="4" mode="contents #default" match="m:value[@as-type='markup-multiline']">
-      <!-\-<p class="OM-lit">
-         Block-level markup including <code>&lt;p></code>, <code>&lt;ul></code>, <code>&lt;ol></code> and a few other (markdown-compatible) HTML-flavored elements.</p>-\->
-   </xsl:template>-->
+      <div class="OM-entry">
+         <p class="OM-line OM-lit OM-gloss">Data of type <xsl:apply-templates select="." mode="linked-datatype"/> (block-level markup)</p>
+            <!--: block-level markup including <span class="OM-name">&lt;p></span>, <span class="OM-name">&lt;ul></span>, <span class="OM-name">&lt;ol></span>, headers (<span class="OM-name">&lt;h1></span>-<span class="OM-name">&lt;h6></span>) and <span class="OM-name">&lt;table></span>. -->
+      </div>
+   </xsl:template>
    
    <xsl:template mode="summary-contents" match="m:element[empty(m:element) and exists(m:value)]" expand-text="true">
       <xsl:apply-templates select="m:value" mode="linked-datatype"/>
@@ -288,6 +293,14 @@ div.OM-map p { margin: 0ex }
    
    <xsl:template mode="summary-contents" match="m:element">
       <xsl:text> &#8230; </xsl:text>
+   </xsl:template>
+   
+   <xsl:template mode="summary-contents" match="m:element[@id=parent::element/@id]" priority="11" expand-text="true">
+      <span class="OM-lit OM-gloss"> (recursive: model like parent <span class="OM-ref">{ @gi }</span>) </span>
+   </xsl:template>
+   
+   <xsl:template mode="summary-contents" match="m:element[@id=ancestor::*/@id]" priority="10" expand-text="true">
+      <span class="OM-lit OM-gloss"> (recursive: model like ancestor <span class="OM-ref">{ @gi }</span>) </span>
    </xsl:template>
    
    
