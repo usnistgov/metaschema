@@ -11,7 +11,7 @@
 
    <xsl:output omit-xml-declaration="true" indent="no"/>
 
-   <xsl:variable name="datatype-page">../../datatypes</xsl:variable>
+   <xsl:variable name="datatype-page">../../../datatypes</xsl:variable>
    
    <xsl:template match="/" mode="make-page">
       <html lang="en">
@@ -276,7 +276,7 @@ details:not([open]) .show-closed { display: inline }
    </xsl:template>
    
    <xsl:template priority="2" mode="inline-link-to" match="m:string" expand-text="true">
-      <span class="OM-datatype"><a href="{$datatype-page}/#{@as-type}">{ @as-type }</a></span>
+      <span class="OM-datatype"><a href="{$datatype-page}/#{lower-case(@as-type)}">{ @as-type }</a></span>
    </xsl:template>
    
    <!--<xsl:template mode="contents" match="m:string">
