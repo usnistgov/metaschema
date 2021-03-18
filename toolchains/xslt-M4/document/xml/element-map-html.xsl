@@ -79,7 +79,7 @@ div.OM-map p { margin: 0ex }
    <xsl:variable name="datatype-page">../../../datatypes</xsl:variable>
    
    <xsl:template priority="2" mode="linked-datatype" match="*" expand-text="true">
-      <xsl:variable name="type" select="(@as-type,'string')[1]"/>
+      <xsl:variable name="type" select="(lower-case(@as-type),'string')[1]"/>
       <span class="OM-datatype"><a href="{$datatype-page}/#{$type}">{ $type }</a></span>
    </xsl:template>
    
