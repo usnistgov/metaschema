@@ -865,17 +865,13 @@
    
    <!-- Only display allowed-values for now -->
    <xsl:template name="display-applicable-constraints">
-      <xsl:variable name="context" select="."/>
-      <xsl:variable name="applicable-constraints" select="key('constraints-for-target',m:use-name(.))[m:include-constraint(.,$context)]"/>
-      <xsl:for-each-group select="$applicable-constraints" group-by="true()" expand-text="true">
+      <xsl:param name="context" select="."/>
+      <xsl:variable name="applicable-constraints"
+         select="$context/key('constraints-for-target', m:use-name(.), $home)[m:include-constraint(., $context)]"/>
+      <xsl:for-each-group select="$applicable-constraints/self::allowed-values" group-by="true()"
+         expand-text="true">
          <div class="constraints">
-            <xsl:apply-templates select="$applicable-constraints/self::allowed-values"/>
-            <!--<xsl:for-each-group select="$applicable-constraints except $applicable-constraints/self::allowed-values" group-by="true()">
-               <details>
-                  <summary class="subhead">Applicable { if (count(current-group()) eq 1) then 'constraint' else 'constraints' } ({ count(current-group()) })</summary>
-                  <xsl:apply-templates select="current-group()"/>
-               </details>
-            </xsl:for-each-group>-->
+            <xsl:apply-templates select="current-group()"/>
          </div>
       </xsl:for-each-group>
    </xsl:template>  
@@ -883,29 +879,32 @@
 <!-- This filter returns 'true' pairwise for any constraint and context-indicating element (whether definition or reference),
      when the two overlap. This must account for when constraints designate multiple targets. -->
    <xsl:function name="m:include-constraint" as="xs:boolean">
-      <xsl:param name="constraint" as="element()"/><!-- has-cardinality, matches, allowed-values etc -->
-      <xsl:param name="context"    as="element()"/><!-- assembly, field, flag, define-assembly, define-field, define-flag -->
-      <xsl:variable name="context-path" select="string-join($context/(ancestor::* | .) ! m:use-name(.),'/')"/>
-      <!-- /METASCHEMA/define-field name='prop' will be 'prop'
-           /METASCHEMA/define-assembly[@name='control']/define-assembly[@name='part']/field[@name='prop']
-           will be 'control/part/prop' -->
-      <xsl:variable name="constraint-context-path" select="string-join($constraint/ancestor-or-self::*/m:use-name(.),'/')"/>
-      <!-- /METASCHEMA/define-assembly[@name='control']/constraint/allowed-values[@target='.//prop'] => 'control' -->
+      <xsl:param name="constraint" as="element()"/>
+      <!-- has-cardinality, matches, allowed-values etc -->
+      <xsl:param name="context" as="element()"/>
+      <!-- assembly, field, flag, define-assembly, define-field, define-flag -->
+      <xsl:variable name="context-path"
+         select="string-join($context/(ancestor::* | .) ! m:use-name(.), '/')"/>
+      <xsl:variable name="constraint-context-path"
+         select="string-join($constraint/ancestor-or-self::*/m:use-name(.), '/')"/>
       <xsl:variable name="constraint-targets" as="xs:string*">
          <xsl:choose>
             <xsl:when test="empty($constraint/@target)">
                <xsl:sequence select="$constraint-context-path"/>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:sequence select="$constraint/@target/m:express-targets(.) ! string-join(($constraint-context-path,.[normalize-space(.)]),'/')"/>
+               <xsl:sequence
+                  select="$constraint/@target/m:express-targets(.) ! string-join(($constraint-context-path, .[normalize-space(.)]), '/')"
+               />
             </xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
-      <!-- debugging <xsl:if test="contains($context-path,'control')">
-         <xsl:message expand-text="true">on { name($constraint)}, testing { $context-path } against { string-join($constraint-targets,', ')} getting { m:match-paths($constraint-targets[1],$context-path)}</xsl:message>
-      </xsl:if>-->
-      <xsl:sequence select="some $t in $constraint-targets satisfies
-         m:match-paths($t,$context-path)"/>
+      <xsl:sequence
+         select="
+            some $t in $constraint-targets
+               satisfies
+               m:match-paths($t, $context-path)"
+      />
    </xsl:function>
    
    <xsl:template mode="make-definition" match="field | flag | assembly"/>
@@ -1101,11 +1100,11 @@
    
    <xsl:function name="m:use-name" as="xs:string?">
       <xsl:param name="who" as="element()"/>
-      <xsl:variable name="definition" select="($who/self::assembly/key('assembly-definitions',@ref),
-         $who/self::field/key('field-definitions',@ref),
-         $who/self::flag/key('flag-definitions',@ref),$who)[1]"/>
-      <xsl:value-of
-         select="($who/self::any/'(ANY)', $who/root-name, $who/use-name, $definition/root-name, $definition/use-name, $definition/@name, '-')[1]"/>
+      <xsl:variable name="definition" select="$who/self::assembly/key('assembly-definitions', @ref) |
+         $who/self::field/key('field-definitions', @ref) | $who/self::flag/key('flag-definitions',@ref)"/>
+      <xsl:variable name="using-name"
+         select="($who/self::any/'ANY', $who/root-name, $who/use-name, $definition/root-name, $definition/use-name, $definition/@name,$who/@name)[1]"/>
+      <xsl:sequence select="$using-name"/>
    </xsl:function>
    
 </xsl:stylesheet>
