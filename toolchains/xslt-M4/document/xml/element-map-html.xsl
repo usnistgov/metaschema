@@ -279,7 +279,7 @@ div.OM-map p { margin: 0ex }
    
    <xsl:template priority="4" mode="contents #default" match="m:value[@as-type='markup-multiline']">
       <div class="OM-entry">
-         <p class="OM-line OM-lit OM-gloss">Data of type <xsl:apply-templates select="." mode="linked-datatype"/> (block-level markup)</p>
+         <p class="OM-line">&lt;p> <span class="OM-lit OM-gloss"><!-- — -->or other elements defined as <xsl:apply-templates select="." mode="linked-datatype"/></span> <xsl:call-template name="cardinality-note"/></p>
             <!--: block-level markup including <span class="OM-name">&lt;p></span>, <span class="OM-name">&lt;ul></span>, <span class="OM-name">&lt;ol></span>, headers (<span class="OM-name">&lt;h1></span>-<span class="OM-name">&lt;h6></span>) and <span class="OM-name">&lt;table></span>. -->
       </div>
    </xsl:template>
@@ -324,5 +324,9 @@ div.OM-map p { margin: 0ex }
       <xsl:text>]</xsl:text>
    </xsl:template>
 
+   <xsl:template mode="occurrence-code" match="m:value[@as-type='markup-multiline']">
+      <xsl:param name="on" select="." tunnel="true"/>
+      <xsl:text expand-text="true">[0 to &#x221e;]</xsl:text>
+   </xsl:template>
 
 </xsl:stylesheet>
