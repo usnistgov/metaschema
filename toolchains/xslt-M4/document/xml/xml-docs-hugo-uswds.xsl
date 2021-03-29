@@ -761,10 +761,10 @@
          </p>
          <xsl:choose expand-text="true">
             <xsl:when test="@allow-other and @allow-other = 'yes'">
-               <p>The value <em>may be locally defined</em>, or { 'one of '[count($enums) gt 1] }the following:</p>
+               <p>The value <b>may be locally defined</b>, or { 'one of '[count($enums) gt 1] }the following:</p>
             </xsl:when>
             <xsl:otherwise>
-               <p>The value <em>must</em> be one of the following ({count(enum)}):</p>
+               <p>The value <b>must</b> be one of the following ({count(enum)}):</p>
             </xsl:otherwise>
          </xsl:choose>
          <ul>

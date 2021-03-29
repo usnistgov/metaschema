@@ -67,8 +67,7 @@ details:not([open]) .show-closed { display: inline }
    <xsl:template match="m:string">
       <xsl:variable name="last-appearing" select="position() eq last()"/>
       <div class="OM-entry">
-         <p class="OM-line">
-            <div class="OM-flex">
+         <p class="OM-line OM-flex">
                <span class="sq card">
                   <xsl:call-template name="cardinality-note"/>
                </span>
@@ -80,7 +79,6 @@ details:not([open]) .show-closed { display: inline }
                      <span class="OM-lit">,</span>
                   </xsl:if>
                </span>
-            </div>
          </p>
       </div>
    </xsl:template>
