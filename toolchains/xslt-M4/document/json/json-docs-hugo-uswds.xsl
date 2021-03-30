@@ -249,7 +249,9 @@
    </xsl:template>
 
    <xsl:template mode="occurrence-code" match="*">
-      <xsl:variable name="minOccurs" select="(@min-occurs, '0')[1]"/>
+      <xsl:param name="require-member" select="false()"/>
+      <xsl:variable name="minOccurs" select="if ($require-member) then  (@min-occurs[not(.='0')], '1')[1]
+         else (@min-occurs, '0')[1]"/>
       <xsl:variable name="maxOccurs"
          select="
             (@max-occurs, '1')[1] ! (if (. eq 'unbounded') then
@@ -510,7 +512,7 @@
             <xsl:apply-templates select="." mode="group-type"/>
          </span>
          <span class="occurrence">
-            <xsl:text expand-text="true">{ if (not(@min-occurs != '0')) then 'optional' else 'required' }</xsl:text>
+            <xsl:text expand-text="true">[{ if (not(@min-occurs != '0')) then 'optional' else 'required' }]</xsl:text>
          </span>
          <span>
             <xsl:apply-templates select="." mode="group-qualifier"/>
@@ -659,7 +661,9 @@
                <!-- should be 'requirement' with mode 'requirement' for flags -->
                <xsl:apply-templates select="self::flag | self::define-flag" mode="requirement"/>
                <xsl:apply-templates select=". except (self::flag | self::define-flag)"
-                  mode="occurrence-code"/>
+                  mode="occurrence-code">
+                  <xsl:with-param name="require-member" select="exists(group-as)"/>
+               </xsl:apply-templates>
             </span>
             <span class="frmname">{ $definition/formal-name
                }{'&#xA0;'[empty($definition/formal-name)] }</span>
