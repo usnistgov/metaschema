@@ -62,8 +62,6 @@ details:not([open]) .show-closed { display: inline }
 
    <xsl:template match="m:schema-name | m:schema-version"/>
    
-   <!-- string object singleton-or-array array group-by-key -->
-   
    <xsl:template match="m:string">
       <xsl:variable name="last-appearing" select="position() eq last()"/>
       <div class="OM-entry">
@@ -99,7 +97,6 @@ details:not([open]) .show-closed { display: inline }
                   <xsl:call-template name="cardinality-note"/>
                </span><span class="sq">
                   <xsl:apply-templates select="." mode="json-key"/>
-                  <!--<xsl:call-template name="cardinality-note"/>-->
                   <xsl:text>: </xsl:text>
                   <span class="OM-lit">
                      <xsl:text>{</xsl:text>
@@ -113,10 +110,6 @@ details:not([open]) .show-closed { display: inline }
             </div>
          </summary>
          <div class="OM-map">
-         <!--<p class="OM-map-name">
-            <xsl:apply-templates select="@formal-name"/>
-            <xsl:text>, an object with properties</xsl:text>
-         </p>-->
          <xsl:apply-templates select="." mode="contents"/>
          <p>
             <span class="OM-lit">
@@ -140,16 +133,9 @@ details:not([open]) .show-closed { display: inline }
             <xsl:call-template name="cardinality-note"/>
             <xsl:if test="not(empty(*))">
                <span class="OM-lit"> { </span>
-               <!--<span class="show-closed">
-                  <xsl:text> &#8230; }</xsl:text>
-                  <xsl:if test="not(position() eq last())">, </xsl:if>
-               </span>-->
             </xsl:if>
             
          </p>
-         <!--<p class="OM-map-name">
-            <xsl:apply-templates select="@formal-name"/>
-         </p>-->
          <xsl:if test="not(empty(*))">
             <xsl:apply-templates select="." mode="contents"/>
             <p>
@@ -178,9 +164,6 @@ details:not([open]) .show-closed { display: inline }
                      <xsl:with-param name="has-subsequent" select="not(position() eq last())"/>
                   </xsl:apply-templates>
                </span>
-            <!--<span class="sq cardinality">
-               <xsl:call-template name="cardinality-note"/>
-            </span>-->
             </div>
          </summary>
          <!--<div class="OM-map">
@@ -283,11 +266,8 @@ details:not([open]) .show-closed { display: inline }
       <span class="OM-datatype"><a href="{$datatype-page}/#{lower-case(@as-type)}">{ @as-type }</a></span>
    </xsl:template>
    
-   <!--<xsl:template mode="contents" match="m:string">
-      <span class="OM-datatype">string</span>
-   </xsl:template>-->
    
-  <xsl:template mode="contents" match="m:array | m:object | m:singleton-or-array | m:group-by-key">
+   <xsl:template mode="contents" match="m:array | m:object | m:singleton-or-array | m:group-by-key">
       <div class="OM-map">
          <xsl:apply-templates select="*"/>
       </div>

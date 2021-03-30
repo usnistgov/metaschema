@@ -84,9 +84,6 @@ div.OM-map p { margin: 0ex }
    </xsl:template>
    
    <xsl:template match="m:element">
-      <!--<xsl:variable name="contents">
-         <xsl:apply-templates select="." mode="contents"/>
-      </xsl:variable>-->
       <details class="OM-entry">
          <xsl:for-each select="parent::m:map">
             <xsl:attribute name="open">open</xsl:attribute>
@@ -108,9 +105,6 @@ div.OM-map p { margin: 0ex }
    </xsl:template>
 
    <xsl:template match="m:element[empty(* except (m:attribute|m:value))]">
-      <!--<xsl:variable name="contents">
-         <xsl:apply-templates select="." mode="contents"/>
-      </xsl:variable>-->
       <div class="OM-entry">
          <p class="OM-line">
             <!--<div class="OM-flex">-->
@@ -147,51 +141,7 @@ div.OM-map p { margin: 0ex }
       </span>
    </xsl:template>
  
-   <!--<xsl:template match="m:element[empty(* except m:flag)]">
-      <xsl:variable name="contents">
-         <xsl:apply-templates select="." mode="contents"/>
-      </xsl:variable>
-      <p class="OM-entry">
-         <span class="sq">
-            <xsl:call-template name="cardinality-note"/>
-         </span>
-         <span class="sq">
-            <span class="nobr">
-               <xsl:text>&lt;</xsl:text>
-               <xsl:apply-templates select="." mode="linked-name"/>
-            </span>
-            <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
-            <xsl:if test="not(matches($contents, '\S'))">/</xsl:if>
-            <xsl:text>></xsl:text>
-            <xsl:if test="matches($contents, '\S')">
-               <xsl:sequence select="$contents"/>
-               <span class="nobr">
-                  
-                  <xsl:text>&lt;/</xsl:text>
-                  <xsl:value-of select="@name"/>
-                  <xsl:text>></xsl:text>
-               </span>
-            </xsl:if>
-         </span>
-      </p>
-   </xsl:template>
-   
-   <xsl:template match="m:element[m:value/@as-type='empty']">
-      <p class="OM-entry">
-         <span class="sq">
-            <xsl:call-template name="cardinality-note"/>
-         </span>
-         <span class="OM-sq">
-            <span class="nobr">
-               <xsl:text>&lt;</xsl:text>
-               <xsl:apply-templates select="." mode="linked-name"/>
-            </span>
-            <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
-            <xsl:text>/&gt;</xsl:text>
-         </span>
-      </p>
-   </xsl:template>-->
-   
+
    <xsl:template match="m:attribute" mode="as-attribute">
       <xsl:text> </xsl:text>
       <span class="nobr">
@@ -302,8 +252,7 @@ div.OM-map p { margin: 0ex }
    <xsl:template mode="summary-contents" match="m:element[@id=ancestor::*/@id]" priority="10" expand-text="true">
       <span class="OM-lit OM-gloss"> (recursive: model like ancestor <span class="OM-ref">{ @gi }</span>) </span>
    </xsl:template>
-   
-   
+
    <xsl:template name="cardinality-note">
       <xsl:text> </xsl:text>
       <span class="OM-cardinality">
