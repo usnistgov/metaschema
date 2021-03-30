@@ -65,18 +65,19 @@ details:not([open]) .show-closed { display: inline }
    <xsl:template match="m:string">
       <xsl:variable name="last-appearing" select="position() eq last()"/>
       <div class="OM-entry">
-         <p class="OM-line OM-flex">
-               <span class="sq card">
+         <p class="OM-line">  <!-- OM-flex -->
+            <!--<span class="sq card">
                   <xsl:call-template name="cardinality-note"/>
                </span>
-               <span class="sq">
+               <span class="sq">-->
                   <xsl:apply-templates select="." mode="json-key"/>
+                  <xsl:call-template name="cardinality-note"/>
                   <xsl:text>: </xsl:text>
                   <xsl:apply-templates select="." mode="inline-link-to"/>
                   <xsl:if test="not(position() eq last())">
                      <span class="OM-lit">,</span>
                   </xsl:if>
-               </span>
+               <!--</span>-->
          </p>
       </div>
    </xsl:template>
@@ -92,11 +93,13 @@ details:not([open]) .show-closed { display: inline }
             <xsl:attribute name="open">open</xsl:attribute>
          </xsl:for-each>
          <summary>
-            <div class="OM-flex">
-               <span class="sq card">
+            <!-- <div class="OM-flex">-->
+            <!-- <span class="sq card">
                   <xsl:call-template name="cardinality-note"/>
-               </span><span class="sq">
+               </span>-->
+            <!--<span class="sq">-->
                   <xsl:apply-templates select="." mode="json-key"/>
+                  <xsl:call-template name="cardinality-note"/>
                   <xsl:text>: </xsl:text>
                   <span class="OM-lit">
                      <xsl:text>{</xsl:text>
@@ -104,10 +107,10 @@ details:not([open]) .show-closed { display: inline }
                         <xsl:text> &#8230; }</xsl:text>
                         <xsl:if test="not(position() eq last())">, </xsl:if>
                      </span>
-                  </span>
+                  <!--</span>-->
                </span>
                
-            </div>
+            <!--</div>-->
          </summary>
          <div class="OM-map">
          <xsl:apply-templates select="." mode="contents"/>
@@ -151,20 +154,20 @@ details:not([open]) .show-closed { display: inline }
    <xsl:template match="m:array | m:singleton-or-array">
       <details class="OM-entry">
          <summary>
-            <div class="OM-flex">
+            <!--<div class="OM-flex">
                <span class="sq card">
                   <xsl:call-template name="cardinality-note"/>
-               </span>
+               </span>-->
                <span class="sq">
                   <xsl:apply-templates select="." mode="json-key"/>
-                  <!--<xsl:call-template name="cardinality-note"/>-->
+                  <xsl:call-template name="cardinality-note"/>
                   <xsl:text>: </xsl:text>
 
                   <xsl:apply-templates select="." mode="open-delimit">
                      <xsl:with-param name="has-subsequent" select="not(position() eq last())"/>
                   </xsl:apply-templates>
                </span>
-            </div>
+            <!--</div>-->
          </summary>
          <!--<div class="OM-map">
          -->   
