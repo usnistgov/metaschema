@@ -42,6 +42,17 @@
         </object>
     </xsl:template>
     
+   <!-- Within an array, an assembly is always required even for min-occurs='0' because the array is optional.   -->
+    <xsl:template match="group[@group-json='ARRAY']/assembly">
+        <object min-occurs="1">
+            <xsl:call-template name="global-id"/>
+            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@formal-name"/>
+            <xsl:apply-templates/>
+        </object>
+    </xsl:template>
+    
+    <xsl:template match="group[@group-json='ARRAY']/assembly/@min-occurs[.='0']"/>
+    
     <xsl:template name="global-id">
         <xsl:if test="@scope = 'global'">
             <xsl:attribute name="id" select="'global_' || @name"/>
