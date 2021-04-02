@@ -153,7 +153,19 @@
     (a parameter must be available)
   -->
   <xs:complexType name="insertType">
-    <xs:attribute name="param-id" use="required" type="xs:NCName"/>
+    <xs:annotation>
+      <xs:documentation>An insert can be used to identify a placeholder for dynamically inserting text related to a specific object, which is referenced by the object's identifier using an <code>id-ref</code>. This insert mechanism allows the selection of which text value from the object to dynamically include based on the application's display requirements.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="type" use="required" type="xs:NCName">
+      <xs:annotation>
+        <xs:documentation>The type of object to include from (e.g., parameter, control, component, role, etc.)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="id-ref" use="required" type="xs:NCName">
+      <xs:annotation>
+        <xs:documentation>The identity of the object to insert a value for. The identity will be selected from the index of objects of the specified <code>type</code>. The specific value to include is based on the application's display requirements, which will likely use a specific data element associated with the <code>type</code> (e.g., title, identifier, value, etc.) that is appropriate for the application.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
   </xs:complexType>
 
   <!--
