@@ -227,25 +227,25 @@
         </xsl:if>
     </xsl:template>
 
-    <xsl:template priority="5" match="define-field[@as-type='markup-line']">
-            <xs:complexType mixed="true">
-                <xsl:apply-templates select="." mode="annotated"/>
-                <xsl:call-template name="name-global-field-type"/>
-                <!--<xs:group ref="{$declaration-prefix}:everything-inline"/>-->
-                <xs:complexContent>
-                    <xs:extension base="{$declaration-prefix}:markupLineType">
-                        
-                <xsl:apply-templates select="define-flag | flag"/>
-                    </xs:extension>
-                </xs:complexContent>
-            </xs:complexType>
+    <xsl:template priority="5" match="define-field[@as-type = 'markup-line']">
+        <xs:complexType mixed="true">
+            <xsl:call-template name="name-global-field-type"/>
+            <xsl:apply-templates select="." mode="annotated"/>
+            <!--<xs:group ref="{$declaration-prefix}:everything-inline"/>-->
+            <xs:complexContent>
+                <xs:extension base="{$declaration-prefix}:markupLineType">
+
+                    <xsl:apply-templates select="define-flag | flag"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
     </xsl:template>
     
     <xsl:template priority="5" match="define-field[@as-type='markup-multiline']">
-        <xsl:apply-templates select="." mode="annotated"/>
         <xs:complexType>
                 <xsl:call-template name="name-global-field-type"/>
-                <!--<xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>-->
+            <xsl:apply-templates select="." mode="annotated"/>
+            <!--<xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>-->
                 <xs:complexContent>
                     <xs:extension base="{$declaration-prefix}:markupMultilineType">
                         <xsl:apply-templates select="define-flag | flag"/>
