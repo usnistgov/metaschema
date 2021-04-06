@@ -28,7 +28,7 @@
     
     <wrapped-prose>
         <h1>Wrapped up prose</h1>
-        <p>This is prose. All wrapped up.</p>
+        <p>This is prose. All wrapped up. <insert type="boo" id-ref="hoo"/></p>
     </wrapped-prose>
     <h1>Unwrapped prose</h1>
     <p>Here we have unwrapped prose....</p>

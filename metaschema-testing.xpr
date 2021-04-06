@@ -595,6 +595,6 @@
     </meta>
     <projectTree name="metaschema-testing.xpr">
         <folder path="."/>
-        <folder path="../OSCAL/"/>
+        <folder path="../../src/"/>
     </projectTree>
 </project>
