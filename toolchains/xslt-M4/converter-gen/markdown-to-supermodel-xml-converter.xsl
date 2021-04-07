@@ -33,7 +33,8 @@
     </xsl:template>
     
     <xsl:template name="run-tests">
-        <!--<xsl:copy-of select="$tag-replacements"/>-->
+        <xsl:message>'run-tests' template line 35</xsl:message>
+        <xsl:copy-of select="$tag-replacements"/>
         <!--<xsl:copy-of select="$examples"/>-->
         <xsl:call-template name="parse-markdown">
             <xsl:with-param name="markdown-str" select="string($examples)"/>
@@ -384,6 +385,10 @@
     </xsl:variable>
     
     
+    <!--<replace match="\{\{\s*(\S+)?\s*\}\}">&lt;insert xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel" param-id='$1'&gt;&lt;/insert&gt;</replace>-->
+    
+    <!--<replace match="\{\{\s*insert: (\i\c*?),\s*(\i\c*?)\s*\}\}">&lt;insert xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel" type="$1" id-ref="$2"/&gt;</replace>-->
+    
 
     <xsl:variable name="tag-specification" as="element()"  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
         <tag-spec>
@@ -393,8 +398,7 @@
             <q>"<text/>"</q>
             
             <img         alt="!\[{{$noclosebracket}}\]" src="\({{$nocloseparen}}\)"/>
-            <insert param-id="\{{\{{{{$nws}}\}}\}}"/>
-            
+            <insert>\{\{\s*insert: <type/>,\s*<id-ref/>\s*\}\}</insert>
             <a href="\[{{$noclosebracket}}\]">\(<text not="\)"/>\)</a>
             <code>`<text/>`</code>
             <strong>
@@ -407,25 +411,7 @@
         </tag-spec>
     </xsl:variable>
     
-    <xsl:template match="*" mode="write-replace">
-        <!-- we can write an open/close pair even for an empty element b/c
-             it will be parsed and serialized -->
-        <xsl:text>&lt;</xsl:text>
-        <xsl:value-of select="local-name()"/>
-        <!-- forcing the namespace! -->
-        <xsl:text> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"</xsl:text>
-        <!-- coercing the order to ensure correct formation of regegex       -->
-        <xsl:apply-templates mode="#current" select="@*"/>
-        <xsl:text>&gt;</xsl:text>
-
-        <xsl:apply-templates mode="#current" select="*"/>
-
-        <xsl:text>&lt;/</xsl:text>
-        <xsl:value-of select="local-name()"/>
-        <xsl:text>&gt;</xsl:text>
-    </xsl:template>
-    
-    <xsl:template match="*" mode="write-match">
+   <xsl:template match="*" mode="write-match">
         <xsl:apply-templates select="@*, node()" mode="write-match"/>
     </xsl:template>
     
@@ -441,18 +427,56 @@
         <xsl:value-of select="replace(., '\{\$noclosebracket\}', '([^\\[]*)?')"/>
     </xsl:template>
     
-    <xsl:template match="@*[matches(., '\{\$nws\}')]" mode="write-match">
-        <!--<xsl:value-of select="."/>-->
-        <!--<xsl:value-of select="replace(., '\{\$nws\}', '(\S*)?')"/>-->
-        <xsl:value-of select="replace(., '\{\$nws\}', '\\s*(\\S+)?\\s*')"/>
+    <xsl:template match="text" mode="write-match">
+        <xsl:text>(.*?)</xsl:text>
+    </xsl:template>
+    
+    <xsl:template match="insert/type | insert/id-ref" mode="write-match">
+        <xsl:text>(\i\c*?)</xsl:text>
+    </xsl:template>
+    
+    <xsl:template match="text[@not]" mode="write-match">
+        <xsl:text expand-text="true">([^{ @not }]*?)</xsl:text>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="write-replace">
+        <!-- we can write an open/close pair even for an empty element b/c
+             it will be parsed and serialized -->
+        <xsl:text>&lt;</xsl:text>
+        <xsl:value-of select="local-name()"/>
+        <!-- forcing the namespace! -->
+        <xsl:text> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"</xsl:text>
+        <!-- coercing the order to ensure correct formation of regegex       -->
+        <xsl:apply-templates mode="#current" select="@*"/>
+        <xsl:text>&gt;</xsl:text>
+        
+        <xsl:apply-templates mode="#current" select="*"/>
+        
+        <xsl:text>&lt;/</xsl:text>
+        <xsl:value-of select="local-name()"/>
+        <xsl:text>&gt;</xsl:text>
     </xsl:template>
     
     <xsl:template match="text" mode="write-replace">
         <xsl:text>$1</xsl:text>
     </xsl:template>
     
-    <xsl:template match="insert/@param-id" mode="write-replace">
-        <xsl:text> param-id='$1'</xsl:text>
+    <!-- 'insert' gets special handling since its contents are promoted into attributes -->
+    <xsl:template match="insert" mode="write-replace">
+        <!-- we can write an open/close pair even for an empty element b/c
+             it will be parsed and serialized -->
+        <xsl:text>&lt;insert xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"</xsl:text>
+        <!-- coercing the order to ensure correct formation of regegex       -->
+        <xsl:apply-templates mode="#current" select="*"/>
+        <xsl:text>/&gt;</xsl:text>
+    </xsl:template>
+    
+    <xsl:template match="insert/type" mode="write-replace">
+        <xsl:text> type='$1'</xsl:text>
+    </xsl:template>
+    
+    <xsl:template match="insert/id-ref" mode="write-replace">
+        <xsl:text> id-ref='$2'</xsl:text>
     </xsl:template>
     
     <xsl:template match="a/@href" mode="write-replace">
@@ -470,13 +494,7 @@
         <!--<xsl:value-of select="replace(.,'\{\$insert\}','\$2')"/>-->
     </xsl:template>
     
-    <xsl:template match="text" mode="write-match">
-        <xsl:text>(.*?)</xsl:text>
-    </xsl:template>
     
-    <xsl:template match="text[@not]" mode="write-match">
-        <xsl:text expand-text="true">([^{ @not }]*?)</xsl:text>
-    </xsl:template>
     
     <!--<xsl:template match="text" mode="write-match">
         <xsl:variable name="match-char"
@@ -516,9 +534,9 @@ Extra long x
             y and z **strong** and **bold**
             
 
-Here's a text with a *parameter* insertion: {{ insert }}
+Here's a text with a *parameter* insertion: {{ insert: param, here }}
 
-{{insert-me}}            
+{{insert: insert-me, overthere}}            
 
 And interesting.
 

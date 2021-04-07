@@ -368,7 +368,7 @@
             <q>"<text/>"</q>
             
             <img         alt="!\[{{$noclosebracket}}\]" src="\({{$nocloseparen}}\)"/>
-            <insert param-id="\{{\{{{{$nws}}\}}\}}"/>
+            <insert>\{\{\s*insert: <type/>,\s*<id-ref/>\s*\}\}</insert>
             
             <a href="\[{{$nocloseparen}}\]">\(<text not="\)"/>\)</a>
             <code>`<text/>`</code>
@@ -414,18 +414,31 @@
         <xsl:value-of select="replace(., '\{\$noclosebracket\}', '([^\\[]*)?')"/>
     </xsl:template>
     
-    <xsl:template match="@*[matches(., '\{\$nws\}')]" mode="write-match">
-        <!--<xsl:value-of select="."/>-->
-        <!--<xsl:value-of select="replace(., '\{\$nws\}', '(\S*)?')"/>-->
-        <xsl:value-of select="replace(., '\{\$nws\}', '\\s*(\\S+)?\\s*')"/>
+    <xsl:template match="m:insert/m:type | m:insert/m:id-ref" mode="write-match">
+        <xsl:text>(\i\c*?)</xsl:text>
     </xsl:template>
+    
     
     <xsl:template match="m:text" mode="write-replace">
         <xsl:text>$1</xsl:text>
     </xsl:template>
     
-    <xsl:template match="m:insert/@param-id" mode="write-replace">
-        <xsl:text> param-id='$1'</xsl:text>
+    <!-- 'insert' gets special handling since its contents are promoted into attributes -->
+    <xsl:template match="m:insert" mode="write-replace">
+        <!-- we can write an open/close pair even for an empty element b/c
+             it will be parsed and serialized -->
+        <xsl:text>&lt;insert xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"</xsl:text>
+        <!-- coercing the order to ensure correct formation of regegex       -->
+        <xsl:apply-templates mode="#current" select="*"/>
+        <xsl:text>/&gt;</xsl:text>
+    </xsl:template>
+    
+    <xsl:template match="m:insert/m:type" mode="write-replace">
+        <xsl:text> type='$1'</xsl:text>
+    </xsl:template>
+    
+    <xsl:template match="m:insert/m:id-ref" mode="write-replace">
+        <xsl:text> id-ref='$2'</xsl:text>
     </xsl:template>
     
     <xsl:template match="m:a/@href" mode="write-replace">

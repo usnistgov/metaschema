@@ -310,10 +310,10 @@
         <xsl:text>"</xsl:text>
     </xsl:template>
     
-    <!-- <insert param-id="ac-1_prm_1"/> -->
+    <!-- <insert type="param" id-ref="ac-1_prm_1"/> -->
     <xsl:template mode="md" match="insert">
-        <xsl:text>{{ </xsl:text>
-        <xsl:value-of select="@param-id"/>
+        <xsl:text>{{ insert: </xsl:text>
+        <xsl:value-of select="@type, @id-ref" separator=", "/>
         <xsl:text> }}</xsl:text>
     </xsl:template>
     
