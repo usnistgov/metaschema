@@ -65,7 +65,7 @@
         
         <sch:rule context="m:METASCHEMA/m:define-assembly | m:METASCHEMA/m:define-field | m:METASCHEMA/m:define-flag">
             <sch:let name="references" value="nm:references-to-definition(.)"/>
-            <sch:report test="@name=(../*/@name except @name)">Definition for '<sch:value-of select="@name"/>' clashes in this metaschema: not a good idea.</sch:report>
+            <sch:report test="(name() || '#' || @name)=(../* except .)/(name() || '#' || @name)">Definition for '<sch:value-of select="@name"/>' clashes in this metaschema: not a good idea.</sch:report>
             <!--<sch:assert role="warning" test="exists($references | self::m:define-assembly/m:root-name) and ( not($metaschema-is-abstract or @scope='local') )">-->
             <sch:assert role="warning" test="exists($references | self::m:define-assembly/m:root-name) or $metaschema-is-abstract or (@scope='local')">Orphan <sch:value-of select="substring-after(local-name(),'define-')"/> '<sch:value-of select="@name"/>' is never used in the composed metaschema</sch:assert>
             
