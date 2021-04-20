@@ -102,7 +102,7 @@
         </object>
     </xsl:template>
     
-    <xsl:template match="group[exists(@json-key-flag)]/*">
+    <xsl:template priority="5" match="group[exists(@json-key-flag)]/*">
         <!-- escaping out for consumption by Hugo -->
         <xsl:variable as="xs:string" name="o">{</xsl:variable>
         <xsl:variable as="xs:string" name="c">}</xsl:variable>
