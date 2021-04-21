@@ -54,7 +54,12 @@
   
   <p:serialization port="J2.json-docs-html" indent="true" method="xml" omit-xml-declaration="false"/>
   <p:output        port="J2.json-docs-html" primary="false">
-    <p:pipe        port="result"             step="render-json-model-map"/>
+    <p:pipe        port="result"             step="render-json-object-directory"/>
+  </p:output>
+  
+  <p:serialization port="J3.json-docs-styled" indent="true" method="xml" omit-xml-declaration="false"/>
+  <p:output        port="J3.json-docs-styled" primary="false">
+    <p:pipe        port="result"             step="style-json-object-directory"/>
   </p:output>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
@@ -126,11 +131,18 @@
     </p:input>
   </p:xslt>
   
-  <p:xslt name="render-json-model-map">
+  <p:xslt name="render-json-object-directory">
     <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->    
     <p:input port="stylesheet">
       <p:document href="document/json/object-directory-html.xsl"/>
     </p:input>
   </p:xslt>
-
+  
+  <p:xslt name="style-json-object-directory">
+    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->    
+    <p:input port="stylesheet">
+      <p:document href="document/json/hugo-css-emulator.xsl"/>
+    </p:input>
+  </p:xslt>
+  
 </p:declare-step>

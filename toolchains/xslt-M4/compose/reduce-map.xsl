@@ -13,6 +13,8 @@
     
     <xsl:template match="@group-name | @group-xml | @in-xml | @link | @root-name | @use-name"/>
     
+    <xsl:template match="formal-name | description | remarks"/>
+    
     <xsl:template match="/map">
         <model root-at="{*/@root-name}">
             <xsl:copy-of select="@*"/>

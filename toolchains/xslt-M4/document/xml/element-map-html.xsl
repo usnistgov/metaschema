@@ -64,7 +64,8 @@ div.OM-map p { margin: 0ex }
 
    <xsl:template match="m:schema-name | m:schema-version"/>
    
-
+   <xsl:template match="m:formal-name | m:description | m:remarks | m:constraint"/>
+   
    
    <xsl:template match="*[exists(@id)]" mode="linked-name">
       <a class="OM-name" href="{ $path-to-docs }#{ @id }">

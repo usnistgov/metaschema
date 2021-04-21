@@ -41,8 +41,12 @@
     </xsl:template>
     
     <!-- Dropping metaschema superstructure from sub modules -->
-    <xsl:template match="METASCHEMA//METASCHEMA/*" mode="digest"/>
-
+    <xsl:template match="METASCHEMA//METASCHEMA/schema-name"    mode="digest"/>
+    <xsl:template match="METASCHEMA//METASCHEMA/schema-version" mode="digest"/>
+    <xsl:template match="METASCHEMA//METASCHEMA/short-name"     mode="digest"/>
+    <xsl:template match="METASCHEMA//METASCHEMA/namespace"      mode="digest"/>
+    <xsl:template match="METASCHEMA//METASCHEMA/remarks"        mode="digest"/>
+    
     <xsl:template priority="10" match="define-assembly | define-field | define-flag" mode="digest">
              <xsl:copy>
                 <xsl:call-template name="mark-module"/>

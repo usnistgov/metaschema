@@ -32,6 +32,7 @@
         <xsl:param name="group-xml" select="group-as/@in-xml"/>
         <xsl:param name="in-xml" select="()"/>
         <xsl:param name="visited" select="()" tunnel="true"/>
+        <xsl:param name="with-remarks" select="()"/>
         <xsl:variable name="type" select="replace(local-name(),'^define\-','')"/>
         
         <xsl:element name="{ $type }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
@@ -61,14 +62,12 @@
             <xsl:for-each select="$group-json"><!-- ARRAY (default), SINGLETON_OR_ARRAY, BY_KEY --> 
                 <xsl:attribute name="group-json" select="."/>
             </xsl:for-each>
-            <xsl:for-each select="formal-name">
-                <xsl:attribute name="formal-name" select="string(.)"/>
-            </xsl:for-each>
             <xsl:apply-templates select="json-key" mode="build"/>
             <xsl:for-each select="$group-name">
                 <xsl:attribute name="group-name" select="."/>
             </xsl:for-each>
             <xsl:if test="not(@name = $visited)">
+                <xsl:apply-templates select="formal-name | description"/>
                 <xsl:apply-templates select="define-flag | flag" mode="build"/>
                 <xsl:apply-templates select="model" mode="build">
                     <xsl:with-param name="visited" tunnel="true" select="$visited, string(@name)"/>
@@ -79,7 +78,8 @@
                     </value>
                 </xsl:for-each>
             </xsl:if>
-            <xsl:apply-templates select="constraint" mode="build"/>
+            <xsl:apply-templates select="constraint"/>
+            <xsl:apply-templates select="$with-remarks, remarks"/>
         </xsl:element>
     </xsl:template>
     
@@ -87,6 +87,7 @@
         <xsl:param name="given-type" select="()"/>
         <xsl:param name="required" select="@required='yes'"/>
         <xsl:param name="using-name" select="()"/>
+        <xsl:param name="with-remarks" select="()"/>
         <flag max-occurs="1" min-occurs="{if ($required) then 1 else 0}" as-type="{ ($given-type,@as-type, 'string')[1] }">
             <xsl:apply-templates select="@*" mode="build"/>
             <xsl:for-each select="parent::METASCHEMA">
@@ -95,13 +96,19 @@
             <xsl:attribute name="gi" select="($using-name,use-name,@name,@ref)[1]"/>
             <xsl:attribute name="key" select="($using-name,use-name,@name,@ref)[1]"/>
             <xsl:attribute name="link" select="(@ref,../@name)[1]"/>
-            <xsl:for-each select="formal-name">
-                <xsl:attribute name="formal-name" select="string(.)"/>
-            </xsl:for-each>
-            <xsl:apply-templates select="constraint" mode="build"/>
+            <xsl:apply-templates select="formal-name | description"/>
+            <xsl:apply-templates select="constraint"/>
+            <xsl:apply-templates select="$with-remarks, remarks"/>
         </flag>
     </xsl:template>
-    
+
+    <xsl:template match="assembly/remarks | field/remarks | flag-remarks">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:attribute name="class">in-use</xsl:attribute>
+            <xsl:apply-templates mode="#current"/>
+        </xsl:copy>
+    </xsl:template>
     
     <xsl:template mode="build" match="json-value-key[matches(@flag-name,'\S')]">
         <xsl:attribute name="json-value-flag" select="@flag-name"/>
@@ -139,6 +146,7 @@
             <xsl:with-param name="group-xml" select="group-as/@in-xml"/>
             <xsl:with-param name="in-xml" select="@in-xml"/>
             <xsl:with-param name="using-name" select="use-name"/>
+            <xsl:with-param name="with-remarks" select="remarks"/>
         </xsl:apply-templates>
     </xsl:template>
     
@@ -151,6 +159,7 @@
             <xsl:with-param name="group-xml" select="group-as/@in-xml"/>
             <xsl:with-param name="in-xml" select="@in-xml"/>
             <xsl:with-param name="using-name" select="use-name"/>
+            <xsl:with-param name="with-remarks" select="remarks"/>
         </xsl:apply-templates>
     </xsl:template>
     
@@ -163,6 +172,7 @@
             <xsl:with-param name="group-xml" select="group-as/@in-xml"/>
             <xsl:with-param name="in-xml" select="@in-xml"/>
             <xsl:with-param name="using-name" select="(use-name,@ref)[1]"/>
+            <xsl:with-param name="with-remarks" select="remarks"/>
             <xsl:with-param name="given-type" select="@as-type"/>
         </xsl:apply-templates>
     </xsl:template>

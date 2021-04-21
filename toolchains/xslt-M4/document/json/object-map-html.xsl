@@ -7,7 +7,7 @@
 
    <xsl:param as="xs:string" name="model-label">oscal-catalog-xml</xsl:param>
 
-   <xsl:variable as="xs:string" name="path-to-docs" select="'../xml-schema/'"/>
+   <xsl:variable as="xs:string" name="path-to-docs" select="'../json-schema/'"/>
 
    <xsl:output omit-xml-declaration="true" indent="no"/>
 
@@ -61,6 +61,8 @@ details:not([open]) .show-closed { display: inline }
    </xsl:template>
 
    <xsl:template match="m:schema-name | m:schema-version"/>
+   
+   <xsl:template match="m:formal-name | m:description | m:remarks | m:constraint"/>
    
    <xsl:template match="m:string">
       <xsl:variable name="last-appearing" select="position() eq last()"/>

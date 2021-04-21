@@ -12,7 +12,7 @@
     <xsl:strip-space
         elements="METASCHEMA define-flag define-field define-assembly remarks model choice"/>
 
-    <xsl:variable name="show-warnings" as="xs:string">no</xsl:variable>
+    <xsl:variable name="show-warnings" as="xs:string">yes</xsl:variable>
     <xsl:variable name="verbose" select="lower-case($show-warnings) = ('yes', 'y', '1', 'true')"/>
 
     <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly" use="@name"/>
@@ -31,7 +31,7 @@
     <xsl:mode on-no-match="shallow-copy"/>
     
     <xsl:variable name="assembly-references" as="xs:string*">
-        <xsl:for-each select="/METASCHEMA/define-assembly[exists(root-name)]">
+        <xsl:for-each select="//METASCHEMA/define-assembly[exists(root-name)]">
             <xsl:sequence select="string(@name)"/>
             <xsl:apply-templates select="model" mode="collect-assembly-references">
                 <xsl:with-param name="assembly-refs" tunnel="yes" select="string(@name)"/>
@@ -40,13 +40,13 @@
     </xsl:variable>
     
     <xsl:variable name="field-references" as="xs:string*">
-        <xsl:apply-templates select="/METASCHEMA/define-assembly[exists(root-name)]" mode="collect-field-references">
+        <xsl:apply-templates select="//METASCHEMA/define-assembly[exists(root-name)]" mode="collect-field-references">
             <xsl:with-param name="field-refs" tunnel="yes" select="()"/>
         </xsl:apply-templates>
     </xsl:variable>
     
     <xsl:variable name="flag-references" as="xs:string*">
-        <xsl:apply-templates select="/METASCHEMA/define-assembly[exists(root-name)]" mode="collect-flag-references">
+        <xsl:apply-templates select="//METASCHEMA/define-assembly[exists(root-name)]" mode="collect-flag-references">
             <xsl:with-param name="flag-refs" tunnel="yes" select="()"/>
         </xsl:apply-templates>
     </xsl:variable>
