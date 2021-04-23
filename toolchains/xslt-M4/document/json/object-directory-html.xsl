@@ -21,19 +21,24 @@
       <h2><span class="usa-tag">Schema version:</span> { . }</h2>
    </xsl:template>
    
+   <xsl:function name="m:json-obj-id">
+      <xsl:param name="whose" as="element()"/>
+      <xsl:value-of select="$whose/ancestor-or-self::*/@key => string-join('/')"/>
+   </xsl:function>
+   
    <xsl:template match="*[exists(@key)]" expand-text="true">
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@key)])"/>
       <section class="json-obj">
          <!-- generates h1-hx headers picked up by Hugo toc -->
          
          <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
-            <xsl:attribute name="id">{ ancestor-or-self::*/@key => string-join('-') }</xsl:attribute>
+            <xsl:attribute name="id">{ m:json-obj-id(.) }</xsl:attribute>
             <xsl:attribute name="class">toc{ $level}</xsl:attribute>
             <xsl:text>{ @key }</xsl:text>
          </xsl:element>
          
          <xsl:apply-templates select="." mode="produce-for-object"/>
-
+         
          <xsl:apply-templates/>
       </section>
    </xsl:template>
@@ -65,7 +70,7 @@
                   <xsl:otherwise> member of array <code>{ ../@key }</code>.</xsl:otherwise>
                </xsl:choose>
             </p>
-            <p class="path">{ (ancestor-or-self::*/(@key/string(.),'#')[1]) => string-join('.') }</p>
+            <p class="path">{ ((ancestor-or-self::* except ancestor::choice)/(@key/string(.),'#')[1]) => string-join('/') }</p>
          </div>
          <xsl:apply-templates mode="#current" select="description"/>
          <xsl:call-template name="report-also-named"/>
@@ -79,15 +84,8 @@
    </xsl:template>
    
    <xsl:template name="report-also-named">
-      <xsl:variable name="also-named" select="key('by-key', @key) except ."/>
-      <xsl:if test="exists($also-named)">
-         <p>
-            <xsl:text>Also with this name, see </xsl:text>
-            <xsl:for-each select="$also-named">
-               <a href="#{ ancestor-or-self::*/@name => string-join('-') }">{ ../@key }.{ @key }</a>
-            </xsl:for-each>
-         </p>
-      </xsl:if>
+      <!-- report - other occurrences of this (same) definition?
+                    other definitions assigned this key? in use? -->
    </xsl:template>
 
   <xsl:key name="by-key" match="*[exists(@key)]" use="@key"/>

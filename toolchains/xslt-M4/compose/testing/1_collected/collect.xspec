@@ -45,7 +45,7 @@
         <x:expect label="Modules collected, no loops">
             <METASCHEMA src="..." module="test">
                 <short-name>test</short-name>
-                <define-assembly name="root">
+                <define-assembly name="root" module="test" key-name="test:root" scope="global">
                     <root-name>root-assembly</root-name>
                     <flag ref="top-level-flag"/>
                     <define-flag name="local-flag">
@@ -54,16 +54,16 @@
                     </define-flag>
                     <model>
                         <field ref="top-level-global-field"/>
-                        <field ref="test-top-level-local-field"><use-name>top-level-local-field</use-name></field>
+                        <field ref="top-level-local-field"/>
                         <define-field name="local-field">
                             <formal-name>Locally defined field</formal-name>
                             <description>XXX</description>
                         </define-field>
                     </model>
                 </define-assembly>
-                <define-field name="top-level-global-field"/>
-                <define-field name="test-top-level-local-field" scope="local"><use-name>top-level-local-field</use-name></define-field>
-                <define-flag name="top-level-flag"/>                
+                <define-field name="top-level-global-field" module="test" key-name="test:top-level-global-field" scope="global"/>
+                <define-field name="top-level-local-field" scope="local" module="test" key-name="test:top-level-local-field"/>
+                <define-flag name="top-level-flag" module="test" key-name="test:top-level-flag" scope="global"/>                
             </METASCHEMA>
             
         </x:expect>
@@ -106,7 +106,7 @@
         <x:expect label="Local definitions preserved with amended names">
             <METASCHEMA src="..." module="test">
                 <short-name>test</short-name>
-                <define-assembly name="root">
+                <define-assembly name="root" module="test" key-name="test:root" scope="global">
                     <root-name>root-assembly</root-name>
                     <flag ref="top-level-flag"/>
                     <define-flag name="local-flag">
@@ -115,27 +115,25 @@
                     </define-flag>
                     <model>
                         <field ref="top-level-global-field"/>
-                        <field ref="test-top-level-local-field"><use-name>top-level-local-field</use-name></field>
-                        <assembly ref="test-top-level-local-assembly"><use-name>top-level-local-assembly</use-name></assembly>
+                        <field ref="top-level-local-field"/>
+                        <assembly ref="top-level-local-assembly"/>
                         <define-field name="local-field">
                             <formal-name>Locally defined field</formal-name>
                             <description>XXX</description>
                         </define-field>
                     </model>
                 </define-assembly>
-                <define-field name="top-level-global-field"/>
-                <define-field name="test-top-level-local-field" scope="local">
+                <define-field name="top-level-global-field" module="test" key-name="test:top-level-global-field" scope="global"/>
+                <define-field name="top-level-local-field" scope="local" module="test" key-name="test:top-level-local-field">
                     <formal-name>Included twice</formal-name>
-                    <use-name>top-level-local-field</use-name>
                 </define-field>
-                <define-assembly name="test-top-level-local-assembly" scope="local">
-                    <use-name>top-level-local-assembly</use-name>
+                <define-assembly name="top-level-local-assembly" scope="local" module="test" key-name="test:top-level-local-assembly">
                     <model>
-                        <field ref="test-top-level-local-field"><use-name>top-level-local-field</use-name></field>
-                        <assembly ref="test-top-level-local-assembly"><use-name>top-level-local-assembly</use-name></assembly>
+                        <field ref="top-level-local-field"/>
+                        <assembly ref="top-level-local-assembly"/>
                     </model>
                 </define-assembly>
-                <define-flag name="top-level-flag"/>                
+                <define-flag name="top-level-flag" module="test" key-name="test:top-level-flag" scope="global"/>                
             </METASCHEMA>
             
         </x:expect>

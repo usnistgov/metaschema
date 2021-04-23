@@ -7,7 +7,7 @@
 
    <xsl:param as="xs:string" name="model-label">oscal-catalog-xml</xsl:param>
 
-   <xsl:variable as="xs:string" name="path-to-docs" select="'../json-schema/'"/>
+   <xsl:variable as="xs:string" name="path-to-docs" select="'../reference'"/>
 
    <xsl:output omit-xml-declaration="true" indent="no"/>
 
@@ -187,7 +187,7 @@ details:not([open]) .show-closed { display: inline }
    
    <xsl:template match="*[exists(@id)]" mode="json-key">
       <a class="OM-name" href="{ $path-to-docs }#{ @id }">
-         <xsl:value-of select="(@key,@name)[1]"/>
+         <xsl:value-of select="(@key,@name,@gi)[1]"/>
       </a>
    </xsl:template>
    
@@ -207,7 +207,7 @@ details:not([open]) .show-closed { display: inline }
          <span class="OM-lit">
             <xsl:text>Array members, or a singleton </xsl:text>
             <span class="OM-name">
-               <xsl:value-of select="(@key,use-name,@name)[1]"/>
+               <xsl:value-of select="(@key,@gi,use-name,@name)[1]"/>
             </span>
             <xsl:text expand-text="true"> { local-name() }</xsl:text>
          </span>

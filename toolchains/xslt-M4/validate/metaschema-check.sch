@@ -38,16 +38,16 @@
         
         <sch:rule context="/m:METASCHEMA">
             <sch:assert test="exists(m:schema-version)" role="warning">Metaschema schema version must be set for any top-level metaschema</sch:assert>
-            <sch:assert test="exists(m:define-assembly/m:root-name) or @abstract='yes'">Unless marked as @abstract='yes', a metaschema should have at least one assembly with a root-name.</sch:assert>
+            <!--<sch:assert test="exists(m:define-assembly/m:root-name) or @abstract='yes'">Unless marked as @abstract='yes', a metaschema should have at least one assembly with a root-name.</sch:assert>-->
         </sch:rule>
         <sch:rule context="/m:METASCHEMA/m:title"/>
         <sch:rule context="/m:METASCHEMA/m:import">
             <sch:report role="warning" test="document-uri(/) = resolve-uri(@href,document-uri(/))">Schema can't import itself</sch:report>
             <sch:assert test="exists(document(@href)/m:METASCHEMA)">Can't find a metaschema at <sch:value-of select="@href"/></sch:assert>
         </sch:rule>
-        <sch:rule context="/m:METASCHEMA/m:define-assembly/m:root-name">
+        <!--<sch:rule context="/m:METASCHEMA/m:define-assembly/m:root-name">
             <sch:report test="$metaschema-is-abstract">Assembly should not be defined as a root when /METASCHEMA/@abstract='yes'</sch:report>
-        </sch:rule>
+        </sch:rule>-->
         
     </sch:pattern>
     

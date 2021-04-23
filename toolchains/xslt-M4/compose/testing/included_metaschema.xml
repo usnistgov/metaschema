@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd"
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    
+<schema-name>Included Metaschema</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>included</short-name>
+    <namespace>http://csrc.nist.gov/ns/oscal/1.0</namespace>
+
+    <define-assembly name="included-flags">
+        <formal-name>Assembly that includes global and local flags</formal-name>
+        <description>This assembly includes a flag defined in this included metaschema module.</description>
+        <flag ref="global-flag">
+            <remarks>
+                <p>This reference should be to the globally scoped flag in the included metaschema.</p>
+            </remarks>
+        </flag>
+        <flag ref="local-flag">
+            <remarks>
+                <p>This reference should be to the locally scoped flag in the included metaschema.</p>
+            </remarks>
+        </flag>
+    </define-assembly>
+    
+    <define-flag name="global-flag">
+        <formal-name>Global Flag - Included Metaschema</formal-name>
+        <description>A flag from the included metaschema. It's scope is global. This name will clash with names in the importing metaschema.</description>
+    </define-flag>
+
+    <define-flag name="local-flag" scope="local">
+        <formal-name>Local Flag - Included Metaschema</formal-name>
+        <description>A flag from the included metaschema. It's scope is local. This name does not clash.</description>
+    </define-flag>
+</METASCHEMA>

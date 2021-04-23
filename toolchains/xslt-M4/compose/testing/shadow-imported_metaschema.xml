@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd"
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    
+    <schema-name>Imported Metaschema</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>imported</short-name>
+    <namespace>http://csrc.nist.gov/ns/oscal/1.0</namespace>
+
+    <define-assembly name="imported-flags">
+        <formal-name>Assembly that includes global and local flags</formal-name>
+        <description>This assembly references a global flag that is shadowed by a global flag defined in the importing metaschema.</description>
+        <flag ref="global-flag">
+            <remarks>
+                <p>This reference should be to the globally scoped flag "global-flag" from the imported metaschema.</p>
+            </remarks>
+        </flag>
+    </define-assembly>
+    
+    <define-flag name="global-flag">
+        <formal-name>Global Flag - Imported Metaschema</formal-name>
+        <description>A flag from the imported metaschema. Its scope is global and it's shadowed by the definition with the same name in the importing metaschema.</description>
+    </define-flag>
+</METASCHEMA>

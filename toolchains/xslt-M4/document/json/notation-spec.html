@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>notation model</title>
+  </head>
+  <body>
+    <section>
+      <h2>Fully expanded (new approach)</h2>
+      <ul style="padding: 0px; margin: 0px 0px 0.625em 25px; list-style: disc;">
+        <li>Catalog<ul style="padding: 0px; margin: 0px 0px 0px 25px; list-style: disc;">
+            <li>Metadata<ul style="padding: 0px; margin: 0px 0px 0px 25px; list-style: disc;">
+                <li>title</li>
+                <li>published</li>
+                <li>...</li>
+              </ul></li>
+          </ul></li>
+        <li>Profile<ul style="padding: 0px; margin: 0px 0px 0px 25px; list-style: disc;">
+            <li>Metadata<ul style="padding: 0px; margin: 0px 0px 0px 25px; list-style: disc;">
+                <li>title</li>
+                <li>published</li>
+                <li>...</li>
+              </ul></li>
+          </ul></li>
+        <li>Index (parent context)<ul
+            style="padding: 0px; margin: 0px 0px 0px 25px; list-style: disc;">
+            <li>Metadata<ul style="padding: 0px; margin: 0px 0px 0px 25px; list-style: disc;">
+                <li>Catalog (link to Metadata under Catalog)</li>
+                <li>Profile (link to Metadata under Profile)</li>
+              </ul></li>
+            <li>Title<ul style="padding: 0px; margin: 0px 0px 0px 25px; list-style: disc;">
+                <li>Catalog / Metadata</li>
+                <li>Profile / Metadata</li>
+              </ul></li>
+          </ul></li>
+      </ul>
+      <section>
+        <h3>doc references</h3>
+        <ol style="padding: 0px; margin: 0px 0px 0.625em 25px; list-style: decimal;">
+          <li>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0px 0px 0.2em;"
+              >Reference to a specific node in a model format.</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px;"
+              >In JSON/YAML:
+              /documentation/v{major}/json/reference#/{property/item}/{property/item}/..</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px;"
+              >In XML: /documentation/v{major}/json/reference#/{element/@attribute}/{element/@attribute}/..</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px;"
+              >Examples:</p>
+            <ul style="padding: 0px; margin: 0px 0px 0px 25px; list-style: disc;">
+              <li>JSON/YAML:
+                /documentation/v{major}/json/reference#/catalog/metadata/props/name</li>
+              <li>XML(attribute): /documentation/v{major}/xml/reference#/catalog/metadata/prop/@name</li>
+              <li>XML(element): /documentation/v{major}/xml/reference#/catalog/metadata/prop</li>
+            </ul>
+          </li>
+          <li>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0px 0px 0.2em;"
+              >Reference to all occurrences of a name in a format</p>
+            <p>JSON/YAML: /documentation/v{major}/json/index#/index/{property/item}</p>
+            <p>XML: /documentation/v{major}/xml/index#/index/{element/@attribute}</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px;"
+              >Examples:</p>
+            <ul style="padding: 0px; margin: 0px 0px 0px 25px; list-style: disc;">
+              <li>JSON/YAML: /documentation/v{major}/json/index#/index/props</li>
+              <li>XML(attribute): /documentation/v{major}/xml/index#/index/@name</li>
+              <li>XML(element): /documentation/v{major}/xml/index#/index/prop</li>
+            </ul>
+          </li>
+          <li>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0px;"
+              >Reference to a type definition</p>
+          </li>
+        </ol>
+      </section>
+      <section>
+        <h3>document naming</h3>
+        <p
+          style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px;"
+          >{version} = v{major}.{minor}, v{major}, or latest</p>
+        <ol style="padding: 0px; margin: 0px 0px 0.625em 25px; list-style: decimal;">
+          <li>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0px 0px 0.2em;"
+              >model maps</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px;"
+              >/documentation/{version}/xml/outline</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px 0px;"
+              >/documentation/{version}/json/outline</p>
+          </li>
+          <li>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0px 0px 0.2em;"
+              >reference</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px;"
+              >/documentation/v{major}.{minor}/xml/reference</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px 0px;"
+              >/documentation/v{major}.{minor}/json/reference</p>
+          </li>
+          <li>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0px 0px 0.2em;"
+              >index</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px;"
+              >/documentation/v{major}.{minor}/xml/index</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px 0px;"
+              >/documentation/v{major}.{minor}/json/index</p>
+          </li>
+          <li>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0px 0px 0.2em;"
+              >type definitions</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px;"
+              >/documentation/v{major}.{minor}/xml/definitions#/{type name}/{path}</p>
+            <p
+              style="font-family: inherit; font-size: inherit; line-height: inherit; margin: 0px; padding: 0.2em 0px 0px;"
+              >/documentation/v{major}.{minor}/json/definitions#/{type name}/{path}</p>
+          </li>
+        </ol>
+      </section>
+    </section>
+  </body>
+</html>

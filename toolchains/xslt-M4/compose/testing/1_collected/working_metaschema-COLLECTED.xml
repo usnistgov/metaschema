@@ -9,40 +9,7 @@
    <remarks>
       <p>For exercising Metaschema semantics with respect to modular assembly and composition.</p>
    </remarks>
-   <METASCHEMA abstract="yes"
-               module="oscal-test-m1"
-               src="...">
-      <schema-name>OSCAL TEST Format Module</schema-name>
-      <schema-version>0.0</schema-version>
-      <short-name>oscal-test-m1</short-name>
-      <namespace>http://csrc.nist.gov/ns/metaschema/test</namespace>
-      <define-assembly name="module-assembly">
-         <formal-name>Assembly defined in a module</formal-name>
-         <description>XXX</description>
-         <define-flag name="inline-flag">
-            <formal-name>Flag defined inline</formal-name>
-            <description>XXX</description>
-         </define-flag>
-         <model>
-            <field ref="global-field"/>
-            <field ref="oscal-test-m1-local-field"><use-name>local-field</use-name></field>
-            <define-field name="inline-field">
-               <formal-name>Locally defined field</formal-name>
-               <description>XXX</description>
-            </define-field>
-         </model>
-      </define-assembly>
-      <define-field name="global-field">
-         <formal-name>Field, defined in module 'oscal-test-m1' (global by default)</formal-name>
-         <description>XXX</description>
-      </define-field>
-      <define-field name="oscal-test-m1-local-field" scope="local">
-         <formal-name>Field, defined in module 'oscal-test-m1' as local</formal-name>
-            <description>ZZZ</description>
-            <use-name>local-field</use-name>
-         </define-field>
-   </METASCHEMA>
-   <define-assembly name="root">
+   <define-assembly name="root" module="oscal-test" key-name="oscal-test:root" scope="global">
       <formal-name>Nominal root</formal-name>
       <description>XXX</description>
       <root-name>root-assembly</root-name>
@@ -53,24 +20,55 @@
       </define-flag>
       <model>
          <field ref="global-field"/>
-         <field ref="oscal-test-local-field"><use-name>local-field</use-name></field>
+         <field ref="local-field"/>
          <define-field name="inline-field">
             <formal-name>Field defined inline on root-assembly</formal-name>
             <description>XXX</description>
          </define-field>
       </model>
    </define-assembly>
-   <define-field name="global-field">
+   <define-field name="global-field" module="oscal-test" key-name="oscal-test:global-field" scope="global">
       <formal-name>Field, defined at top level (global by default)</formal-name>
       <description>XXX</description>
    </define-field>
-   <define-field name="oscal-test-local-field" scope="local">
+   <define-field name="local-field" module="oscal-test" scope="local"  key-name="oscal-test:local-field">
       <formal-name>Field, defined in module 'oscal-test' at top level as 'local'</formal-name>
       <description>XXX</description>
-      <use-name>local-field</use-name>
    </define-field>
-   <define-flag name="global-flag">
+   <define-flag name="global-flag" key-name="oscal-test:global-flag" module="oscal-test" scope="global">
       <formal-name>Flag, defined globally</formal-name>
       <description>XXX</description>
    </define-flag>
+   <METASCHEMA abstract="yes"
+      module="oscal-test-m1"
+      src="...">
+      <schema-name>OSCAL TEST Format Module</schema-name>
+      <schema-version>0.0</schema-version>
+      <short-name>oscal-test-m1</short-name>
+      <namespace>http://csrc.nist.gov/ns/metaschema/test</namespace>
+      <define-assembly name="module-assembly" module="oscal-test-m1"  key-name="oscal-test-m1:module-assembly" scope="global">
+         <formal-name>Assembly defined in a module</formal-name>
+         <description>XXX</description>
+         <define-flag name="inline-flag">
+            <formal-name>Flag defined inline</formal-name>
+            <description>XXX</description>
+         </define-flag>
+         <model>
+            <field ref="global-field"/>
+            <field ref="local-field"/>
+            <define-field name="inline-field">
+               <formal-name>Locally defined field</formal-name>
+               <description>XXX</description>
+            </define-field>
+         </model>
+      </define-assembly>
+      <define-field name="global-field" module="oscal-test-m1" key-name="oscal-test-m1:global-field" scope="global">
+         <formal-name>Field, defined in module 'oscal-test-m1' (global by default)</formal-name>
+         <description>XXX</description>
+      </define-field>
+      <define-field name="local-field" scope="local" module="oscal-test-m1" key-name="oscal-test-m1:local-field">
+         <formal-name>Field, defined in module 'oscal-test-m1' as local</formal-name>
+         <description>ZZZ</description>
+      </define-field>
+   </METASCHEMA>   
 </METASCHEMA>

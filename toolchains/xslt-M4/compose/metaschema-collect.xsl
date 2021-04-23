@@ -25,7 +25,7 @@
          Trace nominal sources.
          Defend against endless loops.
     
-    Also expands top-level declarations marked scope='local' into local declarations, while removing them. -->
+     -->
     
     <xsl:mode name="acquire" on-no-match="shallow-copy"/>
     
@@ -36,7 +36,8 @@
             <xsl:copy-of select="@* except @xsi:*"/>
             <xsl:attribute name="module" select="short-name"/>
             <xsl:attribute name="src" select="base-uri(.)"/>
-            <xsl:apply-templates mode="#current"/>
+            <xsl:apply-templates select="* except import" mode="#current"/>
+            <xsl:apply-templates select="import" mode="#current"/>
         </xsl:copy>
     </xsl:template>
   
@@ -59,57 +60,20 @@
         </xsl:choose>
     </xsl:template>
   
-    <!-- Rewriting name on module-local definitions by prepending the given value with '{ module-short-name }-'
-         Also adding use-name if none is given -->
     <xsl:template mode="acquire"
-        match="METASCHEMA/define-assembly[@scope='local'] |
-               METASCHEMA/define-field[@scope='local']    |
-               METASCHEMA/define-flag[@scope='local']">
+        match="METASCHEMA/define-assembly |
+        METASCHEMA/define-field    |
+        METASCHEMA/define-flag">
         <xsl:copy>
+            <xsl:attribute name="scope">global</xsl:attribute>
             <xsl:copy-of select="@*"/>
-            <xsl:attribute name="name" expand-text="true">{ ../short-name }-{ @name }</xsl:attribute>
-            <xsl:variable name="earlier" select="formal-name | description | root-name | use-name"/>
-            <xsl:apply-templates mode="#current" select="$earlier"/>
-            <xsl:if test="empty(use-name)" expand-text="true">
-                <use-name>{ @name }</use-name>
-            </xsl:if>
-            <xsl:apply-templates mode="#current" select="child::* except $earlier"/>
-        </xsl:copy>
-    </xsl:template>
-    
- <!-- Same at the other end - references to module-local definitions are relabeled correspondingly
-      (to disambiguate from others of the same name in other modules) -->
-    
-    <xsl:key name="top-level-local-assembly-definition-by-name" use="@name"
-        match="METASCHEMA/define-assembly[@scope='local']" />
-    
-    <xsl:key name="top-level-local-field-definition-by-name" use="@name"
-        match="METASCHEMA/define-field[@scope='local']" />
-    
-    <xsl:key name="top-level-local-flag-definition-by-name" use="@name"
-        match="METASCHEMA/define-flag[@scope='local']" />
-    
-    <xsl:template mode="acquire" match="assembly[exists( key('top-level-local-assembly-definition-by-name',@ref) )]">
-        <xsl:call-template name="rewrite-local-reference"/>
-    </xsl:template>
-    
-    <xsl:template mode="acquire" match="field[exists( key('top-level-local-field-definition-by-name',@ref) )]">
-        <xsl:call-template name="rewrite-local-reference"/>
-    </xsl:template>
-    
-    <xsl:template mode="acquire" match="flag[exists( key('top-level-local-flag-definition-by-name',@ref) )]">
-        <xsl:call-template name="rewrite-local-reference"/>
-    </xsl:template>
-    
-    <xsl:template name="rewrite-local-reference">
-        <xsl:copy>
-            <xsl:copy-of select="@*"/>
-            <xsl:attribute name="ref" expand-text="true">{ ancestor::METASCHEMA[1]/short-name }-{ @ref }</xsl:attribute>
-            <xsl:if test="empty(use-name)" expand-text="true">
-                <use-name>{ @ref }</use-name>
-            </xsl:if>
+            <xsl:attribute name="module" expand-text="true">{ ../short-name }</xsl:attribute>
+            <xsl:attribute name="key-name" expand-text="true">{ ../short-name }:{ @name }</xsl:attribute>
             <xsl:apply-templates mode="#current"/>
         </xsl:copy>
     </xsl:template>
+    
+    
+    
     
 </xsl:stylesheet>

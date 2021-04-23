@@ -57,9 +57,19 @@
     <p:pipe        port="result"             step="render-json-object-directory"/>
   </p:output>
   
-  <p:serialization port="J3.json-docs-styled" indent="true" method="xml" omit-xml-declaration="false"/>
-  <p:output        port="J3.json-docs-styled" primary="false">
+  <p:serialization port="J2a.json-docs-styled" indent="true" method="xml" omit-xml-declaration="false"/>
+  <p:output        port="J2a.json-docs-styled" primary="false">
     <p:pipe        port="result"             step="style-json-object-directory"/>
+  </p:output>
+  
+  <p:serialization port="J3.json-index-html" indent="true" method="xml" omit-xml-declaration="false"/>
+  <p:output        port="J3.json-index-html" primary="false">
+    <p:pipe        port="result"             step="make-json-object-index"/>
+  </p:output>
+  
+  <p:serialization port="J3a.json-index-styled" indent="true" method="xml" omit-xml-declaration="false"/>
+  <p:output        port="J3a.json-index-styled" primary="false">
+    <p:pipe        port="result"             step="style-json-object-index"/>
   </p:output>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
@@ -139,6 +149,25 @@
   </p:xslt>
   
   <p:xslt name="style-json-object-directory">
+    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->    
+    <p:input port="stylesheet">
+      <p:document href="document/json/hugo-css-emulator.xsl"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:sink/>
+  
+  <p:xslt name="make-json-object-index">
+    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->    
+    <p:input port="source">
+      <p:pipe port="result" step="render-json-object-directory"/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="document/make-schema-reference-index-html.xsl"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:xslt name="style-json-object-index">
     <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->    
     <p:input port="stylesheet">
       <p:document href="document/json/hugo-css-emulator.xsl"/>
