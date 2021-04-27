@@ -3,6 +3,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     exclude-result-prefixes="xs math m xsi" version="3.0">
@@ -30,8 +31,10 @@
     
     <xsl:mode on-no-match="shallow-copy"/>
     
+    <xsl:variable name="root-assembly-definitions" select="//METASCHEMA/define-assembly[exists(root-name)]"/>
+    
     <xsl:variable name="assembly-references" as="xs:string*">
-        <xsl:for-each select="//METASCHEMA/define-assembly[exists(root-name)]">
+        <xsl:for-each select="$root-assembly-definitions">
             <xsl:sequence select="string(@key-name)"/>
             <xsl:apply-templates select="model" mode="collect-assembly-references">
                 <xsl:with-param name="assembly-refs" tunnel="yes" select="string(@key-name)"/>
@@ -51,22 +54,32 @@
         </xsl:apply-templates>
     </xsl:variable>
     
-    <xsl:template match="/">
-        <xsl:if test="$verbose">
-            <xsl:comment expand-text="true">Assembly references: { $assembly-references }</xsl:comment>
-            <xsl:text>&#xA;</xsl:text>
-            <xsl:comment expand-text="true">Field references: { $field-references }</xsl:comment>
-            <xsl:text>&#xA;</xsl:text>
-            <xsl:comment expand-text="true">Flag references: { $flag-references }</xsl:comment>
-            <xsl:text>&#xA;</xsl:text>
-        </xsl:if>
-        <xsl:apply-templates/>
+    <xsl:template match="/METASCHEMA">
+        <xsl:copy>
+            <xsl:copy-of select="@*"/>
+            <xsl:if test="empty($root-assembly-definitions)">
+                <EXCEPTION problem-type="missing-root">No root found in this metaschema composition.</EXCEPTION>
+            </xsl:if>
+            <!--<xsl:if test="$verbose" expand-text="true">
+                <xsl:variable name="noun" select="if (count($root-assembly-definitions) gt 1) then 'root' else 'roots'"/>
+                <TRACE>Designated { $noun }: { $root-assembly-definitions/root-name }</TRACE>
+                <TRACE>Assembly references found from { $noun }: { $assembly-references => string-join(', ') }</TRACE>
+                <TRACE>Field references found from {    $noun }: { $field-references    => string-join(', ') }</TRACE>
+                <TRACE>Flag references found from  {    $noun }: { $flag-references     => string-join(', ') }</TRACE>
+                <xsl:text>&#xA;</xsl:text>
+            </xsl:if>-->
+            <xsl:apply-templates/>
+            
+        </xsl:copy>
     </xsl:template>
     
     <!-- 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 -->    
 
     <xsl:template match="METASCHEMA/define-assembly[not(@key-name=$assembly-references)]">
         <xsl:call-template name="warning">
+            <!-- since we can detect unused definitions a better way, this can be
+                 silenced and/or rendered as a comment -->
+            <xsl:with-param name="type">unused-definition</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">REMOVING unused assembly definition for '{ @name }' from { ancestor::METASCHEMA[1]/@module
                 }</xsl:with-param>
         </xsl:call-template>
@@ -74,6 +87,9 @@
     
     <xsl:template match="METASCHEMA/define-field[not(@key-name=$field-references)]">
         <xsl:call-template name="warning">
+            <!-- since we can detect unused definitions a better way, this can be
+                 silenced and/or rendered as a comment -->
+            <xsl:with-param name="type">unused-definition</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">REMOVING unused field definition for '{ @name }' from { ancestor::METASCHEMA[1]/@module
                 }</xsl:with-param>
         </xsl:call-template>
@@ -81,6 +97,9 @@
     
     <xsl:template match="METASCHEMA/define-flag[not(@key-name=$flag-references)]">
         <xsl:call-template name="warning">
+            <!-- since we can detect unused definitions a better way, this can be
+                 silenced and/or rendered as a comment -->
+            <xsl:with-param name="type">unused-definition</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">REMOVING unused flag definition for '{ @name }' from { ancestor::METASCHEMA[1]/@module
                 }</xsl:with-param>
         </xsl:call-template>
@@ -158,13 +177,11 @@
     
     <xsl:template name="warning">
         <xsl:param name="msg"/>
+        <xsl:param name="type">warning</xsl:param>
         <xsl:if test="$verbose">
-            <xsl:comment>
+            <EXCEPTION problem-type="{ $type }">
                 <xsl:copy-of select="$msg"/>
-            </xsl:comment>
-            <xsl:message>
-                <xsl:copy-of select="$msg"/>
-            </xsl:message>
+            </EXCEPTION>
         </xsl:if>
     </xsl:template>
     

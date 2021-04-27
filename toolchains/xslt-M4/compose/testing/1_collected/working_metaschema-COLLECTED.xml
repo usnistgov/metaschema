@@ -13,29 +13,29 @@
       <formal-name>Nominal root</formal-name>
       <description>XXX</description>
       <root-name>root-assembly</root-name>
-      <flag ref="global-flag"/>      
-      <define-flag name="inline-flag">
+      <flag ref="global-flag" required="no"/>      
+      <define-flag name="inline-flag" required="no" as-type="string">
          <formal-name>Flag defined inline on root-assembly</formal-name>
          <description>XXX</description>
       </define-flag>
       <model>
-         <field ref="global-field"/>
-         <field ref="local-field"/>
-         <define-field name="inline-field">
+         <field ref="global-field" min-occurs="0" max-occurs="1"/>
+         <field ref="local-field" min-occurs="0" max-occurs="1"/>
+         <define-field collapsible="no" name="inline-field" min-occurs="0" max-occurs="1" as-type="string">
             <formal-name>Field defined inline on root-assembly</formal-name>
             <description>XXX</description>
          </define-field>
       </model>
    </define-assembly>
-   <define-field name="global-field" module="oscal-test" key-name="oscal-test:global-field" scope="global">
+   <define-field name="global-field" module="oscal-test" key-name="oscal-test:global-field" scope="global" as-type="string" collapsible="no">
       <formal-name>Field, defined at top level (global by default)</formal-name>
       <description>XXX</description>
    </define-field>
-   <define-field name="local-field" module="oscal-test" scope="local"  key-name="oscal-test:local-field">
+   <define-field name="local-field" module="oscal-test" scope="local"  key-name="oscal-test:local-field" as-type="string" collapsible="no">
       <formal-name>Field, defined in module 'oscal-test' at top level as 'local'</formal-name>
       <description>XXX</description>
    </define-field>
-   <define-flag name="global-flag" key-name="oscal-test:global-flag" module="oscal-test" scope="global">
+   <define-flag as-type="string" name="global-flag" key-name="oscal-test:global-flag" module="oscal-test" scope="global">
       <formal-name>Flag, defined globally</formal-name>
       <description>XXX</description>
    </define-flag>
@@ -49,24 +49,25 @@
       <define-assembly name="module-assembly" module="oscal-test-m1"  key-name="oscal-test-m1:module-assembly" scope="global">
          <formal-name>Assembly defined in a module</formal-name>
          <description>XXX</description>
-         <define-flag name="inline-flag">
+         <define-flag name="inline-flag" as-type="string" required="no">
             <formal-name>Flag defined inline</formal-name>
             <description>XXX</description>
          </define-flag>
          <model>
-            <field ref="global-field"/>
-            <field ref="local-field"/>
-            <define-field name="inline-field">
+            <field ref="global-field" min-occurs="0" max-occurs="1"/>
+            <field ref="local-field" min-occurs="0" max-occurs="1"/>
+            <define-field max-occurs="1"
+               min-occurs="0" name="inline-field" as-type="string" collapsible="no">
                <formal-name>Locally defined field</formal-name>
                <description>XXX</description>
             </define-field>
          </model>
       </define-assembly>
-      <define-field name="global-field" module="oscal-test-m1" key-name="oscal-test-m1:global-field" scope="global">
+      <define-field name="global-field" module="oscal-test-m1" key-name="oscal-test-m1:global-field" scope="global" as-type="string" collapsible="no">
          <formal-name>Field, defined in module 'oscal-test-m1' (global by default)</formal-name>
          <description>XXX</description>
       </define-field>
-      <define-field name="local-field" scope="local" module="oscal-test-m1" key-name="oscal-test-m1:local-field">
+      <define-field name="local-field" scope="local" module="oscal-test-m1" key-name="oscal-test-m1:local-field" as-type="string" collapsible="no">
          <formal-name>Field, defined in module 'oscal-test-m1' as local</formal-name>
          <description>ZZZ</description>
       </define-field>

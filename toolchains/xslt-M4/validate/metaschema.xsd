@@ -26,7 +26,6 @@
           <xs:element name="define-flag" type="m:global-flag-definition"/>
         </xs:choice>
       </xs:sequence>
-      <xs:attribute name="module" type="xs:anyURI"/>
       <xs:attribute name="abstract">
         <xs:simpleType>
           <xs:restriction base="xs:string">
@@ -76,7 +75,6 @@
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
-    <xs:attribute name="module" type="xs:anyURI"/>
     <xs:attribute name="scope" type="m:scope-type" default="global"/>
   </xs:complexType>
 
@@ -117,7 +115,6 @@
     <xs:attribute name="as-type" type="m:field-types" default="string"/>
     <xs:attribute name="collapsible" type="m:boolean" default="yes"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
-    <xs:attribute name="module" type="xs:anyURI"/>
     <xs:attribute name="scope" type="m:scope-type" default="global"/>
   </xs:complexType>
 
@@ -140,7 +137,6 @@
     <!-- datatype should default to 'string' -->
     <xs:attribute name="as-type" type="m:simple-datatypes" default="string"/>
     <!-- defined for composed (compiled) metaschemas -->
-    <xs:attribute name="module" type="xs:anyURI"/>
     <xs:attribute name="scope" type="m:scope-type" default="global"/>
   </xs:complexType>
 
@@ -167,10 +163,8 @@
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
-    <xs:attribute name="collapsible" type="m:boolean" default="yes"/>
     <xs:attributeGroup ref="m:cardinality-specification"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
-    <xs:attribute name="module" type="xs:anyURI"/>
   </xs:complexType>
 
 
@@ -200,7 +194,6 @@
     <xs:attribute name="collapsible" type="m:boolean" default="yes"/>
     <xs:attributeGroup ref="m:cardinality-specification"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
-    <xs:attribute name="module" type="xs:anyURI"/>
     <xs:attribute name="in-xml" default="WITH_WRAPPER">
       <xs:annotation>
         <xs:documentation>A field with assigned datatype 'markup-multiline' may be designated for representation with or without a containing (wrapper) element
@@ -239,8 +232,6 @@
     <!-- datatype should default to 'string' -->
     <xs:attribute name="as-type" type="m:simple-datatypes" default="string"/>
     <xs:attribute name="required" type="m:boolean" default="no"/>
-    <!-- defined for composed (compiled) metaschemas -->
-    <xs:attribute name="module" type="xs:anyURI"/>
   </xs:complexType>
 
   <xs:element name="formal-name" type="xs:string">
@@ -301,7 +292,6 @@
               <xs:documentation>Mark as 'XML' for XML-only or 'JSON' for JSON-only remarks.</xs:documentation>
             </xs:annotation>
           </xs:attribute>
-          <xs:attribute name="module" type="xs:anyURI"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
@@ -778,7 +768,6 @@
       </xs:sequence>
       <xs:attribute name="href" type="xs:anyURI"/>
       <xs:attribute name="path" type="xs:string"/>
-      <xs:attribute name="module" type="xs:anyURI"/>
     </xs:complexType>
   </xs:element>
 

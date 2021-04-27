@@ -42,7 +42,7 @@
             <xsl:copy-of select="@*"/>
             <xsl:variable name="shadows" select="key('assembly-by-name', @name, parent::METASCHEMA) except ."/>
             <xsl:if test="exists($shadows)" expand-text="true">
-                <WARNING>Assembly definition '{ @name }' in module '{ @module }' shadows { if (count($shadows) eq 1) then 'this definition' else 'these definitions'}: { ($shadows ! ('''' || @name || ''' in module ''' || @module || '''') ) => string-join('; ') }</WARNING>
+                <EXCEPTION level="warning">Assembly definition '{ @name }' in module '{ @module }' shadows { if (count($shadows) eq 1) then 'this definition' else 'these definitions'}: { ($shadows ! ('''' || @name || ''' in module ''' || @module || '''') ) => string-join('; ') }</EXCEPTION>
             </xsl:if>
             <xsl:apply-templates/>
         </xsl:copy>
@@ -53,7 +53,7 @@
             <xsl:copy-of select="@*"/>
             <xsl:variable name="shadows" select="key('field-by-name', @name, parent::METASCHEMA) except ."/>
             <xsl:if test="exists($shadows)" expand-text="true">
-                <WARNING>Field definition '{ @name }' in module '{ @module }' shadows { if (count($shadows) eq 1) then 'this definition' else 'these definitions'}: { ($shadows ! ('''' || @name || ''' in module ''' || @module || '''') ) => string-join('; ') }</WARNING>
+                <EXCEPTION level="warning">Field definition '{ @name }' in module '{ @module }' shadows { if (count($shadows) eq 1) then 'this definition' else 'these definitions'}: { ($shadows ! ('''' || @name || ''' in module ''' || @module || '''') ) => string-join('; ') }</EXCEPTION>
             </xsl:if>
             <xsl:apply-templates/>
             
@@ -65,7 +65,7 @@
             <xsl:copy-of select="@*"/>
             <xsl:variable name="shadows" select="key('flag-by-name', @name, parent::METASCHEMA) except ."/>
             <xsl:if test="exists($shadows)" expand-text="true">
-                <WARNING>Flag definition '{ @name }' in module '{ @module }' shadows { if (count($shadows) eq 1) then 'the definition' else 'these definitions:'} { ($shadows ! ('''' || @name || ''' in module ''' || @module || '''') ) => string-join('; ') }.</WARNING>
+                <EXCEPTION level="warning">Flag definition '{ @name }' in module '{ @module }' shadows { if (count($shadows) eq 1) then 'the definition' else 'these definitions:'} { ($shadows ! ('''' || @name || ''' in module ''' || @module || '''') ) => string-join('; ') }.</EXCEPTION>
             </xsl:if>
             <xsl:apply-templates/>
             
@@ -82,7 +82,7 @@
             <xsl:attribute name="key-ref" select="@key-name"/>
         </xsl:for-each>
         <xsl:if test="empty($all-defs)" expand-text="true">
-            <ERROR>Target definition not found for assembly reference '{ $me }'.</ERROR>
+            <EXCEPTION level="error">Target definition not found for assembly reference '{ $me }'.</EXCEPTION>
         </xsl:if>
     </xsl:template>
     
@@ -96,7 +96,7 @@
           <xsl:attribute name="key-ref" select="@key-name"/>
         </xsl:for-each>
         <xsl:if test="empty($all-defs)" expand-text="true">
-            <ERROR>Target definition not found for field reference '{ $me }'.</ERROR>
+            <EXCEPTION level="error">Target definition not found for field reference '{ $me }'.</EXCEPTION>
         </xsl:if>
     </xsl:template>
     
@@ -110,7 +110,7 @@
             <xsl:attribute name="key-ref" select="@key-name"/>
         </xsl:for-each>
         <xsl:if test="empty($all-defs)" expand-text="true">
-            <ERROR>Target definition not found for flag reference '{ $me }'.</ERROR>
+            <EXCEPTION level="error">Target definition not found for flag reference '{ $me }'.</EXCEPTION>
         </xsl:if>
     </xsl:template>
     

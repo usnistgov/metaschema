@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="../../validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- OSCAL CATALOG METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -26,7 +26,13 @@
       </define-flag>
       <model>
          <field ref="duplicate-global-field"/>
+         <field ref="duplicate-global-field">
+            <use-name>replicate-duplicate-global-field</use-name>
+         </field>
          <field ref="top-level-local-field"/>
+         <define-field name="top-level-local-field">
+            <formal-name>Another field with a misleading name.</formal-name>
+         </define-field>
          <define-field name="local-field">
             <formal-name>Locally defined field</formal-name>
             <description>XXX</description>

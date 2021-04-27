@@ -29,7 +29,9 @@
                         <description>XXX</description>
                     </define-flag>
                     <model>
-                        <field ref="top-level-global-field"/>
+                        <field ref="top-level-global-field" max-occurs="unbounded">
+                            <group-by name="top-level-global-field-sequence"/>
+                        </field>
                         <field ref="top-level-local-field"/>
                         <define-field name="local-field">
                             <formal-name>Locally defined field</formal-name>
@@ -47,23 +49,27 @@
                 <short-name>test</short-name>
                 <define-assembly name="root" module="test" key-name="test:root" scope="global">
                     <root-name>root-assembly</root-name>
-                    <flag ref="top-level-flag"/>
-                    <define-flag name="local-flag">
+                    <flag ref="top-level-flag" required="no">
+                        <use-name>tlf</use-name>
+                    </flag>
+                    <define-flag name="local-flag" as-type="string" required="no">
                         <formal-name>Locally defined flag</formal-name>
                         <description>XXX</description>
                     </define-flag>
                     <model>
-                        <field ref="top-level-global-field"/>
-                        <field ref="top-level-local-field"/>
-                        <define-field name="local-field">
+                        <field ref="top-level-global-field" min-occurs="0" max-occurs="unbounded">
+                            <group-by name="top-level-global-field-sequence"/>
+                        </field>
+                        <field ref="top-level-local-field" min-occurs="0" max-occurs="1"/>
+                        <define-field name="local-field" as-type="string" min-occurs="0" max-occurs="1" collapsible="no">
                             <formal-name>Locally defined field</formal-name>
                             <description>XXX</description>
                         </define-field>
                     </model>
                 </define-assembly>
-                <define-field name="top-level-global-field" module="test" key-name="test:top-level-global-field" scope="global"/>
-                <define-field name="top-level-local-field" scope="local" module="test" key-name="test:top-level-local-field"/>
-                <define-flag name="top-level-flag" module="test" key-name="test:top-level-flag" scope="global"/>                
+                <define-field name="top-level-global-field" module="test" key-name="test:top-level-global-field" scope="global" as-type="string" collapsible="no"/>
+                <define-field name="top-level-local-field" scope="local" module="test" key-name="test:top-level-local-field" as-type="string" collapsible="no"/>
+                <define-flag name="top-level-flag" module="test" key-name="test:top-level-flag" scope="global" as-type="string"/>                
             </METASCHEMA>
             
         </x:expect>
@@ -75,7 +81,9 @@
                 <short-name>test</short-name>
                 <define-assembly name="root">
                     <root-name>root-assembly</root-name>
-                    <flag ref="top-level-flag"/>
+                    <flag ref="top-level-flag" required="no">
+                        <use-name>tlf</use-name>
+                    </flag>
                     <define-flag name="local-flag">
                         <formal-name>Locally defined flag</formal-name>
                         <description>XXX</description>
@@ -108,32 +116,32 @@
                 <short-name>test</short-name>
                 <define-assembly name="root" module="test" key-name="test:root" scope="global">
                     <root-name>root-assembly</root-name>
-                    <flag ref="top-level-flag"/>
-                    <define-flag name="local-flag">
+                    <flag ref="top-level-flag" required="no"/>
+                    <define-flag name="local-flag" as-type="string" required="no">
                         <formal-name>Locally defined flag</formal-name>
                         <description>XXX</description>
                     </define-flag>
                     <model>
-                        <field ref="top-level-global-field"/>
-                        <field ref="top-level-local-field"/>
-                        <assembly ref="top-level-local-assembly"/>
-                        <define-field name="local-field">
+                        <field ref="top-level-global-field" min-occurs="0" max-occurs="1"/>
+                        <field ref="top-level-local-field" min-occurs="0" max-occurs="1"/>
+                        <assembly ref="top-level-local-assembly" min-occurs="0" max-occurs="1"/>
+                        <define-field name="local-field" as-type="string" min-occurs="0" max-occurs="1" collapsible="no">
                             <formal-name>Locally defined field</formal-name>
                             <description>XXX</description>
                         </define-field>
                     </model>
                 </define-assembly>
-                <define-field name="top-level-global-field" module="test" key-name="test:top-level-global-field" scope="global"/>
-                <define-field name="top-level-local-field" scope="local" module="test" key-name="test:top-level-local-field">
+                <define-field name="top-level-global-field" module="test" key-name="test:top-level-global-field" scope="global" as-type="string" collapsible="no"/>
+                <define-field name="top-level-local-field" scope="local" module="test" key-name="test:top-level-local-field" as-type="string" collapsible="no">
                     <formal-name>Included twice</formal-name>
                 </define-field>
                 <define-assembly name="top-level-local-assembly" scope="local" module="test" key-name="test:top-level-local-assembly">
                     <model>
-                        <field ref="top-level-local-field"/>
-                        <assembly ref="top-level-local-assembly"/>
+                        <field ref="top-level-local-field" min-occurs="0" max-occurs="1"/>
+                        <assembly ref="top-level-local-assembly" min-occurs="0" max-occurs="1"/>
                     </model>
                 </define-assembly>
-                <define-flag name="top-level-flag" module="test" key-name="test:top-level-flag" scope="global"/>                
+                <define-flag name="top-level-flag" module="test" key-name="test:top-level-flag" scope="global" as-type="string"/>                
             </METASCHEMA>
             
         </x:expect>
