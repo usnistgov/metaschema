@@ -6,6 +6,10 @@
 
 <!-- further work refactoring composition pipeline
 
+  o finish Metaschema Schematron
+  
+    *except* tests relating to group-as (DW will do)
+    
   unit tests including new error reporting (bad references, shadowing)
     x collect
     o other steps including resolve-use-names.xsl
@@ -21,8 +25,12 @@
   
   x emit EXCEPTION @level 
     from compose/metaschema-prune-unused-definitions.xsl
+    o add @problem-type everywhere
     o exception-allocation.xsl for final phase of pipeline
-
+    o problem-type
+    o base-URI of issue
+    o fully resolvable path
+    
   Metaschema Schematron (for authoring)
     when importing metaschema shadows (redefines definitions) an imported module
          (descendant in import hierarchy)
