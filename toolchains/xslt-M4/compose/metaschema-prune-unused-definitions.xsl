@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -30,34 +31,41 @@
     -->
     
     <xsl:mode on-no-match="shallow-copy"/>
-    
+
     <xsl:variable name="root-assembly-definitions" select="//METASCHEMA/define-assembly[exists(root-name)]"/>
+
+
+    <xsl:variable name="reference-counts" select="accumulator-after('definition-count')"/>
     
-    <xsl:variable name="assembly-references" as="xs:string*">
-        <xsl:for-each select="$root-assembly-definitions">
-            <xsl:sequence select="string(@key-name)"/>
-            <xsl:apply-templates select="model" mode="collect-assembly-references">
-                <xsl:with-param name="assembly-refs" tunnel="yes" select="string(@key-name)"/>
-            </xsl:apply-templates>
+    <xsl:accumulator name="definition-count" as="map(xs:string, xs:integer)"
+        initial-value="map{}">
+        <xsl:accumulator-rule match="m:assembly|m:field|m:flag">
+            <xsl:variable name="key" select="(name(.), @key-ref) => string-join('#')"/>
+            <xsl:choose>
+                <xsl:when test="map:contains($value, $key)">
+                    <xsl:sequence select="map:put($value, string($key), 
+                        $value($key)+1)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="map:put($value, string($key), 1)"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:accumulator-rule>  
+    </xsl:accumulator>
+
+    <xsl:template match="/">
+        <xsl:for-each select="map:keys($reference-counts)">
+            <xsl:comment><xsl:value-of select="."/> = <xsl:value-of select="$reference-counts(.)"/></xsl:comment><xsl:text>&#xa;</xsl:text>
         </xsl:for-each>
-    </xsl:variable>
-    
-    <xsl:variable name="field-references" as="xs:string*">
-        <xsl:apply-templates select="//METASCHEMA/define-assembly[exists(root-name)]" mode="collect-field-references">
-            <xsl:with-param name="field-refs" tunnel="yes" select="()"/>
-        </xsl:apply-templates>
-    </xsl:variable>
-    
-    <xsl:variable name="flag-references" as="xs:string*">
-        <xsl:apply-templates select="//METASCHEMA/define-assembly[exists(root-name)]" mode="collect-flag-references">
-            <xsl:with-param name="flag-refs" tunnel="yes" select="()"/>
-        </xsl:apply-templates>
-    </xsl:variable>
+        <xsl:copy>
+            <xsl:apply-templates/>
+        </xsl:copy>
+    </xsl:template>
     
     <xsl:template match="/METASCHEMA">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:if test="empty($root-assembly-definitions)">
+            <xsl:if test="not(@abstract='yes') and empty($root-assembly-definitions)">
                 <EXCEPTION problem-type="missing-root">No root found in this metaschema composition.</EXCEPTION>
             </xsl:if>
             <!--<xsl:if test="$verbose" expand-text="true">
@@ -75,7 +83,11 @@
     
     <!-- 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 -->    
 
-    <xsl:template match="METASCHEMA/define-assembly[not(@key-name=$assembly-references)]">
+    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-assembly[not(exists(m:root-name) or map:contains($reference-counts,string((substring-after(name(.),'define-'), @key-name) => string-join('#'))))]">
+<!--        <xsl:comment>Root Name? <xsl:value-of select="exists(m:root-name)"/></xsl:comment>
+        <xsl:comment>Map Key <xsl:value-of select="string((substring-after(name(.),'define-'), @key-name) => string-join('#'))"/></xsl:comment>
+        <xsl:comment>Map Contains? <xsl:value-of select="map:contains($reference-counts,string((substring-after(name(.),'define-'), @key-ref) => string-join('#')))"/></xsl:comment>
+-->
         <xsl:call-template name="warning">
             <!-- since we can detect unused definitions a better way, this can be
                  silenced and/or rendered as a comment -->
@@ -85,7 +97,7 @@
         </xsl:call-template>
     </xsl:template>
     
-    <xsl:template match="METASCHEMA/define-field[not(@key-name=$field-references)]">
+    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-field[not(map:contains($reference-counts,string((substring-after(name(.),'define-'), @key-name) => string-join('#'))))]">
         <xsl:call-template name="warning">
             <!-- since we can detect unused definitions a better way, this can be
                  silenced and/or rendered as a comment -->
@@ -95,7 +107,7 @@
         </xsl:call-template>
     </xsl:template>
     
-    <xsl:template match="METASCHEMA/define-flag[not(@key-name=$flag-references)]">
+    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-flag[not(map:contains($reference-counts,string((substring-after(name(.),'define-'), @key-name) => string-join('#'))))]">
         <xsl:call-template name="warning">
             <!-- since we can detect unused definitions a better way, this can be
                  silenced and/or rendered as a comment -->
@@ -103,76 +115,6 @@
             <xsl:with-param name="msg" expand-text="true">REMOVING unused flag definition for '{ @name }' from { ancestor::METASCHEMA[1]/@module
                 }</xsl:with-param>
         </xsl:call-template>
-    </xsl:template>
-
-    <!-- 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 -->
-    <!-- Modes collecting sets of strings naming definitions
-     we actually need, by traversing the definitions tree from the declared root;
-     recursive models are accounted for. -->
-    
-    <xsl:template match="define-assembly" mode="collect-assembly-references">
-        <xsl:apply-templates select="model" mode="#current"/>
-    </xsl:template>
-    
-    <xsl:template match="model" mode="collect-assembly-references">
-        <xsl:apply-templates select=".//assembly" mode="#current"/>
-    </xsl:template>
-    
-    <xsl:template match="assembly" mode="collect-assembly-references">
-        <xsl:param name="assembly-refs" tunnel="yes" select="()"/>
-        <xsl:if test="not(@key-ref = $assembly-refs)">
-            <xsl:sequence select="string(@key-ref)"/>
-            <xsl:apply-templates select="key('global-assembly-definition',@key-ref)" mode="#current">
-                <xsl:with-param name="assembly-refs" tunnel="yes" select="$assembly-refs,string(@key-ref)"/>
-            </xsl:apply-templates>
-        </xsl:if>
-    </xsl:template>
-
-    <!-- 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 -->   
-
-    <xsl:template match="define-assembly" mode="collect-field-references">
-        <xsl:apply-templates select="model" mode="#current"/>
-    </xsl:template>
-    
-    <xsl:template match="model" mode="collect-field-references">
-        <xsl:apply-templates select=".//field" mode="#current"/>
-        <xsl:apply-templates select=".//assembly" mode="#current"/>
-    </xsl:template>
-    
-    <xsl:template match="assembly" mode="collect-field-references collect-flag-references">
-        <xsl:param name="assembly-refs" tunnel="yes" select="()"/>
-        <xsl:if test="not(@key-ref = $assembly-refs)">
-            <xsl:apply-templates select="key('global-assembly-definition',@key-ref)" mode="#current">
-                <xsl:with-param name="assembly-refs" tunnel="yes" select="$assembly-refs,string(@key-ref)"/>
-            </xsl:apply-templates>
-        </xsl:if>
-    </xsl:template>
-    
-    <xsl:template match="field" mode="collect-field-references">
-        <xsl:sequence select="string(@key-ref)"/>
-    </xsl:template>
-
-    <!-- 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 -->   
-    
-    <xsl:template match="define-assembly | define-field" mode="collect-flag-references">
-        <xsl:apply-templates select="flag" mode="#current"/>
-        <xsl:apply-templates select="model" mode="#current"/>
-    </xsl:template>
-    
-    <xsl:template match="model" mode="collect-flag-references">
-        <xsl:apply-templates select=".//field" mode="#current"/>
-        <xsl:apply-templates select=".//define-field/flag" mode="#current"/>
-        <xsl:apply-templates select=".//assembly" mode="#current"/>
-        <xsl:apply-templates select=".//define-assembly/flag" mode="#current"/>
-    </xsl:template>
-    
-    <!-- Match for 'assembly' appears above -->
-    <xsl:template match="field" mode="collect-flag-references">
-            <xsl:apply-templates select="key('global-field-definition',@key-ref)" mode="#current"/>        
-    </xsl:template>
-    
-    <xsl:template match="flag" mode="collect-flag-references">
-        <xsl:sequence select="string(@key-ref)"/>
     </xsl:template>
     
     <xsl:template name="warning">
