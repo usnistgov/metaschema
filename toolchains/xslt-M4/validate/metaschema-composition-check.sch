@@ -123,7 +123,7 @@
             <xsl:variable name="as-composed" as="element()*" select="key('composed-node-by-identifier',nm:metaschema-module-node-identifier(.),$composed-metaschema)"/>
             <!-- filter out current node from defs. This allows a non-match to pass the following assertion, which can happen if the target definition was found to be unused. -->
             <sch:let name="extra-definitions" value="key('top-level-definition-by-name',nm:metaschema-definition-identifier(.),$composed-metaschema) except $as-composed"/>
-            <sch:assert test="empty($extra-definitions)" id="detect-shadowed-definitions">Definition shadows another definition in this (composed) metaschema: see <sch:name/> <xsl:value-of select="$extra-definitions/concat(@module,':',@name)" separator=", "/> (<xsl:value-of select="$extra-definitions/@_base-uri" separator=", "/>)</sch:assert>
+            <sch:assert test="empty($extra-definitions)" id="detect-shadowed-definitions" role="warning">Definition shadows another definition in this (composed) metaschema: see <sch:name/> <xsl:value-of select="$extra-definitions/concat(@module,':',@name)" separator=", "/> (<xsl:value-of select="$extra-definitions/@_base-uri" separator=", "/>)</sch:assert>
         </sch:rule>
     </sch:pattern>
 
