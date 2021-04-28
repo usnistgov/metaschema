@@ -11,14 +11,18 @@
     *except* tests relating to group-as (DW will do)
     
   unit tests including new error reporting (bad references, shadowing)
-    x collect
+    o collect (now broken) - including add defaults
     o other steps including resolve-use-names.xsl
     
   o refactor added attributes in pipeline with names starting with '_'
+  o factor out defaults into variables in collect.xsl
 
   o clean up and remove unused stylesheets and modules
-  
-  o factor out defaults into variables in collect.xsl
+    o update Metaschema validation support pipelines
+      rewire to reduce code overhead/duplication
+
+  o README !!!! with docs about all entry points
+    o describe pipelines
 
   x set globals for values defaulting settings
     x in-json, in-xml, as-type 'string' (DW will find)
@@ -31,20 +35,12 @@
     o base-URI of issue
     o fully resolvable path
     
-  Metaschema Schematron (for authoring)
+  ? (check over) Metaschema Schematron (for authoring)
     when importing metaschema shadows (redefines definitions) an imported module
          (descendant in import hierarchy)
     when a definition has no reference within its (import) scope - orphan definition
 
-  clean up and update XSLTs and XProcs
-  
-  document @key-name and @key-ref as documentation details, not as part of Metaschema spec
-
-  pipeline updates
-    XSD production
-    JSON Schema production
-    convertor XSLT production
-    docs production
+  document @key-name and @key-ref as implementation details, not as part of Metaschema spec
     
   -->
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
@@ -68,24 +64,29 @@
     <p:pipe port="result" step="build-refs"/>
   </p:output>
   
-  <p:serialization port="_3_defs-pruned" indent="true"/>
-  <p:output        port="_3_defs-pruned" primary="false">
+  <p:serialization port="_3_extra-modules-trimmed" indent="true"/>
+  <p:output        port="_3_extra-modules-trimmed" primary="false">
+    <p:pipe port="result" step="trim-extra-modules"/>
+  </p:output>
+  
+  <p:serialization port="_4_defs-pruned" indent="true"/>
+  <p:output        port="_4_defs-pruned" primary="false">
     <p:pipe port="result" step="prune-defs"/>
   </p:output>
   
-  <p:serialization port="_4_using-names-added" indent="true"/>
-  <p:output port="_4_using-names-added" primary="false">
+  <p:serialization port="_5_using-names-added" indent="true"/>
+  <p:output port="_5_using-names-added" primary="false">
     <p:pipe port="result" step="add-use-names"/>
   </p:output>
   
   <!-- 'sibling name' indicates the name among the siblings (whether singular or grouped) -->
-  <p:serialization port="_5_sibling-names-added" indent="true"/>
-  <p:output port="_5_sibling-names-added" primary="false">
+  <p:serialization port="_6_sibling-names-added" indent="true"/>
+  <p:output port="_6_sibling-names-added" primary="false">
     <p:pipe port="result" step="add-sibling-names"/>
   </p:output>
   
-  <p:serialization port="_6_digested" indent="true"/>
-  <p:output port="_6_digested" primary="false">
+  <p:serialization port="_7_digested" indent="true"/>
+  <p:output port="_7_digested" primary="false">
     <p:pipe port="result" step="digest"/>
   </p:output>
   
@@ -113,6 +114,13 @@
   <p:xslt name="build-refs">
     <p:input port="stylesheet">
       <p:document href="compose/metaschema-build-refs.xsl"/>
+    </p:input>
+  </p:xslt>
+  <!--  With EXCEPTION for broken references (error) or shadowing definitions (warning) -->
+  
+  <p:xslt name="trim-extra-modules">
+    <p:input port="stylesheet">
+      <p:document href="compose/metaschema-trim-extra-modules.xsl"/>
     </p:input>
   </p:xslt>
   <!--  With EXCEPTION for broken references (error) or shadowing definitions (warning) -->

@@ -53,29 +53,17 @@
         </xsl:accumulator-rule>  
     </xsl:accumulator>
 
-    <xsl:template match="/">
-        <xsl:for-each select="map:keys($reference-counts)">
-            <xsl:comment><xsl:value-of select="."/> = <xsl:value-of select="$reference-counts(.)"/></xsl:comment><xsl:text>&#xa;</xsl:text>
-        </xsl:for-each>
-        <xsl:copy>
-            <xsl:apply-templates/>
-        </xsl:copy>
-    </xsl:template>
-    
     <xsl:template match="/METASCHEMA">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
             <xsl:if test="not(@abstract='yes') and empty($root-assembly-definitions)">
                 <EXCEPTION problem-type="missing-root">No root found in this metaschema composition.</EXCEPTION>
             </xsl:if>
-            <!--<xsl:if test="$verbose" expand-text="true">
-                <xsl:variable name="noun" select="if (count($root-assembly-definitions) gt 1) then 'root' else 'roots'"/>
-                <TRACE>Designated { $noun }: { $root-assembly-definitions/root-name }</TRACE>
-                <TRACE>Assembly references found from { $noun }: { $assembly-references => string-join(', ') }</TRACE>
-                <TRACE>Field references found from {    $noun }: { $field-references    => string-join(', ') }</TRACE>
-                <TRACE>Flag references found from  {    $noun }: { $flag-references     => string-join(', ') }</TRACE>
-                <xsl:text>&#xA;</xsl:text>
-            </xsl:if>-->
+            <xsl:for-each select="map:keys($reference-counts)">
+                <xsl:comment expand-text="true">{ . } = { $reference-counts(.) }</xsl:comment>
+                <xsl:text>&#xa;</xsl:text>
+            </xsl:for-each>
+            
             <xsl:apply-templates/>
             
         </xsl:copy>

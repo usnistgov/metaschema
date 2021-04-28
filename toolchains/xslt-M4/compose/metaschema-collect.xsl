@@ -55,9 +55,10 @@
     
     <xsl:template match="METASCHEMA" mode="acquire">
         <xsl:copy>
+            <xsl:attribute name="abstract">no</xsl:attribute>
             <xsl:copy-of select="@* except @xsi:*"/>
             <xsl:attribute name="module" select="short-name"/>
-            <xsl:attribute name="src" select="base-uri(.)"/>
+            <xsl:attribute name="_base-uri" select="base-uri(.)"/>
             <xsl:apply-templates select="* except import" mode="#current"/>
             <xsl:apply-templates select="import" mode="#current"/>
         </xsl:copy>
@@ -139,7 +140,7 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template mode="acquire" match="define-assembly | define-field | define-flag | assembly | field | flag">
+    <xsl:template mode="acquire" match="define-assembly | define-field | define-flag | assembly | field | flag | group-by">
         <xsl:copy>
             <!-- hit the node again in the mode to acquire applicable defaults -->
             <xsl:apply-templates select="." mode="assign-defaults"/>
