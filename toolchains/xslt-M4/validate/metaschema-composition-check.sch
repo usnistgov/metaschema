@@ -22,25 +22,25 @@
     
     <!--<xsl:import href="oscal-datatypes-check.xsl"/>-->
     
-    <xsl:variable name="composed-metaschema" select="nm:compose-metaschema(/)"/>
+    <xsl:param    name="global-context" select="/"/>
+    
+    <xsl:variable name="composed-metaschema" select="nm:compose-metaschema($global-context)"/>
  
     <!--<sch:let name="metaschema-is-abstract" value="/m:METASCHEMA/@abstract='yes'"/>-->
     
     <sch:pattern id="top-level-and-schema-docs">
         <sch:rule context="/m:METASCHEMA">
-            <sch:assert test="exists($composed-metaschema)">Can't find composition...</sch:assert>
-            <sch:assert test="exists(m:schema-version)" role="warning">Metaschema schema version must be set for any top-level metaschema</sch:assert>
-            <sch:assert test="exists(@abstract='yes' or $composed-metaschema/m:define-assembly/m:root-name)">Unless marked as @abstract='yes', a metaschema (or an imported metaschema) should have at least one assembly with a root-name.</sch:assert>
+            <sch:assert test="exists($composed-metaschema)" id="expect-successful-composition">Can't find composition...</sch:assert>
+            <sch:assert test="exists(m:schema-version)" role="warning" id="expect-schema-version">Metaschema schema version must be set for any top-level metaschema</sch:assert>
+            <sch:assert test="exists(@abstract='yes' or $composed-metaschema/m:define-assembly/m:root-name)" id="expect-root">Unless marked as @abstract='yes', a metaschema (or an imported metaschema) should have at least one assembly with a root-name.</sch:assert>
         </sch:rule>
         <sch:rule context="/m:METASCHEMA/m:import">
-            <sch:report role="warning" test="document-uri(/) = resolve-uri(@href,document-uri(/))">Schema can't import itself</sch:report>
-            <sch:assert test="exists(document(@href)/m:METASCHEMA)">Can't find a metaschema at <sch:value-of select="@href"/></sch:assert>
+            <sch:report role="warning" test="document-uri(/) = resolve-uri(@href,document-uri(/))" id="detect-circular-import">Schema can't import itself</sch:report>
+            <sch:assert test="exists(document(@href)/m:METASCHEMA)" id="expect-resource-at-href">Can't find a metaschema at <sch:value-of select="@href"/></sch:assert>
         </sch:rule>
     </sch:pattern>
     
-    
-    
-    <sch:pattern id="detect-duplicates-and-name-clashes">
+    <sch:pattern id="duplication-and-name-clashing">
         
         <sch:rule context="m:assembly | m:field | m:flag">
             <!--<sch:report test="true()">ID: <xsl:value-of select="nm:metaschema-module-node-identifier(.)"/></sch:report>
@@ -59,17 +59,30 @@
             <xsl:variable name="as-composed" as="element()?" select="$maybe-composed[count($maybe-composed) eq 1]"/>         
             <xsl:variable name="is-multiple"  select="count($maybe-composed) gt 1"/>
             
+            <sch:assert test="not($is-multiple)" id="expect-unambiguous-reference-in-composition" >Duplicate found for <sch:name/> reference to <sch:value-of select="@ref"/> in <xsl:value-of select="$maybe-composed/(ancestor-or-self::m:define-assembly|ancestor-or-self::m:define-field|ancestor::m:define-flag)/@_base-uri" separator=", "/>. Is this due to a duplicated METASCHEMA/short-name in a module?</sch:assert>
+            <!-- <sch:report test="$is-multiple">Matching <xsl:value-of select="$maybe-composed/serialize(.)" separator=", "/></sch:report>
+-->            
+            
             <sch:let name="my-xml-name"  value="$as-composed/@in-xml-name"/>
             <sch:let name="my-json-name" value="$as-composed/@in-json-name"/>
-            <sch:let name="named-like-me-in-xml" value="$as-composed/ancestor::m:model[1]/(*|m:choice/*)[@in-xml-name=$my-xml-name]"/>
             
-            <sch:let name="named-like-me-in-json" value="$as-composed/ancestor::m:model[1]/(*|m:choice/*)[@in-json-name=$my-json-name]"/>
+            <!-- second clause accounts for flags as separate items -->
+            <sch:let name="rivals-in-xml"
+                value="$as-composed/ancestor::m:model[1]/(*|m:choice/*)
+                     | $as-composed/../(m:flag|m:define-flag)"/>
+            <sch:let name="named-like-me-in-xml" value="$rivals-in-xml[@in-xml-name=$my-xml-name]"/>
             
-            <sch:assert test="not($is-multiple)" >Duplicate found for <sch:name/> reference to <sch:value-of select="@ref"/> in <xsl:value-of select="$maybe-composed/(ancestor-or-self::m:define-assembly|ancestor-or-self::m:define-field|ancestor::m:define-flag)/@_base-uri" separator=", "/>. Is this due to a duplicated METASCHEMA/short-name in a module?</sch:assert>
-<!--            <sch:report test="$is-multiple">Matching <xsl:value-of select="$maybe-composed/serialize(.)" separator=", "/></sch:report>
--->            
-            <sch:assert test="empty($as-composed) or $is-multiple or count($named-like-me-in-json) = 1">Name clash among siblings (properties of the same object) with JSON name '<sch:value-of select="$my-json-name"/>'.</sch:assert>
-            <sch:assert test="empty($as-composed) or $is-multiple or count($named-like-me-in-xml) = 1">Name clash among siblings with XML name '<sch:value-of select="$my-xml-name"/>'.</sch:assert>
+            <!-- in JSON, names of flags, fields and assemblies must all be distinct. -->
+            <sch:let name="rivals-in-json" value="$as-composed/ancestor::m:model[1]/(*|m:choice/*) |
+                $as-composed/ancestor::m:model[1]/parent::m:define-assembly/(m:flag|m:define-flag) |
+                $as-composed/parent::m:define-assembly/m:model[1]/(*|m:choice/*) |
+                $as-composed/parent::m:define-assembly/(m:flag|m:define-flag)"/>
+            <sch:let name="named-like-me-in-json" value="$rivals-in-json[@in-json-name=$my-json-name]"/>
+            
+            <sch:report test="empty($as-composed) or $is-multiple">Not finding '<sch:value-of select="$my-json-name"/>'</sch:report>
+            <sch:assert test="empty($as-composed) or $is-multiple or count($named-like-me-in-json) = 1" id="detect-json-sibling-name-clash">Name clash among siblings (properties of the same object) with JSON name '<sch:value-of select="$my-json-name"/>'. <sch:value-of select="count($named-like-me-in-json)"/></sch:assert>
+            
+            <sch:assert test="empty($as-composed) or $is-multiple or count($named-like-me-in-xml) = 1" id="detect-xml-sibling-name-clash">Name clash among siblings or attributes with XML name '<sch:value-of select="$my-xml-name"/>'.</sch:assert>
         </sch:rule>
         
         <sch:rule context="m:define-flag | m:define-field | m:define-assembly">
@@ -90,12 +103,12 @@
             <xsl:variable name="as-composed" as="element()?" select="$maybe-composed[count($maybe-composed) eq 1]"/>
             <xsl:variable name="is-multiple"  select="count($maybe-composed) gt 1"/>
             
-            <sch:assert test="not($is-multiple)">Duplicate found for <sch:name/> reference to <sch:value-of select="@ref"/> in <xsl:value-of select="$maybe-composed/(ancestor-or-self::m:define-assembly|ancestor-or-self::m:define-field|ancestor::m:define-flag)/@_base-uri" separator=", "/>. Is this due to a duplicated METASCHEMA/short-name in a module?</sch:assert>
+            <sch:assert test="not($is-multiple)" id="expect-unambiguous-composition">Duplicate found for <sch:name/> '<sch:value-of select="@name"/>' in <xsl:value-of select="$maybe-composed/(ancestor-or-self::m:define-assembly|ancestor-or-self::m:define-field|ancestor::m:define-flag)/@_base-uri" separator=", "/>. Is this due to a duplicated METASCHEMA/short-name in a module?</sch:assert>
             
         </sch:rule>
     </sch:pattern>
     
-    <sch:pattern id="detect-shadowed-definitions">
+    <sch:pattern id="definition-shadowing">
         <sch:rule context="/m:METASCHEMA/m:define-assembly | /m:METASCHEMA/m:define-field | /m:METASCHEMA/m:define-flag">
 <!--            <sch:report test="true()">ID: <xsl:value-of select="nm:metaschema-module-node-identifier(.)"/></sch:report>
             <sch:report test="true()">
@@ -109,8 +122,8 @@
 -->            
             <xsl:variable name="as-composed" as="element()*" select="key('composed-node-by-identifier',nm:metaschema-module-node-identifier(.),$composed-metaschema)"/>
             <!-- filter out current node from defs. This allows a non-match to pass the following assertion, which can happen if the target definition was found to be unused. -->
-            <sch:let name="defs" value="key('top-level-definition-by-name',nm:metaschema-definition-identifier(.),$composed-metaschema) except $as-composed"/>
-            <sch:assert test="count($defs)=0">Definition shadows by another definition in this (composed) metaschema: see <sch:name/> <xsl:value-of select="$defs/concat(@module,':',@name)" separator=", "/> (<xsl:value-of select="$defs/@_base-uri" separator=", "/>)</sch:assert>
+            <sch:let name="extra-definitions" value="key('top-level-definition-by-name',nm:metaschema-definition-identifier(.),$composed-metaschema) except $as-composed"/>
+            <sch:assert test="empty($extra-definitions)" id="detect-shadowed-definitions">Definition shadows another definition in this (composed) metaschema: see <sch:name/> <xsl:value-of select="$extra-definitions/concat(@module,':',@name)" separator=", "/> (<xsl:value-of select="$extra-definitions/@_base-uri" separator=", "/>)</sch:assert>
         </sch:rule>
     </sch:pattern>
 
@@ -118,7 +131,7 @@
         <sch:rule context="m:assembly | m:field | m:model/m:define-assembly | m:model/m:define-field">
             <xsl:variable name="as-composed" as="element()*" select="key('composed-node-by-identifier',nm:metaschema-module-node-identifier(.),$composed-metaschema)"/>
 
-            <sch:assert test="not(exists($as-composed)) or number($as-composed/@max-occurs)=1 or exists($as-composed/m:group-as/@name)">Unless @max-occurs is 1, a group-as name must be given within an instance or a local definition.</sch:assert>
+            <sch:assert test="not(exists($as-composed)) or number($as-composed/@max-occurs)=1 or exists($as-composed/m:group-as/@name)" id="expect-group-as-with-maxoccurs-gt-1">Unless @max-occurs is 1, a group-as name must be given within an instance or a local definition.</sch:assert>
         </sch:rule>
     </sch:pattern>
 
@@ -127,9 +140,9 @@
         
         <!-- flag references and inline definitions -->
         <sch:rule context="m:flag | m:define-field/m:define-flag | m:define-assembly/m:define-flag">
-            <sch:assert
+            <sch:assert id="json-value-key-flag-is-required"
                 test="not((@name | @ref) = ../m:json-value-key/@flag-name) or @required = 'yes'">A flag declared as a value key must be required (@required='yes')</sch:assert>
-            <sch:assert
+            <sch:assert id="json-value-flag-is-required"
                 test="not((@name | @ref) = ../m:json-key/@flag-name) or @required = 'yes'">A flag declared as a key must be required (@required='yes')</sch:assert>
         </sch:rule>
         
@@ -137,44 +150,44 @@
         <sch:rule context="m:field | m:model//m:define-field">
             <!-- constraints on markup-multiline **XXX** TEST ME -->
             <xsl:variable name="as-composed" as="element()*" select="key('composed-node-by-identifier',nm:metaschema-module-node-identifier(.),$composed-metaschema)"/>
-            <sch:assert test="empty($as-composed) or not($as-composed/@in-xml='UNWRAPPED') or not($as-composed/@as-type='markup-multiline') or not(preceding-sibling::*[$as-composed/@in-xml='UNWRAPPED']/@as-type='markup-multiline')">Only one field may be marked as 'markup-multiline' (without xml wrapping) within a model.</sch:assert>
-            <sch:report test="($as-composed/@in-xml='UNWRAPPED') and (@max-occurs!='1')">An 'unwrapped' field must have a max occurrence of 1</sch:report>
-            <sch:assert test="$as-composed/@as-type='markup-multiline' or not($as-composed/@in-xml='UNWRAPPED')">Only 'markup-multiline' fields may be unwrapped in XML.</sch:assert>
+            <sch:assert id="permit-a-single-unwrapped-markupmultiline" test="empty($as-composed) or not($as-composed/@in-xml='UNWRAPPED') or not($as-composed/@as-type='markup-multiline') or not(preceding-sibling::*[$as-composed/@in-xml='UNWRAPPED']/@as-type='markup-multiline')">Only one field may be marked as 'markup-multiline' (without xml wrapping) within a model.</sch:assert>
+            <sch:report id="forbid-multiple-unwrapped-fields" test="($as-composed/@in-xml='UNWRAPPED') and (@max-occurs!='1')">An 'unwrapped' field must have a max occurrence of 1</sch:report>
+            <sch:assert id="forbid-unwrapped-xml-except-markupmultiline" test="$as-composed/@as-type='markup-multiline' or not($as-composed/@in-xml='UNWRAPPED')">Only 'markup-multiline' fields may be unwrapped in XML.</sch:assert>
 
 </sch:rule>
         
         <sch:rule context="m:define-field">
             <!-- use @subject to refine the reporting? -->
-            <sch:assert test="empty(m:flag|m:define-flag) or not(@as-type='markup-multiline' and @in-xml='UNWRAPPED')">Multiline markup fields must have no flags, unless always used with a wrapper - put your flags on an assembly with an unwrapped multiline field.</sch:assert>
+            <sch:assert id="forbid-flags-on-unwrapped-markupmultiline" test="empty(m:flag|m:define-flag) or not(@as-type='markup-multiline' and @in-xml='UNWRAPPED')">Multiline markup fields must have no flags, unless always used with a wrapper - put your flags on an assembly with an unwrapped multiline field.</sch:assert>
         </sch:rule>
 
         <sch:rule context="m:json-key">
             <sch:let name="json-key-flag-name" value="@flag-name"/>
             <sch:let name="json-key-flag" value="../m:flag[@ref=$json-key-flag-name] |../m:define-flag[@name=$json-key-flag-name]"/>
-            <sch:assert test="exists($json-key-flag)">JSON key indicates no flag on this <sch:value-of select="substring-after(local-name(..),'define-')"/> <xsl:if test="exists(../m:flag | ../m:define-flag)">Should be (one of) <xsl:value-of select="../m:flag/@ref | ../m:define-flag/@name" separator=", "/></xsl:if></sch:assert>
+            <sch:assert test="exists($json-key-flag)" id="require-json-key-flag-is-a-flag">JSON key indicates no flag on this <sch:value-of select="substring-after(local-name(..),'define-')"/> <xsl:if test="exists(../m:flag | ../m:define-flag)">Should be (one of) <xsl:value-of select="../m:flag/@ref | ../m:define-flag/@name" separator=", "/></xsl:if></sch:assert>
         </sch:rule>
         
         <sch:rule context="m:json-value-key">
-            <sch:assert test="empty(@flag-name) or (@flag-name != ../(m:flag/@ref | m:define-flag/@name) )"><sch:name/> as flag/<sch:value-of select="@flag-name"/> will be inoperative as the value will be given the field key -- no other flags are given <xsl:value-of select="../(m:flag|m:define-flag)/@ref" separator=", "/></sch:assert>
-            <sch:report test="exists(@flag-name) and matches(.,'\S')">JSON value key may be set to a value or a flag's value, but not both.</sch:report>
-            <sch:assert test="empty(@flag-name) or @flag-name = (../m:flag/@ref|../m:define-flag/@name)">flag '<sch:value-of select="@flag-name"/>' not found for JSON value key</sch:assert>
+            <sch:assert test="empty(@flag-name) or (@flag-name != ../(m:flag/@ref | m:define-flag/@name) )" id="locate-json-value-key-flag"><sch:name/> as flag/<sch:value-of select="@flag-name"/> will be inoperative as the value will be given the field key -- no other flags are given <xsl:value-of select="../(m:flag|m:define-flag)/@ref" separator=", "/></sch:assert>
+            <sch:report test="exists(@flag-name) and matches(.,'\S')" id="require-unambiguous-value-key">JSON value key may be set to a value or a flag's value, but not both.</sch:report>
+            <sch:assert test="empty(@flag-name) or @flag-name = (../m:flag/@ref|../m:define-flag/@name)" id="locate-json-key-name">flag '<sch:value-of select="@flag-name"/>' not found for JSON value key</sch:assert>
         </sch:rule>
         
         <sch:rule context="m:allowed-values/m:enum">
-            <sch:assert test="not(@value = preceding-sibling::*/@value)">Allowed value '<sch:value-of select="@value"/>' may only be specified once for flag '<sch:value-of select="../../@name"/>'.</sch:assert>
-            <sch:assert test="m:datatype-validate(@value,../../@as-type)">Value '<sch:value-of select="@value"/>' is not a valid token of type <sch:value-of select="../../@as-type"/></sch:assert>
+            <sch:assert test="not(@value = preceding-sibling::*/@value)" id="require-distinct-enumeration">Allowed value '<sch:value-of select="@value"/>' may only be specified once for flag '<sch:value-of select="../../@name"/>'.</sch:assert>
+            <sch:assert test="m:datatype-validate(@value,../../@as-type)" id="require-enumeration-to-conform-to-given-type">Value '<sch:value-of select="@value"/>' is not a valid token of type <sch:value-of select="../../@as-type"/></sch:assert>
         </sch:rule>
         
         <sch:rule context="m:index | m:is-unique">
-            <sch:assert test="count(key('index-by-name',@name,$composed-metaschema))=1">Only one index or uniqueness assertion may be named '<sch:value-of select="@name"/>'</sch:assert>
+            <sch:assert test="count(key('index-by-name',@name,$composed-metaschema))=1" id="require-unique-index-name">Only one index or uniqueness assertion may be named '<sch:value-of select="@name"/>'</sch:assert>
         </sch:rule>
         
         <sch:rule context="m:index-has-key">
-            <sch:assert test="count(key('index-by-name',@name,$composed-metaschema)/self::m:index)=1">No '<sch:value-of select="@name"/>' index is defined.</sch:assert>
+            <sch:assert test="count(key('index-by-name',@name,$composed-metaschema)/self::m:index)=1" id="require-index-for-index-key">No '<sch:value-of select="@name"/>' index is defined.</sch:assert>
         </sch:rule>
         
         <sch:rule context="m:key-field">
-            <sch:report test="@target = preceding-sibling::*/@target">Index key field target '<sch:value-of select="@target"/>' is already declared.</sch:report>
+            <sch:report test="@target = preceding-sibling::*/@target" id="require-distinct-key-field">Index key field target '<sch:value-of select="@target"/>' is already declared.</sch:report>
         </sch:rule>
     </sch:pattern>
     
@@ -182,13 +195,12 @@
     
     <sch:pattern id="schema-docs">
         <sch:rule context="m:define-assembly | m:define-field | m:define-flag">
-            <sch:assert role="warning" test="exists(m:formal-name)">Formal name missing from <sch:name/></sch:assert>
-            <sch:assert role="warning" test="exists(m:description)">Short description missing from <sch:name/></sch:assert>
+            <sch:assert role="warning" test="exists(m:formal-name)" id="expect-formal-name">Formal name missing from <sch:name/></sch:assert>
+            <sch:assert role="warning" test="exists(m:description)" id="expect-description">Short description missing from <sch:name/></sch:assert>
         </sch:rule>
         
         <sch:rule context="m:p | m:li | m:pre">
-            <sch:assert test="matches(.,'\S')">Empty <name/> (is likely to distort rendition)</sch:assert>
-            <sch:report role="warning" test="not(matches(.,'\w'))">Not much here is there</sch:report>
+            <sch:assert test="matches(.,'\S')" id="discourage-whitespace-only">Empty <name/> (is likely to distort rendition)</sch:assert>
         </sch:rule>
     </sch:pattern>
     

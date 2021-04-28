@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<!-- OSCAL CATALOG METASCHEMA -->
-<!-- validate with XSD and Schematron (linked) -->
-<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../validate/metaschema.xsd"
- xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
    <schema-name>OSCAL TEST Format</schema-name>
    <schema-version>0.0</schema-version>
    <short-name>oscal-test</short-name>
@@ -54,5 +50,5 @@
       <formal-name>Flag, defined at top level</formal-name>
       <description>XXX</description>
    </define-flag>
-   
 </METASCHEMA>
+   
