@@ -17,21 +17,21 @@
     <xsl:template priority="5" match="METASCHEMA/define-assembly[exists(root-name)]">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:attribute name="using-root-name" select="root-name"/>
+            <xsl:attribute name="_using-root-name" select="root-name"/>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
 
-    <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly" use="@key-name"/>
-    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field"    use="@key-name"/>
-    <xsl:key name="global-flag-definition"     match="METASCHEMA/define-flag"     use="@key-name"/>
+    <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly" use="@_key-name"/>
+    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field"    use="@_key-name"/>
+    <xsl:key name="global-flag-definition"     match="METASCHEMA/define-flag"     use="@_key-name"/>
     
     
     <!-- Inline definitions can give their own use-name values. -->
     <xsl:template match="define-assembly/define-flag | define-field/define-flag">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:attribute name="using-name" select="(use-name,@name)[1]"/>
+            <xsl:attribute name="_using-name" select="(use-name,@name)[1]"/>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
@@ -39,7 +39,7 @@
     <xsl:template match="model//define-field">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:attribute name="using-name" select="(use-name,@name)[1]"/>
+            <xsl:attribute name="_using-name" select="(use-name,@name)[1]"/>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
@@ -47,7 +47,7 @@
     <xsl:template match="model//define-assembly">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:attribute name="using-name" select="(use-name,@name)[1]"/>
+            <xsl:attribute name="_using-name" select="(use-name,@name)[1]"/>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
@@ -55,29 +55,29 @@
     <!-- Alternatively, references to definitions can give their own use-name
          values, or acquire them from the definition. -->
     
-    <xsl:template match="flag[exists(@key-ref)]">
+    <xsl:template match="flag[exists(@_key-ref)]">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:variable name="def" select="key('global-flag-definition',@key-ref)"/>
-            <xsl:attribute name="using-name" select="(use-name,$def/use-name,$def/@name)[1]"/>
+            <xsl:variable name="def" select="key('global-flag-definition',@_key-ref)"/>
+            <xsl:attribute name="_using-name" select="(use-name,$def/use-name,$def/@name)[1]"/>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="field[exists(@key-ref)]">
+    <xsl:template match="field[exists(@_key-ref)]">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:variable name="def" select="key('global-field-definition',@key-ref)"/>
-            <xsl:attribute name="using-name" select="(use-name,$def/use-name,$def/@name)[1]"/>
+            <xsl:variable name="def" select="key('global-field-definition',@_key-ref)"/>
+            <xsl:attribute name="_using-name" select="(use-name,$def/use-name,$def/@name)[1]"/>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template match="assembly[exists(@key-ref)]">
+    <xsl:template match="assembly[exists(@_key-ref)]">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:variable name="def" select="key('global-assembly-definition',@key-ref)"/>
-            <xsl:attribute name="using-name" select="(use-name,$def/use-name,$def/@name)[1]"/>
+            <xsl:variable name="def" select="key('global-assembly-definition',@_key-ref)"/>
+            <xsl:attribute name="_using-name" select="(use-name,$def/use-name,$def/@name)[1]"/>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>

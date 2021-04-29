@@ -26,6 +26,7 @@
     <xsl:variable name="transformation-sequence">
         <nm:transform version="3.0">../compose/metaschema-collect.xsl</nm:transform>
         <nm:transform version="3.0">../compose/metaschema-build-refs.xsl</nm:transform>
+        <nm:transform version="3.0">../compose/metaschema-trim-extra-modules.xsl</nm:transform>
         <nm:transform version="3.0">../compose/metaschema-prune-unused-definitions.xsl</nm:transform>
         <nm:transform version="3.0">../compose/metaschema-resolve-use-names.xsl</nm:transform>
         <nm:transform version="3.0">../compose/metaschema-resolve-sibling-names.xsl</nm:transform>

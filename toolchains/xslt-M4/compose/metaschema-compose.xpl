@@ -106,28 +106,28 @@
   
   <p:xslt name="collect">
     <p:input port="stylesheet">
-      <p:document href="compose/metaschema-collect.xsl"/>
+      <p:document href="metaschema-collect.xsl"/>
     </p:input>
   </p:xslt>
   <!--  With EXCEPTION for broken or circular imports -->
   
   <p:xslt name="build-refs">
     <p:input port="stylesheet">
-      <p:document href="compose/metaschema-build-refs.xsl"/>
+      <p:document href="metaschema-build-refs.xsl"/>
     </p:input>
   </p:xslt>
   <!--  With EXCEPTION for broken references (error) or shadowing definitions (warning) -->
   
   <p:xslt name="trim-extra-modules">
     <p:input port="stylesheet">
-      <p:document href="compose/metaschema-trim-extra-modules.xsl"/>
+      <p:document href="metaschema-trim-extra-modules.xsl"/>
     </p:input>
   </p:xslt>
   <!--  With EXCEPTION for broken references (error) or shadowing definitions (warning) -->
   
   <p:xslt name="prune-defs">
     <p:input port="stylesheet">
-      <p:document href="compose/metaschema-prune-unused-definitions.xsl"/>
+      <p:document href="metaschema-prune-unused-definitions.xsl"/>
     </p:input>
     <p:with-param name="show-warnings" select="'yes'"/>
   </p:xslt>
@@ -141,7 +141,7 @@
   <!-- New @using-name exposes the name-in-use, whether given or derived -->
   <p:xslt name="add-use-names">
     <p:input port="stylesheet">
-      <p:document href="compose/metaschema-resolve-use-names.xsl"/>
+      <p:document href="metaschema-resolve-use-names.xsl"/>
     </p:input>
   </p:xslt>
   <!-- No exceptions produced (everything gets a @using-name) -->
@@ -150,7 +150,7 @@
        for checking among siblings within models -->
   <p:xslt name="add-sibling-names">
     <p:input port="stylesheet">
-      <p:document href="compose/metaschema-resolve-sibling-names.xsl"/>
+      <p:document href="metaschema-resolve-sibling-names.xsl"/>
     </p:input>
   </p:xslt>
   <!-- No exceptions produced (everything gets a @sibling-name) -->
@@ -188,7 +188,7 @@ situation results in error
   <!-- flatten and add defaults -->
   <p:xslt name="digest">
     <p:input port="stylesheet">
-      <p:document href="compose/metaschema-digest.xsl"/>
+      <p:document href="metaschema-digest.xsl"/>
     </p:input>
   </p:xslt>
   

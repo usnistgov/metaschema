@@ -30,9 +30,12 @@
     
     <sch:pattern id="top-level-and-schema-docs">
         <sch:rule context="/m:METASCHEMA">
-            <sch:assert test="exists($composed-metaschema)" id="expect-successful-composition">Can't find composition...</sch:assert>
-            <sch:assert test="exists(m:schema-version)" role="warning" id="expect-schema-version">Metaschema schema version must be set for any top-level metaschema</sch:assert>
-            <sch:assert test="exists(@abstract='yes' or $composed-metaschema/m:define-assembly/m:root-name)" id="expect-root">Unless marked as @abstract='yes', a metaschema (or an imported metaschema) should have at least one assembly with a root-name.</sch:assert>
+            <sch:assert id="require-successful-composition" role="warning"
+                test="exists($composed-metaschema)">Can't find composition...</sch:assert>
+            <sch:assert id="require-schema-version"
+                test="exists(m:schema-version)">Metaschema schema version must be set for any top-level metaschema</sch:assert>
+            <sch:assert id="expect-root"
+                test="exists(@abstract='yes' or $composed-metaschema/m:define-assembly/m:root-name)">Unless marked as @abstract='yes', a metaschema (or an imported metaschema) should have at least one assembly with a root-name.</sch:assert>
         </sch:rule>
         <sch:rule context="/m:METASCHEMA/m:import">
             <sch:report role="warning" test="document-uri(/) = resolve-uri(@href,document-uri(/))" id="detect-circular-import">Schema can't import itself</sch:report>
@@ -63,21 +66,21 @@
             <!-- <sch:report test="$is-multiple">Matching <xsl:value-of select="$maybe-composed/serialize(.)" separator=", "/></sch:report>
 -->            
             
-            <sch:let name="my-xml-name"  value="$as-composed/@in-xml-name"/>
-            <sch:let name="my-json-name" value="$as-composed/@in-json-name"/>
+            <sch:let name="my-xml-name"  value="$as-composed/@_in-xml-name"/>
+            <sch:let name="my-json-name" value="$as-composed/@_in-json-name"/>
             
             <!-- second clause accounts for flags as separate items -->
             <sch:let name="rivals-in-xml"
                 value="$as-composed/ancestor::m:model[1]/(*|m:choice/*)
                      | $as-composed/../(m:flag|m:define-flag)"/>
-            <sch:let name="named-like-me-in-xml" value="$rivals-in-xml[@in-xml-name=$my-xml-name]"/>
+            <sch:let name="named-like-me-in-xml" value="$rivals-in-xml[@_in-xml-name=$my-xml-name]"/>
             
             <!-- in JSON, names of flags, fields and assemblies must all be distinct. -->
             <sch:let name="rivals-in-json" value="$as-composed/ancestor::m:model[1]/(*|m:choice/*) |
                 $as-composed/ancestor::m:model[1]/parent::m:define-assembly/(m:flag|m:define-flag) |
                 $as-composed/parent::m:define-assembly/m:model[1]/(*|m:choice/*) |
                 $as-composed/parent::m:define-assembly/(m:flag|m:define-flag)"/>
-            <sch:let name="named-like-me-in-json" value="$rivals-in-json[@in-json-name=$my-json-name]"/>
+            <sch:let name="named-like-me-in-json" value="$rivals-in-json[@_in-json-name=$my-json-name]"/>
             
             <sch:report test="empty($as-composed) or $is-multiple">Not finding '<sch:value-of select="$my-json-name"/>'</sch:report>
             <sch:assert test="empty($as-composed) or $is-multiple or count($named-like-me-in-json) = 1" id="detect-json-sibling-name-clash">Name clash among siblings (properties of the same object) with JSON name '<sch:value-of select="$my-json-name"/>'. <sch:value-of select="count($named-like-me-in-json)"/></sch:assert>
@@ -110,7 +113,8 @@
     
     <sch:pattern id="definition-shadowing">
         <sch:rule context="/m:METASCHEMA/m:define-assembly | /m:METASCHEMA/m:define-field | /m:METASCHEMA/m:define-flag">
-<!--            <sch:report test="true()">ID: <xsl:value-of select="nm:metaschema-module-node-identifier(.)"/></sch:report>
+<!--
+            <sch:report test="true()">ID: <xsl:value-of select="nm:metaschema-module-node-identifier(.)"/></sch:report>
             <sch:report test="true()">
                 <xsl:for-each select="$composed-metaschema//m:define-assembly | $composed-metaschema//m:define-field | $composed-metaschema//m:define-flag
                     | $composed-metaschema//m:flag | $composed-metaschema//m:field | $composed-metaschema//m:assembly">
@@ -132,6 +136,26 @@
             <xsl:variable name="as-composed" as="element()*" select="key('composed-node-by-identifier',nm:metaschema-module-node-identifier(.),$composed-metaschema)"/>
 
             <sch:assert test="not(exists($as-composed)) or number($as-composed/@max-occurs)=1 or exists($as-composed/m:group-as/@name)" id="expect-group-as-with-maxoccurs-gt-1">Unless @max-occurs is 1, a group-as name must be given within an instance or a local definition.</sch:assert>
+        </sch:rule>
+
+        <sch:rule context="m:group-as">
+            <sch:let name="name" value="@name"/>
+            <sch:report test="../@max-occurs/number() = 1">"group-as" should not be used when max-occurs is 1.</sch:report>
+
+<!--            <sch:report test="true()">Parent ID: <xsl:value-of select="nm:metaschema-module-node-identifier(parent::*)"/></sch:report>-->
+            
+            <xsl:variable name="parent-as-composed" as="element()*" select="key('composed-node-by-identifier',nm:metaschema-module-node-identifier(parent::*),$composed-metaschema)"/>
+
+<!--            <sch:report test="true()">Parent Composed: '<xsl:value-of select="$parent-as-composed/serialize(.)"/>'</sch:report>-->
+
+            <xsl:variable name="def-as-composed" as="element()*" select="nm:definition-for-reference($parent-as-composed)"/>
+
+<!--            <sch:report test="true()">Definition: '<xsl:value-of select="nm:definition-for-reference($parent-as-composed)/serialize(.)"/>'</sch:report>
+-->            
+            <sch:assert test="not($parent-as-composed/m:group-as/@in-json='BY_KEY') or exists($def-as-composed/m:json-key)">Cannot group by key since the definition of <sch:value-of select="name(..)"/> '<sch:value-of select="../(@ref | @name)"/>' has no json-key specified. Consider adding a json-key to the '<sch:value-of select="../@ref"/>' definition, or using a different 'in-json' setting.</sch:assert>
+
+            <!-- TODO: need to test $def-as-composed/m:json-key/@flag-name = $def-as-composed/(m:flag/@ref|m:define-flag/@name) -->
+            
         </sch:rule>
     </sch:pattern>
 
@@ -235,7 +259,7 @@
     <xsl:function name="nm:metaschema-definition-identifier" as="xs:string">
         <xsl:param name="who" as="element()"/>
         <xsl:value-of
-            select="(name($who),$who/@name) => string-join('#')"/>
+            select="(name($who),$who/(@name | @ref)) => string-join('#')"/>
     </xsl:function>
     
 
@@ -247,6 +271,19 @@
     <xsl:key name="composed-node-by-identifier"
         match="m:define-assembly | m:define-field | m:define-flag
         | m:flag | m:field | m:assembly" use="nm:composed-node-id(.)"/>
+
+    <xsl:key name="composed-definition-by-key-name"
+        match="m:define-assembly | m:define-field | m:define-flag" use="@_key-name"/>
     
-    
+    <xsl:function name="nm:definition-for-reference" as="element()*">
+        <xsl:param name="who" as="element()"/>
+        <xsl:choose>
+            <xsl:when test="$who/(self::m:define-assembly | self::m:define-field | self::m:define-flag)">
+                <xsl:sequence select="$who"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="key('composed-definition-by-key-name',$who/@_key-ref,$composed-metaschema)"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
 </sch:schema>

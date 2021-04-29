@@ -15,7 +15,16 @@
 
 
     <!-- Configuration of metaschema defaults -->
-    <xsl:variable name="max-occurs-default" as="xs:integer">1</xsl:variable>
+    <xsl:variable name="metaschema-abstract-default" as="xs:string">no</xsl:variable>
+    <xsl:variable name="instance-max-occurs-default" as="xs:integer">1</xsl:variable>
+    <xsl:variable name="instance-min-occurs-default" as="xs:integer">0</xsl:variable>
+    <xsl:variable name="instance-flag-required-default" as="xs:string">no</xsl:variable>
+    <xsl:variable name="instance-group-as-in-json" as="xs:string">SINGLETON_OR_ARRAY</xsl:variable>
+    <xsl:variable name="instance-group-as-in-xml" as="xs:string">UNGROUPED</xsl:variable>
+    <xsl:variable name="definition-field-markup-multiline-in-xml" as="xs:string">WITH_WRAPPER</xsl:variable>
+    <xsl:variable name="definition-field-collapsible" as="xs:string">no</xsl:variable>
+    <xsl:variable name="definition-flag-or-field-as-type" as="xs:string">string</xsl:variable>
+    <xsl:variable name="definition-scope-default" as="xs:string">global</xsl:variable>
     
     
     <xsl:template match="/">
@@ -55,7 +64,7 @@
     
     <xsl:template match="METASCHEMA" mode="acquire">
         <xsl:copy>
-            <xsl:attribute name="abstract">no</xsl:attribute>
+            <xsl:attribute name="abstract" select="$metaschema-abstract-default"/>
             <xsl:copy-of select="@* except @xsi:*"/>
             <xsl:attribute name="module" select="short-name"/>
             <xsl:attribute name="_base-uri" select="base-uri(.)"/>
@@ -86,35 +95,35 @@
     </xsl:template>
   
     <xsl:template priority="60" mode="assign-defaults" match="field | assembly | model//define-field | model//define-assembly">
-        <xsl:attribute name="max-occurs" select="$max-occurs-default"/>
-        <xsl:attribute name="min-occurs">0</xsl:attribute>
+        <xsl:attribute name="max-occurs" select="$instance-max-occurs-default"/>
+        <xsl:attribute name="min-occurs" select="$instance-min-occurs-default"/>
         <xsl:next-match/>
     </xsl:template>
     
     <xsl:template priority="60" mode="assign-defaults" match="flag | define-field/define-flag | define-assembly/define-flag">
-        <xsl:attribute name="required">no</xsl:attribute>
+        <xsl:attribute name="required" select="$instance-flag-required-default"/>
         <xsl:next-match/>
     </xsl:template>
     
     
     <xsl:template priority="50" mode="assign-defaults" match="define-field[@as-type='markup-multiline']">
-        <xsl:attribute name="in-xml">WITH_WRAPPER</xsl:attribute>
+        <xsl:attribute name="in-xml" select="$definition-field-markup-multiline-in-xml"/>
         <xsl:next-match/>
     </xsl:template>
     
     
     <xsl:template priority="40" mode="assign-defaults" match="define-field">
-        <xsl:attribute name="collapsible">no</xsl:attribute>
+        <xsl:attribute name="collapsible" select="$definition-field-collapsible"/>
         <xsl:next-match/>
     </xsl:template>
     
     <xsl:template mode="assign-defaults" match="define-flag | define-field">
-        <xsl:attribute name="as-type">string</xsl:attribute>    
+        <xsl:attribute name="as-type" select="$definition-flag-or-field-as-type"/>
     </xsl:template>
     
     <xsl:template mode="assign-defaults" match="group-by">
-        <xsl:attribute name="in-json">SINGLETON_OR_ARRAY</xsl:attribute>    
-        <xsl:attribute name="in-xml">UNGROUPED</xsl:attribute>    
+        <xsl:attribute name="in-json" select="$instance-group-as-in-json"/>    
+        <xsl:attribute name="in-xml" select="$instance-group-as-in-xml"/>
     </xsl:template>
     
     <xsl:template mode="assign-defaults" match="*"/>
@@ -127,7 +136,7 @@
             <!-- hit the node again in the mode to acquire applicable defaults -->
             <xsl:apply-templates select="." mode="assign-defaults"/>
             <!-- XXX: this can be moved to default settings -->
-            <xsl:attribute name="scope">global</xsl:attribute>
+            <xsl:attribute name="scope" select="$definition-scope-default"/>
             <!-- Now copy attributes as given, overwriting any defaults just provided -->
             <xsl:copy-of select="@*"/>
             <xsl:attribute name="module" expand-text="true">{ ../short-name }</xsl:attribute>
@@ -135,7 +144,7 @@
             <!--<xsl:if test="function-available('saxon:line-number')" xmlns:saxon="http://saxon.sf.net/">
                 <xsl:attribute name="_line_no"  expand-text="true" select="saxon:line-number(.)"/>    
             </xsl:if>-->
-            <xsl:attribute name="key-name"  expand-text="true">{ ../short-name }:{ @name }</xsl:attribute>
+            <xsl:attribute name="_key-name"  expand-text="true">{ ../short-name }:{ @name }</xsl:attribute>
             <xsl:apply-templates mode="#current"/>
         </xsl:copy>
     </xsl:template>
