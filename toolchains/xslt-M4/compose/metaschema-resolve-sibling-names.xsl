@@ -20,8 +20,8 @@
         model//define-assembly | model//define-field">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:attribute name="in-xml-name" expand-text="true">{ @using-name }</xsl:attribute>
-            <xsl:attribute name="in-json-name" expand-text="true">{ (group-as/@name,@using-name)[1] }</xsl:attribute>
+            <xsl:attribute name="_in-xml-name" expand-text="true">{ @using-name }</xsl:attribute>
+            <xsl:attribute name="_in-json-name" expand-text="true">{ (group-as/@name,@using-name)[1] }</xsl:attribute>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
@@ -29,8 +29,8 @@
     <xsl:template priority="10" match="field[group-as/@in-xml='GROUPED']">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:attribute name="in-xml-name" expand-text="true">{ group-as/@name }</xsl:attribute>
-            <xsl:attribute name="in-json-name" expand-text="true">{ group-as/@name }</xsl:attribute>
+            <xsl:attribute name="_in-xml-name" expand-text="true">{ group-as/@name }</xsl:attribute>
+            <xsl:attribute name="_in-json-name" expand-text="true">{ group-as/@name }</xsl:attribute>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
@@ -39,8 +39,8 @@
         model//define-field[@in-xml='UNWRAPPED' and @as-type='markup-multiline']">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:attribute name="in-xml-name">p ul ol pre table h1 h2 h3 h4 h5 h6</xsl:attribute>
-            <xsl:attribute name="in-json-name" expand-text="true">{ @using-name }</xsl:attribute>
+            <xsl:attribute name="_in-xml-name">p ul ol pre table h1 h2 h3 h4 h5 h6</xsl:attribute>
+            <xsl:attribute name="_in-json-name" expand-text="true">{ @using-name }</xsl:attribute>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>

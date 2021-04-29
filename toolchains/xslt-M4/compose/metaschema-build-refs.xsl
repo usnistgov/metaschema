@@ -79,7 +79,7 @@
         <xsl:variable name="local-def"   select="ancestor::METASCHEMA[1]/define-assembly[@scope='local' and @name=$me]"/>
         <xsl:variable name="all-defs"    select="$local-def, $global-defs"/>
         <xsl:for-each select="$all-defs[1]">
-            <xsl:attribute name="key-ref" select="@key-name"/>
+            <xsl:attribute name="_key-ref" select="@_key-name"/>
         </xsl:for-each>
         <xsl:if test="empty($all-defs)" expand-text="true">
             <EXCEPTION level="error">Target definition not found for assembly reference '{ $me }'.</EXCEPTION>
@@ -93,7 +93,7 @@
         <xsl:variable name="local-def"   select="ancestor::METASCHEMA[1]/define-field[@scope='local' and @name=$me]"/>
         <xsl:variable name="all-defs"    select="$local-def, $global-defs"/>
         <xsl:for-each select="$all-defs[1]">
-          <xsl:attribute name="key-ref" select="@key-name"/>
+          <xsl:attribute name="_key-ref" select="@_key-name"/>
         </xsl:for-each>
         <xsl:if test="empty($all-defs)" expand-text="true">
             <EXCEPTION level="error">Target definition not found for field reference '{ $me }'.</EXCEPTION>
@@ -107,7 +107,7 @@
         <xsl:variable name="local-def"   select="ancestor::METASCHEMA[1]/define-flag[@scope='local' and @name=$me]"/>
         <xsl:variable name="all-defs"    select="$local-def, $global-defs"/>
         <xsl:for-each select="$all-defs[1]">
-            <xsl:attribute name="key-ref" select="@key-name"/>
+            <xsl:attribute name="_key-ref" select="@_key-name"/>
         </xsl:for-each>
         <xsl:if test="empty($all-defs)" expand-text="true">
             <EXCEPTION level="error">Target definition not found for flag reference '{ $me }'.</EXCEPTION>

@@ -2,7 +2,7 @@
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     schematron="../../toolchains/xslt-M4/validate/metaschema-composition-check.sch">
-    
+    <x:
     <x:param name="global-context" select="document('scope-local-importing_metaschema.xml')"/>
     <x:param name="allow-foreign">true</x:param>
 

@@ -17,8 +17,8 @@
     <xsl:variable name="show-warnings" as="xs:string">yes</xsl:variable>
     <xsl:variable name="verbose" select="lower-case($show-warnings) = ('yes', 'y', '1', 'true')"/>
 
-    <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly" use="@key-name"/>
-    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field"    use="@key-name"/>
+    <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly" use="@_key-name"/>
+    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field"    use="@_key-name"/>
     
     
     <!-- ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== -->
@@ -40,7 +40,7 @@
     <xsl:accumulator name="definition-count" as="map(xs:string, xs:integer)"
         initial-value="map{}">
         <xsl:accumulator-rule match="m:assembly|m:field|m:flag">
-            <xsl:variable name="key" select="(name(.), @key-ref) => string-join('#')"/>
+            <xsl:variable name="key" select="(name(.), @_key-ref) => string-join('#')"/>
             <xsl:choose>
                 <xsl:when test="map:contains($value, $key)">
                     <xsl:sequence select="map:put($value, string($key), 
@@ -71,10 +71,10 @@
     
     <!-- 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 -->    
 
-    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-assembly[not(exists(m:root-name) or map:contains($reference-counts,string((substring-after(name(.),'define-'), @key-name) => string-join('#'))))]">
+    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-assembly[not(exists(m:root-name) or map:contains($reference-counts,string((substring-after(name(.),'define-'), @_key-name) => string-join('#'))))]">
 <!--        <xsl:comment>Root Name? <xsl:value-of select="exists(m:root-name)"/></xsl:comment>
-        <xsl:comment>Map Key <xsl:value-of select="string((substring-after(name(.),'define-'), @key-name) => string-join('#'))"/></xsl:comment>
-        <xsl:comment>Map Contains? <xsl:value-of select="map:contains($reference-counts,string((substring-after(name(.),'define-'), @key-ref) => string-join('#')))"/></xsl:comment>
+        <xsl:comment>Map Key <xsl:value-of select="string((substring-after(name(.),'define-'), @_key-name) => string-join('#'))"/></xsl:comment>
+        <xsl:comment>Map Contains? <xsl:value-of select="map:contains($reference-counts,string((substring-after(name(.),'define-'), @_key-ref) => string-join('#')))"/></xsl:comment>
 -->
         <xsl:call-template name="warning">
             <!-- since we can detect unused definitions a better way, this can be
@@ -85,7 +85,7 @@
         </xsl:call-template>
     </xsl:template>
     
-    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-field[not(map:contains($reference-counts,string((substring-after(name(.),'define-'), @key-name) => string-join('#'))))]">
+    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-field[not(map:contains($reference-counts,string((substring-after(name(.),'define-'), @_key-name) => string-join('#'))))]">
         <xsl:call-template name="warning">
             <!-- since we can detect unused definitions a better way, this can be
                  silenced and/or rendered as a comment -->
@@ -95,7 +95,7 @@
         </xsl:call-template>
     </xsl:template>
     
-    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-flag[not(map:contains($reference-counts,string((substring-after(name(.),'define-'), @key-name) => string-join('#'))))]">
+    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-flag[not(map:contains($reference-counts,string((substring-after(name(.),'define-'), @_key-name) => string-join('#'))))]">
         <xsl:call-template name="warning">
             <!-- since we can detect unused definitions a better way, this can be
                  silenced and/or rendered as a comment -->
