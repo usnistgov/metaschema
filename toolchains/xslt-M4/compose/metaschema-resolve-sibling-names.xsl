@@ -20,8 +20,8 @@
         model//define-assembly | model//define-field">
         <xsl:copy>
             <xsl:copy-of select="@*"/>
-            <xsl:attribute name="_in-xml-name" expand-text="true">{ @using-name }</xsl:attribute>
-            <xsl:attribute name="_in-json-name" expand-text="true">{ (group-as/@name,@using-name)[1] }</xsl:attribute>
+            <xsl:attribute name="_in-xml-name" expand-text="true">{ @_using-name }</xsl:attribute>
+            <xsl:attribute name="_in-json-name" expand-text="true">{ (group-as/@name,@_using-name)[1] }</xsl:attribute>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>
@@ -40,7 +40,7 @@
         <xsl:copy>
             <xsl:copy-of select="@*"/>
             <xsl:attribute name="_in-xml-name">p ul ol pre table h1 h2 h3 h4 h5 h6</xsl:attribute>
-            <xsl:attribute name="_in-json-name" expand-text="true">{ @using-name }</xsl:attribute>
+            <xsl:attribute name="_in-json-name" expand-text="true">{ @_using-name }</xsl:attribute>
             <xsl:apply-templates/>
         </xsl:copy>
     </xsl:template>

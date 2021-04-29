@@ -34,9 +34,9 @@
  
     <sch:let name="metaschema-is-abstract" value="/m:METASCHEMA/@abstract='yes'"/>
     
-    <sch:pattern id="top-level-and-schema-docs">
+    <sch:pattern id="pattern-metaschema-header">
         
-        <sch:rule context="/m:METASCHEMA">
+        <sch:rule id="rule-metaschema-header" context="/m:METASCHEMA">
             <sch:assert test="exists(m:schema-version)" role="warning">Metaschema schema version must be set for any top-level metaschema</sch:assert>
             <sch:assert test="exists($composed-metaschema/m:define-assembly/m:root-name) or @abstract='yes'">Unless marked as @abstract='yes', a metaschema (or an imported metaschema) should have at least one assembly with a root-name.</sch:assert>
         </sch:rule>
