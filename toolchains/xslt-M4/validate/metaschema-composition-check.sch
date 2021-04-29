@@ -28,14 +28,16 @@
  
     <!--<sch:let name="metaschema-is-abstract" value="/m:METASCHEMA/@abstract='yes'"/>-->
     
-    <sch:pattern id="top-level-and-schema-docs">
-        <sch:rule context="/m:METASCHEMA">
+    <sch:pattern id="pattern-metaschema-header">
+        <sch:rule id="rule-metaschema-header" context="/m:METASCHEMA">
             <sch:assert id="require-successful-composition" role="warning"
                 test="exists($composed-metaschema)">Can't find composition...</sch:assert>
-            <sch:assert id="require-schema-version"
-                test="exists(m:schema-version)">Metaschema schema version must be set for any top-level metaschema</sch:assert>
-            <sch:assert id="expect-root"
-                test="exists(@abstract='yes' or $composed-metaschema/m:define-assembly/m:root-name)">Unless marked as @abstract='yes', a metaschema (or an imported metaschema) should have at least one assembly with a root-name.</sch:assert>
+            <sch:assert id="require-short-name"
+                test="exists(m:short-name)">Metaschema 'short-name' must be set for any top-level metaschema</sch:assert>
+            <sch:assert id="require-schema-version-for-top-level"
+                test="@abstract='yes' or exists(m:schema-version)">Metaschema 'schema-version' must be set for any top-level metaschema</sch:assert>
+            <sch:assert id="expect-root-assembly-for-top-level"
+                test="@abstract='yes' or exists($composed-metaschema/m:define-assembly/m:root-name)">Unless marked as @abstract='yes', a metaschema (or an imported metaschema) should have at least one assembly with a root-name.</sch:assert>
         </sch:rule>
         <sch:rule context="/m:METASCHEMA/m:import">
             <sch:report role="warning" test="document-uri(/) = resolve-uri(@href,document-uri(/))" id="detect-circular-import">Schema can't import itself</sch:report>
