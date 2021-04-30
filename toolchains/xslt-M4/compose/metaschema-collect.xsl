@@ -30,7 +30,7 @@
     <xsl:template match="/">
         <xsl:comment expand-text="true">{ name(/*) }</xsl:comment>
         <xsl:if test="empty(/METASCHEMA)" expand-text="true">
-            <EXCEPTION level="error">No Metaschema found in namespace 'http://csrc.nist.gov/ns/oscal/metaschema/1.0' : instead we have a document '{ */name() }' in namespace '{ /*/namespace-uri(.) }'</EXCEPTION>
+            <EXCEPTION problem-type="not-a-metaschema">No Metaschema found in namespace 'http://csrc.nist.gov/ns/oscal/metaschema/1.0' : instead we have a document '{ */name() }' in namespace '{ /*/namespace-uri(.) }'</EXCEPTION>
         </xsl:if>
         <xsl:apply-templates mode="acquire" select="/METASCHEMA">
             <xsl:with-param name="so-far" tunnel="true" select="document-uri(/)"/>
@@ -76,22 +76,31 @@
     <xsl:template match="import" mode="acquire">
         <xsl:param name="so-far" tunnel="yes" required="yes"/>
         <xsl:variable name="uri" select="resolve-uri(@href,base-uri(parent::METASCHEMA))"/>
-        <xsl:choose expand-text="true">
-            <xsl:when test="$uri = $so-far">
-                <EXCEPTION level="error">Circular import of { $uri } skipped.</EXCEPTION>
-            </xsl:when>
-            <xsl:when test="not(doc-available($uri))">
-                <EXCEPTION level="error">Error: No metaschema module is found at { $uri }.</EXCEPTION>
-            </xsl:when>
-            <xsl:when test="empty(document($uri)/METASCHEMA)">
-                <EXCEPTION level="error">Error: No metaschema module is found at { $uri } (it is not named METASCHEMA in namespace 'http://csrc.nist.gov/ns/oscal/metaschema/1.0').</EXCEPTION>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:apply-templates select="document($uri)/METASCHEMA" mode="acquire">
-                    <xsl:with-param name="so-far" select="$so-far,$uri"/>
-                </xsl:apply-templates>
-            </xsl:otherwise>
-        </xsl:choose>
+            <xsl:choose expand-text="true">
+                <xsl:when test="$uri = $so-far">
+                    <xsl:copy>
+                        <xsl:copy-of select="@* except @xsi:*"/>
+                        <EXCEPTION problem-type="circular-import">Circular import of { $uri } in this file (or one of its children) skipped.</EXCEPTION>
+                    </xsl:copy>
+                </xsl:when>
+                <xsl:when test="not(doc-available($uri))">
+                    <xsl:copy>
+                        <xsl:copy-of select="@* except @xsi:*"/>
+                        <EXCEPTION problem-type="broken-import">Error: No metaschema module is found at { $uri }.</EXCEPTION>
+                    </xsl:copy>
+                </xsl:when>
+                <xsl:when test="empty(document($uri)/METASCHEMA)">
+                    <xsl:copy>
+                        <xsl:copy-of select="@* except @xsi:*"/>
+                        <EXCEPTION problem-type="import-not-a-metaschema">Error: No metaschema module is found at { $uri } (it is not named METASCHEMA in namespace 'http://csrc.nist.gov/ns/oscal/metaschema/1.0').</EXCEPTION>
+                    </xsl:copy>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:apply-templates select="document($uri)/METASCHEMA" mode="acquire">
+                        <xsl:with-param name="so-far" select="$so-far,$uri"/>
+                    </xsl:apply-templates>
+                </xsl:otherwise>
+            </xsl:choose>
     </xsl:template>
   
     <xsl:template priority="60" mode="assign-defaults" match="field | assembly | model//define-field | model//define-assembly">

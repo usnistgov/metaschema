@@ -100,23 +100,31 @@
   
   <p:identity name="input"/>
   
-  <!-- pull modules together
-       and mark all top-level definitions with key-names
-       add scope='global' unless it is given -->
-  
   <p:xslt name="collect">
+    <!-- - Inlines each imported metaschema, checking for circular references.
+         - Adds default values for metaschema attributes and elements.
+         - Tracks source metaschema using @_base-uri.
+         - Adds @_key-name for all top-level definitions, which provides a key lookup in future transforms.
+    -->
     <p:input port="stylesheet">
       <p:document href="metaschema-collect.xsl"/>
     </p:input>
+    <!-- With EXCEPTION problem-type="not-a-metaschema" if the processed document is not a metaschema -->
+    <!-- With EXCEPTION problem-type="broken-import" for broken imports -->
+    <!-- With EXCEPTION problem-type="import-not-a-metaschema" for imports that are not a metaschema -->
+    <!-- With EXCEPTION problem-type="circular-import" for circular imports -->
   </p:xslt>
-  <!--  With EXCEPTION for broken or circular imports -->
   
   <p:xslt name="build-refs">
+    <!-- Generates @_key-ref entries for all assembly, field, and flag instances. -->
     <p:input port="stylesheet">
       <p:document href="metaschema-build-refs.xsl"/>
     </p:input>
+    <!-- With EXCEPTION for broken references (error) or shadowing definitions (warning) -->
+    <!-- With EXCEPTION problem-type="definition-shadowing" when a definition in an importing module clashes with an definition of the same type (i.e., flag, field, assembly) in an imported module or another downstream import -->
+    <!-- With EXCEPTION problem-type="instance-invalid-reference" when an instance references a non-existant or out-of-scope definition -->
   </p:xslt>
-  <!--  With EXCEPTION for broken references (error) or shadowing definitions (warning) -->
+  <!-- WITH EXCEPTION problem-type="metaschema-short-name-clash" when an imported modules short-name clashes with the importing module -->
   
   <p:xslt name="trim-extra-modules">
     <p:input port="stylesheet">
@@ -130,25 +138,20 @@
       <p:document href="metaschema-prune-unused-definitions.xsl"/>
     </p:input>
     <p:with-param name="show-warnings" select="'yes'"/>
+    <!-- With EXCEPTION problem-type="missing-root" for no roots found when the metaschema is not abstract -->
+    <!-- With EXCEPTION problem-type="unused-definition" for definitions removed as unused -->
   </p:xslt>
-<!-- With EXCEPTION for no roots found, also
-     when @show-warnings='yes'
-       EXCEPTION level='warning' for definitions removed as unused
-       TRACE listing all references found -->
   
-  <!-- New @sibling-name will show names to check among siblings within models -->
-  
-  <!-- New @using-name exposes the name-in-use, whether given or derived -->
   <p:xslt name="add-use-names">
+    <!-- - @using-name exposes the name-in-use, whether given or derived -->
     <p:input port="stylesheet">
       <p:document href="metaschema-resolve-use-names.xsl"/>
     </p:input>
+    <!-- No exceptions produced (everything gets a @using-name) -->
   </p:xslt>
-  <!-- No exceptions produced (everything gets a @using-name) -->
   
-  <!-- New @in-xml-name and @in-json-name will show exposed names
-       for checking among siblings within models -->
   <p:xslt name="add-sibling-names">
+    <!-- New @in-xml-name and @in-json-name will show exposed names for checking among siblings within models -->
     <p:input port="stylesheet">
       <p:document href="metaschema-resolve-sibling-names.xsl"/>
     </p:input>

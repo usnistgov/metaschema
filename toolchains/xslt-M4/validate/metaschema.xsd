@@ -15,10 +15,10 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="m:schema-name"/>
-        <xs:element ref="m:schema-version"/>
-        <xs:element ref="m:short-name" minOccurs="1"/>
-        <xs:element ref="m:namespace" minOccurs="1"/>
-        <xs:element ref="m:remarks"/>
+        <xs:element ref="m:schema-version" minOccurs="0"/>
+        <xs:element ref="m:short-name"/>
+        <xs:element ref="m:namespace"/>
+        <xs:element ref="m:remarks" minOccurs="0"/>
         <xs:choice maxOccurs="unbounded">
           <xs:element ref="m:import"/>
           <xs:element name="define-assembly" type="m:global-assembly-definition"/>
