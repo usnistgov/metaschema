@@ -27,10 +27,15 @@
     
     <!-- The $transformation-sequence declares transformations to be applied in order. -->
     <xsl:variable name="transformation-sequence">
+        <!-- See nist-metaschema-MAKE-XML-MAP.xsl for maintenance hints -->
         <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-build-refs.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-trim-extra-modules.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-prune-unused-definitions.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-resolve-use-names.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-resolve-sibling-names.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
+        <!-- all composed -->
         
         <nm:transform version="3.0">compose/make-model-map.xsl</nm:transform>
         <nm:transform version="3.0">compose/unfold-model-map.xsl</nm:transform>

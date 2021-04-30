@@ -28,10 +28,21 @@
     
     <!-- The $transformation-sequence declares transformations to be applied in order. -->
     <xsl:variable name="transformation-sequence">
+        <!-- XQuery to grab XSLTs called out from an XSpec:
+        
+         declare namespace p="http://www.w3.org/ns/xproc";
+         //p:xslt/p:input/p:document/<transform version="3.0">{ @href }</transform>
+          mind you this misses inline XSLTs use with appropriate care
+        -->
         <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-build-refs.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-trim-extra-modules.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-prune-unused-definitions.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-resolve-use-names.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-resolve-sibling-names.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
+        <!-- all composed -->
+        
         <nm:transform version="3.0">compose/make-model-map.xsl</nm:transform>
         <nm:transform version="3.0">compose/unfold-model-map.xsl</nm:transform>
         <nm:transform version="3.0">document/xml/element-tree.xsl</nm:transform>

@@ -5,6 +5,20 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   type="metaschema:make-xml-map" name="make-xml-map">
   
+  <!--
+    
+    docs rework punchlist
+      o review pipelines for possible improvements
+      o copy new JSON logic to XML
+      o expand pipelines to produce:
+        o maps
+        o references (full tree)
+        o definitions
+        o index - with pointers to other pages
+      o update all anchors and linking
+      
+  -->
+  
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
   
@@ -75,7 +89,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="metaschema-compose.xpl"/>
+  <p:import href="compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
