@@ -5,9 +5,9 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
-   <xsl:param as="xs:string" name="model-label">oscal-catalog-xml</xsl:param>
+   
 
-   <xsl:variable as="xs:string" name="path-to-docs" select="'../reference'"/>
+   <xsl:variable as="xs:string" name="path-to-docs">oscal-json-object-reference.html</xsl:variable>
 
    <xsl:output omit-xml-declaration="true" indent="no"/>
 
@@ -185,9 +185,10 @@ details:not([open]) .show-closed { display: inline }
       </details>
    </xsl:template>
    
-   <xsl:template match="*[exists(@id)]" mode="json-key">
-      <a class="OM-name" href="{ $path-to-docs }#{ @id }">
-         <xsl:value-of select="(@key,@name,@gi)[1]"/>
+   
+   <xsl:template match="*[exists(@key)]" mode="json-key">
+      <a class="OM-name" href="{ $path-to-docs }#{  ancestor-or-self::*/@key => string-join('/') }">
+         <xsl:value-of select="@key"/>
       </a>
    </xsl:template>
    

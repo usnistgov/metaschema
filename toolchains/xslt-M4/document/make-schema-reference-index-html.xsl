@@ -7,7 +7,7 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
-   <!-- produces an HTML 'stub' to be inserted into Hugo -->
+   <!-- Assumes HTML with sections and indexes these by their names as presented  -->
    
    <xsl:mode on-no-match="shallow-copy"/>
    

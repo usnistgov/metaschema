@@ -37,32 +37,26 @@
     
     <xsl:template match="assembly">
         <object>
-            <xsl:call-template name="assign-id"/>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs"/>
+            <xsl:apply-templates select="@id,@key,@name,@min-occurs,@max-occurs"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
     
     <xsl:template match="group/assembly">
         <object min-occurs="1">
-            <xsl:call-template name="assign-id"/>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs"/>
+            <xsl:apply-templates select="@id,@key,@name,@min-occurs,@max-occurs"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
     
     <!-- Within a group, an assembly is always required even for min-occurs='0' because its wrapper (array or object) is optional.   -->
-    <xsl:template match="group[@group-json='ARRAY']/assembly/@min-occurs[.='0']"/>
-    
-    <xsl:template name="assign-id">
-        <xsl:attribute name="id" select="ancestor-or-self::*/@key => string-join('/')"/>
+    <xsl:template match="group[@group-json='ARRAY']/assembly/@min-occurs[.='0']">
+        <xsl:attribute name="min-occurs">1</xsl:attribute>
     </xsl:template>
-    
     
     <xsl:template match="field">
         <object>
-            <xsl:call-template name="assign-id"/>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs"/>
+            <xsl:apply-templates select="@id,@key,@name,@min-occurs,@max-occurs"/>
             <xsl:apply-templates mode="field-value" select="."/>
             <xsl:apply-templates select="flag, formal-name, description, remarks, value"/>
         </object>
@@ -76,8 +70,7 @@
     
     <xsl:template match="field[empty(flag)]">
         <string>
-            <xsl:call-template name="assign-id"/>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@as-type,value/@as-type"/>
+            <xsl:apply-templates select="@id,@key,@name,@min-occurs,@max-occurs,@as-type,value/@as-type"/>
             <xsl:apply-templates select="formal-name, description, remarks"/>
         </string>
     </xsl:template>
@@ -128,7 +121,7 @@
     
     <xsl:template match="flag">
         <string>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@id,@key,@name,@min-occurs,@max-occurs,@as-type"/>
             <xsl:apply-templates/>
         </string>
     </xsl:template>

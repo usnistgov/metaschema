@@ -20,17 +20,16 @@
     
     <xsl:template match="assembly | field | group">
         <element>
-            <xsl:variable name="using-name" select="(@root-name[../parent::map],@use-name,@name)[1]"/>
-            <xsl:if test="@scope='global'">
-                <xsl:attribute name="id" select="'global_' || @name"/>
-            </xsl:if>
-            <xsl:apply-templates select="$using-name,@min-occurs,@max-occurs,@as-type,@formal-name,@gi"/>
+            <xsl:call-template name="mark-path"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </element>
     </xsl:template>
     
-    <xsl:template match="@root-name | @use-name | @name">
-        <xsl:attribute name="name" select="string(.)"/>
+    <xsl:template name="mark-path">
+        <xsl:attribute name="xml-path">
+            <xsl:apply-templates select="." mode="path"/>
+        </xsl:attribute>
     </xsl:template>
     
     <xsl:template match="group[@in-xml='HIDDEN']">
@@ -45,7 +44,9 @@
     
     <xsl:template match="flag">
         <attribute>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@gi"/>
+            <xsl:call-template name="mark-path"/>
+            <xsl:apply-templates select="@*"/>
+            <xsl:apply-templates/>
         </attribute>
     </xsl:template>
     
@@ -55,12 +56,24 @@
     
     <xsl:template match="field[@as-type='markup-multiline']">
         <element>
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@gi"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </element>
     </xsl:template>
     
+    <xsl:template priority="2" match="flag/@gi" mode="path">
+        <xsl:text expand-text="true">/@{ . }</xsl:text>
+    </xsl:template>
     
-    <xsl:template match="constraint"/>
+    <xsl:template match="@gi" mode="path">
+        <xsl:text expand-text="true">/{ . }</xsl:text>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="path">
+        <xsl:apply-templates select=".." mode="path"/>
+        <xsl:apply-templates select="@gi" mode="path"/>
+    </xsl:template>
+    
+    <xsl:template match="/" mode="path"/>
     
 </xsl:stylesheet>
