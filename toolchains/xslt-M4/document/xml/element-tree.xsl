@@ -56,6 +56,7 @@
     
     <xsl:template match="field[@as-type='markup-multiline']">
         <element>
+            <xsl:call-template name="mark-path"/>
             <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </element>

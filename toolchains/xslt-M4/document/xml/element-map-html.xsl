@@ -67,8 +67,8 @@ div.OM-map p { margin: 0ex }
    <xsl:template match="m:formal-name | m:description | m:remarks | m:constraint"/>
    
    
-   <xsl:template match="*[exists(@id)]" mode="linked-name">
-      <a class="OM-name" href="{ $path-to-docs }#{ @id }">
+   <xsl:template match="*[exists(@xml-path)]" mode="linked-name">
+      <a class="OM-name" href="{ $path-to-docs }#{ @xml-path }">
          <xsl:value-of select="(@gi,@name)[1]"/>
       </a>
    </xsl:template> 

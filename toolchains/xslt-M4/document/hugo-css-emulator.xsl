@@ -42,7 +42,7 @@
    </xsl:template>
    
    <xsl:template match="section" mode="toc">
-            <xsl:variable name="head" select="*[starts-with(@class,'toc')]"/>
+     <xsl:variable name="head" select="*[starts-with(@class,'toc')] | *[@class='definition-header']/*[starts-with(@class,'toc')]"/>
             <li>
                <xsl:for-each select="$head" expand-text="true">
                   <p><a href="#{ $head/@id }">{ . }</a></p>
@@ -75,8 +75,6 @@ div#toc { width: 24%; float: left; z-index: 2; position: fixed; overflow: scroll
 div#toc * { margin: 0em }
 
 main { padding-left: 25% }
-
-h1, h2, h3, h4, h5, h6 { font-family: monospace; font-size: 140%; font-weight: bold }
 
 .xml-element, .xml-attribute, .json-obj { padding: 0.5em; border-top: thin solid black }
 
@@ -114,8 +112,23 @@ h1, h2, h3, h4, h5, h6 { font-family: monospace; font-size: 140%; font-weight: b
     padding: 1px .5rem; }
 
 <!-- ~~~ -->
-   
-   
+
+.definition-header { background-color: #f0f0f0; padding: 0.5rem }
+.defining          { color: #07648d }
+
+button.schema-link { font-family: sans-serif;
+    color: #fff;
+    background-color: #005ea2;
+    border-radius: .25rem;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 700;
+    margin-right: .5rem;
+    padding: .75rem 1.25rem;
+    text-align: center;
+    text-decoration: none;
+    width: 100%;}
+    
 summary { display: list-item; cursor: pointer; list-style-position: outside; margin-left: 1em }
 
 .OM-entry summary { line-height: 1.5 }

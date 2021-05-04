@@ -10,6 +10,7 @@
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
    
    <xsl:variable name="xml-reference-page">oscal-xml-element-reference.html</xsl:variable>
+   <xsl:variable name="json-map-page"     >oscal-json-object-map.html</xsl:variable>
    
    <xsl:template match="/*">
       <div>
@@ -42,6 +43,9 @@
             <xsl:attribute name="class">toc{ $level}</xsl:attribute>
             <xsl:text>{ @key }</xsl:text>
          </xsl:element>
+         <xsl:sequence expand-text="true">
+            <p>See <a href="{ $json-map-page }#{ m:json-obj-id(.) }">{ m:json-obj-id(.) }</a> in the object map.</p>
+         </xsl:sequence>
          
          <xsl:apply-templates select="." mode="produce-for-object"/>
          

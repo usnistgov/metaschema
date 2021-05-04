@@ -17,6 +17,7 @@
    </xsl:variable>
    
    <xsl:variable name="json-reference-page">oscal-json-object-reference.html</xsl:variable>
+   <xsl:variable name="xml-map-page"       >oscal-xml-element-map.html</xsl:variable>
    
    <xsl:template match="/*">
        <div>
@@ -45,12 +46,13 @@
          
          <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
             <!--  XXX LINK HERE -->
-            <xsl:attribute name="id" select="@xml-path">
-               
+            <xsl:attribute name="id" select="@xml-path"/>
             <xsl:attribute name="class">toc{ $level}</xsl:attribute>
-            <xsl:text>{ @gi }</xsl:text>
+            <xsl:text>{ self::attribute/'@' || @gi }</xsl:text>
          </xsl:element>
-         
+         <xsl:sequence expand-text="true">
+            <p>See <a href="{ $xml-map-page }#{@xml-path}">{ @xml-path }</a> in the element map.</p>
+         </xsl:sequence>
          <xsl:apply-templates select="." mode="produce-for-element"/>
          
          <xsl:apply-templates/>
@@ -77,7 +79,7 @@
                   <xsl:otherwise> member of array <code>{ ../@key }</code>.</xsl:otherwise>
                </xsl:choose>-->
             </p>
-            <p class="path">{ ((ancestor-or-self::* except ancestor::choice)/@gi) => string-join('/') }</p>
+            <p class="path">{ @xml-path }</p>
          </div>
          <xsl:apply-templates mode="#current" select="description"/>
          <xsl:call-template name="report-also-named"/>

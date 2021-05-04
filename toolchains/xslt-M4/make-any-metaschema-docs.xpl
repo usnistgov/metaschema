@@ -205,8 +205,9 @@
     </p:input>
     <p:input port="stylesheet">
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
-      <p:document href="document/xml/xml-docs-hugo-uswds.xsl"/>
+      <p:document href="document/xml/xml-definitions.xsl"/>
     </p:input>
+    <p:with-param name="json-definitions-page" select="'oscal-json-definitions.html'"/>
   </p:xslt>
   
   <p:xslt name="style-xml-definitions">
@@ -228,6 +229,8 @@
       <!-- XSLT consumes HTML and produces an index - works for both XML and JSON reference pages -->
       <p:document href="document/make-schema-reference-index-html.xsl"/>
     </p:input>
+    <p:with-param name="reference-page" select="'oscal-xml-element-reference.html'"/>
+    
   </p:xslt>
   
   <p:xslt name="style-xml-element-index">
@@ -298,8 +301,10 @@
     </p:input>
     <p:input port="stylesheet">
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
-      <p:document href="document/json/json-docs-hugo-uswds.xsl"/>
+      <p:document href="document/json/json-definitions.xsl"/>
     </p:input>
+    <p:with-param name="json-definitions-page" select="'oscal-xml-definitions.html'"/>
+    
   </p:xslt>
 
   <p:xslt name="style-json-definitions">
@@ -320,10 +325,10 @@
     <p:input port="stylesheet">
       <p:document href="document/make-schema-reference-index-html.xsl"/>
     </p:input>
+    <p:with-param name="reference-page" select="'oscal-json-object-reference.html'"/>
   </p:xslt>
 
   <p:xslt name="style-json-object-index">
-    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
     <p:input port="stylesheet">
       <p:document href="document/hugo-css-emulator.xsl"/>
     </p:input>
