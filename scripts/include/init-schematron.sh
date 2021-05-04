@@ -34,40 +34,49 @@ build_schematron() {
 }
 
 validate_with_schematron() {
-    local compiled_schematron="$1"; shift
-    local source_file="$1"; shift
-    local svrl_result="$1"; shift
-    local extra_params=($@)
+  local compiled_schematron="$1"; shift
+  local source_file="$1"; shift
+  local svrl_result="$1"; shift
+  local extra_params=($@)
 
-    set -- "${compiled_schematron}"
+  set -- "${compiled_schematron}"
 
-    if [ ! -z "$source_file" ]; then
-      set -- "$@" "${source_file}"
-    fi
+  if [ ! -z "$source_file" ]; then
+    set -- "$@" "${source_file}"
+  fi
 
-    if [ ! -z "$svrl_result" ]; then
-      set -- "$@" "${svrl_result}"
-    fi
+  if [ ! -z "$svrl_result" ]; then
+    set -- "$@" "${svrl_result}"
+  fi
 
-    # generate the SVRL result
-    xsl_transform "$@" "${extra_params[@]}"
+  # generate the SVRL result
+  xsl_transform "$@" "${extra_params[@]}"
+  cmd_exitcode=$?
+  if [ $cmd_exitcode -ne 0 ]; then
+      echo -e "Processing Schematron '$compiled_schematron' failed for target file '$source_file'"
+      return 3
+  fi
+
+  # check if the SVRL result contains errors
+  if [ ! -z "$svrl_result" ]; then
+    result=$(execute_query '//(*:failed-assert|*:successful-report)[not(exists(@role)) or @role != "warning"]' "$svrl_result")
     cmd_exitcode=$?
     if [ $cmd_exitcode -ne 0 ]; then
-        echo -e "Processing Schematron '$compiled_schematron' failed for target file '$source_file'"
-        return 3
+        echo -e "Processing XQuery '$query' failed for target file '$source_file'"
+        return $cmd_exitcode
     fi
+    # echo -e "exit: $cmd_exitcode"
+    # echo -e "result: '$result'"
+    if [ "$result" != "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" ]; then
+      echo -e "The file '$source_file' has the following Schematron errors:"
 
-    # check if the SVRL result contains errors
-    if [ ! -z "$svrl_result" ]; then
-      if grep --quiet "failed-assert" "$svrl_result"; then
-        echo -e "The file '$source_file' has the following Schematron errors:"
-
-        # display the errors
-        xsl_transform "$OSCALDIR/build/ci-cd/svrl-to-plaintext.xsl" "$svrl_result"
-        echo -e ""
-        return 1
-      else
-        echo -e "File '$source_file' passed Schematron validation."
-      fi
+      # display the errors
+      xsl_transform "$OSCALDIR/build/ci-cd/svrl-to-plaintext.xsl" "$svrl_result"
+      echo -e ""
+      return 1
+    else
+      echo -e "File '$source_file' passed Schematron validation."
     fi
+  fi
+  return 0;
 }

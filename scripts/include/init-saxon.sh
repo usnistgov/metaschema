@@ -45,4 +45,33 @@ xsl_transform() {
     return 0
 }
 
+execute_query() {
+    init_saxon
+
+    local query="$1"; shift
+    local source_file="$1"; shift
+    local extra_params=($@)
+
+    local classpath=$(JARS=("$SAXON_HOME"/*.jar); IFS=:; echo -e "${JARS[*]}")
+
+    set --
+
+    if [ ! -z "$query" ]; then
+      set -- "$@" "-qs:${query}"
+    fi
+
+    if [ ! -z "$source_file" ]; then
+      set -- "$@" "-s:${source_file}"
+    fi
+
+    java -cp "$classpath" net.sf.saxon.Query "$@" "${extra_params[@]}"
+    cmd_exitcode=$?
+
+    if [ "$cmd_exitcode" -ne 0 ]; then
+        echo -e "${P_ERROR}Error running Saxon.${P_END}"
+        return $cmd_exitcode
+    fi
+    return 0
+}
+
 
