@@ -266,7 +266,7 @@
     <p:input port="stylesheet">
       <p:document href="document/json/object-map-html.xsl"/>
     </p:input>
-    <p:with-param name="reference-page" select="$metaschema-id || '-xml-reference.html'"/>
+    <p:with-param name="reference-page" select="$metaschema-id || '-json-reference.html'"/>
   </p:xslt>
 
   <!--  Next we wrap this up to write and view locally/standalone if wanted -->

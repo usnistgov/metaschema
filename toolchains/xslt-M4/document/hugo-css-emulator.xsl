@@ -84,6 +84,10 @@ main { padding-left: 25% }
 .xml-element .xml-attribute,
 .json-obj .json-obj { margin-top: 1em; margin-left: 1em; padding-left: 1em; border-left: medium dotted darkgrey  }
 
+.xml-element   .head,
+.xml-attribute .head,
+.json-obj      .head  { margin-top: 0em }
+
 .obj-name { font-family: sans-serif; font-weight: bold; font-size: 120% }
 
 .obj-desc p { margin: 0em }
