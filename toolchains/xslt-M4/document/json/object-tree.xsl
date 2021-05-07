@@ -18,28 +18,22 @@
     steps in ../compose subdirectory
 
     -->
-    
-    <!--<xsl:template match="@min-occurs">
-        <xsl:if test="not(.='0')">
-            <xsl:attribute name="required">yes</xsl:attribute>
-        </xsl:if>
-    </xsl:template>
-    
-    <xsl:template match="@max-occurs"/>-->
-    
-    <xsl:template match="@name">
-        <xsl:copy-of select="."/>
-    </xsl:template>
-    
-    <xsl:template match="@key">
-        <xsl:copy-of select="."/>
-    </xsl:template>
-    
+
     <xsl:template match="@*">
         <!--<xsl:message expand-text="true">matching @{ local-name() }</xsl:message>-->
         <xsl:copy-of select="."/>
     </xsl:template>
-      
+
+<!-- When a JSON object has no single corresponding XML element
+     we provide as a nominal corresponding target the first available XML path
+     given in its contents (generally its single permitted child object). -->
+    <xsl:template match="@_json-flag">
+        <xsl:copy-of select="."/>
+        <xsl:if test="empty(parent::*/@_xml-flag)">
+            <xsl:apply-templates select="parent::*/child::*[@xml-flag][1]/@_xml-flag"/>
+        </xsl:if>
+    </xsl:template>
+    
     <xsl:template match="assembly">
         <object>
             <xsl:apply-templates select="@*"/>
@@ -125,7 +119,7 @@
     
     <xsl:template match="flag">
         <string>
-            <xsl:apply-templates select="@id,@key,@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </string>
     </xsl:template>

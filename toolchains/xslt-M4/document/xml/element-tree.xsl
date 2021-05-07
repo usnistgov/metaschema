@@ -26,12 +26,14 @@
         </element>
     </xsl:template>
     
-    <xsl:template name="mark-path"/>
-<!--        <xsl:attribute name="_xml-path">
-            <xsl:apply-templates select="." mode="path"/>
-        </xsl:attribute>
+<!-- The points of misalignment between the XML and object models
+     are bridged by including a JSON path for the parent (wrapper) when none is on the node. -->
+    <xsl:template name="mark-path">
+        <xsl:if test="empty(@_json-path)">
+            <xsl:apply-templates select="../@_json-path"/>
+        </xsl:if>
     </xsl:template>
--->    
+    
     <xsl:template match="group[@in-xml='HIDDEN']">
         <xsl:apply-templates/>
     </xsl:template>

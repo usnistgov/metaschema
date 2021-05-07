@@ -34,13 +34,14 @@
    <xsl:template match="*[exists(@key)]" expand-text="true">
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@key)])"/>
       <section class="json-obj">
+         <xsl:call-template name="crosslink-to-xml"/>
          <!-- generates h1-hx headers picked up by Hugo toc -->
-         
          <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
             <xsl:attribute name="id" select="@_json-path"/>
-            <xsl:attribute name="class">toc{ $level}</xsl:attribute>
+            <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
             <xsl:text>{ @key }</xsl:text>
          </xsl:element>
+         
          <xsl:sequence expand-text="true">
             <p>See <a href="{ $json-map-page }#{ @_json-path }">{ @_json-path }</a> in the object map.</p>
          </xsl:sequence>
@@ -65,14 +66,13 @@
    
    <xsl:template name="crosslink-to-xml">
       <div class="crosslink">
-         <a href="{$xml-reference-page}#{@id}">
+         <a href="{$xml-reference-page}#{@_xml-path}">
             <button class="schema-link">Switch to XML</button>
          </a>
       </div>
    </xsl:template>
    
    <xsl:template match="*" mode="produce-for-object" expand-text="true">
-      <xsl:call-template name="crosslink-to-xml"/>
       <div class="obj-desc">
          <!-- target for cross-link -->
          <xsl:copy-of select="@id"/>

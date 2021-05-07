@@ -146,7 +146,7 @@ div.OM-map p { margin: 0ex }
 
    <xsl:template match="m:attribute" mode="as-attribute">
       <xsl:text> </xsl:text>
-      <span class="nobr">
+      <span class="nobr" id="{@_xml-path}">
          <xsl:apply-templates select="." mode="linked-name"/>
          <xsl:text>="</xsl:text>
          <xsl:apply-templates select="." mode="linked-datatype"/>

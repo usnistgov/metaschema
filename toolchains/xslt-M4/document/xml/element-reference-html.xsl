@@ -42,16 +42,17 @@
    <xsl:template match="*[exists(@gi)]" expand-text="true">
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
       <section class="xml-element">
-         <!-- generates h1-hx headers picked up by Hugo toc -->
+         <xsl:call-template name="json-crosslink"/>
          
+         <!-- generates h1-hx headers picked up by Hugo toc -->
          <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
             <!--  XXX LINK HERE -->
-            <xsl:attribute name="id" select="@xml-path"/>
-            <xsl:attribute name="class">toc{ $level}</xsl:attribute>
+            <xsl:attribute name="id" select="@_xml-path"/>
+            <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
             <xsl:text>{ self::attribute/'@' || @gi }</xsl:text>
          </xsl:element>
          <xsl:sequence expand-text="true">
-            <p>See <a href="{ $xml-map-page }#{@xml-path}">{ @xml-path }</a> in the element map.</p>
+            <p>See <a href="{ $xml-map-page }#{@_xml-path}">{ @_xml-path }</a> in the element map.</p>
          </xsl:sequence>
          <xsl:apply-templates select="." mode="produce-for-element"/>
          
@@ -62,7 +63,6 @@
    <xsl:template match="formal-name | description | remarks | constraint"/>
    
    <xsl:template match="*" mode="produce-for-element" expand-text="true">
-      <xsl:call-template name="json-crosslink"/>
       <div class="obj-desc">
          <!-- target for cross-linking -->
          <xsl:copy-of select="@id"/>
@@ -79,7 +79,7 @@
                   <xsl:otherwise> member of array <code>{ ../@key }</code>.</xsl:otherwise>
                </xsl:choose>-->
             </p>
-            <p class="path">{ @xml-path }</p>
+            <p class="path">{ @_xml-path }</p>
          </div>
          <xsl:apply-templates mode="#current" select="description"/>
          <xsl:call-template name="report-also-named"/>
@@ -94,7 +94,7 @@
    
    <xsl:template name="json-crosslink">
       <div class="crosslink">
-         <a href="{$json-reference-page}#{@id}">
+         <a href="{$json-reference-page}#{@_json-path}">
             <button class="schema-link">Switch to JSON</button>
          </a>
       </div>
