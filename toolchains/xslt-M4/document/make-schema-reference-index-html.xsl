@@ -16,10 +16,10 @@
    <xsl:template match="/*">
       <xsl:copy>
          <xsl:copy-of select="@*"/>
-         <xsl:for-each-group expand-text="true" select="//section[@class=('json-obj','xml-element','xml-attribute')]" group-by="*[1]/string(.)">
-            <xsl:sort/>
-            <section class="named-object-group" id="/index/{current-grouping-key()}">
-            <h1 class="toc1" id="{ *[1]/@id }">{ current-grouping-key() }</h1>
+         <xsl:for-each-group expand-text="true" select="//section[@class=('json-obj','xml-element','xml-attribute')]" group-by="(h1|h2|h3|h4|h5|h6)[1]/string(.)">
+            <xsl:sort select="upper-case(current-grouping-key()) => replace('^\p{P}','')"/>
+            <section class="named-object-group">
+            <h1 class="toc1" id="/{ current-grouping-key() }">{ current-grouping-key() }</h1>
                <ul>
                   <xsl:apply-templates select="current-group()"/>
                </ul>
