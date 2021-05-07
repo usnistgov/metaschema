@@ -15,20 +15,29 @@
    
    <xsl:variable name="including-toc" select="not($with-toc=('no','0','false'))"/>
    
+  <xsl:param name="metaschema-code" select="'oscal'"/>
+  <xsl:param name="format" select="'xml'"/>
+  
    <xsl:template match="/*">
       <html>
          <head>
             <xsl:call-template name="hugo-css"/>
          </head>
          <body>
+           <div id="banner">
+               <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-outline.html">Outline</a></button>
+               <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-reference.html">Reference</a></button>
+               <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-index.html">Index</a></button>
+               <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-definitions.html">Definitions</a></button>
+           </div>
             <xsl:if test="$including-toc">
                <div id="toc">
                   <xsl:apply-templates select="." mode="toc"/>
                </div>
             </xsl:if>
-            <main>
+            <div id="main">
                <xsl:apply-templates/>
-            </main>
+            </div>
 
          </body>
       </html>
@@ -71,10 +80,13 @@
    <xsl:template name="hugo-css" xml:space="preserve">
 <style type="text/css">
 
-div#toc { width: 24%; float: left; z-index: 2; position: fixed; overflow: scroll; height: 100% }
+div#toc { width: 24%; float: left; z-index: 2; position: fixed; overflow: scroll; height: 100%; top: 3.5em }
 div#toc * { margin: 0em }
 
-main { padding-left: 25% }
+div#banner { width: 100%; z-index: 2; position: fixed }
+div#banner * { margin: 0em }
+
+div#main { padding-left: 25%; top: 3.5em; position: absolute }
 
 .xml-element, .xml-attribute, .json-obj { padding: 0.5em; border-top: thin solid black }
 
@@ -369,6 +381,22 @@ div.constraint * { margin: 0em; }
     font-size: 80%;
     margin: 0em 0em
 }
+
+.nav-button {
+        background-color: #005ea2;
+        color: white;
+        border-radius: .25rem;
+        padding: .75rem 1.25rem;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-family: sans-serif;
+        margin: 0.2em;
+        cursor: pointer }
+        
+.nav-button a,
+.nav-button a.visited,
+.nav-button a:hover { color: white }
 
 </style>
    </xsl:template>

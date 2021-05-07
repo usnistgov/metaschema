@@ -180,6 +180,7 @@
       <p:document href="document/hugo-css-emulator.xsl"/>
     </p:input>
     <p:with-param name="with-toc" select="'no'"/>
+    <p:with-param name="metaschema-code" select="$metaschema-id"/>
   </p:xslt>
   <!-- Done with that. -->
   <p:sink/>
@@ -200,6 +201,7 @@
     <p:input port="stylesheet">
       <p:document href="document/hugo-css-emulator.xsl"/>
     </p:input>
+    <p:with-param name="metaschema-code" select="$metaschema-id"/>
   </p:xslt>
   
   <p:sink/>
@@ -221,6 +223,7 @@
     <p:input port="stylesheet">
       <p:document href="document/hugo-css-emulator.xsl"/>
     </p:input>
+    <p:with-param name="metaschema-code" select="$metaschema-id"/>
   </p:xslt>
   
   <p:sink/>
@@ -247,6 +250,7 @@
     <p:input port="stylesheet">
       <p:document href="document/hugo-css-emulator.xsl"/>
     </p:input>
+    <p:with-param name="metaschema-code" select="$metaschema-id"/>
   </p:xslt>
   
   <p:sink/>
@@ -276,6 +280,8 @@
       <p:document href="document/hugo-css-emulator.xsl"/>
     </p:input>
     <p:with-param name="with-toc" select="'no'"/>
+    <p:with-param name="metaschema-code" select="$metaschema-id"/>
+    <p:with-param name="format"          select="'json'"/>
   </p:xslt>
 
   <!-- Done with that. -->
@@ -302,6 +308,8 @@
     <p:input port="stylesheet">
       <p:document href="document/hugo-css-emulator.xsl"/>
     </p:input>
+    <p:with-param name="metaschema-code" select="$metaschema-id"/>
+    <p:with-param name="format"          select="'json'"/>
   </p:xslt>
 
   <p:sink/>
@@ -323,6 +331,8 @@
     <p:input port="stylesheet">
       <p:document href="document/hugo-css-emulator.xsl"/>
     </p:input>
+    <p:with-param name="metaschema-code" select="$metaschema-id"/>
+    <p:with-param name="format"          select="'json'"/>
   </p:xslt>
 
   <p:sink/>
@@ -332,7 +342,7 @@
   <p:xslt name="render-json-object-index">
     <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
     <p:input port="source">
-      <p:pipe port="result" step="make-json-object-tree"/>
+      <p:pipe port="result" step="render-json-object-reference"/>
     </p:input>
     <p:input port="stylesheet">
       <p:document href="document/make-schema-reference-index-html.xsl"/>
@@ -344,6 +354,8 @@
     <p:input port="stylesheet">
       <p:document href="document/hugo-css-emulator.xsl"/>
     </p:input>
+    <p:with-param name="metaschema-code" select="$metaschema-id"/>
+    <p:with-param name="format"          select="'json'"/>
   </p:xslt>
 
   <p:sink/>
