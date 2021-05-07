@@ -35,16 +35,21 @@
         <xsl:copy-of select="."/>
     </xsl:template>
     
+    <xsl:template match="@*">
+        <!--<xsl:message expand-text="true">matching @{ local-name() }</xsl:message>-->
+        <xsl:copy-of select="."/>
+    </xsl:template>
+      
     <xsl:template match="assembly">
         <object>
-            <xsl:apply-templates select="@id,@key,@name,@min-occurs,@max-occurs"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
     
     <xsl:template match="group/assembly">
         <object min-occurs="1">
-            <xsl:apply-templates select="@id,@key,@name,@min-occurs,@max-occurs"/>
+            <xsl:apply-templates select="@* except @min-occurs"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
@@ -56,42 +61,42 @@
     
     <xsl:template match="field">
         <object>
-            <xsl:apply-templates select="@id,@key,@name,@min-occurs,@max-occurs"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates mode="field-value" select="."/>
-            <xsl:apply-templates select="flag, formal-name, description, remarks, value"/>
+            <xsl:apply-templates select="flag, value, formal-name, description, remarks"/>
         </object>
     </xsl:template>
     
     <xsl:template match="value">
         <string name="{@key}" min-occurs="0" max-occurs="1">
-            <xsl:apply-templates select="@as-type"/>
+            <xsl:apply-templates select="@* except (@name,@min-occurs,@max-occurs)"/>
         </string>
     </xsl:template>
     
     <xsl:template match="field[empty(flag)]">
         <string>
-            <xsl:apply-templates select="@id,@key,@name,@min-occurs,@max-occurs,@as-type,value/@as-type"/>
+            <xsl:apply-templates select="@*,value/@as-type"/>
             <xsl:apply-templates select="formal-name, description, remarks"/>
         </string>
     </xsl:template>
     
     <xsl:template match="group">
         <singleton-or-array>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </singleton-or-array>
     </xsl:template>
     
     <xsl:template match="group[@group-json='ARRAY']">
         <array>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </array>
     </xsl:template>
     
     <xsl:template match="group[exists(@json-key-flag)]">
         <object property-key="{@json-key-flag}">
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
@@ -100,14 +105,14 @@
         <xsl:variable as="xs:string" name="o">{</xsl:variable>
         <xsl:variable as="xs:string" name="c">}</xsl:variable>
         <object key="{ $o || @json-key-flag || $c }">
-            <xsl:apply-templates select="@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@* except @key"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
     
     <xsl:template priority="3" match="group[exists(@json-key-flag)]/field[not(flag/@name != @json-key-flag)]">
         <string name="[[{@json-key-flag}]]">
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type"/>
+            <xsl:apply-templates select="@* except @name"/>
             <xsl:apply-templates/>
         </string>
     </xsl:template>

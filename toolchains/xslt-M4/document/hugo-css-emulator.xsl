@@ -86,8 +86,6 @@ main { padding-left: 25% }
 
 .obj-name { font-family: sans-serif; font-weight: bold; font-size: 120% }
 
-.obj-desc  { padding: 0.5em; border: thin dotted black; list-style-position: outside }    
-
 .obj-desc p { margin: 0em }
 
 .obj-matrix { background-color: #d9e8f6; padding: 0.4em;
@@ -243,8 +241,11 @@ OM-map a:visited {
 a.OM-name:hover {
   text-decoration: underline; }
 
-details[open] > summary .show-closed {
+details[open] summary .show-closed {
     display: none; }
+
+details:not([open]) summary .show-closed {
+    display: inline; }
 
 
 .define-assembly,

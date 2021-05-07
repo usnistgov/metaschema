@@ -8,7 +8,7 @@
    <xsl:output indent="yes"/>
    <xsl:variable as="xs:string" name="model-label" select="string(/map/@prefix)"/>
 
-   <xsl:variable as="xs:string" name="path-to-docs" select="'../xml-schema/'"/>
+   <xsl:param as="xs:string" name="reference-page" select="'../reference'"/>
 
 <!--http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-model-map/
 http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-schema/-->
@@ -66,9 +66,11 @@ div.OM-map p { margin: 0ex }
    
    <xsl:template match="m:formal-name | m:description | m:remarks | m:constraint"/>
    
+   <xsl:template match="m:formal-name | m:description | m:remarks" mode="contents"/>
    
-   <xsl:template match="*[exists(@xml-path)]" mode="linked-name">
-      <a class="OM-name" href="{ $path-to-docs }#{ @xml-path }">
+   
+   <xsl:template match="*[exists(@_xml-path)]" mode="linked-name">
+      <a class="OM-name" href="{ $reference-page }#{ @_xml-path }">
          <xsl:value-of select="(@gi,@name)[1]"/>
       </a>
    </xsl:template> 
@@ -95,7 +97,7 @@ div.OM-map p { margin: 0ex }
             <!--</div>-->
          </summary>
          <xsl:apply-templates select="." mode="contents"/>
-         <xsl:if test="exists(* except m:attribute)">
+         <xsl:if test="exists(m:element | m:value)">
             <p class="close-tag nobr">
                <xsl:text>&lt;/</xsl:text>
                <xsl:value-of select="(@gi,@name)[1]"/>
@@ -115,18 +117,17 @@ div.OM-map p { margin: 0ex }
       </div>
    </xsl:template>
    
-   
    <xsl:template name="summary-line-content">
-      <xsl:variable name="recurses" select="@id=ancestor::*/@id"/>
+      <xsl:variable name="recurses" select="@recursive = 'true'"/>
       <span class="sq">
          <span class="nobr">
             <xsl:text>&lt;</xsl:text>
             <xsl:apply-templates select="." mode="linked-name"/>
          </span>
          <xsl:apply-templates select="m:attribute" mode="as-attribute"/>
-         <xsl:if test="empty(* except m:attribute) and not($recurses)">/</xsl:if>
+         <xsl:if test="empty(m:element | m:value) and not($recurses)">/</xsl:if>
          <xsl:text>&gt;</xsl:text>
-         <xsl:if test="exists(* except m:attribute) or $recurses">
+         <xsl:if test="exists(m:element | m:value) or $recurses">
             <span class="show-closed">
                <xsl:apply-templates select="." mode="summary-contents"/>
                <span class="nobr">
@@ -246,11 +247,11 @@ div.OM-map p { margin: 0ex }
       <xsl:text> &#8230; </xsl:text>
    </xsl:template>
    
-   <xsl:template mode="summary-contents" match="m:element[@id=parent::element/@id]" priority="11" expand-text="true">
+   <xsl:template mode="summary-contents" match="m:element[@_key-name=parent::element/@_key-name]" priority="11" expand-text="true">
       <span class="OM-lit OM-gloss"> (recursive: model like parent <span class="OM-ref">{ @gi }</span>) </span>
    </xsl:template>
    
-   <xsl:template mode="summary-contents" match="m:element[@id=ancestor::*/@id]" priority="10" expand-text="true">
+   <xsl:template mode="summary-contents" match="m:element[@_key-name=ancestor::*/@_key-name]" priority="10" expand-text="true">
       <span class="OM-lit OM-gloss"> (recursive: model like ancestor <span class="OM-ref">{ @gi }</span>) </span>
    </xsl:template>
 

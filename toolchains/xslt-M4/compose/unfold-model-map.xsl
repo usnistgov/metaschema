@@ -18,27 +18,23 @@
     <xsl:template match="*[exists(@group-name)][@group-json='ARRAY']/@key"/>
     
     <xsl:template priority="10" match="*[exists(@group-name)]">
-        <group key="{@group-name}" in-xml="{ if (@group-xml='GROUPED') then 'SHOWN' else 'HIDDEN' }"
+        <group in-xml="{ if (@group-xml='GROUPED') then 'SHOWN' else 'HIDDEN' }"
             max-occurs="1" min-occurs="{ if (@min-occurs='0') then '0' else '1'}">
             <xsl:if test="@group-xml='GROUPED'">
                 <xsl:attribute name="gi" select="@group-name"/>
+                <!--<xsl:attribute name="_step" select="tokenize(@_step,'/')[1]"/>-->
             </xsl:if>
             <xsl:copy-of select="@json-key-flag | @group-json | @recursive"/>
+            <xsl:copy-of select="@scope | @name"/>
+            <xsl:copy-of select="@_caller-xml-id | @_caller-json-id | @_def-xml-id | @_def-json-id"/>
+            <xsl:copy-of select="@_base-uri | @_key-name | @_key-ref"/>
+            <!--<xsl:apply-templates select="@* except (@max-occurs|@min-occurs|@key)"/>-->
+            <xsl:attribute name="key" expand-text="true">{@group-name}</xsl:attribute>
+            
             <xsl:next-match/>
         </group>
     </xsl:template> 
    
-    <xsl:template match="assembly | field | flag">
-        <xsl:copy>
-            <xsl:apply-templates select="@*"/>
-            <xsl:attribute name="id" separator="_">
-                <xsl:apply-templates select="ancestor-or-self::*" mode="step-name"/>
-                <xsl:value-of select="local-name(.) => upper-case()"/>
-            </xsl:attribute>
-            <xsl:apply-templates/>
-        </xsl:copy>
-    </xsl:template>
-    
     <xsl:template match="*" mode="step-name"/>
 
     <xsl:template as="xs:string" match="*[exists(@_using-root-name|@_using-name|@name)]" mode="step-name">

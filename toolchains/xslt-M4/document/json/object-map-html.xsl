@@ -7,8 +7,8 @@
 
    
 
-   <xsl:variable as="xs:string" name="path-to-docs">oscal-json-object-reference.html</xsl:variable>
-
+   <xsl:param as="xs:string" name="reference-page" select="'../reference'"/>
+   
    <xsl:output omit-xml-declaration="true" indent="no"/>
 
    <xsl:variable name="datatype-page">../../../datatypes</xsl:variable>
@@ -187,7 +187,7 @@ details:not([open]) .show-closed { display: inline }
    
    
    <xsl:template match="*[exists(@key)]" mode="json-key">
-      <a class="OM-name" href="{ $path-to-docs }#{  ancestor-or-self::*/@key => string-join('/') }">
+      <a class="OM-name" href="{ $reference-page }#{  @_json-path }">
          <xsl:value-of select="@key"/>
       </a>
    </xsl:template>

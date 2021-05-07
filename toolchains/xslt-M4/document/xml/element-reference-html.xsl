@@ -16,8 +16,8 @@
       </output:serialization-parameters>
    </xsl:variable>
    
-   <xsl:variable name="json-reference-page">oscal-json-object-reference.html</xsl:variable>
-   <xsl:variable name="xml-map-page"       >oscal-xml-element-map.html</xsl:variable>
+   <xsl:param name="json-reference-page">../../json/reference</xsl:param>
+   <xsl:param name="xml-map-page"       >../outline</xsl:param>
    
    <xsl:template match="/*">
        <div>
