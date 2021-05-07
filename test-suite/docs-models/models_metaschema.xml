@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/css" href="../../../toolchains/xslt-M4/lib/metaschema-author.css"?>
-<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd"
  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
@@ -65,7 +65,7 @@
             </field>
             
             <field ref="wrapped-prose" in-xml="WITH_WRAPPER"/>
-            <field ref="loose-prose" in-xml="UNWRAPPED"/>
+            <field ref="loose-prose"   in-xml="UNWRAPPED"/>
             
             <assembly ref="assembly-with-inlines"/>
             

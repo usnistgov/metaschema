@@ -9,8 +9,15 @@
 
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
    
-   <xsl:variable name="xml-reference-page">oscal-xml-element-reference.html</xsl:variable>
-   <xsl:variable name="json-map-page"     >oscal-json-object-map.html</xsl:variable>
+   <xsl:param name="xml-reference-page">../../xml/reference</xsl:param>
+   <xsl:param name="json-map-page"     >../outline</xsl:param>
+   
+   <xsl:variable name="indenting" as="element()"
+      xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
+      <output:serialization-parameters>
+         <output:indent value="yes"/>
+      </output:serialization-parameters>
+   </xsl:variable>
    
    <xsl:template match="/*">
       <div>
@@ -24,27 +31,18 @@
       <h2><span class="usa-tag">Schema version:</span> { . }</h2>
    </xsl:template>
    
-<!-- the JSON object id is not the same as the cross-linking object, which is acquired from the source.
-     Since JSON objects especially including wrapper arrays and objects, are deeper than the nominal
-     tree, we need to index them separately to get them to appear in the ToC / page hierarchy. -->
-   
-   <xsl:function name="m:json-obj-id">
-      <xsl:param name="whose" as="element()"/>
-      <xsl:value-of select="$whose/ancestor-or-self::*/@key => string-join('/')"/>
-   </xsl:function>
-   
    <xsl:template match="*[exists(@key)]" expand-text="true">
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@key)])"/>
       <section class="json-obj">
          <!-- generates h1-hx headers picked up by Hugo toc -->
          
          <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
-            <xsl:attribute name="id">{ m:json-obj-id(.) }</xsl:attribute>
+            <xsl:attribute name="id" select="@_json-path"/>
             <xsl:attribute name="class">toc{ $level}</xsl:attribute>
             <xsl:text>{ @key }</xsl:text>
          </xsl:element>
          <xsl:sequence expand-text="true">
-            <p>See <a href="{ $json-map-page }#{ m:json-obj-id(.) }">{ m:json-obj-id(.) }</a> in the object map.</p>
+            <p>See <a href="{ $json-map-page }#{ @_json-path }">{ @_json-path }</a> in the object map.</p>
          </xsl:sequence>
          
          <xsl:apply-templates select="." mode="produce-for-object"/>
@@ -91,7 +89,7 @@
                   <xsl:otherwise> member of array <code>{ ../@key }</code>.</xsl:otherwise>
                </xsl:choose>
             </p>
-            <p class="path">{ ((ancestor-or-self::* except ancestor::choice)/(@key/string(.),'#')[1]) => string-join('/') }</p>
+            <p class="path">/{ ancestor-or-self::*/@key => string-join('/') }</p>
          </div>
          <xsl:apply-templates mode="#current" select="description"/>
          <xsl:call-template name="report-also-named"/>
@@ -101,6 +99,10 @@
                <xsl:apply-templates mode="#current" select="remarks"/>
             </details>
          </xsl:if>
+         <details><summary>XML</summary>
+         <pre>
+            <xsl:value-of select="serialize(.,$indenting)"/>
+         </pre></details>
       </div>
    </xsl:template>
    

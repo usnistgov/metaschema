@@ -26,12 +26,12 @@
         </element>
     </xsl:template>
     
-    <xsl:template name="mark-path">
-        <xsl:attribute name="xml-path">
+    <xsl:template name="mark-path"/>
+<!--        <xsl:attribute name="_xml-path">
             <xsl:apply-templates select="." mode="path"/>
         </xsl:attribute>
     </xsl:template>
-    
+-->    
     <xsl:template match="group[@in-xml='HIDDEN']">
         <xsl:apply-templates/>
     </xsl:template>
@@ -50,8 +50,10 @@
         </attribute>
     </xsl:template>
     
+<!-- leaving formal-name and description behind of a wrapper
+     that does not appear in the XML -->
     <xsl:template priority="2" match="field[@in-xml='UNWRAPPED'][value/@as-type='markup-multiline']">
-        <xsl:apply-templates/>
+        <xsl:apply-templates select="value"/>
     </xsl:template>
     
     <xsl:template match="field[@as-type='markup-multiline']">

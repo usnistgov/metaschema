@@ -28,7 +28,7 @@
     
     
     <xsl:template match="/">
-        <xsl:comment expand-text="true">{ name(/*) }</xsl:comment>
+        <!--<xsl:comment expand-text="true">{ name(/*) }</xsl:comment>-->
         <xsl:if test="empty(/METASCHEMA)" expand-text="true">
             <EXCEPTION problem-type="not-a-metaschema">No Metaschema found in namespace 'http://csrc.nist.gov/ns/oscal/metaschema/1.0' : instead we have a document '{ */name() }' in namespace '{ /*/namespace-uri(.) }'</EXCEPTION>
         </xsl:if>
