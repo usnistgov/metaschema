@@ -205,29 +205,6 @@
   </p:xslt>
   
   <p:sink/>
-
-  <!-- For the straight-up definitions directory we go back to the composed metaschema before explosion -->
-  <p:xslt name="render-xml-definitions">
-    <p:input port="source">
-      <p:pipe port="result" step="composed"/>
-    </p:input>
-    <p:input port="stylesheet">
-      <!-- XXX fix up / reduce this XSLT (from RC2) -->
-      <p:document href="document/xml/xml-definitions.xsl"/>
-    </p:input>
-    <p:with-param name="xml-reference-page" select="$metaschema-id || '-xml-reference.html'"/>    
-    <p:with-param name="json-definitions-page" select="$metaschema-id || '-json-definitions.html'"/>
-  </p:xslt>
-  
-  <p:xslt name="style-xml-definitions">
-    <p:input port="stylesheet">
-      <p:document href="document/hugo-css-emulator.xsl"/>
-    </p:input>
-    <p:with-param name="metaschema-code" select="$metaschema-id"/>
-  </p:xslt>
-  
-  <p:sink/>
-  
   <!-- The JSON object index is produced from the full blown out instance tree
        as already rendered into HTML   -->
   <p:xslt name="render-xml-element-index">
@@ -254,6 +231,31 @@
   </p:xslt>
   
   <p:sink/>
+  
+
+  <!-- For the straight-up definitions directory we go back to the composed metaschema before explosion -->
+  <p:xslt name="render-xml-definitions">
+    <p:input port="source">
+      <p:pipe port="result" step="composed"/>
+    </p:input>
+    <p:input port="stylesheet">
+      <!-- XXX fix up / reduce this XSLT (from RC2) -->
+      <p:document href="document/xml/xml-definitions.xsl"/>
+    </p:input>
+    <p:with-param name="xml-reference-page" select="$metaschema-id || '-xml-reference.html'"/>    
+    <p:with-param name="json-definitions-page" select="$metaschema-id || '-json-definitions.html'"/>
+  </p:xslt>
+  
+  <p:xslt name="style-xml-definitions">
+    <p:input port="stylesheet">
+      <p:document href="document/hugo-css-emulator.xsl"/>
+    </p:input>
+    <p:with-param name="metaschema-code" select="$metaschema-id"/>
+  </p:xslt>
+  
+  <p:sink/>
+  
+  
   <!--  JSON pipelines start here -->
   <!--  A representation of the JSON object tree is rendered out from the unfolded blown out model map -->
   <p:xslt name="make-json-object-tree">
@@ -314,6 +316,29 @@
 
   <p:sink/>
 
+  <!-- The JSON object index is produced from the full blown out instance tree
+       as already rendered into HTML   -->
+  <p:xslt name="render-json-object-index">
+    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
+    <p:input port="source">
+      <p:pipe port="result" step="render-json-object-reference"/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="document/make-schema-reference-index-html.xsl"/>
+    </p:input>
+    <p:with-param name="reference-page" select="$metaschema-id || '-json-reference.html'"/>
+  </p:xslt>
+  
+  <p:xslt name="style-json-object-index">
+    <p:input port="stylesheet">
+      <p:document href="document/hugo-css-emulator.xsl"/>
+    </p:input>
+    <p:with-param name="metaschema-code" select="$metaschema-id"/>
+    <p:with-param name="format"          select="'json'"/>
+  </p:xslt>
+  
+  <p:sink/>
+  
   <!-- For the straight-up definitions directory we go back to the composed metaschema before explosion -->
   <p:xslt name="render-json-definitions">
     <p:input port="source">
@@ -337,27 +362,5 @@
 
   <p:sink/>
 
-  <!-- The JSON object index is produced from the full blown out instance tree
-       as already rendered into HTML   -->
-  <p:xslt name="render-json-object-index">
-    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
-    <p:input port="source">
-      <p:pipe port="result" step="render-json-object-reference"/>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:document href="document/make-schema-reference-index-html.xsl"/>
-    </p:input>
-    <p:with-param name="reference-page" select="$metaschema-id || '-json-reference.html'"/>
-  </p:xslt>
-
-  <p:xslt name="style-json-object-index">
-    <p:input port="stylesheet">
-      <p:document href="document/hugo-css-emulator.xsl"/>
-    </p:input>
-    <p:with-param name="metaschema-code" select="$metaschema-id"/>
-    <p:with-param name="format"          select="'json'"/>
-  </p:xslt>
-
-  <p:sink/>
-
+  
 </p:declare-step>
