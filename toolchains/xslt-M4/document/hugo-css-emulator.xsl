@@ -86,9 +86,9 @@ div#toc * { margin: 0em }
 div#banner { width: 100%; z-index: 2; position: fixed }
 div#banner * { margin: 0em }
 
-div#main { padding-left: 25%; top: 3.5em; position: absolute }
+div#main { padding-left: 25%; padding-right: 0.5em; top: 3.5em; position: absolute }
 
-.xml-element, .xml-attribute, .json-obj { padding: 0.5em; border-top: thin solid black }
+.xml-element, .xml-attribute, .json-obj { padding-top: 0.5em; border-top: thin solid black }
 
 .xml-element, .xml-attribute .json-obj * { margin-top: 0.4em }
 
@@ -106,7 +106,7 @@ div#main { padding-left: 25%; top: 3.5em; position: absolute }
 
 .obj-matrix { background-color: #d9e8f6; padding: 0.4em;
     display: grid;
-    grid-template-columns: 4fr 1fr 4fr 2fr;
+    grid-template-columns: 1fr 4vw 20vw 20vw;
     grid-gap: 0.5em;
     margin-top: 0.5em }
 
@@ -153,15 +153,25 @@ summary:focus { outline: none }
   clear: inherit;
 }
 
-.label { @extend .usa-tag }
+.lbl { font-family: sans-serif;
+    font-size: .93rem;
+    color: #fff;
+    text-transform: uppercase;
+    background-color: midnightblue;
+    border-radius: 2px;
+    margin-right: .25rem;
+    padding: 1px .5rem; }
+ }
 
 li.model-entry h3 { margin: 0em }
 
 
-h1, h2, h3, h4, h5, h6 { font-family: sans-serif ) }
+h1, h2, h3, h4, h5, h6 { font-family: sans-serif }
 
 body > div > section { margin-top: 1em }
 .definition-header * { margin: 0em; clear: left }
+
+.head { margin: 0em; clear: left }
 
 .model-summary * { margin: 0em }
 
