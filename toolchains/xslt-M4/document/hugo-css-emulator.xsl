@@ -25,10 +25,15 @@
          </head>
          <body>
            <div id="banner">
-               <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-outline.html">Outline</a></button>
-               <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-reference.html">Reference</a></button>
-               <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-index.html">Index</a></button>
-               <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-definitions.html">Definitions</a></button>
+               <button class="nav-button">
+                 <a href="{ $metaschema-code }-{ $format }-outline.html">
+                   <xsl:value-of select="upper-case($format) || ' '"/>Outline</a></button>
+             <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-reference.html">
+               <xsl:value-of select="upper-case($format) || ' '"/>Reference</a></button>
+             <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-index.html">
+               <xsl:value-of select="upper-case($format) || ' '"/>Index</a></button>
+             <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-definitions.html">
+               <xsl:value-of select="upper-case($format) || ' '"/>Definitions</a></button>
            </div>
             <xsl:if test="$including-toc">
                <div id="toc">
@@ -113,6 +118,8 @@ div#main { padding-left: 25%; padding-right: 0.5em; top: 3.5em; position: absolu
 .occurrence { font-style: italic }
 
 .path { font-family: monospace }
+.pathlink { font-family: monospace; color: midnightblue; padding: 0.2em }
+.pathlink a:hover { background-color: lightblue }
 
 .nb { font-style: italic }
 

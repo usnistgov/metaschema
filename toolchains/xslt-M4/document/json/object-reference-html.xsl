@@ -37,13 +37,13 @@
          <xsl:call-template name="crosslink-to-xml"/>
          <!-- generates h1-hx headers picked up by Hugo toc -->
          <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
-            <xsl:attribute name="id" select="@_json-path"/>
+            <xsl:attribute name="id" select="@_tree-json-id"/>
             <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
             <xsl:text>{ @key }</xsl:text>
          </xsl:element>
          
          <xsl:sequence expand-text="true">
-            <p>See <a href="{ $json-map-page }#{ @_json-path }">{ @_json-path }</a> in the object map.</p>
+            <p>See <a href="{ $json-map-page }#{ @_tree-json-id }">{ @_tree-json-id }</a> in the object map.</p>
          </xsl:sequence>
          
          <xsl:apply-templates select="." mode="produce-for-object"/>
@@ -66,7 +66,7 @@
    
    <xsl:template name="crosslink-to-xml">
       <div class="crosslink">
-         <a href="{$xml-reference-page}#{@_xml-path}">
+         <a href="{$xml-reference-page}#{@_tree-xml-id}">
             <button class="schema-link">Switch to XML</button>
          </a>
       </div>

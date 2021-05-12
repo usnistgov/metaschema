@@ -27,12 +27,12 @@
 <!-- When a JSON object has no single corresponding XML element
      we provide as a nominal corresponding target the first available XML path
      given in its contents (generally its single permitted child object). -->
-    <xsl:template match="@_json-flag">
+    <!--<xsl:template match="@_tree-xml-id">
         <xsl:copy-of select="."/>
-        <xsl:if test="empty(parent::*/@_xml-flag)">
-            <xsl:apply-templates select="parent::*/child::*[@xml-flag][1]/@_xml-flag"/>
+        <xsl:if test="empty(parent::*/@_tree-xml-id)">
+            <xsl:apply-templates select="parent::*/child::*[@_tree-xml-id][1]/@_tree-xml-id"/>
         </xsl:if>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:template match="assembly">
         <object>
@@ -56,8 +56,8 @@
     <xsl:template match="field">
         <object>
             <xsl:apply-templates select="@*"/>
-            <xsl:apply-templates mode="field-value" select="."/>
-            <xsl:apply-templates select="flag, value, formal-name, description, remarks"/>
+            <!--<xsl:apply-templates mode="field-value" select="."/>-->
+            <xsl:apply-templates/>
         </object>
     </xsl:template>
     
@@ -70,7 +70,7 @@
     <xsl:template match="field[empty(flag)]">
         <string>
             <xsl:apply-templates select="@*,value/@as-type"/>
-            <xsl:apply-templates select="formal-name, description, remarks"/>
+            <xsl:apply-templates/>
         </string>
     </xsl:template>
     

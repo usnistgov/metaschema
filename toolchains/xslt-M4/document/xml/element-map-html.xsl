@@ -69,8 +69,8 @@ div.OM-map p { margin: 0ex }
    <xsl:template match="m:formal-name | m:description | m:remarks" mode="contents"/>
    
    
-   <xsl:template match="*[exists(@_xml-path)]" mode="linked-name">
-      <a class="OM-name" href="{ $reference-page }#{ @_xml-path }">
+   <xsl:template match="*[exists(@_tree-xml-id)]" mode="linked-name">
+      <a class="OM-name" href="{ $reference-page }#{ @_tree-xml-id }">
          <xsl:value-of select="(@gi,@name)[1]"/>
       </a>
    </xsl:template> 
@@ -146,7 +146,7 @@ div.OM-map p { margin: 0ex }
 
    <xsl:template match="m:attribute" mode="as-attribute">
       <xsl:text> </xsl:text>
-      <span class="nobr" id="{@_xml-path}">
+      <span class="nobr" id="{@_tree-xml-id}">
          <xsl:apply-templates select="." mode="linked-name"/>
          <xsl:text>="</xsl:text>
          <xsl:apply-templates select="." mode="linked-datatype"/>

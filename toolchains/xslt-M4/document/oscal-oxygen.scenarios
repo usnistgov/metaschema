@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serialized xml:space="preserve">
+	<serializableOrderedMap>
+		<entry>
+			<String>scenarios</String>
+			<scenario-array>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				<xprocScenario>
+					<field name="inputPorts">
+						<xprocInputPort-array/>
+					</field>
+					<field name="outputPorts">
+						<xprocOutputPort-array>
+							<xprocOutputPort>
+								<field name="url">
+									<null/>
+								</field>
+								<field name="showInSequenceView">
+									<Boolean>true</Boolean>
+								</field>
+								<field name="portName">
+									<String>XSweet-HTML</String>
+								</field>
+							</xprocOutputPort>
+						</xprocOutputPort-array>
+					</field>
+					<field name="xprocOptions">
+						<xprocOption-array>
+							<xprocOption>
+								<field name="namespaceURI">
+									<String></String>
+								</field>
+								<field name="localName">
+									<String>docx-file-uri</String>
+								</field>
+								<field name="value">
+									<String>${currentFileURL}</String>
+								</field>
+							</xprocOption>
+						</xprocOption-array>
+					</field>
+					<field name="xprocParameters">
+						<xprocParameterPort-array>
+							<xprocParameterPort>
+								<field name="portName">
+									<String>*</String>
+								</field>
+								<field name="parameters">
+									<xprocParameter-array/>
+								</field>
+							</xprocParameterPort>
+							<xprocParameterPort>
+								<field name="portName">
+									<String>parameters</String>
+								</field>
+								<field name="parameters">
+									<xprocParameter-array/>
+								</field>
+							</xprocParameterPort>
+						</xprocParameterPort-array>
+					</field>
+					<field name="advancedOptionsMap">
+						<null/>
+					</field>
+					<field name="name">
+						<String>Run XSweet docx converter - extract and refine</String>
+					</field>
+					<field name="baseURL">
+						<null/>
+					</field>
+					<field name="footerURL">
+						<null/>
+					</field>
+					<field name="fOPMethod">
+						<null/>
+					</field>
+					<field name="fOProcessorName">
+						<null/>
+					</field>
+					<field name="headerURL">
+						<null/>
+					</field>
+					<field name="inputXSLURL">
+						<String>file:/C:/Users/wap1/Documents/OSS/XSweet/applications/docx-extract-and-structure.xpl</String>
+					</field>
+					<field name="inputXMLURL">
+						<String></String>
+					</field>
+					<field name="defaultScenario">
+						<Boolean>false</Boolean>
+					</field>
+					<field name="isFOPPerforming">
+						<Boolean>false</Boolean>
+					</field>
+					<field name="type">
+						<String>XPROC</String>
+					</field>
+					<field name="saveAs">
+						<Boolean>false</Boolean>
+					</field>
+					<field name="openInBrowser">
+						<Boolean>false</Boolean>
+					</field>
+					<field name="outputResource">
+						<null/>
+					</field>
+					<field name="openOtherLocationInBrowser">
+						<Boolean>false</Boolean>
+					</field>
+					<field name="locationToOpenInBrowserURL">
+						<null/>
+					</field>
+					<field name="openInEditor">
+						<Boolean>true</Boolean>
+					</field>
+					<field name="showInHTMLPane">
+						<Boolean>false</Boolean>
+					</field>
+					<field name="showInXMLPane">
+						<Boolean>true</Boolean>
+					</field>
+					<field name="showInSVGPane">
+						<Boolean>false</Boolean>
+					</field>
+					<field name="showInResultSetPane">
+						<Boolean>false</Boolean>
+					</field>
+					<field name="useXSLTInput">
+						<Boolean>false</Boolean>
+					</field>
+					<field name="xsltParams">
+						<list/>
+					</field>
+					<field name="cascadingStylesheets">
+						<String-array/>
+					</field>
+					<field name="xslTransformer">
+						<String>Add-on for Calabash XProc Engine</String>
+					</field>
+					<field name="extensionURLs">
+						<String-array/>
+					</field>
+				</xprocScenario>
+			</scenario-array>
+		</entry>
+		<entry>
+			<String>scenarios.load.from.project</String>
+			<Boolean>false</Boolean>
+		</entry>
+	</serializableOrderedMap>
+</serialized>
