@@ -47,12 +47,12 @@
          <!-- generates h1-hx headers picked up by Hugo toc -->
          <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
             <!--  XXX LINK HERE -->
-            <xsl:attribute name="id" select="@_xml-path"/>
+            <xsl:attribute name="id" select="@_tree-xml-id"/>
             <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
             <xsl:text>{ self::attribute/'@' || @gi }</xsl:text>
          </xsl:element>
          <xsl:sequence expand-text="true">
-            <p>See <a href="{ $xml-map-page }#{@_xml-path}">{ @_xml-path }</a> in the element map.</p>
+            <p>See <a href="{ $xml-map-page }#{@_tree-xml-id}">{ @_tree-xml-id }</a> in the element map.</p>
          </xsl:sequence>
          <xsl:apply-templates select="." mode="produce-for-element"/>
          
@@ -79,10 +79,16 @@
                   <xsl:otherwise> member of array <code>{ ../@key }</code>.</xsl:otherwise>
                </xsl:choose>-->
             </p>
-            <p class="path">{ @_xml-path }</p>
+            <!--<p class="path">{ @_tree-xml-id }</p>-->
          </div>
          <xsl:apply-templates mode="#current" select="description"/>
          <xsl:call-template name="report-also-named"/>
+         
+         <xsl:for-each select="value">
+            <div class="value">
+               <p>Value: { if (matches(@as-type,'^[aeiou]','i')) then 'An ' else 'A '}{ @as-type } </p>
+            </div>
+         </xsl:for-each>
          <xsl:if test="exists(remarks)">
             <details open="open" class="remarks-group">
                <summary>Remarks</summary>
@@ -94,7 +100,7 @@
    
    <xsl:template name="json-crosslink">
       <div class="crosslink">
-         <a href="{$json-reference-page}#{@_json-path}">
+         <a href="{$json-reference-page}#{@_tree-json-id}">
             <button class="schema-link">Switch to JSON</button>
          </a>
       </div>

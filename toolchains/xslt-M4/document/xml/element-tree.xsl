@@ -29,8 +29,8 @@
 <!-- The points of misalignment between the XML and object models
      are bridged by including a JSON path for the parent (wrapper) when none is on the node. -->
     <xsl:template name="mark-path">
-        <xsl:if test="empty(@_json-path)">
-            <xsl:apply-templates select="../@_json-path"/>
+        <xsl:if test="empty(@_tree-json-id)">
+            <xsl:apply-templates select="../@_tree-json-id"/>
         </xsl:if>
     </xsl:template>
     

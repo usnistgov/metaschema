@@ -208,17 +208,13 @@
   <!-- The JSON object index is produced from the full blown out instance tree
        as already rendered into HTML   -->
   <p:xslt name="render-xml-element-index">
-    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
     <p:input port="source">
-      <p:pipe port="result" step="render-xml-element-reference"/>
+      <p:pipe port="result" step="make-xml-element-tree"/>
     </p:input>
+    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
     <p:input port="stylesheet">
-      <!-- XSLT consumes HTML and produces an index - works for both XML and JSON reference pages -->
-      <p:document href="document/make-schema-reference-index-html.xsl"/>
+      <p:document href="document/xml/element-index-html.xsl"/>
     </p:input>
-    <!--<p:with-param name="xml-reference-page" select="$metaschema-id || '-xml-reference.html'"/>
-    <p:with-param name="xml-map-page" select="$metaschema-id || '-xml-outline.html'"/>-->
-    
     <p:with-param name="reference-page" select="$metaschema-id || '-xml-reference.html'"/>
   </p:xslt>
   
@@ -321,10 +317,10 @@
   <p:xslt name="render-json-object-index">
     <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
     <p:input port="source">
-      <p:pipe port="result" step="render-json-object-reference"/>
+      <p:pipe port="result" step="make-json-object-tree"/>
     </p:input>
     <p:input port="stylesheet">
-      <p:document href="document/make-schema-reference-index-html.xsl"/>
+      <p:document href="document/json/object-index-html.xsl"/>
     </p:input>
     <p:with-param name="reference-page" select="$metaschema-id || '-json-reference.html'"/>
   </p:xslt>

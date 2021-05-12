@@ -187,7 +187,7 @@ details:not([open]) .show-closed { display: inline }
    
    
    <xsl:template match="*[exists(@key)]" mode="json-key">
-      <a class="OM-name" href="{ $reference-page }#{  @_json-path }">
+      <a class="OM-name" href="{ $reference-page }#{  @_tree-json-id }">
          <xsl:value-of select="@key"/>
       </a>
    </xsl:template>
