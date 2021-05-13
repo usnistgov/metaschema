@@ -37,11 +37,14 @@
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
         <!-- all composed -->
         
-        <nm:transform version="3.0">compose/make-model-map.xsl</nm:transform>
+        <nm:transform version="3.0">compose/annotate-composition.xsl</nm:transform>
+        
+        <nm:transform version="3.0">compose/make-model-map2.xsl</nm:transform>
         <nm:transform version="3.0">compose/unfold-model-map.xsl</nm:transform>
+        <nm:transform version="3.0">compose/annotate-model-map.xsl</nm:transform>
         
         <nm:transform version="3.0">document/json/object-tree.xsl</nm:transform>
-        <nm:transform version="3.0">document/json/object-directory-html.xsl</nm:transform>
+        <nm:transform version="3.0">document/json/object-reference-html.xsl</nm:transform>
     </xsl:variable>
     
 </xsl:stylesheet>
