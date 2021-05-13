@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:nm="http://csrc.nist.gov/ns/metaschema"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -13,8 +12,8 @@
     
     -->
 
-    <xsl:output method="xml" indent="no" omit-xml-declaration="yes"/>
-    
+    <xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>
+
     <!-- Turning $trace to 'on' will
          - emit runtime messages with each transformation, and
          - retain nm:ERROR and nm:WARNING messages in results. -->
@@ -28,6 +27,7 @@
     
     <!-- The $transformation-sequence declares transformations to be applied in order. -->
     <xsl:variable name="transformation-sequence">
+        <!-- See nist-metaschema-MAKE-XML-MAP.xsl for maintenance hints -->
         <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-build-refs.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-trim-extra-modules.xsl</nm:transform>
@@ -37,8 +37,12 @@
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
         <!-- all composed -->
         
-        <nm:transform version="3.0">compose/make-model-map.xsl</nm:transform>
+        <nm:transform version="3.0">compose/annotate-composition.xsl</nm:transform>
+        
+        <nm:transform version="3.0">compose/make-model-map2.xsl</nm:transform>
         <nm:transform version="3.0">compose/unfold-model-map.xsl</nm:transform>
+        <nm:transform version="3.0">compose/annotate-model-map.xsl</nm:transform>
+        
         <nm:transform version="3.0">document/json/object-tree.xsl</nm:transform>
         <nm:transform version="3.0">document/json/object-map-html.xsl</nm:transform>
     </xsl:variable>
