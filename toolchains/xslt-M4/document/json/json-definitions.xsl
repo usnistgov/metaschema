@@ -8,7 +8,10 @@ xmlns="http://www.w3.org/1999/xhtml"
 xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
 exclude-result-prefixes="#all">
 
-<xsl:import href="../common-definitions.xsl"/>
+   <xsl:import href="../common-definitions.xsl"/>
     
-
+   <xsl:template name="mark-id">
+      <xsl:attribute name="id" select="@_metaschema-json-id"/>
+   </xsl:template>
+    
 </xsl:stylesheet>

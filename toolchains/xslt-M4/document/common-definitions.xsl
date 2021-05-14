@@ -12,9 +12,6 @@
         </output:serialization-parameters>
     </xsl:variable>
 
-    <xsl:param name="json-reference-page">../../json/reference</xsl:param>
-    <xsl:param name="xml-map-page">../outline</xsl:param>
-
     <xsl:template match="/METASCHEMA" priority="10">
         <div>
             <xsl:apply-templates/>
@@ -121,6 +118,8 @@
     </xsl:template>
 
 
+    <xsl:template name="mark-id"/>
+    
     <xsl:template match="/*/define-assembly | /*/define-field | /*/define-flag">
         <xsl:variable name="level" select="count(. | ancestor::define-assembly)"/>
         <section class="definition { name() }"
@@ -129,7 +128,7 @@
             <!-- generates h1-hx headers picked up by Hugo toc -->
             <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }"
                 expand-text="true">
-                <!--<xsl:attribute name="id" select="@_json-path"/>-->
+                <xsl:call-template name="mark-id"/>
                 <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
                 <xsl:apply-templates select="." mode="definition-title-text"/>
             </xsl:element>
@@ -181,41 +180,62 @@
     <xsl:template match="group-as" mode="inline" expand-text="true"> - grouped as <code>{ @name }</code></xsl:template>
 
     <xsl:template match="field" mode="model-view" expand-text="true">
-        <li>Field (reference) <code>{ @ref }</code>
+        <li>
+            <xsl:call-template name="mark-id"/>
+            <xsl:text>Field (reference) </xsl:text>
+            <code>{ @ref }</code>
             <xsl:apply-templates select="use-name | group-as" mode="inline"/>
         </li>
     </xsl:template>
 
     <xsl:template match="flag" mode="model-view" expand-text="true">
-        <li>Flag (reference) <code>{ @ref }</code>
+        <li>
+            <xsl:call-template name="mark-id"/>
+            <xsl:text>Flag (reference) </xsl:text>
+            <code>{ @ref }</code>
             <xsl:apply-templates select="use-name | group-as" mode="inline"/></li>
     </xsl:template>
 
     <xsl:template match="assembly" mode="model-view" expand-text="true">
-        <li>Assembly (reference) <code>{ @ref }</code>
+        <li>
+            <xsl:call-template name="mark-id"/>
+            <xsl:text>Assembly (reference) </xsl:text>
+            <code>{ @ref }</code>
             <xsl:apply-templates select="use-name | group-as" mode="inline"/>
         </li>
     </xsl:template>
 
     <xsl:template match="define-field" mode="model-view" expand-text="true">
-        <li>Field (defined inline) <code>{ @name }</code>
+        <li>
+            <xsl:call-template name="mark-id"/>
+            <xsl:text>Field (defined inline) </xsl:text>
+            <code>{ @name }</code>
             <xsl:apply-templates select="use-name | group-as" mode="inline"/>
         </li>
     </xsl:template>
 
     <xsl:template match="define-flag" mode="model-view" expand-text="true">
-        <li>Flag (defined inline) <code>{ @name }</code>
+        <li>
+            <xsl:call-template name="mark-id"/>
+            <xsl:text>Flag (defined inline) </xsl:text>
+            <code>{ @name }</code>
             <xsl:apply-templates select="use-name | group-as" mode="inline"/></li>
 
     </xsl:template>
 
     <xsl:template match="define-assembly" mode="model-view" expand-text="true">
-        <li>Assembly (defined inline) <code>{ @name }</code>
+        <li>
+            <xsl:call-template name="mark-id"/>
+            <xsl:text>Assembly (defined inline) </xsl:text>
+             <code>{ @name }</code>
             <xsl:apply-templates select="use-name | group-as" mode="inline"/></li>
     </xsl:template>
 
     <xsl:template priority="5" match="choice">
-        <li class="choice">A choice between: <ul>
+        <li class="choice">
+            <xsl:call-template name="mark-id"/>
+            <xsl:text>A choice between: </xsl:text>
+            <ul>
                 <xsl:apply-templates/>
             </ul>
         </li>
