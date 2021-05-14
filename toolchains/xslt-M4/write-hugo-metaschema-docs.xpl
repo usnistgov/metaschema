@@ -34,92 +34,77 @@
   
   <p:input port="parameters" kind="parameter"/>
 
-  <p:option name="metaschema-id" select="'oscal'"/>
+  <!-- absolute URI -->
   
-  <!-- preview ports permit examining pipeline inputs -->
-  <p:serialization port="_a.echo-input" indent="true"/>
-  <p:output        port="_a.echo-input" primary="false">
-    <p:pipe        port="result" step="input"/>
+  <p:option name="output-path" required="true"/>
+  
+  <p:option name="json-outline-filename"   select="'json-outline.html'"/>
+  <p:option name="json-reference-filename"   select="'json-reference.html'"/>
+  <p:option name="json-index-filename"   select="'json-index.html'"/>
+  <p:option name="json-definitions-filename"   select="'json-definitions.html'"/>
+  <p:option name="xml-outline-filename"   select="'xml-outline.html'"/>
+  <p:option name="xml-reference-filename"   select="'xml-reference.html'"/>
+  <p:option name="xml-index-filename"   select="'xml-index.html'"/>
+  <p:option name="xml-definitions-filename"   select="'xml-definitions.html'"/>
+  
+  <p:serialization port="diagnostic" indent="true"/>
+  <p:output        port="diagnostic" primary="false">
+    <!--<p:document href=""></p:document>-->
+    <p:pipe        port="result"               step="diagnostic">
+      
+    </p:pipe>
   </p:output>
+  
+  <!--<p:serialization port="JSON-object-reference-div" indent="true"/>
+  <p:output        port="JSON-object-reference-div" primary="false">
+    <p:pipe        port="result"                     step="render-json-object-reference"/>
+  </p:output>
+  
+  <p:serialization port="JSON-object-index-div" indent="true"/>
+  <p:output        port="JSON-object-index-div" primary="false">
+    <p:pipe        port="result"                 step="render-json-object-index"/>
+  </p:output>-->
+  
+  <!--<p:serialization port="JSON-definitions-div" indent="true"/>
+  <p:output        port="JSON-definitions-div" primary="false">
+    <p:pipe        port="result"                step="render-json-definitions"/>
+  </p:output>-->
 
-  <p:serialization port="_b.composed" indent="true"/>
-  <p:output        port="_b.composed" primary="false">
-    <p:pipe        port="result" step="composed"/>
+  <!--<p:serialization port="XML-element-outline-div" indent="true"/>
+  <p:output        port="XML-element-outline-div" primary="false">
+    <p:pipe        port="result"               step="make-xml-model-map"/>
   </p:output>
   
-  <p:serialization port="_c.composed-and-annotated" indent="true"/>
-  <p:output        port="_c.composed-and-annotated" primary="false">
-    <p:pipe        port="result" step="annotate-composition"/>
+  <p:serialization port="XML-element-reference-div" indent="true"/>
+  <p:output        port="XML-element-reference-div" primary="false">
+    <p:pipe        port="result"               step="render-xml-element-reference"/>
   </p:output>
   
-  <p:serialization port="_d.abstract-model-map" indent="true"/>
-  <p:output        port="_d.abstract-model-map" primary="false">
-    <p:pipe        port="result"                step="make-abstract-map"/>
-  </p:output>
-
-  <p:serialization port="_e.unfolded-instance-map" indent="true"/>
-  <p:output        port="_e.unfolded-instance-map" primary="false">
-    <p:pipe        port="result"                step="unfold-instance-map"/>
-  </p:output>
+  <p:serialization port="XML-element-index-div" indent="true"/>
+  <p:output        port="XML-element-index-div" primary="false">
+    <p:pipe        port="result"               step="render-xml-element-index"/>
+  </p:output>-->
   
-  <p:serialization port="_f.marked-instance-map" indent="true"/>
-  <p:output        port="_f.marked-instance-map" primary="false">
-    <p:pipe        port="result"                step="annotate-instance-map"/>
-  </p:output>
+  <!--<p:serialization port="XML-definitions-div" indent="true"/>
+  <p:output        port="XML-definitions-div" primary="false">
+    <p:pipe        port="result"               step="render-xml-definitions"/>
+  </p:output>-->
   
-  <p:serialization port="JSON-object-tree-xml" indent="true"/>
-  <p:output        port="JSON-object-tree-xml" primary="false">
-    <p:pipe        port="result"               step="make-json-object-tree"/>
-  </p:output>
-  
-  <p:serialization port="JSON-object-map-html" indent="true"/>
-  <p:output        port="JSON-object-map-html" primary="false">
-    <p:pipe        port="result"               step="style-json-model-map"/>
-  </p:output>
-  
-  <p:serialization port="JSON-object-reference-html" indent="true"/>
-  <p:output        port="JSON-object-reference-html" primary="false">
-    <p:pipe        port="result"                     step="style-json-object-reference"/>
-  </p:output>
-  
-  <p:serialization port="JSON-object-index-html" indent="true"/>
-  <p:output        port="JSON-object-index-html" primary="false">
-    <p:pipe        port="result"                 step="style-json-object-index"/>
-  </p:output>
-  
-  <p:serialization port="JSON-definitions-html" indent="true"/>
-  <p:output        port="JSON-definitions-html" primary="false">
-    <p:pipe        port="result"                step="style-json-definitions"/>
-  </p:output>
-
-  <p:serialization port="XML-element-tree-xml" indent="true"/>
-  <p:output        port="XML-element-tree-xml" primary="false">
-    <p:pipe        port="result"               step="make-xml-element-tree"/>
-  </p:output>
-  
-  <p:serialization port="XML-element-map-html" indent="true"/>
-  <p:output        port="XML-element-map-html" primary="false">
-    <p:pipe        port="result"               step="style-xml-model-map"/>
-  </p:output>
-  
-  <p:serialization port="XML-element-reference-html" indent="true"/>
-  <p:output        port="XML-element-reference-html" primary="false">
-    <p:pipe        port="result"               step="style-xml-element-reference"/>
-  </p:output>
-  
-  <p:serialization port="XML-element-index-html" indent="true"/>
-  <p:output        port="XML-element-index-html" primary="false">
-    <p:pipe        port="result"                 step="style-xml-element-index"/>
-  </p:output>
-  
-  <p:serialization port="XML-definitions-html" indent="true"/>
-  <p:output        port="XML-definitions-html" primary="false">
-    <p:pipe        port="result"                step="style-xml-definitions"/>
-  </p:output>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
 
+  <p:variable name="source-doc"      select="document-uri(/)"/>
+  
+  <p:variable name="xml-outline-uri"      select="resolve-uri($xml-outline-filename,$output-path)"/>
+  <p:variable name="xml-reference-uri"    select="resolve-uri($xml-reference-filename,$output-path)"/>
+  <p:variable name="xml-index-uri"        select="resolve-uri($xml-index-filename,$output-path)"/>
+  <p:variable name="xml-definitions-uri"  select="resolve-uri($xml-definitions-filename,$output-path)"/>
+  <p:variable name="json-outline-uri"     select="resolve-uri($json-outline-filename,$output-path)"/>
+  <p:variable name="json-reference-uri"   select="resolve-uri($json-reference-filename,$output-path)"/>
+  <p:variable name="json-index-uri"       select="resolve-uri($json-index-filename,$output-path)"/>
+  <p:variable name="json-definitions-uri" select="resolve-uri($json-definitions-filename,$output-path)"/>
+  
   <p:import href="compose/metaschema-compose.xpl"/>
 
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
@@ -172,7 +157,7 @@
     <p:input port="stylesheet">
       <p:document href="document/xml/element-map-html.xsl"/>
     </p:input>
-    <p:with-param name="reference-page" select="$metaschema-id || '-xml-reference.html'"/>
+    <!--<p:with-param name="reference-page" select="$metaschema-id || '-xml-reference.html'"/>-->
   </p:xslt>
   
   <p:xslt name="style-xml-model-map">
@@ -192,8 +177,8 @@
     <p:input port="stylesheet">
       <p:document href="document/xml/element-reference-html.xsl"/>
     </p:input>
-    <p:with-param name="json-reference-page" select="$metaschema-id || '-json-reference.html'"/>
-    <p:with-param name="xml-map-page" select="$metaschema-id || '-xml-outline.html'"/>
+    <p:with-param name="json-reference-page" select="$json-reference-uri"/>
+    <p:with-param name="xml-map-page"        select="$xml-outline-uri"/>
   </p:xslt>
   
   <!--  Wrapping this up to write and view locally/standalone if wanted -->
@@ -205,19 +190,18 @@
   </p:xslt>
   
   <p:sink/>
-  <!-- The JSON object index is produced from the full blown out instance tree
-       as already rendered into HTML   -->
+  
   <p:xslt name="render-xml-element-index">
     <p:input port="source">
       <p:pipe port="result" step="make-xml-element-tree"/>
     </p:input>
-    <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
     <p:input port="stylesheet">
       <p:document href="document/xml/element-index-html.xsl"/>
     </p:input>
-    <p:with-param name="reference-page" select="$metaschema-id || '-xml-reference.html'"/>
-    <p:with-param name="definitions-page" select="$metaschema-id || '-xml-definitions.html'"/>
+    <p:with-param name="reference-page" select="$xml-reference-uri"/>
+    <p:with-param name="definitions-page" select="$xml-definitions-uri"/>
   </p:xslt>
+  
   
   <p:xslt name="style-xml-element-index">
     <!--<p:with-option name="initial-mode" select="QName('','make-page')"/>-->
@@ -228,19 +212,18 @@
   </p:xslt>
   
   <p:sink/>
-  
 
   <!-- For the straight-up definitions directory we go back to the composed metaschema before explosion -->
   <p:xslt name="render-xml-definitions">
     <p:input port="source">
-      <p:pipe port="result" step="annotate-composition"/>
+      <p:pipe port="result" step="composed"/>
     </p:input>
     <p:input port="stylesheet">
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
       <p:document href="document/xml/xml-definitions.xsl"/>
     </p:input>
-    <p:with-param name="xml-reference-page" select="$metaschema-id || '-xml-reference.html'"/>    
-    <p:with-param name="json-definitions-page" select="$metaschema-id || '-json-definitions.html'"/>
+    <!--<p:with-param name="xml-reference-page" select="$metaschema-id || '-xml-reference.html'"/>    
+    <p:with-param name="json-definitions-page" select="$metaschema-id || '-json-definitions.html'"/>-->
   </p:xslt>
   
   <p:xslt name="style-xml-definitions">
@@ -249,6 +232,7 @@
     </p:input>
     <p:with-param name="metaschema-code" select="$metaschema-id"/>
   </p:xslt>
+  
   
   <p:sink/>
   
@@ -269,7 +253,7 @@
     <p:input port="stylesheet">
       <p:document href="document/json/object-map-html.xsl"/>
     </p:input>
-    <p:with-param name="reference-page" select="$metaschema-id || '-json-reference.html'"/>
+    <p:with-param name="reference-page" select="$json-outline-uri"/>
   </p:xslt>
 
   <!--  Next we wrap this up to write and view locally/standalone if wanted -->
@@ -298,8 +282,8 @@
     <p:input port="stylesheet">
       <p:document href="document/json/object-reference-html.xsl"/>
     </p:input>
-    <p:with-param name="xml-reference-page" select="$metaschema-id || '-xml-reference.html'"/>
-    <p:with-param name="json-map-page" select="$metaschema-id || '-json-outline.html'"/>
+    <p:with-param name="xml-reference-page" select="$xml-reference-uri"/>
+    <p:with-param name="json-map-page"      select="$json-outline-uri"/>
   </p:xslt>
 
   <!--  Wrapping this up to write and view locally/standalone if wanted -->
@@ -323,8 +307,8 @@
     <p:input port="stylesheet">
       <p:document href="document/json/object-index-html.xsl"/>
     </p:input>
-    <p:with-param name="reference-page" select="$metaschema-id || '-json-reference.html'"/>
-    <p:with-param name="definitions-page" select="$metaschema-id || '-json-definitions.html'"/>
+    <p:with-param name="reference-page" select="$json-reference-uri"/>
+    <p:with-param name="definitions-page" select="$json-definitions-uri"/>
   </p:xslt>
   
   <p:xslt name="style-json-object-index">
@@ -340,14 +324,14 @@
   <!-- For the straight-up definitions directory we go back to the composed metaschema before explosion -->
   <p:xslt name="render-json-definitions">
     <p:input port="source">
-      <p:pipe port="result" step="annotate-composition"/>
+      <p:pipe port="result" step="composed"/>
     </p:input>
     <p:input port="stylesheet">
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
       <p:document href="document/json/json-definitions.xsl"/>
     </p:input>
-    <p:with-param name="xml-definitions-page" select="$metaschema-id || '-xml-definitions.html'"/>
-    <p:with-param name="json-reference-page" select="$metaschema-id || '-json-reference.html'"/>
+    <!--<p:with-param name="xml-definitions-page" select="$metaschema-id || '-xml-definitions.html'"/>
+    <p:with-param name="json-reference-page" select="$metaschema-id || '-json-reference.html'"/>-->
   </p:xslt>
 
   <p:xslt name="style-json-definitions">
@@ -360,5 +344,73 @@
 
   <p:sink/>
 
+  <p:xslt name="diagnostic">
+    <p:input port="source">
+      <p:inline><dummy/></p:inline>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="document/pipeline-diagnostic.xsl"/>
+    </p:input>
+    <p:with-param name="test1" select="$json-outline-uri"/>
+    <p:with-param name="test2"  select="$source-doc"/>
+  </p:xslt>
+  
+  <p:store>
+    <p:input port="source">
+      <p:pipe port="result" step="make-xml-model-map"/>
+    </p:input>
+    <p:with-option name="href" select="$xml-outline-uri"/>
+  </p:store>
+  
+  <p:store>
+    <p:input port="source">
+      <p:pipe port="result" step="render-xml-element-reference"/>
+    </p:input>
+    <p:with-option name="href" select="$xml-reference-uri"/>
+  </p:store>
+  
+  <p:store>
+    <p:input port="source">
+      <p:pipe port="result" step="render-xml-definitions"/>
+    </p:input>
+    <p:with-option name="href" select="$xml-definitions-uri"/>
+  </p:store>
+  
+  <p:store>
+    <p:input port="source">
+      <p:pipe port="result" step="render-xml-element-index"/>
+    </p:input>
+    <p:with-option name="href" select="$xml-index-uri"/>
+  </p:store>
+  
+  <p:store>
+    <p:input port="source">
+      <p:pipe port="result" step="make-json-model-map"/>
+    </p:input>
+    <p:with-option name="href" select="$json-outline-uri"/>
+  </p:store>
+  
+  <p:store>
+    <p:input port="source">
+      <p:pipe port="result" step="render-json-object-reference"/>
+    </p:input>
+    <p:with-option name="href" select="$json-reference-uri"/>
+  </p:store>
+  
+  <p:store>
+    <p:input port="source">
+      <p:pipe port="result" step="render-json-definitions"/>
+    </p:input>
+    <p:with-option name="href" select="$json-definitions-uri"/>
+  </p:store>
+  
+  
+  <p:store>
+    <p:input port="source">
+      <p:pipe port="result" step="render-json-object-index"/>
+    </p:input>
+    <p:with-option name="href" select="$json-index-uri"/>
+  </p:store>
+  
   
 </p:declare-step>

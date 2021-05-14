@@ -76,8 +76,8 @@
             <xsl:for-each select="$group-name">
                 <xsl:attribute name="group-name" select="."/>
             </xsl:for-each>
+            <xsl:apply-templates select="formal-name | description"/>
             <xsl:if test="not(@_key-name = $visited)">
-                <xsl:apply-templates select="formal-name | description"/>
                 <xsl:apply-templates select="define-flag | flag" mode="build"/>
                 <xsl:apply-templates select="model" mode="build">
                     <xsl:with-param name="visited" tunnel="true" select="$visited, string(@_key-name)"/>
@@ -177,8 +177,6 @@
             <xsl:with-param name="reference" select="."/>
         </xsl:apply-templates>
     </xsl:template>
-    
-    
     
     <!--<xsl:template mode="build" match="model//assembly">
         <xsl:apply-templates mode="build" select="key('global-assemblies', @ref)">
