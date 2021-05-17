@@ -8,7 +8,7 @@
    exclude-result-prefixes="#all">
 
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
-   
+
    <xsl:variable name="indenting" as="element()"
       xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
       <output:serialization-parameters>
@@ -26,8 +26,6 @@
          <xsl:value-of select="serialize(.,$indenting)"/>
       </pre>
           </details>-->
-          
-          
          <xsl:apply-templates/>
        </div>
    </xsl:template>
@@ -40,6 +38,7 @@
    
    
    <xsl:template match="*[exists(@gi)]" expand-text="true">
+      <xsl:param tunnel="true" name="constraints" select="()"/>
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
       <section class="xml-element">
          <xsl:call-template name="json-crosslink"/>
@@ -54,15 +53,20 @@
          <xsl:sequence expand-text="true">
             <p>See <a href="{ $xml-map-page }#{@_tree-xml-id}">{ @_tree-xml-id }</a> in the element map.</p>
          </xsl:sequence>
-         <xsl:apply-templates select="." mode="produce-for-element"/>
          
-         <xsl:apply-templates/>
+         <xsl:apply-templates select="." mode="produce"/>
+         
+         <xsl:apply-templates>
+            <xsl:with-param tunnel="true" name="constraints" select="$constraints, constraint"/>
+         </xsl:apply-templates>
+         
       </section>
    </xsl:template>
    
    <xsl:template match="formal-name | description | remarks | constraint"/>
    
-   <xsl:template match="*" mode="produce-for-element" expand-text="true">
+   <xsl:template match="*" mode="produce" expand-text="true">
+      <xsl:param tunnel="true" name="constraints" select="()"/>
       <div class="obj-desc">
          <!-- target for cross-linking -->
          <xsl:copy-of select="@id"/>
@@ -81,14 +85,17 @@
             </p>
             <!--<p class="path">{ @_tree-xml-id }</p>-->
          </div>
-         <xsl:apply-templates mode="#current" select="description"/>
-         <xsl:call-template name="report-also-named"/>
          
-         <xsl:for-each select="value">
-            <div class="value">
-               <p>Value: { if (matches(@as-type,'^[aeiou]','i')) then 'An ' else 'A '}{ @as-type } </p>
-            </div>
-         </xsl:for-each>
+         <xsl:apply-templates mode="#current" select="description"/>
+         <xsl:apply-templates mode="#current" select="value"/>
+         
+         <xsl:variable name="potential-constraints" select="$constraints,constraint"/>
+         
+         <!-- Visiting the constraints passed down from above, with $apply-to as the node applying -->
+         <xsl:apply-templates select="$potential-constraints" mode="produce-matching-constraints">
+            <xsl:with-param name="applying-to" select="."/>
+         </xsl:apply-templates>
+         
          <xsl:if test="exists(remarks)">
             <details open="open" class="remarks-group">
                <summary>Remarks</summary>
@@ -98,6 +105,15 @@
       </div>
    </xsl:template>
    
+   <xsl:template match="value" mode="produce" expand-text="true">
+      <div class="value" id="{ @tree-xml-id }">
+         <p>Value: { if (matches(@as-type,'^[aeiou]','i')) then 'An ' else 'A '}{ @as-type } </p>
+      </div>
+   </xsl:template>
+   
+   <xsl:include href="../common-reference.xsl"/>
+   
+   
    <xsl:template name="json-crosslink">
       <div class="crosslink">
          <a href="{$json-reference-page}#{@_tree-json-id}">
@@ -106,58 +122,5 @@
       </div>
    </xsl:template>
    
-   <xsl:template name="report-also-named">
-      <!-- report - other occurrences of this (same) definition?
-                    other definitions assigned this key? in use? -->
-   </xsl:template>
-
-  <xsl:key name="by-key" match="*[exists(@key)]" use="@key"/>
-   
-   <xsl:template match="description" mode="produce-for-element">
-      <p class="description">
-         <xsl:apply-templates/>
-      </p>
-   </xsl:template>
-   
-   <xsl:template match="remarks" mode="produce-for-element">
-      <div class="remarks{ @class ! (' ' || .)}">
-         <xsl:if test="@class='in-use'"><p class="nb">(In use)</p></xsl:if>
-         <xsl:apply-templates/>
-      </div>
-   </xsl:template>
-   
-   <!-- in no mode, cast to XHTML namespace -->
-   <xsl:template match="description//* | remarks//*">
-      <xsl:element name="{ local-name() }" namespace="http://www.w3.org/1999/xhtml">
-         <xsl:apply-templates/>
-      </xsl:element>
-   </xsl:template>
-   
-<!-- XXX consolidate this w/ JSON code? -->
-   <xsl:template mode="occurrence-code" match="*">
-      <xsl:param name="require-member" select="false()"/>
-      <xsl:variable name="minOccurs" as="xs:string">
-         <xsl:choose>
-            <xsl:when expand-text="true" test="$require-member">{ (@min-occurs[not(.='0')], '1')[1] }</xsl:when>
-            <xsl:otherwise expand-text="true"                  >{ (@min-occurs, '0')[1] }</xsl:otherwise>
-         </xsl:choose>
-      </xsl:variable>
-      <xsl:variable name="maxOccurs" as="xs:string">
-         <xsl:choose>
-            <xsl:when test="@max-occurs = 'unbounded'">&#x221e;</xsl:when>
-            <xsl:otherwise expand-text="true">{ (@max-occurs, '1')[1] }</xsl:otherwise>
-         </xsl:choose>
-      </xsl:variable>
-      <span class="cardinality">
-         <xsl:text>[</xsl:text>
-         <xsl:choose>
-            <xsl:when test="$minOccurs = $maxOccurs" expand-text="true">{ $minOccurs }</xsl:when>
-            <xsl:when test="number($maxOccurs) = number($minOccurs) + 1" expand-text="true">{ $minOccurs } or { $maxOccurs }</xsl:when>
-            <xsl:otherwise expand-text="true">{ $minOccurs } to { $maxOccurs }</xsl:otherwise>
-         </xsl:choose>
-         <xsl:text>]</xsl:text>
-      </span>
-   </xsl:template>
-   
-   
+  
 </xsl:stylesheet>

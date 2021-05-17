@@ -25,6 +25,29 @@
         </x:call>
         <x:expect label="matching" select="true()"/>
     </x:scenario>
+    <!-- 'any-match' test is 'false' for target /EVERYTHING/deep1/deep2/deep3/@count applied to /EVERYTHING/deep1/deep2/deep3/@count-->
+    <x:scenario label="real-worldish">
+        <x:call function="m:match-paths">
+            <x:param name="context-path" as="xs:string">/EVERYTHING/deep1/deep2/deep3/@count</x:param>
+            <x:param name="target-path"  as="xs:string">/EVERYTHING/deep1/deep2/deep3/@count</x:param>
+        </x:call>
+        <x:expect label="matching" select="true()"/>
+    </x:scenario>
+    <x:scenario label="real-worldish">
+        <x:call function="m:match-paths">
+            <x:param name="context-path" as="xs:string">/EVERYTHING/@count</x:param>
+            <x:param name="target-path"  as="xs:string">/EVERYTHING/@count</x:param>
+        </x:call>
+        <x:expect label="matching" select="true()"/>
+    </x:scenario>
+    
+    <x:scenario label="five-step match absolute paths">
+        <x:call function="m:match-paths">
+            <x:param name="context-path" as="xs:string">/e1/e2/e3/e4/@e5</x:param>
+            <x:param name="target-path"  as="xs:string">/e1/e2/e3/e4/@e5</x:param>
+        </x:call>
+        <x:expect label="matching" select="true()"/>
+    </x:scenario>
     <x:scenario label="simple wildcarded match">
         <x:call function="m:match-paths">
             <x:param name="context-path" as="xs:string">boo</x:param>
