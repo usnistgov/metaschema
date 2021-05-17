@@ -5,8 +5,6 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
-   
-
    <xsl:param as="xs:string" name="reference-page" select="'../reference'"/>
    
    <xsl:output omit-xml-declaration="true" indent="no"/>

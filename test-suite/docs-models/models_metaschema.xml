@@ -37,6 +37,9 @@
         <root-name>EVERYTHING</root-name>
         <flag ref="id"/>
         <model>
+            <assembly ref="deep-branch">
+                <use-name>deep1</use-name>
+            </assembly>
             <field ref="field-1only"/>
             <field ref="overloaded">
                 <use-name>overloaded1</use-name>
@@ -92,6 +95,36 @@
                 <group-as name="everything-recursive" in-json="ARRAY"/>
             </assembly>
         </model>
+    </define-assembly>
+
+    <define-assembly name="deep-branch">
+        <formal-name>Deep branch</formal-name>
+        <description>A deepish branching structure defined globally.</description>
+        <model>
+            <define-assembly name="deep2">
+                <formal-name>Deep two (inline)</formal-name>
+                <description>Two levels in.</description>
+                <model>
+                    <define-assembly name="deep3">
+                        <formal-name>Deep Three (inline)</formal-name>
+                        <description>Three levels in.</description>
+                        <flag ref="id"/>
+                        <define-flag name="count">
+                            <formal-name>Count</formal-name>
+                            <description>A count in natural language.</description>
+                        </define-flag>
+                        
+                    </define-assembly>
+                </model>
+            </define-assembly>
+        </model>
+        <constraint>
+            <allowed-values target="deep2/deep3/@count">
+                <enum value="one">One</enum>
+                <enum value="two">Two</enum>
+                <enum value="three">Three</enum>
+            </allowed-values>
+        </constraint>
     </define-assembly>
 
     <define-field name="overloaded">
