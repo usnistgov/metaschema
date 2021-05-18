@@ -26,9 +26,9 @@
     <xsl:variable name="markdown-value-label">RICHTEXT</xsl:variable>
     <xsl:variable name="markdown-multiline-label">PROSE</xsl:variable>
     
-    <xsl:key name="assembly-definition-by-name" match="METASCHEMA/define-assembly" use="@name"/>
-    <xsl:key name="field-definition-by-name"    match="METASCHEMA/define-field"    use="@name"/>
-    <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag"     use="@name"/>
+    <xsl:key name="assembly-definition-by-name" match="METASCHEMA/define-assembly" use="@_key-name"/>
+    <xsl:key name="field-definition-by-name"    match="METASCHEMA/define-field"    use="@_key-name"/>
+    <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag"     use="@_key-name"/>
     
     <!-- Produces composed metaschema (imports resolved) -->
     <!--<xsl:import href="../lib/metaschema-compose.xsl"/>-->
@@ -43,7 +43,7 @@
     <xsl:template match="/METASCHEMA" expand-text="true">
         <map>
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
-            <string key="$id">{ namespace }-schema/{ short-name }-schema.json</string>
+            <string key="$id">{ namespace }/{ short-name }-schema.json</string>
             <xsl:for-each select="schema-name">
                 <string key="$comment">{ . }: JSON Schema</string>
             </xsl:for-each>
@@ -91,7 +91,10 @@
     <xsl:template match="METASCHEMA/short-name"/>
     <xsl:template match="METASCHEMA/remarks"/>
     <xsl:template match="METASCHEMA/namespace"/>
-    <xsl:template match="METASCHEMA/schema-version"/>
+    
+    <xsl:template match="METASCHEMA/schema-version" expand-text="true">
+        <string key="version">{ . }</string>
+    </xsl:template>
     
     <!-- Flag declarations are all handled at the point of invocation -->
     <xsl:template match="define-flag"/>
@@ -112,12 +115,12 @@
     </xsl:template>
     
     <xsl:template match="*" mode="make-definition-id">
-        <xsl:variable name="lineage" select="ancestor-or-self::*/@name"/>
-        <xsl:text>#/definitions/{ $lineage => string-join('-') }</xsl:text>
+        <xsl:text expand-text="true">#/definitions{ @_metaschema-json-id }</xsl:text>
     </xsl:template>
 
     <xsl:template priority="100" match="METASCHEMA/define-assembly">
         <map key="{ $composed-metaschema/*/short-name }-{ @name }">
+            <!--<string key="xslt-lineno">123</string>-->
             <xsl:next-match/>
         </map>
     </xsl:template>
@@ -129,14 +132,14 @@
     </xsl:template>
     
     <xsl:template match="define-assembly">
-            <xsl:apply-templates select="formal-name, description"/>
-            <xsl:call-template name="give-id"/>
-            <string key="type">object</string>
-            <xsl:where-populated>
+        <xsl:apply-templates select="formal-name, description"/>
+        <xsl:call-template name="give-id"/>
+        <string key="type">object</string>
+        <xsl:where-populated>
             <map key="properties">
                 <xsl:apply-templates select="." mode="properties"/>
             </map>
-            </xsl:where-populated>
+        </xsl:where-populated>
         <xsl:call-template name="require-or-allow"/>
     </xsl:template>
     
@@ -171,7 +174,7 @@
             <xsl:variable name="value-key-name" select="json-value-key/@flag-name"/>
             <xsl:variable name="all-properties" select="flag[not(@ref = $value-key-name)] |
                 define-flag[not(@name = $value-key-name)] |
-                model//(field | assembly)"/>
+                model/(*|choice)/(field | assembly | define-field | define-assembly)"/>
             <xsl:comment> we require an unspecified property, with any key, to carry the nominal value </xsl:comment>
             <number key="minProperties">
                 <xsl:value-of
@@ -311,7 +314,7 @@
         <xsl:value-of select="json-value-key"/>
     </xsl:template>
     
-<!-- No property is declared for a value whose key is assigned by a json-value-key   -->
+     <!-- No property is declared for a value whose key is assigned by a json-value-key   -->
     <xsl:template priority="3" match="define-field[matches(json-value-key/@flag-name,'\S')]" mode="value-key"/>
         
     <!--<xsl:template priority="3" match="define-field[exists(flag/value-key)]" mode="text-key"/>-->
@@ -366,30 +369,20 @@
         </xsl:if>
     </xsl:template>-->
     
-    <xsl:template priority="2" mode="property-name" match="assembly">
-        <xsl:apply-templates mode="#current" select="key('assembly-definition-by-name',@ref)">
-            <xsl:with-param name="named" select="(group-as/@name,use-name,@name)[1]"/>
-        </xsl:apply-templates>
+    <!--<xsl:template priority="2" mode="property-name" match="assembly">
+        <xsl:apply-templates mode="#current" select="key('assembly-definition-by-name',@_key-ref)"/>
     </xsl:template>
     
     <xsl:template priority="2" mode="property-name" match="field">
-        <xsl:apply-templates mode="#current" select="key('field-definition-by-name',@ref)">
-            <xsl:with-param name="named" select="(group-as/@name,use-name,@name)[1]"/>
-        </xsl:apply-templates>
+        <xsl:apply-templates mode="#current" select="key('field-definition-by-name',@_key-ref)"/>
     </xsl:template>
     
     <xsl:template priority="2" mode="property-name" match="flag">
-        <xsl:apply-templates mode="#current" select="key('flag-definition-by-name',@ref)">
-            <xsl:with-param name="named" select="(group-as/@name,use-name,@name)[1]"/>
-        </xsl:apply-templates>
-    </xsl:template>
+        <xsl:apply-templates mode="#current" select="key('flag-definition-by-name',@_key-ref)"/>
+    </xsl:template>-->
     
-    <xsl:template priority="2" mode="property-name" match="define-field | define-assembly | define-flag">
-        <xsl:param name="named"/>
-        <xsl:param name="named-here" select="(group-as/@name,root-name,use-name,@name)[1]"/>
-        <string>
-            <xsl:value-of select="($named[matches(.,'\S')],$named-here)[1]"/>
-        </string>
+    <xsl:template priority="2" mode="property-name" match="define-field | define-assembly | define-flag | assembly | field | flag" expand-text="true">
+        <string>{ @_in-json-name }</string>
     </xsl:template>
     
     <!-- Handled by template 'require-or-allow' -->
@@ -404,12 +397,14 @@
     
     <xsl:template mode="define" priority="5" match="define-flag[@name=../(json-value-key|json-key)/@flag-name] |
         flag[@ref=../(json-value-key|json-key)/@flag-name]"/>
-            <xsl:template mode="define" match="flag">
-        <xsl:variable name="decl" select="key('flag-definition-by-name',@ref)"/>
+    
+    
+    <xsl:template mode="define" match="flag">
+        <xsl:variable name="decl" select="key('flag-definition-by-name', @_key-ref)"/>
         <map key="{ (use-name,$decl/use-name,$decl/@name)[1] }">
             <xsl:apply-templates select="$decl/(formal-name | description)"/>
             <xsl:apply-templates select="." mode="object-type"/>
-            <xsl:apply-templates select="$decl/constraint/allowed-values"/>    
+            <xsl:apply-templates select="$decl/constraint/allowed-values"/>
         </map>
     </xsl:template>
     
@@ -435,8 +430,8 @@
     <xsl:template mode="define" priority="5"
         match="define-assembly[group-as/@in-json='BY_KEY'][exists(json-key)] |
         define-field[group-as/@in-json='BY_KEY'][exists(json-key)] |
-        assembly[group-as/@in-json='BY_KEY'][exists(key('assembly-definition-by-name',@ref)/json-key)] |
-        field[group-as/@in-json='BY_KEY'][exists(key('field-definition-by-name',@ref)/json-key)]">
+        assembly[group-as/@in-json='BY_KEY'][exists(key('assembly-definition-by-name',@_key-ref)/json-key)] |
+        field[group-as/@in-json='BY_KEY'][exists(key('field-definition-by-name',@_key-ref)/json-key)]">
         <xsl:variable name="group-name" select="group-as/@name"/>
         <map key="{ $group-name }">
             <string key="type">object</string>
@@ -459,7 +454,7 @@
     <!-- Always a map when max-occurs is 1 or implicit -->
     <xsl:template mode="define" priority="4"
         match="assembly[empty(@max-occurs) or number(@max-occurs) = 1] | define-assembly[empty(@max-occurs) or number(@max-occurs) = 1]">
-        <xsl:variable name="decl" select="key('assembly-definition-by-name', @ref) | self::define-assembly"/>
+        <xsl:variable name="decl" select="key('assembly-definition-by-name', @_key-ref) | self::define-assembly"/>
         <map key="{ (use-name,$decl/use-name,$decl/@name)[1] }">
             <xsl:apply-templates select="." mode="definition-or-reference"/>
         </map>
@@ -468,7 +463,7 @@
     <!-- Always a map when max-occurs is 1 or implicit -->
     <xsl:template mode="define" priority="4"
         match="field[empty(@max-occurs) or number(@max-occurs) = 1] | define-field[empty(@max-occurs) or number(@max-occurs) = 1]">
-        <xsl:variable name="decl" select="key('field-definition-by-name', @ref) | self::define-field"/>
+        <xsl:variable name="decl" select="key('field-definition-by-name', @_key-ref) | self::define-field"/>
         <map key="{ (use-name,$decl/use-name,$decl/@name)[1] }">
             <xsl:apply-templates select="." mode="definition-or-reference"/>
         </map>
@@ -524,17 +519,17 @@
     </xsl:template>
     
     <xsl:template match="flag" mode="definition-or-reference">
-        <xsl:variable name="definition" select="key('flag-definition-by-name',@ref)"/>
+        <xsl:variable name="definition" select="key('flag-definition-by-name',@_key-ref)"/>
         <xsl:apply-templates select="$definition" mode="make-ref"/>
     </xsl:template>
     
     <xsl:template match="field" mode="definition-or-reference">
-        <xsl:variable name="definition" select="key('field-definition-by-name',@ref)"/>
+        <xsl:variable name="definition" select="key('field-definition-by-name',@_key-ref)"/>
         <xsl:apply-templates select="$definition" mode="make-ref"/>
     </xsl:template>
     
     <xsl:template match="assembly" mode="definition-or-reference">
-        <xsl:variable name="definition" select="key('assembly-definition-by-name',@ref)"/>
+        <xsl:variable name="definition" select="key('assembly-definition-by-name',@_key-ref)"/>
         <xsl:apply-templates select="$definition" mode="make-ref"/>
     </xsl:template>
     
@@ -565,8 +560,8 @@
             <xsl:when test="exists(@as-type)">
                 <xsl:next-match/>
             </xsl:when>
-            <xsl:when test="exists(key('field-definition-by-name',@ref)/@as-type)">
-                <xsl:apply-templates mode="#current" select="key('field-definition-by-name',@ref)"/>
+            <xsl:when test="exists(key('field-definition-by-name',@_key-ref)/@as-type)">
+                <xsl:apply-templates mode="#current" select="key('field-definition-by-name',@_key-ref)"/>
             </xsl:when>
             <xsl:otherwise>
                 <string key="type">string</string> 
@@ -590,8 +585,8 @@
             <xsl:when test="exists(@as-type)">
                 <xsl:next-match/>
             </xsl:when>
-            <xsl:when test="exists(key('flag-definition-by-name',@ref)/@as-type)">
-                <xsl:apply-templates mode="#current" select="key('flag-definition-by-name',@ref)"/>
+            <xsl:when test="exists(key('flag-definition-by-name',@_key-ref)/@as-type)">
+                <xsl:apply-templates mode="#current" select="key('flag-definition-by-name',@_key-ref)"/>
             </xsl:when>
             <xsl:otherwise>
                 <string key="type">string</string> 
