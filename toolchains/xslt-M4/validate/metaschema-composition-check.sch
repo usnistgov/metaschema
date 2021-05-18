@@ -170,9 +170,8 @@
             <xsl:variable name="as-composed" as="element()*" select="key('composed-node-by-identifier',nm:metaschema-module-node-identifier(.),$composed-metaschema)"/>
             <sch:assert id="permit-a-single-unwrapped-markupmultiline" test="empty($as-composed) or not($as-composed/@in-xml='UNWRAPPED') or not($as-composed/@as-type='markup-multiline') or not(preceding-sibling::*[$as-composed/@in-xml='UNWRAPPED']/@as-type='markup-multiline')">Only one field may be marked as 'markup-multiline' (without xml wrapping) within a model.</sch:assert>
             <sch:report id="forbid-multiple-unwrapped-fields" test="($as-composed/@in-xml='UNWRAPPED') and (@max-occurs!='1')">An 'unwrapped' field must have a max occurrence of 1</sch:report>
-            <sch:assert id="forbid-unwrapped-xml-except-markupmultiline" test="not($as-composed/@as-type='markup-multiline') or not($as-composed/@in-xml='UNWRAPPED')">Only 'markup-multiline' fields may be unwrapped in XML.</sch:assert>
-
-</sch:rule>
+            <sch:assert id="forbid-unwrapped-xml-except-markupmultiline" test="$as-composed/@as-type='markup-multiline' or not($as-composed/@in-xml='UNWRAPPED')">Only 'markup-multiline' fields may be unwrapped in XML.</sch:assert>
+        </sch:rule>
         
         <sch:rule context="m:define-field">
             <!-- use @subject to refine the reporting? -->
