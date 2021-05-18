@@ -43,7 +43,7 @@
     <xsl:template match="/METASCHEMA" expand-text="true">
         <map>
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
-            <string key="$id">{ namespace }-schema.json</string>
+            <string key="$id">{ namespace }-schema/{ short-name }-schema.json</string>
             <xsl:for-each select="schema-name">
                 <string key="$comment">{ . }: JSON Schema</string>
             </xsl:for-each>
