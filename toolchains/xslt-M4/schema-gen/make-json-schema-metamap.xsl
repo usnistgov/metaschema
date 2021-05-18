@@ -43,12 +43,12 @@
     <xsl:template match="/METASCHEMA" expand-text="true">
         <map>
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
-            <string key="$id">{ namespace }/{ short-name }-schema.json</string>
+            <string key="$id">{ json-base-uri }/{ schema-version }/{ short-name }-schema.json</string>
             <xsl:for-each select="schema-name">
                 <string key="$comment">{ . }: JSON Schema</string>
             </xsl:for-each>
             
-            <xsl:apply-templates select="schema-version"/>
+            <!--<xsl:apply-templates select="schema-version"/>-->
             <string key="type">object</string>
             <map key="definitions">
                 <xsl:apply-templates select="*"/>
@@ -93,7 +93,8 @@
     <xsl:template match="METASCHEMA/namespace"/>
     
     <xsl:template match="METASCHEMA/schema-version" expand-text="true">
-        <string key="version">{ . }</string>
+        <!--property not permitted by JSON Schema v7 -->
+        <!--<string key="version">{ . }</string>-->
     </xsl:template>
     
     <!-- Flag declarations are all handled at the point of invocation -->

@@ -45,6 +45,7 @@
     <xsl:template match="METASCHEMA//METASCHEMA/schema-version" mode="digest"/>
     <xsl:template match="METASCHEMA//METASCHEMA/short-name"     mode="digest"/>
     <xsl:template match="METASCHEMA//METASCHEMA/namespace"      mode="digest"/>
+    <xsl:template match="METASCHEMA//METASCHEMA/json-base-uri"  mode="digest"/>
     <xsl:template match="METASCHEMA//METASCHEMA/remarks"        mode="digest"/>
     
     <xsl:template priority="10" match="define-assembly | define-field | define-flag" mode="digest">

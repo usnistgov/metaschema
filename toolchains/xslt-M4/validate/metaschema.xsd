@@ -18,6 +18,7 @@
         <xs:element ref="m:schema-version"/>
         <xs:element ref="m:short-name"/>
         <xs:element ref="m:namespace"/>
+        <xs:element ref="m:json-base-uri"/>
         <xs:element ref="m:remarks" minOccurs="0"/>
         <xs:choice maxOccurs="unbounded">
           <xs:element ref="m:import"/>
@@ -253,7 +254,13 @@
         should not rely on namespaces alone to disambiguate or resolve semantics.</xs:documentation>
     </xs:annotation>
   </xs:element>
-
+  
+  <xs:element name="json-base-uri" type="xs:anyURI">
+    <xs:annotation>
+      <xs:documentation>The JSON Base URI is nominal base URI assigned to a JSON Schema instance expressing the model defined by this metaschema.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  
   <xs:group name="markup-elements">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
