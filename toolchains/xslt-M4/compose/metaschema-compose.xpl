@@ -42,6 +42,8 @@
 
   document @key-name and @key-ref as implementation details, not as part of Metaschema spec
     
+  //p:xslt/p:input[@port='stylesheet']/p:document/
+  <transform version="3.0">{ string(@href) }</transform>
   -->
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
