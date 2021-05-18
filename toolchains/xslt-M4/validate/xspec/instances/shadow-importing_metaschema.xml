@@ -23,6 +23,22 @@
                     <p>This is the imported "imported-flags" assembly.</p>
                 </remarks>
             </assembly>
+            <define-field name="boo">
+                <formal-name>Boo field</formal-name>
+                <description>Field of boo</description>
+                <json-value-key flag-name="inline-flag"/>
+                
+                <define-flag name="inline-flag" required="yes">
+                    
+                    <formal-name>Troublesome flag</formal-name>
+                    <description>All kinda trouble.</description>
+                    
+                </define-flag>
+                <define-flag name="nother-flag">
+                    <formal-name>Nother thing</formal-name>
+                    <description>coming</description>
+                </define-flag>
+            </define-field>
         </model>
     </define-assembly>
     

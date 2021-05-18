@@ -92,6 +92,11 @@
     <p:pipe port="result" step="digest"/>
   </p:output>
   
+  <p:serialization port="_8_annotated" indent="true"/>
+  <p:output port="_8_annotated" primary="false">
+    <p:pipe port="result" step="annotate"/>
+  </p:output>
+  
   <p:serialization port="final"  indent="true"/>
   <p:output        port="final" primary="true">
     <p:pipe port="result" step="final"/>
@@ -194,6 +199,12 @@ situation results in error
   <p:xslt name="digest">
     <p:input port="stylesheet">
       <p:document href="metaschema-digest.xsl"/>
+    </p:input>
+  </p:xslt>
+  
+  <p:xslt name="annotate">
+    <p:input port="stylesheet">
+      <p:document href="annotate-composition.xsl"/>
     </p:input>
   </p:xslt>
   

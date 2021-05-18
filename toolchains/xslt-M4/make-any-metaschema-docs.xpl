@@ -47,10 +47,10 @@
     <p:pipe        port="result" step="composed"/>
   </p:output>
   
-  <p:serialization port="_c.composed-and-annotated" indent="true"/>
+  <!--<p:serialization port="_c.composed-and-annotated" indent="true"/>
   <p:output        port="_c.composed-and-annotated" primary="false">
     <p:pipe        port="result" step="annotate-composition"/>
-  </p:output>
+  </p:output>-->
   
   <p:serialization port="_d.abstract-model-map" indent="true"/>
   <p:output        port="_d.abstract-model-map" primary="false">
@@ -132,11 +132,11 @@
   <p:identity name="composed"/>
 
   <!--<p:identity  name="render-xml-model-map"/>-->
-  <p:xslt name="annotate-composition">
+  <!--<p:xslt name="annotate-composition">
     <p:input port="stylesheet">
       <p:document href="compose/annotate-composition.xsl"/>
     </p:input>
-  </p:xslt>
+  </p:xslt>-->
   
   <p:xslt name="make-abstract-map">
     <p:input port="stylesheet">
@@ -233,7 +233,7 @@
   <!-- For the straight-up definitions directory we go back to the composed metaschema before explosion -->
   <p:xslt name="render-xml-definitions">
     <p:input port="source">
-      <p:pipe port="result" step="annotate-composition"/>
+      <p:pipe port="result" step="composed"/>
     </p:input>
     <p:input port="stylesheet">
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
@@ -340,7 +340,7 @@
   <!-- For the straight-up definitions directory we go back to the composed metaschema before explosion -->
   <p:xslt name="render-json-definitions">
     <p:input port="source">
-      <p:pipe port="result" step="annotate-composition"/>
+      <p:pipe port="result" step="composed"/>
     </p:input>
     <p:input port="stylesheet">
       <!-- XXX fix up / reduce this XSLT (from RC2) -->

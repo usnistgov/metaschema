@@ -13,7 +13,7 @@
     <xsl:mode on-no-match="shallow-copy"/>
     
     
-    <xsl:template priority="5" mode="make-json-name" match="model//*">
+    <xsl:template priority="5" mode="make-json-name" match="define-assembly | define-field | assembly | field | define-flag | flag">
         <xsl:value-of select="@_in-json-name"/>
     </xsl:template>
     
@@ -21,7 +21,7 @@
         <xsl:value-of select="group-as/@name"/>/<xsl:value-of select="@_in-xml-name"/>
     </xsl:template>
     
-    <xsl:template priority="5" mode="make-xml-name" match="model//*">
+    <xsl:template priority="5" mode="make-xml-name" match="define-assembly | define-field | assembly | field | define-flag | flag">
         <xsl:value-of select="@_in-xml-name"/>
     </xsl:template>
     
@@ -34,8 +34,7 @@
         <xsl:value-of select="@_using-name"/>
     </xsl:template>   
     
-    <xsl:template priority="10"
-        match="METASCHEMA/define-assembly | METASCHEMA/define-field | METASCHEMA/define-flag">
+    <xsl:template priority="10" match="METASCHEMA/define-assembly | METASCHEMA/define-field | METASCHEMA/define-flag">
         <xsl:copy>
             <xsl:variable name="def-id">
                 <xsl:text expand-text="true">/{ replace(name(),'^define\-','') }/{ @module }/{@name}</xsl:text>
