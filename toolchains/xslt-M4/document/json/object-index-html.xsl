@@ -11,8 +11,16 @@
    
    <xsl:mode on-no-match="shallow-copy"/>
    
-   <xsl:param name="reference-page" as="xs:string">../reference</xsl:param>
-   <xsl:param name="definitions-page" as="xs:string">../definitions</xsl:param>
+   <xsl:param name="index-page"       as="xs:string">json/index</xsl:param>
+   <xsl:param name="reference-page"   as="xs:string">json/reference</xsl:param>
+   <xsl:param name="definitions-page" as="xs:string">json/definitions</xsl:param>
+   
+   <!-- writes '../' times the number of steps in $outline-page  -->
+   <xsl:variable name="path-to-common">
+      <xsl:for-each select="tokenize($index-page,'/')">../</xsl:for-each>
+   </xsl:variable>
+   <xsl:variable name="reference-link"   select="$path-to-common || $reference-page"/>
+   <xsl:variable name="definitions-link" select="$path-to-common || $definitions-page"/>
    
    <xsl:variable name="all-objects" select="//*[exists(@_tree-json-id)]"/>
    
@@ -39,7 +47,7 @@
          <xsl:apply-templates select="formal-name"/>
          <xsl:if test="empty(formal-name)" expand-text="true">{ name() }</xsl:if>
          <xsl:text> </xsl:text>
-         <span class="cf">See <a href="{ $definitions-page }#{ @_metaschema-json-id }">Definition</a></span>
+         <span class="cf">See <a href="{ $definitions-link }#{ @_metaschema-json-id }">Definition</a></span>
       </li>
    </xsl:template>
    
@@ -56,7 +64,7 @@
 
    <xsl:template match="@key" mode="linked-path" expand-text="true">
       <xsl:text>/</xsl:text>
-      <a href="{ $reference-page }#{ ../@_tree-json-id }">{ string(.) }</a>
+      <a href="{ $reference-link }#{ ../@_tree-json-id }">{ string(.) }</a>
    </xsl:template>
    
 </xsl:stylesheet>

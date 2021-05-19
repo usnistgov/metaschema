@@ -9,8 +9,17 @@
 
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
    
-   <xsl:param name="xml-reference-page">../../xml/reference</xsl:param>
-   <xsl:param name="json-map-page"     >../outline</xsl:param>
+   <xsl:param name="json-reference-page">json/reference</xsl:param>
+   <xsl:param name="xml-reference-page">xml/reference</xsl:param>
+   <xsl:param name="json-map-page">json/outline</xsl:param>
+   
+   <!-- writes '../' times the number of steps in $outline-page  -->
+   <xsl:variable name="path-to-common">
+      <xsl:for-each select="tokenize($xml-reference-page,'/')">../</xsl:for-each>
+   </xsl:variable>
+   <xsl:variable name="xml-reference-link" select="$path-to-common || $xml-reference-page"/>
+   <xsl:variable name="json-map-link"        select="$path-to-common || $json-map-page"/>
+   
    
    <xsl:variable name="indenting" as="element()"
       xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
@@ -44,7 +53,7 @@
          </xsl:element>
          
          <xsl:sequence expand-text="true">
-            <p>See <a href="{ $json-map-page }#{ @_tree-json-id }">{ @_tree-json-id }</a> in the object map.</p>
+            <p>See <a href="{ $json-map-link }#{ @_tree-json-id }">{ @_tree-json-id }</a> in the object map.</p>
          </xsl:sequence>
          
          <xsl:apply-templates select="." mode="produce"/>
@@ -112,7 +121,7 @@
    
    <xsl:template name="crosslink-to-xml">
       <div class="crosslink">
-         <a href="{$xml-reference-page}#{@_tree-xml-id}">
+         <a href="{$xml-reference-link}#{@_tree-xml-id}">
             <button class="schema-link">Switch to XML</button>
          </a>
       </div>

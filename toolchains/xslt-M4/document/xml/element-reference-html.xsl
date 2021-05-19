@@ -16,8 +16,16 @@
       </output:serialization-parameters>
    </xsl:variable>
    
-   <xsl:param name="json-reference-page">../../json/reference</xsl:param>
-   <xsl:param name="xml-map-page"       >../outline</xsl:param>
+   <xsl:param name="xml-reference-page">xml/reference</xsl:param>
+   <xsl:param name="json-reference-page">json/reference</xsl:param>
+   <xsl:param name="xml-map-page">xml/outline</xsl:param>
+   
+   <!-- writes '../' times the number of steps in $outline-page  -->
+   <xsl:variable name="path-to-common">
+      <xsl:for-each select="tokenize($xml-reference-page,'/')">../</xsl:for-each>
+   </xsl:variable>
+   <xsl:variable name="json-reference-link" select="$path-to-common || $json-reference-page"/>
+   <xsl:variable name="xml-map-link"        select="$path-to-common || $xml-map-page"/>
    
    <xsl:template match="/*">
        <div>
@@ -51,7 +59,7 @@
             <xsl:text>{ self::attribute/'@' || @gi }</xsl:text>
          </xsl:element>
          <xsl:sequence expand-text="true">
-            <p>See <a href="{ $xml-map-page }#{@_tree-xml-id}">{ @_tree-xml-id }</a> in the element map.</p>
+            <p>See <a href="{$xml-map-link}#{@_tree-xml-id}">{ @_tree-xml-id }</a> in the element map.</p>
          </xsl:sequence>
          
          <xsl:apply-templates select="." mode="produce"/>
@@ -116,7 +124,7 @@
    
    <xsl:template name="json-crosslink">
       <div class="crosslink">
-         <a href="{$json-reference-page}#{@_tree-json-id}">
+         <a href="{$json-reference-link}#{@_tree-json-id}">
             <button class="schema-link">Switch to JSON</button>
          </a>
       </div>
