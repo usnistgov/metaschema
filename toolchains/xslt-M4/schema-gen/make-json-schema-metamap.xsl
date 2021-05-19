@@ -120,14 +120,14 @@
     </xsl:template>
 
     <xsl:template priority="100" match="METASCHEMA/define-assembly">
-        <map key="{ $composed-metaschema/*/short-name }-{ @name }">
+        <map key="{ $composed-metaschema/*/short-name }-{ @_key-name }">
             <!--<string key="xslt-lineno">123</string>-->
             <xsl:next-match/>
         </map>
     </xsl:template>
     
     <xsl:template priority="100" match="METASCHEMA/define-field">
-        <map key="{ $composed-metaschema/*/short-name }-{ @name }">
+        <map key="{ $composed-metaschema/*/short-name }-{ @_key-name }">
             <xsl:next-match/>
         </map>
     </xsl:template>
