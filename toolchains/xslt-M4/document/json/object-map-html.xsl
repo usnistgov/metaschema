@@ -5,10 +5,19 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
-   <xsl:param as="xs:string" name="reference-page" select="'../reference'"/>
-   
+
    <xsl:output omit-xml-declaration="true" indent="no"/>
 
+   
+   <xsl:param as="xs:string" name="outline-page"   select="'json/outline'"/>
+   <xsl:param as="xs:string" name="reference-page" select="'json/reference'"/>
+   
+   <!-- writes '../' times the number of steps in $outline-page  -->
+   <xsl:variable name="path-to-common">
+      <xsl:for-each select="tokenize($outline-page,'/')">../</xsl:for-each>
+   </xsl:variable>
+   <xsl:variable name="reference-link" select="$path-to-common || $reference-page"/>
+   
    <xsl:variable name="datatype-page">../../../datatypes</xsl:variable>
    
    <xsl:template match="/" mode="make-page">
@@ -185,7 +194,7 @@ details:not([open]) .show-closed { display: inline }
    
    
    <xsl:template match="*[exists(@key)]" mode="json-key">
-      <a class="OM-name" href="{ $reference-page }#{  @_tree-json-id }">
+      <a class="OM-name" href="{ $reference-link }#{  @_tree-json-id }">
          <xsl:value-of select="@key"/>
       </a>
    </xsl:template>
