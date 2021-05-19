@@ -863,7 +863,6 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="boolean"/>
       <xs:enumeration value="string"/>
-      <xs:enumeration value="NCName"/>
       <xs:enumeration value="decimal"/>
       <!-- Not supporting float or double -->
       <!--<xs:enumeration value="float" />
