@@ -82,7 +82,7 @@
          <!-- target for cross-link -->
          <xsl:copy-of select="@id"/>
          <div class="obj-matrix">
-            <p class="obj-name"> { formal-name }</p>
+            <p class="obj-name">{ name(.) => replace('^define\-','')  } { formal-name }</p>
             <p class="occurrence">
                <xsl:apply-templates select="." mode="occurrence-code"/>
             </p>
@@ -99,12 +99,12 @@
          
          <xsl:apply-templates mode="#current" select="description"/>
          
-         <xsl:variable name="potential-constraints" select="$constraints,constraint"/>
+         <!--<xsl:variable name="potential-constraints" select="$constraints,constraint"/>-->
          
          <!-- Visiting the constraints passed down from above, with $apply-to as the node applying -->
-         <xsl:apply-templates select="$potential-constraints" mode="produce-matching-constraints">
+         <!--<xsl:apply-templates select="$potential-constraints" mode="produce-matching-constraints">
             <xsl:with-param name="applying-to" select="."/>
-         </xsl:apply-templates>
+         </xsl:apply-templates>-->
          
          <xsl:if test="exists(remarks)">
             <details open="open" class="remarks-group">
@@ -117,6 +117,9 @@
    
 
    <xsl:include href="../common-reference.xsl"/>
+   
+  
+   
    
    
    <xsl:template name="crosslink-to-xml">
