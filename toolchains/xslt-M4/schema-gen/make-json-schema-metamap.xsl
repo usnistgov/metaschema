@@ -116,7 +116,7 @@
     </xsl:template>
     
     <xsl:template match="*" mode="make-definition-id">
-        <xsl:text expand-text="true">#/definitions{ @_metaschema-json-id }</xsl:text>
+        <xsl:text expand-text="true">#{ substring(replace(@_metaschema-json-id,'/','_'),2) }</xsl:text>
     </xsl:template>
 
     <xsl:template priority="100" match="METASCHEMA/define-assembly">

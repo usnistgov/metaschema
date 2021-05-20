@@ -28,7 +28,7 @@
    <xsl:variable name="xml-map-link"        select="$path-to-common || $xml-map-page"/>
    
    <xsl:template match="/*">
-       <div>
+       <div class="xml-reference">
           <!--<details><summary>XML source</summary>
              <pre>
          <xsl:value-of select="serialize(.,$indenting)"/>
@@ -49,15 +49,17 @@
       <xsl:param tunnel="true" name="constraints" select="()"/>
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
       <section class="xml-element">
-         <xsl:call-template name="json-crosslink"/>
-         
-         <!-- generates h1-hx headers picked up by Hugo toc -->
-         <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
-            <!--  XXX LINK HERE -->
-            <xsl:attribute name="id" select="@_tree-xml-id"/>
-            <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
-            <xsl:text>{ self::attribute/'@' || @gi }</xsl:text>
-         </xsl:element>
+         <div class="header">
+            <xsl:call-template name="json-crosslink"/>
+            
+            <!-- generates h1-hx headers picked up by Hugo toc -->
+            <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
+               <!--  XXX LINK HERE -->
+               <xsl:attribute name="id" select="@_tree-xml-id"/>
+               <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
+               <xsl:text>{ self::attribute/'@' || @gi }</xsl:text>
+            </xsl:element>
+         </div>
          <xsl:sequence expand-text="true">
             <p>See <a href="{$xml-map-link}#{@_tree-xml-id}">{ @_tree-xml-id }</a> in the element map.</p>
          </xsl:sequence>

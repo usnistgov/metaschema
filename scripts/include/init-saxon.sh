@@ -12,6 +12,10 @@ init_saxon() {
       fi
       SAXON_HOME=~/.m2/repository/net/sf/saxon/Saxon-HE/$SAXON_VERSION
   fi
+
+  if [[ -z "$CALABASH_HOME" ]]; then
+    echo -e "${P_ERROR}CALABASH_HOME is not set or is empty.${P_END} ${P_INFO}Please set SAXON_VERSION to indicate the library version or SAXON_HOME to point to the location of the Saxon library.${P_END}"
+  fi
 }
 
 # ( set -o posix ; set )
@@ -45,4 +49,22 @@ xsl_transform() {
     return 0
 }
 
+run_calabash() {
+    local xproc="$1"; shift
+    local extra_params=($@)
+
+    local JARS=()
+    JARS+=("$CALABASH_HOME"/*.jar)
+    JARS+=("$CALABASH_HOME"/lib/*.jar)
+
+    local classpath=$(IFS=:; echo -e "${JARS[*]}")
+
+    java -cp "$classpath" com.xmlcalabash.drivers.Main -D "${extra_params[@]}" "$xproc"
+
+    if [ "$?" -ne 0 ]; then
+        echo -e "${P_ERROR}Error running Calabash.${P_END}"
+        return 3
+    fi
+    return 0
+}
 

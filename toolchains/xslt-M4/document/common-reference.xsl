@@ -18,13 +18,13 @@
       <xsl:param name="applying-to" select="parent::*"/>
       <xsl:variable name="constraints" select=".//allowed-values | .//matches | .//has-cardinality | .//is-unique | .//index-has-key | .//index"/>
       <xsl:where-populated>
-      <!--<details>
+<!--      <details>
          <summary>Constraints</summary>
          <xsl:apply-templates mode="produce-matching-constraints" select="$constraints">
             <xsl:with-param name="applying-to" select="$applying-to"/>
          </xsl:apply-templates>
       </details>-->
-      </xsl:where-populated>
+-->      </xsl:where-populated>
       
    </xsl:template>
    

@@ -26,6 +26,7 @@
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
+  
   <p:import href="compose/metaschema-compose.xpl"/>
   
   <p:variable name="source-doc"      select="document-uri(/)"/>
@@ -227,56 +228,56 @@
     <p:with-param name="test2"  select="$source-doc"/>
   </p:xslt>-->
   
-  <p:store>
+  <p:store method="xhtml" indent="true">
     <p:input port="source">
       <p:pipe port="result" step="make-xml-model-map"/>
     </p:input>
     <p:with-option name="href" select="$xml-outline-uri"/>
   </p:store>
   
-  <p:store>
+  <p:store method="xhtml" indent="true">
     <p:input port="source">
       <p:pipe port="result" step="render-xml-element-reference"/>
     </p:input>
     <p:with-option name="href" select="$xml-reference-uri"/>
   </p:store>
   
-  <p:store>
+  <p:store method="xhtml" indent="true">
     <p:input port="source">
       <p:pipe port="result" step="render-xml-definitions"/>
     </p:input>
     <p:with-option name="href" select="$xml-definitions-uri"/>
   </p:store>
   
-  <p:store>
+  <p:store method="xhtml" indent="true">
     <p:input port="source">
       <p:pipe port="result" step="render-xml-element-index"/>
     </p:input>
     <p:with-option name="href" select="$xml-index-uri"/>
   </p:store>
   
-  <p:store>
+  <p:store method="xhtml" indent="true">
     <p:input port="source">
       <p:pipe port="result" step="make-json-model-map"/>
     </p:input>
     <p:with-option name="href" select="$json-outline-uri"/>
   </p:store>
   
-  <p:store>
+  <p:store method="xhtml" indent="true">
     <p:input port="source">
       <p:pipe port="result" step="render-json-object-reference"/>
     </p:input>
     <p:with-option name="href" select="$json-reference-uri"/>
   </p:store>
   
-  <p:store>
+  <p:store method="xhtml" indent="true">
     <p:input port="source">
       <p:pipe port="result" step="render-json-definitions"/>
     </p:input>
     <p:with-option name="href" select="$json-definitions-uri"/>
   </p:store>
   
-  <p:store>
+  <p:store method="xhtml" indent="true">
     <p:input port="source">
       <p:pipe port="result" step="render-json-object-index"/>
     </p:input>

@@ -29,7 +29,7 @@
    </xsl:variable>
    
    <xsl:template match="/*">
-      <div>
+      <div class="json-reference">
          <xsl:apply-templates/>
       </div>
    </xsl:template>
@@ -37,21 +37,22 @@
    <xsl:template match="schema-name"/>
    
    <xsl:template match="schema-version" expand-text="true">
-      <h2><span class="usa-tag">Schema version:</span> { . }</h2>
+      <p><span class="usa-tag">Schema version:</span> { . }</p>
    </xsl:template>
    
    <xsl:template match="*[exists(@key)]" expand-text="true">
       <xsl:param tunnel="true" name="constraints" select="()"/>
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@key)])"/>
       <section class="json-obj">
-         <xsl:call-template name="crosslink-to-xml"/>
-         <!-- generates h1-hx headers picked up by Hugo toc -->
-         <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
-            <xsl:attribute name="id" select="@_tree-json-id"/>
-            <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
-            <xsl:text>{ @key }</xsl:text>
-         </xsl:element>
-         
+         <div class="header">
+            <xsl:call-template name="crosslink-to-xml"/>
+            <!-- generates h1-hx headers picked up by Hugo toc -->
+            <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
+               <xsl:attribute name="id" select="@_tree-json-id"/>
+               <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
+               <xsl:text>{ @key }</xsl:text>
+            </xsl:element>
+         </div>
          <xsl:sequence expand-text="true">
             <p>See <a href="{ $json-map-link }#{ @_tree-json-id }">{ @_tree-json-id }</a> in the object map.</p>
          </xsl:sequence>
