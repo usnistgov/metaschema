@@ -7,7 +7,9 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
    
-   <xsl:import href="../metapath/docs-metapath.xsl"/>
+   <!--<xsl:import href="../metapath/docs-metapath.xsl"/>-->
+   
+  
    
    <xsl:template mode="produce-matching-constraints" match="constraint">
       <!-- $applying-to is the node to which the constraint applies (or not) - 
@@ -16,17 +18,17 @@
       <xsl:param name="applying-to" select="parent::*"/>
       <xsl:variable name="constraints" select=".//allowed-values | .//matches | .//has-cardinality | .//is-unique | .//index-has-key | .//index"/>
       <xsl:where-populated>
-      <details>
+      <!--<details>
          <summary>Constraints</summary>
          <xsl:apply-templates mode="produce-matching-constraints" select="$constraints">
             <xsl:with-param name="applying-to" select="$applying-to"/>
          </xsl:apply-templates>
-      </details>
+      </details>-->
       </xsl:where-populated>
       
    </xsl:template>
    
-   <xsl:template match="constraint//*" mode="produce-matching-constraints" expand-text="true">
+   <!--<xsl:template match="constraint//*" mode="produce-matching-constraints" expand-text="true">
       <xsl:param name="applying-to" select="parent::*"/>
       <xsl:variable name="apply-to-path" select="$applying-to/@_tree-xml-id/m:express-targets(.)"/>
       <xsl:variable name="target-path" select="(ancestor::constraint/parent::*/@_tree-xml-id, (@target,'.')[1]) => string-join('/')"/>
@@ -34,9 +36,7 @@
       <xsl:if test="m:any-match($apply-to-path, $target-path)">
          <xsl:apply-templates select="." mode="produce"/>
       </xsl:if>
-      
-   </xsl:template>
-   
+   </xsl:template>-->
    
    <xsl:template match="constraint" mode="produce" expand-text="true">
       <xsl:variable name="constraints" select=".//allowed-values | .//matches | .//has-cardinality | .//is-unique | .//index-has-key | .//index"/>
@@ -171,24 +171,28 @@
       </div>
    </xsl:template>
    
-   
    <xsl:template match="description" mode="produce">
-      <p class="description">
-         <xsl:apply-templates/>
-      </p>
+      <xsl:where-populated>
+         <p class="description">
+            <xsl:apply-templates mode="cast-to-html"/>
+         </p>
+      </xsl:where-populated>
+      <xsl:on-empty>
+         <xsl:message expand-text="true">Empty description on { name(..) }</xsl:message>
+      </xsl:on-empty>
    </xsl:template>
    
    <xsl:template match="remarks" mode="produce">
       <div class="remarks{ @class ! (' ' || .)}">
          <xsl:if test="@class='in-use'"><p class="nb">(In use)</p></xsl:if>
-         <xsl:apply-templates/>
+         <xsl:apply-templates mode="cast-to-html"/>
       </div>
    </xsl:template>
    
-   <!-- in no mode, cast to XHTML namespace -->
-   <xsl:template match="description//* | remarks//*">
+   <!-- Cast to XHTML namespace -->
+   <xsl:template match="description//* | remarks//*" mode="cast-to-html">
       <xsl:element name="{ local-name() }" namespace="http://www.w3.org/1999/xhtml">
-         <xsl:apply-templates/>
+         <xsl:apply-templates mode="#current"/>
       </xsl:element>
    </xsl:template>
    

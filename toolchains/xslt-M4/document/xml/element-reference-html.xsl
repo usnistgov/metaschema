@@ -79,7 +79,7 @@
          <!-- target for cross-linking -->
          <xsl:copy-of select="@id"/>
          <div class="obj-matrix">
-            <p class="obj-name"> { formal-name }</p>
+            <p class="obj-name">{ name(.) => replace('^define\-','')  } { formal-name }</p>
             <p class="occurrence">
                <xsl:apply-templates select="." mode="occurrence-code"/>
             </p>
