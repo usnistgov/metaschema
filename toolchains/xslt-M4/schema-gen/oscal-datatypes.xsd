@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema
-  xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
   
@@ -14,9 +13,9 @@
   <xs:appinfo>
     <xs:simpleType name="boolean"/>
     <xs:simpleType name="base64Binary"/>
-    <xs:simpleType name="string"/>
+    <!--<xs:simpleType name="string"/>-->
     <xs:simpleType name="NCName"/>
-    <xs:simpleType name="NMTOKENS"/>
+    <!--<xs:simpleType name="NMTOKENS"/>-->
     <xs:simpleType name="decimal"/>
     <!-- Not supporting float or double -->
     <!--<xs:simpleType name="float"/>
@@ -24,13 +23,29 @@
     <xs:simpleType name="integer"/>
     <xs:simpleType name="nonNegativeInteger"/>
     <xs:simpleType name="positiveInteger"/>
-    <xs:simpleType name="ID"/>
-    <xs:simpleType name="IDREF"/>
-    <xs:simpleType name="IDREFS"/>
+    <!--<xs:simpleType name="ID"/>-->
+    <!--<xs:simpleType name="IDREF"/>-->
+    <!--<xs:simpleType name="IDREFS"/>-->
     <xs:simpleType name="date"/>
     <xs:simpleType name="dateTime"/>
   </xs:appinfo>
 </xs:annotation>
+
+  <!-- The OSCAL 'string' datatype restricts the XSD type by prohibiting leading and trailing whitespace, and something
+     (not only whitespace) is required. -->
+  <xs:simpleType name="string">
+    <xs:annotation>
+      <xs:documentation>A string, but not empty and not whitespace-only (whitespace is U+9, U+10, U+32 or [ \n\t]+ )</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve"/>
+      <xs:pattern value="\S(.*\S)?">
+        <xs:annotation>
+          <xs:documentation>A trimmed string, at least one character with no leading or trailing whitespace.</xs:documentation>
+        </xs:annotation>
+      </xs:pattern>
+    </xs:restriction>
+  </xs:simpleType>
   
   
   <xs:simpleType name="ip-v4-address">
@@ -137,5 +152,25 @@
     </xs:restriction>
   </xs:simpleType>
 
+  <!-- This could be renamed 'ncname-token' if we wish to loosen 'token', as this is pretty strict. -->
+  <xs:simpleType name="token">
+    <xs:annotation>
+      <!--<xs:documentation>Matching XSD NCName, except whitespace is not collapsed.</xs:documentation>-->
+      <xs:documentation>A string token following the rules of XML "no colon" names, with no whitespace. (XML names are single alphabetic characters
+      followed by alphanumeric characters, periods, underscores or dashes.)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve"/>
+      <xs:pattern value="[\i-[:&#x10000;-&#xEFFFF;]][\c-[:&#x10000;-&#xEFFFF;]]*">
+        <xs:annotation>
+          <!--<xs:documentation>An XML initial character (but not colon), followed by any XML name character (but not colon).</xs:documentation>-->
+          <xs:documentation>A single token may not contain whitespace.</xs:documentation>
+        </xs:annotation>
+      </xs:pattern>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  
+  
 </xs:schema>
 

@@ -29,7 +29,7 @@
   
   <p:import href="compose/metaschema-compose.xpl"/>
   
-  <p:variable name="source-doc"      select="document-uri(/)"/>
+  
   
   <p:variable name="xml-outline-uri"      select="resolve-uri($xml-outline-filename,     $output-path)"/>
   <p:variable name="xml-reference-uri"    select="resolve-uri($xml-reference-filename,   $output-path)"/>
