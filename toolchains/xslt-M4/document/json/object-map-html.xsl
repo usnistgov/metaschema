@@ -33,8 +33,10 @@
    
    <xsl:template match="/" name="make-map">
       <!--<call-template name="legend"/>-->
-      <div class="OM-map">
-         <xsl:apply-templates select="/*"/>
+      <div class="json-outline">
+         <div class="model-container">
+            <xsl:apply-templates select="/*"/>
+         </div>
       </div>
    </xsl:template>
    
@@ -121,7 +123,6 @@ details:not([open]) .show-closed { display: inline }
                
             <!--</div>-->
          </summary>
-         <div class="OM-map">
          <xsl:apply-templates select="." mode="contents"/>
          <p>
             <span class="OM-lit">
@@ -129,7 +130,6 @@ details:not([open]) .show-closed { display: inline }
                <xsl:if test="not(position() eq last())">, </xsl:if>
             </span>
          </p>
-         </div>
       </details>
    </xsl:template>
    
@@ -281,7 +281,7 @@ details:not([open]) .show-closed { display: inline }
    
    
    <xsl:template mode="contents" match="m:array | m:object | m:singleton-or-array | m:group-by-key">
-      <div class="OM-map">
+      <div class="model-container {name()}">
          <xsl:apply-templates select="*"/>
       </div>
    </xsl:template>

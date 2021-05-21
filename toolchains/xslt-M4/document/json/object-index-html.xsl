@@ -25,7 +25,7 @@
    <xsl:variable name="all-objects" select="//*[exists(@_tree-json-id)]"/>
    
    <xsl:template match="/*">
-      <div>
+      <div class="json-index">
          <xsl:for-each-group expand-text="true" select="$all-objects" group-by="@key">
             <xsl:sort select="upper-case(current-grouping-key()) => replace('^\p{P}','')"/>
             <section class="named-object-group">
@@ -43,18 +43,14 @@
          <span class="pathlink">
             <xsl:apply-templates select="." mode="linked-path"/>
          </span>
-         <xsl:text> </xsl:text>
-         <xsl:apply-templates select="formal-name"/>
-         <xsl:if test="empty(formal-name)" expand-text="true">{ name() }</xsl:if>
-         <xsl:text> </xsl:text>
-         <span class="cf">See <a href="{ $definitions-link }#{ @_metaschema-json-id }">Definition</a></span>
+         <xsl:text> - </xsl:text>
+         <span class="formal-name">
+            <a href="{ $definitions-link }#{ @_metaschema-json-id }">
+               <xsl:text>{ formal-name }</xsl:text>
+               <xsl:if test="empty(formal-name)" expand-text="true">{ name() }</xsl:if>
+            </a>
+         </span>
       </li>
-   </xsl:template>
-   
-   <xsl:template match="formal-name" mode="inline">
-      <span class="formal-name">
-         <xsl:apply-templates/>
-      </span>
    </xsl:template>
    
    <xsl:template match="." mode="linked-path">

@@ -38,8 +38,10 @@ http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-schem
    
    <xsl:template match="/" name="make-map">
       <!--<xsl:call-template name="legend"/>-->
-      <div class="OM-map as-xml">
-         <xsl:apply-templates select="/*"/>
+      <div class="xml-outline">
+         <div class="model-container">
+            <xsl:apply-templates select="/*"/>
+         </div>
       </div>
    </xsl:template>
    
@@ -165,7 +167,7 @@ div.OM-map p { margin: 0ex }
    <xsl:template priority="5" match="m:attribute"/>
    
    <xsl:template priority="5" mode="contents" match="m:element[exists(descendant::m:element)]" expand-text="true">
-      <div class="OM-map">
+      <div class="model-container">
          <!--<xsl:for-each select="@formal-name">
             <p class="OM-map-name">
                <xsl:apply-templates select="."/>

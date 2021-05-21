@@ -45,13 +45,16 @@
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@key)])"/>
       <section class="json-obj">
          <div class="header">
-            <xsl:call-template name="crosslink-to-xml"/>
+            <div>
             <!-- generates h1-hx headers picked up by Hugo toc -->
             <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
                <xsl:attribute name="id" select="@_tree-json-id"/>
                <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
                <xsl:text>{ @key }</xsl:text>
             </xsl:element>
+            <xsl:apply-templates select="." mode="produce-header"/>
+            <xsl:call-template name="crosslink-to-xml"/>
+            </div>
          </div>
          <xsl:sequence expand-text="true">
             <p>See <a href="{ $json-map-link }#{ @_tree-json-id }">{ @_tree-json-id }</a> in the object map.</p>
@@ -68,7 +71,7 @@
 
    <xsl:template match="formal-name | description | remarks | constraint"/>
    
-   <xsl:template match="array" mode="produce" expand-text="true">
+   <xsl:template match="array" mode="produce-header" expand-text="true">
       <xsl:variable name="array-of" select="*[1]"/>
       <p>An array of { $array-of/formal-name } { $array-of/name()}s</p>
       <p class="occurrence">

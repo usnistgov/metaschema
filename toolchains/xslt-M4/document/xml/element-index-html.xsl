@@ -31,7 +31,7 @@
    </xsl:function>
    
    <xsl:template match="/*">
-      <div>
+      <div class="xml-index">
          <!-- Attributes are distinguished from elements by prepending their '@'  -->
          <xsl:for-each-group expand-text="true" select="$all-nodes" group-by="m:step(.)">
             <!-- but sorted ignoring both case and leading punctuation including '@' -->
@@ -51,18 +51,14 @@
          <span class="pathlink">
             <xsl:apply-templates select="." mode="linked-path"/>
          </span>
-         <xsl:text> </xsl:text>
-         <xsl:apply-templates select="formal-name"/>
-         <xsl:if test="empty(formal-name)" expand-text="true">{ name() }</xsl:if>
-         <xsl:text> </xsl:text>
-         <span class="cf">See <a href="{ $definitions-link }#{ @_metaschema-xml-id }">Definition</a></span>
+         <xsl:text> - </xsl:text>
+         <span class="formal-name">
+            <a href="{ $definitions-link }#{ @_metaschema-xml-id }">
+               <xsl:text>{ formal-name }</xsl:text>
+               <xsl:if test="empty(formal-name)" expand-text="true">{ name() }</xsl:if>
+            </a>
+         </span>
       </li>
-   </xsl:template>
-   
-   <xsl:template match="formal-name" mode="inline">
-      <span class="formal-name">
-         <xsl:apply-templates/>
-      </span>
    </xsl:template>
    
    <xsl:template match="." mode="linked-path">
