@@ -862,7 +862,11 @@
   <xs:simpleType name="simple-datatypes">
     <xs:restriction base="xs:string">
       <xs:enumeration value="boolean"/>
-      <xs:enumeration value="string"/>
+      <xs:enumeration value="string">
+        <xs:annotation>
+          <xs:documentation>A string with no leading or trailing whitespace.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
       <xs:enumeration value="decimal"/>
       <!-- Not supporting float or double -->
       <!--<xs:enumeration value="float" />
@@ -882,9 +886,11 @@
       <xs:enumeration value="hostname"/>
       <xs:enumeration value="ip-v4-address"/>
       <xs:enumeration value="ip-v6-address"/>
+      <xs:enumeration value="token"/>
       <xs:enumeration value="uri"/>
       <xs:enumeration value="uri-reference"/>
       <xs:enumeration value="uuid"/>
+      
     </xs:restriction>
   </xs:simpleType>
 

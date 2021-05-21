@@ -444,7 +444,6 @@
             <xsl:attribute name="{ $assign-to-attribute }" expand-text="true"
                 select="concat($declaration-prefix, ':', $datatype)"/>
         </xsl:if>
-        
     </xsl:template>
 
     <!-- When allow-other=yes, we union the enumeration with the declared datatype -->        
