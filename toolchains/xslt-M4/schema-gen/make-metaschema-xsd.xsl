@@ -25,9 +25,9 @@
     
     <xsl:variable name="declaration-prefix" select="string(/METASCHEMA/short-name)"/>
     
-    <xsl:key name="global-assembly-by-name" match="/METASCHEMA/define-assembly" use="@name"/>
-    <xsl:key name="global-field-by-name"    match="/METASCHEMA/define-field"    use="@name"/>
-    <xsl:key name="global-flag-by-name"     match="/METASCHEMA/define-flag"     use="@name"/>
+    <xsl:key name="global-assembly-by-name" match="/METASCHEMA/define-assembly" use="@_key-name"/>
+    <xsl:key name="global-field-by-name"    match="/METASCHEMA/define-field"    use="@_key-name"/>
+    <xsl:key name="global-flag-by-name"     match="/METASCHEMA/define-flag"     use="@_key-name"/>
     
     <xsl:variable name="metaschema" select="/"/>
     
@@ -99,6 +99,11 @@
         </xsl:for-each>
     </xsl:template>
     
+    <xsl:function name="m:local-key-name" as="xs:string?">
+        <xsl:param name="whose" as="element()"/>
+        <xsl:sequence select="$whose/@_key-name/replace(.,':','-')"/>
+    </xsl:function>
+    
     <xsl:template match="/METASCHEMA/schema-name | /METASCHEMA/short-name |
         /METASCHEMA/schema-version | /METASCHEMA/remarks"/>
     
@@ -106,12 +111,12 @@
         <xsl:variable name="whose" select="."/>
         
         <xsl:for-each select="child::root-name">
-            <xs:element name="{.}" type="{$declaration-prefix}:{../@name}-ASSEMBLY"/>
+            <xs:element name="{.}" type="{$declaration-prefix}:{ m:local-key-name(..) }-ASSEMBLY"/>
         </xsl:for-each>
         
         <xs:complexType>
             <xsl:if test="parent::METASCHEMA">
-                <xsl:attribute name="name" expand-text="true">{@name}-ASSEMBLY</xsl:attribute>
+                <xsl:attribute name="name" expand-text="true">{ m:local-key-name(.) }-ASSEMBLY</xsl:attribute>
             </xsl:if>
             <xsl:apply-templates select="." mode="annotated"/>
             <xsl:apply-templates select="model"/>
@@ -146,8 +151,8 @@
     
     <xsl:template match="json-key" mode="uniqueness-constraint">
         <xsl:param name="whose"  select="(ancestor::define-assembly | ancestor::define-field)[last()]"/>
-        <xs:unique name="{ $whose/@name}-{ ../@name }-keys">
-            <xs:selector xpath="{ $declaration-prefix}:{../@name }"/>
+        <xs:unique name="{ m:local-key-name($whose) }-{ m:local-key-name($whose/..) }-keys">
+            <xs:selector xpath="{ $declaration-prefix}:{ m:local-key-name($whose/..) }"/>
             <xs:field xpath="@{ @flag-name }"/>
         </xs:unique>
     </xsl:template>
@@ -223,7 +228,7 @@
     
     <xsl:template name="name-global-field-type">
         <xsl:if test="parent::METASCHEMA">
-            <xsl:attribute name="name" select="@name || '-FIELD'"/>
+            <xsl:attribute name="name" select="@_key-name/replace(.,':','-') || '-FIELD'"/>
         </xsl:if>
     </xsl:template>
 
@@ -305,29 +310,29 @@
     </xsl:template>
 
     <xsl:template match="field">
-        <xsl:variable name="decl" select="key('global-field-by-name',@ref)"/>
+        <xsl:variable name="decl" select="key('global-field-by-name',@_key-ref)"/>
         <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
         <xsl:call-template name="declare-element-as-type">
             <xsl:with-param name="decl" select="$decl"/>
             <xsl:with-param name="gi" select="$gi"/>
-            <xsl:with-param name="type" select="$declaration-prefix || ':' || @ref || '-FIELD'"></xsl:with-param>
+            <xsl:with-param name="type" select="$declaration-prefix || ':' || m:local-key-name($decl) || '-FIELD'"></xsl:with-param>
         </xsl:call-template>
     </xsl:template>
     
     <xsl:template match="assembly">
-        <xsl:variable name="decl" select="key('global-assembly-by-name',@ref)"/>
+        <xsl:variable name="decl" select="key('global-assembly-by-name',@_key-ref)"/>
         <xsl:variable name="gi" select="(use-name,$decl/root-name,$decl/use-name,@ref)[1]"/>
         <xsl:call-template name="declare-element-as-type">
             <xsl:with-param name="decl" select="$decl"/>
             <xsl:with-param name="gi" select="$gi"/>
-            <xsl:with-param name="type" select="$declaration-prefix || ':' || @ref || '-ASSEMBLY'"/>
+            <xsl:with-param name="type" select="$declaration-prefix || ':' || m:local-key-name(($decl,.)[1]) || '-ASSEMBLY'"/>
         </xsl:call-template>
     </xsl:template>
     
     <xsl:template name="declare-element-as-type">
         <xsl:param name="decl" select="()"/>
         <xsl:param name="gi" required="yes"/>
-        <xsl:param name="type" select="@ref"/>
+        <xsl:param name="type" required="yes"/>
         <xs:element name="{$gi}" type="{$type}"
             minOccurs="{ if (exists(@min-occurs)) then @min-occurs else 0 }"
             maxOccurs="{ if (exists(@max-occurs)) then @max-occurs else 1 }">
@@ -342,7 +347,7 @@
         <xs:element name="{group-as/@name}"
             minOccurs="{ if (@min-occurs != '0') then 1 else 0 }"
             maxOccurs="1">
-            <xsl:variable name="decl" select="key('global-field-by-name',self::field/@ref) | key('global-assembly-by-name',self::assembly/@ref)"/>
+            <xsl:variable name="decl" select="key('global-field-by-name',self::field/@_key-ref) | key('global-assembly-by-name',self::assembly/@_key-ref)"/>
             <!--<xsl:apply-templates select="$decl" mode="annotated"/>-->
             <xs:complexType>
                 <xs:sequence>
@@ -361,18 +366,18 @@
     </xsl:template>
     
     <!-- No wrapper, just prose elements -->
-    <xsl:template match="field[@in-xml='UNWRAPPED'][key('global-field-by-name',@ref)/@as-type='markup-multiline']">
+    <xsl:template match="field[@in-xml='UNWRAPPED'][key('global-field-by-name',@_key-ref)/@as-type='markup-multiline']">
         <xs:group ref="{$declaration-prefix}:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
     </xsl:template>
     
     <!-- With wrapper -->
-    <xsl:template match="field[not(@in-xml='UNWRAPPED')][key('global-field-by-name',@ref)/@as-type='markup-multiline']">
-        <xsl:variable name="decl" select="key('global-field-by-name',@ref)"/>
+    <xsl:template match="field[not(@in-xml='UNWRAPPED')][key('global-field-by-name',@_key-ref)/@as-type='markup-multiline']">
+        <xsl:variable name="decl" select="key('global-field-by-name',@_key-ref)"/>
         <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
         <xs:element name="{ $gi }"
             minOccurs="{ if (exists(@min-occurs)) then @min-occurs else 0 }"
             maxOccurs="{ if (exists(@max-occurs)) then @max-occurs else 1 }">
-            <xsl:apply-templates select="key('global-field-by-name',@ref)" mode="annotated"/>
+            <xsl:apply-templates select="key('global-field-by-name',@_key-ref)" mode="annotated"/>
             <xs:complexType>
                 <xs:group ref="{$declaration-prefix}:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
               <!--<xs:group ref="{$declaration-prefix}:PROSE" maxOccurs="unbounded" minOccurs="0"/>-->
@@ -382,7 +387,7 @@
     
     
     <xsl:template match="flag">
-        <xsl:variable name="decl" select="key('global-flag-by-name',@ref)"/>
+        <xsl:variable name="decl" select="key('global-flag-by-name',@_key-ref)"/>
         <xsl:variable name="gi" select="(use-name,$decl/use-name,@ref)[1]"/>
         <xsl:variable name="datatype" select="(@as-type,$decl/@as-type,'string')[1]"/>
         <!--<xsl:variable name="value-list" select="(constraint/allowed-values,key('global-flag-by-name',@ref)/constraint/allowed-values)[1]"/>-->
