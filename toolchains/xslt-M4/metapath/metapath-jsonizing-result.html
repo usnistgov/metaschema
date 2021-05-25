@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>Test Report for C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl (passed: 18 / pending: 0 / failed: 1 / total: 19)</title>
+      <title>Test Report for C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl (passed: 19 / pending: 0 / failed: 0 / total: 19)</title>
       <style type="text/css">/****************************************************************************/
 /*  File:       test-report.css                                             */
 /*  Author:     Jeni Tennison                                               */
@@ -587,7 +587,7 @@ span.scenario-totals {
       <h1>Test Report</h1>
       <p>Stylesheet: <a href="file:/C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl">C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/metapath/metapath-jsonize.xsl</a></p>
       <p>XSpec: <a href="file:/C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/metapath/metapath-jsonizing.xspec">C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/metapath/metapath-jsonizing.xspec</a></p>
-      <p>Tested: 25 May 2021 at 15:36</p>
+      <p>Tested: 25 May 2021 at 17:32</p>
       <h2>Contents</h2>
       <table class="xspec">
          <colgroup>
@@ -600,9 +600,9 @@ span.scenario-totals {
          <thead>
             <tr>
                <th></th>
-               <th class="totals">passed: 18</th>
+               <th class="totals">passed: 19</th>
                <th class="totals">pending: 0</th>
-               <th class="totals">failed: 1</th>
+               <th class="totals">failed: 0</th>
                <th class="totals">total: 19</th>
             </tr>
          </thead>
@@ -614,11 +614,11 @@ span.scenario-totals {
                <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
-            <tr class="failed">
+            <tr class="successful">
                <th><a href="#top_scenario2">broken path?</a></th>
-               <th class="totals">0</th>
-               <th class="totals">0</th>
                <th class="totals">1</th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
             <tr class="successful">
@@ -755,55 +755,30 @@ span.scenario-totals {
                   <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
                </tr>
                <tr class="successful">
-                  <td>expecting to see</td>
+                  <td>field could be either a map or an array member (since SINGLETON_OR_ARRAY by default)</td>
                   <td>Success</td>
                </tr>
             </tbody>
          </table>
       </div>
       <div id="top_scenario2">
-         <h2 class="failed">broken path?<span class="scenario-totals">passed: 0 / pending: 0 / failed: 1 / total: 1</span></h2>
+         <h2 class="successful">broken path?<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
          <table class="xspec" id="table_scenario2">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
             </colgroup>
             <tbody>
-               <tr class="failed">
+               <tr class="successful">
                   <th>broken path?</th>
-                  <th>passed: 0 / pending: 0 / failed: 1 / total: 1</th>
+                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
                </tr>
-               <tr class="failed">
-                  <td><a href="#scenario2-expect1">expecting to see</a></td>
-                  <td>Failure</td>
+               <tr class="successful">
+                  <td>field is grouped as ARRAY</td>
+                  <td>Success</td>
                </tr>
             </tbody>
          </table>
-         <div id="scenario2">
-            <h3>broken path?</h3>
-            <div id="scenario2-expect1" class="xTestReport">
-               <h4 class="xTestReportTitle">expecting to see</h4>
-               <div class="xTestReportHint"><a href="https://github.com/xspec/xspec/wiki/Understanding-Test-Results" target="_blank" title="What does this report mean?">[?]</a></div>
-               <table class="xspecResult">
-                  <thead>
-                     <tr>
-                        <th>Result</th>
-                        <th>Expected Result</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td>
-                           <pre>'j:array[@key=''wrapped-fields'']/j:array[@key=''wrapped-fields'']/j:stringj:string[@key=''wrapped-fields'']'</pre>
-                        </td>
-                        <td>
-                           <pre>'(j:array[@key=''wrapped-fields'']/j:string | j:string[@key=''wrapped-fields''])'</pre>
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-         </div>
       </div>
       <div id="top_scenario3">
          <h2 class="successful">Path to root<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
