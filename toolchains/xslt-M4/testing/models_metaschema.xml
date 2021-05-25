@@ -14,7 +14,8 @@
     <schema-version>1.0</schema-version>
     <short-name>everything</short-name>
     <namespace>http://csrc.nist.gov/metaschema/ns/everything</namespace>
-
+    <json-base-uri>http://csrc.nist.gov/metaschema/ns/everything</json-base-uri>
+    
     <remarks>
         <p>A mini metaschema produced for <em>conversion</em> testing purposes.</p>
         <p>This metaschema exercises modeling with global definitions. It does not exercise

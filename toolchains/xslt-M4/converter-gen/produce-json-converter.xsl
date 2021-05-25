@@ -49,6 +49,17 @@
         <xsl:comment> METASCHEMA conversion stylesheet supports JSON -> METASCHEMA/SUPERMODEL conversion </xsl:comment>
     </xsl:template>
     
+    <xsl:template name="provide-namespace">
+        <!-- iff at the top -->
+        <xsl:for-each select="parent::model" expand-text="true">
+            <!-- likewise the XSLT provides a namespace only if at the top -->
+            <XSLT:if test=".. is /j:map">
+                <XSLT:attribute name="namespace">{ $source-namespace }</XSLT:attribute>
+                <!-- don't need unless we have a requirement to prefix in serialization: <XSLT:attribute name="prefix">{ $source-prefix }</XSLT:attribute>-->
+            </XSLT:if>
+        </xsl:for-each>
+    </xsl:template>
+    
     <!-- Overriding the imported template for casting prose elements (wrt namespace) since we do not need it -->
     <xsl:template name="cast-prose-template"/>
     

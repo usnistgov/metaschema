@@ -46,12 +46,12 @@
     <xsl:output indent="yes"/>
     
 <!-- Overloading this key so wildcards get everythang   -->
-    <xsl:key name="obj-by-gi" match="*[exists(@gi)][not(@recursive='true')]" use="@gi"/>
-    <xsl:key name="obj-by-gi" match="*[exists(@gi)][not(@recursive='true')]" use="$wildcard"/>
+    <xsl:key name="obj-by-gi" match="*[exists(@gi)]" use="@gi"/>
+    <xsl:key name="obj-by-gi" match="*[exists(@gi)]" use="$wildcard"/>
     
     <xsl:param name="px" as="xs:string">j</xsl:param>
     
-    <xsl:param name="definition-map" select="document('../testing/catalog-definition-model.xml')"/>
+    <xsl:param name="definition-map" select="/"/>
     
     <!-- We have to detect wildcards on path steps with no node name (XML GI) -->
     <xsl:variable name="wildcard" as="xs:string+" select="'*','node()'"/>
@@ -144,9 +144,6 @@
     
     <!-- field grouped by key -->
     <xsl:template priority="3" match="group[@group-json='BY_KEY']/field" mode="cast-node-test">
-        <xsl:variable name="type">
-            <xsl:apply-templates select="." mode="object-type"/>
-        </xsl:variable>
         <xsl:variable name="field-path">
             <xsl:next-match/>
         </xsl:variable>
@@ -154,9 +151,6 @@
     </xsl:template>
     
     <xsl:template priority="3" match="group[@group-json='ARRAY']/field" mode="cast-node-test">
-        <xsl:variable name="type">
-            <xsl:apply-templates select="." mode="object-type"/>
-        </xsl:variable>
         <xsl:variable name="field-path">
             <xsl:next-match/>
         </xsl:variable>
@@ -164,15 +158,12 @@
     </xsl:template>
     
     <!-- Catches field grouped as SINGLETON-OR-ARRAY -->
-    <xsl:template priority="2" match="group[not(@group-json=('BY_KEY','ARRAY'))]/field" mode="cast-node-test">
+    <xsl:template priority="2" match="group/field" mode="cast-node-test">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
-        <xsl:variable name="field-path">
-            <xsl:next-match/>
-        </xsl:variable>
-        <cast>{$px}:array[@key='{../@key}']/{$field-path}</cast>
-        <cast>{$field-path}[@key='{../@key}']</cast>
+        <cast>{$px}:array[@key='{../@key}']/{$px}:{$type}</cast>
+        <cast>{$px}:{$type}[@key='{../@key}']</cast>
     </xsl:template>
     
     <!-- field with no flags apart from a json-key-flag points to itself as a value property -->
@@ -238,7 +229,7 @@
     </xsl:template>
     
     <xsl:template match="*" mode="cast-node-test" expand-text="true">
-        <cast>OoopsFellThroughOn { name() }</cast>
+        <!--<cast>OoopsFellThroughOn { name() }</cast>-->
         <cast>{$px}:*[@key='{../@key}']</cast>
     </xsl:template>
     
@@ -402,7 +393,7 @@
                 <xsl:when test="$starting">
                     <xsl:choose>
                         <xsl:when test="$relative">
-                            <!-- the first step of a relative path starts where it starts-->
+                            <!-- the first step of a relative path starts where it starts could be anywhere in the tree -->
                             <xsl:sequence select="key('obj-by-gi', string(node), $definition-map)"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -573,13 +564,13 @@
     
     <xsl:template mode="find-definition" priority="5" match="step[axis='child::'][node=$wildcard]">
         <xsl:param name="from" as="element()*"/>
-        <xsl:variable name="recursors" select="$from/(.|group[empty(@gi)])/assembly[@recursive = 'true']"/>
+        <!-- recursors is any recursive children, not only recursing to here -->
         <xsl:variable name="recursors" as="element()*">
             <xsl:variable name="recursion-points"
                 select="$from/(.|choice)/(. | assembly | group[empty(@gi)])[@recursive = 'true']"/>
+            <xsl:variable name="recursing" select="@_key-name"/>
             <xsl:for-each select="$recursion-points">
-                <xsl:variable name="recursing" select="@name"/>
-                <xsl:sequence select="ancestor::assembly[@name = $recursing][1]"/>
+                <xsl:sequence select="ancestor::assembly[@_key-name = $recursing][1]"/>
             </xsl:for-each>
         </xsl:variable>
         <xsl:sequence select="($from|$recursors)/(.|choice)/(.|group[empty(@gi)])/(group|assembly|field)[exists(@gi)]"/>
@@ -607,10 +598,10 @@
         <xsl:variable name="nodetest" select="node"/>
         <xsl:variable name="recursors" as="element()*">
             <xsl:variable name="recursion-points"
-                select="$from/(.|choice)/(. | assembly | group[empty(@gi)])[@recursive = 'true']"/>
+                select="$from/(.|choice)/(. | assembly | group[empty(@gi)])[@gi=$nodetest][@recursive = 'true']"/>
             <xsl:for-each select="$recursion-points">
-                <xsl:variable name="recursing" select="@name"/>
-                <xsl:sequence select="ancestor::assembly[@name = $recursing][1]"/>
+                <xsl:variable name="recursing" select="@_key-name"/>
+                <xsl:sequence select="ancestor::assembly[@_key-name = $recursing][1]"/>
             </xsl:for-each>
         </xsl:variable>
         <xsl:sequence select="($from|$recursors)/(.|choice)/(.|group[empty(@gi)])/(group|assembly|field)[@gi=$nodetest]"/>
@@ -639,11 +630,9 @@
     
     <xsl:function name="m:find-recursors" as="element(assembly)*">
         <xsl:param name="from" as="element()*"/>
-        <xsl:variable name="recursion-points"
-            select="$from/descendant-or-self::assembly[@recursive = 'true']"/>
-        <xsl:for-each select="$recursion-points">
-            <xsl:variable name="recursing" select="@name"/>
-            <xsl:sequence select="ancestor::assembly[@name = $recursing][1]"/>
+        <xsl:for-each select="$from/descendant-or-self::assembly[@recursive = 'true']">
+            <xsl:variable name="recursing" select="@_key-name"/>
+            <xsl:sequence select="ancestor::assembly[@key-name = $recursing][1]"/>
         </xsl:for-each>
     </xsl:function>
     

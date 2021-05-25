@@ -53,7 +53,7 @@
             <xsl:apply-templates select="@*"            mode="build"/>
             <xsl:apply-templates select="$reference/@*" mode="build"/>
             
-            <xsl:if test="not(@in-xml='UNWRAPPED')">
+            <xsl:if test="not($in-xml='UNWRAPPED')">
               <xsl:attribute name="gi"  select="($using-name, root-name, use-name,@name)[1]"/>
             </xsl:if>
             <xsl:attribute name="key" select="($using-name, root-name, use-name,@name)[1]"/>

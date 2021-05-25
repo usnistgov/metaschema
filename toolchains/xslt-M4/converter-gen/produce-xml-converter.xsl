@@ -58,10 +58,10 @@
                  (definition name and name-in-use) -->
             
             <!--XXX refactor all this for legibility -->
-            <xsl:for-each-group select=".//assembly[@scope = 'global'][not(@recursive='true')]"
+            <xsl:for-each-group select=".//assembly[@scope = 'global']"
                 group-by="@gi">
-                <xsl:variable name="aliased" select="count(distinct-values(current-group()/@name)) gt 1"/>
-                <xsl:for-each-group select="current-group()" group-by="@name">
+                <xsl:variable name="aliased" select="count(distinct-values(current-group()/@_key-name)) gt 1"/>
+                <xsl:for-each-group select="current-group()" group-by="@_key-name">
                     <!-- but we also break by type name since we have aliases (different type, same use-name) -->
                     <xsl:apply-templates select="current-group()[1]" mode="make-template">
                         <xsl:with-param name="team" tunnel="true" select="current-group()"/>
@@ -71,8 +71,8 @@
             </xsl:for-each-group>
             <xsl:for-each-group select=".//field[@scope = 'global']"
                 group-by="@gi">
-                <xsl:variable name="aliased" select="count(distinct-values(current-group()/@name)) gt 1"/>
-                <xsl:for-each-group select="current-group()" group-by="@name">
+                <xsl:variable name="aliased" select="count(distinct-values(current-group()/@_key-name)) gt 1"/>
+                <xsl:for-each-group select="current-group()" group-by="@_key-name">
                     <!-- but we also break by type name since we have aliases (different type, same use-name) -->
                     <xsl:apply-templates select="current-group()[1]" mode="make-template">
                         <xsl:with-param name="team" tunnel="true" select="current-group()"/>
@@ -82,7 +82,7 @@
             </xsl:for-each-group>
             
             <!-- again, this time for (all) flags, also discriminating by data type -->
-            <xsl:for-each-group select=".//flag" group-by="string-join((@name, @as-type, @gi), ':')">
+            <xsl:for-each-group select=".//flag" group-by="string-join((@_key-name, @as-type, @gi), ':')">
                 <xsl:apply-templates select="current-group()[1]" mode="make-template">
                     <xsl:with-param name="team" tunnel="true" select="current-group()"/>
                 </xsl:apply-templates>
@@ -98,13 +98,6 @@
         </XSLT:stylesheet> 
     </xsl:template>
     
-<!-- For any combination of node type (assembly or field), @name, @gi we make a template, plus
-     another for any that are recursive ... we have to specify them so that templates matching these
-     do not collapse on each other when they have the same element names -->
-    <xsl:template name="make-templates-for-type">
-        
-        
-    </xsl:template>
     
     
     <xsl:template name="xpath-namespace">
@@ -168,12 +161,14 @@
             <XSLT:param name="with-key" select="true()"/>
             <xsl:call-template name="comment-template"/>
             <xsl:element name="{ local-name() }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
-                <xsl:copy-of select="@* except (@key|@scope)"/>
+                <xsl:copy-of select="@* except (@scope)"/>
                 <!--'SCALAR' marks fields that will be strings or data values, not maps (objects)
                 by virtue of not permitting flags other than designated for the JSON key-->
                 <xsl:if test="self::field[empty(flag[not(@key=$json-key-flag-name)])]">
                     <xsl:attribute name="in-json">SCALAR</xsl:attribute>
                 </xsl:if>
+                <!--<xsl:comment expand-text="true">team has { count($team) } { $team/name() => string-join(',') } { exists(. intersect $team) } { exists($team/@key) } { serialize(.) }</xsl:comment>-->
+                <!--<xsl:comment expand-text="true">{ serialize(.) }</xsl:comment>-->
                 <xsl:if test="exists($team/@key)">
                     <XSLT:if test="$with-key">
                         <XSLT:attribute name="key">
@@ -184,6 +179,10 @@
                 <xsl:call-template name="provide-namespace"/>
                 <xsl:apply-templates select="." mode="make-key-flag"/>
                 <xsl:apply-templates select="*" mode="make-pull"/>
+                <xsl:variable name="keyname" select="@_key-name"/>
+                <xsl:if test="@recursive='true'">
+                  <xsl:apply-templates select="ancestor::*[@_key-name=$keyname]/*" mode="make-pull"/>
+                </xsl:if>
             </xsl:element>
         </XSLT:template>
         <!--Additionally we need templates for elements defined implicitly as wrappers for given assemblies or fields-->
@@ -239,16 +238,7 @@
         <xsl:value-of select="'@' || @gi"/>
     </xsl:template>
 
-    <!--<xsl:template priority="20" match="*[@recursive='true']" mode="make-xml-match">
-        <xsl:variable name="r">
-            <xsl:apply-templates select="ancestor::*[@name = current()/@name][1]"
-                mode="make-xml-match"/>
-            <xsl:text expand-text="true">//</xsl:text>
-            <xsl:next-match/>
-        </xsl:variable>
-        <xsl:message expand-text="true">{ $r }</xsl:message>
-        <xsl:sequence select="$r"/>
-    </xsl:template>-->
+    
     
     
     <!--a   a//a
@@ -267,19 +257,19 @@
             <xsl:when test="$aliased">
                 <xsl:for-each select="$team/ancestor::*[exists(@gi)][1]">
                     <xsl:if test="position() gt 1"> | </xsl:if>
-                    <xsl:call-template name="make-recurring-match">
+                    <xsl:apply-templates mode="make-xml-step" select="."/>
+                    <xsl:text>/</xsl:text>
+                    <xsl:apply-templates mode="make-xml-step" select="$me"/>
+                    <!--<xsl:call-template name="make-recurring-match">
                         <xsl:with-param name="me" select="$me"/>
                         <xsl:with-param name="prepend">
-                            <xsl:apply-templates mode="make-xml-step" select="."/>
-                            <xsl:text>/</xsl:text>
+                            
                         </xsl:with-param>
-                    </xsl:call-template>
+                    </xsl:call-template>-->
                 </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:call-template name="make-recurring-match">
-                    <xsl:with-param name="me" select="$me"/>
-                </xsl:call-template>
+                <xsl:apply-templates mode="make-xml-step" select="$me"/>
             </xsl:otherwise>
                 
         </xsl:choose>
@@ -308,21 +298,22 @@
         
     </xsl:template>
     
-    <xsl:template name="make-recurring-match">
+    <!--<xsl:template name="make-recurring-match">
         <xsl:param name="me"/>
         <xsl:param name="prepend"/>
+        <xsl:variable name="keyname" select="@_key-name"/>
         <xsl:sequence select="$prepend"/>
         <xsl:apply-templates mode="make-xml-step" select="$me"/>
-        <xsl:if test="$me/@name = $me/descendant::*[@recursive = 'true']/@name">
+        <xsl:if test="$keyname = $me/descendant::*[@recursive = 'true']/@_key-name">
             <xsl:text> | </xsl:text>
             <xsl:sequence select="$prepend"/>
             <xsl:apply-templates mode="make-xml-step" select="$me"/>
             <xsl:text>/</xsl:text>
-            <xsl:if test="$me/@name = $me/child::*/descendant::*[@recursive = 'true']/@name"
-                >/</xsl:if>
-            <xsl:apply-templates mode="make-xml-step" select="$me"/>
+            <!-\- extra step for deep recursors -\->
+            <xsl:if test="$keyname = $me/child::*/descendant::*[@recursive = 'true']/@_key-name">/</xsl:if>
+            <xsl:apply-templates mode="make-xml-step" select="$me/descendant::*[@recursive = 'true'][@_key-name=$keyname][1]"/>
         </xsl:if>
-    </xsl:template>
+    </xsl:template>-->
     
     <!--<xsl:template priority="10" match="*[@scope = 'global'] | group[*/@scope = 'global']" mode="make-xml-step">
         <xsl:param name="aliased" tunnel="true" select="false()"/>
@@ -354,7 +345,7 @@
             <xsl:for-each
                 select="ancestor-or-self::*[@gi]">
                 <xsl:if test="position() gt 1">/</xsl:if>
-                <xsl:if test="@name = .//@name[../@recursive='true']">/</xsl:if>
+                <xsl:if test="@_key-name = .//*[@recursive='true']/@_key-name">/</xsl:if>
                 <xsl:apply-templates select="." mode="make-xml-step"/>
             </xsl:for-each>
         </xsl:value-of>

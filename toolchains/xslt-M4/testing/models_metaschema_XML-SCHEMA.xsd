@@ -21,8 +21,8 @@
          <m:root>ASSEMBLY-1ONLY</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="EVERYTHING" type="everything:everything-ASSEMBLY"/>
-   <xs:complexType name="everything-ASSEMBLY">
+   <xs:element name="EVERYTHING" type="everything:everything-everything-ASSEMBLY"/>
+   <xs:complexType name="everything-everything-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>EVERYTHING</m:formal-name>
@@ -33,57 +33,57 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="field-1only"
-                     type="everything:field-1only-FIELD"
+                     type="everything:everything-field-1only-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="overloaded1"
-                     type="everything:overloaded-FIELD"
+                     type="everything:everything-overloaded-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="overloaded2"
-                     type="everything:overloaded-FIELD"
+                     type="everything:everything-overloaded-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="field-base64"
-                     type="everything:field-base64-FIELD"
+                     type="everything:everything-field-base64-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="field-boolean"
-                     type="everything:field-boolean-FIELD"
+                     type="everything:everything-field-boolean-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="field-named-value"
-                     type="everything:field-named-value-FIELD"
+                     type="everything:everything-field-named-value-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="markup-line"
-                     type="everything:markup-line-FIELD"
+                     type="everything:everything-markup-line-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="field-simple-groupable"
-                     type="everything:field-simple-groupable-FIELD"
+                     type="everything:everything-field-simple-groupable-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="field-flagged-groupable"
-                     type="everything:field-flagged-groupable-FIELD"
+                     type="everything:everything-field-flagged-groupable-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="wrapped-fields" minOccurs="0" maxOccurs="1">
             <xs:complexType>
                <xs:sequence>
                   <xs:element name="field-wrappable"
-                              type="everything:field-wrappable-FIELD"
+                              type="everything:everything-field-wrappable-FIELD"
                               minOccurs="0"
                               maxOccurs="unbounded"/>
                </xs:sequence>
             </xs:complexType>
          </xs:element>
          <xs:element name="field-by-key"
-                     type="everything:field-by-key-FIELD"
+                     type="everything:everything-field-by-key-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="field-dynamic-value-key"
-                     type="everything:field-dynamic-value-key-FIELD"
+                     type="everything:everything-field-dynamic-value-key-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="wrapped-prose" minOccurs="0" maxOccurs="1">
@@ -105,45 +105,45 @@
                    maxOccurs="unbounded"
                    minOccurs="0"/>
          <xs:element name="assembly-empty"
-                     type="everything:assembly-empty-ASSEMBLY"
+                     type="everything:everything-assembly-empty-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="assembly-empty-grouped"
-                     type="everything:assembly-empty-grouped-ASSEMBLY"
+                     type="everything:everything-assembly-empty-grouped-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="alias"
-                     type="everything:assembly-alias1-ASSEMBLY"
+                     type="everything:everything-assembly-alias1-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
-         <xs:element name="ASSEMBLY-1ONLY"
-                     type="everything:assembly-1only-ASSEMBLY"
+         <xs:element name="assembly-1only"
+                     type="everything:everything-assembly-1only-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="assembly-groupable"
-                     type="everything:assembly-groupable-ASSEMBLY"
+                     type="everything:everything-assembly-groupable-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="wrapped-assemblies" minOccurs="0" maxOccurs="1">
             <xs:complexType>
                <xs:sequence>
                   <xs:element name="assembly-wrappable"
-                              type="everything:assembly-wrappable-ASSEMBLY"
+                              type="everything:everything-assembly-wrappable-ASSEMBLY"
                               minOccurs="0"
                               maxOccurs="unbounded"/>
                </xs:sequence>
             </xs:complexType>
          </xs:element>
          <xs:element name="assembly-by-key"
-                     type="everything:assembly-by-key-ASSEMBLY"
+                     type="everything:everything-assembly-by-key-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
-         <xs:element name="EVERYTHING"
-                     type="everything:everything-ASSEMBLY"
+         <xs:element name="everything"
+                     type="everything:everything-everything-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
       </xs:sequence>
-      <xs:attribute name="id" type="xs:string">
+      <xs:attribute name="id" type="everything:string">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>ID</m:formal-name>
@@ -154,7 +154,7 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   <xs:complexType name="overloaded-FIELD">
+   <xs:complexType name="everything-overloaded-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>OVERLOADED</m:formal-name>
@@ -164,8 +164,8 @@
             <b>OVERLOADED</b>: Overloaded field</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string">
-            <xs:attribute name="simple-flag" type="xs:string">
+         <xs:extension base="everything:string">
+            <xs:attribute name="simple-flag" type="everything:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>Simple Flag</m:formal-name>
@@ -188,7 +188,7 @@
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:complexType name="field-1only-FIELD">
+   <xs:complexType name="everything-field-1only-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>FIELD-1ONLY</m:formal-name>
@@ -198,8 +198,8 @@
             <b>FIELD-1ONLY</b>: field field-1only</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string">
-            <xs:attribute name="simple-flag" type="xs:string">
+         <xs:extension base="everything:string">
+            <xs:attribute name="simple-flag" type="everything:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>Simple Flag</m:formal-name>
@@ -222,7 +222,7 @@
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:simpleType name="field-base64-FIELD">
+   <xs:simpleType name="everything-field-base64-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>FIELD-BASE64</m:formal-name>
@@ -233,7 +233,7 @@
       </xs:annotation>
       <xs:restriction base="xs:base64Binary"/>
    </xs:simpleType>
-   <xs:simpleType name="field-boolean-FIELD">
+   <xs:simpleType name="everything-field-boolean-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>FIELD-BOOLEAN</m:formal-name>
@@ -244,7 +244,7 @@
       </xs:annotation>
       <xs:restriction base="xs:boolean"/>
    </xs:simpleType>
-   <xs:complexType name="field-simple-groupable-FIELD">
+   <xs:complexType name="everything-field-simple-groupable-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>FIELD-SIMPLE-GROUPABLE</m:formal-name>
@@ -254,8 +254,8 @@
             <b>FIELD-SIMPLE-GROUPABLE</b>: simple field, groupable</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string">
-            <xs:attribute name="simple-flag" type="xs:string">
+         <xs:extension base="everything:string">
+            <xs:attribute name="simple-flag" type="everything:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>Simple Flag</m:formal-name>
@@ -278,7 +278,7 @@
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:complexType name="field-flagged-groupable-FIELD">
+   <xs:complexType name="everything-field-flagged-groupable-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>FIELD-FLAGGED-GROUPABLE</m:formal-name>
@@ -288,7 +288,7 @@
             <b>FIELD-FLAGGED-GROUPABLE</b>: field field-groupable</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string">
+         <xs:extension base="everything:string">
             <xs:attribute name="flagged-date" type="xs:date">
                <xs:annotation>
                   <xs:appinfo>
@@ -312,7 +312,7 @@
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:simpleType name="field-wrappable-FIELD">
+   <xs:simpleType name="everything-field-wrappable-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>FIELD-WRAPPABLE</m:formal-name>
@@ -321,9 +321,9 @@
          <xs:documentation>
             <b>FIELD-WRAPPABLE</b>: field field-wrappable</xs:documentation>
       </xs:annotation>
-      <xs:restriction base="xs:string"/>
+      <xs:restriction base="everything:string"/>
    </xs:simpleType>
-   <xs:complexType name="field-by-key-FIELD">
+   <xs:complexType name="everything-field-by-key-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>FIELD-BY-KEY</m:formal-name>
@@ -333,8 +333,8 @@
             <b>FIELD-BY-KEY</b>: field field-by-key</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string">
-            <xs:attribute name="id" use="required" type="xs:string">
+         <xs:extension base="everything:string">
+            <xs:attribute name="id" use="required" type="everything:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>ID</m:formal-name>
@@ -347,7 +347,7 @@
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:complexType name="field-named-value-FIELD">
+   <xs:complexType name="everything-field-named-value-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>FIELD-NAMED-VALUE</m:formal-name>
@@ -357,8 +357,8 @@
             <b>FIELD-NAMED-VALUE</b>: field field-named-value</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string">
-            <xs:attribute name="id" use="required" type="xs:string">
+         <xs:extension base="everything:string">
+            <xs:attribute name="id" use="required" type="everything:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>ID</m:formal-name>
@@ -371,7 +371,7 @@
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:complexType name="field-dynamic-value-key-FIELD">
+   <xs:complexType name="everything-field-dynamic-value-key-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>FIELD-DYNAMIC-VALUE-KEY</m:formal-name>
@@ -381,8 +381,8 @@
             <b>FIELD-DYNAMIC-VALUE-KEY</b>: field field-dynamic-value-key</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string">
-            <xs:attribute name="id" use="required" type="xs:string">
+         <xs:extension base="everything:string">
+            <xs:attribute name="id" use="required" type="everything:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>ID</m:formal-name>
@@ -392,7 +392,7 @@
                      <b>ID</b>: flag id</xs:documentation>
                </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="color" type="xs:string">
+            <xs:attribute name="color" type="everything:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>COLOR</m:formal-name>
@@ -405,12 +405,46 @@
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:complexType mixed="true" name="markup-line-FIELD">
+   <xs:complexType mixed="true" name="everything-markup-line-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>MARKUP-LINE</m:formal-name>
+            <m:description>field markup-line</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>MARKUP-LINE</b>: field markup-line</xs:documentation>
+      </xs:annotation>
       <xs:complexContent>
          <xs:extension base="everything:markupLineType"/>
       </xs:complexContent>
    </xs:complexType>
-   <xs:complexType name="assembly-empty-ASSEMBLY">
+   <xs:complexType name="everything-wrapped-prose-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>WRAPPED-PROSE</m:formal-name>
+            <m:description>field wrapped-prose</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>WRAPPED-PROSE</b>: field wrapped-prose</xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="everything:markupMultilineType"/>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="everything-loose-prose-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>LOOSE-PROSE</m:formal-name>
+            <m:description>field loose-prose</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>LOOSE-PROSE</b>: field loose-prose</xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="everything:markupMultilineType"/>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="everything-assembly-empty-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>ASSEMBLY-EMPTY</m:formal-name>
@@ -419,7 +453,7 @@
          <xs:documentation>
             <b>ASSEMBLY-EMPTY</b>: assembly assembly-empty</xs:documentation>
       </xs:annotation>
-      <xs:attribute name="id" use="required" type="xs:string">
+      <xs:attribute name="id" use="required" type="everything:string">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>ID</m:formal-name>
@@ -430,7 +464,7 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   <xs:complexType name="assembly-empty-grouped-ASSEMBLY">
+   <xs:complexType name="everything-assembly-empty-grouped-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>ASSEMBLY-EMPTY-GROUPED</m:formal-name>
@@ -439,7 +473,7 @@
          <xs:documentation>
             <b>ASSEMBLY-EMPTY-GROUPED</b>: assembly assembly-empty-grouped</xs:documentation>
       </xs:annotation>
-      <xs:attribute name="id" use="required" type="xs:string">
+      <xs:attribute name="id" use="required" type="everything:string">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>ID</m:formal-name>
@@ -450,8 +484,9 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   <xs:element name="ASSEMBLY-1ONLY" type="everything:assembly-1only-ASSEMBLY"/>
-   <xs:complexType name="assembly-1only-ASSEMBLY">
+   <xs:element name="ASSEMBLY-1ONLY"
+               type="everything:everything-assembly-1only-ASSEMBLY"/>
+   <xs:complexType name="everything-assembly-1only-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>ASSEMBLY-1ONLY</m:formal-name>
@@ -462,16 +497,16 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="field-1only"
-                     type="everything:field-1only-FIELD"
+                     type="everything:everything-field-1only-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
-         <xs:element name="ASSEMBLY-1ONLY"
-                     type="everything:assembly-1only-ASSEMBLY"
+         <xs:element name="assembly-1only"
+                     type="everything:everything-assembly-1only-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="assembly-alias1-ASSEMBLY">
+   <xs:complexType name="everything-assembly-alias1-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>ASSEMBLY-ALIASED 1</m:formal-name>
@@ -482,20 +517,20 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="field-1only"
-                     type="everything:field-1only-FIELD"
+                     type="everything:everything-field-1only-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
-         <xs:element name="ASSEMBLY-1ONLY"
-                     type="everything:assembly-1only-ASSEMBLY"
+         <xs:element name="assembly-1only"
+                     type="everything:everything-assembly-1only-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="alias"
-                     type="everything:assembly-alias2-ASSEMBLY"
+                     type="everything:everything-assembly-alias2-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="assembly-alias2-ASSEMBLY">
+   <xs:complexType name="everything-assembly-alias2-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>ASSEMBLY-ALIASED 2</m:formal-name>
@@ -505,17 +540,17 @@
             <b>ASSEMBLY-ALIASED 2</b>: second aliased assembly (has a name conflict)</xs:documentation>
       </xs:annotation>
       <xs:sequence>
-         <xs:element name="ASSEMBLY-1ONLY"
-                     type="everything:assembly-1only-ASSEMBLY"
+         <xs:element name="assembly-1only"
+                     type="everything:everything-assembly-1only-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="field-1only"
-                     type="everything:field-1only-FIELD"
+                     type="everything:everything-field-1only-FIELD"
                      minOccurs="0"
                      maxOccurs="1"/>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="assembly-groupable-ASSEMBLY">
+   <xs:complexType name="everything-assembly-groupable-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>ASSEMBLY-GROUPABLE</m:formal-name>
@@ -526,16 +561,16 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="field-simple-groupable"
-                     type="everything:field-simple-groupable-FIELD"
+                     type="everything:everything-field-simple-groupable-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="assembly-groupable"
-                     type="everything:assembly-groupable-ASSEMBLY"
+                     type="everything:everything-assembly-groupable-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="assembly-wrappable-ASSEMBLY">
+   <xs:complexType name="everything-assembly-wrappable-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>ASSEMBLY-WRAPPABLE</m:formal-name>
@@ -549,7 +584,7 @@
             <xs:complexType>
                <xs:sequence>
                   <xs:element name="field-wrappable"
-                              type="everything:field-wrappable-FIELD"
+                              type="everything:everything-field-wrappable-FIELD"
                               minOccurs="0"
                               maxOccurs="unbounded"/>
                </xs:sequence>
@@ -559,7 +594,7 @@
             <xs:complexType>
                <xs:sequence>
                   <xs:element name="assembly-wrappable"
-                              type="everything:assembly-wrappable-ASSEMBLY"
+                              type="everything:everything-assembly-wrappable-ASSEMBLY"
                               minOccurs="0"
                               maxOccurs="unbounded"/>
                </xs:sequence>
@@ -567,7 +602,7 @@
          </xs:element>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="assembly-by-key-ASSEMBLY">
+   <xs:complexType name="everything-assembly-by-key-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>ASSEMBLY-BY-KEY</m:formal-name>
@@ -578,15 +613,15 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="field-by-key"
-                     type="everything:field-by-key-FIELD"
+                     type="everything:everything-field-by-key-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="assembly-by-key"
-                     type="everything:assembly-by-key-ASSEMBLY"
+                     type="everything:everything-assembly-by-key-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
       </xs:sequence>
-      <xs:attribute name="id" use="required" type="xs:string">
+      <xs:attribute name="id" use="required" type="everything:string">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>ID</m:formal-name>
@@ -731,7 +766,19 @@
     (a parameter must be available)
   -->
    <xs:complexType name="insertType">
-      <xs:attribute name="param-id" use="required" type="xs:NCName"/>
+      <xs:annotation>
+         <xs:documentation>An insert can be used to identify a placeholder for dynamically inserting text related to a specific object, which is referenced by the object's identifier using an <code xmlns="http://csrc.nist.gov/ns/oscal/1.0">id-ref</code>. This insert mechanism allows the selection of which text value from the object to dynamically include based on the application's display requirements.</xs:documentation>
+      </xs:annotation>
+      <xs:attribute name="type" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:documentation>The type of object to include from (e.g., parameter, control, component, role, etc.)</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="id-ref" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:documentation>The identity of the object to insert a value for. The identity will be selected from the index of objects of the specified <code xmlns="http://csrc.nist.gov/ns/oscal/1.0">type</code>. The specific value to include is based on the application's display requirements, which will likely use a specific data element associated with the <code xmlns="http://csrc.nist.gov/ns/oscal/1.0">type</code> (e.g., title, identifier, value, etc.) that is appropriate for the application.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
    </xs:complexType>
    <!--
     Within a selection, a choice - tbd
@@ -742,4 +789,17 @@
     IDs are required everywhere for now
     idAttr      = attribute id { xsd:ID }
   -->
+   <xs:simpleType name="string">
+      <xs:annotation>
+         <xs:documentation>A string, but not empty and not whitespace-only (whitespace is U+9, U+10, U+32 or [ \n\t]+ )</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:whiteSpace value="preserve"/>
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>A trimmed string, at least one character with no leading or trailing whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
 </xs:schema>
