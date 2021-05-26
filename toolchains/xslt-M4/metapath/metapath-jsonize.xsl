@@ -415,8 +415,6 @@
             </xsl:choose>
         </xsl:variable>
         
-        <xsl:message expand-text="true">definitions? { count($definition-proxies) }?</xsl:message>
-        
         <!-- making all the steps to the JSON -->
         <xsl:variable name="all-json-steps" as="element(step)*">
             <xsl:for-each select="$definition-proxies">
@@ -531,7 +529,6 @@
             casts can be produced for different potential variant expressions
             (or 'synonyms') in the JSON, such as when a given object may appear
             either grouped or ungrouped. -->
-            <xsl:message expand-text="true">from is { name($from) } { $from/@name }</xsl:message>
             <xsl:variable name="casts" as="element(cast)*">
                 <xsl:apply-templates select="$from" mode="cast-node-test"/>
             </xsl:variable>

@@ -71,6 +71,7 @@
             </xsl:for-each-group>
             <xsl:for-each-group select=".//field[@scope = 'global']"
                 group-by="@gi">
+                
                 <xsl:variable name="aliased" select="count(distinct-values(current-group()/@_key-name)) gt 1"/>
                 <xsl:for-each-group select="current-group()" group-by="@_key-name">
                     <!-- but we also break by type name since we have aliases (different type, same use-name) -->
