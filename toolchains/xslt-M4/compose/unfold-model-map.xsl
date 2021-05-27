@@ -12,12 +12,12 @@
     <xsl:mode on-no-match="shallow-copy"/>
     
     <!-- Moved up to new 'group' parent -->
-    <xsl:template match="@group-json | @group-xml | @group-name"/>
+    <xsl:template match="@group-json | @group-xml | @_group-name"/>
     
     <!-- Removing from objects not to be keyed -->
-    <xsl:template match="*[exists(@group-name)][@group-json='ARRAY']/@key"/>
+    <xsl:template match="*[exists(@_group-name)][@group-json='ARRAY']/@key"/>
     
-    <xsl:template priority="10" match="*[exists(@group-name)]">
+    <xsl:template priority="10" match="*[exists(@_group-name)]">
         <group in-xml="{ if (@group-xml='GROUPED') then 'SHOWN' else 'HIDDEN' }"
             max-occurs="1" min-occurs="{ if (@min-occurs='0') then '0' else '1'}">
             <xsl:if test="@group-xml='GROUPED'">
@@ -29,7 +29,7 @@
             <xsl:copy-of select="@_caller-xml-id | @_caller-json-id | @_def-xml-id | @_def-json-id"/>
             <xsl:copy-of select="@_base-uri | @_key-name | @_key-ref"/>
             <!--<xsl:apply-templates select="@* except (@max-occurs|@min-occurs|@key)"/>-->
-            <xsl:attribute name="key" expand-text="true">{@group-name}</xsl:attribute>
+            <xsl:attribute name="key" expand-text="true">{@_group-name}</xsl:attribute>
             
             <xsl:next-match/>
         </group>

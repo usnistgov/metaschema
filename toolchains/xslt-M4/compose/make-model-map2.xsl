@@ -53,7 +53,7 @@
             <xsl:apply-templates select="@*"            mode="build"/>
             <xsl:apply-templates select="$reference/@*" mode="build"/>
             
-            <xsl:if test="not(@in-xml='UNWRAPPED')">
+            <xsl:if test="not($in-xml='UNWRAPPED')">
               <xsl:attribute name="gi"  select="($using-name, root-name, use-name,@name)[1]"/>
             </xsl:if>
             <xsl:attribute name="key" select="($using-name, root-name, use-name,@name)[1]"/>
@@ -72,7 +72,8 @@
             <xsl:for-each select="$group-json"><!-- ARRAY (default), SINGLETON_OR_ARRAY, BY_KEY --> 
                 <xsl:attribute name="group-json" select="."/>
             </xsl:for-each>
-            <xsl:apply-templates select="json-key" mode="build"/>
+            <xsl:apply-templates select="($reference/json-key,json-key)[1]" mode="build"/>
+            <xsl:apply-templates select="($reference/json-value-key,json-value-key)[1]" mode="build"/>
             <xsl:for-each select="$group-name">
                 <xsl:attribute name="group-name" select="."/>
             </xsl:for-each>

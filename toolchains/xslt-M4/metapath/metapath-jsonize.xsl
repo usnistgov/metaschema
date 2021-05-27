@@ -46,12 +46,12 @@
     <xsl:output indent="yes"/>
     
 <!-- Overloading this key so wildcards get everythang   -->
-    <xsl:key name="obj-by-gi" match="*[exists(@gi)][not(@recursive='true')]" use="@gi"/>
-    <xsl:key name="obj-by-gi" match="*[exists(@gi)][not(@recursive='true')]" use="$wildcard"/>
+    <xsl:key name="obj-by-gi" match="*[exists(@gi)]" use="@gi"/>
+    <xsl:key name="obj-by-gi" match="*[exists(@gi)]" use="$wildcard"/>
     
     <xsl:param name="px" as="xs:string">j</xsl:param>
     
-    <xsl:param name="definition-map" select="document('../testing/catalog-definition-model.xml')"/>
+    <xsl:param name="definition-map" select="document('../testing/temp/IN-models_DEFINITION-MODEL.xml')"/>
     
     <!-- We have to detect wildcards on path steps with no node name (XML GI) -->
     <xsl:variable name="wildcard" as="xs:string+" select="'*','node()'"/>
@@ -60,8 +60,10 @@
         <!--<test>field-flagged-groupable</test>
         <test>field-dynamic-value-key</test>-->
         <!--<test>*/@color</test>-->
-        <test>catalog//group//part</test>
-        <test>catalog//group//control/param/select/choice</test>
+        <test>everything</test>
+        <test>field-wrappable</test>
+        <test>field-simple-groupable</test>
+        <!--<test>catalog//group//control/param/select/choice</test>-->
         <!--<test>catalog//control/title</test>-->
         <test>nowhere</test>
         <!--<test>EVERYTHING/@id|field-named-value/@id</test>-->
@@ -107,7 +109,7 @@
         <test expr="{.}" expand="{string-join($map)}">
         <!--<test>-->
             <!--<xsl:apply-templates select="key('obj-by-gi',.,$definition-map)" mode="cast-node-test"/>-->
-            <json><xsl:sequence select="m:jsonize-path(.)"/></json>
+            <!--<json><xsl:sequence select="m:jsonize-path(.)"/></json>-->
             <xsl:sequence select="m:path-map(.)"/>
             
             <xsl:sequence select="m:jsonization(.)"/>
@@ -115,68 +117,59 @@
         </test>
     </xsl:template>
     
-    <xsl:template match="/model" mode="cast-node-test">
+    <xsl:template match="/model" mode="cast-node-test" as="element(cast)*">
         <cast>/{$px}:map</cast>
     </xsl:template>
     
-    <xsl:template priority="2" match="group[@group-json='BY_KEY']/assembly" mode="cast-node-test">
+    <xsl:template priority="2" match="group[@group-json='BY_KEY']/assembly" mode="cast-node-test" as="element(cast)*">
         <cast>{$px}:map[@key='{../@key}']/{$px}:map</cast>
     </xsl:template>
     
-    <xsl:template priority="2" match="group[@group-json='ARRAY']/assembly" mode="cast-node-test">
+    <xsl:template priority="2" match="group[@group-json='ARRAY']/assembly" mode="cast-node-test" as="element(cast)*">
         <cast>{$px}:array[@key='{../@key}']/{$px}:map</cast>
     </xsl:template>
     
     <!-- Catches groups that are explicit in the XML -->
-    <xsl:template match="group[exists(@gi)]" mode="cast-node-test">
+    <xsl:template match="group[exists(@gi)]" mode="cast-node-test" as="element(cast)*">
         <cast>{$px}:array[@key='{@key}']</cast>
     </xsl:template>
     
     <!-- Catches assembly grouped as SINGLETON_OR_ARRAY -->
-    <xsl:template match="group/assembly" mode="cast-node-test">
+    <xsl:template match="group/assembly" mode="cast-node-test" as="element(cast)*">
         <cast>{$px}:array[@key='{../@key}']/{$px}:map</cast>
         <cast>{$px}:map[@key='{../@key}']</cast>
     </xsl:template>
     
-    <xsl:template match="assembly" mode="cast-node-test">
+    <xsl:template match="assembly" mode="cast-node-test" as="element(cast)*">
         <cast>{$px}:map[@key='{@key}']</cast>
     </xsl:template>
     
     <!-- field grouped by key -->
-    <xsl:template priority="3" match="group[@group-json='BY_KEY']/field" mode="cast-node-test">
+    <xsl:template priority="3" match="group[@group-json='BY_KEY']/field" mode="cast-node-test" as="element(cast)*">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
-        <xsl:variable name="field-path">
-            <xsl:next-match/>
-        </xsl:variable>
-        <cast>{$px}:map[@key='{../@key}']/{$field-path}</cast>
+        <cast>{$px}:map[@key='{../@key}']/{$px}:{$type}</cast>
     </xsl:template>
     
-    <xsl:template priority="3" match="group[@group-json='ARRAY']/field" mode="cast-node-test">
+    <xsl:template priority="3" match="group[@group-json='ARRAY']/field" mode="cast-node-test" as="element(cast)*">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
-        <xsl:variable name="field-path">
-            <xsl:next-match/>
-        </xsl:variable>
-        <cast>{$px}:array[@key='{../@key}']/{$field-path}</cast>
+        <cast>{$px}:array[@key='{../@key}']/{$px}:{$type}</cast>
     </xsl:template>
     
     <!-- Catches field grouped as SINGLETON-OR-ARRAY -->
-    <xsl:template priority="2" match="group[not(@group-json=('BY_KEY','ARRAY'))]/field" mode="cast-node-test">
+    <xsl:template priority="2" match="group/field" mode="cast-node-test" as="element(cast)*">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
-        <xsl:variable name="field-path">
-            <xsl:next-match/>
-        </xsl:variable>
-        <cast>{$px}:array[@key='{../@key}']/{$field-path}</cast>
-        <cast>{$field-path}[@key='{../@key}']</cast>
+        <cast>{$px}:array[@key='{../@key}']/{$px}:{$type}</cast>
+        <cast>{$px}:{$type}[@key='{../@key}']</cast>
     </xsl:template>
     
     <!-- field with no flags apart from a json-key-flag points to itself as a value property -->
-    <xsl:template match="field[empty(flag[not(@key = ../@json-key-flag)])]" mode="cast-node-test">
+    <xsl:template match="field[empty(flag[not(@key = ../@json-key-flag)])]" mode="cast-node-test" as="element(cast)*">
         <xsl:variable name="type">
             <xsl:apply-templates select="." mode="object-type"/>
         </xsl:variable>
@@ -238,7 +231,7 @@
     </xsl:template>
     
     <xsl:template match="*" mode="cast-node-test" expand-text="true">
-        <cast>OoopsFellThroughOn { name() }</cast>
+        <!--<cast>OoopsFellThroughOn { name() }</cast>-->
         <cast>{$px}:*[@key='{../@key}']</cast>
     </xsl:template>
     
@@ -395,14 +388,14 @@
         <xsl:param name="from" as="element()*"/>
         <xsl:param name="starting" as="xs:boolean" select="false()"/>
         <xsl:param name="relative" as="xs:boolean" select="true()"/>
-        <!--<xsl:if test="not($starting) or not($relative)">/</xsl:if>-->
-        <xsl:variable name="here" as="node()*">
+        
+        <xsl:variable name="this-step" select="."/>
+        <xsl:variable name="definition-proxies" as="node()*">
             <xsl:choose>
                 <!-- the first step of an absolute path is located relative to the root -->
                 <xsl:when test="$starting">
                     <xsl:choose>
                         <xsl:when test="$relative">
-                            <!-- the first step of a relative path starts where it starts-->
                             <xsl:sequence select="key('obj-by-gi', string(node), $definition-map)"/>
                         </xsl:when>
                         <xsl:otherwise>
@@ -421,11 +414,10 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
+        
         <!-- making all the steps to the JSON -->
-        <xsl:variable name="all-json-steps" as="node()*">
-            <xsl:variable name="this-step" select="."/>
-            <xsl:variable name="definitions" select="$here/self::*"/>
-            <xsl:for-each select="$definitions">
+        <xsl:variable name="all-json-steps" as="element(step)*">
+            <xsl:for-each select="$definition-proxies">
                 <xsl:variable name="definition" select="."/>
                 <step>
                     <xsl:for-each select="$this-step">
@@ -439,15 +431,19 @@
         
         <!-- removing duplicates -->
         <xsl:variable name="distinct-steps" as="element(step)*">
-            <xsl:for-each-group select="$all-json-steps" group-by="serialize(.)">
+            <xsl:for-each-group select="$all-json-steps" group-by="string(.)">
                 <!--. returns current-group()[1] -->
-                <xsl:sequence select="current-group()[1]"/>
+                <xsl:variable name="one-step" select="current-group()[1]" as="element(step)"/>
+                <xsl:sequence select="$one-step"/>
             </xsl:for-each-group>
         </xsl:variable>
+        
+        
         
         <!-- showing a split if any. Note, we insert syntax here rather than
              executing yet another subpipeline. -->
         <xsl:choose>
+            
             <xsl:when test="count($distinct-steps) eq 1">
                 <xsl:sequence select="$distinct-steps"/>
             </xsl:when>
@@ -473,10 +469,10 @@
         </xsl:apply-templates>-->
         
         <!-- if there is nowhere to go, we don't -->
-        <xsl:if test="exists($here)">
+        <xsl:if test="exists($definition-proxies)">
             <!-- otherwise we traverse to the next sibling, from $here -->
             <xsl:apply-templates select="following-sibling::node()[1]" mode="#current">
-                <xsl:with-param name="from" select="$here"/>
+                <xsl:with-param name="from" select="$definition-proxies"/>
             </xsl:apply-templates>
         </xsl:if>
         <!-- if there are no further siblings, we are done -->
@@ -538,10 +534,10 @@
             </xsl:variable>
             <!-- Now we have to format the stuff coming back. NB each cast comes as zero
                 or more 'cast' elements, whose string values we stitch together. -->
-            <!-- The 'else' clause captures the singleton or null case. -->
-            <xsl:sequence select="if (count($casts) gt 1) then
-                string-join($casts,' | ') ! ('(' || . || ')') else $casts"/>
-            <!--<xsl:apply-templates select="$from" mode="cast-node-test"/>-->
+            <xsl:if test="count($casts) gt 1">(</xsl:if>
+            <xsl:sequence select="string-join($casts/string(),' | ')"/>
+            <xsl:if test="count($casts) gt 1">)</xsl:if>
+            
         </node>
         <xsl:apply-templates mode="#current" select="following-sibling::node()[1]">
             <xsl:with-param name="from"      select="$from"/>
@@ -573,13 +569,13 @@
     
     <xsl:template mode="find-definition" priority="5" match="step[axis='child::'][node=$wildcard]">
         <xsl:param name="from" as="element()*"/>
-        <xsl:variable name="recursors" select="$from/(.|group[empty(@gi)])/assembly[@recursive = 'true']"/>
+        <!-- recursors is any recursive children, not only recursing to here -->
         <xsl:variable name="recursors" as="element()*">
             <xsl:variable name="recursion-points"
                 select="$from/(.|choice)/(. | assembly | group[empty(@gi)])[@recursive = 'true']"/>
+            <xsl:variable name="recursing" select="@_key-name"/>
             <xsl:for-each select="$recursion-points">
-                <xsl:variable name="recursing" select="@name"/>
-                <xsl:sequence select="ancestor::assembly[@name = $recursing][1]"/>
+                <xsl:sequence select="ancestor::assembly[@_key-name = $recursing][1]"/>
             </xsl:for-each>
         </xsl:variable>
         <xsl:sequence select="($from|$recursors)/(.|choice)/(.|group[empty(@gi)])/(group|assembly|field)[exists(@gi)]"/>
@@ -607,10 +603,10 @@
         <xsl:variable name="nodetest" select="node"/>
         <xsl:variable name="recursors" as="element()*">
             <xsl:variable name="recursion-points"
-                select="$from/(.|choice)/(. | assembly | group[empty(@gi)])[@recursive = 'true']"/>
+                select="$from/(.|choice)/(. | assembly | group[empty(@gi)])[@gi=$nodetest][@recursive = 'true']"/>
             <xsl:for-each select="$recursion-points">
-                <xsl:variable name="recursing" select="@name"/>
-                <xsl:sequence select="ancestor::assembly[@name = $recursing][1]"/>
+                <xsl:variable name="recursing" select="@_key-name"/>
+                <xsl:sequence select="ancestor::assembly[@_key-name = $recursing][1]"/>
             </xsl:for-each>
         </xsl:variable>
         <xsl:sequence select="($from|$recursors)/(.|choice)/(.|group[empty(@gi)])/(group|assembly|field)[@gi=$nodetest]"/>
@@ -639,11 +635,9 @@
     
     <xsl:function name="m:find-recursors" as="element(assembly)*">
         <xsl:param name="from" as="element()*"/>
-        <xsl:variable name="recursion-points"
-            select="$from/descendant-or-self::assembly[@recursive = 'true']"/>
-        <xsl:for-each select="$recursion-points">
-            <xsl:variable name="recursing" select="@name"/>
-            <xsl:sequence select="ancestor::assembly[@name = $recursing][1]"/>
+        <xsl:for-each select="$from/descendant-or-self::assembly[@recursive = 'true']">
+            <xsl:variable name="recursing" select="@_key-name"/>
+            <xsl:sequence select="ancestor::assembly[@key-name = $recursing][1]"/>
         </xsl:for-each>
     </xsl:function>
     
