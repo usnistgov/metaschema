@@ -100,7 +100,7 @@
   
   <p:xslt name="make-abstract-map">
     <p:input port="stylesheet">
-      <p:document href="compose/make-model-map2.xsl"/>
+      <p:document href="compose/make-model-map.xsl"/>
     </p:input>
   </p:xslt>
   

@@ -100,7 +100,7 @@
   <!--<p:identity  name="make-model-map"/>-->
   <p:xslt name="make-model-map">
     <p:input port="stylesheet">
-      <p:document href="../compose/make-model-map2.xsl"/>
+      <p:document href="../compose/make-model-map.xsl"/>
     </p:input>
   </p:xslt>
   
