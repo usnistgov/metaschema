@@ -33,6 +33,17 @@
     <h1>Unwrapped prose</h1>
     <p>Here we have unwrapped prose....</p>
     <p>And more and more unwrapped prose!</p>
+    
+    <branch1>
+        <OVERLOAD a="branch1-a">
+            <OVERLOAD a="branch1-a"/>
+        </OVERLOAD>
+    </branch1>
+    <branch2>
+        <OVERLOAD z="branch2-z">
+            <OVERLOAD z="branch2-z"/>
+        </OVERLOAD>
+    </branch2>
     <assembly-empty id="123"/>
     <assembly-empty-grouped id="456"/>
     <assembly-empty-grouped id="789"/>
@@ -42,8 +53,6 @@
             <field-1only>field</field-1only>
         </alias>
     </alias>
-    
-    
     <assembly-1only>
         <field-1only>ASSEMBLY-1-ONLY / FIELD-1-ONLY</field-1only>
     </assembly-1only>

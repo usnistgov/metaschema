@@ -76,6 +76,8 @@
             <field ref="wrapped-prose" in-xml="WITH_WRAPPER"/>
             <field ref="loose-prose" in-xml="UNWRAPPED"/>
             
+            <assembly ref="branch1"/>
+            <assembly ref="branch2"/>
             <assembly ref="assembly-empty"/>
             <assembly ref="assembly-empty-grouped" max-occurs="unbounded">
                 <group-as name="empty-assembly-group"/>
@@ -188,6 +190,60 @@
         <formal-name>LOOSE-PROSE</formal-name>
         <description>field loose-prose</description>
     </define-field>
+    
+    <define-assembly name="branch1">
+        <formal-name>branch 1 for OVERLOAD1</formal-name>
+        <description>A discrete containter for objects with overloaded names.</description>
+        <model>
+            <assembly ref="overload1" max-occurs="unbounded">
+                <use-name>OVERLOAD</use-name>
+                <group-as name="OVERLOAD_GROUP" in-json="ARRAY"/>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="branch2">
+        <formal-name>branch 2 for OVERLOAD2</formal-name>
+        <description>A discrete containter for objects with overloaded names.</description>
+        <model>
+            <assembly ref="overload2" max-occurs="unbounded">
+                <use-name>OVERLOAD</use-name>
+                <group-as name="OVERLOAD_GROUP" in-json="ARRAY"/>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="overload1">
+        <formal-name>Overloaded name 1</formal-name>
+        <description>The first object with an overloaded name</description>
+        <use-name>OVERLOAD</use-name>
+        <define-flag name="a">
+            <formal-name>An OVERLOAD/@a</formal-name>
+            <description>A flag on an assembly called 'OVERLOAD'</description>
+        </define-flag>
+        <model>
+            <assembly ref="overload1" max-occurs="unbounded">
+                <use-name>OVERLOAD</use-name>
+                <group-as name="OVERLOAD_GROUP" in-json="ARRAY"/>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="overload2">
+        <formal-name>Overloaded name 2</formal-name>
+        <description>The second object with an overloaded name</description>
+        <use-name>OVERLOAD</use-name>
+        <define-flag name="z">
+            <formal-name>An OVERLOAD/@z</formal-name>
+            <description>A flag on an assembly called 'OVERLOAD'</description>
+        </define-flag>
+        <model>
+            <assembly ref="overload2" max-occurs="unbounded">
+                <use-name>OVERLOAD</use-name>
+                <group-as name="OVERLOAD_GROUP" in-json="ARRAY"/>
+            </assembly>
+        </model>
+    </define-assembly>
     
     <define-assembly name="assembly-empty">
         <formal-name>ASSEMBLY-EMPTY</formal-name>
