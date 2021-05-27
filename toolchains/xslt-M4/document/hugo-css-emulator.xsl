@@ -48,6 +48,9 @@
       </html>
    </xsl:template>
    
+   <xsl:template match="a/@href[starts-with(.,'../..')]">
+     <xsl:attribute name="href" select="substring-after(.,'../../')"/>
+   </xsl:template>
    
    <xsl:template match="/div" name="toc-level" mode="toc">
       <ul class="toc">
@@ -56,7 +59,7 @@
    </xsl:template>
    
    <xsl:template match="section" mode="toc">
-     <xsl:variable name="head" select="*[starts-with(@class,'toc')] | *[@class='definition-header']/*[starts-with(@class,'toc')]"/>
+     <xsl:variable name="head" select="*[starts-with(@class,'toc')] | *[@class='header']/descendant::*[starts-with(@class,'toc')][1]"/>
             <li>
                <xsl:for-each select="$head" expand-text="true">
                   <p><a href="#{ $head/@id }">{ . }</a></p>

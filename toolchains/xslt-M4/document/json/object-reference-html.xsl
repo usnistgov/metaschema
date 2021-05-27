@@ -74,11 +74,28 @@
    <xsl:template match="array" mode="produce-header" expand-text="true">
       <xsl:variable name="array-of" select="*[1]"/>
       <p>An array of { $array-of/formal-name } { $array-of/name()}s</p>
-      <p class="occurrence">
+      <!--<p class="occurrence">
          <xsl:apply-templates select="." mode="occurrence-code"/>
-      </p>
-      <xsl:apply-templates select="$array-of" mode="produce"/>
+      </p>-->
    </xsl:template>
+   
+   <xsl:template match="object" mode="produce-header" expand-text="true">
+      <xsl:variable name="array-of" select="*[1]"/>
+      <p>An object { formal-name } { $array-of/name()}s</p>
+      <!--<p class="occurrence">
+         <xsl:apply-templates select="." mode="occurrence-code"/>
+      </p>-->
+   </xsl:template>
+   
+   <xsl:template match="string | number | boolean | *" mode="produce-header" expand-text="true">
+      <xsl:variable name="array-of" select="*[1]"/>
+      <p>A { name(.) } { formal-name }</p>
+      <!--<p class="occurrence">
+         <xsl:apply-templates select="." mode="occurrence-code"/>
+      </p>-->
+   </xsl:template>
+   
+   
    
    <xsl:template match="*" mode="produce" expand-text="true">
       <xsl:param tunnel="true" name="constraints" select="()"/>
@@ -86,7 +103,17 @@
          <!-- target for cross-link -->
          <xsl:copy-of select="@id"/>
          <div class="obj-matrix">
-            <p class="obj-name">{ name(.) => replace('^define\-','')  } { formal-name }</p>
+            <p class="obj-name">
+               
+               <xsl:if test="empty(formal-name)">
+                  <xsl:text>{ name(.) => replace('^define\-','')  } of </xsl:text>
+                  <xsl:for-each select="*/child::formal-name">
+                  <span class="formal-name">
+                     <xsl:apply-templates/>
+                  </span>
+               </xsl:for-each>
+               </xsl:if>
+            </p>
             <p class="occurrence">
                <xsl:apply-templates select="." mode="occurrence-code"/>
             </p>
