@@ -82,8 +82,8 @@
                 </xsl:for-each-group>
             </xsl:for-each-group>
             
-            <!-- again, this time for (all) flags, also discriminating by data type -->
-            <xsl:for-each-group select=".//flag" group-by="string-join((@_key-name, @as-type, @gi), ':')">
+            <!-- again, this time for (all) flags, grouping by key name when available -->
+            <xsl:for-each-group select=".//flag" group-by="(@key-name,@_metaschema-xml-id)[1]">
                 <xsl:apply-templates select="current-group()[1]" mode="make-template">
                     <xsl:with-param name="team" tunnel="true" select="current-group()"/>
                 </xsl:apply-templates>
@@ -250,17 +250,25 @@
     
 
     <xsl:template priority="10" match="*[@scope = 'global'] | group[*/@scope = 'global']" mode="make-xml-match">
+        <!-- $aliased when some other element has the same name requiring further disambiguation by context -->
         <xsl:param name="aliased" tunnel="true" select="false()"/>
         <xsl:param name="team" tunnel="true" select="."/>
         <xsl:variable name="me" select="."/>
-        
         <xsl:choose>
             <xsl:when test="$aliased">
-                <xsl:for-each select="$team/ancestor::*[exists(@gi)][1]">
+                <!-- so we get a group of matches, one for each matching node, disambiguating in its context -->
+                <xsl:for-each select="$team">
+                    <xsl:variable name="matcher" select="."/>
+                    <xsl:variable name="recursor" select=".[@recursive='true']/ancestor::*[@_key-name=$matcher/@_key-name][last()]"/>
                     <xsl:if test="position() gt 1"> | </xsl:if>
-                    <xsl:apply-templates mode="make-xml-step" select="."/>
+                    <xsl:for-each select="$recursor/ancestor::*[exists(@gi)][1]">
+                        <xsl:apply-templates mode="make-xml-step" select="."/>
+                        <xsl:text>/</xsl:text>
+                    </xsl:for-each>    
+                    <xsl:apply-templates mode="make-xml-step" select="ancestor::*[exists(@gi)][1]"/>
                     <xsl:text>/</xsl:text>
-                    <xsl:apply-templates mode="make-xml-step" select="$me"/>
+                    <xsl:if test="@recursive='true'">/</xsl:if>
+                    <xsl:apply-templates mode="make-xml-step" select="$matcher"/>
                     <!--<xsl:call-template name="make-recurring-match">
                         <xsl:with-param name="me" select="$me"/>
                         <xsl:with-param name="prepend">

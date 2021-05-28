@@ -104,6 +104,14 @@
          <xs:group ref="everything:blockElementGroup"
                    maxOccurs="unbounded"
                    minOccurs="0"/>
+         <xs:element name="branch1"
+                     type="everything:everything-branch1-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:element name="branch2"
+                     type="everything:everything-branch2-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="1"/>
          <xs:element name="assembly-empty"
                      type="everything:everything-assembly-empty-ASSEMBLY"
                      minOccurs="0"
@@ -443,6 +451,90 @@
       <xs:complexContent>
          <xs:extension base="everything:markupMultilineType"/>
       </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="everything-branch1-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>branch 1 for OVERLOAD1</m:formal-name>
+            <m:description>A discrete containter for objects with overloaded names.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>branch 1 for OVERLOAD1</b>: A discrete containter for objects with overloaded names.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="OVERLOAD"
+                     type="everything:everything-overload1-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="everything-branch2-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>branch 2 for OVERLOAD2</m:formal-name>
+            <m:description>A discrete containter for objects with overloaded names.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>branch 2 for OVERLOAD2</b>: A discrete containter for objects with overloaded names.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="OVERLOAD"
+                     type="everything:everything-overload2-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="everything-overload1-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Overloaded name 1</m:formal-name>
+            <m:description>The first object with an overloaded name</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Overloaded name 1</b>: The first object with an overloaded name</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="OVERLOAD"
+                     type="everything:everything-overload1-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="a" type="everything:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>An OVERLOAD/@a</m:formal-name>
+               <m:description>A flag on an assembly called 'OVERLOAD'</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>An OVERLOAD/@a</b>: A flag on an assembly called 'OVERLOAD'</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
+   <xs:complexType name="everything-overload2-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Overloaded name 2</m:formal-name>
+            <m:description>The second object with an overloaded name</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Overloaded name 2</b>: The second object with an overloaded name</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="OVERLOAD"
+                     type="everything:everything-overload2-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="z" type="everything:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>An OVERLOAD/@z</m:formal-name>
+               <m:description>A flag on an assembly called 'OVERLOAD'</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>An OVERLOAD/@z</b>: A flag on an assembly called 'OVERLOAD'</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
    </xs:complexType>
    <xs:complexType name="everything-assembly-empty-ASSEMBLY">
       <xs:annotation>
