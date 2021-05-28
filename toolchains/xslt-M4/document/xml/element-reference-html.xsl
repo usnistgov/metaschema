@@ -67,9 +67,10 @@
          <xsl:apply-templates select="." mode="produce"/>
          
          <xsl:apply-templates>
-            <xsl:with-param tunnel="true" name="constraints" select="$constraints, constraint"/>
+            <xsl:with-param tunnel="true" name="constraints" select="constraint"/>
+            <!-- for later when constraint allocation is working: -->
+            <!--<xsl:with-param tunnel="true" name="constraints" select="$constraints, constraint"/>-->
          </xsl:apply-templates>
-         
       </section>
    </xsl:template>
    
@@ -79,9 +80,12 @@
       <xsl:param tunnel="true" name="constraints" select="()"/>
       <div class="obj-desc">
          <!-- target for cross-linking -->
-         <xsl:copy-of select="@id"/>
+         <xsl:attribute name="id" select="@_tree-xml-id"/>
          <div class="obj-matrix">
-            <p class="obj-name">{ name(.) => replace('^define\-','')  } { formal-name }</p>
+            <p class="obj-name">{ (formal-name, name())[1] }</p>
+            <!--<xsl:if test="empty(formal-name)">
+               <xsl:message expand-text="true">{ name() } is missing formal-name</xsl:message>
+            </xsl:if>-->
             <p class="occurrence">
                <xsl:apply-templates select="." mode="occurrence-code"/>
             </p>

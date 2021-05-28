@@ -6,7 +6,7 @@
    exclude-result-prefixes="#all">
 
 
-   <xsl:output omit-xml-declaration="true" indent="no"/>
+   <xsl:output omit-xml-declaration="true" indent="yes"/>
 
    
    <xsl:param as="xs:string" name="outline-page"   select="'json/outline'"/>
@@ -81,7 +81,7 @@ details:not([open]) .show-closed { display: inline }
                   <xsl:call-template name="cardinality-note"/>
                </span>
                <span class="sq">-->
-                  <xsl:apply-templates select="." mode="json-key"/>
+                  <xsl:apply-templates select="." mode="json-group-description"/>
                   <xsl:call-template name="cardinality-note"/>
                   <xsl:text>: </xsl:text>
                   <xsl:apply-templates select="." mode="inline-link-to"/>
@@ -109,7 +109,7 @@ details:not([open]) .show-closed { display: inline }
                   <xsl:call-template name="cardinality-note"/>
                </span>-->
             <!--<span class="sq">-->
-                  <xsl:apply-templates select="." mode="json-key"/>
+                  <xsl:apply-templates select="." mode="json-group-description"/>
                   <xsl:call-template name="cardinality-note"/>
                   <xsl:text>: </xsl:text>
                   <span class="OM-lit">
@@ -140,7 +140,7 @@ details:not([open]) .show-closed { display: inline }
    <xsl:template match="m:array/m:object | m:singleton-or-array/m:object | m:object[empty(*)]">
       <div class="OM-entry">
          <p>
-            <xsl:apply-templates select="." mode="json-key"/>
+            <xsl:apply-templates select="." mode="json-group-description"/>
             <xsl:text> </xsl:text>
             <xsl:call-template name="cardinality-note"/>
             <xsl:if test="not(empty(*))">
@@ -168,7 +168,7 @@ details:not([open]) .show-closed { display: inline }
                   <xsl:call-template name="cardinality-note"/>
                </span>-->
                <span class="sq">
-                  <xsl:apply-templates select="." mode="json-key"/>
+                  <xsl:apply-templates select="." mode="json-group-description"/>
                   <xsl:call-template name="cardinality-note"/>
                   <xsl:text>: </xsl:text>
 
@@ -193,35 +193,37 @@ details:not([open]) .show-closed { display: inline }
    </xsl:template>
    
    
-   <xsl:template match="*[exists(@key)]" mode="json-key">
-      <a class="OM-name" href="{ $reference-link }#{  @_tree-json-id }">
-         <xsl:value-of select="@key"/>
-      </a>
+   <xsl:template match="*" mode="json-group-description">
+      <xsl:apply-templates select="." mode="json-object-link"/>
    </xsl:template>
    
-   <xsl:template match="*" mode="json-key">
-      <xsl:value-of select="(@key,@name)[1]"/>
-   </xsl:template>
-   
-   <xsl:template priority="3" match="m:array/*" mode="json-key">
+   <xsl:template priority="3" match="m:array/*" mode="json-group-description">
       <span class="OM-lit">
          <xsl:text>An array of </xsl:text>
-         <xsl:next-match/>
+         <xsl:apply-templates select="." mode="json-object-link"/>
          <xsl:text expand-text="true"> { local-name() }{ if (@max-occurs != '1') then 's' else '' }</xsl:text>
       </span>
    </xsl:template>
    
-   <xsl:template priority="3" match="m:singleton-or-array/*" mode="json-key" expand-text="true">
+   <xsl:template priority="3" match="m:singleton-or-array/*" mode="json-group-description" expand-text="true">
          <span class="OM-lit">
             <xsl:text>Array members, or a singleton </xsl:text>
-            <span class="OM-name">
-               <xsl:value-of select="(@key,@gi,use-name,@name)[1]"/>
-            </span>
+            <xsl:apply-templates select="." mode="json-object-link"/>
             <xsl:text expand-text="true"> { local-name() }</xsl:text>
          </span>
    </xsl:template>
    
-   <xsl:template priority="2" match="*[exists(@json-key-flag)]"  mode="json-key" expand-text="true">
+   <xsl:template match="*" mode="json-object-link">
+      <xsl:if test="empty(@_tree-json-id)">
+         <xsl:message expand-text="true">not seeing json tree id for { name(.) }</xsl:message>
+      </xsl:if>
+      <a class="OM-name" href="{ $reference-link }#{  @_tree-json-id }">
+         <xsl:value-of select="(@key,@gi,@name)[1]"/>
+      </a>
+   </xsl:template>
+
+
+   <xsl:template priority="2" match="*[exists(@json-key-flag)]"  mode="json-group-description" expand-text="true">
       <span class="OM-lit">
          <xsl:next-match/>
          <xsl:text> { local-name()}s </xsl:text>
@@ -279,11 +281,12 @@ details:not([open]) .show-closed { display: inline }
       <span class="OM-datatype"><a href="{$datatype-page}/#{lower-case(@as-type)}">{ @as-type }</a></span>
    </xsl:template>
    
-   
    <xsl:template mode="contents" match="m:array | m:object | m:singleton-or-array | m:group-by-key">
-      <div class="model-container {name()}">
-         <xsl:apply-templates select="*"/>
-      </div>
+      <xsl:where-populated>
+         <div class="model-container {name()}">
+            <xsl:apply-templates select="*"/>
+         </div>
+      </xsl:where-populated>
    </xsl:template>
    
    <xsl:template name="datatype-link">

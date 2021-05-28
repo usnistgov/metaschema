@@ -156,12 +156,15 @@
             @name }</code></xsl:template>
 
 
-
-    <xsl:template match="define-assembly | define-field" mode="model">
-        <ul class="model">
-            <xsl:apply-templates select="flag | define-flag" mode="model-view"/>
-            <xsl:apply-templates select="model/*" mode="model-view"/>
-        </ul>
+    <xsl:template match="define-field" mode="model"/>
+        
+    <xsl:template match="define-assembly" mode="model">
+        <xsl:where-populated>
+            <ul class="model">
+                <xsl:apply-templates select="flag | define-flag" mode="model-view"/>
+                <xsl:apply-templates select="model/*" mode="model-view"/>
+            </ul>
+        </xsl:where-populated>
     </xsl:template>
 
     <xsl:template match="define-flag" mode="model"/>
