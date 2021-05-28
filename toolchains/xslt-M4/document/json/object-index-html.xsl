@@ -45,13 +45,22 @@
          </span>
          <xsl:text> - </xsl:text>
          <span class="formal-name">
-            <a href="{ $definitions-link }#{ @_metaschema-json-id }">
-               <xsl:text>{ formal-name }</xsl:text>
-               <xsl:if test="empty(formal-name)" expand-text="true">{ name() }</xsl:if>
+            <xsl:variable name="target" select="(@_metaschema-json-id,*/@_metaschema-json-id)[1]"/>
+            <xsl:if test="empty($target)">
+              <xsl:message>Missing link?</xsl:message>
+            </xsl:if>
+            <a href="{ $definitions-link }#{ $target }">
+               <xsl:apply-templates select="." mode="formal-name"/>
             </a>
          </span>
       </li>
    </xsl:template>
+   
+   <xsl:template mode="formal-name" match="*" expand-text="true">{ @name }</xsl:template>
+   
+   <xsl:template mode="formal-name" match="*[exists(formal-name)]" expand-text="true">{ formal-name }</xsl:template>
+   
+   <xsl:template mode="formal-name" match="array[exists(*/formal-name)]" expand-text="true">{ */formal-name }</xsl:template>
    
    <xsl:template match="." mode="linked-path">
       <xsl:apply-templates select="parent::*" mode="linked-path"/>

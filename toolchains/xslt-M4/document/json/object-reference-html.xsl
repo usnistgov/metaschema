@@ -63,7 +63,9 @@
          <xsl:apply-templates select="." mode="produce"/>
          
          <xsl:apply-templates>
-            <xsl:with-param tunnel="true" name="constraints" select="$constraints, constraint"/>
+            <xsl:with-param tunnel="true" name="constraints" select="constraint"/>
+            <!-- for later when constraint allocation is working: -->
+            <!--<xsl:with-param tunnel="true" name="constraints" select="$constraints, constraint"/>-->
          </xsl:apply-templates>
          
       </section>
@@ -95,8 +97,6 @@
       </p>-->
    </xsl:template>
    
-   
-   
    <xsl:template match="*" mode="produce" expand-text="true">
       <xsl:param tunnel="true" name="constraints" select="()"/>
       <div class="obj-desc">
@@ -104,7 +104,7 @@
          <xsl:copy-of select="@id"/>
          <div class="obj-matrix">
             <p class="obj-name">
-               
+               <xsl:value-of select="formal-name"/>
                <xsl:if test="empty(formal-name)">
                   <xsl:text>{ name(.) => replace('^define\-','')  } of </xsl:text>
                   <xsl:for-each select="*/child::formal-name">

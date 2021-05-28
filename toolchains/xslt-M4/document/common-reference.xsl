@@ -171,7 +171,7 @@
             <xsl:apply-templates select="." mode="report-context"/>
             <span class="cnstr-tag">cardinality rule</span>
             <xsl:text> the cardinality of  </xsl:text>
-            <code>{ @target }</code>
+            <code>{ (@target,'.')[1] }</code>
             <xsl:text> is constrained: </xsl:text>
             <b>{ (@min-occurs,0)[1] }</b>
             <xsl:text>; maximum </xsl:text>
@@ -189,12 +189,7 @@
             <xsl:text>this value must correspond to a listing in the index </xsl:text>
             <code>{ @name }</code>
             <xsl:text> using a key constructed of key field(s) </xsl:text>
-            <xsl:for-each select="key-field">
-               <xsl:if test="position() gt 1">; </xsl:if>
-               <code>
-                  <xsl:value-of select="@target"/>
-               </code>
-            </xsl:for-each>
+            <xsl:call-template name="construct-key"/>
          </p>
       </div>
    </xsl:template>
@@ -207,17 +202,28 @@
             <span class="cnstr-tag">index definition</span>
             <xsl:text> an index </xsl:text>
             <code>{ @name }</code>
-            <xsl:text> shall list values returned by targets </xsl:text>
-            <code>{ @target }</code>
+            <xsl:choose>
+               <xsl:when test="matches(@target,'\S')">
+                  <xsl:text> shall list values returned by targets </xsl:text>
+                  <code>{ @target }</code>
+               </xsl:when>
+               <xsl:otherwise>
+                  <xsl:text> shall contain values </xsl:text>
+               </xsl:otherwise>
+            </xsl:choose>
             <xsl:text> using keys constructed of key field(s) </xsl:text>
-            <xsl:for-each select="key-field">
-               <xsl:if test="position() gt 1">; </xsl:if>
-               <code>
-                  <xsl:value-of select="@target"/>
-               </code>
-            </xsl:for-each>
+            <xsl:call-template name="construct-key"/>
          </p>
       </div>
+   </xsl:template>
+   
+   <xsl:template name="construct-key">
+      <xsl:for-each select="key-field">
+         <xsl:if test="position() gt 1">; </xsl:if>
+         <code>
+            <xsl:value-of select="(@target, 'its value')[1]"/>
+         </code>
+      </xsl:for-each>
    </xsl:template>
    
    <!-- XXX consolidate this w/ JSON code? -->
