@@ -104,9 +104,10 @@
     <p:input port="stylesheet">
       <p:document href="document/xml/element-reference-html.xsl"/>
     </p:input>
-    <p:with-param name="xml-reference-page"  select="$xml-reference-filename"/>
-    <p:with-param name="json-reference-page" select="$json-reference-filename"/>
-    <p:with-param name="xml-map-page"        select="$xml-outline-filename"/>
+    <p:with-param name="xml-reference-page"    select="$xml-reference-filename"/>
+    <p:with-param name="xml-definitions-page"  select="$xml-definitions-filename"/>
+    <p:with-param name="json-reference-page"   select="$json-reference-filename"/>
+    <p:with-param name="xml-map-page"          select="$xml-outline-filename"/>
   </p:xslt>
   
   <p:sink/>
@@ -177,9 +178,10 @@
     <p:input port="stylesheet">
       <p:document href="document/json/object-reference-html.xsl"/>
     </p:input>
-    <p:with-param name="json-reference-page" select="$json-reference-filename"/>
-    <p:with-param name="xml-reference-page"  select="$xml-reference-filename"/>
-    <p:with-param name="json-map-page"       select="$json-outline-filename"/>
+    <p:with-param name="json-reference-page"   select="$json-reference-filename"/>
+    <p:with-param name="json-definitions-page" select="$json-definitions-filename"/>
+    <p:with-param name="xml-reference-page"    select="$xml-reference-filename"/>
+    <p:with-param name="json-map-page"         select="$json-outline-filename"/>
   </p:xslt>
 
   <p:sink/>

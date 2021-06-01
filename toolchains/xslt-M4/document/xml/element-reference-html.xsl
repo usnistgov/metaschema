@@ -8,17 +8,50 @@
    exclude-result-prefixes="#all">
 
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
+   
+   
+   
+   <xsl:param name="xml-reference-page">xml/reference</xsl:param>
+   <xsl:param name="json-reference-page">json/reference</xsl:param>
+   <xsl:param name="xml-map-page">xml/outline</xsl:param>
+   
+   <xsl:variable name="datatype-page" as="xs:string">../../../datatypes</xsl:variable>
+   
+   <xsl:template match="metadata/json-base-uri"/>
+      
+   <xsl:template match="short-name" mode="schema-link" expand-text="true">
+      <p>
+         <span class="usa-tag">XML Schema</span>
+         <a href="https://pages.nist.gov/OSCAL/artifacts/xml/schema/oscal_{$file-map(.)}_schema.xsd">oscal_{$file-map(string(.))}_schema.xsd</a>
+      </p>
+   </xsl:template>
+   
+   <xsl:template match="short-name" mode="converter-link" expand-text="true">
+      <p>
+         <span class="usa-tag">JSON to XML converter</span>
+         <a href="https://pages.nist.gov/OSCAL/artifacts/xml/convert/oscal_{$file-map(.)}_json-to-xml-converter.xsl">oscal_{$file-map(string(.))}_json-to-xml-converter.xsl</a>  <a href="https://github.com/usnistgov/OSCAL/tree/master/xml#converting-oscal-json-content-to-xml">(How do I use the converter to convert OSCAL JSON to XML?)</a>
+      </p>
+   </xsl:template>
 
+   <xsl:template name="remarks-group">
+      <!-- can't use xsl:where-populated due to the header :-( -->
+      <!-- don't include a remarks if it is marked for json -->
+      <xsl:for-each-group select="remarks[not(@class = 'json')]" group-by="true()">
+         <div class="remarks-group usa-prose">
+            <details open="open">
+               <summary class="subhead">Remarks</summary>
+               <xsl:apply-templates select="current-group()" mode="produce"/>
+            </details>
+         </div>
+      </xsl:for-each-group>
+   </xsl:template>
+   
    <xsl:variable name="indenting" as="element()"
       xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
       <output:serialization-parameters>
          <output:indent value="yes"/>
       </output:serialization-parameters>
    </xsl:variable>
-   
-   <xsl:param name="xml-reference-page">xml/reference</xsl:param>
-   <xsl:param name="json-reference-page">json/reference</xsl:param>
-   <xsl:param name="xml-map-page">xml/outline</xsl:param>
    
    <!-- writes '../' times the number of steps in $outline-page  -->
    <xsl:variable name="path-to-common">
@@ -29,19 +62,8 @@
    
    <xsl:template match="/*">
        <div class="xml-reference">
-          <!--<details><summary>XML source</summary>
-             <pre>
-         <xsl:value-of select="serialize(.,$indenting)"/>
-      </pre>
-          </details>-->
          <xsl:apply-templates/>
        </div>
-   </xsl:template>
-   
-   <xsl:template match="schema-name"/>
-   
-   <xsl:template match="schema-version" expand-text="true">
-      <h2><span class="usa-tag">Schema version:</span> { . }</h2>
    </xsl:template>
    
    
@@ -125,7 +147,7 @@
       </div>
    </xsl:template>
    
-   <xsl:include href="../common-reference.xsl"/>
+   <xsl:import href="../common-reference.xsl"/>
    
    
    <xsl:template name="json-crosslink">

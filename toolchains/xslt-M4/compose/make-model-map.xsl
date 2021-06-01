@@ -15,7 +15,9 @@
     <xsl:template match="/METASCHEMA">
         <map namespace="{child::namespace ! normalize-space(.) }"
             prefix="{child::short-name ! normalize-space(.) }">
-            <xsl:copy-of select="schema-name | schema-version"/>
+            <metadata>
+                <xsl:copy-of copy-namespaces="no" select="* except (define-assembly | define-field | define-flag)"/>
+            </metadata>
             <xsl:apply-templates select="child::*[exists(root-name)]" mode="build"/>
         </map>
     </xsl:template>

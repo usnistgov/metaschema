@@ -8,6 +8,8 @@
    
     <xsl:import href="REx/metapath02.xslt"/>
 
+    <xsl:include href="paths-split.xsl"/>
+    
     <xsl:output indent="yes"/>
 
 <!-- 1. reduce target paths to their minimized form accounting for axes, removing predicates etc.
@@ -172,11 +174,11 @@
         </m:metapath>
     </xsl:template>
     
-    <xsl:template match="UnionExpr" mode="reduce-path">
+    <!--<xsl:template match="UnionExpr" mode="reduce-path">
         <m:choice>
             <xsl:apply-templates mode="#current"/>
         </m:choice>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:template match="UnionExpr/UnaryExpr" mode="reduce-path">
         <m:alternative>

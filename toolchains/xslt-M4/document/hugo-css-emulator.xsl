@@ -25,15 +25,15 @@
          </head>
          <body>
            <div id="banner">
-               <button class="nav-button">
-                 <a href="{ $metaschema-code }-{ $format }-outline.html">
-                   <xsl:value-of select="upper-case($format) || ' '"/>Outline</a></button>
-             <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-reference.html">
-               <xsl:value-of select="upper-case($format) || ' '"/>Reference</a></button>
-             <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-index.html">
-               <xsl:value-of select="upper-case($format) || ' '"/>Index</a></button>
-             <button class="nav-button"><a href="{ $metaschema-code }-{ $format }-definitions.html">
-               <xsl:value-of select="upper-case($format) || ' '"/>Definitions</a></button>
+               <a href="{ $metaschema-code }-{ $format }-outline.html"><button class="nav-button">
+                 
+                   <xsl:value-of select="upper-case($format) || ' '"/>Outline</button></a>
+             <a href="{ $metaschema-code }-{ $format }-reference.html"><button class="nav-button">
+               <xsl:value-of select="upper-case($format) || ' '"/>Reference</button></a>
+             <a href="{ $metaschema-code }-{ $format }-index.html"><button class="nav-button">
+               <xsl:value-of select="upper-case($format) || ' '"/>Index</button></a>
+             <a href="{ $metaschema-code }-{ $format }-definitions.html"><button class="nav-button">
+               <xsl:value-of select="upper-case($format) || ' '"/>Definitions</button></a>
            </div>
             <xsl:if test="$including-toc">
                <div id="toc">
