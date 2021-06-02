@@ -78,7 +78,7 @@
             <!-- generates h1-hx headers picked up by Hugo toc -->
             <xsl:element expand-text="true" name="h{ $level }" namespace="http://www.w3.org/1999/xhtml">
                <xsl:attribute name="id" select="@_tree-json-id"/>
-               <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
+               <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
                <xsl:text>{ @key }</xsl:text>
             </xsl:element>
             <p class="type">
@@ -150,7 +150,7 @@
    </xsl:template>
    
    <xsl:template mode="metaschema-type" match="*">
-      <xsl:value-of select="local-name()"/>
+      <xsl:value-of select="local-name()"/><br />
       <xsl:if test="@scope='global'">
          <xsl:text> </xsl:text>
          <a href="{ $json-definitions-page}#{ @_metaschema-json-id }">(global definition)</a>
@@ -162,7 +162,7 @@
    </xsl:template>
    
    <xsl:template match="formal-name | description | remarks | constraint"/>
-   
+
    <!--<xsl:template match="array" mode="produce-header" expand-text="true">
       <xsl:variable name="array-of" select="*[1]"/>
       <p>An array of { $array-of/formal-name } { $array-of/name()}s</p>
@@ -241,9 +241,7 @@
 
    <xsl:template name="crosslink-to-xml">
       <div class="crosslink">
-         <a href="{$xml-reference-link}#{@_tree-xml-id}">
-            <button class="schema-link">Switch to XML</button>
-         </a>
+         <a class="usa-button" href="{$xml-reference-link}#{@_tree-xml-id}">Switch to XML</a>
       </div>
    </xsl:template>
    

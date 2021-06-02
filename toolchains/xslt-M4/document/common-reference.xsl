@@ -125,6 +125,8 @@
    <xsl:template match="description" mode="produce">
       <xsl:where-populated>
          <p class="description">
+            <span class="usa-tag">Description</span>
+            <xsl:text> </xsl:text>
             <xsl:apply-templates mode="cast-to-html"/>
          </p>
       </xsl:where-populated>
@@ -309,15 +311,13 @@
             <xsl:otherwise expand-text="true">{ (@max-occurs, '1')[1] }</xsl:otherwise>
          </xsl:choose>
       </xsl:variable>
-      <span class="cardinality">
-         <xsl:text>[</xsl:text>
-         <xsl:choose>
-            <xsl:when test="$minOccurs = $maxOccurs" expand-text="true">{ $minOccurs }</xsl:when>
-            <xsl:when test="number($maxOccurs) = number($minOccurs) + 1" expand-text="true">{ $minOccurs } or { $maxOccurs }</xsl:when>
-            <xsl:otherwise expand-text="true">{ $minOccurs } to { $maxOccurs }</xsl:otherwise>
-         </xsl:choose>
-         <xsl:text>]</xsl:text>
-      </span>
+      <xsl:text>[</xsl:text>
+      <xsl:choose>
+         <xsl:when test="$minOccurs = $maxOccurs" expand-text="true">{ $minOccurs }</xsl:when>
+         <xsl:when test="number($maxOccurs) = number($minOccurs) + 1" expand-text="true">{ $minOccurs } or { $maxOccurs }</xsl:when>
+         <xsl:otherwise expand-text="true">{ $minOccurs } to { $maxOccurs }</xsl:otherwise>
+      </xsl:choose>
+      <xsl:text>]</xsl:text>
    </xsl:template>
    
    
