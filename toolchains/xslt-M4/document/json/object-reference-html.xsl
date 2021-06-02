@@ -12,6 +12,37 @@
    <xsl:param name="json-reference-page">json/reference</xsl:param>
    <xsl:param name="xml-reference-page">xml/reference</xsl:param>
    <xsl:param name="json-map-page">json/outline</xsl:param>
+   <xsl:param name="json-definitions-page">json/definitions</xsl:param>
+   
+   <xsl:variable name="datatype-page" as="xs:string">../../../datatypes</xsl:variable>
+   
+   <xsl:template match="metadata/namespace"/>
+   
+   <xsl:template match="short-name" mode="schema-link" expand-text="true">
+      <p>
+         <span class="usa-tag">JSON Schema</span>
+         <a href="https://pages.nist.gov/OSCAL/artifacts/json/schema/oscal_{$file-map(.)}_schema.json">oscal_{$file-map(string(.))}_schema.json</a>
+      </p>
+   </xsl:template>
+   
+   <xsl:template match="short-name" mode="converter-link" expand-text="true">
+      <p>
+         <span class="usa-tag">XML to JSON converter</span>
+         <a href="https://pages.nist.gov/OSCAL/artifacts/json/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl">oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a> <a href="https://github.com/usnistgov/OSCAL/tree/master/json#converting-oscal-xml-content-to-json">(How do I use the converter to convert OSCAL XML to JSON?)</a>
+      </p>
+   </xsl:template>
+   
+   <xsl:template name="remarks-group">
+      <xsl:for-each-group select="remarks[not(@class = 'xml')]" group-by="true()">
+         <div class="remarks-group usa-prose">
+            <details open="open">
+               <summary class="subhead">Remarks</summary>
+               <xsl:apply-templates select="current-group()" mode="produce"/>
+            </details>
+         </div>
+      </xsl:for-each-group>
+   </xsl:template>
+   
    
    <!-- writes '../' times the number of steps in $outline-page  -->
    <xsl:variable name="path-to-common">
@@ -34,73 +65,132 @@
       </div>
    </xsl:template>
    
-   <xsl:template match="schema-name"/>
-   
-   <xsl:template match="schema-version" expand-text="true">
-      <p><span class="usa-tag">Schema version:</span> { . }</p>
-   </xsl:template>
-   
+
+<!-- Map traversal -->
    <xsl:template match="*[exists(@key)]" expand-text="true">
       <xsl:param tunnel="true" name="constraints" select="()"/>
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@key)])"/>
-      <section class="json-obj">
-         <div class="header">
-            <div>
+      <xsl:variable name="grouped-object" select="(self::array | self::singleton-or-array)/*"/>
+      <xsl:variable name="me" select="($grouped-object,.)[1]"/>
+      <div class="definition { tokenize($me/@_metaschema-json-id,'/')[2] }">
+         <xsl:variable name="class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
+         <div class="{ $class }">
             <!-- generates h1-hx headers picked up by Hugo toc -->
-            <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
+            <xsl:element expand-text="true" name="h{ $level }" namespace="http://www.w3.org/1999/xhtml">
                <xsl:attribute name="id" select="@_tree-json-id"/>
                <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
                <xsl:text>{ @key }</xsl:text>
             </xsl:element>
-            <xsl:apply-templates select="." mode="produce-header"/>
+            <p class="type">
+               <xsl:apply-templates select="." mode="metaschema-type"/>
+            </p>
+            <xsl:if test="empty(parent::map)">
+               <p class="occurrence">
+                  <xsl:apply-templates select="." mode="occurrence-code"/>
+               </p>
+            </xsl:if>
             <xsl:call-template name="crosslink-to-xml"/>
-            </div>
+            <xsl:apply-templates select="formal-name" mode="produce"/>
          </div>
-         <xsl:sequence expand-text="true">
-            <p>See <a href="{ $json-map-link }#{ @_tree-json-id }">{ @_tree-json-id }</a> in the object map.</p>
-         </xsl:sequence>
+         <!-- only arrays or singleton-or-array get array headers -->
+         <xsl:apply-templates mode="for-array-member"/>
          
-         <xsl:apply-templates select="." mode="produce"/>
-         
-         <xsl:apply-templates>
+         <xsl:apply-templates select="description" mode="produce"/>
+         <xsl:call-template name="remarks-group"/>
+      
+         <xsl:variable name="mine" select="$me / (child::* except (formal-name|description | remarks))"/>
+         <xsl:for-each-group select="$mine" group-by="true()">
+         <details class="properties" open="open">
+            <summary>
+               <xsl:text expand-text="true">Properties ({ count( $mine )})</xsl:text>
+            </summary>
+            <xsl:apply-templates select="$mine">
             <xsl:with-param tunnel="true" name="constraints" select="constraint"/>
             <!-- for later when constraint allocation is working: -->
             <!--<xsl:with-param tunnel="true" name="constraints" select="$constraints, constraint"/>-->
          </xsl:apply-templates>
+         </details>
+         </xsl:for-each-group>
          
-      </section>
+      </div>
    </xsl:template>
-
+   
+   <xsl:template mode="for-array-member" match="*"/>
+   
+   <xsl:template mode="for-array-member" match="array/*">
+      <div class="array-header">
+         <p class="array-member">(array member)</p>
+         <p class="type">
+            <xsl:apply-templates select="." mode="metaschema-type"/>
+         </p>
+         <p class="occurrence">
+            <xsl:apply-templates select="." mode="occurrence-code"/>
+         </p>
+         <xsl:apply-templates select="formal-name" mode="produce"/>
+      </div>
+      
+      <xsl:apply-templates select="description" mode="produce"/>
+      <xsl:call-template name="remarks-group"/>
+   </xsl:template>
+   
+   <xsl:template match="singleton-or-array/*" mode="for-array-member">
+      <div class="array-header">
+         <p class="array-member">(array member or singleton)</p>
+         <p class="type">
+            <xsl:apply-templates select="." mode="metaschema-type"/>
+         </p>
+         <p class="occurrence">
+            <xsl:apply-templates select="." mode="occurrence-code"/>
+         </p>
+         <xsl:apply-templates select="formal-name" mode="produce"/>
+      </div>
+      
+      <xsl:apply-templates select="description" mode="produce"/>
+      <xsl:call-template name="remarks-group"/>
+   </xsl:template>
+   
+   <xsl:template mode="metaschema-type" match="*">
+      <xsl:value-of select="local-name()"/>
+      <xsl:if test="@scope='global'">
+         <xsl:text> </xsl:text>
+         <a href="{ $json-definitions-page}#{ @_metaschema-json-id }">(global definition)</a>
+      </xsl:if>
+   </xsl:template>
+   
+   <xsl:template mode="metaschema-type" match="*[exists(@as-type)]" expand-text="true">
+      <a href="{$datatype-page}/#{(lower-case(@as-type))}">{ @as-type }</a>
+   </xsl:template>
+   
    <xsl:template match="formal-name | description | remarks | constraint"/>
    
-   <xsl:template match="array" mode="produce-header" expand-text="true">
+   <!--<xsl:template match="array" mode="produce-header" expand-text="true">
       <xsl:variable name="array-of" select="*[1]"/>
       <p>An array of { $array-of/formal-name } { $array-of/name()}s</p>
-      <!--<p class="occurrence">
+      <!-\-<p class="occurrence">
          <xsl:apply-templates select="." mode="occurrence-code"/>
-      </p>-->
+      </p>-\->
    </xsl:template>
    
    <xsl:template match="object" mode="produce-header" expand-text="true">
       <xsl:variable name="array-of" select="*[1]"/>
       <p>An object { formal-name } { $array-of/name()}s</p>
-      <!--<p class="occurrence">
+      <!-\-<p class="occurrence">
          <xsl:apply-templates select="." mode="occurrence-code"/>
-      </p>-->
+      </p>-\->
    </xsl:template>
    
    <xsl:template match="string | number | boolean | *" mode="produce-header" expand-text="true">
       <xsl:variable name="array-of" select="*[1]"/>
       <p>A { name(.) } { formal-name }</p>
-      <!--<p class="occurrence">
+      <!-\-<p class="occurrence">
          <xsl:apply-templates select="." mode="occurrence-code"/>
-      </p>-->
-   </xsl:template>
+      </p>-\->
+   </xsl:template>-->
    
-   <xsl:template match="*" mode="produce" expand-text="true">
+   <!--<xsl:template match="*" mode="produce" expand-text="true">
       <xsl:param tunnel="true" name="constraints" select="()"/>
       <div class="obj-desc">
-         <!-- target for cross-link -->
+         <!-\- target for cross-link -\->
          <xsl:copy-of select="@id"/>
          <div class="obj-matrix">
             <p class="obj-name">
@@ -130,12 +220,12 @@
          
          <xsl:apply-templates mode="#current" select="description"/>
          
-         <!--<xsl:variable name="potential-constraints" select="$constraints,constraint"/>-->
+         <!-\-<xsl:variable name="potential-constraints" select="$constraints,constraint"/>-\->
          
-         <!-- Visiting the constraints passed down from above, with $apply-to as the node applying -->
-         <!--<xsl:apply-templates select="$potential-constraints" mode="produce-matching-constraints">
+         <!-\- Visiting the constraints passed down from above, with $apply-to as the node applying -\->
+         <!-\-<xsl:apply-templates select="$potential-constraints" mode="produce-matching-constraints">
             <xsl:with-param name="applying-to" select="."/>
-         </xsl:apply-templates>-->
+         </xsl:apply-templates>-\->
          
          <xsl:if test="exists(remarks)">
             <details open="open" class="remarks-group">
@@ -144,15 +234,11 @@
             </details>
          </xsl:if>
       </div>
-   </xsl:template>
-   
+   </xsl:template>-->
 
-   <xsl:include href="../common-reference.xsl"/>
-   
-  
-   
-   
-   
+
+   <xsl:import href="../common-reference.xsl"/>
+
    <xsl:template name="crosslink-to-xml">
       <div class="crosslink">
          <a href="{$xml-reference-link}#{@_tree-xml-id}">
@@ -160,7 +246,5 @@
          </a>
       </div>
    </xsl:template>
-   
-
    
 </xsl:stylesheet>

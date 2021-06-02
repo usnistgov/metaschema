@@ -10,9 +10,72 @@
    <!-- Silencing constraint allocation logic -->
    <!--<xsl:import href="../metapath/docs-metapath.xsl"/>-->
    
+   
+   
+   <xsl:template match="metadata">
+      <xsl:apply-templates select="* except remarks"/>
+      <xsl:apply-templates select="short-name" mode="schema-link"/>
+      <xsl:apply-templates select="short-name" mode="converter-link"/>
+      <xsl:for-each select="remarks">
+         <div class="remarks">
+            <xsl:apply-templates/>
+         </div>
+      </xsl:for-each>
+   </xsl:template>
+   
+   <xsl:template match="metadata/short-name"/>
+   
+   <xsl:template match="metadata/schema-name">
+      <p>
+         <span class="usa-tag">OSCAL model</span>
+         <xsl:text> </xsl:text>
+         <xsl:apply-templates/>
+      </p>
+   </xsl:template>
+   
+   <xsl:template match="metadata/namespace">
+      <p>
+         <span class="usa-tag">XML namespace</span>
+         <xsl:text> </xsl:text>
+         <code>
+            <xsl:apply-templates/>
+         </code>
+      </p>
+   </xsl:template>
+   
+   <xsl:template match="metadata/json-base-uri">
+      <p>
+         <span class="usa-tag">JSON Base URI</span>
+         <xsl:text> </xsl:text>
+         <code>
+            <xsl:apply-templates/>
+         </code>
+      </p>
+   </xsl:template>
+   
+   <xsl:variable name="file-map" as="map(xs:string, text())">
+      <xsl:map>
+         <xsl:map-entry key="'oscal-catalog'"  >catalog</xsl:map-entry>
+         <xsl:map-entry key="'oscal-profile'"  >profile</xsl:map-entry>
+         <xsl:map-entry key="'oscal-component-definition'">component</xsl:map-entry>
+         <xsl:map-entry key="'oscal-ssp'"      >ssp</xsl:map-entry>
+         <xsl:map-entry key="'oscal-poam'"     >poam</xsl:map-entry>
+         <xsl:map-entry key="'oscal-ap'"       >assessment-plan</xsl:map-entry>
+         <xsl:map-entry key="'oscal-ar'"       >assessment-results</xsl:map-entry>
+      </xsl:map>
+   </xsl:variable>
+   
+   <xsl:template match="schema-name"/>
+   
+   <xsl:template match="schema-version" expand-text="true">
+      <p><span class="usa-tag">Schema version:</span> { . }</p>
+   </xsl:template>
+   
+   
    <xsl:template mode="produce-matching-constraints" match="constraint">
       <xsl:apply-templates mode="produce-constraint"/>
    </xsl:template>
+   
    
    <!--<xsl:template match="require" mode="produce">
       <div class="constraint-set">
@@ -65,9 +128,14 @@
             <xsl:apply-templates mode="cast-to-html"/>
          </p>
       </xsl:where-populated>
-      <xsl:on-empty>
-         <xsl:message expand-text="true">Empty description on { name(..) }</xsl:message>
-      </xsl:on-empty>
+   </xsl:template>
+   
+   <xsl:template match="formal-name" mode="produce">
+      <xsl:where-populated>
+         <p class="formal-name">
+            <xsl:apply-templates mode="cast-to-html"/>
+         </p>
+      </xsl:where-populated>
    </xsl:template>
    
    <xsl:template match="remarks" mode="produce">

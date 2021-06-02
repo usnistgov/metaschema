@@ -74,7 +74,7 @@ div.OM-map p { margin: 0ex }
             </style>
    </xsl:template>
 
-   <xsl:template match="m:schema-name | m:schema-version"/>
+   <xsl:template match="m:metadata"/>
    
    <xsl:template match="m:formal-name | m:description | m:remarks | m:constraint"/>
    
