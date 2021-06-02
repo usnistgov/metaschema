@@ -149,12 +149,15 @@
    <!-- Cast to XHTML namespace -->
    <xsl:template match="description//* | remarks//*" mode="cast-to-html">
       <xsl:element name="{ local-name() }" namespace="http://www.w3.org/1999/xhtml">
+         <xsl:copy-of copy-namespaces="no" select="@*"/>
          <xsl:apply-templates mode="#current"/>
       </xsl:element>
    </xsl:template>
    
    <!-- Shouldn't match in this mode but just in case. -->
-   <xsl:template match="constraint" mode="produce"/>
+   <xsl:template match="constraint" mode="produce">
+      <xsl:apply-templates select="." mode="produce-constraint"/>
+   </xsl:template>
    
    <!--<xsl:template match="constraint" mode="produce" expand-text="true">
       <xsl:variable name="constraints" select=".//allowed-values | .//matches | .//has-cardinality | .//is-unique | .//index-has-key | .//index"/>
@@ -169,12 +172,7 @@
    <xsl:template mode="produce-constraint" priority="2" match="allowed-values" expand-text="true">
       <xsl:variable name="enums" select="enum"/>
       <div class="constraint">
-         <p><span class="cnstr-tag">Allowed value{ 's'[count($enums) gt 1] }</span>
-            <xsl:for-each select="@target[not(.=('.','value()')) ]">
-               <xsl:text>  for </xsl:text>
-               <span class="path">{ . }</span>
-            </xsl:for-each>
-            <xsl:text> defined on </xsl:text>
+         <p><span class="usa-tag">allowed value{ 's'[count($enums) gt 1] }</span>
             <xsl:apply-templates select="." mode="report-context"/>
          </p>
          <xsl:choose expand-text="true">
@@ -192,7 +190,12 @@
    </xsl:template>
    
    <xsl:template match="*" mode="report-context" expand-text="true">
-      <span class="path">{ ancestor::constraint/../@_tree-xml-id }</span>
+      <xsl:for-each select="@target[not(.=('.','value()')) ]">
+         <xsl:text>  for </xsl:text>
+         <code class="path">{ . }</code>
+      </xsl:for-each>
+      <xsl:text> defined on </xsl:text>
+      <code class="path">{ ancestor::constraint/../@_tree-xml-id }</code>
    </xsl:template>
    
    <xsl:template match="allowed-values/enum" mode="produce-constraint">
@@ -203,10 +206,9 @@
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
       <div class="constraint">
          <p>
-            <span class="usa-tag">constraint</span>
+            <span class="usa-tag">matches</span>
             <xsl:apply-templates select="." mode="report-context"/>
-            <span class="cnstr-tag">match</span>
-            <xsl:text expand-text="true"> a target (value) must match the regular expression '{ @regex }'.</xsl:text></p>
+            <xsl:text expand-text="true">: a target (value) must match the regular expression '{ @regex }'.</xsl:text></p>
       </div>
    </xsl:template>
    
@@ -214,10 +216,9 @@
    <xsl:template mode="produce-constraint" priority="2" match="matches[@datatype]" expand-text="true">
       <div class="constraint">
          <p>
-            <span class="usa-tag">constraint</span>
+            <span class="usa-tag">matches</span>
             <xsl:apply-templates select="." mode="report-context"/>
-            <span class="cnstr-tag">match</span>
-            <xsl:text>the target value must match the lexical form of the '{ @datatype }' data type.</xsl:text></p>
+            <xsl:text>: the target value must match the lexical form of the '{ @datatype }' data type.</xsl:text></p>
       </div>
    </xsl:template>
    
@@ -225,9 +226,8 @@
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
       <div class="constraint">
          <p>
-            <span class="usa-tag">constraint</span>
+            <span class="usa-tag">is unique</span>
             <xsl:apply-templates select="." mode="report-context"/>
-            <span class="cnstr-tag">uniqueness rule</span>
             <xsl:text>: any target value must be unique (i.e., occur only once)</xsl:text>
          </p>
       </div>
@@ -236,7 +236,7 @@
    <xsl:template mode="produce-constraint" priority="2" match="has-cardinality" expand-text="true">
       <div class="constraint">
          <p>
-            <span class="usa-tag">constraint</span>
+            <span class="usa-tag">has cardinality</span>
             <xsl:apply-templates select="." mode="report-context"/>
             <span class="cnstr-tag">cardinality rule</span>
             <xsl:text> the cardinality of  </xsl:text>
@@ -252,7 +252,7 @@
       <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
       <div class="constraint">
          <p>
-            <span class="usa-tag">constraint</span>
+            <span class="usa-tag">index has key</span>
             <xsl:apply-templates select="." mode="report-context"/>
             <span class="cnstr-tag">index rule</span>
             <xsl:text>this value must correspond to a listing in the index </xsl:text>
@@ -266,7 +266,7 @@
    <xsl:template mode="produce-constraint" priority="2" match="index" expand-text="true">
       <div class="constraint">
          <p>
-            <span class="usa-tag">constraint</span>
+            <span class="usa-tag">index</span>
             <xsl:apply-templates select="." mode="report-context"/>
             <span class="cnstr-tag">index definition</span>
             <xsl:text> an index </xsl:text>

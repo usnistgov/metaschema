@@ -88,7 +88,7 @@
                 <xsl:variable name="value-keyname">
                     <xsl:apply-templates select="." mode="value-keyname"/>
                 </xsl:variable>
-                <xsl:for-each select="self::define-field">
+                <xsl:for-each select="self::define-field[exists(flag|define-flag)]">
                     <value as-type="{(@as-type,'string')[1]}">
                         <xsl:for-each select="(@_metaschema-xml-id|@_metaschema-json-id)">
                             <xsl:attribute name="{ name(.) }" select=". || '/' || $value-keyname"/>

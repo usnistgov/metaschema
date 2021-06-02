@@ -48,9 +48,9 @@
    <xsl:variable name="path-to-common">
       <xsl:for-each select="tokenize($xml-reference-page,'/')">../</xsl:for-each>
    </xsl:variable>
+   
    <xsl:variable name="xml-reference-link" select="$path-to-common || $xml-reference-page"/>
    <xsl:variable name="json-map-link"        select="$path-to-common || $json-map-page"/>
-   
    
    <xsl:variable name="indenting" as="element()"
       xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
@@ -111,17 +111,17 @@
                      <xsl:apply-templates select="$mine"/>
                   </details>
                </xsl:for-each-group>
-               <xsl:for-each-group select="constraint" group-by="true()">
+               <xsl:variable name="my-constraints" select="$me/constraint/( descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index )"/>
+               <xsl:if test="exists($my-constraints)">
                   <details class="constraints" open="open">
                      <summary>
-                        <xsl:text expand-text="true">{ if (count(constraint) gt 1) then 'Constraints' else 'Constraint' }({ count( $mine )})</xsl:text>
+                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' }({ count($my-constraints) })</xsl:text>
                      </summary>
-                     <xsl:apply-templates select="current-group()" mode="produce"/>
+                     <xsl:apply-templates select="$my-constraints" mode="produce-constraint"/>
                   </details>
-               </xsl:for-each-group>
+               </xsl:if>
             </div>
          </xsl:where-populated>
-         
       </div>
    </xsl:template>
    
@@ -163,7 +163,7 @@
       <xsl:value-of select="local-name()"/><br />
       <xsl:if test="@scope='global'">
          <xsl:text> </xsl:text>
-         <a href="{ $json-definitions-page}#{ @_metaschema-json-id }">(global definition)</a>
+         <a href="{$path-to-common || $json-definitions-page }#{ @_metaschema-json-id }">(global definition)</a>
       </xsl:if>
    </xsl:template>
    
