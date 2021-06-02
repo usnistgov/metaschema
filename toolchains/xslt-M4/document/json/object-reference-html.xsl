@@ -68,13 +68,12 @@
 
 <!-- Map traversal -->
    <xsl:template match="*[exists(@key)]" expand-text="true">
-      <xsl:param tunnel="true" name="constraints" select="()"/>
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@key)])"/>
       <xsl:variable name="grouped-object" select="(self::array | self::singleton-or-array)/*"/>
       <xsl:variable name="me" select="($grouped-object,.)[1]"/>
-      <div class="definition { tokenize($me/@_metaschema-json-id,'/')[2] }">
-         <xsl:variable name="class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
-         <div class="{ $class }">
+      <div class="model-entry definition { tokenize($me/@_metaschema-json-id,'/')[2] }">
+         <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
+         <div class="{ $header-class }">
             <!-- generates h1-hx headers picked up by Hugo toc -->
             <xsl:element expand-text="true" name="h{ $level }" namespace="http://www.w3.org/1999/xhtml">
                <xsl:attribute name="id" select="@_tree-json-id"/>
@@ -92,25 +91,36 @@
             <xsl:call-template name="crosslink-to-xml"/>
             <xsl:apply-templates select="formal-name" mode="produce"/>
          </div>
-         <!-- only arrays or singleton-or-array get array headers -->
-         <xsl:apply-templates mode="for-array-member"/>
-         
-         <xsl:apply-templates select="description" mode="produce"/>
-         <xsl:call-template name="remarks-group"/>
-      
-         <xsl:variable name="mine" select="$me / (child::* except (formal-name|description | remarks))"/>
-         <xsl:for-each-group select="$mine" group-by="true()">
-         <details class="properties" open="open">
-            <summary>
-               <xsl:text expand-text="true">Properties ({ count( $mine )})</xsl:text>
-            </summary>
-            <xsl:apply-templates select="$mine">
-            <xsl:with-param tunnel="true" name="constraints" select="constraint"/>
-            <!-- for later when constraint allocation is working: -->
-            <!--<xsl:with-param tunnel="true" name="constraints" select="$constraints, constraint"/>-->
-         </xsl:apply-templates>
-         </details>
-         </xsl:for-each-group>
+         <xsl:where-populated>
+            <div class="body">
+               <!-- only arrays or singleton-or-array get array headers -->
+               <xsl:apply-templates mode="for-array-member"/>
+
+               <xsl:apply-templates select="description" mode="produce"/>
+               <xsl:call-template name="remarks-group"/>
+
+               <!--<xsl:variable name="mine" select="$me / (array | singleton-or-array | object | string | number | boolean)"/>-->
+               <xsl:variable name="mine"
+                  select="$me/(child::* except (formal-name | description | remarks | constraint))"/>
+
+               <xsl:for-each-group select="$mine" group-by="true()">
+                  <details class="properties" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if (count($mine) gt 1) then 'Properties' else 'Property' } ({ count( $mine )})</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="$mine"/>
+                  </details>
+               </xsl:for-each-group>
+               <xsl:for-each-group select="constraint" group-by="true()">
+                  <details class="constraints" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if (count(constraint) gt 1) then 'Constraints' else 'Constraint' }({ count( $mine )})</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="current-group()" mode="produce"/>
+                  </details>
+               </xsl:for-each-group>
+            </div>
+         </xsl:where-populated>
          
       </div>
    </xsl:template>

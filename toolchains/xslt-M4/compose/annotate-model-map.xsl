@@ -59,12 +59,20 @@
         <xsl:apply-templates select="parent::*" mode="#current"/>
         <xsl:apply-templates select="@gi" mode="#current"/>
     </xsl:template>
+   
+    <!--the path in XML must point to the parent, since a (field) value is constituted by
+    its (element and text) children-->
     
-    <xsl:template match="value" mode="xml-path object-path">
+    <xsl:template match="value" mode="xml-path">
+        <xsl:apply-templates select="parent::*" mode="#current"/>
+    </xsl:template>
+    
+   
+    <xsl:template match="value" mode="object-path">
         <xsl:apply-templates select="parent::*" mode="#current"/>
         <xsl:text expand-text="true">/{ @key }</xsl:text>
     </xsl:template>
-
+    
     <xsl:template priority="2" match="flag/@gi" mode="xml-path">
         <xsl:text expand-text="true">/@{ . }</xsl:text>
     </xsl:template>

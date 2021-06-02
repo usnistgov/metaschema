@@ -142,7 +142,6 @@
    
    <xsl:template match="remarks" mode="produce">
       <div class="remarks{ @class ! (' ' || .)}">
-         <xsl:if test="@class='in-use'"><p class="nb">(In use)</p></xsl:if>
          <xsl:apply-templates mode="cast-to-html"/>
       </div>
    </xsl:template>
