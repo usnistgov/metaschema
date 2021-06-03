@@ -25,7 +25,7 @@
                 <!--<xsl:attribute name="_step" select="tokenize(@_step,'/')[1]"/>-->
             </xsl:if>
             <xsl:copy-of select="@json-key-flag | @group-json | @recursive"/>
-            <xsl:copy-of select="@scope | @name"/>
+            <xsl:copy-of select="@name"/>
             <xsl:copy-of select="@_caller-xml-id | @_caller-json-id | @_def-xml-id | @_def-json-id"/>
             <xsl:copy-of select="@_base-uri | @_key-name | @_key-ref"/>
             <!--<xsl:apply-templates select="@* except (@max-occurs|@min-occurs|@key)"/>-->

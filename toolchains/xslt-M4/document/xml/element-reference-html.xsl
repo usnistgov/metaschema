@@ -14,6 +14,7 @@
    <xsl:param name="xml-reference-page">xml/reference</xsl:param>
    <xsl:param name="json-reference-page">json/reference</xsl:param>
    <xsl:param name="xml-map-page">xml/outline</xsl:param>
+   <xsl:param name="xml-definitions-page">xml/definitions</xsl:param>
    
    <xsl:variable name="datatype-page" as="xs:string">../../../datatypes</xsl:variable>
    
@@ -66,80 +67,66 @@
        </div>
    </xsl:template>
    
-   
    <xsl:template match="*[exists(@gi)]" expand-text="true">
-      <xsl:param tunnel="true" name="constraints" select="()"/>
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
-      <section class="xml-element">
-         <div class="header">
-            <xsl:call-template name="json-crosslink"/>
-            
+      <div class="model-entry definition { tokenize(@_metaschema-xml-id,'/')[2] }">
+         <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
+         <div class="{ $header-class }">
             <!-- generates h1-hx headers picked up by Hugo toc -->
-            <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }" expand-text="true">
-               <!--  XXX LINK HERE -->
-               <xsl:attribute name="id" select="@_tree-xml-id"/>
-               <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
-               <xsl:text>{ self::attribute/'@' || @gi }</xsl:text>
+            <xsl:element expand-text="true" name="h{ $level }" namespace="http://www.w3.org/1999/xhtml">
+               <xsl:attribute name="id" select="@_tree-json-id"/>
+               <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
+               <xsl:text>{ @key }</xsl:text>
             </xsl:element>
+            <p class="type">
+               <xsl:apply-templates select="." mode="metaschema-type"/>
+            </p>
+            <xsl:if test="empty(parent::map)">
+               <p class="occurrence">
+                  <xsl:apply-templates select="." mode="occurrence-code"/>
+               </p>
+            </xsl:if>
+            <xsl:call-template name="crosslink-to-json"/>
+            <xsl:apply-templates select="formal-name" mode="produce"/>
          </div>
-         <xsl:sequence expand-text="true">
-            <p>See <a href="{$xml-map-link}#{@_tree-xml-id}">{ @_tree-xml-id }</a> in the element map.</p>
-         </xsl:sequence>
-         
-         <xsl:apply-templates select="." mode="produce"/>
-         
-         <xsl:apply-templates>
-            <xsl:with-param tunnel="true" name="constraints" select="constraint"/>
-            <!-- for later when constraint allocation is working: -->
-            <!--<xsl:with-param tunnel="true" name="constraints" select="$constraints, constraint"/>-->
-         </xsl:apply-templates>
-      </section>
+         <xsl:where-populated>
+            <div class="body">
+               <xsl:apply-templates select="description" mode="produce"/>
+               <xsl:apply-templates select="value" mode="produce"/>
+               <xsl:call-template name="remarks-group"/>
+               
+               <xsl:for-each-group select="attribute" group-by="true()">
+                  <details class="properties attributes" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if (count(attribute) gt 1) then 'Attributes' else 'Attribute' } ({ count( attribute )})</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="attribute"/>
+                  </details>
+               </xsl:for-each-group>
+               <xsl:for-each-group select="element" group-by="true()">
+                  <details class="properties elements" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">Element { if (count(element) gt 1) then 'children' else 'child' } ({ count( element )})</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="element"/>
+                  </details>
+               </xsl:for-each-group>
+               <xsl:variable name="my-constraints"
+                  select="constraint/( descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index )"/>
+               <xsl:if test="exists($my-constraints)">
+                  <details class="constraints" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' }({ count($my-constraints) })</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="$my-constraints" mode="produce-constraint"/>
+                  </details>
+               </xsl:if>
+            </div>
+         </xsl:where-populated>
+      </div>
    </xsl:template>
    
    <xsl:template match="formal-name | description | remarks | constraint"/>
-   
-   <xsl:template match="*" mode="produce" expand-text="true">
-      <xsl:param tunnel="true" name="constraints" select="()"/>
-      <div class="obj-desc">
-         <!-- target for cross-linking -->
-         <xsl:attribute name="id" select="@_tree-xml-id"/>
-         <div class="obj-matrix">
-            <p class="obj-name">{ (formal-name, name())[1] }</p>
-            <!--<xsl:if test="empty(formal-name)">
-               <xsl:message expand-text="true">{ name() } is missing formal-name</xsl:message>
-            </xsl:if>-->
-            <p class="occurrence">
-               <xsl:apply-templates select="." mode="occurrence-code"/>
-            </p>
-            <p>
-               <xsl:text>{ if (matches(name(),'^[aeiou]','i')) then 'An ' else 'A '}{ name() } </xsl:text>
-               <xsl:if test="exists(@as-type)">of type <a href="link.to.{@as-type}">{ @as-type }</a></xsl:if>
-               <!--<xsl:choose>
-                  <xsl:when test="exists(@key)"> with key <code>{ @key }</code>.</xsl:when>
-                  <xsl:otherwise> member of array <code>{ ../@key }</code>.</xsl:otherwise>
-               </xsl:choose>-->
-            </p>
-            <!--<p class="path">{ @_tree-xml-id }</p>-->
-         </div>
-         
-         <xsl:apply-templates mode="#current" select="description"/>
-         <xsl:apply-templates mode="#current" select="value"/>
-         
-         <xsl:variable name="potential-constraints" select="$constraints,constraint"/>
-         
-         <!-- Visiting the constraints passed down from above, with $apply-to as the node applying -->
-         <xsl:apply-templates select="$potential-constraints" mode="produce-matching-constraints">
-            <xsl:with-param name="applying-to" select="."/>
-         </xsl:apply-templates>
-         
-         <xsl:if test="exists(remarks)">
-            <details open="open" class="remarks-group">
-               <summary>Remarks</summary>
-               <xsl:apply-templates mode="#current" select="remarks"/>
-            </details>
-         </xsl:if>
-      </div>
-   </xsl:template>
    
    <xsl:template match="value" mode="produce" expand-text="true">
       <div class="value" id="{ @tree-xml-id }">
@@ -147,12 +134,23 @@
       </div>
    </xsl:template>
    
+   <xsl:template mode="metaschema-type" match="*">
+      <xsl:value-of select="local-name()"/><br />
+      <xsl:if test="@scope='global'">
+         <xsl:text> </xsl:text>
+         <a href="{$path-to-common || $xml-definitions-page }#{ @_metaschema-json-id }">(global definition)</a>
+      </xsl:if>
+   </xsl:template>
+   
+   <xsl:template mode="metaschema-type" match="*[exists(@as-type)]" expand-text="true">
+      <a href="{$datatype-page}/#{(lower-case(@as-type))}">{ @as-type }</a>
+   </xsl:template>
+   
    <xsl:import href="../common-reference.xsl"/>
    
-   
-   <xsl:template name="json-crosslink">
+   <xsl:template name="crosslink-to-json">
       <div class="crosslink">
-         <a href="{$json-reference-link}#{@_tree-json-id}">
+         <a class="usa-button" href="{$json-reference-link}#{@_tree-json-id}">
             <button class="schema-link">Switch to JSON</button>
          </a>
       </div>

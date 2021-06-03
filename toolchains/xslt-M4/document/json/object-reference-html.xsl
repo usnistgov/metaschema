@@ -48,9 +48,9 @@
    <xsl:variable name="path-to-common">
       <xsl:for-each select="tokenize($xml-reference-page,'/')">../</xsl:for-each>
    </xsl:variable>
+   
    <xsl:variable name="xml-reference-link" select="$path-to-common || $xml-reference-page"/>
    <xsl:variable name="json-map-link"        select="$path-to-common || $json-map-page"/>
-   
    
    <xsl:variable name="indenting" as="element()"
       xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
@@ -68,13 +68,12 @@
 
 <!-- Map traversal -->
    <xsl:template match="*[exists(@key)]" expand-text="true">
-      <xsl:param tunnel="true" name="constraints" select="()"/>
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@key)])"/>
       <xsl:variable name="grouped-object" select="(self::array | self::singleton-or-array)/*"/>
       <xsl:variable name="me" select="($grouped-object,.)[1]"/>
-      <div class="definition { tokenize($me/@_metaschema-json-id,'/')[2] }">
-         <xsl:variable name="class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
-         <div class="{ $class }">
+      <div class="model-entry definition { tokenize($me/@_metaschema-json-id,'/')[2] }">
+         <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
+         <div class="{ $header-class }">
             <!-- generates h1-hx headers picked up by Hugo toc -->
             <xsl:element expand-text="true" name="h{ $level }" namespace="http://www.w3.org/1999/xhtml">
                <xsl:attribute name="id" select="@_tree-json-id"/>
@@ -92,26 +91,37 @@
             <xsl:call-template name="crosslink-to-xml"/>
             <xsl:apply-templates select="formal-name" mode="produce"/>
          </div>
-         <!-- only arrays or singleton-or-array get array headers -->
-         <xsl:apply-templates mode="for-array-member"/>
-         
-         <xsl:apply-templates select="description" mode="produce"/>
-         <xsl:call-template name="remarks-group"/>
-      
-         <xsl:variable name="mine" select="$me / (child::* except (formal-name|description | remarks))"/>
-         <xsl:for-each-group select="$mine" group-by="true()">
-         <details class="properties" open="open">
-            <summary>
-               <xsl:text expand-text="true">Properties ({ count( $mine )})</xsl:text>
-            </summary>
-            <xsl:apply-templates select="$mine">
-            <xsl:with-param tunnel="true" name="constraints" select="constraint"/>
-            <!-- for later when constraint allocation is working: -->
-            <!--<xsl:with-param tunnel="true" name="constraints" select="$constraints, constraint"/>-->
-         </xsl:apply-templates>
-         </details>
-         </xsl:for-each-group>
-         
+         <xsl:where-populated>
+            <div class="body">
+               <!-- only arrays or singleton-or-array get array headers -->
+               <xsl:apply-templates mode="for-array-member"/>
+
+               <xsl:apply-templates select="description" mode="produce"/>
+               <xsl:call-template name="remarks-group"/>
+
+               <!--<xsl:variable name="mine" select="$me / (array | singleton-or-array | object | string | number | boolean)"/>-->
+               <xsl:variable name="mine"
+                  select="$me/(child::* except (formal-name | description | remarks | constraint))"/>
+
+               <xsl:for-each-group select="$mine" group-by="true()">
+                  <details class="properties" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if (count($mine) gt 1) then 'Properties' else 'Property' } ({ count( $mine )})</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="$mine"/>
+                  </details>
+               </xsl:for-each-group>
+               <xsl:variable name="my-constraints" select="$me/constraint/( descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index )"/>
+               <xsl:if test="exists($my-constraints)">
+                  <details class="constraints" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' }({ count($my-constraints) })</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="$my-constraints" mode="produce-constraint"/>
+                  </details>
+               </xsl:if>
+            </div>
+         </xsl:where-populated>
       </div>
    </xsl:template>
    
@@ -149,11 +159,13 @@
       <xsl:call-template name="remarks-group"/>
    </xsl:template>
    
+   <xsl:template match="formal-name | description | remarks | constraint"/>
+
    <xsl:template mode="metaschema-type" match="*">
       <xsl:value-of select="local-name()"/><br />
       <xsl:if test="@scope='global'">
          <xsl:text> </xsl:text>
-         <a href="{ $json-definitions-page}#{ @_metaschema-json-id }">(global definition)</a>
+         <a href="{$path-to-common || $json-definitions-page }#{ @_metaschema-json-id }">(global definition)</a>
       </xsl:if>
    </xsl:template>
    
@@ -161,81 +173,6 @@
       <a href="{$datatype-page}/#{(lower-case(@as-type))}">{ @as-type }</a>
    </xsl:template>
    
-   <xsl:template match="formal-name | description | remarks | constraint"/>
-
-   <!--<xsl:template match="array" mode="produce-header" expand-text="true">
-      <xsl:variable name="array-of" select="*[1]"/>
-      <p>An array of { $array-of/formal-name } { $array-of/name()}s</p>
-      <!-\-<p class="occurrence">
-         <xsl:apply-templates select="." mode="occurrence-code"/>
-      </p>-\->
-   </xsl:template>
-   
-   <xsl:template match="object" mode="produce-header" expand-text="true">
-      <xsl:variable name="array-of" select="*[1]"/>
-      <p>An object { formal-name } { $array-of/name()}s</p>
-      <!-\-<p class="occurrence">
-         <xsl:apply-templates select="." mode="occurrence-code"/>
-      </p>-\->
-   </xsl:template>
-   
-   <xsl:template match="string | number | boolean | *" mode="produce-header" expand-text="true">
-      <xsl:variable name="array-of" select="*[1]"/>
-      <p>A { name(.) } { formal-name }</p>
-      <!-\-<p class="occurrence">
-         <xsl:apply-templates select="." mode="occurrence-code"/>
-      </p>-\->
-   </xsl:template>-->
-   
-   <!--<xsl:template match="*" mode="produce" expand-text="true">
-      <xsl:param tunnel="true" name="constraints" select="()"/>
-      <div class="obj-desc">
-         <!-\- target for cross-link -\->
-         <xsl:copy-of select="@id"/>
-         <div class="obj-matrix">
-            <p class="obj-name">
-               <xsl:value-of select="formal-name"/>
-               <xsl:if test="empty(formal-name)">
-                  <xsl:text>{ name(.) => replace('^define\-','')  } of </xsl:text>
-                  <xsl:for-each select="*/child::formal-name">
-                  <span class="formal-name">
-                     <xsl:apply-templates/>
-                  </span>
-               </xsl:for-each>
-               </xsl:if>
-            </p>
-            <p class="occurrence">
-               <xsl:apply-templates select="." mode="occurrence-code"/>
-            </p>
-            <p>
-               <xsl:text>{ if (matches(name(),'^[aeiou]','i')) then 'An ' else 'A '}{ name() } </xsl:text>
-               <xsl:if test="exists(@as-type)">of type <a href="link.to.{@as-type}">{ @as-type }</a></xsl:if>
-               <xsl:choose>
-                  <xsl:when test="exists(@key)"> with key <code>{ @key }</code>.</xsl:when>
-                  <xsl:otherwise> member of array <code>{ ../@key }</code>.</xsl:otherwise>
-               </xsl:choose>
-            </p>
-            <p class="path">/{ ancestor-or-self::*/@key => string-join('/') }</p>
-         </div>
-         
-         <xsl:apply-templates mode="#current" select="description"/>
-         
-         <!-\-<xsl:variable name="potential-constraints" select="$constraints,constraint"/>-\->
-         
-         <!-\- Visiting the constraints passed down from above, with $apply-to as the node applying -\->
-         <!-\-<xsl:apply-templates select="$potential-constraints" mode="produce-matching-constraints">
-            <xsl:with-param name="applying-to" select="."/>
-         </xsl:apply-templates>-\->
-         
-         <xsl:if test="exists(remarks)">
-            <details open="open" class="remarks-group">
-               <summary>Remarks</summary>
-               <xsl:apply-templates mode="#current" select="remarks"/>
-            </details>
-         </xsl:if>
-      </div>
-   </xsl:template>-->
-
 
    <xsl:import href="../common-reference.xsl"/>
 
