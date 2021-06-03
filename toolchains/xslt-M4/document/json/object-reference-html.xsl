@@ -33,7 +33,8 @@
    </xsl:template>
    
    <xsl:template name="remarks-group">
-      <xsl:for-each-group select="remarks[not(@class = 'xml')]" group-by="true()">
+      <xsl:param name="these-remarks" select="remarks"/>
+         <xsl:for-each-group select="$these-remarks[not(contains-token(@class,'xml'))]" group-by="true()">
          <div class="remarks-group usa-prose">
             <details open="open">
                <summary class="subhead">Remarks</summary>
@@ -91,13 +92,14 @@
             <xsl:call-template name="crosslink-to-xml"/>
             <xsl:apply-templates select="formal-name" mode="produce"/>
          </div>
+         <xsl:apply-templates mode="array-header"/>
+            
          <xsl:where-populated>
             <div class="body">
-               <!-- only arrays or singleton-or-array get array headers -->
-               <xsl:apply-templates mode="for-array-member"/>
-
-               <xsl:apply-templates select="description" mode="produce"/>
-               <xsl:call-template name="remarks-group"/>
+               <xsl:apply-templates select="$me/description" mode="produce"/>
+               <xsl:call-template name="remarks-group">
+                  <xsl:with-param name="these-remarks" select="$me/remarks"/>
+               </xsl:call-template>
 
                <!--<xsl:variable name="mine" select="$me / (array | singleton-or-array | object | string | number | boolean)"/>-->
                <xsl:variable name="mine"
@@ -125,9 +127,9 @@
       </div>
    </xsl:template>
    
-   <xsl:template mode="for-array-member" match="*"/>
+   <xsl:template mode="array-header" match="*"/>
    
-   <xsl:template mode="for-array-member" match="array/*">
+   <xsl:template mode="array-header" match="array/*">
       <div class="array-header">
          <p class="array-member">(array member)</p>
          <p class="type">
@@ -138,12 +140,9 @@
          </p>
          <xsl:apply-templates select="formal-name" mode="produce"/>
       </div>
-      
-      <xsl:apply-templates select="description" mode="produce"/>
-      <xsl:call-template name="remarks-group"/>
    </xsl:template>
    
-   <xsl:template match="singleton-or-array/*" mode="for-array-member">
+   <xsl:template match="singleton-or-array/*" mode="array-header">
       <div class="array-header">
          <p class="array-member">(array member or singleton)</p>
          <p class="type">

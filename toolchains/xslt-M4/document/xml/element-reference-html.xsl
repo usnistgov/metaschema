@@ -35,9 +35,8 @@
    </xsl:template>
 
    <xsl:template name="remarks-group">
-      <!-- can't use xsl:where-populated due to the header :-( -->
-      <!-- don't include a remarks if it is marked for json -->
-      <xsl:for-each-group select="remarks[not(@class = 'json')]" group-by="true()">
+      <xsl:param name="these-remarks" select="remarks"/>
+      <xsl:for-each-group select="$these-remarks[not(contains-token(@class,'json'))]" group-by="true()">
          <div class="remarks-group usa-prose">
             <details open="open">
                <summary class="subhead">Remarks</summary>
@@ -46,6 +45,8 @@
          </div>
       </xsl:for-each-group>
    </xsl:template>
+   
+  
    
    <xsl:variable name="indenting" as="element()"
       xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
