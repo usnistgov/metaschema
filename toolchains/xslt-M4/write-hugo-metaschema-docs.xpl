@@ -136,8 +136,8 @@
       <p:document href="document/xml/xml-definitions.xsl"/>
     </p:input>
     <p:with-param name="xml-definitions-page"  select="$xml-definitions-filename"/>
-    <p:with-param name="xml-reference-page" select="$xml-reference-filename"/>    
     <p:with-param name="json-definitions-page" select="$json-definitions-filename"/>
+    <p:with-param name="xml-reference-page"    select="$xml-reference-filename"/>    
   </p:xslt>
   
   <p:sink/>

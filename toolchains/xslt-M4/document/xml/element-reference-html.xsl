@@ -23,6 +23,7 @@
    <xsl:template match="short-name" mode="schema-link" expand-text="true">
       <p>
          <span class="usa-tag">XML Schema</span>
+         <xsl:text> </xsl:text>
          <a href="https://pages.nist.gov/OSCAL/artifacts/xml/schema/oscal_{$file-map(.)}_schema.xsd">oscal_{$file-map(string(.))}_schema.xsd</a>
       </p>
    </xsl:template>
@@ -30,6 +31,7 @@
    <xsl:template match="short-name" mode="converter-link" expand-text="true">
       <p>
          <span class="usa-tag">JSON to XML converter</span>
+         <xsl:text> </xsl:text>
          <a href="https://pages.nist.gov/OSCAL/artifacts/xml/convert/oscal_{$file-map(.)}_json-to-xml-converter.xsl">oscal_{$file-map(string(.))}_json-to-xml-converter.xsl</a>  <a href="https://github.com/usnistgov/OSCAL/tree/master/xml#converting-oscal-json-content-to-xml">(How do I use the converter to convert OSCAL JSON to XML?)</a>
       </p>
    </xsl:template>
@@ -45,8 +47,6 @@
          </div>
       </xsl:for-each-group>
    </xsl:template>
-   
-  
    
    <xsl:variable name="indenting" as="element()"
       xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
@@ -70,14 +70,15 @@
    
    <xsl:template match="*[exists(@gi)]" expand-text="true">
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
+      <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
       <div class="model-entry definition { tokenize(@_metaschema-xml-id,'/')[2] }">
          <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
          <div class="{ $header-class }">
             <!-- generates h1-hx headers picked up by Hugo toc -->
-            <xsl:element expand-text="true" name="h{ $level }" namespace="http://www.w3.org/1999/xhtml">
+            <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
                <xsl:attribute name="id" select="@_tree-json-id"/>
                <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
-               <xsl:text>{ @key }</xsl:text>
+               <xsl:text>{ @gi }</xsl:text>
             </xsl:element>
             <p class="type">
                <xsl:apply-templates select="." mode="metaschema-type"/>
@@ -99,17 +100,17 @@
                <xsl:for-each-group select="attribute" group-by="true()">
                   <details class="properties attributes" open="open">
                      <summary>
-                        <xsl:text expand-text="true">{ if (count(attribute) gt 1) then 'Attributes' else 'Attribute' } ({ count( attribute )})</xsl:text>
+                        <xsl:text expand-text="true">{ if (count(current-group()) gt 1) then 'Attributes' else 'Attribute' } ({ count(current-group()) })</xsl:text>
                      </summary>
-                     <xsl:apply-templates select="attribute"/>
+                     <xsl:apply-templates select="current-group()"/>
                   </details>
                </xsl:for-each-group>
                <xsl:for-each-group select="element" group-by="true()">
                   <details class="properties elements" open="open">
                      <summary>
-                        <xsl:text expand-text="true">Element { if (count(element) gt 1) then 'children' else 'child' } ({ count( element )})</xsl:text>
+                        <xsl:text expand-text="true">{ if (count(current-group()) gt 1) then 'Elements' else 'Element' } ({ count(current-group()) })</xsl:text>
                      </summary>
-                     <xsl:apply-templates select="element"/>
+                     <xsl:apply-templates select="current-group()"/>
                   </details>
                </xsl:for-each-group>
                <xsl:variable name="my-constraints"
@@ -117,7 +118,7 @@
                <xsl:if test="exists($my-constraints)">
                   <details class="constraints" open="open">
                      <summary>
-                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' }({ count($my-constraints) })</xsl:text>
+                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' } ({ count($my-constraints) })</xsl:text>
                      </summary>
                      <xsl:apply-templates select="$my-constraints" mode="produce-constraint"/>
                   </details>
@@ -139,7 +140,7 @@
       <xsl:value-of select="local-name()"/><br />
       <xsl:if test="@scope='global'">
          <xsl:text> </xsl:text>
-         <a href="{$path-to-common || $xml-definitions-page }#{ @_metaschema-json-id }">(global definition)</a>
+         <a class="definition-link" href="{$path-to-common || $xml-definitions-page }#{ @_metaschema-json-id }">(global definition)</a>
       </xsl:if>
    </xsl:template>
    
@@ -151,9 +152,7 @@
    
    <xsl:template name="crosslink-to-json">
       <div class="crosslink">
-         <a class="usa-button" href="{$json-reference-link}#{@_tree-json-id}">
-            <button class="schema-link">Switch to JSON</button>
-         </a>
+         <a class="usa-button" href="{$json-reference-link}#{@_tree-json-id}">Switch to JSON</a>
       </div>
    </xsl:template>
    
