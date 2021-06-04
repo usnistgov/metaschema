@@ -7,6 +7,11 @@
 
     <xsl:import href="common-reference.xsl"/>
     
+    <xsl:key name="assembly-definition-by-name" match="/METASCHEMA/define-assembly" use="@_key-name"/>
+    <xsl:key name="field-definition-by-name" match="/METASCHEMA/define-field"       use="@_key-name"/>
+    <xsl:key name="flag-definition-by-name" match="/METASCHEMA/define-flag"         use="@_key-name"/>
+    
+    
     <xsl:variable name="datatype-page" as="xs:string">../../../datatypes</xsl:variable>
     
     <xsl:variable name="indenting" as="element()"
@@ -215,12 +220,13 @@
                 <xsl:apply-templates select="formal-name" mode="in-header"/>
             </div>
             <!-- placeholder for what is to come -->
-            <xsl:call-template name="link-to-definition"/>
+            <xsl:apply-templates/>
+            <xsl:apply-templates select="." mode="link-to-definition"/>
             
         </div>
     </xsl:template>
     
-    <xsl:template name="link-to-definition">
+    <xsl:template match="*" mode="link-to-definition">
         <xsl:comment> link to definition goes here </xsl:comment>
         <xsl:message>not making link to definition...</xsl:message>
     </xsl:template>

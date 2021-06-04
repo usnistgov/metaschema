@@ -28,9 +28,25 @@ exclude-result-prefixes="#all">
     </xsl:variable>
     <xsl:variable name="json-definitions-link" select="$path-to-common || $json-definitions-page"/>
     
-    <xsl:template name="link-to-definition">
+    
+    <xsl:template match="assembly" mode="link-to-definition">
+        <xsl:variable name="definition" select="key('assembly-definition-by-name',@_key-ref)"/>
         <p class="definition-link">
-            <a href="#{@_metaschema-xml-id}">See definition</a>
+            <a href="#{$definition/@_metaschema-xml-id}">See definition</a>
+        </p>
+    </xsl:template>
+    
+    <xsl:template match="field" mode="link-to-definition">
+        <xsl:variable name="definition" select="key('field-definition-by-name',@_key-ref)"/>
+        <p class="definition-link">
+            <a href="#{$definition/@_metaschema-xml-id}">See definition</a>
+        </p>
+    </xsl:template>
+    
+    <xsl:template match="flag" mode="link-to-definition">
+        <xsl:variable name="definition" select="key('flag-definition-by-name',@_key-ref)"/>
+        <p class="definition-link">
+            <a href="#{$definition/@_metaschema-xml-id}">See definition</a>
         </p>
     </xsl:template>
     
