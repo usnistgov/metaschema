@@ -5,6 +5,15 @@
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     exclude-result-prefixes="#all">
 
+    <xsl:import href="common-reference.xsl"/>
+    
+    <xsl:key name="assembly-definition-by-name" match="/METASCHEMA/define-assembly" use="@_key-name"/>
+    <xsl:key name="field-definition-by-name" match="/METASCHEMA/define-field"       use="@_key-name"/>
+    <xsl:key name="flag-definition-by-name" match="/METASCHEMA/define-flag"         use="@_key-name"/>
+    
+    
+    <xsl:variable name="datatype-page" as="xs:string">../../../datatypes</xsl:variable>
+    
     <xsl:variable name="indenting" as="element()"
         xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
         <output:serialization-parameters>
@@ -12,42 +21,21 @@
         </output:serialization-parameters>
     </xsl:variable>
 
-    <xsl:template match="/METASCHEMA" priority="10">
-        <div>
-            <xsl:apply-templates/>
-        </div>
-    </xsl:template>
-
-
-    <xsl:template match="*" expand-text="true">
-        <div class="{ name() }">
-            <p class="element-label">
-                <span class="lbl">{ name(. )}</span>
-            </p>
-            <xsl:apply-templates/>
-        </div>
-    </xsl:template>
-
-    <xsl:template match="*[exists(text()[matches(., '\S')])]" priority="-0.1" expand-text="true">
-        <p class="{ name(.) }">
-            <span class="lbl">{ name(. )}</span>
-            <xsl:apply-templates/>
-        </p>
-    </xsl:template>
-
-
     <xsl:template match="METASCHEMA">
         <xsl:variable name="definitions" select="define-assembly | define-field | define-flag"/>
         <div>
+            <xsl:call-template name="reference-class"/>
             <xsl:apply-templates select="* except (remarks | $definitions)"/>
             <xsl:apply-templates select="short-name" mode="schema-link"/>
             <xsl:apply-templates select="short-name" mode="converter-link"/>
             <xsl:apply-templates select="remarks"/>
 
-            <xsl:apply-templates select="$definitions"/>
+            <xsl:apply-templates select="$definitions" mode="model-view"/>
 
         </div>
     </xsl:template>
+    
+    <xsl:template name="reference-class"/>
 
     <xsl:template match="METASCHEMA/schema-name">
         <p>
@@ -91,11 +79,9 @@
     <xsl:template match="short-name" mode="converter-link" expand-text="true">
         <p>
             <span class="usa-tag">JSON to XML converter</span>
-            <a
-                href="https://pages.nist.gov/OSCAL/artifacts/xml/convert/oscal_{$file-map(.)}_json-to-xml-converter.xsl"
+            <a href="https://pages.nist.gov/OSCAL/artifacts/xml/convert/oscal_{$file-map(.)}_json-to-xml-converter.xsl"
                 >oscal_{$file-map(string(.))}_json-to-xml-converter.xsl</a>
-            <a
-                href="https://github.com/usnistgov/OSCAL/tree/master/xml#converting-oscal-json-content-to-xml"
+            <a href="https://github.com/usnistgov/OSCAL/tree/master/xml#converting-oscal-json-content-to-xml"
                 >(How do I use the converter to convert OSCAL JSON to XML?)</a>
         </p>
     </xsl:template>
@@ -120,120 +106,154 @@
 
     <xsl:template name="mark-id"/>
     
-    <xsl:template match="/*/define-assembly | /*/define-field | /*/define-flag">
-        <xsl:variable name="level" select="count(. | ancestor::define-assembly)"/>
-        <section class="definition { name() }"
-            style="margin: 0em; margin-top: 1em; padding: 0.5em; border: thin solid black">
-            <!--<xsl:call-template name="crosslink-to-xml"/>-->
-            <!-- generates h1-hx headers picked up by Hugo toc -->
-            <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }"
-                expand-text="true">
-                <xsl:call-template name="mark-id"/>
-                <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
-                <xsl:apply-templates select="." mode="definition-title-text"/>
-            </xsl:element>
-
-            <xsl:apply-templates/>
-            <xsl:apply-templates select="." mode="model"/>
-
-            <details>
-                <summary>Metaschema source</summary>
-                <pre><xsl:value-of select="serialize(., $indenting)"/></pre>
-            </details>
-        </section>
-    </xsl:template>
-
-    <!-- Handled from parent in mode 'model' -->
+    
+    <!-- Dropped in default traversal; handled from parent in mode 'model' -->
     <xsl:template match="flag | define-flag | model"/>
 
-    <xsl:template mode="definition-title-text" match="define-assembly" expand-text="true">Assembly
-            <code>{ @name }</code></xsl:template>
+    <xsl:template mode="definition-title-text"
+        match="define-assembly | assembly" expand-text="true">{ (use-name,@name,@ref)[1] }</xsl:template>
 
-    <xsl:template mode="definition-title-text" match="define-flag" expand-text="true">Flag <code>{
-            @name }</code></xsl:template>
+    <xsl:template mode="definition-title-text"
+        match="define-flag | flag" expand-text="true">{ (use-name,@name,@ref)[1] }</xsl:template>
 
-    <xsl:template mode="definition-title-text" match="define-field" expand-text="true">Field <code>{
-            @name }</code></xsl:template>
+    <xsl:template mode="definition-title-text"
+        match="define-field | field" expand-text="true">{ (use-name,@name,@ref)[1] }</xsl:template>
 
-
-    <xsl:template match="define-field" mode="model"/>
-        
-    <xsl:template match="define-assembly" mode="model">
-        <xsl:where-populated>
-            <ul class="model">
-                <xsl:apply-templates select="flag | define-flag" mode="model-view"/>
-                <xsl:apply-templates select="model/*" mode="model-view"/>
-            </ul>
-        </xsl:where-populated>
+    <xsl:template match="root-name" expand-text="true">
+        <p>Name at root: <code class="use-name">{ . }</code></p>
     </xsl:template>
-
+    
+    <xsl:template match="/METASCHEMA/*/use-name" expand-text="true">
+        <p>May use name: <code class="name">{ . }</code></p>
+    </xsl:template>
+    
+    <xsl:template match="use-name" expand-text="true">
+        <p>Use name: <code class="name">{ . }</code></p>
+    </xsl:template>
+    
+    <xsl:template match="group-as" expand-text="true">
+        <p>Grouping rule: group as <code class="name">{ @name }</code></p>
+    </xsl:template>
+    
+    
     <xsl:template match="define-flag" mode="model"/>
+        
+    <xsl:template match="define-assembly | define-field" mode="model">
+        <xsl:variable name="metaschema-type" select="replace(name(),'^define\-','')"/>
+        <xsl:for-each-group select="flag | define-flag | model/*" group-by="true()">
+            <details open="open">
+                <summary>Property set / contents:</summary>
 
-    <!--<xsl:template match="description" mode="model">
-        <xsl:text> </xsl:text>
-        <span class="model-description">
-            <xsl:apply-templates/>
-        </span>
-    </xsl:template>-->
-
-
+                <div class="model { $metaschema-type }-model">
+                    <xsl:apply-templates select="current-group()" mode="model-view"/>
+                </div>
+            </details>
+        </xsl:for-each-group>
+    </xsl:template>
 
     <xsl:template match="use-name" mode="inline" expand-text="true"> - using name <code>{ . }</code></xsl:template>
 
     <xsl:template match="group-as" mode="inline" expand-text="true"> - grouped as <code>{ @name }</code></xsl:template>
 
-    <xsl:template match="field" mode="model-view" expand-text="true">
-        <li>
-            <xsl:call-template name="mark-id"/>
-            <xsl:text>Field (reference) </xsl:text>
-            <code>{ @ref }</code>
-            <xsl:apply-templates select="use-name | group-as" mode="inline"/>
-        </li>
+    <xsl:template match="define-assembly | define-field | define-flag" mode="model-view">
+        <xsl:variable name="level" select="count(. | ancestor::define-assembly)"/>
+        <div class="model-entry definition { name() }"
+            style="margin: 0em; margin-top: 1em; padding: 0.5em; border: thin solid black">
+            <div class="definition-header">
+                <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }"
+                    expand-text="true">
+                    <xsl:call-template name="mark-id"/>
+                    <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
+                    <xsl:apply-templates select="." mode="definition-title-text"/>
+                </xsl:element>
+                <p class="type">
+                    <xsl:apply-templates select="." mode="metaschema-type"/>
+                </p>
+                <xsl:if test="exists(ancestor::model)">
+                    <p class="occurrence">
+                        <xsl:apply-templates select="." mode="occurrence-code"/>
+                    </p>
+                </xsl:if>
+                <xsl:call-template name="crosslink"/>
+                <xsl:apply-templates select="formal-name" mode="in-header"/>
+            </div>
+            <!-- in no mode for regular contents -->
+            <xsl:apply-templates/>
+            <!--            -->
+            <xsl:apply-templates select="." mode="model"/>
+            
+            <!--<details>
+                <summary>Metaschema source</summary>
+                <pre><xsl:value-of select="serialize(., $indenting)"/></pre>
+            </details>-->
+        </div>
+    </xsl:template>
+    
+    <xsl:template name="crosslink">
+        <xsl:comment> crosslink goes here</xsl:comment>
+        <xsl:message>not making crosslink...</xsl:message>
+    </xsl:template>
+    
+    <xsl:template match="assembly | field | flag" mode="model-view">
+        <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
+        <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
+        <div class="model-entry definition { name() }"
+            style="margin: 0em; margin-top: 1em; padding: 0.5em; border: thin solid black">
+            <!--<xsl:call-template name="crosslink-to-xml"/>-->
+            <!-- generates h1-hx headers picked up by Hugo toc -->
+            <div class="instance-header">
+                <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }"
+                expand-text="true">
+                <xsl:call-template name="mark-id"/>
+                <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
+                <xsl:apply-templates select="." mode="definition-title-text"/>
+            </xsl:element>
+                <p class="type">
+                    <xsl:apply-templates select="." mode="metaschema-type"/>
+                </p>
+                <xsl:if test="exists(ancestor::model)">
+                    <p class="occurrence">
+                        <xsl:apply-templates select="." mode="occurrence-code"/>
+                    </p>
+                </xsl:if>
+                <xsl:call-template name="crosslink"/>
+                <xsl:apply-templates select="formal-name" mode="in-header"/>
+            </div>
+            <!-- placeholder for what is to come -->
+            <xsl:apply-templates/>
+            <xsl:apply-templates select="." mode="link-to-definition"/>
+            
+        </div>
+    </xsl:template>
+    
+    <xsl:template match="*" mode="link-to-definition">
+        <xsl:comment> link to definition goes here </xsl:comment>
+        <xsl:message>not making link to definition...</xsl:message>
+    </xsl:template>
+    
+    
+    <xsl:template match="constraint">
+        <xsl:variable name="constraints"
+            select="descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index"/>
+        <details>
+            <summary>Constraint</summary>
+            <xsl:apply-templates/>
+        </details>
     </xsl:template>
 
-    <xsl:template match="flag" mode="model-view" expand-text="true">
-        <li>
-            <xsl:call-template name="mark-id"/>
-            <xsl:text>Flag (reference) </xsl:text>
-            <code>{ @ref }</code>
-            <xsl:apply-templates select="use-name | group-as" mode="inline"/></li>
+    <xsl:template match="constraint//*">
+        <!-- use mode in imported XSLT       -->
+        <xsl:apply-templates select="." mode="produce-constraint"/>
     </xsl:template>
-
-    <xsl:template match="assembly" mode="model-view" expand-text="true">
-        <li>
-            <xsl:call-template name="mark-id"/>
-            <xsl:text>Assembly (reference) </xsl:text>
-            <code>{ @ref }</code>
-            <xsl:apply-templates select="use-name | group-as" mode="inline"/>
-        </li>
+   
+    <!-- override this -->
+    <xsl:template mode="metaschema-type" match="*" expand-text="true">{ local-name() }</xsl:template>
+        
+    <!-- expect overriding XSLT to provide metaschema type with appropriate link  -->
+    <xsl:template mode="metaschema-type" match="*[exists(@as-type)]" expand-text="true">
+        <a href="{$datatype-page}/#{(lower-case(@as-type))}">{ @as-type }</a>
     </xsl:template>
-
-    <xsl:template match="define-field" mode="model-view" expand-text="true">
-        <li>
-            <xsl:call-template name="mark-id"/>
-            <xsl:text>Field (defined inline) </xsl:text>
-            <code>{ @name }</code>
-            <xsl:apply-templates select="use-name | group-as" mode="inline"/>
-        </li>
-    </xsl:template>
-
-    <xsl:template match="define-flag" mode="model-view" expand-text="true">
-        <li>
-            <xsl:call-template name="mark-id"/>
-            <xsl:text>Flag (defined inline) </xsl:text>
-            <code>{ @name }</code>
-            <xsl:apply-templates select="use-name | group-as" mode="inline"/></li>
-
-    </xsl:template>
-
-    <xsl:template match="define-assembly" mode="model-view" expand-text="true">
-        <li>
-            <xsl:call-template name="mark-id"/>
-            <xsl:text>Assembly (defined inline) </xsl:text>
-             <code>{ @name }</code>
-            <xsl:apply-templates select="use-name | group-as" mode="inline"/></li>
-    </xsl:template>
-
+    
     <xsl:template priority="5" match="choice">
         <li class="choice">
             <xsl:call-template name="mark-id"/>
@@ -244,70 +264,28 @@
         </li>
     </xsl:template>
 
-    <!--<xsl:template  match="example">
-      <div class="example">
-         <pre class="example font-mono-sm">
-           <xsl:apply-templates select="*" mode="serialize"/>
-         </pre>
-      </div>
-   </xsl:template>-->
-
-    <!--<xsl:template match="prose">
-        <li class="prose">Prose contents (paragraphs and lists)</li>
-    </xsl:template>
-    
-    <xsl:template match="allowed-values" name="allowed-values">
-        <xsl:choose>
-            <xsl:when test="@allow-other and @allow-other='yes'">
-                <p>The value may be locally defined, or one of the following:</p>
-            </xsl:when>
-            <xsl:otherwise>
-                <p>The value must be one of the following:</p>
-            </xsl:otherwise>
-        </xsl:choose>
-        <ul>
-            <xsl:apply-templates/>
-        </ul>   
-    </xsl:template>
-    
-    <xsl:template match="allowed-values/enum">
-        <li><strong><xsl:value-of select="@value"/></strong><xsl:if test="node()">: <xsl:apply-templates/></xsl:if></li>     
-    </xsl:template>-->
-
     <xsl:template match="remarks">
-        <div class="remarks">
+        <details class="remarks">
+            <summary>Remarks</summary>
             <xsl:apply-templates/>
-        </div>
+        </details>
     </xsl:template>
 
-
-    <xsl:template match="formal-name" expand-text="true">
-        <p class="formal-name" style="font-family: sans-serif; font-weight: bold">{ . }</p>
+    <xsl:template match="formal-name" mode="in-header">
+        <p class="formal-name">
+          <xsl:apply-templates/>
+        </p>
     </xsl:template>
 
-    <!--<xsl:template match="formal-name" mode="inline">
-        <b class="formal-name">
-            <xsl:apply-templates/>
-        </b>
-    </xsl:template>-->
-
+    <!--Dropped in regular traversal b/c acquired in 'in-header' mode-->
+    <xsl:template match="formal-name"/>
+    
+    
     <xsl:template match="description">
         <p class="description">
             <xsl:apply-templates/>
         </p>
     </xsl:template>
-
-    <!-- <xsl:template match="example/description">
-        <p class="description">
-            <xsl:apply-templates/>
-        </p>
-    </xsl:template>-->
-
-    <!--<xsl:template match="example/remarks">
-      <div class="remarks">
-          <xsl:apply-templates/>
-      </div>
-   </xsl:template>-->
 
     <xsl:template match="p">
         <p class="p">
@@ -315,31 +293,11 @@
         </p>
     </xsl:template>
 
-
-    <xsl:template match="code">
-        <code>
-            <xsl:apply-templates/>
-        </code>
-    </xsl:template>
-
-    <xsl:template match="q">
-        <q>
-            <xsl:apply-templates/>
-        </q>
-    </xsl:template>
-
-    <xsl:template match="em | strong | b | i | u">
+   <xsl:template match="em | strong | b | i | u | q | code | a">
         <xsl:element name="{local-name(.)}" namespace="http://www.w3.org/1999/xhtml">
+            <xsl:copy-of select="@*"/>
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
-
-    <xsl:template match="a">
-        <a href="{@href}">
-            <xsl:apply-templates/>
-        </a>
-    </xsl:template>
-
-
 
 </xsl:stylesheet>

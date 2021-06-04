@@ -21,6 +21,7 @@
    <xsl:template match="short-name" mode="schema-link" expand-text="true">
       <p>
          <span class="usa-tag">JSON Schema</span>
+         <xsl:text> </xsl:text>
          <a href="https://pages.nist.gov/OSCAL/artifacts/json/schema/oscal_{$file-map(.)}_schema.json">oscal_{$file-map(string(.))}_schema.json</a>
       </p>
    </xsl:template>
@@ -28,12 +29,14 @@
    <xsl:template match="short-name" mode="converter-link" expand-text="true">
       <p>
          <span class="usa-tag">XML to JSON converter</span>
+         <xsl:text> </xsl:text>
          <a href="https://pages.nist.gov/OSCAL/artifacts/json/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl">oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a> <a href="https://github.com/usnistgov/OSCAL/tree/master/json#converting-oscal-xml-content-to-json">(How do I use the converter to convert OSCAL XML to JSON?)</a>
       </p>
    </xsl:template>
    
    <xsl:template name="remarks-group">
-      <xsl:for-each-group select="remarks[not(@class = 'xml')]" group-by="true()">
+      <xsl:param name="these-remarks" select="remarks"/>
+         <xsl:for-each-group select="$these-remarks[not(contains-token(@class,'xml'))]" group-by="true()">
          <div class="remarks-group usa-prose">
             <details open="open">
                <summary class="subhead">Remarks</summary>
@@ -68,14 +71,15 @@
 
 <!-- Map traversal -->
    <xsl:template match="*[exists(@key)]" expand-text="true">
-      <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@key)])"/>
+      <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
+      <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
       <xsl:variable name="grouped-object" select="(self::array | self::singleton-or-array)/*"/>
       <xsl:variable name="me" select="($grouped-object,.)[1]"/>
       <div class="model-entry definition { tokenize($me/@_metaschema-json-id,'/')[2] }">
          <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
          <div class="{ $header-class }">
             <!-- generates h1-hx headers picked up by Hugo toc -->
-            <xsl:element expand-text="true" name="h{ $level }" namespace="http://www.w3.org/1999/xhtml">
+            <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
                <xsl:attribute name="id" select="@_tree-json-id"/>
                <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
                <xsl:text>{ @key }</xsl:text>
@@ -91,13 +95,14 @@
             <xsl:call-template name="crosslink-to-xml"/>
             <xsl:apply-templates select="formal-name" mode="produce"/>
          </div>
+         <xsl:apply-templates mode="array-header"/>
+            
          <xsl:where-populated>
             <div class="body">
-               <!-- only arrays or singleton-or-array get array headers -->
-               <xsl:apply-templates mode="for-array-member"/>
-
-               <xsl:apply-templates select="description" mode="produce"/>
-               <xsl:call-template name="remarks-group"/>
+               <xsl:apply-templates select="$me/description" mode="produce"/>
+               <xsl:call-template name="remarks-group">
+                  <xsl:with-param name="these-remarks" select="$me/remarks"/>
+               </xsl:call-template>
 
                <!--<xsl:variable name="mine" select="$me / (array | singleton-or-array | object | string | number | boolean)"/>-->
                <xsl:variable name="mine"
@@ -115,7 +120,7 @@
                <xsl:if test="exists($my-constraints)">
                   <details class="constraints" open="open">
                      <summary>
-                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' }({ count($my-constraints) })</xsl:text>
+                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' } ({ count($my-constraints) })</xsl:text>
                      </summary>
                      <xsl:apply-templates select="$my-constraints" mode="produce-constraint"/>
                   </details>
@@ -125,9 +130,9 @@
       </div>
    </xsl:template>
    
-   <xsl:template mode="for-array-member" match="*"/>
+   <xsl:template mode="array-header" match="*"/>
    
-   <xsl:template mode="for-array-member" match="array/*">
+   <xsl:template mode="array-header" match="array/*">
       <div class="array-header">
          <p class="array-member">(array member)</p>
          <p class="type">
@@ -138,12 +143,9 @@
          </p>
          <xsl:apply-templates select="formal-name" mode="produce"/>
       </div>
-      
-      <xsl:apply-templates select="description" mode="produce"/>
-      <xsl:call-template name="remarks-group"/>
    </xsl:template>
    
-   <xsl:template match="singleton-or-array/*" mode="for-array-member">
+   <xsl:template match="singleton-or-array/*" mode="array-header">
       <div class="array-header">
          <p class="array-member">(array member or singleton)</p>
          <p class="type">
@@ -165,7 +167,7 @@
       <xsl:value-of select="local-name()"/><br />
       <xsl:if test="@scope='global'">
          <xsl:text> </xsl:text>
-         <a href="{$path-to-common || $json-definitions-page }#{ @_metaschema-json-id }">(global definition)</a>
+         <a class="definition-link" href="{$path-to-common || $json-definitions-page }#{ @_metaschema-json-id }">(global definition)</a>
       </xsl:if>
    </xsl:template>
    
