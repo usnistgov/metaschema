@@ -190,7 +190,7 @@
    </xsl:template>
    
    <xsl:template match="*" mode="report-context" expand-text="true">
-      <xsl:for-each select="@target[not(.=('.','value()')) ]">
+      <xsl:for-each select="@target[matches(.,'\S')][not(.=('.','value()')) ]">
          <xsl:text>  for </xsl:text>
          <code class="path">{ . }</code>
       </xsl:for-each>
@@ -203,7 +203,7 @@
    </xsl:template>
    
    <xsl:template mode="produce-constraint" priority="2" match="matches[@regex]" expand-text="true">
-      <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
+      <xsl:variable name="target" select="@target[matches(.,'\S')][not(.=('.','value()'))]"/>
       <div class="constraint">
          <p>
             <span class="usa-tag">matches</span>
@@ -223,7 +223,7 @@
    </xsl:template>
    
    <xsl:template mode="produce-constraint" priority="2" match="is-unique">
-      <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
+      <xsl:variable name="target" select="@target[matches(.,'\S')][not(.=('.','value()'))]"/>
       <div class="constraint">
          <p>
             <span class="usa-tag">is unique</span>
@@ -238,9 +238,8 @@
          <p>
             <span class="usa-tag">has cardinality</span>
             <xsl:apply-templates select="." mode="report-context"/>
-            <span class="cnstr-tag">cardinality rule</span>
             <xsl:text> the cardinality of  </xsl:text>
-            <code>{ (@target,'.')[1] }</code>
+            <code>{ (@target[matches(.,'\S')],'.')[1] }</code>
             <xsl:text> is constrained: </xsl:text>
             <b>{ (@min-occurs,0)[1] }</b>
             <xsl:text>; maximum </xsl:text>
@@ -249,12 +248,11 @@
    </xsl:template>
    
    <xsl:template mode="produce-constraint" priority="2" match="index-has-key" expand-text="true">
-      <xsl:variable name="target" select="@target[not(.=('.','value()'))]"/>
+      <xsl:variable name="target" select="@target[matches(.,'\S')][not(.=('.','value()'))]"/>
       <div class="constraint">
          <p>
             <span class="usa-tag">index has key</span>
             <xsl:apply-templates select="." mode="report-context"/>
-            <span class="cnstr-tag">index rule</span>
             <xsl:text>this value must correspond to a listing in the index </xsl:text>
             <code>{ @name }</code>
             <xsl:text> using a key constructed of key field(s) </xsl:text>
@@ -268,11 +266,10 @@
          <p>
             <span class="usa-tag">index</span>
             <xsl:apply-templates select="." mode="report-context"/>
-            <span class="cnstr-tag">index definition</span>
             <xsl:text> an index </xsl:text>
             <code>{ @name }</code>
             <xsl:choose>
-               <xsl:when test="matches(@target,'\S')">
+               <xsl:when test="matches(@target,'\S') and not(@target=('.','value()'))">
                   <xsl:text> shall list values returned by targets </xsl:text>
                   <code>{ @target }</code>
                </xsl:when>

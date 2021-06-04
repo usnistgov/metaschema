@@ -57,23 +57,21 @@ exclude-result-prefixes="#all">
         </div>
     </xsl:template>
 
-    <xsl:template mode="metaschema-type" match="define-assembly | define-field | define-flag">
-        <xsl:text expand-text="true">{ local-name() => replace('^define\-','') } definition</xsl:text><br class="br" />
-        <xsl:variable name="definition" select="()"/>
-        <xsl:if test="exists($definition)">
-            <xsl:text> </xsl:text>
-            <a class="definition-link" href="#{ @_metaschema-xml-id }">(global definition)</a>
-        </xsl:if>
+    <xsl:template mode="metaschema-type" match="define-assembly">
+        <xsl:text expand-text="true">assembly</xsl:text><br class="br" />
+        <xsl:text> </xsl:text>
     </xsl:template>
     
     <xsl:template mode="metaschema-type" match="assembly | field | flag">
-        <xsl:value-of select="local-name()"/><br class="br"/>
-        <xsl:variable name="definition" select="()"/>
+        <xsl:variable name="definition" as="element()">
+            <xsl:apply-templates select="." mode="find-definition"/>
+        </xsl:variable>
+        <xsl:apply-templates select="$definition" mode="metaschema-type"/>
+        <br class="br"/>
         <xsl:if test="exists($definition)">
             <xsl:text> </xsl:text>
             <a class="definition-link" href="#{ @_metaschema-xml-id }">(global definition)</a>
         </xsl:if>
     </xsl:template>
-    
     
 </xsl:stylesheet>
