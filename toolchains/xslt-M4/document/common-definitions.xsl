@@ -30,7 +30,7 @@
             <xsl:apply-templates select="remarks"/>
 
             <xsl:apply-templates select="$definitions" mode="model-view">
-                <xsl:sort select="(root-name,use-name,@name)[1]"/>
+                <!--<xsl:sort select="(root-name,use-name,@name)[1]"/>-->
             </xsl:apply-templates>
 
         </div>
@@ -145,22 +145,21 @@
     </xsl:template>
     
     <xsl:template match="group-as" expand-text="true">
-        <p><span class="usa-tag">group as</span>&#xA0;<code class="name">{ @name }</code></p>
-        <p><span class="usa-tag">grouping object</span>&#xA0;<code class="name">{ (@in-json,'ARRAY')[1] }</code></p>
-        <xsl:if test="@in-xml='GROUPED'">
-            <p>When expressed in XML, a containing element <code class="name">{ @name }</code> is required.</p>
-        </xsl:if>
+        <xsl:message>unexpected match</xsl:message>
     </xsl:template>
     
     <xsl:template match="example"/>
     
+    <!-- References get specialized treatment -->
+    <xsl:template match="assembly | field | flag" mode="model"/>
+    
     <xsl:template match="define-flag" mode="model"/>
-        
+    
     <xsl:template match="define-assembly | define-field" mode="model">
         <xsl:variable name="metaschema-type" select="replace(name(),'^define\-','')"/>
-        <xsl:for-each-group select="flag | define-flag | model/*" group-by="true()">
+        <xsl:for-each-group select="flag | define-flag | model/*" group-by="true()" expand-text="true">
             <details open="open">
-                <summary>Property set / contents:</summary>
+                <summary>{ if (count(current-group()) le 1) then 'Properties' else 'Property' } { count(current-group()) }</summary>
 
                 <div class="model { $metaschema-type }-model">
                     <xsl:apply-templates select="current-group()" mode="model-view"/>
@@ -176,8 +175,7 @@
         <xsl:variable name="definition" as="element()">
             <xsl:apply-templates select="." mode="find-definition"/>
         </xsl:variable>
-        <div class="model-entry definition { name() }"
-            style="margin: 0em; margin-top: 1em; padding: 0.5em; border: thin solid black">
+        <div class="model-entry definition { name() }">
             <div class="{ if ($is-inline) then 'instance-header' else 'definition-header' }">
                 <xsl:element namespace="http://www.w3.org/1999/xhtml" name="{ $header-tag }"
                     expand-text="true">
@@ -196,16 +194,35 @@
                 <xsl:call-template name="crosslink"/>
                 <xsl:apply-templates select="$definition/formal-name" mode="in-header"/>
             </div>
-            
-            <!-- in no mode for regular contents including use-name, group-as etc. -->
-            <xsl:apply-templates/>
-            
-            <!-- emits contents only for define-assembly and define-field -->
-            <xsl:apply-templates select="." mode="model"/>
-            
-            <!-- emits contents only for references -->
-            <xsl:apply-templates select="." mode="link-to-definition"/>
+            <xsl:where-populated>
+                <div class="body">
+                    <!-- in no mode for regular contents including use-name, group-as etc. -->
+                    
+<!-- split out to control order; include group-as, json-key etc. etc. from definitions                   -->
+                    <!-- pick up a description from the definition if none is present -->
+                    <xsl:apply-templates select="(.,$definition)[1]/description"/>
+
+                    <xsl:apply-templates select="(.|$definition)/(root-name, use-name, group-as, json-value-key, json-key)"/>
+                    <xsl:call-template name="remarks-group">
+                        <xsl:with-param name="these-remarks" select="$definition/remarks, remarks"/>
+                    </xsl:call-template>
+                    <xsl:apply-templates select="constraint"/>
+                    
+                    <!--  description | root-name | remarks | use-name | group-as | constraint | json-value-key | flag | example -->
+                    <!-- emits contents only for define-assembly and define-field -->
+                    <xsl:apply-templates select="." mode="model"/>
+                    <!-- emits contents only for references -->
+                    <xsl:apply-templates select="." mode="link-to-definition"/>
+                </div>
+            </xsl:where-populated>
         </div>
+    </xsl:template>
+    
+    <xsl:template name="remarks-group">
+        <xsl:param name="these-remarks" select="child::remarks"/>
+        
+        <xsl:comment> remarks group goes here</xsl:comment>
+        <xsl:message> remarks-group override failing...</xsl:message>
     </xsl:template>
     
     <xsl:template name="crosslink">
@@ -213,38 +230,7 @@
         <xsl:message>not making crosslink...</xsl:message>
     </xsl:template>
     
-    <!--<xsl:template match="assembly | field | flag" mode="model-view">
-        <xsl:variable name="level" select="count(. | ancestor::define-assembly | ancestor::define-field)"/>
-        <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
-        <xsl:variable name="definition" as="element()">
-            <xsl:apply-templates select="." mode="find-definition"/>
-        </xsl:variable>
-        <div class="model-entry definition { name() }"
-            style="margin: 0em; margin-top: 1em; padding: 0.5em; border: thin solid black">
-            <div class="instance-header">
-                <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }"
-                expand-text="true">
-                <xsl:call-template name="mark-id"/>
-                <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
-                <xsl:apply-templates select="." mode="definition-title-text"/>
-            </xsl:element>
-                <p class="type">
-                    <xsl:apply-templates select="$definition" mode="metaschema-type"/>
-                </p>
-                <xsl:if test="exists(ancestor::model)">
-                    <p class="occurrence">
-                        <xsl:apply-templates select="." mode="occurrence-code"/>
-                    </p>
-                </xsl:if>
-                <xsl:call-template name="crosslink"/>
-                <xsl:apply-templates select="$definition/formal-name" mode="in-header"/>
-            </div>
-            <!-\- placeholder for what is to come -\->
-            <xsl:apply-templates/>
-            <xsl:apply-templates select="." mode="link-to-definition"/>
-            
-        </div>
-    </xsl:template>-->
+
     
     <xsl:template mode="find-definition" as="element()" match="define-assembly | define-field | define-flag">
         <xsl:sequence select="."/>
@@ -275,7 +261,7 @@
         <xsl:variable name="constraints"
             select="descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index"/>
         <details>
-            <summary>Constraint</summary>
+            <summary>Constraint{ if (count($constraints) le 1) then 's' else '' } ({ count($constraints) })</summary>
             <xsl:apply-templates/>
         </details>
     </xsl:template>
@@ -302,7 +288,7 @@
     </xsl:template>
 
     <xsl:template match="remarks">
-        <details class="remarks">
+        <details class="remarks" open="open">
             <summary>Remarks</summary>
             <xsl:apply-templates/>
         </details>
@@ -319,7 +305,8 @@
     
     
     <xsl:template match="description">
-        <p class="description">
+        <p class="description"><span class="usa-tag">description</span>
+            <xsl:text> </xsl:text>
             <xsl:apply-templates/>
         </p>
     </xsl:template>

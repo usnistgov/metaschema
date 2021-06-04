@@ -97,6 +97,16 @@
                <xsl:apply-templates select="value" mode="produce"/>
                <xsl:call-template name="remarks-group"/>
                
+               <xsl:variable name="my-constraints"
+                  select="constraint/( descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index )"/>
+               <xsl:if test="exists($my-constraints)">
+                  <details class="constraints" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' } ({ count($my-constraints) })</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="$my-constraints" mode="produce-constraint"/>
+                  </details>
+               </xsl:if>
                <xsl:for-each-group select="attribute" group-by="true()">
                   <details class="properties attributes" open="open">
                      <summary>
@@ -113,16 +123,7 @@
                      <xsl:apply-templates select="current-group()"/>
                   </details>
                </xsl:for-each-group>
-               <xsl:variable name="my-constraints"
-                  select="constraint/( descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index )"/>
-               <xsl:if test="exists($my-constraints)">
-                  <details class="constraints" open="open">
-                     <summary>
-                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' } ({ count($my-constraints) })</xsl:text>
-                     </summary>
-                     <xsl:apply-templates select="$my-constraints" mode="produce-constraint"/>
-                  </details>
-               </xsl:if>
+               
             </div>
          </xsl:where-populated>
       </div>

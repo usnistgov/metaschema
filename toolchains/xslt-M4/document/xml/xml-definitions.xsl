@@ -18,6 +18,44 @@ exclude-result-prefixes="#all">
         <xsl:attribute name="class">xml-definition</xsl:attribute>
     </xsl:template>
     
+    <xsl:template mode="definition-title-text" expand-text="true"
+        match="model//define-field[@as-type='markup-multiline'][@in-xml='UNWRAPPED']">(unwrapped)</xsl:template>
+    
+    <xsl:template mode="definition-title-text" expand-text="true"
+        match="field[@as-type='markup-multiline'][@in-xml='UNWRAPPED']">
+        <xsl:variable name="definition" as="element()">
+            <xsl:apply-templates select="." mode="find-definition"/>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="(.|$definition)/@as-type='markup-multiline' and @in-xml='UNWRAPPED'">(unwrapped)</xsl:when>
+            <xsl:otherwise>
+                <xsl:next-match/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template match="define-assembly | define-field" mode="model">
+        <xsl:variable name="metaschema-type" select="replace(name(),'^define\-','')"/>
+        <xsl:for-each-group select="flag | define-flag" group-by="true()" expand-text="true">
+            <details open="open">
+                <summary>{ if (count(current-group()) ne 1) then 'Attributes' else 'Attribute' } ({ count(current-group()) }):</summary>
+                
+                <div class="model { $metaschema-type }-model">
+                    <xsl:apply-templates select="current-group()" mode="model-view"/>
+                </div>
+            </details>
+        </xsl:for-each-group>
+        <xsl:for-each-group select="model/*" group-by="true()" expand-text="true">
+            <details open="open">
+                <summary>Elements ({ count(current-group()) }):</summary>
+                <div class="model { $metaschema-type }-model">
+                    <xsl:apply-templates select="current-group()" mode="model-view"/>
+                </div>
+            </details>
+        </xsl:for-each-group>
+    </xsl:template>
+    
+    
     <xsl:template name="mark-id">
         <xsl:attribute name="id" select="@_metaschema-xml-id"/>
     </xsl:template>
@@ -28,6 +66,14 @@ exclude-result-prefixes="#all">
     </xsl:variable>
     <xsl:variable name="json-definitions-link" select="$path-to-common || $json-definitions-page"/>
     
+    <!-- JSON values dropped in default traversal for XML docs   -->
+    <xsl:template match="json-value-key | json-key"/>
+    
+    <xsl:template match="group-as" expand-text="true">
+        <xsl:if test="@in-xml='GROUPED'">
+            <p><span class="usa-tag">wrapper element</span>&#xA0;<code class="name">{ @name }</code></p>
+        </xsl:if>
+    </xsl:template>
     
     <xsl:template match="assembly" mode="link-to-definition">
         <xsl:variable name="definition" select="key('assembly-definition-by-name',@_key-ref)"/>
@@ -50,10 +96,22 @@ exclude-result-prefixes="#all">
         </p>
     </xsl:template>
     
+    <xsl:template name="remarks-group">
+        <xsl:param name="these-remarks" select="child::remarks"/>
+        <xsl:for-each-group select="$these-remarks[not(contains-token(@class,'json'))]" group-by="true()">
+            <div class="remarks-group usa-prose">
+                <details open="open">
+                    <summary class="subhead">Remarks</summary>
+                    <xsl:apply-templates select="current-group()" mode="produce"/>
+                </details>
+            </div>
+        </xsl:for-each-group>
+    </xsl:template>
+    
     <!-- Crosslink heads to JSON page -->
     <xsl:template name="crosslink">
         <div class="crosslink">
-            <a class="usa-button" href="{$json-definitions-link}#{@_tree-json-id}">Switch to JSON</a>
+            <a class="usa-button" href="{$json-definitions-link}#{@_metaschema-json-id}">Switch to JSON</a>
         </div>
     </xsl:template>
 

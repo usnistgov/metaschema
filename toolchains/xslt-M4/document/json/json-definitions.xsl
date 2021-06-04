@@ -27,6 +27,22 @@ exclude-result-prefixes="#all">
    </xsl:variable>
    <xsl:variable name="xml-definitions-link" select="$path-to-common || $xml-definitions-page"/>
    
+   <xsl:template name="remarks-group">
+      <xsl:param name="these-remarks" select="child::remarks"/>
+      <xsl:for-each-group select="$these-remarks[not(contains-token(@class,'xml'))]" group-by="true()">
+         <div class="remarks-group usa-prose">
+            <details open="open">
+               <summary class="subhead">Remarks</summary>
+               <xsl:apply-templates select="current-group()" mode="produce"/>
+            </details>
+         </div>
+      </xsl:for-each-group>
+   </xsl:template>
+   
+   <xsl:template match="group-as" expand-text="true">
+      <p><span class="usa-tag">group as</span>&#xA0;<code class="name">{ @name }</code></p>
+   </xsl:template>
+   
    <xsl:template match="assembly" mode="link-to-definition">
       <xsl:variable name="definition" select="key('assembly-definition-by-name',@_key-ref)"/>
       <p class="definition-link">
@@ -51,7 +67,7 @@ exclude-result-prefixes="#all">
    <!-- Crosslink heads to XML page  -->
    <xsl:template name="crosslink">
       <div class="crosslink">
-         <a class="usa-button" href="{$xml-definitions-link}#{@_tree-xml-id}">Switch to XML</a>
+         <a class="usa-button" href="{$xml-definitions-link}#{@_metaschema-xml-id}">Switch to XML</a>
       </div>
    </xsl:template>
    

@@ -98,7 +98,7 @@
                 </xsl:for-each>
             </xsl:if>
             <xsl:apply-templates select="constraint"/>
-            <xsl:apply-templates select="$with-remarks, remarks"/>
+            <xsl:apply-templates select="remarks, $with-remarks"/>
         </xsl:element>
     </xsl:template>
     
@@ -108,7 +108,7 @@
         <xsl:variable name="given-type"   select="$reference/@as-type"/>
         <xsl:variable name="is-required"  select="($reference/@required | @required) ='yes'"/>
         <xsl:variable name="using-name"   select="$reference/(use-name,@ref)[1]"/>
-        <xsl:variable name="with-remarks" select="$reference/with-remarks"/>
+        <xsl:variable name="with-remarks" select="$reference/remarks"/>
         
         <flag max-occurs="1" min-occurs="{if ($is-required) then 1 else 0}" as-type="{ ($given-type,@as-type, 'string')[1] }">
             
@@ -124,7 +124,7 @@
             
             <xsl:apply-templates select="formal-name | description"/>
             <xsl:apply-templates select="constraint"/>
-            <xsl:apply-templates select="$with-remarks, remarks"/>
+            <xsl:apply-templates select="remarks, $with-remarks"/>
         </flag>
     </xsl:template>
 
