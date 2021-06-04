@@ -11,7 +11,6 @@
     <xsl:key name="field-definition-by-name" match="/METASCHEMA/define-field"       use="@_key-name"/>
     <xsl:key name="flag-definition-by-name" match="/METASCHEMA/define-flag"         use="@_key-name"/>
     
-    
     <xsl:variable name="datatype-page" as="xs:string">../../../datatypes</xsl:variable>
     
     <xsl:variable name="indenting" as="element()"
@@ -135,7 +134,6 @@
         <p>Grouping rule: group as <code class="name">{ @name }</code></p>
     </xsl:template>
     
-    
     <xsl:template match="define-flag" mode="model"/>
         
     <xsl:template match="define-assembly | define-field" mode="model">
@@ -157,19 +155,20 @@
 
     <xsl:template match="define-assembly | define-field | define-flag" mode="model-view">
         <xsl:variable name="level" select="count(. | ancestor::define-assembly)"/>
+        <xsl:variable name="is-inline" select="exists(ancestor::model)"/>
         <div class="model-entry definition { name() }"
             style="margin: 0em; margin-top: 1em; padding: 0.5em; border: thin solid black">
-            <div class="definition-header">
+            <div class="{ if ($is-inline) then 'instance-header' else 'definition-header' }">
                 <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }"
                     expand-text="true">
                     <xsl:call-template name="mark-id"/>
-                    <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
+                    <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
                     <xsl:apply-templates select="." mode="definition-title-text"/>
                 </xsl:element>
                 <p class="type">
                     <xsl:apply-templates select="." mode="metaschema-type"/>
                 </p>
-                <xsl:if test="exists(ancestor::model)">
+                <xsl:if test="$is-inline">
                     <p class="occurrence">
                         <xsl:apply-templates select="." mode="occurrence-code"/>
                     </p>
@@ -195,8 +194,11 @@
     </xsl:template>
     
     <xsl:template match="assembly | field | flag" mode="model-view">
-        <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
+        <xsl:variable name="level" select="count(.|ancestor::define-field|ancestor::define-assembly)"/>
         <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
+        <xsl:variable name="definition" as="element()">
+            <xsl:apply-templates select="." mode="find-definition"/>
+        </xsl:variable>
         <div class="model-entry definition { name() }"
             style="margin: 0em; margin-top: 1em; padding: 0.5em; border: thin solid black">
             <!--<xsl:call-template name="crosslink-to-xml"/>-->
@@ -205,11 +207,11 @@
                 <xsl:element namespace="http://www.w3.org/1999/xhtml" name="h{ $level }"
                 expand-text="true">
                 <xsl:call-template name="mark-id"/>
-                <xsl:attribute name="class">toc{ $level} head</xsl:attribute>
+                <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
                 <xsl:apply-templates select="." mode="definition-title-text"/>
             </xsl:element>
                 <p class="type">
-                    <xsl:apply-templates select="." mode="metaschema-type"/>
+                    <xsl:apply-templates select="$definition" mode="metaschema-type"/>
                 </p>
                 <xsl:if test="exists(ancestor::model)">
                     <p class="occurrence">
@@ -217,13 +219,25 @@
                     </p>
                 </xsl:if>
                 <xsl:call-template name="crosslink"/>
-                <xsl:apply-templates select="formal-name" mode="in-header"/>
+                <xsl:apply-templates select="$definition/formal-name" mode="in-header"/>
             </div>
             <!-- placeholder for what is to come -->
             <xsl:apply-templates/>
             <xsl:apply-templates select="." mode="link-to-definition"/>
             
         </div>
+    </xsl:template>
+    
+    <xsl:template mode="find-definition" as="element()" match="assembly">
+        <xsl:sequence select="key('assembly-definition-by-name',@_key-ref)"/>
+    </xsl:template>
+    
+    <xsl:template mode="find-definition" as="element()" match="field">
+        <xsl:sequence select="key('field-definition-by-name',@_key-ref)"/>
+    </xsl:template>
+    
+    <xsl:template mode="find-definition" as="element()" match="flag">
+        <xsl:sequence select="key('flag-definition-by-name',@_key-ref)"/>
     </xsl:template>
     
     <xsl:template match="*" mode="link-to-definition">
@@ -255,13 +269,11 @@
     </xsl:template>
     
     <xsl:template priority="5" match="choice">
-        <li class="choice">
+        <div class="choice">
             <xsl:call-template name="mark-id"/>
-            <xsl:text>A choice between: </xsl:text>
-            <ul>
-                <xsl:apply-templates/>
-            </ul>
-        </li>
+            <p>A choice between: </p>
+            <xsl:apply-templates/>
+        </div>
     </xsl:template>
 
     <xsl:template match="remarks">
