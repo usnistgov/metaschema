@@ -119,7 +119,7 @@
     <xsl:template mode="definition-title-text"
         match="define-field | field" expand-text="true">{ (use-name,@name,@ref)[1] }</xsl:template>
 
-    <xsl:template match="root-name">
+    <xsl:template match="root-name" expand-text="true">
         <p>Name at root: <code class="use-name">{ . }</code></p>
     </xsl:template>
     
