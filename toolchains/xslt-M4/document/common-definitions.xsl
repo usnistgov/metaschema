@@ -29,7 +29,9 @@
             <xsl:apply-templates select="short-name" mode="converter-link"/>
             <xsl:apply-templates select="remarks"/>
 
-            <xsl:apply-templates select="$definitions" mode="model-view"/>
+            <xsl:apply-templates select="$definitions" mode="model-view">
+                <xsl:sort select="(root-name,use-name,@name)[1]"/>
+            </xsl:apply-templates>
 
         </div>
     </xsl:template>
@@ -119,19 +121,19 @@
         match="define-field | field" expand-text="true">{ (use-name,@name,@ref)[1] }</xsl:template>
 
     <xsl:template match="root-name" expand-text="true">
-        <p>Name at root: <code class="use-name">{ . }</code></p>
-    </xsl:template>
-    
-    <xsl:template match="/METASCHEMA/*/use-name" expand-text="true">
-        <p>May use name: <code class="name">{ . }</code></p>
+        <p><span class="usa-tag">root name</span>&#xA0;<code class="name">{ . }</code></p>
     </xsl:template>
     
     <xsl:template match="use-name" expand-text="true">
-        <p>Use name: <code class="name">{ . }</code></p>
+        <p><span class="usa-tag">use name</span>&#xA0;<code class="name">{ . }</code></p>
     </xsl:template>
     
     <xsl:template match="group-as" expand-text="true">
-        <p>Grouping rule: group as <code class="name">{ @name }</code></p>
+        <p><span class="usa-tag">group as</span>&#xA0;<code class="name">{ @name }</code></p>
+        <p><span class="usa-tag">grouping object</span>&#xA0;<code class="name">{ (@in-json,'ARRAY')[1] }</code></p>
+        <xsl:if test="@in-xml='GROUPED'">
+            <p>When expressed in XML, a containing element <code class="name">{ @name }</code> is required.</p>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="define-flag" mode="model"/>
@@ -154,7 +156,7 @@
     <xsl:template match="group-as" mode="inline" expand-text="true"> - grouped as <code>{ @name }</code></xsl:template>
 
     <xsl:template match="define-assembly | define-field | define-flag" mode="model-view">
-        <xsl:variable name="level" select="count(. | ancestor::define-assembly)"/>
+        <xsl:variable name="level" select="count(. | ancestor::define-assembly | ancestor::define-field)"/>
         <xsl:variable name="is-inline" select="exists(ancestor::model)"/>
         <div class="model-entry definition { name() }"
             style="margin: 0em; margin-top: 1em; padding: 0.5em; border: thin solid black">
@@ -194,7 +196,7 @@
     </xsl:template>
     
     <xsl:template match="assembly | field | flag" mode="model-view">
-        <xsl:variable name="level" select="count(.|ancestor::define-field|ancestor::define-assembly)"/>
+        <xsl:variable name="level" select="count(. | ancestor::define-assembly | ancestor::define-field)"/>
         <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
         <xsl:variable name="definition" as="element()">
             <xsl:apply-templates select="." mode="find-definition"/>
