@@ -159,7 +159,7 @@
         <xsl:variable name="metaschema-type" select="replace(name(),'^define\-','')"/>
         <xsl:for-each-group select="flag | define-flag | model/*" group-by="true()" expand-text="true">
             <details open="open">
-                <summary>{ if (count(current-group()) le 1) then 'Properties' else 'Property' } { count(current-group()) }</summary>
+                <summary>{ if (count(current-group()) ne 1) then 'Properties' else 'Property' } ({ count(current-group()) })</summary>
 
                 <div class="model { $metaschema-type }-model">
                     <xsl:apply-templates select="current-group()" mode="model-view"/>
