@@ -8,12 +8,22 @@ xmlns="http://www.w3.org/1999/xhtml"
 xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
 exclude-result-prefixes="#all">
 
+<xsl:output indent="true"/>
+   
    <xsl:import href="../common-definitions.xsl"/>
     
    <xsl:param name="json-definitions-page">json/definitions</xsl:param>
    <xsl:param name="xml-definitions-page">xml/definitions</xsl:param>
    
    <xsl:template match="METASCHEMA/namespace"/>
+   
+   <xsl:template match="METASCHEMA/json-base-uri" expand-text="true">
+      <p>
+         <span class="usa-tag">JSON Base URI</span>
+         <xsl:text> </xsl:text>
+         <code>{ . }</code>
+      </p>
+   </xsl:template>
    
    <xsl:template match="short-name" mode="schema-link" expand-text="true">
       <p>
