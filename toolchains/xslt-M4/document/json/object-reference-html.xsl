@@ -176,6 +176,13 @@
       <a href="{$datatype-page}/#{(lower-case(@as-type))}">{ @as-type }</a>
    </xsl:template>
    
+   <xsl:template match="*" mode="report-context" expand-text="true">
+      <xsl:for-each select="@target[matches(.,'\S')][not(.=('.','value()')) ]">
+         <xsl:text>  for </xsl:text>
+         <code class="path">{ . }</code>
+      </xsl:for-each>
+   </xsl:template>
+   
 
    <xsl:import href="../common-reference.xsl"/>
 

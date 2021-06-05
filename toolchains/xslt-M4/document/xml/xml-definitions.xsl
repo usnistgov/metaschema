@@ -132,4 +132,11 @@ exclude-result-prefixes="#all">
         </xsl:if>
     </xsl:template>
     
+    <xsl:template match="*" mode="report-context" expand-text="true">
+        <xsl:for-each select="@target[matches(.,'\S')][not(.=('.','value()')) ]">
+            <xsl:text> for </xsl:text>
+            <code class="path">{ . }</code>
+        </xsl:for-each>
+    </xsl:template>
+    
 </xsl:stylesheet>
