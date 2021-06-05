@@ -261,7 +261,9 @@
         <xsl:variable name="constraints"
             select="descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index"/>
         <details>
-            <summary>Constraint{ if (count($constraints) le 1) then 's' else '' } ({ count($constraints) })</summary>
+            <summary>
+                <xsl:text expand-text="true">Constraint{ if (count($constraints) le 1) then 's' else '' } ({ count($constraints) })</xsl:text>
+            </summary>
             <xsl:apply-templates/>
         </details>
     </xsl:template>
