@@ -13,6 +13,31 @@ exclude-result-prefixes="#all">
    <xsl:param name="json-definitions-page">json/definitions</xsl:param>
    <xsl:param name="xml-definitions-page">xml/definitions</xsl:param>
    
+   <xsl:template match="METASCHEMA/namespace"/>
+   
+   <xsl:template match="short-name" mode="schema-link" expand-text="true">
+      <p>
+         <span class="usa-tag">JSON Schema</span>
+         <xsl:text> </xsl:text>
+         <a
+            href="https://pages.nist.gov/OSCAL/artifacts/json/schema/oscal_{$file-map(.)}_schema.json"
+            >oscal_{$file-map(string(.))}_schema.json</a>
+      </p>
+   </xsl:template>
+   
+   
+   <xsl:template match="short-name" mode="converter-link" expand-text="true">
+      <p>
+         <span class="usa-tag">XML to JSON converter</span>
+         <xsl:text> </xsl:text>
+         <a href="https://pages.nist.gov/OSCAL/artifacts/xml/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl"
+            >oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a>
+         <xsl:text> </xsl:text>
+         <a href="https://github.com/usnistgov/OSCAL/tree/master/xml#converting-oscal-xml-content-to-json"
+            >(How do I use the converter to convert OSCAL XML to JSON)</a>
+      </p>
+   </xsl:template>
+   
    <xsl:template name="reference-class">
       <xsl:attribute name="class">json-definition</xsl:attribute>
    </xsl:template>

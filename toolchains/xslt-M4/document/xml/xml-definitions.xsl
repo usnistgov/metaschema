@@ -14,6 +14,8 @@ exclude-result-prefixes="#all">
     <xsl:param name="json-definitions-page">json/definitions</xsl:param>
     
     
+    <xsl:template match="METASCHEMA/json-base-uri"/>
+    
     <xsl:template name="reference-class">
         <xsl:attribute name="class">xml-definition</xsl:attribute>
     </xsl:template>
