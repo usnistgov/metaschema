@@ -135,7 +135,7 @@
         </sch:rule>
         
         <sch:rule context="m:index | m:is-unique">
-            <sch:assert test="count(key('index-by-name',@name,$composed-metaschema))=1">Only one index or uniqueness assertion may be named '<sch:value-of select="@name"/>'</sch:assert>
+            <sch:assert role="warning" test="count(key('index-by-name',@name,$composed-metaschema))=1">Only one index or uniqueness assertion may be named '<sch:value-of select="@name"/>'</sch:assert>
         </sch:rule>
         
         <sch:rule context="m:index-has-key">

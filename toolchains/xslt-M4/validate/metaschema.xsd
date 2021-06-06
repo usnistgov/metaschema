@@ -72,7 +72,7 @@
       </xs:choice>
       <xs:element name="model" minOccurs="0" type="m:assembly-model"/>
       <xs:element minOccurs="0" name="constraint" type="m:assembly-constraint-type"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
+      <xs:element minOccurs="0" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
@@ -110,7 +110,7 @@
           type="m:local-flag-definition"/>
       </xs:choice>
       <xs:element minOccurs="0" name="constraint" type="m:model-constraint-type"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
+      <xs:element minOccurs="0" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
     <xs:attribute name="as-type" type="m:field-types" default="string"/>
@@ -131,13 +131,12 @@
       <xs:element minOccurs="0" ref="m:description"/>
       <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       <xs:element name="constraint" minOccurs="0" type="m:define-flag-constraints-type"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
+      <xs:element minOccurs="0" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
     <!-- datatype should default to 'string' -->
     <xs:attribute name="as-type" type="m:simple-datatypes" default="string"/>
-    <!-- defined for composed (compiled) metaschemas -->
     <xs:attribute name="scope" type="m:scope-type" default="global"/>
   </xs:complexType>
 
@@ -150,7 +149,7 @@
     <xs:sequence>
       <xs:element minOccurs="0" ref="m:formal-name"/>
       <xs:element minOccurs="0" ref="m:description"/>
-      <xs:element minOccurs="0" name="use-name"/>
+      <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-key"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-value-key"/>
       <xs:element minOccurs="0" ref="m:group-as"/>
@@ -161,7 +160,7 @@
       </xs:choice>
       <xs:element name="model" minOccurs="0" type="m:assembly-model"/>
       <xs:element minOccurs="0" name="constraint" type="m:assembly-constraint-type"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
+      <xs:element minOccurs="0" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
     <xs:attributeGroup ref="m:cardinality-specification"/>
@@ -178,7 +177,7 @@
     <xs:sequence>
       <xs:element minOccurs="0" ref="m:formal-name"/>
       <xs:element minOccurs="0" ref="m:description"/>
-      <xs:element minOccurs="0" name="use-name"/>
+      <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-key"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="m:json-value-key"/>
       <xs:element minOccurs="0" ref="m:group-as"/>
@@ -188,7 +187,7 @@
           type="m:local-flag-definition"/>
       </xs:choice>
       <xs:element minOccurs="0" name="constraint" type="m:model-constraint-type"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
+      <xs:element minOccurs="0" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
     <xs:attribute name="as-type" type="m:field-types" default="string"/>
@@ -226,7 +225,7 @@
       <xs:element minOccurs="0" ref="m:formal-name"/>
       <xs:element minOccurs="0" ref="m:description"/>
       <xs:element name="constraint" minOccurs="0" type="m:define-flag-constraints-type"/>
-      <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
+      <xs:element minOccurs="0" ref="m:remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
@@ -854,8 +853,12 @@
         the field being defined. When a flag-name is provided, indicates that the value of the field
         is to be labeled in the JSON with the value of the flag.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true">
-      <xs:attribute name="flag-name" type="xs:NCName"/>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NCName">
+          <xs:attribute name="flag-name" type="xs:NCName"/>
+        </xs:extension>
+      </xs:simpleContent>
     </xs:complexType>
   </xs:element>
 
@@ -908,7 +911,7 @@
 
   <!-- TODO: check if both forms are handled. In some cases only 'yes' is handled, and 'true' is not. -->
   <xs:simpleType name="boolean">
-    <xs:restriction base="xs:NCName">
+    <xs:restriction base="xs:string">
       <xs:enumeration value="yes"/>
       <xs:enumeration value="no"/>
     </xs:restriction>
