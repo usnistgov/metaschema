@@ -11,7 +11,9 @@
     
     <xsl:mode on-no-match="shallow-copy"/>
     
-    <xsl:template match="@group-name | @group-xml | @in-xml | @link | @root-name | @use-name"/>
+    <xsl:template match="@group-name | @group-xml| @link | @root-name | @use-name"/>
+    
+    <xsl:template match="formal-name | description | remarks"/>
     
     <xsl:template match="/map">
         <model root-at="{*/@root-name}">
@@ -25,9 +27,9 @@
         <xsl:if test="empty(../parent::group)">
             <xsl:attribute name="key" select="(../@root-name,../@use-name,.)[1]"/>
         </xsl:if>
-        <xsl:if test="not(../@in-xml=('UNWRAPPED','HIDDEN'))">
+        <!--<xsl:if test="not(../@in-xml=('UNWRAPPED','HIDDEN'))">
             <xsl:attribute name="gi"  select="(../@root-name,../@use-name,.)[1]"/>
-        </xsl:if>
+        </xsl:if>-->
     </xsl:template>
     
     <xsl:template match="@required"/>

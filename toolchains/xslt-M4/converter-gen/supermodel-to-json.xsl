@@ -40,6 +40,8 @@
     
     <xsl:template match="flag[@key=../@json-key-flag]" mode="write-json"/>
     
+    <!-- in the case of SINGLETON_OR_ARRAY with a single member, we pass through, but
+         commandeer the key -->
     <xsl:template match="group[@in-json='SINGLETON_OR_ARRAY'][count(*)=1]" mode="write-json">
         <xsl:apply-templates mode="write-json">
             <xsl:with-param name="group-key" select="@key"/>
@@ -51,8 +53,11 @@
         <xsl:param name="group-key" select="()"/>
         <!--@json-key-flag is only available when group/@in-json="BY_KEY"-->
         <xsl:variable name="json-key-flag-name" select="@json-key-flag"/>
+        <!-- this will be an array member unless its group is a singleton or BY_KEY -->
+        <!-- so we want no key except -->
         <map>
-            <xsl:copy-of select="($group-key,@key)[1]"/>
+            <!-- we take a $group-key if given -->
+            <xsl:copy-of select="$group-key"/>
             <!-- when there's a JSON key flag, we get the key from there -->
             <xsl:for-each select="flag[@key=$json-key-flag-name]">
                 <xsl:attribute name="key" select="."/>
@@ -137,6 +142,12 @@
             namespace="http://www.w3.org/2005/xpath-functions">
             <xsl:copy-of
                 select="((../flag[@key=$key-flag-name],parent::field[@in-json = 'SCALAR'])/@key, @key)[1]"/>
+            <!-- overriding the key           -->
+            <xsl:if test="exists(@key-flag)">
+                <xsl:attribute name="key">
+                    <xsl:apply-templates select="../flag[@name=$key-flag-name]" mode="cast-data"/>
+                </xsl:attribute>
+            </xsl:if>
             <xsl:apply-templates select="." mode="cast-data"/>
         </xsl:element>
     </xsl:template>
@@ -173,9 +184,7 @@
     
     
     <xsl:template name="conditional-lf">
-        <xsl:variable name="predecessor"
-            select="preceding-sibling::p | preceding-sibling::ul | preceding-sibling::ol | preceding-sibling::table | preceding-sibling::pre"/>
-        <xsl:if test="exists($predecessor)">
+        <xsl:if test="exists(preceding-sibling::*)">
             <string/>
         </xsl:if>
     </xsl:template>

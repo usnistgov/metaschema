@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     stylesheet="docs-metapath.xsl"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
 <!-- Tests path-aware element name prefixing -->
@@ -21,6 +22,29 @@
         <x:call function="m:match-paths">
             <x:param name="context-path" as="xs:string">e1/e2/e3/e4/e5</x:param>
             <x:param name="target-path"  as="xs:string">e1/e2/e3/e4/e5</x:param>
+        </x:call>
+        <x:expect label="matching" select="true()"/>
+    </x:scenario>
+    <!-- 'any-match' test is 'false' for target /EVERYTHING/deep1/deep2/deep3/@count applied to /EVERYTHING/deep1/deep2/deep3/@count-->
+    <x:scenario label="real-worldish">
+        <x:call function="m:match-paths">
+            <x:param name="context-path" as="xs:string">/EVERYTHING/deep1/deep2/deep3/@count</x:param>
+            <x:param name="target-path"  as="xs:string">/EVERYTHING/deep1/deep2/deep3/@count</x:param>
+        </x:call>
+        <x:expect label="matching" select="true()"/>
+    </x:scenario>
+    <x:scenario label="real-worldish">
+        <x:call function="m:match-paths">
+            <x:param name="context-path" as="xs:string">/EVERYTHING/@count</x:param>
+            <x:param name="target-path"  as="xs:string">/EVERYTHING/@count</x:param>
+        </x:call>
+        <x:expect label="matching" select="true()"/>
+    </x:scenario>
+    
+    <x:scenario label="five-step match absolute paths">
+        <x:call function="m:match-paths">
+            <x:param name="context-path" as="xs:string">/e1/e2/e3/e4/@e5</x:param>
+            <x:param name="target-path"  as="xs:string">/e1/e2/e3/e4/@e5</x:param>
         </x:call>
         <x:expect label="matching" select="true()"/>
     </x:scenario>

@@ -49,6 +49,17 @@
         <xsl:comment> METASCHEMA conversion stylesheet supports JSON -> METASCHEMA/SUPERMODEL conversion </xsl:comment>
     </xsl:template>
     
+    <xsl:template name="provide-namespace">
+        <!-- iff at the top -->
+        <xsl:for-each select="parent::model" expand-text="true">
+            <!-- likewise the XSLT provides a namespace only if at the top -->
+            <XSLT:if test=".. is /j:map">
+                <XSLT:attribute name="namespace">{ $source-namespace }</XSLT:attribute>
+                <!-- don't need unless we have a requirement to prefix in serialization: <XSLT:attribute name="prefix">{ $source-prefix }</XSLT:attribute>-->
+            </XSLT:if>
+        </xsl:for-each>
+    </xsl:template>
+    
     <!-- Overriding the imported template for casting prose elements (wrt namespace) since we do not need it -->
     <xsl:template name="cast-prose-template"/>
     
@@ -206,6 +217,21 @@
     
     <xsl:template name="for-this-converter">
         <!-- For the JSON converter, we provide templates (in two modes) to give us field values from the fields; this defaults them. -->
+        
+        <!-- Additional to templates provided by the XML converter we have need
+        a template for markup multiline wrappers in JSON not present in XML -->
+        <xsl:for-each-group select=".//field[@scope='global'][empty(@gi)][@as-type='markup-multiline']"
+            group-by="true()">
+            <xsl:variable name="aliased" select="count(distinct-values(current-group()/@_key-name)) gt 1"/>
+            <xsl:for-each-group select="current-group()" group-by="@_key-name">
+                <!-- but we also break by type name since we have aliases (different type, same use-name) -->
+                <xsl:apply-templates select="current-group()[1]" mode="make-template">
+                    <xsl:with-param name="team" tunnel="true" select="current-group()"/>
+                    <xsl:with-param name="aliased" tunnel="true" select="$aliased"/>
+                </xsl:apply-templates>
+            </xsl:for-each-group>
+        </xsl:for-each-group>
+       
        
         <xsl:comment> by default, fields traverse their properties to find a value </xsl:comment>
         <XSLT:template match="*" mode="get-value-property">

@@ -36,11 +36,14 @@ xsl_transform() {
       set -- "$@" "-s:${source_file}"
     fi
 
-    java -cp "$classpath" net.sf.saxon.Transform "$@" "${extra_params[@]}"
-
-    if [ "$?" -ne 0 ]; then
+    result=$(java -cp "$classpath" net.sf.saxon.Transform "$@" "${extra_params[@]}" 2>&1)
+    cmd_exitcode=$?
+    if [ $cmd_exitcode -ne 0 ]; then
+        echo -e "${P_ERROR}${result}${P_END}"
         echo -e "${P_ERROR}Error running Saxon.${P_END}"
-        return 3
+        return 3;
+    else
+        echo -e "${result}"
     fi
     return 0
 }

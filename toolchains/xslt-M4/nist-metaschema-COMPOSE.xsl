@@ -34,10 +34,10 @@
         
 <!-- Collects metaschema modules and renames definitions scoped locally to their modules -->
         <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
-<!-- Removes overwritten definitions (imported but subsequently rewritten) -->
-        <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
+<!-- Resolves references to global, local and imported definitions -->
+        <nm:transform version="3.0">compose/metaschema-build-refs.xsl</nm:transform>
 <!-- Removes unused definitions (not descended from an assembly defined for the root) -->
-        <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-prune-unused-definitions.xsl</nm:transform>
 <!-- Flattens, normalizes and (to come) expands examples -->
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
         

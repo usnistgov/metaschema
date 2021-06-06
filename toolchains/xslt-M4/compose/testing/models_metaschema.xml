@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="../../../toolchains/xslt-M4/lib/metaschema-author.css"?>
+<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>NIST Metaschema Everything</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>test-model</short-name>
+    <namespace>http://csrc.nist.gov/metaschema/ns/everything</namespace>
+
+    <remarks>
+        <p>A mini metaschema produced for <em>documentation</em> testing purposes.</p>
+        <p>This metaschema exercises modeling with a mix of global, modular (local) and inline
+            definitions. In particular, <code>root-name</code> and <code>use-name</code> should be deployed.</p>
+    </remarks>
+
+    <define-flag name="id">
+        <formal-name>ID</formal-name>
+        <description>flag id</description>
+    </define-flag>
+    
+    <define-flag name="simple-flag">
+        <formal-name>Simple Flag</formal-name>
+        <description>some string</description>
+    </define-flag>
+    
+    <define-flag name="integer-flag" as-type="integer" >
+        <formal-name>Integer Flag</formal-name>
+        <description>an integer</description>
+    </define-flag>
+    
+    <!-- -->
+    <define-assembly name="everything">
+        <formal-name>Everything (container)</formal-name>
+        <description>assembly everything is the root (containing element or top-level object) of this schema.</description>
+        <root-name>EVERYTHING</root-name>
+        <flag ref="id"/>
+        <model>
+            <field ref="field-1only"/>
+            <field ref="overloaded">
+                <use-name>overloaded1</use-name>
+            </field>
+            <field ref="overloaded">
+                <use-name>overloaded2</use-name>
+            </field>
+            <field ref="field-base64"/>
+            <field ref="field-boolean"/>
+            <field ref="field-named-value"/>
+            <field ref="markup-line"/>
+            <field ref="field-simple-groupable" max-occurs="unbounded">
+                <group-as name="groupable-simple-fields"/>
+            </field>
+            <field ref="field-flagged-groupable" max-occurs="unbounded">
+                <group-as name="groupable-flagged-fields"/>
+            </field>
+            <field ref="field-wrappable" max-occurs="unbounded">
+                <group-as name="wrapped-fields" in-xml="GROUPED" in-json="ARRAY"/>
+            </field>
+            <field ref="field-by-key" max-occurs="unbounded">
+                <group-as name="keyed-fields" in-json="BY_KEY"/>
+            </field>
+            <field ref="field-dynamic-value-key" max-occurs="unbounded">
+                <group-as name="dynamic-value-key-fields"/>
+            </field>
+            
+            <field ref="wrapped-prose" in-xml="WITH_WRAPPER"/>
+            <field ref="loose-prose" in-xml="UNWRAPPED"/>
+            
+            <assembly ref="assembly-with-inlines"/>
+            
+            <assembly ref="assembly-empty"/>
+            <assembly ref="assembly-empty-grouped" max-occurs="unbounded">
+                <group-as name="empty-assembly-group"/>
+            </assembly>
+            
+            <assembly ref="assembly-alias1">
+                <use-name>alias</use-name>
+            </assembly>
+            
+            <assembly ref="assembly-1only"/>
+            <assembly ref="assembly-groupable" max-occurs="unbounded">
+                <group-as name="groupable-assemblies"/>
+            </assembly>
+            <assembly ref="assembly-wrappable" max-occurs="unbounded">
+                <group-as name="wrapped-assemblies" in-xml="GROUPED" in-json="ARRAY"/>
+            </assembly>
+            <assembly ref="assembly-by-key" max-occurs="unbounded">
+                <group-as name="keyed-assemblies" in-json="BY_KEY"/>
+            </assembly>
+            <assembly ref="everything" max-occurs="unbounded">
+                <group-as name="everything-recursive" in-json="ARRAY"/>
+            </assembly>
+        </model>
+    </define-assembly>
+
+    <define-field name="overloaded">
+        <formal-name>Overloaded field</formal-name>
+        <description>A field called several times by different names.</description>
+        <flag ref="simple-flag"/>
+        <flag ref="integer-flag"/>
+    </define-field>
+    
+    <define-field name="field-1only">
+        <formal-name>Solitary field</formal-name>
+        <description>field field-1only</description>
+        <flag ref="simple-flag"/>
+        <flag ref="integer-flag"/>
+    </define-field>
+    
+    <define-field name="field-base64" as-type="base64Binary">
+        <formal-name>Lexically constrainted field</formal-name>
+        <description>field field-base64</description>
+    </define-field>
+    
+    <define-field name="field-boolean" as-type="boolean">
+        <formal-name>Boolean typed field</formal-name>
+        <description>field field-boolean</description>
+    </define-field>
+    
+    <define-field name="field-simple-groupable">
+        <formal-name>Groupable field</formal-name>
+        <description>simple field, groupable</description>
+        <flag ref="simple-flag"/>
+        <flag ref="integer-flag"/>
+    </define-field>
+    
+    <define-field name="field-flagged-groupable">
+        <formal-name>Flagged groupable field</formal-name>
+        <description>field field-groupable</description>
+        <define-flag name="flagged-date" as-type="date">
+            <formal-name>Date flag</formal-name>
+            <description>A flag for a date</description>
+        </define-flag>
+        <define-flag name="flagged-decimal" as-type="decimal">
+            <formal-name>Decimal flag</formal-name>
+            <description>A flag with a decimal value</description>
+        </define-flag>
+    </define-field>
+    
+    <define-field name="field-wrappable">
+        <formal-name>Wrappable field</formal-name>
+        <description>field field-wrappable</description>
+    </define-field>
+    
+    <define-field name="field-by-key">
+        <formal-name>Keyed field</formal-name>
+        <description>field field-by-key</description>
+        <json-key flag-name="id"/>
+        <flag ref="id" required="yes"/>
+    </define-field>
+    
+    <define-field name="field-named-value">
+        <formal-name>Named-value field</formal-name>
+        <description>field field-named-value</description>
+        <json-value-key>CUSTOM-VALUE-KEY</json-value-key>
+        <flag ref="id" required="yes"/>
+    </define-field>
+    
+    <define-field name="field-dynamic-value-key">
+        <formal-name>Dynamic value key field</formal-name>
+        <description>field field-dynamic-value-key</description>
+        <json-value-key flag-name="id"/>
+        <flag ref="id" required="yes"/>
+        <define-flag name="color">
+            <formal-name>COLOR</formal-name>
+            <description>flag color</description>    
+        </define-flag>
+    </define-field>
+
+    <define-field name="markup-line" as-type="markup-line">
+        <formal-name>Markup line field</formal-name>
+        <description>field markup-line</description>
+    </define-field>
+    
+    <define-field name="wrapped-prose" as-type="markup-multiline">
+        <formal-name>Wrapped prose field</formal-name>
+        <description>field wrapped-prose</description>
+    </define-field>
+    
+    <define-field name="loose-prose" as-type="markup-multiline">
+        <formal-name>Unwrapped prose</formal-name>
+        <description>field loose-prose</description>
+    </define-field>
+    
+    <define-assembly name="assembly-empty">
+        <formal-name>Empty assembly</formal-name>
+        <description>assembly assembly-empty</description>
+        <flag ref="id" required="yes"/>
+    </define-assembly>
+    
+    <define-assembly name="assembly-empty-grouped">
+        <formal-name>Groupable empty assembly</formal-name>
+        <description>assembly assembly-empty-grouped</description>
+        <flag ref="id" required="yes"/>
+    </define-assembly>
+    
+    <define-assembly name="assembly-1only">
+        <formal-name>Solitary assembly</formal-name>
+        <description>assembly assembly-1only</description>
+        <root-name>ASSEMBLY-1ONLY</root-name>
+        <model>
+            <field ref="field-1only"/>
+            <assembly ref="assembly-1only"/>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="assembly-with-inlines">
+        <formal-name>Assembly with inline definitions</formal-name>
+        <description>Inline definitions have their own metadata too.</description>
+        <model>
+            <field ref="field-1only"/>
+            <assembly ref="assembly-1only"/>
+            <assembly ref="assembly-alias2">
+                <use-name>alias</use-name>
+            </assembly>
+            <define-assembly name="inline-assembly">
+                <formal-name>Inline assembly</formal-name>
+                <description>Assembly whose definition is inline</description>
+            </define-assembly>
+            <define-assembly name="inline-aliased-assemby">
+                <formal-name>An inline assembly named 'alias'</formal-name>
+                <description>Assembly whose definition is inline, but whose name is 'alias'</description>
+            </define-assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="assembly-alias1">
+        <formal-name>Aliased assembly - outer</formal-name>
+        <description>first aliased assembly (has a name conflict)</description>
+        <use-name>alias</use-name>
+        <model>
+            <field ref="field-1only"/>
+            <assembly ref="assembly-1only"/>
+            <assembly ref="assembly-alias2">
+                <use-name>alias</use-name>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="assembly-alias2">
+        <formal-name>Aliased assembly - inner</formal-name>
+        <description>second aliased assembly (has a name conflict) appears only in the context of its parent of the same name.</description>
+        <model>
+            <assembly ref="assembly-1only"/>
+            <field ref="field-1only"/>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="assembly-groupable">
+        <formal-name>Groupable assembly.</formal-name>
+        <description>assembly assembly-groupable</description>
+        <model>
+            <field ref="field-simple-groupable" max-occurs="unbounded">
+                <group-as name="groupable-simple-fields"/>
+            </field>
+            <assembly ref="assembly-groupable" max-occurs="unbounded">
+                <group-as name="groupable-assemblies"/>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="assembly-wrappable">
+        <formal-name>Wrappable assembly</formal-name>
+        <description>assembly assembly-wrappable</description>
+        <model>
+            <field ref="field-wrappable" max-occurs="unbounded">
+                <group-as name="wrapped-fields" in-xml="GROUPED" in-json="ARRAY"/>
+            </field>
+            <assembly ref="assembly-wrappable" max-occurs="unbounded">
+                <group-as name="wrapped-assemblies" in-xml="GROUPED" in-json="ARRAY"/>
+            </assembly>
+        </model>
+        
+    </define-assembly>
+    
+    <define-assembly name="assembly-by-key">
+        <formal-name>Keyed assembly</formal-name>
+        <description>assembly assembly-by-key</description>
+        <json-key flag-name="id"/>
+        <flag ref="id" required="yes"/>
+        
+        <model>
+            <field ref="field-by-key" max-occurs="unbounded">
+                <group-as name="keyed-fields" in-json="BY_KEY"/>
+            </field>
+            <assembly ref="assembly-by-key" max-occurs="unbounded">
+                <group-as name="keyed-assemblies" in-json="BY_KEY"/>
+            </assembly>
+        </model>
+    </define-assembly>
+
+</METASCHEMA>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>Test Report for C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/compose/metaschema-collect.xsl (passed: 3 / pending: 0 / failed: 0 / total: 3)</title>
+      <title>Test Report for C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/metaschema-collect.xsl (passed: 1 / pending: 0 / failed: 2 / total: 3)</title>
       <style type="text/css">/****************************************************************************/
 /*  File:       test-report.css                                             */
 /*  Author:     Jeni Tennison                                               */
@@ -509,9 +509,9 @@ span.scenario-totals {float: right; text-align: right}
    </head>
    <body>
       <h1>Test Report</h1>
-      <p>Stylesheet: <a href="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/compose/metaschema-collect.xsl">C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/compose/metaschema-collect.xsl</a></p>
-      <p>XSpec: <a href="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/compose/testing/1_collected/collect.xspec">C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/compose/testing/1_collected/collect.xspec</a></p>
-      <p>Tested: 8 February 2021 at 11:55</p>
+      <p>Stylesheet: <a href="file:/C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/metaschema-collect.xsl">C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/metaschema-collect.xsl</a></p>
+      <p>XSpec: <a href="file:/C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/testing/1_collected/collect.xspec">C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/testing/1_collected/collect.xspec</a></p>
+      <p>Tested: 26 April 2021 at 14:09</p>
       <h2>Contents</h2>
       <table class="xspec">
          <colgroup>
@@ -524,9 +524,9 @@ span.scenario-totals {float: right; text-align: right}
          <thead>
             <tr>
                <th></th>
-               <th class="totals">passed: 3</th>
+               <th class="totals">passed: 1</th>
                <th class="totals">pending: 0</th>
-               <th class="totals">failed: 0</th>
+               <th class="totals">failed: 2</th>
                <th class="totals">total: 3</th>
             </tr>
          </thead>
@@ -538,18 +538,18 @@ span.scenario-totals {float: right; text-align: right}
                <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
-            <tr class="successful">
+            <tr class="failed">
                <th><a href="#top_scenario2">Metaschema skeleton</a></th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
                <th class="totals">1</th>
-               <th class="totals">0</th>
-               <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
-            <tr class="successful">
+            <tr class="failed">
                <th><a href="#top_scenario3">Nested locals</a></th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
                <th class="totals">1</th>
-               <th class="totals">0</th>
-               <th class="totals">0</th>
                <th class="totals">1</th>
             </tr>
          </tbody>
@@ -574,42 +574,348 @@ span.scenario-totals {float: right; text-align: right}
          </table>
       </div>
       <div id="top_scenario2">
-         <h2 class="successful">Metaschema skeleton<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <h2 class="failed">Metaschema skeleton<span class="scenario-totals">passed: 0 / pending: 0 / failed: 1 / total: 1</span></h2>
          <table class="xspec" id="table_scenario2">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
             </colgroup>
             <tbody>
-               <tr class="successful">
+               <tr class="failed">
                   <th>Metaschema skeleton</th>
-                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
+                  <th>passed: 0 / pending: 0 / failed: 1 / total: 1</th>
                </tr>
-               <tr class="successful">
-                  <td>Modules collected, no loops</td>
-                  <td>Success</td>
+               <tr class="failed">
+                  <td><a href="#scenario2-expect1">Modules collected, no loops</a></td>
+                  <td>Failure</td>
                </tr>
             </tbody>
          </table>
+         <div id="scenario2">
+            <h3>Metaschema skeleton</h3>
+            <div id="scenario2-expect1" class="xTestReport">
+               <h4 class="xTestReportTitle">Modules collected, no loops</h4>
+               <div class="xTestReportHint"><a href="https://github.com/xspec/xspec/wiki/Understanding-Test-Results" target="_blank" title="What does this report mean?">❔</a></div>
+               <table class="xspecResult">
+                  <thead>
+                     <tr>
+                        <th>Result</th>
+                        <th>Expected Result</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>
+                           <p>XPath <code class="same">/element()</code> from:</p>
+                           <pre>&lt;<span class="inner-diff">METASCHEMA</span> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution"
+            <span class="same">module</span>=<span class="same">"test"</span>
+            <span class="same">src</span>=<span class="same">"file:/C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/testing/1_collected/xspec/collect-compiled.xsl"</span>&gt;
+   &lt;<span class="same">short-name</span>&gt;<span class="same">test</span>&lt;/short-name&gt;
+   &lt;<span class="inner-diff">define-assembly</span> <span class="same">scope</span>=<span class="same">"global"</span>
+                    <span class="same">name</span>=<span class="same">"root"</span>
+                    <span class="same">module</span>=<span class="same">"test"</span>
+                    <span class="same">key-name</span>=<span class="same">"test:root"</span>&gt;
+      &lt;<span class="same">root-name</span>&gt;<span class="same">root-assembly</span>&lt;/root-name&gt;
+      &lt;<span class="inner-diff">flag</span> <span class="same">required</span>=<span class="same">"no"</span>
+            <span class="same">ref</span>=<span class="same">"top-level-flag"</span> /&gt;
+      &lt;<span class="same">define-flag</span> <span class="same">required</span>=<span class="same">"no"</span>
+                   <span class="same">as-type</span>=<span class="same">"string"</span>
+                   <span class="same">name</span>=<span class="same">"local-flag"</span>&gt;
+         &lt;<span class="same">formal-name</span>&gt;<span class="same">Locally defined flag</span>&lt;/formal-name&gt;
+         &lt;<span class="same">description</span>&gt;<span class="same">XXX</span>&lt;/description&gt;
+      &lt;/define-flag&gt;
+      &lt;<span class="same">model</span>&gt;
+         &lt;<span class="same">field</span> <span class="same">max-occurs</span>=<span class="same">"unbounded"</span>
+                <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                <span class="same">ref</span>=<span class="same">"top-level-global-field"</span>&gt;
+            &lt;<span class="same">group-by</span> <span class="same">name</span>=<span class="same">"top-level-global-field-sequence"</span> /&gt;
+         &lt;/field&gt;
+         &lt;<span class="same">field</span> <span class="same">max-occurs</span>=<span class="same">"1"</span>
+                <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                <span class="same">ref</span>=<span class="same">"top-level-local-field"</span> /&gt;
+         &lt;<span class="same">define-field</span> <span class="same">max-occurs</span>=<span class="same">"1"</span>
+                       <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                       <span class="same">collapsible</span>=<span class="same">"no"</span>
+                       <span class="same">as-type</span>=<span class="same">"string"</span>
+                       <span class="same">name</span>=<span class="same">"local-field"</span>&gt;
+            &lt;<span class="same">formal-name</span>&gt;<span class="same">Locally defined field</span>&lt;/formal-name&gt;
+            &lt;<span class="same">description</span>&gt;<span class="same">XXX</span>&lt;/description&gt;
+         &lt;/define-field&gt;
+      &lt;/model&gt;
+   &lt;/define-assembly&gt;
+   &lt;<span class="same">define-field</span> <span class="same">collapsible</span>=<span class="same">"no"</span>
+                 <span class="same">as-type</span>=<span class="same">"string"</span>
+                 <span class="same">scope</span>=<span class="same">"global"</span>
+                 <span class="same">name</span>=<span class="same">"top-level-global-field"</span>
+                 <span class="same">module</span>=<span class="same">"test"</span>
+                 <span class="same">key-name</span>=<span class="same">"test:top-level-global-field"</span> /&gt;
+   &lt;<span class="same">define-field</span> <span class="same">collapsible</span>=<span class="same">"no"</span>
+                 <span class="same">as-type</span>=<span class="same">"string"</span>
+                 <span class="same">scope</span>=<span class="same">"local"</span>
+                 <span class="same">name</span>=<span class="same">"top-level-local-field"</span>
+                 <span class="same">module</span>=<span class="same">"test"</span>
+                 <span class="same">key-name</span>=<span class="same">"test:top-level-local-field"</span> /&gt;
+   &lt;<span class="same">define-flag</span> <span class="same">as-type</span>=<span class="same">"string"</span>
+                <span class="same">scope</span>=<span class="same">"global"</span>
+                <span class="same">name</span>=<span class="same">"top-level-flag"</span>
+                <span class="same">module</span>=<span class="same">"test"</span>
+                <span class="same">key-name</span>=<span class="same">"test:top-level-flag"</span> /&gt;
+&lt;/METASCHEMA&gt;</pre>
+                        </td>
+                        <td>
+                           <p>XPath <code class="same">/element()</code> from:</p>
+                           <pre>&lt;<span class="inner-diff">METASCHEMA</span> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution"
+            <span class="same">src</span>=<span class="same">"..."</span>
+            <span class="same">module</span>=<span class="same">"test"</span>&gt;
+   &lt;<span class="same">short-name</span>&gt;<span class="same">test</span>&lt;/short-name&gt;
+   &lt;<span class="inner-diff">define-assembly</span> <span class="same">name</span>=<span class="same">"root"</span>
+                    <span class="same">module</span>=<span class="same">"test"</span>
+                    <span class="same">key-name</span>=<span class="same">"test:root"</span>
+                    <span class="same">scope</span>=<span class="same">"global"</span>&gt;
+      &lt;<span class="same">root-name</span>&gt;<span class="same">root-assembly</span>&lt;/root-name&gt;
+      &lt;<span class="inner-diff">flag</span> <span class="same">ref</span>=<span class="same">"top-level-flag"</span>
+            <span class="same">required</span>=<span class="same">"no"</span>&gt;
+         &lt;<span class="diff">use-name</span>&gt;<span class="diff">tlf</span>&lt;/use-name&gt;
+      &lt;/flag&gt;
+      &lt;<span class="same">define-flag</span> <span class="same">name</span>=<span class="same">"local-flag"</span>
+                   <span class="same">as-type</span>=<span class="same">"string"</span>
+                   <span class="same">required</span>=<span class="same">"no"</span>&gt;
+         &lt;<span class="same">formal-name</span>&gt;<span class="same">Locally defined flag</span>&lt;/formal-name&gt;
+         &lt;<span class="same">description</span>&gt;<span class="same">XXX</span>&lt;/description&gt;
+      &lt;/define-flag&gt;
+      &lt;<span class="same">model</span>&gt;
+         &lt;<span class="same">field</span> <span class="same">ref</span>=<span class="same">"top-level-global-field"</span>
+                <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                <span class="same">max-occurs</span>=<span class="same">"unbounded"</span>&gt;
+            &lt;<span class="same">group-by</span> <span class="same">name</span>=<span class="same">"top-level-global-field-sequence"</span> /&gt;
+         &lt;/field&gt;
+         &lt;<span class="same">field</span> <span class="same">ref</span>=<span class="same">"top-level-local-field"</span>
+                <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                <span class="same">max-occurs</span>=<span class="same">"1"</span> /&gt;
+         &lt;<span class="same">define-field</span> <span class="same">name</span>=<span class="same">"local-field"</span>
+                       <span class="same">as-type</span>=<span class="same">"string"</span>
+                       <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                       <span class="same">max-occurs</span>=<span class="same">"1"</span>
+                       <span class="same">collapsible</span>=<span class="same">"no"</span>&gt;
+            &lt;<span class="same">formal-name</span>&gt;<span class="same">Locally defined field</span>&lt;/formal-name&gt;
+            &lt;<span class="same">description</span>&gt;<span class="same">XXX</span>&lt;/description&gt;
+         &lt;/define-field&gt;
+      &lt;/model&gt;
+   &lt;/define-assembly&gt;
+   &lt;<span class="same">define-field</span> <span class="same">name</span>=<span class="same">"top-level-global-field"</span>
+                 <span class="same">module</span>=<span class="same">"test"</span>
+                 <span class="same">key-name</span>=<span class="same">"test:top-level-global-field"</span>
+                 <span class="same">scope</span>=<span class="same">"global"</span>
+                 <span class="same">as-type</span>=<span class="same">"string"</span>
+                 <span class="same">collapsible</span>=<span class="same">"no"</span> /&gt;
+   &lt;<span class="same">define-field</span> <span class="same">name</span>=<span class="same">"top-level-local-field"</span>
+                 <span class="same">scope</span>=<span class="same">"local"</span>
+                 <span class="same">module</span>=<span class="same">"test"</span>
+                 <span class="same">key-name</span>=<span class="same">"test:top-level-local-field"</span>
+                 <span class="same">as-type</span>=<span class="same">"string"</span>
+                 <span class="same">collapsible</span>=<span class="same">"no"</span> /&gt;
+   &lt;<span class="same">define-flag</span> <span class="same">name</span>=<span class="same">"top-level-flag"</span>
+                <span class="same">module</span>=<span class="same">"test"</span>
+                <span class="same">key-name</span>=<span class="same">"test:top-level-flag"</span>
+                <span class="same">scope</span>=<span class="same">"global"</span>
+                <span class="same">as-type</span>=<span class="same">"string"</span> /&gt;
+&lt;/METASCHEMA&gt;</pre>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
       </div>
       <div id="top_scenario3">
-         <h2 class="successful">Nested locals<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <h2 class="failed">Nested locals<span class="scenario-totals">passed: 0 / pending: 0 / failed: 1 / total: 1</span></h2>
          <table class="xspec" id="table_scenario3">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />
             </colgroup>
             <tbody>
-               <tr class="successful">
+               <tr class="failed">
                   <th>Nested locals</th>
-                  <th>passed: 1 / pending: 0 / failed: 0 / total: 1</th>
+                  <th>passed: 0 / pending: 0 / failed: 1 / total: 1</th>
                </tr>
-               <tr class="successful">
-                  <td>Local definitions preserved with amended names</td>
-                  <td>Success</td>
+               <tr class="failed">
+                  <td><a href="#scenario3-expect1">Local definitions preserved with amended names</a></td>
+                  <td>Failure</td>
                </tr>
             </tbody>
          </table>
+         <div id="scenario3">
+            <h3>Nested locals</h3>
+            <div id="scenario3-expect1" class="xTestReport">
+               <h4 class="xTestReportTitle">Local definitions preserved with amended names</h4>
+               <div class="xTestReportHint"><a href="https://github.com/xspec/xspec/wiki/Understanding-Test-Results" target="_blank" title="What does this report mean?">❔</a></div>
+               <table class="xspecResult">
+                  <thead>
+                     <tr>
+                        <th>Result</th>
+                        <th>Expected Result</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>
+                           <p>XPath <code class="same">/element()</code> from:</p>
+                           <pre>&lt;<span class="inner-diff">METASCHEMA</span> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution"
+            <span class="same">module</span>=<span class="same">"test"</span>
+            <span class="same">src</span>=<span class="same">"file:/C:/Users/wap1/Documents/usnistgov/OSCAL/build/metaschema/toolchains/xslt-M4/compose/testing/1_collected/xspec/collect-compiled.xsl"</span>&gt;
+   &lt;<span class="same">short-name</span>&gt;<span class="same">test</span>&lt;/short-name&gt;
+   &lt;<span class="inner-diff">define-assembly</span> <span class="same">scope</span>=<span class="same">"global"</span>
+                    <span class="same">name</span>=<span class="same">"root"</span>
+                    <span class="same">module</span>=<span class="same">"test"</span>
+                    <span class="same">key-name</span>=<span class="same">"test:root"</span>&gt;
+      &lt;<span class="same">root-name</span>&gt;<span class="same">root-assembly</span>&lt;/root-name&gt;
+      &lt;<span class="inner-diff">flag</span> <span class="same">required</span>=<span class="same">"no"</span>
+            <span class="same">ref</span>=<span class="same">"top-level-flag"</span>&gt;
+         &lt;<span class="diff">use-name</span>&gt;<span class="diff">tlf</span>&lt;/use-name&gt;
+      &lt;/flag&gt;
+      &lt;<span class="same">define-flag</span> <span class="same">required</span>=<span class="same">"no"</span>
+                   <span class="same">as-type</span>=<span class="same">"string"</span>
+                   <span class="same">name</span>=<span class="same">"local-flag"</span>&gt;
+         &lt;<span class="same">formal-name</span>&gt;<span class="same">Locally defined flag</span>&lt;/formal-name&gt;
+         &lt;<span class="same">description</span>&gt;<span class="same">XXX</span>&lt;/description&gt;
+      &lt;/define-flag&gt;
+      &lt;<span class="same">model</span>&gt;
+         &lt;<span class="same">field</span> <span class="same">max-occurs</span>=<span class="same">"1"</span>
+                <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                <span class="same">ref</span>=<span class="same">"top-level-global-field"</span> /&gt;
+         &lt;<span class="same">field</span> <span class="same">max-occurs</span>=<span class="same">"1"</span>
+                <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                <span class="same">ref</span>=<span class="same">"top-level-local-field"</span> /&gt;
+         &lt;<span class="same">assembly</span> <span class="same">max-occurs</span>=<span class="same">"1"</span>
+                   <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                   <span class="same">ref</span>=<span class="same">"top-level-local-assembly"</span> /&gt;
+         &lt;<span class="same">define-field</span> <span class="same">max-occurs</span>=<span class="same">"1"</span>
+                       <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                       <span class="same">collapsible</span>=<span class="same">"no"</span>
+                       <span class="same">as-type</span>=<span class="same">"string"</span>
+                       <span class="same">name</span>=<span class="same">"local-field"</span>&gt;
+            &lt;<span class="same">formal-name</span>&gt;<span class="same">Locally defined field</span>&lt;/formal-name&gt;
+            &lt;<span class="same">description</span>&gt;<span class="same">XXX</span>&lt;/description&gt;
+         &lt;/define-field&gt;
+      &lt;/model&gt;
+   &lt;/define-assembly&gt;
+   &lt;<span class="same">define-field</span> <span class="same">collapsible</span>=<span class="same">"no"</span>
+                 <span class="same">as-type</span>=<span class="same">"string"</span>
+                 <span class="same">scope</span>=<span class="same">"global"</span>
+                 <span class="same">name</span>=<span class="same">"top-level-global-field"</span>
+                 <span class="same">module</span>=<span class="same">"test"</span>
+                 <span class="same">key-name</span>=<span class="same">"test:top-level-global-field"</span> /&gt;
+   &lt;<span class="same">define-field</span> <span class="same">collapsible</span>=<span class="same">"no"</span>
+                 <span class="same">as-type</span>=<span class="same">"string"</span>
+                 <span class="same">scope</span>=<span class="same">"local"</span>
+                 <span class="same">name</span>=<span class="same">"top-level-local-field"</span>
+                 <span class="same">module</span>=<span class="same">"test"</span>
+                 <span class="same">key-name</span>=<span class="same">"test:top-level-local-field"</span>&gt;
+      &lt;<span class="same">formal-name</span>&gt;<span class="same">Included twice</span>&lt;/formal-name&gt;
+   &lt;/define-field&gt;
+   &lt;<span class="same">define-assembly</span> <span class="same">scope</span>=<span class="same">"local"</span>
+                    <span class="same">name</span>=<span class="same">"top-level-local-assembly"</span>
+                    <span class="same">module</span>=<span class="same">"test"</span>
+                    <span class="same">key-name</span>=<span class="same">"test:top-level-local-assembly"</span>&gt;
+      &lt;<span class="same">model</span>&gt;
+         &lt;<span class="same">field</span> <span class="same">max-occurs</span>=<span class="same">"1"</span>
+                <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                <span class="same">ref</span>=<span class="same">"top-level-local-field"</span> /&gt;
+         &lt;<span class="same">assembly</span> <span class="same">max-occurs</span>=<span class="same">"1"</span>
+                   <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                   <span class="same">ref</span>=<span class="same">"top-level-local-assembly"</span> /&gt;
+      &lt;/model&gt;
+   &lt;/define-assembly&gt;
+   &lt;<span class="same">define-flag</span> <span class="same">as-type</span>=<span class="same">"string"</span>
+                <span class="same">scope</span>=<span class="same">"global"</span>
+                <span class="same">name</span>=<span class="same">"top-level-flag"</span>
+                <span class="same">module</span>=<span class="same">"test"</span>
+                <span class="same">key-name</span>=<span class="same">"test:top-level-flag"</span> /&gt;
+&lt;/METASCHEMA&gt;</pre>
+                        </td>
+                        <td>
+                           <p>XPath <code class="same">/element()</code> from:</p>
+                           <pre>&lt;<span class="inner-diff">METASCHEMA</span> xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution"
+            <span class="same">src</span>=<span class="same">"..."</span>
+            <span class="same">module</span>=<span class="same">"test"</span>&gt;
+   &lt;<span class="same">short-name</span>&gt;<span class="same">test</span>&lt;/short-name&gt;
+   &lt;<span class="inner-diff">define-assembly</span> <span class="same">name</span>=<span class="same">"root"</span>
+                    <span class="same">module</span>=<span class="same">"test"</span>
+                    <span class="same">key-name</span>=<span class="same">"test:root"</span>
+                    <span class="same">scope</span>=<span class="same">"global"</span>&gt;
+      &lt;<span class="same">root-name</span>&gt;<span class="same">root-assembly</span>&lt;/root-name&gt;
+      &lt;<span class="inner-diff">flag</span> <span class="same">ref</span>=<span class="same">"top-level-flag"</span>
+            <span class="same">required</span>=<span class="same">"no"</span> /&gt;
+      &lt;<span class="same">define-flag</span> <span class="same">name</span>=<span class="same">"local-flag"</span>
+                   <span class="same">as-type</span>=<span class="same">"string"</span>
+                   <span class="same">required</span>=<span class="same">"no"</span>&gt;
+         &lt;<span class="same">formal-name</span>&gt;<span class="same">Locally defined flag</span>&lt;/formal-name&gt;
+         &lt;<span class="same">description</span>&gt;<span class="same">XXX</span>&lt;/description&gt;
+      &lt;/define-flag&gt;
+      &lt;<span class="same">model</span>&gt;
+         &lt;<span class="same">field</span> <span class="same">ref</span>=<span class="same">"top-level-global-field"</span>
+                <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                <span class="same">max-occurs</span>=<span class="same">"1"</span> /&gt;
+         &lt;<span class="same">field</span> <span class="same">ref</span>=<span class="same">"top-level-local-field"</span>
+                <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                <span class="same">max-occurs</span>=<span class="same">"1"</span> /&gt;
+         &lt;<span class="same">assembly</span> <span class="same">ref</span>=<span class="same">"top-level-local-assembly"</span>
+                   <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                   <span class="same">max-occurs</span>=<span class="same">"1"</span> /&gt;
+         &lt;<span class="same">define-field</span> <span class="same">name</span>=<span class="same">"local-field"</span>
+                       <span class="same">as-type</span>=<span class="same">"string"</span>
+                       <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                       <span class="same">max-occurs</span>=<span class="same">"1"</span>
+                       <span class="same">collapsible</span>=<span class="same">"no"</span>&gt;
+            &lt;<span class="same">formal-name</span>&gt;<span class="same">Locally defined field</span>&lt;/formal-name&gt;
+            &lt;<span class="same">description</span>&gt;<span class="same">XXX</span>&lt;/description&gt;
+         &lt;/define-field&gt;
+      &lt;/model&gt;
+   &lt;/define-assembly&gt;
+   &lt;<span class="same">define-field</span> <span class="same">name</span>=<span class="same">"top-level-global-field"</span>
+                 <span class="same">module</span>=<span class="same">"test"</span>
+                 <span class="same">key-name</span>=<span class="same">"test:top-level-global-field"</span>
+                 <span class="same">scope</span>=<span class="same">"global"</span>
+                 <span class="same">as-type</span>=<span class="same">"string"</span>
+                 <span class="same">collapsible</span>=<span class="same">"no"</span> /&gt;
+   &lt;<span class="same">define-field</span> <span class="same">name</span>=<span class="same">"top-level-local-field"</span>
+                 <span class="same">scope</span>=<span class="same">"local"</span>
+                 <span class="same">module</span>=<span class="same">"test"</span>
+                 <span class="same">key-name</span>=<span class="same">"test:top-level-local-field"</span>
+                 <span class="same">as-type</span>=<span class="same">"string"</span>
+                 <span class="same">collapsible</span>=<span class="same">"no"</span>&gt;
+      &lt;<span class="same">formal-name</span>&gt;<span class="same">Included twice</span>&lt;/formal-name&gt;
+   &lt;/define-field&gt;
+   &lt;<span class="same">define-assembly</span> <span class="same">name</span>=<span class="same">"top-level-local-assembly"</span>
+                    <span class="same">scope</span>=<span class="same">"local"</span>
+                    <span class="same">module</span>=<span class="same">"test"</span>
+                    <span class="same">key-name</span>=<span class="same">"test:top-level-local-assembly"</span>&gt;
+      &lt;<span class="same">model</span>&gt;
+         &lt;<span class="same">field</span> <span class="same">ref</span>=<span class="same">"top-level-local-field"</span>
+                <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                <span class="same">max-occurs</span>=<span class="same">"1"</span> /&gt;
+         &lt;<span class="same">assembly</span> <span class="same">ref</span>=<span class="same">"top-level-local-assembly"</span>
+                   <span class="same">min-occurs</span>=<span class="same">"0"</span>
+                   <span class="same">max-occurs</span>=<span class="same">"1"</span> /&gt;
+      &lt;/model&gt;
+   &lt;/define-assembly&gt;
+   &lt;<span class="same">define-flag</span> <span class="same">name</span>=<span class="same">"top-level-flag"</span>
+                <span class="same">module</span>=<span class="same">"test"</span>
+                <span class="same">key-name</span>=<span class="same">"test:top-level-flag"</span>
+                <span class="same">scope</span>=<span class="same">"global"</span>
+                <span class="same">as-type</span>=<span class="same">"string"</span> /&gt;
+&lt;/METASCHEMA&gt;</pre>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
       </div>
    </body>
 </html>

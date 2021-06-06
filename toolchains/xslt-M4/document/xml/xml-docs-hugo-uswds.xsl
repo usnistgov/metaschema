@@ -51,6 +51,8 @@
    
    <xsl:import href="../metaschema-htmldoc-xslt1.xsl"/>
    
+   <xsl:param name="json-definitions-page" as="xs:string">../../json/definitions</xsl:param>
+   
    <xsl:variable name="home" select="/METASCHEMA"/>
    
    <xsl:variable name="all-references" select="//flag/@name | //model//*/@ref"/>
@@ -185,7 +187,9 @@
    </xsl:template>
    
    <xsl:template name="definition-header">
-      <xsl:variable name="references"
+      <xsl:variable name="identifier" select="string-join(ancestor-or-self::*/@name,'/')"/>
+      <xsl:variable name="nested" select="count(.|ancestor::define-assembly|ancestor::define-field)"/>
+      <!--<xsl:variable name="references"
          select="self::define-flag/key('flag-references', @name) |
                  self::define-field/key('field-references', @name) |
                  self::define-assembly/key('assembly-references', @name)"/>
@@ -193,19 +197,21 @@
       <xsl:variable name="using-names"
          select="if (exists(root-name)) then (root-name, use-name)
             else (if (exists(use-name)) then use-name
-               else $references/(use-name, @ref)[1])"/>
+               else $references/(use-name, @ref)[1])"/>-->
       <div class="definition-header">
          <xsl:call-template name="cross-links"/>
-         <h2 class="toc1" id="global_{@name}_h2">
-            <span class="defining">
-               <xsl:for-each-group select="$using-names" group-by="string(.)">
+         <xsl:element name="h{ $nested }" namespace="http://www.w3.org/1999/xhtml" expand-text="true">
+            <xsl:attribute name="class" select="'toc' || $nested"/>
+            <xsl:attribute name="id" select="$identifier"/>
+            <span class="defining">{ $identifier }</span>
+               <!--<xsl:for-each-group select="$using-names" group-by="string(.)">
                   <xsl:if test="position() gt 1">, </xsl:if>
                   <span class="usename">
                      <xsl:value-of select="current-grouping-key()"/>
                   </span>
                </xsl:for-each-group>
-            </span>
-         </h2>
+            </span>-->
+         </xsl:element>
          <xsl:for-each select="formal-name">
             <p>
                <span class="usa-tag">formal name</span>
@@ -284,19 +290,17 @@
    <!-- ^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V -->
 
    <xsl:template name="cross-links">
-      <xsl:param name="make-page-links" select="false()" tunnel="true"/>
+      <xsl:variable name="identifier" select="string-join(ancestor-or-self::*/@name,'/')"/>
       <!--<xsl:variable name="schema-base" select="replace($metaschema-code,'-xml$','')"/>-->
-      <xsl:if test="$make-page-links">
       <div class="crosslink">
-         <a href="../json-schema/#global_{@name}">
+         <a href="{$json-definitions-page}/#{$identifier}">
             <button class="schema-link">Switch to JSON</button>
          </a>
       </div>
-      </xsl:if>
    </xsl:template>
 
    <xsl:template match="define-flag" mode="make-definition">
-      <div class="definition define-flag" id="global_{@name}">
+      <section class="definition define-flag" id="global_{@name}">
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="description"/>
          <xsl:apply-templates select="." mode="representation-in-xml"/>
@@ -310,11 +314,11 @@
          </xsl:for-each-group>
          <xsl:call-template name="remarks-group"/>
          <xsl:call-template name="report-module"/>
-      </div>
+      </section>
    </xsl:template>
 
    <xsl:template match="define-field" mode="make-definition">
-      <div class="definition define-field" id="global_{@name}">
+      <section class="definition define-field" id="global_{@name}">
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="formal-name | description"/>
          <xsl:call-template name="appears-in"/>
@@ -323,7 +327,7 @@
          <xsl:call-template name="flags-for-field"/>
          <xsl:apply-templates select="example"/>
          <xsl:call-template name="report-module"/>
-      </div>
+      </section>
    </xsl:template>
    
    <xsl:template name="flags-for-field">
@@ -354,17 +358,17 @@
    </xsl:template>
 
    <xsl:template match="define-assembly" mode="make-definition">
-      <div class="definition define-assembly" id="global_{@name}">
+      <section class="definition define-assembly" id="global_{@name}">
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="formal-name | description"/>
          <xsl:for-each select="root-name">
-            <h5><code xsl:expand-text="true">{ . }</code> is a root (containing) element in this schema. </h5>
+            <p class="h5"><code xsl:expand-text="true">{ . }</code> is a root (containing) element in this schema. </p>
          </xsl:for-each>
          <xsl:call-template name="appears-in"/>
          <xsl:call-template name="remarks-group"/>
          <xsl:for-each-group select="define-flag | flag" group-by="true()" expand-text="true">
                <div class="model attributes">
-                  <h4 class="subhead">{ if (count(current-group()) eq 1) then 'Attribute' else 'Attributes' } ({ count(current-group()) })</h4>
+                  <p class="subhead">{ if (count(current-group()) eq 1) then 'Attribute' else 'Attributes' } ({ count(current-group()) })</p>
                   <ul>
                      <xsl:apply-templates select="current-group()">
                         <xsl:with-param name="make-page-links" tunnel="true" select="false()"/>
@@ -377,7 +381,7 @@
          <!-- will be a no-op until we have constraints besides allowed-values -->
          <xsl:call-template name="display-applicable-constraints"/>
          <xsl:call-template name="report-module"/>
-      </div>
+      </section>
    </xsl:template>
 
    <xsl:template name="appears-in">
@@ -455,8 +459,8 @@
 
    <xsl:template match="model">
       <div class="model">
-         <h4 class="subhead">Contents<xsl:if
-               test="count(*) > 1"> (in order)</xsl:if></h4>
+         <p class="subhead">Contents<xsl:if
+               test="count(*) > 1"> (in order)</xsl:if></p>
          <ul>
             <xsl:apply-templates>
                <xsl:with-param name="make-page-links" tunnel="true" select="false()"/>
@@ -489,12 +493,15 @@
       </xsl:if>
       <div class="model-descr" tabindex="0">
          <div class="model-summary">
-            <h3 class="usename{ ' toc2'[$make-model-links and not($is-a-flag) and not($too-deep)] }">
+            <p class="modeling usename">
+               <xsl:value-of select="m:use-name(.)"/>
+            </p>
+            <!--<h3 class="usename{ ' toc2'[$make-model-links and not($is-a-flag) and not($too-deep)] }">
                <xsl:if test="$make-model-links">
                   <xsl:attribute name="id" select="'#local_' || string-join(ancestor-or-self::*/(@name|@ref), '-') || '_ref-h3'"/>
                </xsl:if>
                <xsl:value-of select="m:use-name(.)"/>
-            </h3>
+            </h3>-->
             <!--<h3 class="usename{ ' toc2'[not($is-a-flag) and not($too-deep)] }" id="#local_{string-join( ancestor-or-self::*/(@name|@ref),'-')}_ref-h3">{ m:use-name(.) }</h3>-->
             <!--<h3 class="usename{ ' toc2'[not($is-a-flag) and not($too-deep)] }">{ m:use-name(.) }</h3>-->
             <span class="mtyp">
@@ -566,7 +573,15 @@
             <xsl:attribute name="id" select="'#local_' || string-join( ancestor-or-self::*/@name,'-')"/>
          </xsl:if>
          <div class="model-summary{ ' definition-header'[$is-local] }">
-            <h3 class="usename{ ' toc2'[$make-model-links and not($is-a-flag) and not($too-deep)] }">
+            <p class="modeling usename"><xsl:choose>
+               <xsl:when test="$is-unwrapped"><em>{{block text}}</em></xsl:when>
+               <xsl:otherwise>
+                  <xsl:value-of select="m:use-name(.)"/>
+               </xsl:otherwise>
+            </xsl:choose>
+            </p>
+            
+            <!--<h3 class="usename{ ' toc2'[$make-model-links and not($is-a-flag) and not($too-deep)] }">
                <xsl:if test="$make-model-links">
                   <xsl:attribute name="id" select="'#local_' || string-join(ancestor-or-self::*/@name, '-') || '_def-h3'"/>
                </xsl:if>
@@ -576,7 +591,7 @@
                      <xsl:value-of select="m:use-name(.)"/>
                   </xsl:otherwise>
                </xsl:choose>
-            </h3>
+            </h3>-->
             <span class="mtyp">
                <xsl:apply-templates select="." mode="metaschema-type"/>
                <xsl:if test="empty($definition)">&#xA0;</xsl:if>

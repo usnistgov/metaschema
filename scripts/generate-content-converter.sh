@@ -126,12 +126,12 @@ fi
 result=$(generate_converter "$METASCHEMA" "$GENERATED_CONVERTER" "${GENERATE_SOURCE_FORMAT}" "${GENERATE_TARGET_FORMAT}" 2>&1)
 cmd_exitcode=$?
 if [ $cmd_exitcode -ne 0 ]; then
-  
-  echo -e "${P_ERROR}Generating ${GENERATE_SOURCE_FORMAT^^} to ${GENERATE_TARGET_FORMAT^^} converter failed for '${P_END}${METASCHEMA_RELATIVE_PATH}${P_ERROR}'.${P_END}"
-  echo -e "${P_ERROR}${result}${P_END}"
-  exitcode=1
+  >&2 echo -e "${P_ERROR}Generating ${GENERATE_SOURCE_FORMAT^^} to ${GENERATE_TARGET_FORMAT^^} converter failed for '${P_END}${METASCHEMA_RELATIVE_PATH}${P_ERROR}'.${P_END}"
+  >&2 echo -e "${P_ERROR}${result}${P_END}"
+  exit 1;
 else
   echo -e "${P_OK}Generated ${GENERATE_SOURCE_FORMAT^^} to ${GENERATE_TARGET_FORMAT^^} converter for '${P_END}${METASCHEMA_RELATIVE_PATH}${P_OK}' as '${P_END}${GENERATED_CONVERTER_RELATIVE}${P_INFO}'.${P_END}"
 fi
 
+exit 0;
 

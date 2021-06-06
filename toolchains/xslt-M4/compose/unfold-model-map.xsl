@@ -12,19 +12,33 @@
     <xsl:mode on-no-match="shallow-copy"/>
     
     <!-- Moved up to new 'group' parent -->
-    <xsl:template match="@group-json | @group-xml | @group-name"/>
+    <xsl:template match="@group-json | @group-xml | @_group-name"/>
     
-<!-- Removing from objects not to be keyed -->
-    <xsl:template match="*[exists(@group-name)][@group-json='ARRAY']/@key"/>
+    <!-- Removing from objects not to be keyed -->
+    <xsl:template match="*[exists(@_group-name)][@group-json='ARRAY']/@key"/>
     
-    <xsl:template match="*[exists(@group-name)]">
-        <group name="{@group-name}" in-xml="{ if (@group-xml='GROUPED') then 'SHOWN' else 'HIDDEN' }"
+    <xsl:template priority="10" match="*[exists(@_group-name)]">
+        <group in-xml="{ if (@group-xml='GROUPED') then 'SHOWN' else 'HIDDEN' }"
             max-occurs="1" min-occurs="{ if (@min-occurs='0') then '0' else '1'}">
+            <xsl:if test="@group-xml='GROUPED'">
+                <xsl:attribute name="gi" select="@group-name"/>
+                <!--<xsl:attribute name="_step" select="tokenize(@_step,'/')[1]"/>-->
+            </xsl:if>
             <xsl:copy-of select="@json-key-flag | @group-json | @recursive"/>
+            <xsl:copy-of select="@name"/>
+            <xsl:copy-of select="@_caller-xml-id | @_caller-json-id | @_def-xml-id | @_def-json-id"/>
+            <xsl:copy-of select="@_base-uri | @_key-name | @_key-ref"/>
+            <!--<xsl:apply-templates select="@* except (@max-occurs|@min-occurs|@key)"/>-->
+            <xsl:attribute name="key" expand-text="true">{@_group-name}</xsl:attribute>
+            
             <xsl:next-match/>
         </group>
-    </xsl:template>
-    
-    
+    </xsl:template> 
    
+    <xsl:template match="*" mode="step-name"/>
+
+    <xsl:template as="xs:string" match="*[exists(@_using-root-name|@_using-name|@name)]" mode="step-name">
+        <xsl:value-of select="(@_using-root-name,@_using-name,@name)[1]"/>
+    </xsl:template>
+
 </xsl:stylesheet>

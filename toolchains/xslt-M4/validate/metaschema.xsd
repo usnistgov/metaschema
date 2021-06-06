@@ -15,9 +15,10 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="m:schema-name"/>
-        <xs:element ref="m:schema-version" minOccurs="0"/>
+        <xs:element ref="m:schema-version"/>
         <xs:element ref="m:short-name"/>
-        <xs:element ref="m:namespace" minOccurs="1"/>
+        <xs:element ref="m:namespace"/>
+        <xs:element ref="m:json-base-uri"/>
         <xs:element ref="m:remarks" minOccurs="0"/>
         <xs:choice maxOccurs="unbounded">
           <xs:element ref="m:import"/>
@@ -252,7 +253,13 @@
         should not rely on namespaces alone to disambiguate or resolve semantics.</xs:documentation>
     </xs:annotation>
   </xs:element>
-
+  
+  <xs:element name="json-base-uri" type="xs:anyURI">
+    <xs:annotation>
+      <xs:documentation>The JSON Base URI is nominal base URI assigned to a JSON Schema instance expressing the model defined by this metaschema.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  
   <xs:group name="markup-elements">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
@@ -278,11 +285,22 @@
     </xs:annotation>
   </xs:element>
 
-  <xs:element name="remarks" type="m:markup-multiline">
+  <xs:element name="remarks">
     <xs:annotation>
       <xs:documentation>Any explanatory or helpful information to be provided in the
       documentation of an assembly, field or flag.</xs:documentation>
     </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="m:markup-multiline">
+          <xs:attribute name="class" type="xs:NMTOKENS">
+            <xs:annotation>
+              <xs:documentation>Mark as 'XML' for XML-only or 'JSON' for JSON-only remarks.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
   </xs:element>
 
   <xs:complexType name="markup-multiline">
@@ -847,8 +865,11 @@
   <xs:simpleType name="simple-datatypes">
     <xs:restriction base="xs:string">
       <xs:enumeration value="boolean"/>
-      <xs:enumeration value="string"/>
-      <xs:enumeration value="NCName"/>
+      <xs:enumeration value="string">
+        <xs:annotation>
+          <xs:documentation>A string with no leading or trailing whitespace.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
       <xs:enumeration value="decimal"/>
       <!-- Not supporting float or double -->
       <!--<xs:enumeration value="float" />
@@ -868,9 +889,11 @@
       <xs:enumeration value="hostname"/>
       <xs:enumeration value="ip-v4-address"/>
       <xs:enumeration value="ip-v6-address"/>
+      <xs:enumeration value="token"/>
       <xs:enumeration value="uri"/>
       <xs:enumeration value="uri-reference"/>
       <xs:enumeration value="uuid"/>
+      
     </xs:restriction>
   </xs:simpleType>
 

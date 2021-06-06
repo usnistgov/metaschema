@@ -56,9 +56,13 @@
   <xsl:variable name="produce-xml-converter">
     <!-- first compose the metaschema -->
     <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
-    <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
-    <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
+    <nm:transform version="3.0">compose/metaschema-build-refs.xsl</nm:transform>
+    <nm:transform version="3.0">compose/metaschema-trim-extra-modules.xsl</nm:transform>
+    <nm:transform version="3.0">compose/metaschema-prune-unused-definitions.xsl</nm:transform>
+    <nm:transform version="3.0">compose/metaschema-resolve-use-names.xsl</nm:transform>
+    <nm:transform version="3.0">compose/metaschema-resolve-sibling-names.xsl</nm:transform>
     <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
+    <nm:transform version="3.0">compose/annotate-composition.xsl</nm:transform>
     
     <!-- next produce definition map -->
     <nm:transform version="3.0">compose/make-model-map.xsl</nm:transform>

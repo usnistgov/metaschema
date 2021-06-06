@@ -29,9 +29,14 @@
     <!-- The $transformation-sequence declares transformations to be applied in order. -->
     <xsl:variable name="transformation-sequence">
         <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-reduce1.xsl</nm:transform>
-        <nm:transform version="3.0">compose/metaschema-reduce2.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-build-refs.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-trim-extra-modules.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-prune-unused-definitions.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-resolve-use-names.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-resolve-sibling-names.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
+        <nm:transform version="3.0">compose/annotate-composition.xsl</nm:transform>
+        
         <nm:transform version="3.0">schema-gen/make-metaschema-xsd.xsl</nm:transform>
         <nm:transform version="3.0">schema-gen/configure-namespaces.xsl</nm:transform>
     </xsl:variable>

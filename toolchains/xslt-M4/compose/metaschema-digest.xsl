@@ -17,9 +17,9 @@
     
     <xsl:variable name="target-ns" select="/METASCHEMA/namespace/string()"/>
     
-    <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag" use="@name"/>
-    <xsl:key name="field-definition-by-name"    match="METASCHEMA/define-flag" use="@name"/>
-    <xsl:key name="assembly-definition-by-name" match="METASCHEMA/define-flag" use="@name"/>
+    <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag" use="@_key-name"/>
+    <xsl:key name="field-definition-by-name"    match="METASCHEMA/define-flag" use="@_key-name"/>
+    <xsl:key name="assembly-definition-by-name" match="METASCHEMA/define-flag" use="@_key-name"/>
     
     <xsl:template match="/">
         <xsl:apply-templates mode="digest"/>
@@ -41,11 +41,15 @@
     </xsl:template>
     
     <!-- Dropping metaschema superstructure from sub modules -->
-    <xsl:template match="METASCHEMA//METASCHEMA/*" mode="digest"/>
-
+    <xsl:template match="METASCHEMA//METASCHEMA/schema-name"    mode="digest"/>
+    <xsl:template match="METASCHEMA//METASCHEMA/schema-version" mode="digest"/>
+    <xsl:template match="METASCHEMA//METASCHEMA/short-name"     mode="digest"/>
+    <xsl:template match="METASCHEMA//METASCHEMA/namespace"      mode="digest"/>
+    <xsl:template match="METASCHEMA//METASCHEMA/json-base-uri"  mode="digest"/>
+    <xsl:template match="METASCHEMA//METASCHEMA/remarks"        mode="digest"/>
+    
     <xsl:template priority="10" match="define-assembly | define-field | define-flag" mode="digest">
              <xsl:copy>
-                <xsl:call-template name="mark-module"/>
                 <xsl:copy-of select="@*"/>
                 <xsl:apply-templates mode="#current"/>
             </xsl:copy>
@@ -65,7 +69,7 @@
 
     <xsl:template mode="digest" match="field">
         <xsl:copy>
-            <xsl:copy-of select="key('field-definition-by-name',@ref)/@as-type"/>
+            <xsl:copy-of select="key('field-definition-by-name',@_key-ref)/@as-type"/>
             <!-- Allowing local datatype to override the definition's datatype -->
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates mode="#current"/>
@@ -74,15 +78,12 @@
     
     <xsl:template mode="digest" match="flag">
         <xsl:copy>
-            <xsl:copy-of select="key('flag-definition-by-name',@ref)/@as-type"/>
+            <xsl:copy-of select="key('flag-definition-by-name',@_key-ref)/@as-type"/>
             <!-- Allowing local datatype to override the definition's datatype -->
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates mode="#current"/>
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template name="mark-module">
-        <xsl:copy-of select="ancestor-or-self::METASCHEMA[1]/@module"/>
-    </xsl:template>
-
+   
 </xsl:stylesheet>

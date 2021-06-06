@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" stylesheet="metapath-jsonize.xsl">
-    <x:param name="definition-map" href="../testing/latest-definition-map.xml"/>
     
+    <x:param name="definition-map" href="../testing/temp/IN-models_DEFINITION-MODEL.xml"/>
+    
+    
+    <x:scenario label="broken path?">
+        <x:call function="m:jsonize-path">
+            <x:param>field-simple-groupable</x:param>
+        </x:call>
+        <x:expect label="field could be either a map or an array member (since SINGLETON_OR_ARRAY by default)" select="'(j:array[@key=''groupable-simple-fields'']/j:map | j:map[@key=''groupable-simple-fields''])'"/>
+    </x:scenario>
+    <x:scenario label="broken path?">
+        <x:call function="m:jsonize-path">
+            <x:param>field-wrappable</x:param>
+        </x:call>
+        <x:expect label="field is grouped as ARRAY" select="'j:array[@key=''wrapped-fields'']/j:string'"/>
+    </x:scenario>
     <x:scenario label="Path to root">
         <x:call function="m:jsonize-path">
             <x:param>/</x:param>
@@ -88,7 +103,7 @@
             <x:param>/nothing</x:param>
         </x:call>
         <x:expect label="produces a no-op (path to nothing)"
-            select="'/j:map/((: NOWHERE :))'"/>
+            select="'/j:map/()'"/>
     </x:scenario>
     
     <x:scenario label="Absolute path to document element, with predicate">
@@ -174,20 +189,36 @@
             select="''"/>
     </x:scenario>-->
     
-    <x:scenario label="Absolute path showing two steps into a recursive structure">
+    <x:scenario label="Relative path showing a recursive structure">
         <x:call function="m:jsonize-path">
-            <x:param>/EVERYTHING/EVERYTHING</x:param>
+            <x:param>everything</x:param>
         </x:call>
         <x:expect label="from the root, the first step isolates a singleton"
+            select="'j:array[@key=''everything-recursive'']/j:map'"/>
+    </x:scenario>
+    
+    <x:scenario label="Relative path showing a recursive structure">
+        <x:call function="m:jsonize-path">
+            <x:param>assembly-1only/assembly-1only</x:param>
+        </x:call>
+        <x:expect label="both steps"
+            select="'j:map[@key=''assembly-1only'']/j:map[@key=''assembly-1only'']'"/>
+    </x:scenario>
+    
+    <x:scenario label="Absolute path showing two steps into a recursive structure">
+        <x:call function="m:jsonize-path">
+            <x:param>/EVERYTHING/everything</x:param>
+        </x:call>
+        <x:expect label="both steps, from the top"
             select="'/j:map/j:map[@key=''EVERYTHING'']/j:array[@key=''everything-recursive'']/j:map'"/>
     </x:scenario>
-
+    
     <x:scenario label="Relative path showing three steps into a recursive structure">
         <x:call function="m:jsonize-path">
-            <x:param>EVERYTHING/EVERYTHING/EVERYTHING</x:param>
+            <x:param>EVERYTHING/everything/everything</x:param>
         </x:call>
-        <x:expect label="in a relative path each step shows all possibilities at that step"
-            select="'(j:map[@key=''EVERYTHING''] | j:array[@key=''everything-recursive'']/j:map)/j:array[@key=''everything-recursive'']/j:map/j:array[@key=''everything-recursive'']/j:map'"/>
+        <x:expect label="the root matches differently even for the same object type"
+            select="'j:map[@key=''EVERYTHING'']/j:array[@key=''everything-recursive'']/j:map/j:array[@key=''everything-recursive'']/j:map'"/>
     </x:scenario>
 
 </x:description>

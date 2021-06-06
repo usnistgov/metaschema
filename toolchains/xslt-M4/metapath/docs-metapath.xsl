@@ -8,9 +8,9 @@
    
     <xsl:import href="REx/metapath02.xslt"/>
 
+    <xsl:include href="paths-split.xsl"/>
+    
     <xsl:output indent="yes"/>
-
-    <xsl:mode on-no-match="shallow-skip"/>
 
 <!-- 1. reduce target paths to their minimized form accounting for axes, removing predicates etc.
           cast wildcards 'node()' 'element()' and 'attribute' to '*'
@@ -23,7 +23,7 @@
      
     -->
     
-    <xsl:variable as="xs:string" name="t">control[a=b]/part//./part/prop[@name='label'] | a/c</xsl:variable>
+    <xsl:variable as="xs:string" name="t">a / (b|c|d)</xsl:variable>
     <!--<xsl:variable as="xs:string" name="t">control[a=b]/part//./part/prop[@name='label'] | a/(b|c)</xsl:variable>-->
     <xsl:variable name="tests" as="element()*">
         <test context="part/prop"
@@ -36,20 +36,20 @@
     </xsl:variable>
     
 <!-- Run this XSLT on itself to see test results -->
-    <xsl:template match="/" mode="test">
+    <xsl:template match="/">
         <test-results>
-            <IN>
+            <!--<IN>
             <xsl:copy-of select="$tests[m:any-match(@context,@target)]"/>
             </IN>
             <OUT>
                 <xsl:copy-of select="$tests[not(m:any-match(@context,@target))]"/>
                 
-            </OUT>
-            <!--<xsl:for-each expand-text="true" select="m:express-targets($t)">
+            </OUT>-->
+            <xsl:for-each expand-text="true" select="m:express-targets($t)">
                 <path>{ . }</path>
-            </xsl:for-each>-->
-            <!--<xsl:sequence select="m:reduce-path-expr($t)"/>
-            <xsl:sequence select="p:parse-XPath($t)"/>-->
+            </xsl:for-each>
+            <xsl:sequence select="m:reduce-path-expr($t)"/>
+            <xsl:sequence select="p:parse-XPath($t)"/>
         </test-results>
     </xsl:template>
 
@@ -60,7 +60,7 @@
       self axis is dropped
       child and attribute axis are unified
         so '/path/to//deep[$true]/@in' becomes 'deep/in'
-        'any/where | you|want' becomes 'any/where' and 'you/want' (two targets)
+        'any/where | you/want' becomes 'any/where' and 'you/want' (two targets)
         a path that does not parse should be empty (TODO) or come back '*' (match everything)?
     -->
     <xsl:function name="m:express-targets" as="xs:string*">
@@ -71,6 +71,22 @@
     
     <!-- m:reduce-path-expr accepts a path, parses it, and returns a 'reduced' and rewritten path
          easier to rewrite than the raw parse tree -->
+    <xsl:function name="m:expand-path-expr" as="node()*">
+        <xsl:param name="expr" as="xs:string"/>
+        <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
+        <xsl:variable name="reduced.tree">
+          <xsl:apply-templates select="$parse.tree" mode="reduce-path"/>
+        </xsl:variable>
+        <!-- each tree returns a sequence of paths as strings, expanded  -->
+        <!-- so (a|b)/(c|d) comes back a/c, a/d, b/c, b/d etc. -->
+        <xsl:apply-templates select="$reduced.tree" mode="expand"/>
+    </xsl:function>
+    
+    <xsl:mode name="expand" on-no-match="shallow-copy"/>
+    
+    
+    
+    
     <xsl:function name="m:reduce-path-expr" as="node()*">
         <xsl:param name="expr" as="xs:string"/>
         <xsl:variable name="parse.tree" select="p:parse-XPath($expr)"/>
@@ -82,7 +98,7 @@
         <xsl:param name="context-path" as="xs:string"/><!-- a/b/c -->
         <xsl:param name="target-expr"  as="xs:string"/><!-- a[1]/b/c[3] | d/e[$n]/f -->
         <xsl:sequence select="some $t in m:express-targets($target-expr) satisfies
-            m:match-paths($t,$context-path)"/>
+            m:match-paths($context-path,$t)"/>
     </xsl:function>
     
     <xsl:function name="m:match-paths" as="xs:boolean">
@@ -100,24 +116,51 @@
             ( ($cs[$p],$ts[$p])='*' or $cs[$p]=$ts[$p] )"/>
     </xsl:function>
     
+    <!--<xsl:template mode="refine-path" match="m:metapath" as="xs:string*">
+        <xsl:variable name="unified" as="element()">
+            <xsl:apply-templates mode="#current"/>
+        </xsl:variable>
+        
+    </xsl:template>-->
+    
+    <xsl:template mode="refine-path" match="m:alternative[exists(m:alternative)]">
+        <xsl:apply-templates mode="#current"/>
+    </xsl:template>
     
     <xsl:template mode="refine-path" match="m:alternative" as="xs:string">
-        <xsl:value-of separator="/">
+        <xsl:variable name="steps" as="xs:string*">
             <xsl:apply-templates select="m:step" mode="#current"/>
+        </xsl:variable>
+        <xsl:value-of select="$steps" separator="/"/>
+    </xsl:template>
+    
+    <xsl:template mode="refine-path" match="m:choice" as="xs:string">
+        <xsl:value-of>
+            <xsl:text>(</xsl:text>
+            <xsl:variable name="alternatives" as="xs:string*">
+                <xsl:apply-templates select="m:alternative" mode="#current"/>
+            </xsl:variable>
+            <xsl:value-of select="$alternatives" separator=" | "/>
+            <xsl:text>)</xsl:text>
         </xsl:value-of>
+    </xsl:template>
+    
+    <xsl:template mode="refine-path" match="m:choice[count(m:alternative)=1]" priority="2" as="xs:string">
+        <xsl:apply-templates select="m:alternative" mode="#current"/>
     </xsl:template>
     
     <xsl:template mode="refine-path" match="m:step[(.|following-sibling::m:step)/m:axis='descendant-or-self']"/>
     <xsl:template mode="refine-path" match="m:step[(following-sibling::m:step)/m:axis='descendant']"/>
-    <xsl:template mode="refine-path" priority="2" match="m:step[m:axis='self']"/>
-    <xsl:template mode="refine-path" priority="2" match="m:step[empty(*)]"/>
+    <!--<xsl:template mode="refine-path" priority="2" match="m:step[m:axis='self']"/>-->
+    <!--<xsl:template mode="refine-path" priority="2" match="m:step[empty(*)]"/>-->
     
-    <xsl:template mode="refine-path" match="m:step" as="xs:string">
+    <xsl:template mode="refine-path" match="m:step">
         <xsl:apply-templates mode="#current"/>
     </xsl:template>
     
     <xsl:template mode="refine-path" match="m:axis"/>
     <xsl:template mode="refine-path" match="m:node[.='node()']">*</xsl:template>
+    <!--<xsl:template mode="refine-path" match="m:step[m:axis='self'][empty(preceding-sibling::*)]" priority="3">.</xsl:template>-->
     
     
     <xsl:template mode="reduce-path" match="PredicateList"/>
@@ -131,7 +174,13 @@
         </m:metapath>
     </xsl:template>
     
-    <xsl:template match="XPath/UnionExpr/UnaryExpr" mode="reduce-path">
+    <!--<xsl:template match="UnionExpr" mode="reduce-path">
+        <m:choice>
+            <xsl:apply-templates mode="#current"/>
+        </m:choice>
+    </xsl:template>-->
+    
+    <xsl:template match="UnionExpr/UnaryExpr" mode="reduce-path">
         <m:alternative>
             <xsl:apply-templates mode="#current"/>
         </m:alternative>
@@ -160,6 +209,10 @@
     <xsl:template match="ForwardStep[AbbrevForwardStep/TOKEN='.']" mode="reduce-path">
         <m:axis>self</m:axis>
         <m:node>node()</m:node>
+    </xsl:template>
+    
+    <xsl:template match="FilterExpr[normalize-space(.)='.']" mode="reduce-path">
+        <m:step>.</m:step>
     </xsl:template>
     
     <xsl:template match="text()" mode="reduce-path"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/css" href="../../../toolchains/xslt-M4/lib/metaschema-author.css"?>
-<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd"
  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
@@ -8,7 +8,8 @@
     <schema-version>1.0</schema-version>
     <short-name>test-model</short-name>
     <namespace>http://csrc.nist.gov/metaschema/ns/everything</namespace>
-
+    <json-base-uri>http://csrc.nist.gov/metaschema/ns/everything</json-base-uri>
+    
     <remarks>
         <p>A mini metaschema produced for <em>documentation</em> testing purposes.</p>
         <p>This metaschema exercises modeling with a mix of global, modular (local) and inline
@@ -37,6 +38,9 @@
         <root-name>EVERYTHING</root-name>
         <flag ref="id"/>
         <model>
+            <assembly ref="deep-branch">
+                <use-name>deep1</use-name>
+            </assembly>
             <field ref="field-1only"/>
             <field ref="overloaded">
                 <use-name>overloaded1</use-name>
@@ -65,7 +69,7 @@
             </field>
             
             <field ref="wrapped-prose" in-xml="WITH_WRAPPER"/>
-            <field ref="loose-prose" in-xml="UNWRAPPED"/>
+            <field ref="loose-prose"   in-xml="UNWRAPPED"/>
             
             <assembly ref="assembly-with-inlines"/>
             
@@ -92,6 +96,36 @@
                 <group-as name="everything-recursive" in-json="ARRAY"/>
             </assembly>
         </model>
+    </define-assembly>
+
+    <define-assembly name="deep-branch">
+        <formal-name>Deep branch</formal-name>
+        <description>A deepish branching structure defined globally.</description>
+        <model>
+            <define-assembly name="deep2">
+                <formal-name>Deep two (inline)</formal-name>
+                <description>Two levels in.</description>
+                <model>
+                    <define-assembly name="deep3">
+                        <formal-name>Deep Three (inline)</formal-name>
+                        <description>Three levels in.</description>
+                        <flag ref="id"/>
+                        <define-flag name="count">
+                            <formal-name>Count</formal-name>
+                            <description>A count in natural language.</description>
+                        </define-flag>
+                        
+                    </define-assembly>
+                </model>
+            </define-assembly>
+        </model>
+        <constraint>
+            <allowed-values target="deep2/deep3/@count">
+                <enum value="one">One</enum>
+                <enum value="two">Two</enum>
+                <enum value="three">Three</enum>
+            </allowed-values>
+        </constraint>
     </define-assembly>
 
     <define-field name="overloaded">

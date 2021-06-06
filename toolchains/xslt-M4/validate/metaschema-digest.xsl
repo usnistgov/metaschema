@@ -17,9 +17,9 @@
     
     <xsl:variable name="target-ns" select="/METASCHEMA/namespace/string()"/>
     
-    <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag" use="@name"/>
-    <xsl:key name="field-definition-by-name"    match="METASCHEMA/define-flag" use="@name"/>
-    <xsl:key name="assembly-definition-by-name" match="METASCHEMA/define-flag" use="@name"/>
+    <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag" use="@key-name"/>
+    <xsl:key name="field-definition-by-name"    match="METASCHEMA/define-flag" use="@key-name"/>
+    <xsl:key name="assembly-definition-by-name" match="METASCHEMA/define-flag" use="@key-name"/>
     
     <xsl:template match="/">
         <xsl:apply-templates mode="digest"/>
@@ -65,7 +65,7 @@
 
     <xsl:template mode="digest" match="field">
         <xsl:copy>
-            <xsl:copy-of select="key('field-definition-by-name',@ref)/@as-type"/>
+            <xsl:copy-of select="key('field-definition-by-name',@key-ref)/@as-type"/>
             <!-- Allowing local datatype to override the definition's datatype -->
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates mode="#current"/>
@@ -74,7 +74,7 @@
     
     <xsl:template mode="digest" match="flag">
         <xsl:copy>
-            <xsl:copy-of select="key('flag-definition-by-name',@ref)/@as-type"/>
+            <xsl:copy-of select="key('flag-definition-by-name',@key-ref)/@as-type"/>
             <!-- Allowing local datatype to override the definition's datatype -->
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates mode="#current"/>

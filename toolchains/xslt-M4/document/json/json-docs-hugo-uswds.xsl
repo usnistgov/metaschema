@@ -9,19 +9,6 @@
    <!-- Input:   Metaschema -->
    <!-- Output:  HTML  -->
 
-
-   <!-- TO DO:
-   hide list of attributes on section title when "Attributes" is expanded
-   expand Remarks to be open on page load (closable)
-   
-   into Hugo
-     generate and provide to Hugo 'partial' file
-     update CSS and test binding
-   next integrate into CI/CD script
-   
-   -->
-
-
    <xsl:mode on-no-match="text-only-copy"/>
 
    <!--<xsl:param name="schema-path" select="document-uri(/)"/>-->
@@ -39,7 +26,6 @@
 
    <xsl:output indent="yes"/>
 
-
    <!-- Purpose: XSLT 3.0 stylesheet for Metaschema display (HTML): common code -->
    <!-- Input:   Metaschema -->
    <!-- Output:  HTML  -->
@@ -50,6 +36,9 @@
 
    <xsl:variable name="home" select="/METASCHEMA"/>
 
+   <xsl:param name="xml-definitions-page" as="xs:string">../../xml/definitions</xsl:param>
+   
+   
    <xsl:variable name="all-references" select="//flag/@name | //model//*/@ref"/>
 
    <xsl:key name="assembly-definitions" match="/METASCHEMA/define-assembly" use="@name"/>
@@ -155,8 +144,12 @@
       </p>
    </xsl:template>
 
-   <xsl:template match="*" mode="link-here">
-      <!-- forcing names in top-down order     -->
+   <xsl:template match="*" mode="link-usage">
+      <xsl:value-of select="m:use-name(.)"/>
+   </xsl:template>
+   
+   <!--<xsl:template match="*" mode="link-here">
+      <!-\- forcing names in top-down order     -\->
       <a href="#local_{string-join( (ancestor::*|.)/(@name|@ref),'-')}" class="name-link">
          <xsl:value-of select="m:use-name(.)"/>
       </a>
@@ -166,9 +159,11 @@
       <a href="#global_{@name}" class="name-link">
          <xsl:value-of select="m:use-name(.)"/>
       </a>
-   </xsl:template>
+   </xsl:template>-->
 
    <xsl:template name="definition-header">
+      <xsl:variable name="identifier" select="string-join(ancestor-or-self::*/@name,'/')"/>
+      <xsl:variable name="nested" select="count(.|ancestor::define-assembly|ancestor::define-field)"/>
       <xsl:variable name="references"
          select="self::define-flag/key('flag-references', @name) |
          self::define-field/key('field-references', @name) |
@@ -184,7 +179,9 @@
       <!--<xsl:variable name="group-names" select="group-as/@name, $references/group-as/@name"/>-->
       <div class="definition-header">
          <xsl:call-template name="cross-links"/>
-         <h2 class="toc1" id="global_{@name}_h2">
+         <xsl:element name="h{ $nested }" namespace="http://www.w3.org/1999/xhtml">
+            <xsl:attribute name="class" select="'toc' || $nested"/>
+            <xsl:attribute name="id" select="$identifier"/>
             <span class="defining">
                <xsl:for-each-group select="$singular-names" group-by="string(.)">
                   <xsl:if test="position() gt 1">, </xsl:if>
@@ -193,7 +190,7 @@
                   </span>
                </xsl:for-each-group>
             </span>
-         </h2>
+         </xsl:element>
          <p>
             <xsl:for-each select="formal-name">
                <span class="usa-tag">formal name</span>
@@ -218,11 +215,11 @@
       </xsl:for-each-group>
    </xsl:template>
 
-   <xsl:template match="code[. = (/*/@name except ancestor::*/@name)]">
+   <!--<xsl:template match="code[. = (/*/@name except ancestor::*/@name)]">
       <a href="#{.}">
          <xsl:next-match/>
       </a>
-   </xsl:template>
+   </xsl:template>-->
 
 
    <!--<xsl:variable name="github-base" as="xs:string">https://github.com/usnistgov/OSCAL/tree/master</xsl:variable>-->
@@ -282,19 +279,18 @@
    <!-- ^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V -->
 
    <xsl:template name="cross-links">
-      <xsl:param name="make-page-links" select="false()" tunnel="true"/>
-      <!--<xsl:variable name="schema-base" select="replace($metaschema-code, '-xml$', '')"/>-->
-      <xsl:if test="$make-page-links">
-         <div class="crosslink">
-            <a href="../xml-schema/#global_{@name}">
-               <button class="schema-link">Switch to XML</button>
-            </a>
-         </div>
-      </xsl:if>
+      <xsl:variable name="identifier" select="string-join(ancestor-or-self::*/@name,'/')"/>
+      <!--<xsl:variable name="schema-base" select="replace($metaschema-code,'-xml$','')"/>-->
+      <div class="crosslink">
+         <a href="{$xml-definitions-page}/#{$identifier}">
+            <button class="schema-link">Switch to XML</button>
+         </a>
+      </div>
    </xsl:template>
+   
 
    <xsl:template match="define-flag" mode="make-definition">
-      <div class="definition define-flag" id="global_{@name}">
+      <section class="definition define-flag" id="global_{@name}">
          <xsl:call-template name="definition-header"/>
          <xsl:apply-templates select="description"/>
          <xsl:apply-templates select="." mode="representation-in-json"/>
@@ -303,18 +299,18 @@
                <xsl:for-each-group select="current-group()" group-by="@name">
                   <xsl:if test="position() gt 1 and last() ne 2">, </xsl:if>
                   <xsl:if test="position() gt 1 and position() eq last()"> and </xsl:if>
-                  <xsl:apply-templates select="." mode="link-here"/>
+                  <xsl:apply-templates select="." mode="link-usage"/>
                </xsl:for-each-group>.</p>
          </xsl:for-each-group>
          <xsl:call-template name="remarks-group"/>
          <xsl:call-template name="display-applicable-constraints"/>
          <xsl:call-template name="report-module"/>
-      </div>
+      </section>
    </xsl:template>
 
    <xsl:template match="define-field" mode="make-definition">
       <xsl:variable name="showing-flags" select="(define-flag | flag)[not(@name=../json-value-key/@flag-name)]"/>
-      <div class="definition define-field" id="global_{@name}">
+      <section class="definition define-field" id="global_{@name}">
          <xsl:call-template name="definition-header">
             <xsl:with-param name="make-page-links" tunnel="true" select="true()"/>
          </xsl:call-template>
@@ -337,12 +333,12 @@
          </xsl:variable>
          <xsl:if test="exists($value-property-proxy | $showing-flags)">
          <div class="model properties">
-            <h4 class="subhead">
+            <p class="subhead">
                <xsl:choose>
                   <xsl:when test="empty($showing-flags)">Property</xsl:when>
                   <xsl:otherwise>Properties</xsl:otherwise>
                </xsl:choose>
-            </h4>
+            </p>
             <ul>
                <xsl:apply-templates select="$value-property-proxy">
                   <xsl:with-param name="proxy-of" tunnel="true" select="."/>
@@ -359,18 +355,18 @@
          <!--<xsl:call-template name="display-applicable-constraints"/>-->
          <xsl:apply-templates select="example"/>
          <xsl:call-template name="report-module"/>
-      </div>
+      </section>
    </xsl:template>
 
    <xsl:template match="define-assembly" mode="make-definition">
-      <div class="definition define-assembly" id="global_{@name}">
+      <section class="definition define-assembly" id="global_{@name}">
          <xsl:call-template name="definition-header">
             <xsl:with-param name="make-page-links" tunnel="true" select="true()"/>
          </xsl:call-template>
          <xsl:apply-templates select="formal-name | description"/>
          <xsl:for-each select="root-name">
-            <h5><code xsl:expand-text="true">{ . }</code> is a root (containing) object for this
-               schema.</h5>
+            <p class="h5"><code xsl:expand-text="true">{ . }</code> is a root (containing) object for thi
+               schema.</p>
          </xsl:for-each>
          <xsl:apply-templates mode="appears-in" select="."/>
          <xsl:call-template name="remarks-group"/>
@@ -378,8 +374,8 @@
             model/(.|choice)/( define-field | define-assembly | field | assembly )"/>
          <xsl:for-each-group select="$for-properties" group-by="true()" expand-text="true">
             <div class="model properties">
-               <h4 class="subhead">{ if (count(current-group()) eq 1) then 'Property' else
-                  'Properties' } ({ count(current-group()) })</h4>
+               <p class="subhead">{ if (count(current-group()) eq 1) then 'Property' else
+                  'Properties' } ({ count(current-group()) })</p>
                <ul>
                   <xsl:apply-templates select="current-group()">
                      <xsl:with-param name="make-page-links" tunnel="true" select="false()"/>
@@ -390,7 +386,7 @@
          <xsl:call-template name="display-applicable-constraints"/>
          <xsl:apply-templates select="example"/>
          <xsl:call-template name="report-module"/>
-      </div>
+      </section>
    </xsl:template>
 
    <xsl:template match="*" mode="appears-in"/>
@@ -432,7 +428,7 @@
                select="current-group()/ancestor::*[self::define-field | self::define-assembly][1]">
                <xsl:if test="position() gt 1 and last() ne 2">, </xsl:if>
                <xsl:if test="position() gt 1 and position() eq last()"> and </xsl:if>
-               <xsl:apply-templates select="." mode="link-here"/>
+               <xsl:apply-templates select="." mode="link-usage"/>
             </xsl:for-each>.</p>
       </xsl:for-each-group>
    </xsl:template>
@@ -501,13 +497,10 @@
    </xsl:template>
 
    <xsl:template match="*" mode="group-header" expand-text="true">
-      <xsl:variable name="too-deep"
-         select="exists(ancestor::model[2] | (parent::define-field | parent::define-assembly)/ancestor::model)"/>
       <div class="model-summary">
-         <h3 class="modeling usename{ ' toc2'[not($too-deep)] }"
-            id="#gen_{string-join(ancestor-or-self::*/@name, '-') }_def-h3">
+         <p class="modeling usename">
             <xsl:value-of select="group-as/@name"/>
-         </h3>
+         </p>
          <span class="mtyp">
             <xsl:apply-templates select="." mode="group-type"/>
          </span>
@@ -546,28 +539,16 @@
       <xsl:variable name="definition" select="key('assembly-definitions', self::assembly/@ref) |
          key('field-definitions', self::field/@ref) | key('flag-definitions', self::flag/@ref)"/>
       <xsl:variable name="is-a-flag" select="exists(self::flag)"/>
-      <xsl:variable name="too-deep"
-         select="exists(ancestor::model[2] | (parent::define-field | parent::define-assembly)/ancestor::model)"/>
+      <!--<xsl:variable name="too-deep"
+         select="exists(ancestor::model[2] | (parent::define-field | parent::define-assembly)/ancestor::model)"/>-->
       <xsl:if test="empty($definition)">
          <xsl:message>NO DEFINITION FOUND FOR { local-name() }</xsl:message>
       </xsl:if>
       <div class="model-descr" tabindex="0">
          <div class="model-summary">
-            <xsl:variable name="head-gi"
-               select="
-                  if ($grouped) then
-                     'span'
-                  else
-                     'h3'"/>
-            <xsl:element name="{$head-gi}">
-               <xsl:attribute name="class" expand-text="true">modeling usename{ ' toc2'[not($grouped or
-                  $too-deep)] }</xsl:attribute>
-               <xsl:if test="not($grouped)">
-                  <xsl:attribute name="id"
-                     select="'#gen_' || string-join(ancestor-or-self::*/@name, '-') || '_def-h3'"/>
-               </xsl:if>
+            <p class="modeling usename">
                <xsl:apply-templates select="." mode="key-name"/>
-            </xsl:element>
+            </p>
             <span class="mtyp">
                <xsl:apply-templates select="." mode="metaschema-type"/>
                <xsl:if test="empty($definition)">&#xA0;</xsl:if>
@@ -639,21 +620,9 @@
             <xsl:attribute name="id" select="'#local_' || string-join( ancestor-or-self::*/@name,'-')"/>
          </xsl:if>-->
          <div class="model-summary{ ' definition-header'[$is-local] }">
-            <xsl:variable name="head-gi"
-               select="
-                  if ($grouped) then
-                     'span'
-                  else
-                     'h3'"/>
-            <xsl:element name="{$head-gi}">
-               <xsl:attribute name="class" expand-text="true">modeling { ' usename'[not($grouped)]
-                  }{ ' toc2'[not($grouped or $too-deep)] }</xsl:attribute>
-               <xsl:if test="not($grouped)">
-                  <xsl:attribute name="id"
-                     select="'#gen_' || string-join(ancestor-or-self::*/@name, '-') || '_def-h3'"/>
-               </xsl:if>
+            <p class="modeling { ' usename'[not($grouped)]}">
                <xsl:apply-templates select="." mode="key-name"/>
-            </xsl:element>
+            </p>
             <span class="mtyp">
                <xsl:apply-templates select="." mode="metaschema-type"/>
             </span>
@@ -699,7 +668,7 @@
          model/(.|choice)/( define-field | define-assembly | field | assembly )"/>
       <xsl:for-each-group select="$for-properties" group-by="true()" expand-text="true">
          <div class="properties">
-            <details open="open">
+            <details>
                <summary class="subhead">
                   <xsl:text>{ if (count(current-group()) eq 1) then 'Property' else 'Properties' } ({ count(current-group()) }): </xsl:text>
                   <xsl:for-each select="current-group()">
@@ -741,7 +710,8 @@
 
    <xsl:template match="*" mode="make-link-to-global" expand-text="true">
       <div class="deflink">
-         <a href="#global_{@ref}">Link to <code>{ m:use-name(.) }</code> global definition to see
+         <!-- XXX -->
+         <a href="#xxx">Link to <code>{ m:use-name(.) }</code> global definition to see
             contents.</a>
       </div>
    </xsl:template>
@@ -1059,13 +1029,13 @@
    <xsl:template match="example" mode="dev">
       <xsl:variable name="example-no" select="'example' || count(. | preceding-sibling::example)"/>
       <div class="example usa-accordion">
-         <h4>
+         <p>
             <button class="usa-accordion__button" aria-expanded="true"
                aria-controls="{ ../@name }_{$example-no}_xml">
                <xsl:text>Example</xsl:text>
                <xsl:for-each select="description">: <xsl:apply-templates/></xsl:for-each>
             </button>
-         </h4>
+         </p>
          <div id="{ m:use-name(..) }_{ $example-no }_xml"
             class="example-content usa-accordion__content usa-prose">
             <xsl:apply-templates select="remarks"/>
@@ -1225,7 +1195,8 @@
    </xsl:template>
    
    <xsl:template mode="metaschema-type" match="METASCHEMA/define-assembly">
-      <a href="#global_{@name}">object (globally&#xA0;defined)</a>
+      <!-- XXX -->
+      <a href="#xxx">object (globally&#xA0;defined)</a>
    </xsl:template>
 
    <xsl:template match="*" mode="metaschema-type">

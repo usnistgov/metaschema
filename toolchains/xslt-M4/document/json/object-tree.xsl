@@ -2,6 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math"
+    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:html="http://www.w3.org/1999/xhtml"
@@ -17,104 +18,95 @@
     steps in ../compose subdirectory
 
     -->
-    
-    <!--<xsl:template match="@min-occurs">
-        <xsl:if test="not(.='0')">
-            <xsl:attribute name="required">yes</xsl:attribute>
+
+    <xsl:template match="@*">
+        <!--<xsl:message expand-text="true">matching @{ local-name() }</xsl:message>-->
+        <xsl:copy-of select="."/>
+    </xsl:template>
+
+<!-- When a JSON object has no single corresponding XML element
+     we provide as a nominal corresponding target the first available XML path
+     given in its contents (generally its single permitted child object). -->
+    <!--<xsl:template match="@_tree-xml-id">
+        <xsl:copy-of select="."/>
+        <xsl:if test="empty(parent::*/@_tree-xml-id)">
+            <xsl:apply-templates select="parent::*/child::*[@_tree-xml-id][1]/@_tree-xml-id"/>
         </xsl:if>
-    </xsl:template>
-    
-    <xsl:template match="@max-occurs"/>-->
-    
-    <xsl:template match="@name">
-        <xsl:copy-of select="."/>
-    </xsl:template>
-    
-    <xsl:template match="@key">
-        <xsl:copy-of select="."/>
-    </xsl:template>
+    </xsl:template>-->
     
     <xsl:template match="assembly">
         <object>
-            <xsl:call-template name="global-id"/>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@formal-name"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
     
     <xsl:template match="group/assembly">
         <object min-occurs="1">
-            <xsl:call-template name="global-id"/>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@formal-name"/>
+            <xsl:apply-templates select="@* except @min-occurs"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
     
     <!-- Within a group, an assembly is always required even for min-occurs='0' because its wrapper (array or object) is optional.   -->
-    <xsl:template match="group[@group-json='ARRAY']/assembly/@min-occurs[.='0']"/>
-    
-    <xsl:template name="global-id">
-        <xsl:if test="@scope = 'global'">
-            <xsl:attribute name="id" select="'global_' || @name"/>
-        </xsl:if>
+    <xsl:template match="group[@group-json='ARRAY']/assembly/@min-occurs[.='0']">
+        <xsl:attribute name="min-occurs">1</xsl:attribute>
     </xsl:template>
     
     <xsl:template match="field">
         <object>
-            <xsl:call-template name="global-id"/>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@formal-name"/>
-            <xsl:apply-templates mode="field-value" select="."/>
-            <xsl:apply-templates select="flag, value"/>
+            <xsl:apply-templates select="@*"/>
+            <!--<xsl:apply-templates mode="field-value" select="."/>-->
+            <xsl:apply-templates/>
         </object>
     </xsl:template>
     
     <xsl:template match="value">
         <string name="{@key}" min-occurs="0" max-occurs="1">
-            <xsl:apply-templates select="@as-type"/>
+            <xsl:apply-templates select="@* except (@name,@min-occurs,@max-occurs)"/>
         </string>
     </xsl:template>
     
     <xsl:template match="field[empty(flag)]">
         <string>
-            <xsl:call-template name="global-id"/>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@as-type,@formal-name,value/@as-type"/>
+            <xsl:apply-templates select="@*,value/@as-type"/>
+            <xsl:apply-templates/>
         </string>
     </xsl:template>
     
     <xsl:template match="group">
         <singleton-or-array>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </singleton-or-array>
     </xsl:template>
     
     <xsl:template match="group[@group-json='ARRAY']">
         <array>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </array>
     </xsl:template>
     
     <xsl:template match="group[exists(@json-key-flag)]">
         <object property-key="{@json-key-flag}">
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@as-type,@formal-name,@formal-name"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
     
-    <xsl:template match="group[exists(@json-key-flag)]/*">
-        <!-- escaping out for consumption by Hugo -->
+    <xsl:template priority="5" match="group[exists(@json-key-flag)]/*">
         <xsl:variable as="xs:string" name="o">{</xsl:variable>
         <xsl:variable as="xs:string" name="c">}</xsl:variable>
         <object key="{ $o || @json-key-flag || $c }">
-            <xsl:apply-templates select="@min-occurs,@max-occurs,@as-type,@formal-name"/>
+            <xsl:apply-templates select="@* except @key"/>
             <xsl:apply-templates/>
         </object>
     </xsl:template>
     
     <xsl:template priority="3" match="group[exists(@json-key-flag)]/field[not(flag/@name != @json-key-flag)]">
         <string name="[[{@json-key-flag}]]">
-            <xsl:apply-templates select="@name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
+            <xsl:apply-templates select="@* except @name"/>
             <xsl:apply-templates/>
         </string>
     </xsl:template>
@@ -127,12 +119,11 @@
     
     <xsl:template match="flag">
         <string>
-            <xsl:apply-templates select="@key,@name,@min-occurs,@max-occurs,@as-type,@formal-name"/>
+            <xsl:apply-templates select="@*"/>
             <xsl:apply-templates/>
         </string>
     </xsl:template>
 
-    <xsl:template match="constraint" mode="#all"/>
-    
+    <!--<xsl:template match="constraint" mode="#all"/>-->
     
 </xsl:stylesheet>
