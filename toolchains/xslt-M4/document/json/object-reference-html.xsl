@@ -107,16 +107,8 @@
                <!--<xsl:variable name="mine" select="$me / (array | singleton-or-array | object | string | number | boolean)"/>-->
                <xsl:variable name="mine"
                   select="$me/(child::* except (formal-name | description | remarks | constraint))"/>
-
-               <xsl:for-each-group select="$mine" group-by="true()">
-                  <details class="properties" open="open">
-                     <summary>
-                        <xsl:text expand-text="true">{ if (count($mine) gt 1) then 'Properties' else 'Property' } ({ count( $mine )})</xsl:text>
-                     </summary>
-                     <xsl:apply-templates select="$mine"/>
-                  </details>
-               </xsl:for-each-group>
-               <xsl:variable name="my-constraints" select="$me/constraint/( descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index )"/>
+               <xsl:variable name="my-constraints"
+                  select="$me/constraint/(descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index)"/>
                <xsl:if test="exists($my-constraints)">
                   <details class="constraints" open="open">
                      <summary>
@@ -125,6 +117,15 @@
                      <xsl:apply-templates select="$my-constraints" mode="produce-constraint"/>
                   </details>
                </xsl:if>
+               <xsl:for-each-group select="$mine" group-by="true()">
+                  <details class="properties" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if (count($mine) gt 1) then 'Properties' else 'Property' } ({ count( $mine )})</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="$mine"/>
+                  </details>
+               </xsl:for-each-group>
+
             </div>
          </xsl:where-populated>
       </div>
@@ -173,6 +174,13 @@
    
    <xsl:template mode="metaschema-type" match="*[exists(@as-type)]" expand-text="true">
       <a href="{$datatype-page}/#{(lower-case(@as-type))}">{ @as-type }</a>
+   </xsl:template>
+   
+   <xsl:template match="*" mode="report-context" expand-text="true">
+      <xsl:for-each select="@target[matches(.,'\S')][not(.=('.','value()')) ]">
+         <xsl:text>  for </xsl:text>
+         <code class="path">{ . }</code>
+      </xsl:for-each>
    </xsl:template>
    
 

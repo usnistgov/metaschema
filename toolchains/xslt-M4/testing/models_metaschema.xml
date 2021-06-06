@@ -38,6 +38,7 @@
     <define-flag name="integer-flag" as-type="integer" >
         <formal-name>Integer Flag</formal-name>
         <description>an integer</description>
+        <remarks><p>Things to know about integers</p></remarks>
     </define-flag>
     
     <!-- -->
@@ -106,7 +107,11 @@
         <formal-name>OVERLOADED</formal-name>
         <description>Overloaded field</description>
         <flag ref="simple-flag"/>
-        <flag ref="integer-flag"/>
+        <flag ref="integer-flag">
+            <remarks>
+                <p>things to know about particular integers</p>
+            </remarks>
+        </flag>
     </define-field>
     
     <define-field name="field-1only">

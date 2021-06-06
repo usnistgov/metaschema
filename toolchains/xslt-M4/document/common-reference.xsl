@@ -194,8 +194,8 @@
          <xsl:text>  for </xsl:text>
          <code class="path">{ . }</code>
       </xsl:for-each>
-      <xsl:text> defined on </xsl:text>
-      <code class="path">{ ancestor::constraint/../@_tree-xml-id }</code>
+      <!--<xsl:text> defined on </xsl:text>
+      <code class="path">{ ancestor::constraint/../@_tree-xml-id }</code>-->
    </xsl:template>
    
    <xsl:template match="allowed-values/enum" mode="produce-constraint">
