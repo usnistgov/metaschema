@@ -76,7 +76,7 @@
          <div class="{ $header-class }">
             <!-- generates h1-hx headers picked up by Hugo toc -->
             <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
-               <xsl:attribute name="id" select="@_tree-json-id"/>
+               <xsl:attribute name="id" select="@_tree-xml-id"/>
                <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
                <xsl:text>{ @gi }</xsl:text>
             </xsl:element>
@@ -141,7 +141,7 @@
       <xsl:value-of select="local-name()"/><br />
       <xsl:if test="@scope='global'">
          <xsl:text> </xsl:text>
-         <a class="definition-link" href="{$path-to-common || $xml-definitions-page }#{ @_metaschema-json-id }">(global definition)</a>
+         <a class="definition-link" href="{$path-to-common || $xml-definitions-page }#{ @_metaschema-xml-id }">(global definition)</a>
       </xsl:if>
    </xsl:template>
    

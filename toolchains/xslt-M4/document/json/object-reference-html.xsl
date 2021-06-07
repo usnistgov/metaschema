@@ -7,6 +7,7 @@
    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
    exclude-result-prefixes="#all">
 
+   <xsl:output indent="true"/>
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
    
    <xsl:param name="json-reference-page">json/reference</xsl:param>
@@ -67,11 +68,10 @@
          <xsl:apply-templates/>
       </div>
    </xsl:template>
-   
 
-<!-- Map traversal -->
+   <!-- Map traversal -->
    <xsl:template match="*[exists(@key)]" expand-text="true">
-      <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
+      <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@key)])"/>
       <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
       <xsl:variable name="grouped-object" select="(self::array | self::singleton-or-array)/*"/>
       <xsl:variable name="me" select="($grouped-object,.)[1]"/>
