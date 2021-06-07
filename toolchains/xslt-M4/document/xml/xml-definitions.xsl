@@ -99,7 +99,7 @@ exclude-result-prefixes="#all">
     </xsl:template>
     
     <xsl:template name="remarks-group">
-        <xsl:param name="these-remarks" select="child::remarks"/>
+        <xsl:param name="these-remarks" select="child::remarks" as="element(remarks)*"/>
         <xsl:for-each-group select="$these-remarks[not(contains-token(@class,'json'))]" group-by="true()">
             <div class="remarks-group usa-prose">
                 <details open="open">

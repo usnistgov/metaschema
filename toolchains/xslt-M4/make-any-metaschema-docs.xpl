@@ -47,11 +47,6 @@
     <p:pipe        port="result" step="composed"/>
   </p:output>
   
-  <!--<p:serialization port="_c.composed-and-annotated" indent="true"/>
-  <p:output        port="_c.composed-and-annotated" primary="false">
-    <p:pipe        port="result" step="annotate-composition"/>
-  </p:output>-->
-  
   <p:serialization port="_d.abstract-model-map" indent="true"/>
   <p:output        port="_d.abstract-model-map" primary="false">
     <p:pipe        port="result"                step="make-abstract-map"/>

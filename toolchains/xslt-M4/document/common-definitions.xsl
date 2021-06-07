@@ -30,7 +30,7 @@
             <xsl:apply-templates select="remarks"/>
 
             <xsl:apply-templates select="$definitions" mode="model-view">
-                <!--<xsl:sort select="(root-name,use-name,@name)[1]"/>-->
+                <xsl:sort select="(root-name,use-name,@name)[1]"/>
             </xsl:apply-templates>
 
         </div>
@@ -157,22 +157,15 @@
     
     <xsl:template match="define-flag" mode="model"/>
     
-    <xsl:template match="define-assembly | define-field" mode="model">
-        <xsl:variable name="metaschema-type" select="replace(name(),'^define\-','')"/>
-        <xsl:for-each-group select="flag | define-flag | model/*" group-by="true()" expand-text="true">
-            <details open="open">
-                <summary>{ if (count(current-group()) ne 1) then 'Properties' else 'Property' } ({ count(current-group()) })</summary>
-
-                <div class="model { $metaschema-type }-model">
-                    <xsl:apply-templates select="current-group()" mode="model-view"/>
-                </div>
-            </details>
-        </xsl:for-each-group>
+    <xsl:template match="define-assembly | define-field" mode="model" expand-text="true">
+            <xsl:comment> { name() } model goes here</xsl:comment>
+            <xsl:message>{ name() } model override failing...</xsl:message>
     </xsl:template>
 
     <xsl:template match="define-assembly | define-field | define-flag | assembly | field | flag" mode="model-view">
-        <xsl:variable name="level" select="count(. | ancestor::define-assembly | ancestor::define-field)"/>
-        <xsl:variable name="is-inline" select="exists(ancestor::model)"/>
+        <!-- level must be parameterized for dynamically generated flags on the JSON side -->
+        <xsl:param name="level" select="count(. | ancestor::define-assembly | ancestor::define-field)"/>
+        <xsl:variable name="is-inline" select="empty(parent::METASCHEMA)"/>
         <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
         <xsl:variable name="definition" as="element()">
             <xsl:apply-templates select="." mode="find-definition"/>
@@ -206,7 +199,12 @@
 
                     <xsl:apply-templates select="(.|$definition)/(root-name, use-name, group-as, json-value-key, json-key)"/>
                     <xsl:call-template name="remarks-group">
-                        <xsl:with-param name="these-remarks" select="$definition/remarks, remarks"/>
+                        <xsl:with-param name="these-remarks" as="element(remarks)*">
+                            <!-- returns remarks off the definition, which could be self::node(). -->
+                            <xsl:sequence select="$definition/remarks"/>
+                            <!-- after, adds any local remarks on a reference -->
+                            <xsl:sequence select="(self::assembly|self::field|self::flag)/remarks"/>
+                        </xsl:with-param>
                     </xsl:call-template>
                     <xsl:apply-templates select="constraint"/>
                     
@@ -222,7 +220,6 @@
     
     <xsl:template name="remarks-group">
         <xsl:param name="these-remarks" select="child::remarks"/>
-        
         <xsl:comment> remarks group goes here</xsl:comment>
         <xsl:message> remarks-group override failing...</xsl:message>
     </xsl:template>
@@ -262,12 +259,14 @@
     <xsl:template match="constraint">
         <xsl:variable name="constraints"
             select="descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index"/>
-        <details>
-            <summary>
-                <xsl:text expand-text="true">Constraint{ if (count($constraints) ne 1) then 's' else '' } ({ count($constraints) })</xsl:text>
-            </summary>
-            <xsl:apply-templates/>
-        </details>
+        <xsl:if test="exists($constraints)">
+            <details>
+                <summary>
+                    <xsl:text expand-text="true">Constraint{ if (count($constraints) ne 1) then 's' else '' } ({ count($constraints) })</xsl:text>
+                </summary>
+                <xsl:apply-templates/>
+            </details>
+        </xsl:if>
     </xsl:template>
 
     <xsl:template match="constraint//*">
