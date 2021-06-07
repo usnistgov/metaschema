@@ -55,6 +55,7 @@
    
    <xsl:variable name="file-map" as="map(xs:string, text())">
       <xsl:map>
+         <xsl:map-entry key="'oscal-complete'" >complete</xsl:map-entry>
          <xsl:map-entry key="'oscal-catalog'"  >catalog</xsl:map-entry>
          <xsl:map-entry key="'oscal-profile'"  >profile</xsl:map-entry>
          <xsl:map-entry key="'oscal-component-definition'">component</xsl:map-entry>

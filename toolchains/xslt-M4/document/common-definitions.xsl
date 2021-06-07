@@ -58,6 +58,7 @@
 
     <xsl:variable name="file-map" as="map(xs:string, text())">
         <xsl:map>
+            <xsl:map-entry key="'oscal-complete'">complete</xsl:map-entry>
             <xsl:map-entry key="'oscal-catalog'">catalog</xsl:map-entry>
             <xsl:map-entry key="'oscal-profile'">profile</xsl:map-entry>
             <xsl:map-entry key="'oscal-component-definition'">component</xsl:map-entry>
@@ -84,6 +85,7 @@
             <xsl:text> </xsl:text>
             <a href="/artifacts/xml/convert/oscal_{$file-map(.)}_json-to-xml-converter.xsl"
                 >oscal_{$file-map(string(.))}_json-to-xml-converter.xsl</a>
+            <xsl:text> </xsl:text>
             <a href="https://github.com/usnistgov/OSCAL/tree/main/xml#converting-oscal-json-content-to-xml"
                 >(How do I use the converter to convert OSCAL JSON to XML?)</a>
         </p>
