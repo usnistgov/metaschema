@@ -101,7 +101,7 @@
     
     <define-assembly name="incorporates-component">
         <formal-name>Incorporates Component</formal-name>
-        <description>TBD</description>
+        <description>Identifies a component that is leveraged in this context.</description>
         <json-key flag-name="component-uuid"/>
         <flag name="component-uuid" required="yes" as-type="uuid">
             <formal-name>Component Reference</formal-name>
