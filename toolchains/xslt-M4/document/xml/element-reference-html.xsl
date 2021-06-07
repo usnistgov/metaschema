@@ -115,10 +115,11 @@
                      <xsl:apply-templates select="current-group()"/>
                   </details>
                </xsl:for-each-group>
-               <xsl:for-each-group select="element" group-by="true()">
+               <xsl:for-each-group select="element | choice[exists(child::element)]" group-by="true()">
+                  <xsl:variable name="elements" select="current-group()/ (self::element | child::element)"/>
                   <details class="properties elements" open="open">
                      <summary>
-                        <xsl:text expand-text="true">{ if (count(current-group()) gt 1) then 'Elements' else 'Element' } ({ count(current-group()) })</xsl:text>
+                        <xsl:text expand-text="true">{ if (count($elements) gt 1) then 'Elements' else 'Element' } ({ count($elements) })</xsl:text>
                      </summary>
                      <xsl:apply-templates select="current-group()"/>
                   </details>
@@ -128,6 +129,7 @@
          </xsl:where-populated>
       </div>
    </xsl:template>
+   
    
    <xsl:template match="formal-name | description | remarks | constraint"/>
    
