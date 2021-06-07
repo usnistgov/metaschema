@@ -159,6 +159,13 @@
       <xsl:apply-templates select="." mode="produce-constraint"/>
    </xsl:template>
    
+   <xsl:template match="choice">
+      <div class="choice">
+         <p>A choice:</p>
+         <xsl:apply-templates/>
+      </div>
+   </xsl:template>
+   
    <!--<xsl:template match="constraint" mode="produce" expand-text="true">
       <xsl:variable name="constraints" select=".//allowed-values | .//matches | .//has-cardinality | .//is-unique | .//index-has-key | .//index"/>
       <xsl:for-each-group select="$constraints" group-by="true()">
