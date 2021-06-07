@@ -42,7 +42,6 @@
         <xsl:variable name="in-xml"       select="$reference/@in-xml"/>
         <xsl:variable name="with-remarks" select="$reference/remarks"/>
         
-        
         <xsl:element name="{ $type }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
             <xsl:for-each select="self::define-assembly[empty(model)]">
                 <xsl:attribute name="as-type">empty</xsl:attribute>

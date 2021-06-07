@@ -35,6 +35,68 @@ exclude-result-prefixes="#all">
       </p>
    </xsl:template>
    
+   <xsl:template match="define-assembly | define-field" mode="model">
+      <xsl:variable name="metaschema-type" select="replace(name(),'^define\-','')"/>
+      <xsl:for-each-group select="flag | define-flag | model/*" group-by="true()" expand-text="true">
+         <details open="open">
+            <summary>{ if (count(current-group()) ne 1) then 'Properties' else 'Property' } ({ count(current-group()) })</summary>
+            <div class="model { $metaschema-type }-model">
+               <xsl:apply-templates select="current-group()" mode="model-view"/>
+            </div>
+         </details>
+      </xsl:for-each-group>
+   </xsl:template>
+   
+   
+   
+<!-- fields with flags become objects with properties, one of which holds the nominal
+     field value - it is represented by a proxy -->
+   <xsl:template match="define-field[exists(flag|define-flag)]" mode="model">
+      <xsl:variable name="level" select="count(. | ancestor::define-assembly | ancestor::define-field)"/>
+      <xsl:variable name="value-name" as="xs:string">
+         <xsl:apply-templates select="." mode="get-field-value-name"/>
+      </xsl:variable>
+      <xsl:variable as="element()" name="value-property-proxy" expand-text="true">
+         <m:define-flag name="{$value-name}" value-proxy="true" required="yes">
+            <xsl:attribute name="_metaschema-json-id" select="@_metaschema-json-id || '/' || $value-name"/>
+            <xsl:copy-of select="@as-type | @_metaschema-xml-id"/>
+            <m:formal-name>{ formal-name } Value</m:formal-name>
+            <xsl:apply-templates select="." mode="get-field-value-description"/>
+         </m:define-flag>
+   </xsl:variable>
+      <xsl:variable name="metaschema-type" select="'field'"/>
+      <xsl:for-each-group select="flag | define-flag | $value-property-proxy" group-by="true()" expand-text="true">
+         <details open="open">
+            <summary>{ if (count(current-group()) ne 1) then 'Properties' else 'Property' } ({ count(current-group()) })</summary>
+            <div class="model { $metaschema-type }-model">
+               <xsl:apply-templates select="current-group()" mode="model-view">
+                  <!-- we pass in $level so the proxy has one -->
+                  <xsl:with-param name="level" select="$level + 1"/>
+               </xsl:apply-templates>
+            </div>
+         </details>
+      </xsl:for-each-group>
+   </xsl:template>
+   
+   <xsl:template match="*" mode="get-field-value-name" as="xs:string">STRVALUE</xsl:template>
+   
+   <xsl:template match="*[@as-type=('markup-line','markup-multiline')]" mode="get-field-value-name" as="xs:string">RICHTEXT</xsl:template>
+   
+   <xsl:template match="*[exists(json-value-key)]" mode="get-field-value-name" as="xs:string">
+      <xsl:value-of select="json-value-key"/>   
+   </xsl:template>
+   
+   <xsl:template priority="2" match="*[exists(json-value-key/@flag-name)]" mode="get-field-value-name"  as="xs:string">
+      <xsl:value-of select="'{' || json-value-key/@flag-name || '}'"/>
+   </xsl:template>
+   
+   <xsl:template match="*" mode="get-field-value-description">
+      <m:description>This property provides the (nominal) value for this object as a whole.</m:description>
+   </xsl:template>
+   
+   <xsl:template priority="2" match="*[exists(json-value-key/@flag-name)]" mode="get-field-value-description">
+      <m:description>A property whose name is distinct from assigned properties for this object is taken as its (nominal) value, while its key is taken to be the value of the <code><xsl:value-of select="json-value-key/@flag-name"/></code> property.</m:description>
+   </xsl:template>
    
    <xsl:template match="short-name" mode="converter-link" expand-text="true">
       <p>
@@ -63,7 +125,7 @@ exclude-result-prefixes="#all">
    <xsl:variable name="xml-definitions-link" select="$path-to-common || $xml-definitions-page"/>
    
    <xsl:template name="remarks-group">
-      <xsl:param name="these-remarks" select="child::remarks"/>
+      <xsl:param name="these-remarks" select="child::remarks" as="element(remarks)*"/>
       <xsl:for-each-group select="$these-remarks[not(contains-token(@class,'xml'))]" group-by="true()">
          <div class="remarks-group usa-prose">
             <details open="open">
