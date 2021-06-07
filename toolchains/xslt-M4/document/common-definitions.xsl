@@ -11,7 +11,7 @@
     <xsl:key name="field-definition-by-name" match="/METASCHEMA/define-field"       use="@_key-name"/>
     <xsl:key name="flag-definition-by-name" match="/METASCHEMA/define-flag"         use="@_key-name"/>
     
-    <xsl:variable name="datatype-page" as="xs:string">../../../datatypes</xsl:variable>
+    <xsl:variable name="datatype-page" as="xs:string">/reference/datatypes</xsl:variable>
     
     <xsl:variable name="indenting" as="element()"
         xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
@@ -73,7 +73,7 @@
             <span class="usa-tag">XML Schema</span>
             <xsl:text> </xsl:text>
             <a
-                href="https://pages.nist.gov/OSCAL/artifacts/xml/schema/oscal_{$file-map(.)}_schema.xsd"
+                href="/artifacts/xml/schema/oscal_{$file-map(.)}_schema.xsd"
                 >oscal_{$file-map(string(.))}_schema.xsd</a>
         </p>
     </xsl:template>
@@ -82,9 +82,9 @@
         <p>
             <span class="usa-tag">JSON to XML converter</span>
             <xsl:text> </xsl:text>
-            <a href="https://pages.nist.gov/OSCAL/artifacts/xml/convert/oscal_{$file-map(.)}_json-to-xml-converter.xsl"
+            <a href="/artifacts/xml/convert/oscal_{$file-map(.)}_json-to-xml-converter.xsl"
                 >oscal_{$file-map(string(.))}_json-to-xml-converter.xsl</a>
-            <a href="https://github.com/usnistgov/OSCAL/tree/master/xml#converting-oscal-json-content-to-xml"
+            <a href="https://github.com/usnistgov/OSCAL/tree/main/xml#converting-oscal-json-content-to-xml"
                 >(How do I use the converter to convert OSCAL JSON to XML?)</a>
         </p>
     </xsl:template>

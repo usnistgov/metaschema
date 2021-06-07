@@ -138,7 +138,7 @@
     </xsl:template>
     
     
-    <!--<xsl:variable name="github-base" as="xs:string">https://github.com/usnistgov/OSCAL/tree/master</xsl:variable>-->
+    <!--<xsl:variable name="github-base" as="xs:string">https://github.com/usnistgov/OSCAL/tree/main</xsl:variable>-->
     
     <xsl:template name="report-module"/>
     

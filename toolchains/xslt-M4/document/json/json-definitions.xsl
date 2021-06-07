@@ -30,7 +30,7 @@ exclude-result-prefixes="#all">
          <span class="usa-tag">JSON Schema</span>
          <xsl:text> </xsl:text>
          <a
-            href="https://pages.nist.gov/OSCAL/artifacts/json/schema/oscal_{$file-map(.)}_schema.json"
+            href="/artifacts/json/schema/oscal_{$file-map(.)}_schema.json"
             >oscal_{$file-map(string(.))}_schema.json</a>
       </p>
    </xsl:template>
@@ -40,10 +40,10 @@ exclude-result-prefixes="#all">
       <p>
          <span class="usa-tag">XML to JSON converter</span>
          <xsl:text> </xsl:text>
-         <a href="https://pages.nist.gov/OSCAL/artifacts/xml/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl"
+         <a href="/artifacts/xml/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl"
             >oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a>
          <xsl:text> </xsl:text>
-         <a href="https://github.com/usnistgov/OSCAL/tree/master/xml#converting-oscal-xml-content-to-json"
+         <a href="https://github.com/usnistgov/OSCAL/tree/main/xml#converting-oscal-xml-content-to-json"
             >(How do I use the converter to convert OSCAL XML to JSON)</a>
       </p>
    </xsl:template>

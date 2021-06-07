@@ -18,7 +18,7 @@
    <xsl:variable name="reference-link" select="$path-to-common || $reference-page"/>
    
    
-   <xsl:variable name="datatype-page">../../../datatypes</xsl:variable>
+   <xsl:variable name="datatype-page">/reference/datatypes</xsl:variable>
    
 <!--http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-model-map/
 http://localhost:1313/OSCAL/documentation/schema/catalog-layer/catalog/xml-schema/-->

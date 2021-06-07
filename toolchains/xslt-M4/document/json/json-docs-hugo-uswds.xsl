@@ -18,7 +18,7 @@
 
    <xsl:variable name="metaschema-code" select="/*/short-name || '-json'"/>
 
-   <xsl:variable name="datatype-page" as="xs:string">../../../datatypes</xsl:variable>
+   <xsl:variable name="datatype-page" as="xs:string">/reference/datatypes</xsl:variable>
 
    <xsl:strip-space elements="*"/>
 
@@ -125,14 +125,14 @@
    <xsl:template match="short-name" mode="schema-link" expand-text="true">
       <p>
          <span class="usa-tag">JSON Schema</span>
-         <a href="https://pages.nist.gov/OSCAL/artifacts/json/schema/oscal_{$file-map(.)}_schema.json">oscal_{$file-map(string(.))}_schema.json</a>
+         <a href="/artifacts/json/schema/oscal_{$file-map(.)}_schema.json">oscal_{$file-map(string(.))}_schema.json</a>
       </p>
    </xsl:template>
    
    <xsl:template match="short-name" mode="converter-link" expand-text="true">
       <p>
          <span class="usa-tag">XML to JSON converter</span>
-         <a href="https://pages.nist.gov/OSCAL/artifacts/json/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl">oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a> <a href="https://github.com/usnistgov/OSCAL/tree/master/json#converting-oscal-xml-content-to-json">(How do I use the converter to convert OSCAL XML to JSON?)</a>
+         <a href="/artifacts/json/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl">oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a> <a href="https://github.com/usnistgov/OSCAL/tree/main/json#converting-oscal-xml-content-to-json">(How do I use the converter to convert OSCAL XML to JSON?)</a>
       </p>
    </xsl:template>
    <xsl:template match="description">
@@ -222,7 +222,7 @@
    </xsl:template>-->
 
 
-   <!--<xsl:variable name="github-base" as="xs:string">https://github.com/usnistgov/OSCAL/tree/master</xsl:variable>-->
+   <!--<xsl:variable name="github-base" as="xs:string">https://github.com/usnistgov/OSCAL/tree/main</xsl:variable>-->
 
    <xsl:template name="report-module"/>
 

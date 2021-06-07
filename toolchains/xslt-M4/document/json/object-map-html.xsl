@@ -18,7 +18,7 @@
    </xsl:variable>
    <xsl:variable name="reference-link" select="$path-to-common || $reference-page"/>
    
-   <xsl:variable name="datatype-page">../../../datatypes</xsl:variable>
+   <xsl:variable name="datatype-page">/reference/datatypes</xsl:variable>
    
    <xsl:template match="/" mode="make-page">
       <html lang="en">
