@@ -378,7 +378,7 @@
     <xsl:variable name="prose-elements">p | ul | ol | pre | h1 | h2 | h3 | h4 | h5 | h6 | table</xsl:variable>
     
     <!-- A field without a GI is implicit in the XML; Metaschema prevents it from having flags -->
-    <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-xml-pull">
+    <xsl:template priority="2" match="field[empty(@gi)][(.|value)/@as-type='markup-multiline']" mode="make-xml-pull">
         <XSLT:for-each-group select="{ $prose-elements }" group-by="true()">
             <field in-json="SCALAR">
                 <xsl:copy-of select="@* except @scope"/>
