@@ -231,8 +231,6 @@
                 </xsl:apply-templates>
             </xsl:for-each-group>
         </xsl:for-each-group>
-       
-       
         <xsl:comment> by default, fields traverse their properties to find a value </xsl:comment>
         <XSLT:template match="*" mode="get-value-property">
             <XSLT:apply-templates mode="keep-value-property"/>
