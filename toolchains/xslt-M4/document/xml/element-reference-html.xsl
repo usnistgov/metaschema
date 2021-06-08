@@ -89,44 +89,7 @@
             <xsl:call-template name="crosslink-to-json"/>
             <!--<xsl:apply-templates select="formal-name" mode="produce"/>-->
          </div>
-         <!--<xsl:where-populated>
-            <div class="body">
-               
-               
-               <xsl:apply-templates select="description" mode="produce"/>
-               <xsl:apply-templates select="value" mode="produce"/>
-               <xsl:call-template name="remarks-group"/>
-               
-               <xsl:variable name="my-constraints"
-                  select="constraint/( descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index )"/>
-               <xsl:if test="exists($my-constraints)">
-                  <details class="constraints" open="open">
-                     <summary>
-                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' } ({ count($my-constraints) })</xsl:text>
-                     </summary>
-                     <xsl:apply-templates select="$my-constraints" mode="produce-constraint"/>
-                  </details>
-               </xsl:if>
-               <xsl:for-each-group select="attribute" group-by="true()">
-                  <details class="properties attributes" open="open">
-                     <summary>
-                        <xsl:text expand-text="true">{ if (count(current-group()) gt 1) then 'Attributes' else 'Attribute' } ({ count(current-group()) })</xsl:text>
-                     </summary>
-                     <xsl:apply-templates select="current-group()"/>
-                  </details>
-               </xsl:for-each-group>
-               <xsl:for-each-group select="element | choice[exists(child::element)]" group-by="true()">
-                  <xsl:variable name="elements" select="current-group()/ (self::element | child::element)"/>
-                  <details class="properties elements" open="open">
-                     <summary>
-                        <xsl:text expand-text="true">{ if (count($elements) gt 1) then 'Elements' else 'Element' } ({ count($elements) })</xsl:text>
-                     </summary>
-                     <xsl:apply-templates select="current-group()"/>
-                  </details>
-               </xsl:for-each-group>
-               
-            </div>
-         </xsl:where-populated>-->
+         
       </div>
    </xsl:template>
    
@@ -157,7 +120,7 @@
          <xsl:where-populated>
             <div class="body">
                <xsl:apply-templates select="description" mode="produce"/>
-               <!--<xsl:apply-templates select="value" mode="produce"/>-->
+               <xsl:apply-templates select="value" mode="produce"/>
                <xsl:call-template name="remarks-group"/>
                
                <xsl:variable name="my-constraints"
@@ -178,8 +141,8 @@
                      <xsl:apply-templates select="current-group()"/>
                   </details>
                </xsl:for-each-group>
-               <xsl:for-each-group select="element | choice[exists(child::element)] | value[empty(@gi)]" group-by="true()">
-                  <xsl:variable name="elements" select="current-group()/ (self::element | child::element)"/>
+               <xsl:for-each-group select="element | choice[exists(child::element)]" group-by="true()">
+                  <xsl:variable name="elements" select="current-group()/ (self::element | self::choice/child::element)"/>
                   <details class="properties elements" open="open">
                      <summary>
                         <xsl:text expand-text="true">{ if (count($elements) gt 1) then 'Elements' else 'Element' } ({ count($elements) })</xsl:text>
@@ -197,8 +160,8 @@
    <xsl:template match="formal-name | description | remarks | constraint"/>
    
    <xsl:template match="value" mode="produce" expand-text="true">
-      <div class="value" id="{ @tree-xml-id }">
-         <p>Value: { if (matches(@as-type,'^[aeiou]','i')) then 'An ' else 'A '}{ @as-type } </p>
+      <div class="value">
+         <p>Value: { if (matches(@as-type,'^[aeiou]','i')) then 'An ' else 'A '}{ @as-type } value.</p>
       </div>
    </xsl:template>
    

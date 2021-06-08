@@ -48,18 +48,19 @@
       </html>
    </xsl:template>
    
-   <xsl:template match="a/@href[starts-with(.,'../..')]">
-     <xsl:attribute name="href" select="substring-after(.,'../../')"/>
+   <xsl:template match="a/@href[starts-with(.,'../')]">
+     <xsl:attribute name="href" expand-text="true">{ $metaschema-code }-{ substring-after(.,'../') }</xsl:attribute>
    </xsl:template>
    
-   <xsl:template match="/div" name="toc-level" mode="toc">
+   <xsl:template priority="10" match="/div" name="toc-level" mode="toc">
       <ul class="toc">
-         <xsl:apply-templates select="section" mode="#current"/>
+         <xsl:apply-templates select="child::div[contains-token(@class,'model-entry')]" mode="#current"/>
       </ul>
    </xsl:template>
    
-   <xsl:template match="section" mode="toc">
-     <xsl:variable name="head" select="*[starts-with(@class,'toc')] | *[@class='header']/descendant::*[starts-with(@class,'toc')][1]"/>
+  <xsl:template match="div[contains-token(@class,'model-entry')]" mode="toc">
+    <xsl:variable name="head" select="(descendant::h1 | descendant::h2 | descendant::h3 | descendant::h4 | descendant::h5 | descendant::h6 )[1]"/>
+    <xsl:variable name="h-level" select="$head ! replace(name(),'\D','') ! number()"/>
             <li>
                <xsl:for-each select="$head" expand-text="true">
                   <p><a href="#{ $head/@id }">{ . }</a></p>
