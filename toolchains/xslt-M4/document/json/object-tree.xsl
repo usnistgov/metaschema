@@ -67,6 +67,8 @@
         </string>
     </xsl:template>
     
+    <xsl:template match="field[empty(flag)]/value"/>
+    
     <xsl:template match="field[empty(flag)]">
         <string>
             <xsl:apply-templates select="@*,value/@as-type"/>

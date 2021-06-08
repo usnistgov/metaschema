@@ -9,8 +9,6 @@
 
    <!-- produces an HTML 'stub' to be inserted into Hugo -->
    
-   
-   
    <xsl:param name="xml-reference-page">xml/reference</xsl:param>
    <xsl:param name="json-reference-page">json/reference</xsl:param>
    <xsl:param name="xml-map-page">xml/outline</xsl:param>
@@ -70,7 +68,7 @@
        </div>
    </xsl:template>
    
-   <xsl:template match="*[exists(@gi)]" expand-text="true">
+   <xsl:template match="value[empty(@gi)][@as-type='markup-multiline']" expand-text="true">
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
       <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
       <div class="model-entry definition { tokenize(@_metaschema-xml-id,'/')[2] }">
@@ -80,21 +78,21 @@
             <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
                <xsl:attribute name="id" select="@_tree-xml-id"/>
                <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
-               <xsl:text>{ @gi }</xsl:text>
+               <xsl:text>(unwrapped)</xsl:text>
             </xsl:element>
             <p class="type">
                <xsl:apply-templates select="." mode="metaschema-type"/>
             </p>
             <xsl:if test="empty(parent::map)">
-               <p class="occurrence">
-                  <xsl:apply-templates select="." mode="occurrence-code"/>
-               </p>
+               <p class="occurrence">[0 to &#x221e;]</p>
             </xsl:if>
             <xsl:call-template name="crosslink-to-json"/>
-            <xsl:apply-templates select="formal-name" mode="produce"/>
+            <!--<xsl:apply-templates select="formal-name" mode="produce"/>-->
          </div>
-         <xsl:where-populated>
+         <!--<xsl:where-populated>
             <div class="body">
+               
+               
                <xsl:apply-templates select="description" mode="produce"/>
                <xsl:apply-templates select="value" mode="produce"/>
                <xsl:call-template name="remarks-group"/>
@@ -128,6 +126,69 @@
                </xsl:for-each-group>
                
             </div>
+         </xsl:where-populated>-->
+      </div>
+   </xsl:template>
+   
+   
+   <xsl:template match="*[exists(@gi)]" expand-text="true">
+      <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
+      <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
+      <div class="model-entry definition { tokenize(@_metaschema-xml-id,'/')[2] }">
+         <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
+         <div class="{ $header-class }">
+            <!-- generates h1-hx headers picked up by Hugo toc -->
+            <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
+               <xsl:attribute name="id" select="@_tree-xml-id"/>
+               <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
+               <xsl:text>{ @gi }</xsl:text>
+            </xsl:element>
+            <p class="type">
+               <xsl:apply-templates select="." mode="metaschema-type"/>
+            </p>
+            <xsl:if test="empty(parent::map)">
+               <p class="occurrence">
+                  <xsl:apply-templates select="." mode="occurrence-code"/>
+               </p>
+            </xsl:if>
+            <xsl:call-template name="crosslink-to-json"/>
+            <xsl:apply-templates select="formal-name" mode="produce"/>
+         </div>
+         <xsl:where-populated>
+            <div class="body">
+               <xsl:apply-templates select="description" mode="produce"/>
+               <!--<xsl:apply-templates select="value" mode="produce"/>-->
+               <xsl:call-template name="remarks-group"/>
+               
+               <xsl:variable name="my-constraints"
+                  select="constraint/( descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index )"/>
+               <xsl:if test="exists($my-constraints)">
+                  <details class="constraints" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if ( count($my-constraints) gt 1) then 'Constraints' else 'Constraint' } ({ count($my-constraints) })</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="$my-constraints" mode="produce-constraint"/>
+                  </details>
+               </xsl:if>
+               <xsl:for-each-group select="attribute" group-by="true()">
+                  <details class="properties attributes" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if (count(current-group()) gt 1) then 'Attributes' else 'Attribute' } ({ count(current-group()) })</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="current-group()"/>
+                  </details>
+               </xsl:for-each-group>
+               <xsl:for-each-group select="element | choice[exists(child::element)] | value[empty(@gi)]" group-by="true()">
+                  <xsl:variable name="elements" select="current-group()/ (self::element | child::element)"/>
+                  <details class="properties elements" open="open">
+                     <summary>
+                        <xsl:text expand-text="true">{ if (count($elements) gt 1) then 'Elements' else 'Element' } ({ count($elements) })</xsl:text>
+                     </summary>
+                     <xsl:apply-templates select="current-group()"/>
+                  </details>
+               </xsl:for-each-group>
+               
+            </div>
          </xsl:where-populated>
       </div>
    </xsl:template>
@@ -140,6 +201,8 @@
          <p>Value: { if (matches(@as-type,'^[aeiou]','i')) then 'An ' else 'A '}{ @as-type } </p>
       </div>
    </xsl:template>
+   
+   <xsl:template match="value[empty(parent::element/child::attribute)]" mode="produce"/>
    
    <xsl:template mode="metaschema-type" match="*">
       <xsl:value-of select="local-name()"/><br />

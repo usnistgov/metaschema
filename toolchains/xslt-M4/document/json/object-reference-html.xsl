@@ -108,7 +108,7 @@
 
                <!--<xsl:variable name="mine" select="$me / (array | singleton-or-array | object | string | number | boolean)"/>-->
                <xsl:variable name="mine"
-                  select="$me/(child::* except (formal-name | description | remarks | constraint))"/>
+                  select="$me/(child::* except (formal-name | description | remarks | constraint | value))"/>
                <xsl:variable name="my-constraints"
                   select="$me/constraint/(descendant::allowed-values | descendant::matches | descendant::has-cardinality | descendant::is-unique | descendant::index-has-key | descendant::index)"/>
                <xsl:if test="exists($my-constraints)">
@@ -120,6 +120,7 @@
                   </details>
                </xsl:if>
                <xsl:for-each-group select="$mine" group-by="true()">
+                  <!--<xsl:message expand-text="true">$mine includes { $mine/name() }</xsl:message>-->
                   <details class="properties" open="open">
                      <summary>
                         <xsl:text expand-text="true">{ if (count($mine) gt 1) then 'Properties' else 'Property' } ({ count( $mine )})</xsl:text>
