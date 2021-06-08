@@ -10,6 +10,8 @@
     exclude-result-prefixes="#all"
     version="3.0">
     
+    <xsl:output indent="yes"/>
+    
     <xsl:mode on-no-match="shallow-copy"/>
     
     <!--
@@ -104,6 +106,17 @@
             <xsl:apply-templates select="@* except @key"/>
             <xsl:apply-templates/>
         </object>
+    </xsl:template>
+    
+    <!--IDs on assemblies and fields with dynamic key flags are adjusted
+    to reflect the position of the target node in the represented hierarchy -->
+    <xsl:template match="assembly[exists(@json-key-flag)]/@_tree-xml-id |
+                         field[exists(@json-key-flag)]/@_tree-xml-id |
+                         assembly[exists(@json-key-flag)]/@_tree-json-id |
+                         field[exists(@json-key-flag)]/@_tree-json-id">
+        <xsl:attribute name="{name()}">
+            <xsl:value-of select="(.,../@json-key-flag) => string-join('/')"/>
+        </xsl:attribute>
     </xsl:template>
     
     <xsl:template priority="3" match="group[exists(@json-key-flag)]/field[not(flag/@name != @json-key-flag)]">

@@ -34,7 +34,19 @@
   
   <p:input port="parameters" kind="parameter"/>
 
-  <p:option name="metaschema-id" select="'oscal'"/>
+  <!--<p:option name="metaschema-id" select="'oscal'"/>-->
+  
+  <p:option name="output-path" required="true"/>
+  <p:option name="metaschema-id" select="'oscal_catalog_metaschema'"/>
+  
+  <p:option name="json-outline-filename"     select="'json-outline.html'"/>
+  <p:option name="json-reference-filename"   select="'json-reference.html'"/>
+  <p:option name="json-index-filename"       select="'json-index.html'"/>
+  <p:option name="json-definitions-filename" select="'json-definitions.html'"/>
+  <p:option name="xml-outline-filename"      select="'xml-outline.html'"/>
+  <p:option name="xml-reference-filename"    select="'xml-reference.html'"/>
+  <p:option name="xml-index-filename"        select="'xml-index.html'"/>
+  <p:option name="xml-definitions-filename"  select="'xml-definitions.html'"/>
   
   <!-- preview ports permit examining pipeline inputs -->
   <p:serialization port="_a.echo-input" indent="true"/>
@@ -112,11 +124,25 @@
     <p:pipe        port="result"                step="style-xml-definitions"/>
   </p:output>
   
+  <p:serialization port="_DIAGNOSTIC_" indent="true"/>
+  <p:output        port="_DIAGNOSTIC_" primary="false">
+    <p:pipe        port="result"                step="render-json-object-reference"/>
+  </p:output>
+  
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
 
   <p:import href="compose/metaschema-compose.xpl"/>
 
+  <p:variable name="xml-outline-uri"      select="resolve-uri($xml-outline-filename,     $output-path)"/>
+  <p:variable name="xml-reference-uri"    select="resolve-uri($xml-reference-filename,   $output-path)"/>
+  <p:variable name="xml-index-uri"        select="resolve-uri($xml-index-filename,       $output-path)"/>
+  <p:variable name="xml-definitions-uri"  select="resolve-uri($xml-definitions-filename, $output-path)"/>
+  <p:variable name="json-outline-uri"     select="resolve-uri($json-outline-filename,    $output-path)"/>
+  <p:variable name="json-reference-uri"   select="resolve-uri($json-reference-filename,  $output-path)"/>
+  <p:variable name="json-index-uri"       select="resolve-uri($json-index-filename,      $output-path)"/>
+  <p:variable name="json-definitions-uri" select="resolve-uri($json-definitions-filename,$output-path)"/>
+  
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
 
@@ -167,7 +193,8 @@
     <p:input port="stylesheet">
       <p:document href="document/xml/element-map-html.xsl"/>
     </p:input>
-    <p:with-param name="reference-page" select="$metaschema-id || '-xml-reference.html'"/>
+    <p:with-param name="outline-page"   select="$xml-outline-filename"/>
+    <p:with-param name="reference-page" select="$xml-reference-filename"/>
   </p:xslt>
   
   <p:xslt name="style-xml-model-map">
@@ -187,8 +214,10 @@
     <p:input port="stylesheet">
       <p:document href="document/xml/element-reference-html.xsl"/>
     </p:input>
-    <p:with-param name="json-reference-page" select="$metaschema-id || '-json-reference.html'"/>
-    <p:with-param name="xml-map-page" select="$metaschema-id || '-xml-outline.html'"/>
+    <p:with-param name="xml-reference-page"    select="$xml-reference-filename"/>
+    <p:with-param name="xml-definitions-page"  select="$xml-definitions-filename"/>
+    <p:with-param name="json-reference-page"   select="$json-reference-filename"/>
+    <p:with-param name="xml-map-page"          select="$xml-outline-filename"/>
   </p:xslt>
   
   <!--  Wrapping this up to write and view locally/standalone if wanted -->
@@ -210,8 +239,9 @@
     <p:input port="stylesheet">
       <p:document href="document/xml/element-index-html.xsl"/>
     </p:input>
-    <p:with-param name="reference-page" select="$metaschema-id || '-xml-reference.html'"/>
-    <p:with-param name="definitions-page" select="$metaschema-id || '-xml-definitions.html'"/>
+    <p:with-param name="index-page"       select="$xml-index-filename"/>
+    <p:with-param name="reference-page"   select="$xml-reference-filename"/>
+    <p:with-param name="definitions-page" select="$xml-definitions-filename"/>
   </p:xslt>
   
   <p:xslt name="style-xml-element-index">
@@ -234,8 +264,9 @@
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
       <p:document href="document/xml/xml-definitions.xsl"/>
     </p:input>
-    <p:with-param name="xml-reference-page" select="$metaschema-id || '-xml-reference.html'"/>    
-    <p:with-param name="json-definitions-page" select="$metaschema-id || '-json-definitions.html'"/>
+    <p:with-param name="xml-definitions-page"  select="$xml-definitions-filename"/>
+    <p:with-param name="json-definitions-page" select="$json-definitions-filename"/>
+    <p:with-param name="xml-reference-page"    select="$xml-reference-filename"/>    
   </p:xslt>
   
   <p:xslt name="style-xml-definitions">
@@ -264,7 +295,8 @@
     <p:input port="stylesheet">
       <p:document href="document/json/object-map-html.xsl"/>
     </p:input>
-    <p:with-param name="reference-page" select="$metaschema-id || '-json-reference.html'"/>
+    <p:with-param name="outline-page"   select="$json-outline-filename"/>
+    <p:with-param name="reference-page" select="$json-reference-filename"/>
   </p:xslt>
 
   <!--  Next we wrap this up to write and view locally/standalone if wanted -->
@@ -293,8 +325,10 @@
     <p:input port="stylesheet">
       <p:document href="document/json/object-reference-html.xsl"/>
     </p:input>
-    <p:with-param name="xml-reference-page" select="$metaschema-id || '-xml-reference.html'"/>
-    <p:with-param name="json-map-page" select="$metaschema-id || '-json-outline.html'"/>
+    <p:with-param name="json-reference-page"   select="$json-reference-filename"/>
+    <p:with-param name="json-definitions-page" select="$json-definitions-filename"/>
+    <p:with-param name="xml-reference-page"    select="$xml-reference-filename"/>
+    <p:with-param name="json-map-page"         select="$json-outline-filename"/>
   </p:xslt>
 
   <!--  Wrapping this up to write and view locally/standalone if wanted -->
@@ -318,8 +352,9 @@
     <p:input port="stylesheet">
       <p:document href="document/json/object-index-html.xsl"/>
     </p:input>
-    <p:with-param name="reference-page" select="$metaschema-id || '-json-reference.html'"/>
-    <p:with-param name="definitions-page" select="$metaschema-id || '-json-definitions.html'"/>
+    <p:with-param name="index-page"       select="$json-index-filename"/>
+    <p:with-param name="reference-page"   select="$json-reference-filename"/>
+    <p:with-param name="definitions-page" select="$json-definitions-filename"/>
   </p:xslt>
   
   <p:xslt name="style-json-object-index">
@@ -341,8 +376,9 @@
       <!-- XXX fix up / reduce this XSLT (from RC2) -->
       <p:document href="document/json/json-definitions.xsl"/>
     </p:input>
-    <p:with-param name="xml-definitions-page" select="$metaschema-id || '-xml-definitions.html'"/>
-    <p:with-param name="json-reference-page" select="$metaschema-id || '-json-reference.html'"/>
+    <p:with-param name="json-definitions-page" select="$json-definitions-filename"/>
+    <p:with-param name="xml-definitions-page"  select="$xml-definitions-filename"/>
+    <p:with-param name="json-reference-page"   select="$json-reference-filename"/>
   </p:xslt>
 
   <p:xslt name="style-json-definitions">

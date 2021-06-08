@@ -49,13 +49,6 @@
 
   <p:identity name="composed"/>
 
-  <!--<p:identity  name="render-xml-model-map"/>-->
-  <p:xslt name="annotate-composition">
-    <p:input port="stylesheet">
-      <p:document href="compose/annotate-composition.xsl"/>
-    </p:input>
-  </p:xslt>
-  
   <p:xslt name="make-abstract-map">
     <p:input port="stylesheet">
       <p:document href="compose/make-model-map.xsl"/>
