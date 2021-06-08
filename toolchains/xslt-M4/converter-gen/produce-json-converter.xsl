@@ -119,7 +119,7 @@
     <!-- overriding template in produce-xml-converter that suppresses template
          production for an element not present in the XML: this time we want the field
          (but must also hard-wire the match). -->
-    <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-template">
+    <xsl:template priority="2" match="field[empty(@gi)][@as-type='markup-multiline']" mode="make-template">
         <xsl:variable name="parent-xml-context">
             <xsl:for-each select="ancestor::*[exists(@gi)][1]">
               <xsl:call-template name="make-full-context-match"/>
@@ -220,7 +220,7 @@
         
         <!-- Additional to templates provided by the XML converter we have need
         a template for markup multiline wrappers in JSON not present in XML -->
-        <xsl:for-each-group select=".//field[@scope='global'][empty(@gi)][@as-type='markup-multiline']"
+        <xsl:for-each-group select=".//field[@scope='global'][empty(@gi)][(.|value)/@as-type='markup-multiline']"
             group-by="true()">
             <xsl:variable name="aliased" select="count(distinct-values(current-group()/@_key-name)) gt 1"/>
             <xsl:for-each-group select="current-group()" group-by="@_key-name">

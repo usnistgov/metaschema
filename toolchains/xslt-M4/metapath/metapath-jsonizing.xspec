@@ -5,6 +5,12 @@
     
     <x:param name="definition-map" href="../testing/temp/IN-models_DEFINITION-MODEL.xml"/>
     
+    <x:scenario label="broken path?">
+        <x:call function="m:jsonize-path">
+            <x:param>field-wrappable</x:param>
+        </x:call>
+        <x:expect label="field could be either a map or an array member (since SINGLETON_OR_ARRAY by default)" select="'j:array[@key=''wrapped-fields'']/j:string'"/>
+    </x:scenario>
     
     <x:scenario label="broken path?">
         <x:call function="m:jsonize-path">
