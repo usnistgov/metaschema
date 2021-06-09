@@ -18,8 +18,14 @@
     </xsl:template>
     
     <xsl:template priority="10" mode="make-xml-name" match="*[group-as/@in-xml='GROUPED']">
-        <xsl:value-of select="group-as/@name"/>/<xsl:value-of select="@_in-xml-name"/>
+        <xsl:value-of select="group-as/@name"/>/<xsl:next-match/>
     </xsl:template>
+    
+    <xsl:template priority="6" mode="make-xml-name" match="field[@as-type='markup-multiline' and @in-xml='UNWRAPPED'] |
+        define-field[@as-type='markup-multiline' and @in-xml='UNWRAPPED']">
+        <xsl:value-of select="@_using-name"/>
+    </xsl:template>   
+    
     
     <xsl:template priority="5" mode="make-xml-name" match="define-assembly | define-field | assembly | field | define-flag | flag">
         <xsl:value-of select="@_in-xml-name"/>
@@ -28,11 +34,6 @@
     <!-- <xsl:template mode="make-xml-name" match="*[exists(root-name)]">
         <xsl:value-of select="@_using-root-name"/>
     </xsl:template>-->
-    
-    <xsl:template mode="make-xml-name" match="field[@as-type='markup-multiline' and @in-xml='UNWRAPPED'] |
-        define-field[@as-type='markup-multiline' and @in-xml='UNWRAPPED']">
-        <xsl:value-of select="@_using-name"/>
-    </xsl:template>   
     
     <xsl:template priority="10" match="METASCHEMA/define-assembly | METASCHEMA/define-field | METASCHEMA/define-flag">
         <xsl:copy>
