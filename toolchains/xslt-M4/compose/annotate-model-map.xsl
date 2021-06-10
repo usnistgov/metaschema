@@ -65,12 +65,12 @@
     
     <xsl:template match="value" mode="xml-path">
         <xsl:apply-templates select="parent::*" mode="#current"/>
+        <xsl:text>/_VALUE</xsl:text>
     </xsl:template>
-    
    
     <xsl:template match="value" mode="object-path">
         <xsl:apply-templates select="parent::*" mode="#current"/>
-        <xsl:text expand-text="true">/{ @key }</xsl:text>
+        <xsl:text expand-text="true">/{ (@key,'_VALUE')[1] }</xsl:text>
     </xsl:template>
     
     <xsl:template priority="2" match="flag/@gi" mode="xml-path">

@@ -68,32 +68,6 @@
        </div>
    </xsl:template>
    
-   <xsl:template match="value[empty(@gi)][@as-type='markup-multiline']" expand-text="true">
-      <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
-      <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
-      <div class="model-entry definition { tokenize(@_metaschema-xml-id,'/')[2] }">
-         <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
-         <div class="{ $header-class }">
-            <!-- generates h1-hx headers picked up by Hugo toc -->
-            <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
-               <xsl:attribute name="id" select="@_tree-xml-id"/>
-               <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
-               <xsl:text>(unwrapped)</xsl:text>
-            </xsl:element>
-            <p class="type">
-               <xsl:apply-templates select="." mode="metaschema-type"/>
-            </p>
-            <xsl:if test="empty(parent::map)">
-               <p class="occurrence">[0 to &#x221e;]</p>
-            </xsl:if>
-            <xsl:call-template name="crosslink-to-json"/>
-            <!--<xsl:apply-templates select="formal-name" mode="produce"/>-->
-         </div>
-         
-      </div>
-   </xsl:template>
-   
-   
    <xsl:template match="*[exists(@gi)]" expand-text="true">
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
       <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
@@ -141,11 +115,11 @@
                      <xsl:apply-templates select="current-group()"/>
                   </details>
                </xsl:for-each-group>
-               <xsl:for-each-group select="element | choice[exists(child::element)]" group-by="true()">
+               <xsl:for-each-group select="element | choice[exists(child::element)]  | value[@as-type='markup-multiline']" group-by="true()">
                   <xsl:variable name="elements" select="current-group()/ (self::element | self::choice/child::element)"/>
                   <details class="properties elements" open="open">
                      <summary>
-                        <xsl:text expand-text="true">{ if (count($elements) gt 1) then 'Elements' else 'Element' } ({ count($elements) })</xsl:text>
+                        <xsl:text expand-text="true">{ if (count($elements) gt 1) then 'Elements' else 'Element' } ({ count($elements) }{ current-group()/self::value/'+' })</xsl:text>
                      </summary>
                      <xsl:apply-templates select="current-group()"/>
                   </details>
@@ -156,16 +130,54 @@
       </div>
    </xsl:template>
    
-   
-   <xsl:template match="formal-name | description | remarks | constraint"/>
-   
-   <xsl:template match="value" mode="produce" expand-text="true">
-      <div class="value">
-         <p>Value: { if (matches(@as-type,'^[aeiou]','i')) then 'An ' else 'A '}{ @as-type } value.</p>
+   <xsl:template match="value[empty(@gi)][@as-type='markup-multiline']" expand-text="true">
+      <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
+      <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
+      <div class="model-entry definition { tokenize(@_metaschema-xml-id,'/')[2] }">
+         <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
+         <div class="{ $header-class }">
+            <!-- generates h1-hx headers picked up by Hugo toc -->
+            <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
+               <xsl:attribute name="id" select="@_tree-xml-id"/>
+               <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
+               <xsl:text>(unwrapped)</xsl:text>
+            </xsl:element>
+            <p class="type">
+               <xsl:apply-templates select="." mode="metaschema-type"/>
+            </p>
+            <p class="occurrence">[0 to &#x221e;]</p>
+            <!--<xsl:call-template name="crosslink-to-json"/>-->
+            <!--<xsl:apply-templates select="formal-name" mode="produce"/>-->
+         </div>
+         
       </div>
    </xsl:template>
    
-   <xsl:template match="value[empty(parent::element/child::attribute)]" mode="produce"/>
+   
+   <xsl:template match="formal-name | description | remarks | constraint"/>
+   
+   <!--<xsl:template match="value" mode="produce"/>-->
+   
+   <xsl:template match="value" mode="produce" expand-text="true">
+      <div class="value" id="{ @_tree-xml-id }">
+         <p>
+            <xsl:text>Value: { if (matches(@as-type,'^[aeiou]','i')) then 'An ' else 'A '} </xsl:text>
+            <xsl:apply-templates mode="metaschema-type"/>
+            <xsl:text> value.</xsl:text>
+         </p>
+      </div>
+   </xsl:template>
+   
+   <xsl:template match="value[@as-type='markup-multiline']" mode="produce">
+      <!-- no @id here as it is assigned to the header in the containing div -->
+      <div class="value">
+         <p>
+            <xsl:text>Value type </xsl:text>
+            <xsl:apply-templates mode="metaschema-type"/>
+            <xsl:text> permits paragraph-level markup.</xsl:text>
+         </p>
+      </div>
+   </xsl:template>
    
    <xsl:template mode="metaschema-type" match="*">
       <xsl:value-of select="local-name()"/><br />

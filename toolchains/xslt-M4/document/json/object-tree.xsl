@@ -111,15 +111,24 @@
     <!--IDs on assemblies and fields with dynamic key flags are adjusted
     to reflect the position of the target node in the represented hierarchy -->
     <xsl:template match="assembly[exists(@json-key-flag)]/@_tree-xml-id |
-                         field[exists(@json-key-flag)]/@_tree-xml-id |
-                         assembly[exists(@json-key-flag)]/@_tree-json-id |
-                         field[exists(@json-key-flag)]/@_tree-json-id">
-        <xsl:attribute name="{name()}">
-            <xsl:value-of select="(.,../@json-key-flag) => string-join('/')"/>
+                            field[exists(@json-key-flag)]/@_tree-xml-id">
+        <xsl:attribute name="_tree-xml-id">
+            <!-- it's a flag so it gets an '@' in the XML path -->
+            <xsl:variable name="step" expand-text="true">@{ ../@json-key-flag }</xsl:variable>
+            <xsl:value-of select="(.,$step) => string-join('/')"/>
         </xsl:attribute>
     </xsl:template>
     
-    <xsl:template priority="3" match="group[exists(@json-key-flag)]/field[not(flag/@name != @json-key-flag)]">
+    <xsl:template match="assembly[exists(@json-key-flag)]/@_tree-json-id |
+                            field[exists(@json-key-flag)]/@_tree-json-id">
+        <xsl:attribute name="_tree-json-id">
+            <xsl:variable name="step" expand-text="true">{ ../@json-key-flag }</xsl:variable>
+            <xsl:value-of select="(.,$step) => string-join('/')"/>
+        </xsl:attribute>
+    </xsl:template>
+    
+    <xsl:template priority="3"
+        match="group[exists(@json-key-flag)]/field[not(flag/@name != @json-key-flag)]">
         <string name="[[{@json-key-flag}]]">
             <xsl:apply-templates select="@* except @name"/>
             <xsl:apply-templates/>

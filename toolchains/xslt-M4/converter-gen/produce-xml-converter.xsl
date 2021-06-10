@@ -143,6 +143,12 @@
         <xsl:apply-templates select="." mode="make-template"/>
     </xsl:template>
  
+    <xsl:template match="@*" mode="maybe-keep">
+        <xsl:copy-of select="." copy-namespaces="no"/>
+    </xsl:template>
+    
+    <xsl:template match="@_base-uri | @_key-name | @_metaschema-json-id | @_metaschema-xml-id | @_using-root-name | @_in-json-name | @_in-xml-name | @_key | @_key-ref | @_step | @_using-name" mode="maybe-keep"/>
+    
     <!-- no template for implicit wrappers on markup-multiline -->
     <xsl:template priority="2" match="field[empty(@gi)][value/@as-type='markup-multiline']" mode="make-template"/>
         
@@ -162,7 +168,7 @@
             <XSLT:param name="with-key" select="true()"/>
             <xsl:call-template name="comment-template"/>
             <xsl:element name="{ local-name() }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel">
-                <xsl:copy-of select="@* except (@scope)"/>
+                <xsl:apply-templates mode="maybe-keep" select="@* except (@scope)"/>
                 <!--'SCALAR' marks fields that will be strings or data values, not maps (objects)
                 by virtue of not permitting flags other than designated for the JSON key-->
                 <xsl:if test="self::field[empty(flag[not(@key=$json-key-flag-name)])]">
@@ -200,7 +206,7 @@
             </xsl:if>
             <xsl:call-template name="comment-template"/>
             <flag in-json="string">
-                <xsl:copy-of select="@* except @scope"/>
+                <xsl:apply-templates mode="maybe-keep" select="@* except @scope"/>
                 <!-- rewriting in-json where necessary -->
                 <xsl:apply-templates select="@as-type" mode="assign-json-type"/>
                 <XSLT:value-of select="."/>
@@ -381,7 +387,7 @@
     <xsl:template priority="2" match="field[empty(@gi)][(.|value)/@as-type='markup-multiline']" mode="make-xml-pull">
         <XSLT:for-each-group select="{ $prose-elements }" group-by="true()">
             <field in-json="SCALAR">
-                <xsl:copy-of select="@* except @scope"/>
+                <xsl:apply-templates mode="maybe-keep" select="@* except @scope"/>
                 <value in-json="string">
                     <xsl:copy-of select="value/@*"/>
                     <XSLT:apply-templates select="current-group()" mode="cast-prose"/>
