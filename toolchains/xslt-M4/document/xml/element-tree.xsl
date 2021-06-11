@@ -20,8 +20,8 @@
     
     <xsl:template match="assembly | field | group">
         <element>
-            <xsl:call-template name="mark-path"/>
             <xsl:apply-templates select="@*"/>
+            <xsl:call-template name="mark-path"/>
             <xsl:apply-templates/>
         </element>
     </xsl:template>
@@ -29,7 +29,7 @@
 <!-- The points of misalignment between the XML and object models
      are bridged by including a JSON path for the parent (wrapper) when none is on the node. -->
     <xsl:template name="mark-path">
-        <xsl:if test="empty(@_tree-json-id)">
+        <xsl:if test="empty(@_tree-json-id) or (parent::group/@in-xml='HIDDEN')">
             <xsl:apply-templates select="../@_tree-json-id"/>
         </xsl:if>
     </xsl:template>
@@ -46,8 +46,8 @@
     
     <xsl:template match="flag">
         <attribute>
-            <xsl:call-template name="mark-path"/>
             <xsl:apply-templates select="@*"/>
+            <xsl:call-template name="mark-path"/>
             <xsl:apply-templates/>
         </attribute>
     </xsl:template>
@@ -60,8 +60,8 @@
     
     <xsl:template match="field[@as-type='markup-multiline']">
         <element>
-            <xsl:call-template name="mark-path"/>
             <xsl:apply-templates select="@*"/>
+            <xsl:call-template name="mark-path"/>
             <xsl:apply-templates/>
         </element>
     </xsl:template>
