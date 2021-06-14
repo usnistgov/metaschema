@@ -30,7 +30,8 @@
     <p:pipe        port="result" step="rewire-xsd"/>
   </p:output>
   
-  <p:serialization port="f.final" indent="true" method="xml" omit-xml-declaration="false"/>
+  <!-- us-ascii encoding to provide escaping on upper-ASCII characters in the schema -->
+  <p:serialization port="f.final" indent="true" method="xml" omit-xml-declaration="false" encoding="us-ascii"/>
   <p:output        port="f.final" primary="true">
     <p:pipe        port="result" step="final"/>
   </p:output>
