@@ -48,14 +48,6 @@
             <!-- then, the remarks off the definition or reference -->
             <xsl:sequence select="$instance/remarks"/>
         </xsl:variable>
-        <xsl:variable name="with-remarks">
-            <!-- when doing a global definition get its remarks first -->
-            <xsl:if test="not(. is $instance)">
-                <xsl:sequence select="remarks"/>
-            </xsl:if>
-            <!-- then, the remarks off a local definition or reference, or a global called at the top -->         
-            <xsl:sequence select="$instance/remarks"/>
-        </xsl:variable>
         
         <xsl:element name="{ $type }" namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
             <xsl:for-each select="self::define-assembly[empty(model)]">
@@ -119,33 +111,33 @@
     </xsl:template>
     
     <xsl:template match="define-flag" mode="build">
-        <xsl:param   name="instance" select="."/>
-        
-        <xsl:variable name="given-type"   select="$instance/@as-type"/>
-        <xsl:variable name="is-required"  select="($instance/@required | @required) ='yes'"/>
-        <xsl:variable name="using-name"   select="$instance/(use-name,@ref)[1]"/>
+        <xsl:param name="instance" select="."/>
+
+        <xsl:variable name="given-type" select="$instance/@as-type"/>
+        <xsl:variable name="is-required" select="($instance/@required | @required) = 'yes'"/>
+        <xsl:variable name="using-name" select="$instance/(use-name, @ref)[1]"/>
         <xsl:variable name="with-remarks">
             <!-- when doing a global definition for an instance, get its remarks first -->
             <xsl:if test="not(. is $instance)">
                 <xsl:sequence select="remarks"/>
             </xsl:if>
-            <!-- then, the remarks off a local definition or reference, or a global called at the top -->         
+            <!-- then, the remarks off a local definition or reference, or a global called at the top -->
             <xsl:sequence select="$instance/remarks"/>
         </xsl:variable>
-        
-        
-        <flag max-occurs="1" min-occurs="{if ($is-required) then 1 else 0}" as-type="{ ($given-type,@as-type, 'string')[1] }">
-            
-            <xsl:apply-templates select="@*"           mode="build"/>
+
+        <flag max-occurs="1" min-occurs="{if ($is-required) then 1 else 0}"
+            as-type="{ ($given-type,@as-type, 'string')[1] }">
+
+            <xsl:apply-templates select="@*" mode="build"/>
             <xsl:apply-templates select="$instance/@*" mode="build"/>
-            
+
             <xsl:for-each select="parent::METASCHEMA">
                 <xsl:attribute name="scope">global</xsl:attribute>
             </xsl:for-each>
-            
-            <xsl:attribute name="gi"  select="($using-name,use-name,@name,@ref)[1]"/>
-            <xsl:attribute name="key" select="($using-name,use-name,@name,@ref)[1]"/>
-            
+
+            <xsl:attribute name="gi" select="($using-name, use-name, @name, @ref)[1]"/>
+            <xsl:attribute name="key" select="($using-name, use-name, @name, @ref)[1]"/>
+
             <xsl:apply-templates select="formal-name | description"/>
             <xsl:apply-templates select="constraint"/>
             <xsl:apply-templates select="$with-remarks"/>
@@ -189,19 +181,19 @@
     
     <xsl:template mode="build" match="model//assembly">
         <xsl:apply-templates mode="build" select="key('global-assemblies', @_key-ref)">
-            <xsl:with-param name="reference" select="."/>
+            <xsl:with-param name="instance" select="."/>
         </xsl:apply-templates>
     </xsl:template>
     
     <xsl:template mode="build" match="model//field">
         <xsl:apply-templates mode="build" select="key('global-fields', @_key-ref)">
-            <xsl:with-param name="reference" select="."/>
+            <xsl:with-param name="instance" select="."/>
         </xsl:apply-templates>
     </xsl:template>
     
     <xsl:template mode="build" match="flag">
         <xsl:apply-templates mode="build" select="key('global-flags', @_key-ref)">
-            <xsl:with-param name="reference" select="."/>
+            <xsl:with-param name="instance" select="."/>
         </xsl:apply-templates>
     </xsl:template>
     
