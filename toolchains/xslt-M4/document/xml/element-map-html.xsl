@@ -213,7 +213,7 @@ div.OM-map p { margin: 0ex }
    <xsl:template match="m:choice">
       <div class="OM-choices">
          <p class="OM-lit">
-            <xsl:text>A choice:</xsl:text>
+            <xsl:text>A choice of:</xsl:text>
          </p>
          <xsl:apply-templates/>
       </div>

@@ -266,7 +266,7 @@ details:not([open]) .show-closed { display: inline }
       <div class="OM-choices">
          <p class="OM-lit">
             <xsl:call-template name="line-marker"/>
-            <xsl:text>A choice:</xsl:text></p>
+            <xsl:text>A choice of:</xsl:text></p>
          <xsl:apply-templates/>
       </div>
    </xsl:template>

@@ -80,7 +80,12 @@
                <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
                <xsl:text>{ @gi }</xsl:text>
             </xsl:element>
+            <!-- Only assign the @id here if there is a value and the type is not markup-multiline, since in the other cases it
+                 is assigned to the header in the containing div -->
             <p class="type">
+               <xsl:if test="exists(value[not(@as-type='markup-multiline')])">
+                  <xsl:attribute name="id">{ value/@_tree-xml-id }</xsl:attribute>
+               </xsl:if>
                <xsl:apply-templates select="." mode="metaschema-type"/>
             </p>
             <xsl:if test="empty(parent::map)">
@@ -149,15 +154,18 @@
             <!--<xsl:call-template name="crosslink-to-json"/>-->
             <!--<xsl:apply-templates select="formal-name" mode="produce"/>-->
          </div>
-         
+         <div class="body">
+            <p><xsl:text>This use of the </xsl:text><a href="{$datatype-page}/#markup-multiline">markup-multiline</a><xsl:text> type permits unwrapped block-level markup.</xsl:text></p>
+         </div>
       </div>
    </xsl:template>
    
    
    <xsl:template match="formal-name | description | remarks | constraint"/>
    
-   <!--<xsl:template match="value" mode="produce"/>-->
-   
+   <xsl:template match="value" mode="produce"/>
+
+<!--   
    <xsl:template match="value" mode="produce" expand-text="true">
       <div class="value" id="{ @_tree-xml-id }">
          <p>
@@ -167,16 +175,10 @@
          </p>
       </div>
    </xsl:template>
-   
+-->
+
    <xsl:template match="value[@as-type='markup-multiline']" mode="produce">
       <!-- no @id here as it is assigned to the header in the containing div -->
-      <div class="value">
-         <p>
-            <xsl:text>Value type </xsl:text>
-            <xsl:apply-templates mode="metaschema-type"/>
-            <xsl:text> permits paragraph-level markup.</xsl:text>
-         </p>
-      </div>
    </xsl:template>
    
    <xsl:template mode="metaschema-type" match="*">
