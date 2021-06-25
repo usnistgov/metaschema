@@ -24,9 +24,7 @@
         <xsl:variable name="definitions" select="define-assembly | define-field | define-flag"/>
         <div>
             <xsl:call-template name="reference-class"/>
-            <xsl:apply-templates select="* except (remarks | $definitions)"/>
-            <xsl:apply-templates select="short-name" mode="schema-link"/>
-            <xsl:apply-templates select="short-name" mode="converter-link"/>
+            <xsl:apply-templates select="* except (schema-name | schema-version | remarks | $definitions)"/>
             <xsl:apply-templates select="remarks"/>
 
             <xsl:apply-templates select="$definitions" mode="model-view">
@@ -37,14 +35,6 @@
     </xsl:template>
     
     <xsl:template name="reference-class"/>
-
-    <xsl:template match="METASCHEMA/schema-name">
-        <p>
-            <span class="usa-tag">OSCAL model</span>
-            <xsl:text> </xsl:text>
-            <xsl:apply-templates/>
-        </p>
-    </xsl:template>
 
     <xsl:template match="METASCHEMA/namespace">
         <p>
@@ -69,29 +59,6 @@
         </xsl:map>
     </xsl:variable>
 
-    <xsl:template match="short-name" mode="schema-link" expand-text="true">
-        <p>
-            <span class="usa-tag">XML Schema</span>
-            <xsl:text> </xsl:text>
-            <a
-                href="/artifacts/xml/schema/oscal_{$file-map(.)}_schema.xsd"
-                >oscal_{$file-map(string(.))}_schema.xsd</a>
-        </p>
-    </xsl:template>
-
-    <xsl:template match="short-name" mode="converter-link" expand-text="true">
-        <p>
-            <span class="usa-tag">JSON to XML converter</span>
-            <xsl:text> </xsl:text>
-            <a href="/artifacts/xml/convert/oscal_{$file-map(.)}_json-to-xml-converter.xsl"
-                >oscal_{$file-map(string(.))}_json-to-xml-converter.xsl</a>
-            <xsl:text> </xsl:text>
-            <a href="https://github.com/usnistgov/OSCAL/tree/main/xml#converting-oscal-json-content-to-xml"
-                >(How do I use the converter to convert OSCAL JSON to XML?)</a>
-        </p>
-    </xsl:template>
-
-
     <xsl:template match="METASCHEMA/short-name">
         <p>
             <span class="usa-tag">Short name</span>
@@ -99,15 +66,6 @@
             <xsl:apply-templates/>
         </p>
     </xsl:template>
-
-    <xsl:template match="METASCHEMA/schema-version">
-        <p>
-            <span class="usa-tag">Version</span>
-            <xsl:text> </xsl:text>
-            <xsl:apply-templates/>
-        </p>
-    </xsl:template>
-
 
     <xsl:template name="mark-id"/>
     

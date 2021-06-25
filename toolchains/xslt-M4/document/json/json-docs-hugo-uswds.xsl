@@ -78,8 +78,6 @@
       <xsl:variable name="definitions" select="define-assembly | define-field | define-flag"/>
       <div class="{$metaschema-code ! replace(.,'.*-','') }-docs">
          <xsl:apply-templates select="* except (remarks|$definitions)"/>
-         <xsl:apply-templates select="short-name" mode="schema-link"/>
-         <xsl:apply-templates select="short-name" mode="converter-link"/>
          <xsl:apply-templates select="remarks"/>
          <xsl:apply-templates select="child::define-assembly | child::define-field"
             mode="make-definition">
@@ -121,20 +119,7 @@
          <xsl:map-entry key="'oscal-ar'"       >assessment-results</xsl:map-entry>
       </xsl:map>
    </xsl:variable>
-   
-   <xsl:template match="short-name" mode="schema-link" expand-text="true">
-      <p>
-         <span class="usa-tag">JSON Schema</span>
-         <a href="/artifacts/json/schema/oscal_{$file-map(.)}_schema.json">oscal_{$file-map(string(.))}_schema.json</a>
-      </p>
-   </xsl:template>
-   
-   <xsl:template match="short-name" mode="converter-link" expand-text="true">
-      <p>
-         <span class="usa-tag">XML to JSON converter</span>
-         <a href="/artifacts/json/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl">oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a> <a href="https://github.com/usnistgov/OSCAL/tree/main/json#converting-oscal-xml-content-to-json">(How do I use the converter to convert OSCAL XML to JSON?)</a>
-      </p>
-   </xsl:template>
+
    <xsl:template match="description">
       <xsl:variable name="is-global" select="exists(parent::*/parent::METASCHEMA)"/>
       <p class="description{ ' global'[$is-global]}">

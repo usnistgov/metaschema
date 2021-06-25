@@ -25,16 +25,6 @@ exclude-result-prefixes="#all">
       </p>
    </xsl:template>
    
-   <xsl:template match="short-name" mode="schema-link" expand-text="true">
-      <p>
-         <span class="usa-tag">JSON Schema</span>
-         <xsl:text> </xsl:text>
-         <a
-            href="https://pages.nist.gov/OSCAL/artifacts/json/schema/oscal_{$file-map(.)}_schema.json"
-            >oscal_{$file-map(string(.))}_schema.json</a>
-      </p>
-   </xsl:template>
-   
    <xsl:template match="define-assembly | define-field" mode="model">
       <xsl:variable name="metaschema-type" select="replace(name(),'^define\-','')"/>
       <xsl:for-each-group select="flag | define-flag | model/*" group-by="true()" expand-text="true">

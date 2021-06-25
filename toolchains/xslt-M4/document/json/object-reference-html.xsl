@@ -19,24 +19,6 @@
    
    <xsl:template match="metadata/namespace"/>
    
-   <xsl:template match="short-name" mode="schema-link" expand-text="true">
-      <p>
-         <span class="usa-tag">JSON Schema</span>
-         <xsl:text> </xsl:text>
-         <a href="/artifacts/json/schema/oscal_{$file-map(.)}_schema.json">oscal_{$file-map(string(.))}_schema.json</a>
-      </p>
-   </xsl:template>
-   
-   <xsl:template match="short-name" mode="converter-link" expand-text="true">
-      <p>
-         <span class="usa-tag">XML to JSON converter</span>
-         <xsl:text> </xsl:text>
-         <a href="/artifacts/json/convert/oscal_{$file-map(.)}_xml-to-json-converter.xsl">oscal_{$file-map(string(.))}_xml-to-json-converter.xsl</a>
-         <xsl:text> </xsl:text>
-         <a href="https://github.com/usnistgov/OSCAL/tree/main/json#converting-oscal-xml-content-to-json">(How do I use the converter to convert OSCAL XML to JSON?)</a>
-      </p>
-   </xsl:template>
-   
    <xsl:template name="remarks-group">
       <xsl:param name="these-remarks" select="remarks"/>
          <xsl:for-each-group select="$these-remarks[not(contains-token(@class,'xml'))]" group-by="true()">
@@ -48,7 +30,6 @@
          </div>
       </xsl:for-each-group>
    </xsl:template>
-   
    
    <!-- writes '../' times the number of steps in $outline-page  -->
    <xsl:variable name="path-to-common">

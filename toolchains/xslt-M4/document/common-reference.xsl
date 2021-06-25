@@ -13,9 +13,7 @@
    
    
    <xsl:template match="metadata">
-      <xsl:apply-templates select="* except remarks"/>
-      <xsl:apply-templates select="short-name" mode="schema-link"/>
-      <xsl:apply-templates select="short-name" mode="converter-link"/>
+      <xsl:apply-templates select="* except (schema-name | schema-version | remarks)"/>
       <xsl:for-each select="remarks">
          <div class="remarks">
             <xsl:apply-templates/>
@@ -24,14 +22,6 @@
    </xsl:template>
    
    <xsl:template match="metadata/short-name"/>
-   
-   <xsl:template match="metadata/schema-name">
-      <p>
-         <span class="usa-tag">OSCAL model</span>
-         <xsl:text> </xsl:text>
-         <xsl:apply-templates/>
-      </p>
-   </xsl:template>
    
    <xsl:template match="metadata/namespace">
       <p>
@@ -65,13 +55,6 @@
          <xsl:map-entry key="'oscal-ar'"       >assessment-results</xsl:map-entry>
       </xsl:map>
    </xsl:variable>
-   
-   <xsl:template match="schema-name"/>
-   
-   <xsl:template match="schema-version" expand-text="true">
-      <p><span class="usa-tag">Schema version:</span> { . }</p>
-   </xsl:template>
-   
    
    <xsl:template mode="produce-matching-constraints" match="constraint">
       <xsl:apply-templates mode="produce-constraint"/>

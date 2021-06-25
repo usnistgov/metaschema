@@ -18,24 +18,6 @@
    
    <xsl:template match="metadata/json-base-uri"/>
       
-   <xsl:template match="short-name" mode="schema-link" expand-text="true">
-      <p>
-         <span class="usa-tag">XML Schema</span>
-         <xsl:text> </xsl:text>
-         <a href="/artifacts/xml/schema/oscal_{$file-map(.)}_schema.xsd">oscal_{$file-map(string(.))}_schema.xsd</a>
-      </p>
-   </xsl:template>
-   
-   <xsl:template match="short-name" mode="converter-link" expand-text="true">
-      <p>
-         <span class="usa-tag">JSON to XML converter</span>
-         <xsl:text> </xsl:text>
-         <a href="/artifacts/xml/convert/oscal_{$file-map(.)}_json-to-xml-converter.xsl">oscal_{$file-map(string(.))}_json-to-xml-converter.xsl</a>
-         <xsl:text> </xsl:text>
-         <a href="https://github.com/usnistgov/OSCAL/tree/main/xml#converting-oscal-json-content-to-xml">(How do I use the converter to convert OSCAL JSON to XML?)</a>
-      </p>
-   </xsl:template>
-
    <xsl:template name="remarks-group">
       <xsl:param name="these-remarks" select="remarks"/>
       <xsl:for-each-group select="$these-remarks[not(contains-token(@class,'json'))]" group-by="true()">
