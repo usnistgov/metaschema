@@ -5,13 +5,13 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="#all">
 
-    <!--
-        
-    An XSLT 3.0 stylesheet using XPath 3.1 functions including transform()
-        
-    This XSLT orchestrates a sequence of transformations over its input.
+<!-- Purpose: Assemble a logical metaschema instance out of its modules and reconcile definitions -->
+<!-- Dependencies: This is a 'shell' XSLT and calls several steps in sequence, each implemented as an XSLT -->
+<!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
+<!-- Output: A single metaschema instance, unifying the definitions from the input modules and annotating with identifiers and pointers  -->
+<!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
     
-    -->
+<!--Purpose|Dependencies|Input|Output|Note|Limitations|Warning-->
 
     <xsl:output method="xml" indent="yes"/>
 
