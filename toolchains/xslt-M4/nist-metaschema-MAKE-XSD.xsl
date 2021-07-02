@@ -5,13 +5,11 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="#all">
 
-    <!--
-        
-    An XSLT 3.0 stylesheet using XPath 3.1 functions including transform()
-        
-    This XSLT orchestrates a sequence of transformations over its input.
-    
-    -->
+    <!-- Purpose: Produce an XML Schema Definition (XSD) reflecting constraints defined in a metaschema -->
+    <!-- Dependencies: This is a 'shell' XSLT and calls several steps in sequence, each implemented as an XSLT -->
+    <!-- Input: A top-level metaschema; this XSLT also composes metaschema input so composition is not necessary -->
+    <!-- Output: An XSD describing an XML format consistent with definitions given in the input metaschema -->
+    <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
 
     <xsl:output method="xml" indent="yes" encoding="us-ascii"/>
 

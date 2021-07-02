@@ -10,8 +10,10 @@
 <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
 <!-- Output: A single metaschema instance, unifying the definitions from the input modules and annotating with identifiers and pointers  -->
 <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
+
+<!-- NIST/ITL Metaschema github.com/usnistgov/metaschema https://pages.nist.gov/metaschema/ -->
     
-<!--Purpose|Dependencies|Input|Output|Note|Limitations|Warning-->
+<!-- Purpose|Dependencies|Input|Output|Note|Limitations|Warning -->
 
     <xsl:output method="xml" indent="yes"/>
 

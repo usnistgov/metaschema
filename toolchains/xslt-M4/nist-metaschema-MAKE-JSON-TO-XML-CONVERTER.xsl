@@ -9,7 +9,14 @@
   
   version="3.0">
 
-
+  <!-- Purpose: Produce an XSLT transformation capable of converting a JSON format defined in a metaschema, into an XML JSON format capturing an equivalent data set -->
+  <!-- Dependencies: This is a 'shell' XSLT and calls several steps in sequence, each implemented as an XSLT -->
+  <!-- Input: A top-level metaschema; this XSLT also composes metaschema input so composition is not necessary -->
+  <!-- Output: A standalone XSLT suitable for use or deployment, accepting JSON valid to the metaschema-defined constraints -->
+  <!-- Note: see the result XSLT for information regarding its runtime interface -->
+  <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
+  
+  
     <xsl:output indent="yes"/>
 
   <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
