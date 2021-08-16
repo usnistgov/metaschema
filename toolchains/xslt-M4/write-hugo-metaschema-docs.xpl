@@ -4,6 +4,11 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" type="metaschema:make-all-metaschema-docs"
   name="make-all-metaschema-docs">
 
+  <!-- Purpose: Write Hugo-ready HTML with XML and JSON-oriented metaschema documentation -->
+  <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
+  <!-- Output: Options indicate file names to assign to outputs in serialization -->
+  <!-- Note: See make-metaschema-standalone-docs.xpl for debugging -->
+  
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
 

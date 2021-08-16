@@ -33,16 +33,14 @@
     
     <!-- The $transformation-sequence declares transformations to be applied in order. -->
     <xsl:variable name="transformation-sequence">
-        
-<!-- Collects metaschema modules and renames definitions scoped locally to their modules -->
         <nm:transform version="3.0">compose/metaschema-collect.xsl</nm:transform>
-<!-- Resolves references to global, local and imported definitions -->
         <nm:transform version="3.0">compose/metaschema-build-refs.xsl</nm:transform>
-<!-- Removes unused definitions (not descended from an assembly defined for the root) -->
+        <nm:transform version="3.0">compose/metaschema-trim-extra-modules.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-prune-unused-definitions.xsl</nm:transform>
-<!-- Flattens, normalizes and (to come) expands examples -->
+        <nm:transform version="3.0">compose/metaschema-resolve-use-names.xsl</nm:transform>
+        <nm:transform version="3.0">compose/metaschema-resolve-sibling-names.xsl</nm:transform>
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
-        
+        <nm:transform version="3.0">compose/annotate-composition.xsl</nm:transform>
     </xsl:variable>
     
     <xsl:function name="nm:compose-metaschema">

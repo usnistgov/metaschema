@@ -4,6 +4,8 @@ An XSLT implementation of the metaschema toolchain for generating schemas, conve
 
 Typically any of these operations will combine several lower-level operations in a defined sequence.
 
+More details (produced by surveying the files) can be seen in [file-manifest.md](file-manifest.md). Note however that this file is not reliable if it is not more recent than the files described.
+
 ## Generate schemas
 
 ### Generate XML Schema (XSD)
@@ -60,45 +62,21 @@ tbd: Schematron that operates on JSON inputs (JSONatron)
 
 ## Generate documentation
 
-### XML docs
+For any metaschema (including the 'all' i.e. combined models metaschema) a range of documentation artifacts are produced for consumption by Hugo (ingest into a static published documentation repository / web sites).
 
-source: metaschema (main module)
+Accordingly see these XProc pipelines for details:
 
-XSLT: `nist-metaschema-MAKE-XML-DOCS.xsl`
+`make-metaschema-standalone-docs.xpl` a generic pipeline producing standalone documentation (by passing Hugo ingest files through a normalizer/stabilizer).
 
-result: HTML file for Hugo (suffix `*.html`)
+Use with a debugging pipeline that binds the output ports for inspection.
 
-note: needs extension / integration / CSS work
+`write-hugo-metaschema-docs.xpl` producing the same set of docs, except writing them to the file system ready for Hugo. Note that this pipeline writes files to the system.
 
-### XML model map
-
-source: metaschema (main module)
-
-XSLT: `nist-metaschema-MAKE-XML-MAP.xsl`
-
-result: HTML file for Hugo (suffix `*.html`)
-
-note: needs integration / CSS work?
-
-### JSON docs
-
-source: metaschema (main module)
-
-XSLT: `nist-metaschema-MAKE-JSON-DOCS.xsl`
-
-result: HTML file for Hugo (suffix `*.html`)
-
-note: needs extension / integration / CSS work
-
-### JSON model map
-
-source: metaschema (main module)
-
-XSLT: `nist-metaschema-MAKE-JSON-MAP.xsl`
-
-result: HTML file for Hugo (suffix `*.html`)
-
-note: needs integration / CSS work?
+Produced by both these pipelines (which should be work-alikes):
+  - XML and JSON-oriented model documents with cross-links
+    - Both instance- and model-oriented
+  - XML and JSON model maps / synopsis
+  - Indexes
 
 ## Extras
 

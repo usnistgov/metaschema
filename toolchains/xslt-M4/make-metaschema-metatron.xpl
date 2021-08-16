@@ -4,6 +4,10 @@
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
   type="metaschema:make-metaschema-metatron" name="make-metaschema-metatron">
   
+  <!-- Purpose: Produces a Schematron instance (Metatron)  -->
+  <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
+  <!-- Output: Port exposes a Schematron -->
+  
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
   
@@ -33,7 +37,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="metaschema-compose.xpl"/>
+  <p:import href="compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
