@@ -11,7 +11,7 @@
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports //p:serialization/@port  => string-join(' ')-->
-   
+  
   <!-- _0_main-module           echoes input
        _1_collected             collects modules
        _2_refs-built            disambiguates names and references
@@ -23,12 +23,14 @@
        _8_annotated             provides extra annotations (pre-loading)
        final -->
   
+  <!-- out of line XSLTs //p:xslt/p:input[@port='stylesheet']/p:*/@href  => string-join(' &#xA;') -->
   
   
 <!-- Try on
     A. trivial model
     B. an OSCAL model
     C. OSCAL 'all'
+    D. pathological tests see ../../../test-suite/
     
     document each step
     find / build out unit tests (including edge cases)

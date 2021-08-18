@@ -5,6 +5,8 @@
     exclude-result-prefixes="xs o"
     version="3.0">
 
+<!-- Purpose: test harness for calling Markdown conversion logic -->
+    
     <xsl:output indent="yes"/>
 
     <xsl:param name="target-ns" as="xs:string?">http://csrc.nist.gov/ns/oscal/1.0</xsl:param>
@@ -23,7 +25,7 @@
     
     <xsl:template match="text()">
         <!--<xsl:value-of select="."/>-->
-        <xsl:call-template name="parse">
+        <xsl:call-template name="parse-markdown">
             <xsl:with-param name="markdown-str" select="string(.)"/>
         </xsl:call-template><!--
         <xsl:apply-templates select="." mode="parse"/>-->

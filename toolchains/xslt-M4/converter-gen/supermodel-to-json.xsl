@@ -8,12 +8,10 @@
     default-mode="write-json"
     version="3.0">
     
-<!-- XXX TO DO XXX
-    
-    stitch in XML to markdown (see xml-to-markdown.xsl)
-    map datatypes to JSON object types 'number' 'boolean' etc.
-    implement 'collapsible='yes'"
-        
+<!-- Rewrites Metaschema 'supermodel' XML as XPath JSON XML,
+     suitable for serializing in JSON syntax or otherwise casting into objects.
+     Borrows logic from xml-to-markdown.xsl (copied verbatim)
+     
     -->
     
     <xsl:output indent="true"/>

@@ -12,6 +12,20 @@
 
     <xsl:mode on-no-match="shallow-copy"/>
     
+<!-- Markdown conversion support for inclusion into conversion pipelines
+    
+    Reading markdown, returns HTML-like tagging in the OSCAL metaschema 'supermodel' namespace.
+    This XSLT provides template to be included via transformation in any top-level
+    (generated) metaschema-based JSON-to-XML converter, which must perform a Markdown
+    conversion to support markup-line and markup-multiline datatypes.
+    The 'supermodel' target namespace is an intermediate form to be cast
+    (in a serialization step) into the target element namespace).
+    ../testing/test-xml-json-roundtrip.xpl
+    See ../nist-metaschema-MAKE-XML-TO-JSON-CONVERTER.xsl
+    and its parallel emulators in XProc files
+    such as ../testing/test-json-conversions.xpl
+    
+    -->
     <!-- The templates are the same, but kept separate to enable calling them in separately. -->
     <xsl:template match="value[@as-type=('markup-line')]">
         <xsl:copy>

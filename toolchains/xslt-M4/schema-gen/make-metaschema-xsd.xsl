@@ -11,7 +11,7 @@
 
     
 <!-- Purpose: Produce an XSD Schema representing constraints declared in a metaschema -->
-<!-- Input:   A Metaschema -->
+<!-- Input:   A (composed) metaschema -->
 <!-- Output:  An XSD, with embedded documentation -->
 
 <!-- nb The schema and Schematron for the metaschema format is essential
@@ -38,6 +38,10 @@
     
     <!--MAIN ACTION HERE -->
     
+    
+    <xsl:variable name="prose-module-xsd" select="document('oscal-prose-module.xsd')"/>
+   
+    <xsl:variable name="types-library"    select="document('oscal-datatypes.xsd')/*"/>
     
     <xsl:template match="/" name="build-schema">
         <xs:schema elementFormDefault="qualified" targetNamespace="{ $target-namespace }">
@@ -72,15 +76,13 @@
                         </xs:choice>
                     </xs:group>
                 </xsl:if>-->
-                <xsl:apply-templates mode="acquire-prose" select="document('oscal-prose-module.xsd')"/>
+                <xsl:apply-templates mode="acquire-prose" select="$prose-module-xsd"/>
             </xsl:if>
             <xsl:variable name="all-types" select="$metaschema//@as-type"/>
             
             <xsl:copy-of select="$types-library/xs:simpleType[@name = $all-types]"/>
         </xs:schema>
     </xsl:template>
-    
-    <xsl:variable name="types-library" select="document('oscal-datatypes.xsd')/*"/>
     
     <xsl:template match="namespace"/>
         
