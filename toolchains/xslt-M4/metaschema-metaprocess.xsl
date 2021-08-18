@@ -60,7 +60,7 @@
         <xsl:variable name="runtime" as="map(xs:string, item())">
             <xsl:map>
                 <xsl:map-entry key="'xslt-version'"        select="xs:decimal($xslt-spec/@version)"/>
-                <xsl:map-entry key="'stylesheet-location'" select=" resolve-uri(string($xslt-spec),$xslt-base)"/>
+                <xsl:map-entry key="'stylesheet-location'" select="resolve-uri(string($xslt-spec),$xslt-base)"/>
                 <xsl:map-entry key="'source-node'"         select="$sourcedoc"/>
                 <xsl:map-entry key="'stylesheet-params'"   select="$runtime-params"/>
             </xsl:map>

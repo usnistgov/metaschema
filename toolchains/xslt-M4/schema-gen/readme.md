@@ -44,9 +44,7 @@
 #### test-make-metaschema-xsd.xpl
 
 - XProc pipeline version 1.0 (5 steps)
-
 - Runtime dependency: `configure-namespaces.xsl`
-
 - Runtime dependency: `make-metaschema-xsd.xsl`
 
 ### xsd

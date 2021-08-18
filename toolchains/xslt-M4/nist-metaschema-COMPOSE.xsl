@@ -29,7 +29,7 @@
     <xsl:variable name="home" select="/"/>
     <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
 
-    <xsl:import href="lib/metaschema-metaprocess.xsl"/>
+    <xsl:import href="metaschema-metaprocess.xsl"/>
     
     <!-- The $transformation-sequence declares transformations to be applied in order. -->
     <xsl:variable name="transformation-sequence">
