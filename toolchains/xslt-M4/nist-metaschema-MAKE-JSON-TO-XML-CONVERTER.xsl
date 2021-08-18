@@ -63,7 +63,7 @@
   
   <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
   
-  <xsl:import href="lib/metaschema-metaprocess.xsl"/>
+  <xsl:import href="nist-metaschema-metaprocess.xsl"/>
   
   <!-- The $transformation-sequence declares transformations to be applied in order. -->
   <xsl:variable name="produce-json-converter">
