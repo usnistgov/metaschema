@@ -112,8 +112,8 @@
                     location="/*:METASCHEMA[namespace-uri()='http://csrc.nist.gov/ns/oscal/metaschema/1.0'][1]/*:define-flag[namespace-uri()='http://csrc.nist.gov/ns/oscal/metaschema/1.0'][1]"/>
             </x:scenario>
         </x:scenario>
-        <x:scenario label="Check instance clashes:">
-        </x:scenario>
+        <!--<x:scenario label="Check instance clashes:">
+        </x:scenario>-->
     </x:scenario>
         <!--
         <x:scenario label="Seeing any name clashes">
