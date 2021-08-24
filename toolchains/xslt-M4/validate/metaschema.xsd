@@ -114,7 +114,7 @@
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
     <xs:attribute name="as-type" type="m:FieldDatatypesType" default="string"/>
-    <xs:attribute name="collapsible" type="m:BooleanType" default="yes"/>
+    <xs:attribute name="collapsible" type="m:BooleanType" default="no"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
     <xs:attribute name="scope" type="m:ScopeType" default="global"/>
     <xs:anyAttribute processContents="lax"/>
@@ -194,7 +194,7 @@
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
     </xs:sequence>
     <xs:attribute name="as-type" type="m:FieldDatatypesType" default="string"/>
-    <xs:attribute name="collapsible" type="m:BooleanType" default="yes"/>
+    <xs:attribute name="collapsible" type="m:BooleanType" default="no"/>
     <xs:attributeGroup ref="m:CardinalitySpecificationGroup"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
     <xs:attribute name="in-xml" type="m:InXmlWrappedType" default="WITH_WRAPPER">
