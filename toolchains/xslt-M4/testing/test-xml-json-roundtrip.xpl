@@ -15,7 +15,7 @@ Dependencies //p:xslt/p:input[@port='stylesheet']/p:*/@href  => string-join(' &#
 ../converter-gen/produce-xml-converter.xsl 
 ../converter-gen/supermodel-to-xml.xsl 
 ../converter-gen/supermodel-to-json.xsl 
-../converter-gen/xpath-json-to-json.xsl 
+../util/xpath-json-to-json.xsl 
 ../converter-gen/produce-json-converter.xsl 
 ../converter-gen/markdown-to-supermodel-xml-converter.xsl 
 ../converter-gen/supermodel-to-xml.xsl
@@ -177,7 +177,7 @@ Dependencies //p:xslt/p:input[@port='stylesheet']/p:*/@href  => string-join(' &#
     <!-- Finally we serialize to ensure JSONness -->
     <p:xslt name="serialize-supermodel.1-as-json">
       <p:input port="stylesheet">
-        <p:document href="../converter-gen/xpath-json-to-json.xsl"/>
+        <p:document href="../util/xpath-json-to-json.xsl"/>
       </p:input>
     </p:xslt>
     

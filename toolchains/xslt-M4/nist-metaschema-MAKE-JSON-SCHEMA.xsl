@@ -36,7 +36,7 @@
         <nm:transform version="3.0">compose/annotate-composition.xsl</nm:transform>
         
         <nm:transform version="3.0">schema-gen/make-json-schema-metamap.xsl</nm:transform>
-        <nm:transform version="3.0">lib/xpath-json-to-json.xsl</nm:transform>
+        <nm:transform version="3.0">util/xpath-json-to-json.xsl</nm:transform>
     </xsl:variable>
     
 </xsl:stylesheet>

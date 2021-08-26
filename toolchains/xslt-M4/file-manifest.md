@@ -106,7 +106,7 @@
 #### make-metaschema-json-schema.xpl
 
 - XProc pipeline version 1.0 (4 steps)
-- Runtime dependency: `lib/xpath-json-to-json.xsl`
+- Runtime dependency: `util/xpath-json-to-json.xsl`
 - Runtime dependency: `schema-gen/make-json-schema-metamap.xsl`
 
 #### make-metaschema-metatron.xpl
