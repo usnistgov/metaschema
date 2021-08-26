@@ -6,6 +6,10 @@
   type="metaschema:make-metaschema-xml-to-supermodel-xslt"
   name="make-metaschema-xml-to-supermodel-xslt">
   
+  <!-- Purpose: Produces a single converter XSLT (for debugging) -->
+  <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
+  <!-- Output: Port exposes a converter XSLT but does not run it -->
+  
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
   

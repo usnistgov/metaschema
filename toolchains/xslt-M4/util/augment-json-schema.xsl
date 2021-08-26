@@ -5,6 +5,10 @@
     <!-- The input JSON file -->
     <xsl:param name="input" select="''"/>
     
+    
+<!-- Accepts JSON and emits JSON with '\/' unescaped back into '/' 
+     Intervenes with strategic adjustments -->
+    
     <xsl:output method="text"/>
     
     <xsl:mode on-no-match="shallow-copy"/>

@@ -5,6 +5,24 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   type="metaschema:test-roundtrip-conversions" name="test-roundtrip-conversions">
   
+  <!--
+
+Dependencies //p:xslt/p:input[@port='stylesheet']/p:*/@href  => string-join(' &#xA;')
+
+../compose/make-model-map.xsl 
+../compose/unfold-model-map.xsl 
+../compose/reduce-map.xsl 
+../converter-gen/produce-xml-converter.xsl 
+../converter-gen/supermodel-to-xml.xsl 
+../converter-gen/supermodel-to-json.xsl 
+../converter-gen/xpath-json-to-json.xsl 
+../converter-gen/produce-json-converter.xsl 
+../converter-gen/markdown-to-supermodel-xml-converter.xsl 
+../converter-gen/supermodel-to-xml.xsl
+  
+  
+  -->
+  
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
   
@@ -159,7 +177,7 @@
     <!-- Finally we serialize to ensure JSONness -->
     <p:xslt name="serialize-supermodel.1-as-json">
       <p:input port="stylesheet">
-        <p:document href="../lib/xpath-json-to-json.xsl"/>
+        <p:document href="../converter-gen/xpath-json-to-json.xsl"/>
       </p:input>
     </p:xslt>
     

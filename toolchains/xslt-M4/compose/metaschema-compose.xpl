@@ -4,12 +4,41 @@
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
   type="metaschema:metaschema-compose" name="metaschema-compose">
 
+
+  <!-- Purpose: Produce a standalone Metaschema instance representing a data model, suitable for further processing  -->
+  <!-- Input: A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct) -->
+  <!-- Output: A completely standalone Metaschema instance fully resolving and disambiguating links among definitions, suitable for further processing. -->
+  
+  <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
+  <!-- Ports //p:serialization/@port  => string-join(' ')-->
+  
+  <!-- _0_main-module           echoes input
+       _1_collected             collects modules
+       _2_refs-built            disambiguates names and references
+       _3_extra-modules-trimmed removes any replicated modules
+       _4_defs-pruned           removes unneeded definitions
+       _5_using-names-added     decorates with names for use
+       _6_sibling-names-added   decorates with group names in use
+       _7_digested              flattens and removes cruft
+       _8_annotated             provides extra annotations (pre-loading)
+       final -->
+  
+  <!-- out of line XSLTs //p:xslt/p:input[@port='stylesheet']/p:*/@href  => string-join(' &#xA;') -->
+  
+  
+<!-- Try on
+    A. trivial model
+    B. an OSCAL model
+    C. OSCAL 'all'
+    D. pathological tests see ../../../test-suite/
+    
+    document each step
+    find / build out unit tests (including edge cases)
+  
+    -->
+  
 <!-- further work refactoring composition pipeline
 
-  o finish Metaschema Schematron
-  
-    *except* tests relating to group-as (DW will do)
-    
   unit tests including new error reporting (bad references, shadowing)
     o collect (now broken) - including add defaults
     o other steps including resolve-use-names.xsl

@@ -8,7 +8,8 @@
     <schema-version>1.0</schema-version>
     <short-name>ανθ</short-name>
     <namespace>http://csrc.nist.gov/metaschema/ns/anthology</namespace>
-   
+    <json-base-uri>http://csrc.nist.gov/metaschema/anthology</json-base-uri>
+    
    <remarks>
        <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
    </remarks>
@@ -96,7 +97,7 @@ Under 'widget'
         <description>Discard me</description>
     </define-field>
     
-    <define-flag name="id" as-type="NCName">
+    <define-flag name="id" as-type="token">
         <formal-name>Identifier</formal-name>
         <description>A distinct code</description>
     </define-flag>

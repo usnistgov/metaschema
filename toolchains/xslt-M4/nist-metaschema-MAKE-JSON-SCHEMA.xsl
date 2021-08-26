@@ -5,14 +5,12 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="#all">
 
-    <!--
-        
-    An XSLT 3.0 stylesheet using XPath 3.1 functions including transform()
-        
-    This XSLT orchestrates a sequence of transformations over its input.
+    <!-- Purpose: Produce a JSON Schema reflecting constraints defined in a metaschema -->
+    <!-- Dependencies: This is a 'shell' XSLT and calls several steps in sequence, each implemented as an XSLT -->
+    <!-- Input: A top-level metaschema; this XSLT also composes metaschema input so composition is not necessary -->
+    <!-- Output: A JSON Schema (v7) describing a JSON format consistent with definitions given in the input metaschema -->
+    <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
     
-    -->
-
     <xsl:output method="text" indent="yes"/>
 
     <!-- Turning $trace to 'on' will
@@ -24,7 +22,7 @@
 
     <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
     
-    <xsl:import href="lib/metaschema-metaprocess.xsl"/>
+    <xsl:import href="nist-metaschema-metaprocess.xsl"/>
     
     <!-- The $transformation-sequence declares transformations to be applied in order. -->
     <xsl:variable name="transformation-sequence">

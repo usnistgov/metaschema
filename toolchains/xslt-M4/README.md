@@ -4,6 +4,12 @@ An XSLT implementation of the metaschema toolchain for generating schemas, conve
 
 Typically any of these operations will combine several lower-level operations in a defined sequence.
 
+More details (produced by surveying the files) can be seen in [file-manifest.md](file-manifest.md). Note however that this file is not reliable if it is not more recent than the files described.
+
+In addition to this readme, this folder contains XSLT transformations (`*.xsl`), and XProc pipelines (`xpr`). The XSLT provides stable runtimes to the supported operations as described below. The XProc  The XProc is provided for convenience in development and debugging, and can be expected to change (develop/proliferate) somewhat more freely. These are currently XProc 1.0 pending further development.
+
+Routines described below provide the XSLT entry point for the service. In general, any service consumes a metaschema input and produces one or more outputs, publishable as artifacts. For any XSLT, an analogous XProc is usually discernable from a file name (for example, `make-metaschema-xsd.xpr` instantiates the same pipeline as `nist-metaschema-MAKE-XSD.xsl`). For documentation production, only XProc is given.
+
 ## Generate schemas
 
 ### Generate XML Schema (XSD)
@@ -40,6 +46,8 @@ XSLT: `nist-metaschema-MAKE-XML-TO-JSON-CONVERTER.xsl`
 
 result: XSLT (suffix `*.xsl`)
 
+An XML instance valid to a given metaschema-defined model can be converted by the XSLT produced by this XSLT (operating on the metaschema), into an information-identical JSON representation, losslessly, valid to the analogous JSON Schema.
+
 ### JSON to XML converter
 
 source: metaschema (main module)
@@ -47,6 +55,8 @@ source: metaschema (main module)
 XSLT: `nist-metaschema-MAKE-JSON-TO-XML-CONVERTER.xsl`
 
 result: XSLT (suffix `*.xsl`)
+
+A JSON serialization (string) valid to a given metaschema-defined model can be converted by the XSLT produced by this XSLT (operating on the metaschema), into an information-identical XML representation, losslessly, valid to the analogous XML Schema (XSD).
 
 ## Generate Metatron / Metaschema-based constraints validation
 
@@ -60,53 +70,31 @@ tbd: Schematron that operates on JSON inputs (JSONatron)
 
 ## Generate documentation
 
-### XML docs
+For any metaschema a range of documentation artifacts are produced for consumption by Hugo (ingest into a static published documentation repository / web sites).
 
-source: metaschema (main module)
+Accordingly see these XProc pipelines for details:
 
-XSLT: `nist-metaschema-MAKE-XML-DOCS.xsl`
+`make-metaschema-standalone-docs.xpl` a generic pipeline producing standalone documentation (by passing Hugo ingest files through a normalizer/stabilizer).
 
-result: HTML file for Hugo (suffix `*.html`)
+Use with a debugging pipeline that binds the output ports for inspection.
 
-note: needs extension / integration / CSS work
+`write-hugo-metaschema-docs.xpl` producing the same set of docs, except writing them to the file system ready for Hugo. Note that this pipeline writes files to the system.
 
-### XML model map
-
-source: metaschema (main module)
-
-XSLT: `nist-metaschema-MAKE-XML-MAP.xsl`
-
-result: HTML file for Hugo (suffix `*.html`)
-
-note: needs integration / CSS work?
-
-### JSON docs
-
-source: metaschema (main module)
-
-XSLT: `nist-metaschema-MAKE-JSON-DOCS.xsl`
-
-result: HTML file for Hugo (suffix `*.html`)
-
-note: needs extension / integration / CSS work
-
-### JSON model map
-
-source: metaschema (main module)
-
-XSLT: `nist-metaschema-MAKE-JSON-MAP.xsl`
-
-result: HTML file for Hugo (suffix `*.html`)
-
-note: needs integration / CSS work?
+Produced by both these pipelines (which should be work-alikes):
+  - XML and JSON-oriented model documents with cross-links
+    - Both instance- and model-oriented
+  - XML and JSON model maps / synopsis
+  - Indexes
 
 ## Extras
 
-### Metaschema schemas
+The XSLT `nist-metaschema-metaprocess.xsl` is a utility XSLT providing a unified interface for orchestrating the order and application of subordinate transformations, via configurations.
+
+### Metaschema schemas / `validate` folder
 
 Any metaschema, metaschema module, or composed metaschema, should all be valid to the Metaschema XSD `validate/metaschema.xsd` and to the `validate/metaschema-check.sch` Schematron.
 
-A composed metaschema is essentially what a metaschema will look like with all imports resolved (last appearing definition prevailing, imports read before main definitions); so a metaschema with no imports can be its own composed expression.
+A composed metaschema is essentially what a metaschema will look like with all imports resolved (last appearing definition prevailing, imports read before main definitions); so a metaschema with no imports maps directly to its own composed expression. In composition, pointers are also written into the metaschema representation to provide useful information for downstream processing in resolving referential ambiguities (resulting from unintended or intended import clashes).
 
 The Schematron currently runs the composition step irrespectively. We should perhaps factor out Schematron checks that are dependent on Metaschema composition, from those that should apply to any metaschema (composed, standalone) or module.
 
@@ -124,6 +112,6 @@ A composition step is provided internally by other processes, but it can also be
 
 ### XProc
 
-Everything can also be done under XProc 1.0 (`*.xpl` files) for debugging.
+As noted above, everything can also be done under XProc 1.0 (`*.xpl` files) for debugging.
 
 Porting to XProc 3.0 and/or to other pipelining approaches is on the further horizon.

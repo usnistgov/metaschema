@@ -9,15 +9,14 @@
     exclude-result-prefixes="xs math"
     version="3.0"
     xmlns:sch="http://purl.oclc.org/dsdl/schematron"
-    xmlns="http://purl.oclc.org/dsdl/schematron"
-    >
+    xmlns="http://purl.oclc.org/dsdl/schematron">
     
 <!-- Purpose: Produce an Schematron representing constraints declared in a metaschema -->
-<!-- Input:   A Metaschema -->
-<!-- Output:  An XSD, with embedded documentation -->
+<!-- Input:   A (composed) metaschema -->
+<!-- Output:  A Schematron, enforcing constraints defined in the metaschema as applied to an OSCAL document -->
+<!-- Dependency: Calls a function in imported XSLT `metatron-datatype-functions.xsl` to produce datatype functions on the fly -->
 <!-- Maintenance note: when Saxon10 is available in tooling, try cache=yes on function declarations. -->
-<!-- nb Validation against both schema and Schematron for the metaschema format
-        is assumed. -->
+<!-- nb Validation against both schema and Schematron for the Metaschema format is assumed. -->
     <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
     
     <xsl:import href="../metapath/parse-metapath.xsl"/>

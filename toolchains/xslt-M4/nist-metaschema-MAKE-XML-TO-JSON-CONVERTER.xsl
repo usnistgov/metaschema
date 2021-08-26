@@ -8,7 +8,13 @@
   exclude-result-prefixes="#all"
   version="3.0">
 
-
+  <!-- Purpose: Produce an XSLT transformation capable of converting an XML format defined in a metaschema, into a JSON format capturing an equivalent data set-->
+  <!-- Dependencies: This is a 'shell' XSLT and calls several steps in sequence, each implemented as an XSLT -->
+  <!-- Input: A top-level metaschema; this XSLT also composes metaschema input so composition is not necessary -->
+  <!-- Output: A standalone XSLT suitable for use or deployment, accepting XML valid to the metaschema-defined constraints -->
+  <!-- Note: see the result XSLT for information regarding its runtime interface -->  
+  <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
+  
   <xsl:output indent="yes"/>
 
   <xsl:namespace-alias stylesheet-prefix="XSLT" result-prefix="xsl"/>
@@ -50,7 +56,7 @@
   
   <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
   
-  <xsl:import href="lib/metaschema-metaprocess.xsl"/>
+  <xsl:import href="nist-metaschema-metaprocess.xsl"/>
   
   <!-- The $transformation-sequence declares transformations to be applied in order. -->
   <xsl:variable name="produce-xml-converter">
