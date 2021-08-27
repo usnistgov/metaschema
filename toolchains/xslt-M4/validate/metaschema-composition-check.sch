@@ -196,7 +196,7 @@
             <sch:assert test="m:datatype-validate(@value,../../@as-type)" id="require-enumeration-to-conform-to-given-type">Value '<sch:value-of select="@value"/>' is not a valid token of type <sch:value-of select="../../@as-type"/></sch:assert>
         </sch:rule>
         
-        <sch:rule context="m:index | m:is-unique">
+        <sch:rule context="m:index">
             <sch:assert test="count(key('index-by-name',@name,$composed-metaschema))=1" id="require-unique-index-name">Only one index or uniqueness assertion may be named '<sch:value-of select="@name"/>'</sch:assert>
         </sch:rule>
         
