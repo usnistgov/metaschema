@@ -144,7 +144,7 @@
     
     <XSLT:variable name="write-options" as="map(*)">
       <XSLT:map>
-        <XSLT:map-entry key="'indent'" expand-text="true">{ $json-indent='yes' }</XSLT:map-entry>
+        <XSLT:map-entry key="'indent'" select="$json-indent='yes'"/>
       </XSLT:map>
     </XSLT:variable>
     

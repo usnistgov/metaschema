@@ -168,8 +168,8 @@
     <XSLT:output indent="true"/>
     <xsl:text>&#xA;</xsl:text>
     <xsl:comment> Processing architecture </xsl:comment>
-    <xsl:comment> $file should be a URI, absolute or relative to the XSLT transformation</xsl:comment>
-    <XSLT:param name="file" as="xs:anyURI?"/>
+    <xsl:comment> $file should be a path to the file </xsl:comment>
+    <XSLT:param name="file" as="xs:string?"/>
     <xsl:comment> Pass in $produce=supermodel to produce OSCAL M4 supermodel intermediate format </xsl:comment>
     <XSLT:param name="produce" as="xs:string">xml</XSLT:param><!-- set to 'supermodel' to produce supermodel intermediate -->
   
@@ -191,11 +191,15 @@
     
     <XSLT:mode name="cast-md" on-no-match="shallow-copy"/>
     
-    <XSLT:template match="/" name="from-xdm-json-xml" expand-text="true">
+    <XSLT:template match="/">
+      <nm:ERROR>Error in XSLT invocation - an initial template (-it) is expected ('from-json' or 'from-xdm-json-xml'), but none is given</nm:ERROR>
+    </XSLT:template>
+    
+    <XSLT:template name="from-xdm-json-xml" expand-text="true">
       <!-- Take source to be JSON in XPath 3.1 (XDM) representation -->
       <XSLT:param name="source">
         <XSLT:choose>
-          <xsl:comment> evaluate { $file } as URI (absolute or relative to stylesheet)</xsl:comment>
+          <xsl:comment> evaluating $file as URI (absolute or relative to stylesheet)</xsl:comment>
           <XSLT:when test="exists($file)">
             <XSLT:try select="document($file)" xmlns:err="http://www.w3.org/2005/xqt-errors">
               <XSLT:catch expand-text="true">
