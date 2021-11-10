@@ -170,6 +170,8 @@
     <xsl:comment> Processing architecture </xsl:comment>
     <xsl:comment> $file should be a path to the file </xsl:comment>
     <XSLT:param name="file" as="xs:string?"/>
+    <xsl:comment> or $json should be a JSON literal </xsl:comment>
+    <XSLT:param name="json" as="xs:string?"/>
     <xsl:comment> Pass in $produce=supermodel to produce OSCAL M4 supermodel intermediate format </xsl:comment>
     <XSLT:param name="produce" as="xs:string">xml</XSLT:param><!-- set to 'supermodel' to produce supermodel intermediate -->
   
@@ -178,14 +180,27 @@
       <XSLT:if test="not(unparsed-text-available($file))" expand-text="true">
         <nm:ERROR>No file found at { $file }</nm:ERROR>
       </XSLT:if>
+      <XSLT:variable name="source">
+        <XSLT:choose>
+          <XSLT:when test="matches($json,'\S')">
+            <xsl:comment> $json is not empty, so we try it </xsl:comment>
+            <XSLT:try select="json-to-xml($json)" xmlns:err="http://www.w3.org/2005/xqt-errors">
+              <XSLT:catch expand-text="true">
+                <nm:ERROR code="{{ $err:code }}">{{ $err:description }}</nm:ERROR>
+              </XSLT:catch>
+            </XSLT:try>
+          </XSLT:when>
+          <XSLT:otherwise>
+            <XSLT:try select="unparsed-text($file) ! json-to-xml(.)" xmlns:err="http://www.w3.org/2005/xqt-errors">
+              <XSLT:catch expand-text="true">
+                <nm:ERROR code="{{ $err:code }}">{{ $err:description }}</nm:ERROR>
+              </XSLT:catch>
+            </XSLT:try>
+          </XSLT:otherwise>
+        </XSLT:choose>
+      </XSLT:variable>
       <XSLT:call-template name="from-xdm-json-xml">
-        <XSLT:with-param name="source">
-          <XSLT:try select="unparsed-text($file) ! json-to-xml(.)" xmlns:err="http://www.w3.org/2005/xqt-errors">
-            <XSLT:catch expand-text="true">
-              <nm:ERROR code="{{ $err:code }}">{{ $err:description }}</nm:ERROR>
-            </XSLT:catch>
-          </XSLT:try>
-        </XSLT:with-param> 
+        <XSLT:with-param name="source" select="$source"/>
       </XSLT:call-template>
     </XSLT:template>
     

@@ -201,6 +201,9 @@
             <xsl:apply-templates select="." mode="make-match"/>
         </xsl:variable>
         <XSLT:template match="{ $matching}">
+            <xsl:if test="not(@scope='global')">
+                <xsl:attribute name="priority" select="count(ancestor::assembly except (ancestor::assembly[@scope='global']/ancestor::*))"/>
+            </xsl:if>
             <xsl:if test="not((.|..)/@scope='global')">
                 <xsl:attribute name="priority" select="count(ancestor-or-self::*)"/>
             </xsl:if>
