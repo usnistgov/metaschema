@@ -5,21 +5,21 @@
     
     <x:param name="definition-map" href="test/ssp-definition-model.xml"/>
     
-    <x:scenario label="role-id field">
+    <x:scenario label="role-id field - path">
         <x:call function="m:jsonize-path">
             <x:param>role-id</x:param>
         </x:call>
         <x:expect label="always an array member" select="'j:array[@key=''role-ids'']/j:string'"/>
     </x:scenario>
     
-    <x:scenario label="role-id flag">
+    <x:scenario label="role-id flag - path">
         <x:call function="m:jsonize-path">
             <x:param>@role-id</x:param>
         </x:call>
         <x:expect label="getting a string this time" select="'j:string[@key=''role-id'']'"/>
     </x:scenario>
     
-    <x:scenario label="role-id flag">
+    <x:scenario label="role-id flag - return tree from casting">
         <x:call function="m:jsonization">
             <x:param>@role-id</x:param>
         </x:call>
@@ -37,7 +37,7 @@
         </x:expect>
     </x:scenario>
     
-    <x:scenario label="role-id flag">
+    <x:scenario label="role-id flag - parse">
         <x:call function="m:path-map">
             <x:param>@role-id</x:param>
         </x:call>
