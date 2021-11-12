@@ -423,7 +423,7 @@
                              <xsl:sequence select="key('obj-by-gi', string(node), $definition-map)/self::flag"/>
                                 </xsl:when>
                         <xsl:when test="$relative">
-                            <xsl:sequence select="key('obj-by-gi', string(node), $definition-map)/(self::field | self::assembly)"/>
+                            <xsl:sequence select="key('obj-by-gi', string(node), $definition-map)/(self::field | self::assembly | self::group)"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <!-- an absolute path starts from the root -->
