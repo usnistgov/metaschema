@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0" stylesheet="metapath-jsonize.xsl">
+    
+    <x:param name="definition-map" href="test/ssp-definition-model.xml"/>
+    
+    <x:scenario label="role-id field">
+        <x:call function="m:jsonize-path">
+            <x:param>role-id</x:param>
+        </x:call>
+        <x:expect label="always an array member" select="'j:array[@key=''role-ids'']/j:string'"/>
+    </x:scenario>
+    
+    <x:scenario label="role-id flag">
+        <x:call function="m:jsonize-path">
+            <x:param>@role-id</x:param>
+        </x:call>
+        <x:expect label="getting a string this time" select="'j:string[@key=''role-id'']'"/>
+    </x:scenario>
+    
+    <x:scenario label="role-id flag">
+        <x:call function="m:jsonization">
+            <x:param>@role-id</x:param>
+        </x:call>
+        <x:expect label="getting a tree this time">
+            <m:metapath xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+                <m:alternative>
+                    <m:path>
+                        <step xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+                            <axis />
+                            <node>j:string[@key='role-id']</node>
+                        </step>
+                    </m:path>
+                </m:alternative>
+            </m:metapath>
+        </x:expect>
+    </x:scenario>
+    
+    <x:scenario label="role-id flag">
+        <x:call function="m:path-map">
+            <x:param>@role-id</x:param>
+        </x:call>
+        <x:expect label="getting its path map">
+            <m:metapath xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+                <m:alternative>
+                    <m:path>
+                        <m:step>
+                            <m:axis>attribute::</m:axis>
+                            <m:node>role-id</m:node>
+                        </m:step>
+                    </m:path>
+                </m:alternative>
+            </m:metapath>
+        </x:expect>
+    </x:scenario>
+</x:description>
