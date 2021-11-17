@@ -3,7 +3,7 @@
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  type="metaschema:test-metaschema-conversions" name="test-metaschema-conversions">
+  type="metaschema:test-metaschema-json-conversion" name="test-metaschema-json-conversion">
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
@@ -44,7 +44,7 @@
   
   <p:serialization port="Q.testdata-json-xml-source" indent="true"/>
   <p:output        port="Q.testdata-json-xml-source" primary="false">
-    <p:pipe port="testdata-json-xml" step="test-metaschema-conversions"/>
+    <p:pipe port="testdata-json-xml" step="test-metaschema-json-conversion"/>
   </p:output>
   
   <p:serialization port="S.testdata-supermodel" indent="true"/>
@@ -57,8 +57,8 @@
     <p:pipe        port="result" step="convert-supermodel-to-json-xml"/>
   </p:output>
    
-  <p:serialization port="_J2.testdata-xml-result" indent="true" method="text"/>
-  <p:output        port="_J2.testdata-xml-result" primary="false">
+  <p:serialization port="_J2.testdata-json-result" indent="true" method="text"/>
+  <p:output        port="_J2.testdata-json-result" primary="false">
     <p:pipe        port="result" step="serialize-json"/>
   </p:output>
 
@@ -70,7 +70,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="../metaschema-compose.xpl"/>
+  <p:import href="../compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
@@ -103,22 +103,22 @@
     </p:input>
   </p:xslt>
   
-  <p:identity name="make-json-converter"/>
-  <!--<p:xslt name="make-json-converter">
+  <!--<p:identity name="make-json-converter"/>-->
+  <p:xslt name="make-json-converter">
     <p:input port="stylesheet">
       <p:document href="../converter-gen/produce-json-converter.xsl"/>
     </p:input>
-  </p:xslt>-->
+  </p:xslt>
   
-  <p:identity name="convert-json-testdata"/>
-  <!--<p:xslt name="convert-json-testdata">
+  <!--<p:identity name="convert-json-testdata"/>-->
+  <p:xslt name="convert-json-testdata">
     <p:input port="source">
-      <p:pipe port="testdata-json-xml" step="test-metaschema-conversions"/>
+      <p:pipe port="testdata-json-xml" step="test-metaschema-json-conversion"/>
     </p:input>
     <p:input port="stylesheet">
       <p:pipe step="make-json-converter" port="result"/>
     </p:input>
-  </p:xslt>-->
+  </p:xslt>
   
   <!-- Now going back downhill to JSON -->
   <p:identity name="convert-supermodel-to-json-xml"/>
@@ -146,11 +146,11 @@
   </p:identity>
   
   <!-- Back downhill to XML -->
-  <p:identity  name="convert-supermodel-to-xml"/>
-  <!--<p:xslt name="convert-supermodel-to-xml">
+  <!--<p:identity  name="convert-supermodel-to-xml"/>-->
+  <p:xslt name="convert-supermodel-to-xml">
     <p:input port="stylesheet">
       <p:document href="../converter-gen/supermodel-to-xml.xsl"/>
     </p:input>
-  </p:xslt>-->
+  </p:xslt>
   
 </p:declare-step>

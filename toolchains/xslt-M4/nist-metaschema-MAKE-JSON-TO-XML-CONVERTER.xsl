@@ -168,8 +168,10 @@
     <XSLT:output indent="true"/>
     <xsl:text>&#xA;</xsl:text>
     <xsl:comment> Processing architecture </xsl:comment>
-    <xsl:comment> $file should be a URI, absolute or relative to the XSLT transformation</xsl:comment>
-    <XSLT:param name="file" as="xs:anyURI?"/>
+    <xsl:comment> $file should be a path to the file </xsl:comment>
+    <XSLT:param name="file" as="xs:string?"/>
+    <xsl:comment> or $json should be a JSON literal </xsl:comment>
+    <XSLT:param name="json" as="xs:string?"/>
     <xsl:comment> Pass in $produce=supermodel to produce OSCAL M4 supermodel intermediate format </xsl:comment>
     <XSLT:param name="produce" as="xs:string">xml</XSLT:param><!-- set to 'supermodel' to produce supermodel intermediate -->
   
@@ -178,24 +180,41 @@
       <XSLT:if test="not(unparsed-text-available($file))" expand-text="true">
         <nm:ERROR>No file found at { $file }</nm:ERROR>
       </XSLT:if>
+      <XSLT:variable name="source">
+        <XSLT:choose>
+          <XSLT:when test="matches($json,'\S')">
+            <xsl:comment> $json is not empty, so we try it </xsl:comment>
+            <XSLT:try select="json-to-xml($json)" xmlns:err="http://www.w3.org/2005/xqt-errors">
+              <XSLT:catch expand-text="true">
+                <nm:ERROR code="{{ $err:code }}">{{ $err:description }}</nm:ERROR>
+              </XSLT:catch>
+            </XSLT:try>
+          </XSLT:when>
+          <XSLT:otherwise>
+            <XSLT:try select="unparsed-text($file) ! json-to-xml(.)" xmlns:err="http://www.w3.org/2005/xqt-errors">
+              <XSLT:catch expand-text="true">
+                <nm:ERROR code="{{ $err:code }}">{{ $err:description }}</nm:ERROR>
+              </XSLT:catch>
+            </XSLT:try>
+          </XSLT:otherwise>
+        </XSLT:choose>
+      </XSLT:variable>
       <XSLT:call-template name="from-xdm-json-xml">
-        <XSLT:with-param name="source">
-          <XSLT:try select="unparsed-text($file) ! json-to-xml(.)" xmlns:err="http://www.w3.org/2005/xqt-errors">
-            <XSLT:catch expand-text="true">
-              <nm:ERROR code="{{ $err:code }}">{{ $err:description }}</nm:ERROR>
-            </XSLT:catch>
-          </XSLT:try>
-        </XSLT:with-param> 
+        <XSLT:with-param name="source" select="$source"/>
       </XSLT:call-template>
     </XSLT:template>
     
     <XSLT:mode name="cast-md" on-no-match="shallow-copy"/>
     
-    <XSLT:template match="/" name="from-xdm-json-xml" expand-text="true">
+    <XSLT:template match="/">
+      <nm:ERROR>Error in XSLT invocation - an initial template (-it) is expected ('from-json' or 'from-xdm-json-xml'), but none is given</nm:ERROR>
+    </XSLT:template>
+    
+    <XSLT:template name="from-xdm-json-xml" expand-text="true">
       <!-- Take source to be JSON in XPath 3.1 (XDM) representation -->
       <XSLT:param name="source">
         <XSLT:choose>
-          <xsl:comment> evaluate { $file } as URI (absolute or relative to stylesheet)</xsl:comment>
+          <xsl:comment> evaluating $file as URI (absolute or relative to stylesheet)</xsl:comment>
           <XSLT:when test="exists($file)">
             <XSLT:try select="document($file)" xmlns:err="http://www.w3.org/2005/xqt-errors">
               <XSLT:catch expand-text="true">

@@ -289,6 +289,30 @@
         
     <xsl:function name="m:jsonize-path" as="xs:string">
         <xsl:param name="metapath" as="xs:string" required="yes"/>
+        <!--As the path returned by JSONIZATION may include numerous syntactic duplicates
+        (for nodes used frequently in the tree)
+        we have to traverse and unify -->
+        <!--
+            Example:
+        <m:alternative>
+            <m:path>
+                <split xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">(<step>
+                    <axis />
+                    <node>j:string[@key='role-id']</node>
+                </step> | <step>
+                    <axis />
+                    <node>j:string[@key='role-id']</node>
+                </step> | <step>
+                    <axis />
+                    <node>j:array[@key='role-ids']/j:string</node>
+                </step> | <step>
+                    <axis />
+                    <node>j:string[@key='role-id']</node>
+                </step>
+                </split>
+            </m:path>
+        </m:alternative>
+          returns 'j:string[@key='role-id'] | j:array[@key='role-ids']/j:string'-->
         <xsl:value-of select="m:jsonization($metapath)"/>
     </xsl:function>
     
@@ -395,8 +419,11 @@
                 <!-- the first step of an absolute path is located relative to the root -->
                 <xsl:when test="$starting">
                     <xsl:choose>
+                        <xsl:when test="$relative and (axis='attribute::')">
+                             <xsl:sequence select="key('obj-by-gi', string(node), $definition-map)/self::flag"/>
+                                </xsl:when>
                         <xsl:when test="$relative">
-                            <xsl:sequence select="key('obj-by-gi', string(node), $definition-map)"/>
+                            <xsl:sequence select="key('obj-by-gi', string(node), $definition-map)/(self::field | self::assembly | self::group)"/>
                         </xsl:when>
                         <xsl:otherwise>
                             <!-- an absolute path starts from the root -->
@@ -451,7 +478,7 @@
             <xsl:otherwise>
                 <split>
                     <xsl:text>(</xsl:text>
-                    <xsl:for-each select="$all-json-steps">
+                    <xsl:for-each select="$distinct-steps">
                         <xsl:if test="position() gt 1"> | </xsl:if>
                         <xsl:sequence select="."/>
                     </xsl:for-each>

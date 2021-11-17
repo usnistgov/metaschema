@@ -3,7 +3,7 @@
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   xmlns:metaschema="http://csrc.nist.gov/ns/metaschema/1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  type="metaschema:test-metaschema-conversions" name="test-metaschema-conversions">
+  type="metaschema:test-metaschema-xml-conversion" name="test-metaschema-xml-conversion">
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Ports -->
@@ -44,7 +44,7 @@
   
   <p:serialization port="Q.testdata-xml-source" indent="true"/>
   <p:output        port="Q.testdata-xml-source" primary="false">
-    <p:pipe port="testdata-xml" step="test-metaschema-conversions"/>
+    <p:pipe port="testdata-xml" step="test-metaschema-xml-conversion"/>
   </p:output>
   
   <p:serialization port="S.testdata-supermodel" indent="true"/>
@@ -117,7 +117,7 @@
   <!--<p:identity name="convert-xml-testdata"/>-->
   <p:xslt name="convert-xml-testdata">
     <p:input port="source">
-      <p:pipe port="testdata-xml" step="test-metaschema-conversions"/>
+      <p:pipe port="testdata-xml" step="test-metaschema-xml-conversion"/>
     </p:input>
     <p:input port="stylesheet">
       <p:pipe step="make-xml-converter" port="result"/>

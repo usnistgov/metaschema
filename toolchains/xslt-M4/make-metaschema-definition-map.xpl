@@ -22,18 +22,13 @@
   
   <p:serialization port="c.definitions-map" indent="true"/>
   <p:output        port="c.definitions-map" primary="false">
-    <p:pipe        port="result" step="make-model-map"/>
-  </p:output>
-  
-  <p:serialization port="f.final" indent="true" method="xml" omit-xml-declaration="false"/>
-  <p:output        port="f.final" primary="true">
-    <p:pipe        port="result" step="final"/>
+    <p:pipe        port="result" step="reduce-map"/>
   </p:output>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="metaschema-compose.xpl"/>
+  <p:import href="compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
@@ -46,7 +41,17 @@
   
   <p:xslt name="make-model-map">
     <p:input port="stylesheet">
-      <p:document href="compose/make-definition-map.xsl"/>
+      <p:document href="compose/make-model-map.xsl"/>
+    </p:input>
+  </p:xslt>
+  <p:xslt name="unfold-model-map">
+    <p:input port="stylesheet">
+      <p:document href="compose/unfold-model-map.xsl"/>
+    </p:input>
+  </p:xslt>
+  <p:xslt name="reduce-map">
+    <p:input port="stylesheet">
+      <p:document href="compose/reduce-map.xsl"/>
     </p:input>
   </p:xslt>
   
