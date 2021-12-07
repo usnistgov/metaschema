@@ -414,20 +414,68 @@
     </xs:union>
   </xs:simpleType>
 
+  <xs:complexType abstract="true" name="ConstraintType">
+    <xs:sequence>
+      <xs:element ref="m:formal-name" minOccurs="0"/>
+      <xs:element ref="m:description" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:NCName" use="optional"/>
+    <xs:attribute name="level" type="m:LevelType" default="ERROR"/>
+  </xs:complexType>
+
+  <xs:group name="ConstraintContentsGroup">
+    <xs:sequence>
+      <xs:element name="message" type="xs:string" minOccurs="0"/>
+      <xs:element ref="m:remarks" minOccurs="0"/>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:simpleType name="LevelType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="CRITICAL">
+        <xs:annotation>
+          <xs:documentation>A violation of the constraint represents a serious fault in the content
+            that will prevent typical use of the content.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ERROR">
+        <xs:annotation>
+          <xs:documentation>A violation of the constraint represents a fault in the content. This
+            may include issues around compatibility, integrity, consistency, etc.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="WARNING">
+        <xs:annotation>
+          <xs:documentation>A violation of the constraint represents a potential issue
+            with the content.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="INFORMATIONAL">
+        <xs:annotation>
+          <xs:documentation>A violation of the constraint represents a point of
+            interest.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
   <xs:complexType name="AllowedValuesType">
     <xs:annotation>
       <xs:documentation>Indicates a set of values to be recognized for a flag or field, with semantics asserted by a metaschema enumeration (enum).</xs:documentation>
     </xs:annotation>
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" ref="m:enum"/>
-      <xs:element minOccurs="0" ref="m:remarks"/>
-    </xs:sequence>
-    <xs:attribute name="allow-other" type="m:BooleanType" default="no">
-      <xs:annotation>
-        <xs:documentation>The given enumerated value or values are inclusive of other values ('yes') or not ('no', the default)</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute name="id" type="xs:NCName"/>
+    <xs:complexContent>
+      <xs:extension base="m:ConstraintType">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" ref="m:enum"/>
+          <xs:group ref="m:ConstraintContentsGroup"/>
+        </xs:sequence>
+        <xs:attribute name="allow-other" type="m:BooleanType" default="no">
+          <xs:annotation>
+            <xs:documentation>The given enumerated value or values are inclusive of other values ('yes') or not ('no', the default)</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:element name="enum">
@@ -491,16 +539,20 @@
 
   <xs:complexType name="MatchesConstraintType">
     <!-- TODO: need a metaschema check to make sure either a pattern or a datatype is used; or make these element children and use a choice -->
-    <xs:sequence>
-      <xs:element minOccurs="0" ref="m:remarks"/>
-    </xs:sequence>
-    <xs:attribute name="regex" type="m:RegexType"/>
-    <xs:attribute name="datatype" type="m:SimpleDatatypesType">
-      <xs:annotation>
-        <xs:documentation>Specifies the datatype for which the value identified by the scope attribute must conform to.</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute name="id" type="xs:NCName"/>
+    <xs:complexContent>
+      <xs:extension base="m:ConstraintType">
+        <xs:sequence>
+          <xs:group ref="m:ConstraintContentsGroup"/>
+        </xs:sequence>
+        <xs:attribute name="regex" type="m:RegexType"/>
+        <xs:attribute name="datatype" type="m:SimpleDatatypesType">
+          <xs:annotation>
+            <xs:documentation>Specifies the datatype for which the value identified by the scope
+              attribute must conform to.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="ScopedMatchesConstraintType">
@@ -613,26 +665,33 @@
     <xs:annotation>
       <xs:documentation>Defines an unique key constraint.</xs:documentation>
     </xs:annotation>
-    <xs:sequence>
-      <xs:element name="key-field" maxOccurs="unbounded">
-        <xs:annotation>
-          <xs:documentation>Specifies a value, relative to the provided <code>target</code>, that is to be used as part of the key. More than one key-field can be used to create a composite key.</xs:documentation>
-        </xs:annotation>
-        <xs:complexType>
-          <xs:complexContent>
-            <xs:extension base="m:IndexFieldType">
-              <xs:attribute name="pattern" type="m:RegexType">
-                <xs:annotation>
-                  <xs:documentation>The first captured group in the regular expression is used as the key value for lookup. The regular expression must not match a zero-length string.</xs:documentation>
-                </xs:annotation>
-              </xs:attribute>
-            </xs:extension>
-          </xs:complexContent>
-        </xs:complexType>
-      </xs:element>
-      <xs:element minOccurs="0" ref="m:remarks"/>
-    </xs:sequence>
-    <xs:attribute name="id" type="xs:NCName"/>
+    <xs:complexContent>
+      <xs:extension base="m:ConstraintType">
+        <xs:sequence>
+          <xs:element name="key-field" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:documentation>Specifies a value, relative to the provided <code>target</code>,
+                that is to be used as part of the key. More than one key-field can be used to create
+                a composite key.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:complexContent>
+                <xs:extension base="m:IndexFieldType">
+                  <xs:attribute name="pattern" type="m:RegexType">
+                    <xs:annotation>
+                      <xs:documentation>The first captured group in the regular expression is used
+                        as the key value for lookup. The regular expression must not match a
+                        zero-length string.</xs:documentation>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:extension>
+              </xs:complexContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:group ref="m:ConstraintContentsGroup"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
   
   <xs:complexType name="ScopedKeyConstraintType">
@@ -701,16 +760,20 @@
   </xs:complexType>
   
   <xs:complexType name="ExpectConstraintType">
-    <xs:sequence>
-      <xs:element minOccurs="0" ref="m:remarks"/>
-    </xs:sequence>
-    <xs:attribute name="test" type="m:MetaschemaPathType" use="required">
-      <xs:annotation>
-        <xs:documentation>A test that is expected to pass in this context. Presently, datatyping is not directly supported except by
-          explicit use of data type casting functions, e.g. xs:double() and xs:date().</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute name="id" type="xs:NCName"/>
+    <xs:complexContent>
+      <xs:extension base="m:ConstraintType">
+        <xs:sequence>
+          <xs:group ref="m:ConstraintContentsGroup"/>
+        </xs:sequence>
+        <xs:attribute name="test" type="m:MetaschemaPathType" use="required">
+          <xs:annotation>
+            <xs:documentation>A test that is expected to pass in this context. Presently, datatyping
+              is not directly supported except by explicit use of data type casting functions, e.g.
+              xs:double() and xs:date().</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
 
   <xs:complexType name="ScopedExpectConstraintType">
@@ -751,25 +814,35 @@
   </xs:group>
 
   <xs:complexType name="HasCardinalityConstraintType">
-    <xs:sequence>
-      <xs:element minOccurs="0" ref="m:remarks"/>
-    </xs:sequence>
-    <xs:attribute name="target" type="m:MetaschemaPathType" use="required">
-      <xs:annotation>
-        <xs:documentation>Specifies the target of the constraint as a metaschema path. If the value is "." and the containing metaschema object is a field, the constraint applies to the field's value. Otherwise, the scope value "." is not allowed to be used.</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute name="min-occurs" type="xs:nonNegativeInteger">
-      <xs:annotation>
-        <xs:documentation>Minimum occurrence of assemblies or fields within the set of objects identified by the <code>target</code>. This value cannot be less than the corresponding value defined on the target.</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute name="max-occurs" type="xs:nonNegativeInteger">
-      <xs:annotation>
-        <xs:documentation>Maximum occurrence of assemblies or fields within the set of objects identified by the <code>target</code>. This value must be less than the corresponding value defined on the target.</xs:documentation>
-      </xs:annotation>
-    </xs:attribute>
-    <xs:attribute name="id" type="xs:NCName"/>
+    <xs:complexContent>
+      <xs:extension base="m:ConstraintType">
+        <xs:sequence>
+          <xs:group ref="m:ConstraintContentsGroup"/>
+        </xs:sequence>
+        <xs:attribute name="target" type="m:MetaschemaPathType" use="required">
+          <xs:annotation>
+            <xs:documentation>Specifies the target of the constraint as a metaschema path. If the
+              value is "." and the containing metaschema object is a field, the constraint applies
+              to the field's value. Otherwise, the scope value "." is not allowed to be
+              used.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="min-occurs" type="xs:nonNegativeInteger">
+          <xs:annotation>
+            <xs:documentation>Minimum occurrence of assemblies or fields within the set of objects
+              identified by the <code>target</code>. This value cannot be less than the
+              corresponding value defined on the target.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="max-occurs" type="xs:nonNegativeInteger">
+          <xs:annotation>
+            <xs:documentation>Maximum occurrence of assemblies or fields within the set of objects
+              identified by the <code>target</code>. This value must be less than the corresponding
+              value defined on the target.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
   </xs:complexType>
   
   <xs:group name="AssemblyConstraintsGroup">
@@ -788,17 +861,6 @@
         <xs:annotation>
           <xs:documentation>Checks that the specified set of <code>target</code> entries match the provided cardinality.</xs:documentation>
         </xs:annotation>
-      </xs:element>
-      <xs:element name="require">
-        <xs:complexType>
-          <xs:sequence>
-            <xs:choice minOccurs="1" maxOccurs="unbounded">
-              <xs:group ref="m:CommonModelConstraintsGroup"/>
-              <xs:group ref="m:AssemblyConstraintsGroup"/>
-            </xs:choice>                
-          </xs:sequence>
-          <xs:attribute name="when" type="m:MetaschemaPathType" use="required"/>
-        </xs:complexType>
       </xs:element>
     </xs:choice>
   </xs:group>
