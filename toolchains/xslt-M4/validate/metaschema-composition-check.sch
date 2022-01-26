@@ -213,8 +213,8 @@
     
     <sch:pattern id="schema-docs">
         <sch:rule context="m:define-assembly | m:define-field | m:define-flag">
-            <sch:assert role="warning" test="exists(m:formal-name)" id="expect-formal-name">Formal name missing from <sch:name/></sch:assert>
-            <sch:assert role="warning" test="exists(m:description)" id="expect-description">Short description missing from <sch:name/></sch:assert>
+            <sch:assert role="warning" test="exists(m:formal-name)" id="expect-formal-name">Formal name missing from <sch:name/> named '<sch:value-of select="@name"/>'</sch:assert>
+            <sch:assert role="warning" test="exists(m:description)" id="expect-description">Short description missing from <sch:name/> named '<sch:value-of select="@name"/>'</sch:assert>
         </sch:rule>
         
         <sch:rule context="m:p | m:li | m:pre">
