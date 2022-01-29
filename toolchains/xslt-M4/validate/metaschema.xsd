@@ -425,7 +425,6 @@
 
   <xs:group name="ConstraintContentsGroup">
     <xs:sequence>
-      <xs:element name="message" type="xs:string" minOccurs="0"/>
       <xs:element ref="m:remarks" minOccurs="0"/>
     </xs:sequence>
   </xs:group>
@@ -763,6 +762,7 @@
     <xs:complexContent>
       <xs:extension base="m:ConstraintType">
         <xs:sequence>
+          <xs:element name="message" type="xs:string" minOccurs="0"/>
           <xs:group ref="m:ConstraintContentsGroup"/>
         </xs:sequence>
         <xs:attribute name="test" type="m:MetaschemaPathType" use="required">
