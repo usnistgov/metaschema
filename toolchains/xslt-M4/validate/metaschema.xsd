@@ -76,6 +76,7 @@
     </xs:sequence>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
     <xs:attribute name="scope" type="m:ScopeType" default="global"/>
+    <xs:attribute ref="m:deprecated"/>
     <xs:anyAttribute processContents="lax"/>
   </xs:complexType>
 
@@ -117,6 +118,7 @@
     <xs:attribute name="collapsible" type="m:BooleanType" default="no"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
     <xs:attribute name="scope" type="m:ScopeType" default="global"/>
+    <xs:attribute ref="m:deprecated"/>
     <xs:anyAttribute processContents="lax"/>
   </xs:complexType>
 
@@ -139,6 +141,7 @@
     <!-- datatype should default to 'string' -->
     <xs:attribute name="as-type" type="m:SimpleDatatypesType" default="string"/>
     <xs:attribute name="scope" type="m:ScopeType" default="global"/>
+    <xs:attribute ref="m:deprecated"/>
     <xs:anyAttribute processContents="lax"/>
   </xs:complexType>
 
@@ -167,6 +170,7 @@
     </xs:sequence>
     <xs:attributeGroup ref="m:CardinalitySpecificationGroup"/>
     <xs:attribute name="name" use="required" type="xs:NCName"/>
+    <xs:attribute ref="m:deprecated"/>
     <xs:anyAttribute processContents="lax"/>
   </xs:complexType>
 
@@ -203,6 +207,7 @@
           in XML.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute ref="m:deprecated"/>
     <xs:anyAttribute processContents="lax"/>
   </xs:complexType>
 
@@ -221,6 +226,7 @@
     <!-- datatype should default to 'string' -->
     <xs:attribute name="as-type" type="m:SimpleDatatypesType" default="string"/>
     <xs:attribute name="required" type="m:BooleanType" default="no"/>
+    <xs:attribute ref="m:deprecated"/>
     <xs:anyAttribute processContents="lax"/>
   </xs:complexType>
 
@@ -350,6 +356,7 @@
       </xs:sequence>
       <xs:attribute name="ref" use="required" type="xs:NCName"/>
       <xs:attributeGroup ref="m:CardinalitySpecificationGroup"/>
+      <xs:attribute ref="m:deprecated"/>
       <xs:anyAttribute processContents="lax"/>
     </xs:complexType>
   </xs:element>
@@ -372,6 +379,7 @@
             in XML.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute ref="m:deprecated"/>
       <xs:anyAttribute processContents="lax"/>
     </xs:complexType>
   </xs:element>
@@ -494,6 +502,12 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:attribute name="deprecated" type="m:VersionType">
+    <xs:annotation>
+      <xs:documentation>The associated construct has been deprecated at the specified version. Its use should be avoided if possible.</xs:documentation>
+    </xs:annotation>    
+  </xs:attribute>
+
   <xs:element name="p" type="m:MarkupLineType">
     <xs:annotation>
       <xs:documentation>A paragraph or paragraph fragment, in documentation.</xs:documentation>
@@ -519,6 +533,7 @@
       </xs:sequence>
       <xs:attribute name="ref" use="required" type="xs:NCName"/>
       <xs:attribute name="required" type="m:BooleanType" default="no"/>
+      <xs:attribute ref="m:deprecated"/>
       <xs:anyAttribute processContents="lax"/>
     </xs:complexType>
   </xs:element>
@@ -1071,6 +1086,12 @@
           <xs:documentation>This definition will be made available to any metaschema that includes this one either directly or indirectly through a chain of imported metaschemas.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="VersionType">
+    <xs:restriction base="xs:string">
+      <xs:whiteSpace value="preserve"/>
     </xs:restriction>
   </xs:simpleType>
 </xs:schema>
