@@ -497,6 +497,7 @@
               <xs:documentation>A value recognized for a flag or field.</xs:documentation>
             </xs:annotation>
           </xs:attribute>
+          <xs:attribute ref="m:deprecated"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
