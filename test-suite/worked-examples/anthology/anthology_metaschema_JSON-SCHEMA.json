@@ -1,95 +1,98 @@
 
   { "$schema" : "http://json-schema.org/draft-07/schema#",
-    "$id" : "http://csrc.nist.gov/metaschema/ns/anthology-schema.json",
+    "$id" : "http://csrc.nist.gov/metaschema/anthology/1.0/anth-schema.json",
     "$comment" : "Anthology Metaschema: JSON Schema",
     "type" : "object",
     "definitions" : 
-    { "anthology" : 
+    { "anth-anth:anthology" : 
       { "title" : "Anthology",
         "description" : "A collection of literary excerpts",
-        "$id" : "#/definitions/anthology",
+        "$id" : "#assembly_anth_anthology",
         "type" : "object",
         "properties" : 
         { "id" : 
           { "title" : "Identifier",
             "description" : "A distinct code",
-            "type" : "string" },
+            "type" : "string",
+            "pattern" : "^[_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\\-\\.0-9\u00B7\u0300-\u036F\u203F-\u2040]*$" },
           "meta" : 
-          { "$ref" : "#/definitions/meta" },
+          { "$ref" : "#assembly_anth_meta" },
           "pieces" : 
           { "anyOf" : 
             [ 
-              { "$ref" : "#/definitions/piece" },
+              { "$ref" : "#assembly_anth_piece" },
               
               { "type" : "array",
                 "minItems" : 1,
                 "items" : 
-                { "$ref" : "#/definitions/piece" } } ] },
+                { "$ref" : "#assembly_anth_piece" } } ] },
           "back" : 
-          { "$ref" : "#/definitions/back" } },
+          { "$ref" : "#assembly_anth_back" } },
         "required" : 
         [ "meta" ],
         "additionalProperties" : false },
-      "meta" : 
+      "anth-anth:meta" : 
       { "title" : "Front matter / metadata",
         "description" : "Metadata for the anthology as a ^whole, or for a single piece within it",
-        "$id" : "#/definitions/meta",
+        "$id" : "#assembly_anth_meta",
         "type" : "object",
         "properties" : 
         { "creators" : 
           { "anyOf" : 
             [ 
-              { "$ref" : "#/definitions/creator" },
+              { "$ref" : "#field_anth_creator" },
               
               { "type" : "array",
                 "minItems" : 1,
                 "items" : 
-                { "$ref" : "#/definitions/creator" } } ] },
+                { "$ref" : "#field_anth_creator" } } ] },
           "date" : 
-          { "$ref" : "#/definitions/date" },
+          { "$ref" : "#field_anth_date" },
           "keywords" : 
           { "anyOf" : 
             [ 
               { "title" : "Key word",
                 "description" : "A string",
-                "$id" : "#/definitions/meta-keyword",
-                "type" : "string" },
+                "type" : "string",
+                "pattern" : "^\\S(.*\\S)?$" },
               
               { "type" : "array",
                 "minItems" : 1,
                 "items" : 
                 { "title" : "Key word",
                   "description" : "A string",
-                  "$id" : "#/definitions/meta-keyword",
-                  "type" : "string" } } ] },
+                  "type" : "string",
+                  "pattern" : "^\\S(.*\\S)?$" } } ] },
           "remarks" : 
-          { "$ref" : "#/definitions/remarks" } },
+          { "$ref" : "#field_anth_remarks" } },
         "additionalProperties" : false },
-      "date" : 
+      "anth-anth:date" : 
       { "title" : "Date",
         "description" : "As represented",
-        "$id" : "#/definitions/date",
+        "$id" : "#field_anth_date",
         "type" : "object",
         "properties" : 
         { "type" : 
           { "title" : "Type of date representation",
             "description" : "May be given as a formatting code, e.g. 'YYYY' for year only. It is up to implementations to implement logic.",
-            "type" : "string" },
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
           "STRVALUE" : 
           { "type" : "string" } },
         "required" : 
         [ "STRVALUE" ],
         "additionalProperties" : false },
-      "creator" : 
+      "anth-anth:creator" : 
       { "title" : "Creator (author or editor)",
         "description" : "The text contents should name the person; the optional who flag links it to the index.",
-        "$id" : "#/definitions/creator",
+        "$id" : "#field_anth_creator",
         "type" : "object",
         "properties" : 
         { "role" : 
           { "title" : "Role",
             "description" : "Contribution of the creator",
             "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$",
             "enum" : 
             [ "author",
               "editor",
@@ -97,66 +100,68 @@
           "who" : 
           { "title" : "Person identifier",
             "description" : "Relates a person to the biographical index",
-            "type" : "string" },
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
           "STRVALUE" : 
           { "type" : "string" } },
         "required" : 
         [ "STRVALUE",
           "role" ],
         "additionalProperties" : false },
-      "remarks" : 
+      "anth-anth:remarks" : 
       { "title" : "Remarks",
         "description" : "Pertinent information of any kind.",
-        "$id" : "#/definitions/remarks",
+        "$id" : "#field_anth_remarks",
         "type" : "string" },
-      "piece" : 
+      "anth-anth:piece" : 
       { "title" : "Piece",
         "description" : "A single anthologized piece; poetry or prose, entire or excerpted",
-        "$id" : "#/definitions/piece",
+        "$id" : "#assembly_anth_piece",
         "type" : "object",
         "properties" : 
         { "meta" : 
-          { "$ref" : "#/definitions/meta" },
+          { "$ref" : "#assembly_anth_meta" },
           "verse" : 
-          { "$ref" : "#/definitions/verse" },
+          { "$ref" : "#assembly_anth_verse" },
           "prose" : 
-          { "$ref" : "#/definitions/prose" },
+          { "$ref" : "#field_anth_prose" },
           "include" : 
-          { "$ref" : "#/definitions/include" } },
+          { "$ref" : "#assembly_anth_include" } },
         "additionalProperties" : false },
-      "verse" : 
+      "anth-anth:verse" : 
       { "title" : "Verse",
         "description" : "A composition in lines, or an excerpt from such a composition",
-        "$id" : "#/definitions/verse",
+        "$id" : "#assembly_anth_verse",
         "type" : "object",
         "properties" : 
         { "type" : 
           { "title" : "Verse type",
             "description" : "Any specialized form such as Byronic, terza rima, sestina, sonnet",
-            "type" : "string" },
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
           "lines" : 
           { "anyOf" : 
             [ 
-              { "$ref" : "#/definitions/line" },
+              { "$ref" : "#field_anth_line" },
               
               { "type" : "array",
                 "minItems" : 1,
                 "items" : 
-                { "$ref" : "#/definitions/line" } } ] },
+                { "$ref" : "#field_anth_line" } } ] },
           "stanzas" : 
           { "anyOf" : 
             [ 
-              { "$ref" : "#/definitions/stanza" },
+              { "$ref" : "#assembly_anth_stanza" },
               
               { "type" : "array",
                 "minItems" : 1,
                 "items" : 
-                { "$ref" : "#/definitions/stanza" } } ] } },
+                { "$ref" : "#assembly_anth_stanza" } } ] } },
         "additionalProperties" : false },
-      "line" : 
+      "anth-anth:line" : 
       { "title" : "Line of verse",
         "description" : "May be metrical",
-        "$id" : "#/definitions/line",
+        "$id" : "#field_anth_line",
         "type" : "object",
         "properties" : 
         { "feet" : 
@@ -167,6 +172,7 @@
           { "title" : "Base meter",
             "description" : "Identifies the base metrical type, if any",
             "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$",
             "enum" : 
             [ "dactyl",
               "anapest",
@@ -178,53 +184,57 @@
         "required" : 
         [ "RICHTEXT" ],
         "additionalProperties" : false },
-      "stanza" : 
+      "anth-anth:stanza" : 
       { "title" : "Stanza",
         "description" : "A group of lines within a verse",
-        "$id" : "#/definitions/stanza",
+        "$id" : "#assembly_anth_stanza",
         "type" : "object",
         "properties" : 
         { "type" : 
           { "title" : "Verse type",
             "description" : "Any specialized form such as Byronic, terza rima, sestina, sonnet",
-            "type" : "string" },
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
           "lines" : 
           { "anyOf" : 
             [ 
-              { "$ref" : "#/definitions/line" },
+              { "$ref" : "#field_anth_line" },
               
               { "type" : "array",
                 "minItems" : 1,
                 "items" : 
-                { "$ref" : "#/definitions/line" } } ] } },
+                { "$ref" : "#field_anth_line" } } ] } },
         "additionalProperties" : false },
-      "prose" : 
+      "anth-anth:prose" : 
       { "title" : "Prose",
         "description" : "Short prose or an excerpt",
-        "$id" : "#/definitions/prose",
+        "$id" : "#field_anth_prose",
         "type" : "string" },
-      "include" : 
+      "anth-anth:include" : 
       { "title" : "Include other",
         "description" : "Some other sort of markup altogether",
-        "$id" : "#/definitions/include",
+        "$id" : "#assembly_anth_include",
         "type" : "object",
         "properties" : 
         { "lang" : 
-          { "type" : "string" } },
+          { "title" : "Language",
+            "description" : "Describing the notation used",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" } },
         "additionalProperties" : true },
-      "back" : 
+      "anth-anth:back" : 
       { "title" : "Back matter",
         "description" : "Indexes and appurtenances",
-        "$id" : "#/definitions/back",
+        "$id" : "#assembly_anth_back",
         "type" : "object",
         "properties" : 
         { "author-index" : 
-          { "$ref" : "#/definitions/author-index" } },
+          { "$ref" : "#assembly_anth_author-index" } },
         "additionalProperties" : false },
-      "author-index" : 
+      "anth-anth:author-index" : 
       { "title" : "Author index",
         "description" : "Information about authors cited in the anthology",
-        "$id" : "#/definitions/author-index",
+        "$id" : "#assembly_anth_author-index",
         "type" : "object",
         "properties" : 
         { "authors" : 
@@ -233,75 +243,73 @@
             "additionalProperties" : 
             { "allOf" : 
               [ 
-                { "$ref" : "#/definitions/author" },
+                { "$ref" : "#assembly_anth_author" },
                 
                 { "not" : 
                   { "type" : "string" } } ] } } },
         "additionalProperties" : false },
-      "author" : 
+      "anth-anth:author" : 
       { "title" : "Author",
         "description" : "A single author cited in the anthology, with relevant info",
-        "$id" : "#/definitions/author",
+        "$id" : "#assembly_anth_author",
         "type" : "object",
         "properties" : 
         { "name" : 
-          { "$ref" : "#/definitions/name" },
+          { "$ref" : "#field_anth_name" },
           "dates" : 
-          { "$ref" : "#/definitions/dates" },
+          { "$ref" : "#assembly_anth_dates" },
           "publications" : 
           { "anyOf" : 
             [ 
-              { "$ref" : "#/definitions/publication" },
+              { "$ref" : "#field_anth_publication" },
               
               { "type" : "array",
                 "minItems" : 1,
                 "items" : 
-                { "$ref" : "#/definitions/publication" } } ] },
+                { "$ref" : "#field_anth_publication" } } ] },
           "bio" : 
-          { "$ref" : "#/definitions/bio" } },
+          { "$ref" : "#assembly_anth_bio" } },
         "additionalProperties" : true },
-      "name" : 
+      "anth-anth:name" : 
       { "title" : "Name",
         "description" : "A personal or place name",
-        "$id" : "#/definitions/name",
-        "type" : "string" },
-      "bio" : 
+        "$id" : "#field_anth_name",
+        "type" : "string",
+        "pattern" : "^\\S(.*\\S)?$" },
+      "anth-anth:bio" : 
       { "title" : "Biographical info",
         "description" : "Gives basic facts or colorful detail.",
-        "$id" : "#/definitions/bio",
+        "$id" : "#assembly_anth_bio",
         "type" : "object",
         "properties" : 
         { "also-known-as" : 
           { "anyOf" : 
             [ 
-              { "$ref" : "#/definitions/name" },
+              { "$ref" : "#field_anth_name" },
               
               { "type" : "array",
                 "minItems" : 1,
                 "items" : 
-                { "$ref" : "#/definitions/name" } } ] },
+                { "$ref" : "#field_anth_name" } } ] },
           "fact-statements" : 
           { "anyOf" : 
             [ 
               { "title" : "Facts",
                 "description" : "Structured data",
-                "$id" : "#/definitions/bio-facts",
                 "type" : "object",
                 "properties" : 
                 { "dates" : 
-                  { "$ref" : "#/definitions/dates" },
+                  { "$ref" : "#assembly_anth_dates" },
                   "residences" : 
                   { "anyOf" : 
                     [ 
                       { "title" : "Residency",
                         "description" : "A range of values in time-space",
-                        "$id" : "#/definitions/bio-facts-residence",
                         "type" : "object",
                         "properties" : 
                         { "dates" : 
                           { "title" : "Dates",
                             "description" : "Start to end",
-                            "$id" : "#/definitions/bio-facts-residence-dates",
                             "type" : "object",
                             "properties" : 
                             { "start" : 
@@ -322,13 +330,11 @@
                         "items" : 
                         { "title" : "Residency",
                           "description" : "A range of values in time-space",
-                          "$id" : "#/definitions/bio-facts-residence",
                           "type" : "object",
                           "properties" : 
                           { "dates" : 
                             { "title" : "Dates",
                               "description" : "Start to end",
-                              "$id" : "#/definitions/bio-facts-residence-dates",
                               "type" : "object",
                               "properties" : 
                               { "start" : 
@@ -351,23 +357,20 @@
                 "items" : 
                 { "title" : "Facts",
                   "description" : "Structured data",
-                  "$id" : "#/definitions/bio-facts",
                   "type" : "object",
                   "properties" : 
                   { "dates" : 
-                    { "$ref" : "#/definitions/dates" },
+                    { "$ref" : "#assembly_anth_dates" },
                     "residences" : 
                     { "anyOf" : 
                       [ 
                         { "title" : "Residency",
                           "description" : "A range of values in time-space",
-                          "$id" : "#/definitions/bio-facts-residence",
                           "type" : "object",
                           "properties" : 
                           { "dates" : 
                             { "title" : "Dates",
                               "description" : "Start to end",
-                              "$id" : "#/definitions/bio-facts-residence-dates",
                               "type" : "object",
                               "properties" : 
                               { "start" : 
@@ -388,13 +391,11 @@
                           "items" : 
                           { "title" : "Residency",
                             "description" : "A range of values in time-space",
-                            "$id" : "#/definitions/bio-facts-residence",
                             "type" : "object",
                             "properties" : 
                             { "dates" : 
                               { "title" : "Dates",
                                 "description" : "Start to end",
-                                "$id" : "#/definitions/bio-facts-residence-dates",
                                 "type" : "object",
                                 "properties" : 
                                 { "start" : 
@@ -413,22 +414,21 @@
           "colorful-details" : 
           { "title" : "Colorful details",
             "description" : "Unstructured data",
-            "$id" : "#/definitions/bio-colorful-details",
             "type" : "object",
             "properties" : 
             { "dates" : 
               { "title" : "Dates",
                 "description" : "This time, a string, so \"Lincoln's Birthday\" is a date.",
-                "$id" : "#/definitions/bio-colorful-details-dates",
-                "type" : "string" },
+                "type" : "string",
+                "pattern" : "^\\S(.*\\S)?$" },
               "remarks" : 
-              { "$ref" : "#/definitions/remarks" } },
+              { "$ref" : "#field_anth_remarks" } },
             "additionalProperties" : false } },
         "additionalProperties" : false },
-      "dates" : 
+      "anth-anth:dates" : 
       { "title" : "Dates",
         "description" : "As a range (birth-death) or floruit",
-        "$id" : "#/definitions/dates",
+        "$id" : "#assembly_anth_dates",
         "type" : "object",
         "properties" : 
         { "birth" : 
@@ -447,10 +447,10 @@
             "type" : "string",
             "pattern" : "^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$" } },
         "additionalProperties" : false },
-      "publication" : 
+      "anth-anth:publication" : 
       { "title" : "Publication",
         "description" : "A publication attributed to an author",
-        "$id" : "#/definitions/publication",
+        "$id" : "#field_anth_publication",
         "type" : "object",
         "properties" : 
         { "date" : 
@@ -465,7 +465,7 @@
         "additionalProperties" : false } },
     "properties" : 
     { "ANTHOLOGY" : 
-      { "$ref" : "#/definitions/anthology" } },
+      { "$ref" : "#assembly_anth_anthology" } },
     "required" : 
     [ "ANTHOLOGY" ],
     "additionalProperties" : false,

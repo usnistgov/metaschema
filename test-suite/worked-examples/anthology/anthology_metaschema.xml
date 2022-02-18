@@ -6,7 +6,7 @@
  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>Anthology Metaschema</schema-name>
     <schema-version>1.0</schema-version>
-    <short-name>ανθ</short-name>
+    <short-name>anth</short-name>
     <namespace>http://csrc.nist.gov/metaschema/ns/anthology</namespace>
     <json-base-uri>http://csrc.nist.gov/metaschema/anthology</json-base-uri>
     

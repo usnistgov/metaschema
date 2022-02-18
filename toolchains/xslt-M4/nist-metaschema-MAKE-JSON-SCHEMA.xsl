@@ -11,8 +11,9 @@
     <!-- Output: A JSON Schema (v7) describing a JSON format consistent with definitions given in the input metaschema -->
     <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
     
-    <xsl:output method="text" indent="yes"/>
+    <xsl:output method="text" indent="yes" use-character-maps="json-escaping"/>
 
+    
     <!-- Turning $trace to 'on' will
          - emit runtime messages with each transformation, and
          - retain nm:ERROR and nm:WARNING messages in results. -->
@@ -38,5 +39,37 @@
         <nm:transform version="3.0">schema-gen/make-json-schema-metamap.xsl</nm:transform>
         <nm:transform version="3.0">util/xpath-json-to-json.xsl</nm:transform>
     </xsl:variable>
+    
+    <xsl:character-map name="json-escaping">
+        <xsl:output-character character="&#x00C0;" string="\u00C0"/>
+        <xsl:output-character character="&#x00D6;" string="\u00D6"/>
+        <xsl:output-character character="&#x00D8;" string="\u00D8"/>
+        <xsl:output-character character="&#x00F6;" string="\u00F6"/>
+        <xsl:output-character character="&#x00F8;" string="\u00F8"/>
+        <xsl:output-character character="&#x02FF;" string="\u02FF"/>
+        <xsl:output-character character="&#x0370;" string="\u0370"/>
+        <xsl:output-character character="&#x037D;" string="\u037D"/>
+        <xsl:output-character character="&#x037F;" string="\u037F"/>
+        <xsl:output-character character="&#x1FFF;" string="\u1FFF"/>
+        <xsl:output-character character="&#x200C;" string="\u200C"/>
+        <xsl:output-character character="&#x200D;" string="\u200D"/>
+        <xsl:output-character character="&#x2070;" string="\u2070"/>
+        <xsl:output-character character="&#x218F;" string="\u218F"/>
+        <xsl:output-character character="&#x2C00;" string="\u2C00"/>
+        <xsl:output-character character="&#x2FEF;" string="\u2FEF"/>
+        <xsl:output-character character="&#x3001;" string="\u3001"/>
+        <xsl:output-character character="&#xD7FF;" string="\uD7FF"/>
+        <xsl:output-character character="&#xF900;" string="\uF900"/>
+        <xsl:output-character character="&#xFDCF;" string="\uFDCF"/>
+        <xsl:output-character character="&#xFDF0;" string="\uFDF0"/>
+        <xsl:output-character character="&#xFFFD;" string="\uFFFD"/>
+        <xsl:output-character character="&#x00B7;" string="\u00B7"/>
+        <xsl:output-character character="&#x0300;" string="\u0300"/>
+        <xsl:output-character character="&#x036F;" string="\u036F"/>
+        <xsl:output-character character="&#x203F;" string="\u203F"/>
+        <xsl:output-character character="&#x2040;" string="\u2040"/>
+    </xsl:character-map>
+    
+    
     
 </xsl:stylesheet>

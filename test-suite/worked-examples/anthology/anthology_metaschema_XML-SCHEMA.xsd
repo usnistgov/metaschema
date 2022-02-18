@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="us-ascii"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-           xmlns:ανθ="http://csrc.nist.gov/metaschema/ns/anthology"
+           xmlns:anth="http://csrc.nist.gov/metaschema/ns/anthology"
            xmlns:oscal-prose="http://csrc.nist.gov/metaschema/ns/anthology"
            elementFormDefault="qualified"
            targetNamespace="http://csrc.nist.gov/metaschema/ns/anthology"
@@ -10,15 +10,15 @@
       <xs:appinfo>
          <m:schema-name>Anthology Metaschema</m:schema-name>
          <m:schema-version>1.0</m:schema-version>
-         <m:short-name>ανθ</m:short-name>
+         <m:short-name>anth</m:short-name>
          <m:remarks>
             <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
          </m:remarks>
          <m:root>ANTHOLOGY</m:root>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="ANTHOLOGY" type="ανθ:anthology-ASSEMBLY"/>
-   <xs:complexType name="anthology-ASSEMBLY">
+   <xs:element name="ANTHOLOGY" type="anth:anth-anthology-ASSEMBLY"/>
+   <xs:complexType name="anth-anthology-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Anthology</m:formal-name>
@@ -29,19 +29,19 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="meta"
-                     type="ανθ:meta-ASSEMBLY"
+                     type="anth:anth-meta-ASSEMBLY"
                      minOccurs="1"
                      maxOccurs="1"/>
          <xs:element name="piece"
-                     type="ανθ:piece-ASSEMBLY"
+                     type="anth:anth-piece-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="back"
-                     type="ανθ:back-ASSEMBLY"
+                     type="anth:anth-back-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
       </xs:sequence>
-      <xs:attribute name="id" type="xs:NCName">
+      <xs:attribute name="id" type="anth:token">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>Identifier</m:formal-name>
@@ -52,7 +52,7 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   <xs:complexType name="meta-ASSEMBLY">
+   <xs:complexType name="anth-meta-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Front matter / metadata</m:formal-name>
@@ -63,10 +63,13 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="creator"
-                     type="ανθ:creator-FIELD"
+                     type="anth:anth-creator-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
-         <xs:element name="date" type="ανθ:date-FIELD" minOccurs="0" maxOccurs="1"/>
+         <xs:element name="date"
+                     type="anth:anth-date-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
          <xs:element name="keyword" minOccurs="0" maxOccurs="unbounded">
             <xs:simpleType>
                <xs:annotation>
@@ -77,7 +80,7 @@
                   <xs:documentation>
                      <b>Key word</b>: A string</xs:documentation>
                </xs:annotation>
-               <xs:restriction base="xs:string"/>
+               <xs:restriction base="anth:string"/>
             </xs:simpleType>
          </xs:element>
          <xs:element name="remarks" minOccurs="0" maxOccurs="1">
@@ -90,12 +93,12 @@
                   <b>Remarks</b>: Pertinent information of any kind.</xs:documentation>
             </xs:annotation>
             <xs:complexType>
-               <xs:group ref="ανθ:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+               <xs:group ref="anth:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
             </xs:complexType>
          </xs:element>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="date-FIELD">
+   <xs:complexType name="anth-date-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Date</m:formal-name>
@@ -105,8 +108,8 @@
             <b>Date</b>: As represented</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string">
-            <xs:attribute name="type" type="xs:string">
+         <xs:extension base="anth:string">
+            <xs:attribute name="type" type="anth:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>Type of date representation</m:formal-name>
@@ -119,7 +122,7 @@
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:complexType name="creator-FIELD">
+   <xs:complexType name="anth-creator-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Creator (author or editor)</m:formal-name>
@@ -129,8 +132,8 @@
             <b>Creator (author or editor)</b>: The text contents should name the person; the optional who flag links it to the index.</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string">
-            <xs:attribute name="role" use="required" type="xs:string">
+         <xs:extension base="anth:string">
+            <xs:attribute name="role" use="required" type="anth:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>Role</m:formal-name>
@@ -140,7 +143,7 @@
                      <b>Role</b>: Contribution of the creator</xs:documentation>
                </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="who" type="xs:string">
+            <xs:attribute name="who" type="anth:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>Person identifier</m:formal-name>
@@ -153,7 +156,20 @@
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>
-   <xs:complexType name="piece-ASSEMBLY">
+   <xs:complexType name="anth-remarks-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Remarks</m:formal-name>
+            <m:description>Pertinent information of any kind.</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Remarks</b>: Pertinent information of any kind.</xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="anth:markupMultilineType"/>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="anth-piece-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Piece</m:formal-name>
@@ -164,12 +180,12 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="meta"
-                     type="ανθ:meta-ASSEMBLY"
+                     type="anth:anth-meta-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:choice>
             <xs:element name="verse"
-                        type="ανθ:verse-ASSEMBLY"
+                        type="anth:anth-verse-ASSEMBLY"
                         minOccurs="0"
                         maxOccurs="1"/>
             <xs:element name="prose" minOccurs="0" maxOccurs="1">
@@ -182,17 +198,17 @@
                      <b>Prose</b>: Short prose or an excerpt</xs:documentation>
                </xs:annotation>
                <xs:complexType>
-                  <xs:group ref="ανθ:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+                  <xs:group ref="anth:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
                </xs:complexType>
             </xs:element>
             <xs:element name="include"
-                        type="ανθ:include-ASSEMBLY"
+                        type="anth:anth-include-ASSEMBLY"
                         minOccurs="0"
                         maxOccurs="1"/>
          </xs:choice>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="verse-ASSEMBLY">
+   <xs:complexType name="anth-verse-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Verse</m:formal-name>
@@ -204,16 +220,16 @@
       <xs:sequence>
          <xs:choice>
             <xs:element name="line"
-                        type="ανθ:line-FIELD"
+                        type="anth:anth-line-FIELD"
                         minOccurs="0"
                         maxOccurs="unbounded"/>
             <xs:element name="stanza"
-                        type="ανθ:stanza-ASSEMBLY"
+                        type="anth:anth-stanza-ASSEMBLY"
                         minOccurs="0"
                         maxOccurs="unbounded"/>
          </xs:choice>
       </xs:sequence>
-      <xs:attribute name="type" type="xs:string">
+      <xs:attribute name="type" type="anth:string">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>Verse type</m:formal-name>
@@ -224,9 +240,17 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   <xs:complexType mixed="true" name="line-FIELD">
+   <xs:complexType mixed="true" name="anth-line-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Line of verse</m:formal-name>
+            <m:description>May be metrical</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Line of verse</b>: May be metrical</xs:documentation>
+      </xs:annotation>
       <xs:complexContent>
-         <xs:extension base="ανθ:markupLineType">
+         <xs:extension base="anth:markupLineType">
             <xs:attribute name="feet" type="xs:integer">
                <xs:annotation>
                   <xs:appinfo>
@@ -237,7 +261,7 @@
                      <b>Meter count(feet)</b>: Count of metrical feet (dimeter, trimeter, tetrameter etc) represented as a natural number</xs:documentation>
                </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="base" type="xs:string">
+            <xs:attribute name="base" type="anth:string">
                <xs:annotation>
                   <xs:appinfo>
                      <m:formal-name>Base meter</m:formal-name>
@@ -250,7 +274,7 @@
          </xs:extension>
       </xs:complexContent>
    </xs:complexType>
-   <xs:complexType name="stanza-ASSEMBLY">
+   <xs:complexType name="anth-stanza-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Stanza</m:formal-name>
@@ -261,11 +285,11 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="line"
-                     type="ανθ:line-FIELD"
+                     type="anth:anth-line-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
       </xs:sequence>
-      <xs:attribute name="type" type="xs:string">
+      <xs:attribute name="type" type="anth:string">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>Verse type</m:formal-name>
@@ -276,7 +300,20 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   <xs:complexType name="include-ASSEMBLY">
+   <xs:complexType name="anth-prose-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>Prose</m:formal-name>
+            <m:description>Short prose or an excerpt</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>Prose</b>: Short prose or an excerpt</xs:documentation>
+      </xs:annotation>
+      <xs:complexContent>
+         <xs:extension base="anth:markupMultilineType"/>
+      </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name="anth-include-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Include other</m:formal-name>
@@ -286,11 +323,23 @@
             <b>Include other</b>: Some other sort of markup altogether</xs:documentation>
       </xs:annotation>
       <xs:sequence>
-         <xs:any namespace="##other" processContents="lax"/>
+         <xs:any namespace="##other"
+                 processContents="lax"
+                 minOccurs="0"
+                 maxOccurs="unbounded"/>
       </xs:sequence>
-      <xs:attribute name="lang" type="xs:string"/>
+      <xs:attribute name="lang" type="anth:string">
+         <xs:annotation>
+            <xs:appinfo>
+               <m:formal-name>Language</m:formal-name>
+               <m:description>Describing the notation used</m:description>
+            </xs:appinfo>
+            <xs:documentation>
+               <b>Language</b>: Describing the notation used</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
    </xs:complexType>
-   <xs:complexType name="back-ASSEMBLY">
+   <xs:complexType name="anth-back-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Back matter</m:formal-name>
@@ -301,12 +350,12 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="author-index"
-                     type="ανθ:author-index-ASSEMBLY"
+                     type="anth:anth-author-index-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="author-index-ASSEMBLY">
+   <xs:complexType name="anth-author-index-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Author index</m:formal-name>
@@ -317,12 +366,12 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="author"
-                     type="ανθ:author-ASSEMBLY"
+                     type="anth:anth-author-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="author-ASSEMBLY">
+   <xs:complexType name="anth-author-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Author</m:formal-name>
@@ -332,19 +381,28 @@
             <b>Author</b>: A single author cited in the anthology, with relevant info</xs:documentation>
       </xs:annotation>
       <xs:sequence>
-         <xs:element name="name" type="ανθ:name-FIELD" minOccurs="0" maxOccurs="1"/>
+         <xs:element name="name"
+                     type="anth:anth-name-FIELD"
+                     minOccurs="0"
+                     maxOccurs="1"/>
          <xs:element name="dates"
-                     type="ανθ:dates-ASSEMBLY"
+                     type="anth:anth-dates-ASSEMBLY"
                      minOccurs="0"
                      maxOccurs="1"/>
          <xs:element name="publication"
-                     type="ανθ:publication-FIELD"
+                     type="anth:anth-publication-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
-         <xs:element name="bio" type="ανθ:bio-ASSEMBLY" minOccurs="0" maxOccurs="1"/>
-         <xs:any namespace="##other" processContents="lax"/>
+         <xs:element name="bio"
+                     type="anth:anth-bio-ASSEMBLY"
+                     minOccurs="0"
+                     maxOccurs="1"/>
+         <xs:any namespace="##other"
+                 processContents="lax"
+                 minOccurs="0"
+                 maxOccurs="unbounded"/>
       </xs:sequence>
-      <xs:attribute name="id" use="required" type="xs:NCName">
+      <xs:attribute name="id" use="required" type="anth:token">
          <xs:annotation>
             <xs:appinfo>
                <m:formal-name>Identifier</m:formal-name>
@@ -355,7 +413,7 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   <xs:simpleType name="name-FIELD">
+   <xs:simpleType name="anth-name-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Name</m:formal-name>
@@ -364,9 +422,9 @@
          <xs:documentation>
             <b>Name</b>: A personal or place name</xs:documentation>
       </xs:annotation>
-      <xs:restriction base="xs:string"/>
+      <xs:restriction base="anth:string"/>
    </xs:simpleType>
-   <xs:complexType name="bio-ASSEMBLY">
+   <xs:complexType name="anth-bio-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Biographical info</m:formal-name>
@@ -377,7 +435,7 @@
       </xs:annotation>
       <xs:sequence>
          <xs:element name="name"
-                     type="ανθ:name-FIELD"
+                     type="anth:anth-name-FIELD"
                      minOccurs="0"
                      maxOccurs="unbounded"/>
          <xs:element name="facts" minOccurs="0" maxOccurs="3">
@@ -392,7 +450,7 @@
                </xs:annotation>
                <xs:sequence>
                   <xs:element name="dates"
-                              type="ανθ:dates-ASSEMBLY"
+                              type="anth:anth-dates-ASSEMBLY"
                               minOccurs="0"
                               maxOccurs="1"/>
                   <xs:element name="residence" minOccurs="0" maxOccurs="unbounded">
@@ -465,7 +523,7 @@
                            <xs:documentation>
                               <b>Dates</b>: This time, a string, so "Lincoln's Birthday" is a date.</xs:documentation>
                         </xs:annotation>
-                        <xs:restriction base="xs:string"/>
+                        <xs:restriction base="anth:string"/>
                      </xs:simpleType>
                   </xs:element>
                   <xs:element name="remarks" minOccurs="0" maxOccurs="1">
@@ -478,7 +536,7 @@
                            <b>Remarks</b>: Pertinent information of any kind.</xs:documentation>
                      </xs:annotation>
                      <xs:complexType>
-                        <xs:group ref="ανθ:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
+                        <xs:group ref="anth:blockElementGroup" maxOccurs="unbounded" minOccurs="0"/>
                      </xs:complexType>
                   </xs:element>
                </xs:sequence>
@@ -486,7 +544,7 @@
          </xs:element>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="dates-ASSEMBLY">
+   <xs:complexType name="anth-dates-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Dates</m:formal-name>
@@ -526,7 +584,7 @@
          </xs:annotation>
       </xs:attribute>
    </xs:complexType>
-   <xs:complexType name="publication-FIELD">
+   <xs:complexType name="anth-publication-FIELD">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>Publication</m:formal-name>
@@ -536,7 +594,7 @@
             <b>Publication</b>: A publication attributed to an author</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
-         <xs:extension base="xs:string">
+         <xs:extension base="anth:string">
             <xs:attribute name="date" type="xs:date">
                <xs:annotation>
                   <xs:appinfo>
@@ -551,25 +609,25 @@
       </xs:simpleContent>
    </xs:complexType>
    <xs:complexType name="markupLineType" mixed="true">
-      <xs:group ref="ανθ:mixedInlineMarkupGroup"/>
+      <xs:group ref="anth:mixedInlineMarkupGroup"/>
    </xs:complexType>
    <xs:complexType name="markupMultilineType">
-      <xs:group ref="ανθ:blockElementGroup"/>
+      <xs:group ref="anth:blockElementGroup"/>
    </xs:complexType>
    <xs:group name="blockElementGroup">
       <xs:sequence>
-         <xs:choice minOccurs="1" maxOccurs="unbounded">
-            <xs:element name="h1" type="ανθ:blockElementType"/>
-            <xs:element name="h2" type="ανθ:blockElementType"/>
-            <xs:element name="h3" type="ανθ:blockElementType"/>
-            <xs:element name="h4" type="ανθ:blockElementType"/>
-            <xs:element name="h5" type="ανθ:blockElementType"/>
-            <xs:element name="h6" type="ανθ:blockElementType"/>
-            <xs:element name="p" type="ανθ:blockElementType"/>
-            <xs:element name="ul" type="ανθ:listType"/>
-            <xs:element name="ol" type="ανθ:listType"/>
-            <xs:element name="pre" type="ανθ:preformattedType"/>
-            <xs:element name="table" type="ανθ:tableType"/>
+         <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="h1" type="anth:blockElementType"/>
+            <xs:element name="h2" type="anth:blockElementType"/>
+            <xs:element name="h3" type="anth:blockElementType"/>
+            <xs:element name="h4" type="anth:blockElementType"/>
+            <xs:element name="h5" type="anth:blockElementType"/>
+            <xs:element name="h6" type="anth:blockElementType"/>
+            <xs:element name="p" type="anth:blockElementType"/>
+            <xs:element name="ul" type="anth:listType"/>
+            <xs:element name="ol" type="anth:listType"/>
+            <xs:element name="pre" type="anth:preformattedType"/>
+            <xs:element name="table" type="anth:tableType"/>
             <!-- TODO: need to add support for blockquote, which can contain block elements. usnistgov/metaschema#70 -->
          </xs:choice>
       </xs:sequence>
@@ -582,11 +640,11 @@
     td th: phrase inline markup, a, insert, img (phrase+img)
   -->
    <xs:complexType name="blockElementType" mixed="true">
-      <xs:group ref="ανθ:phraseInlineMarkupGroup"/>
+      <xs:group ref="anth:phraseInlineMarkupGroup"/>
    </xs:complexType>
    <xs:complexType name="headingType" mixed="true">
       <xs:complexContent>
-         <xs:extension base="ανθ:blockElementType">
+         <xs:extension base="anth:blockElementType">
             <xs:annotation>
                <xs:documentation>The content model is the same as blockElementType, but line endings need
             to be preserved, since this is preformatted.</xs:documentation>
@@ -596,7 +654,7 @@
    </xs:complexType>
    <xs:complexType name="preformattedType" mixed="true">
       <xs:complexContent>
-         <xs:extension base="ανθ:blockElementType">
+         <xs:extension base="anth:blockElementType">
             <xs:annotation>
                <xs:documentation>The content model is the same as blockElementType, but line endings need
             to be preserved, since this is preformatted.</xs:documentation>
@@ -607,33 +665,33 @@
    <xs:complexType name="listType">
       <xs:sequence>
          <xs:element name="li"
-                     type="ανθ:listItemType"
+                     type="anth:listItemType"
                      minOccurs="1"
                      maxOccurs="unbounded"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="listItemType" mixed="true">
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-         <xs:group ref="ανθ:mixedInlineMarkupGroup"/>
-         <xs:element name="ul" type="ανθ:listType"/>
-         <xs:element name="ol" type="ανθ:listType"/>
+         <xs:group ref="anth:mixedInlineMarkupGroup"/>
+         <xs:element name="ul" type="anth:listType"/>
+         <xs:element name="ol" type="anth:listType"/>
       </xs:choice>
    </xs:complexType>
    <xs:complexType name="tableType">
       <xs:sequence>
-         <xs:element maxOccurs="unbounded" name="tr" type="ανθ:tableRowType"/>
+         <xs:element maxOccurs="unbounded" name="tr" type="anth:tableRowType"/>
       </xs:sequence>
    </xs:complexType>
    <xs:complexType name="tableRowType"><!-- QUESTION: Should we allow TH and TD to be mixed? -->
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-         <xs:element name="td" type="ανθ:tableCellType" maxOccurs="unbounded"/>
-         <xs:element name="th" type="ανθ:tableCellType" maxOccurs="unbounded"/>
+         <xs:element name="td" type="anth:tableCellType" maxOccurs="unbounded"/>
+         <xs:element name="th" type="anth:tableCellType" maxOccurs="unbounded"/>
       </xs:choice>
    </xs:complexType>
    <xs:complexType name="tableCellType" mixed="true">
-      <xs:group ref="ανθ:mixedInlineMarkupGroup"/>
+      <xs:group ref="anth:mixedInlineMarkupGroup"/>
       <!-- TODO: consider adding a choice between the inline or paragraphs. We need to figure out what is supported in Markdown. -->
-      <xs:attribute name="align" type="ανθ:alignType" default="left"/>
+      <xs:attribute name="align" type="anth:alignType" default="left"/>
       <!-- TODO: need to add support for alignment. usnistgov/metaschema#70 -->
    </xs:complexType>
    <xs:simpleType name="alignType">
@@ -647,36 +705,36 @@
    <xs:group name="mixedInlineMarkupGroup">
       <xs:sequence>
          <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="ανθ:phraseInlineMarkupGroup"/>
-            <xs:element name="img" type="ανθ:imageType"/>
+            <xs:group ref="anth:phraseInlineMarkupGroup"/>
+            <xs:element name="img" type="anth:imageType"/>
          </xs:choice>
       </xs:sequence>
    </xs:group>
    <xs:group name="phraseInlineMarkupGroup">
       <xs:sequence>
          <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element name="code" type="ανθ:inlineMarkupType" minOccurs="1"/>
-            <xs:element name="em" type="ανθ:inlineMarkupType" minOccurs="1"/>
-            <xs:element name="i" type="ανθ:inlineMarkupType" minOccurs="1"/>
-            <xs:element name="b" type="ανθ:inlineMarkupType" minOccurs="1"/>
-            <xs:element name="strong" type="ανθ:inlineMarkupType" minOccurs="1"/>
-            <xs:element name="sub" type="ανθ:inlineMarkupType" minOccurs="1"/>
-            <xs:element name="sup" type="ανθ:inlineMarkupType" minOccurs="1"/>
-            <xs:element name="q" type="ανθ:inlineMarkupType" minOccurs="1"/>
-            <xs:element name="insert" type="ανθ:insertType"/>
-            <xs:element name="a" type="ανθ:anchorType"/>
+            <xs:element name="code" type="anth:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="em" type="anth:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="i" type="anth:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="b" type="anth:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="strong" type="anth:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="sub" type="anth:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="sup" type="anth:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="q" type="anth:inlineMarkupType" minOccurs="1"/>
+            <xs:element name="insert" type="anth:insertType"/>
+            <xs:element name="a" type="anth:anchorType"/>
          </xs:choice>
       </xs:sequence>
    </xs:group>
    <xs:complexType name="inlineMarkupType" mixed="true">
-      <xs:group ref="ανθ:phraseInlineMarkupGroup"/>
+      <xs:group ref="anth:phraseInlineMarkupGroup"/>
    </xs:complexType>
    <xs:complexType name="imageType">
       <xs:attribute name="alt" type="xs:string"/>
       <xs:attribute name="src" use="required" type="xs:anyURI"/>
    </xs:complexType>
    <xs:complexType name="anchorType" mixed="true">
-      <xs:group ref="ανθ:phraseInlineMarkupGroup"/>
+      <xs:group ref="anth:phraseInlineMarkupGroup"/>
       <xs:attribute name="href" type="xs:anyURI"/>
    </xs:complexType>
    <!--
@@ -684,7 +742,19 @@
     (a parameter must be available)
   -->
    <xs:complexType name="insertType">
-      <xs:attribute name="param-id" use="required" type="xs:NCName"/>
+      <xs:annotation>
+         <xs:documentation>An insert can be used to identify a placeholder for dynamically inserting text related to a specific object, which is referenced by the object's identifier using an <code xmlns="http://csrc.nist.gov/ns/oscal/1.0">id-ref</code>. This insert mechanism allows the selection of which text value from the object to dynamically include based on the application's display requirements.</xs:documentation>
+      </xs:annotation>
+      <xs:attribute name="type" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:documentation>The type of object to include from (e.g., parameter, control, component, role, etc.)</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="id-ref" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:documentation>The identity of the object to insert a value for. The identity will be selected from the index of objects of the specified <code xmlns="http://csrc.nist.gov/ns/oscal/1.0">type</code>. The specific value to include is based on the application's display requirements, which will likely use a specific data element associated with the <code xmlns="http://csrc.nist.gov/ns/oscal/1.0">type</code> (e.g., title, identifier, value, etc.) that is appropriate for the application.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
    </xs:complexType>
    <!--
     Within a selection, a choice - tbd
@@ -695,4 +765,31 @@
     IDs are required everywhere for now
     idAttr      = attribute id { xsd:ID }
   -->
+   <xs:simpleType name="string">
+      <xs:annotation>
+         <xs:documentation>A string, but not empty and not whitespace-only (whitespace is U+9, U+10, U+32 or [ \n\t]+ )</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:whiteSpace value="preserve"/>
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>A trimmed string, at least one character with no leading or trailing whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="token">
+      <xs:annotation><!--<xs:documentation>Matching XSD NCName, except whitespace is not collapsed.</xs:documentation>-->
+         <xs:documentation>A string token following the rules of XML "no colon" names, with no whitespace. (XML names are single alphabetic characters
+      followed by alphanumeric characters, periods, underscores or dashes.)</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:whiteSpace value="preserve"/>
+         <xs:pattern value="[\i-[:]][\c-[:]]*"><!-- emulates NCName (XML name without colons) -->
+            <xs:annotation><!--<xs:documentation>An XML initial character (but not colon), followed by any XML name character (but not colon).</xs:documentation>-->
+               <xs:documentation>A single token may not contain whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
 </xs:schema>

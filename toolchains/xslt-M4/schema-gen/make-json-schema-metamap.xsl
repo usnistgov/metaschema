@@ -721,8 +721,8 @@ PRODUCTION 4a NameChar	   ::=
             <string key="type">string</string>
             <xsl:sequence expand-text="true">
                 <!--<xsl:variable name="test">_A-Z123\u00C0-\u00D6</xsl:variable>-->
-                <xsl:variable name="initial-name-chars" as="xs:string">_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD<!--\u10000-\uEFFFF--></xsl:variable>
-                <xsl:variable as="xs:string" name="name-chars">{ $initial-name-chars }\-\.0-9\u00B7\u0300-\u036F\u203F-\u2040</xsl:variable>
+                <xsl:variable name="initial-name-chars" as="xs:string">_A-Za-z&#x00C0;-&#x00D6;&#x00D8;-&#x00F6;&#x00F8;-&#x02FF;&#x0370;-&#x037D;&#x037F;-&#x1FFF;&#x200C;-&#x200D;&#x2070;-&#x218F;&#x2C00;-&#x2FEF;&#x3001;-&#xD7FF;&#xF900;-&#xFDCF;&#xFDF0;-&#xFFFD;<!--\u10000-\uEFFFF--></xsl:variable>
+                <xsl:variable as="xs:string" name="name-chars">{ $initial-name-chars }\-\.0-9&#x00B7;&#x0300;-&#x036F;&#x203F;-&#x2040;</xsl:variable>
                 <!--<string key="pattern">^[{ $test }]+$</string>-->
                 <string key="pattern">^[{ $initial-name-chars }][{ $name-chars }]*$</string>
             </xsl:sequence>
