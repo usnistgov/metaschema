@@ -161,7 +161,7 @@
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:whiteSpace value="preserve"/>
-      <xs:pattern value="[\i-[:&#x10000;-&#xEFFFF;]][\c-[:&#x10000;-&#xEFFFF;]]*">
+      <xs:pattern value="[\i-[:]][\c-[:]]*"><!-- matches NCName (XML name without colons) -->
         <xs:annotation>
           <!--<xs:documentation>An XML initial character (but not colon), followed by any XML name character (but not colon).</xs:documentation>-->
           <xs:documentation>A single token may not contain whitespace.</xs:documentation>
