@@ -11,7 +11,7 @@
     <!-- Output: An XSD describing an XML format consistent with definitions given in the input metaschema -->
     <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
 
-    <xsl:output method="xml" indent="yes" encoding="us-ascii"/>
+    <xsl:output method="xml" indent="yes"/>
 
     <!-- Turning $trace to 'on' will
          - emit runtime messages with each transformation, and
