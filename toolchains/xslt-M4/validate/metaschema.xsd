@@ -4,6 +4,12 @@
   xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
   targetNamespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
 
+  <xs:include schemaLocation="../schema-gen/oscal-prose-module.xsd">
+    <xs:annotation>
+      <xs:documentation>This prose module provides support for line and multiline markup.</xs:documentation>
+    </xs:annotation>
+  </xs:include>
+
   <!-- Import any OSCAL schemas needed for samples... -->
   <!--<xs:import namespace="http://csrc.nist.gov/ns/oscal/1.0"
     schemaLocation="../../../schema/xml/oscal-catalog-schema.xsd"/>-->
@@ -67,7 +73,7 @@
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="flag"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-          type="LocalFlagDefinitionType"/>
+          type="InlineFlagDefinitionType"/>
       </xs:choice>
       <xs:element name="model" minOccurs="0" type="AssemblyModelType"/>
       <xs:element minOccurs="0" name="constraint" type="DefineAssemblyConstraintsType"/>
@@ -85,8 +91,8 @@
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="assembly"/>
         <xs:element ref="field"/>
-        <xs:element name="define-assembly" type="LocalAssemblyDefinitionType"/>
-        <xs:element name="define-field" type="LocalFieldDefinitionType"/>
+        <xs:element name="define-assembly" type="InlineAssemblyDefinitionType"/>
+        <xs:element name="define-field" type="InlineFieldDefinitionType"/>
         <xs:element ref="choice"/>
       </xs:choice>
       <xs:element ref="any" minOccurs="0"/>
@@ -96,7 +102,7 @@
   <xs:complexType name="GlobalFieldDefinitionType">
     <xs:annotation>
       <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
-        inline - not fully structured - markup). In XML, an element with string or mixed
+        inline - not fully structured - markup). In XML, an element with string or markup
         content. Defined globally, a field can be assigned to appear in the <code>model</code> of any assembly by <code>field</code> reference.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -108,7 +114,7 @@
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="flag"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-          type="LocalFlagDefinitionType"/>
+          type="InlineFlagDefinitionType"/>
       </xs:choice>
       <xs:element minOccurs="0" name="constraint" type="DefineFieldConstraintsType"/>
       <xs:element minOccurs="0" ref="remarks"/>
@@ -145,10 +151,10 @@
     <xs:anyAttribute processContents="lax"/>
   </xs:complexType>
 
-  <xs:complexType name="LocalAssemblyDefinitionType">
+  <xs:complexType name="InlineAssemblyDefinitionType">
     <xs:annotation>
       <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
-        inline - not fully structured - markup). In XML, an element with string or mixed
+        inline - not fully structured - markup). In XML, an element with string or markup
         content. A local definition describes and constrains the appearance of the field only in this (assembly) context.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -161,7 +167,7 @@
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="flag"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-          type="LocalFlagDefinitionType"/>
+          type="InlineFlagDefinitionType"/>
       </xs:choice>
       <xs:element name="model" minOccurs="0" type="AssemblyModelType"/>
       <xs:element minOccurs="0" name="constraint" type="DefineAssemblyConstraintsType"/>
@@ -175,10 +181,10 @@
   </xs:complexType>
 
 
-  <xs:complexType name="LocalFieldDefinitionType">
+  <xs:complexType name="InlineFieldDefinitionType">
     <xs:annotation>
       <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
-        inline - not fully structured - markup). In XML, an element with string or mixed
+        inline - not fully structured - markup). In XML, an element with string or markup
         content. A local definition describes and constrains the appearance of the field only in this (assembly) context.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
@@ -191,7 +197,7 @@
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="flag"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-          type="LocalFlagDefinitionType"/>
+          type="InlineFlagDefinitionType"/>
       </xs:choice>
       <xs:element minOccurs="0" name="constraint" type="DefineFieldConstraintsType"/>
       <xs:element minOccurs="0" ref="remarks"/>
@@ -211,7 +217,7 @@
     <xs:anyAttribute processContents="lax"/>
   </xs:complexType>
 
-  <xs:complexType name="LocalFlagDefinitionType">
+  <xs:complexType name="InlineFlagDefinitionType">
     <xs:annotation>
       <xs:documentation>A data point to be expressed as an attribute in the XML or a name/value pair in the JSON. A local definition describes and constrains the appearance of the flag only in its parent (assembly or field) context.</xs:documentation>
     </xs:annotation>
@@ -255,24 +261,8 @@
       <xs:documentation>The JSON Base URI is nominal base URI assigned to a JSON Schema instance expressing the model defined by this metaschema.</xs:documentation>
     </xs:annotation>
   </xs:element>
-  
-  <xs:group name="MarkupElementsGroup">
-    <xs:sequence>
-      <xs:choice maxOccurs="unbounded">
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="a"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="code"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="q"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="em"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="strong"/>
-      </xs:choice>
-    </xs:sequence>
-  </xs:group>
-
-  <xs:complexType name="MarkupLineType" mixed="true">
-    <xs:group ref="MarkupElementsGroup"/>
-  </xs:complexType>
-
-  <xs:element name="description" type="MarkupLineType">
+ 
+  <xs:element name="description" type="markupLineType">
     <xs:annotation>
       <xs:documentation>A short description of the data construct, to be inserted into
         documentation. Unlike 'formal-name' this should not simply repeat what is readily
@@ -288,7 +278,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="MarkupMultilineType">
+        <xs:extension base="markupMultilineType">
           <xs:attribute name="class" type="xs:NMTOKENS">
             <xs:annotation>
               <xs:documentation>Mark as 'XML' for XML-only or 'JSON' for JSON-only remarks.</xs:documentation>
@@ -299,29 +289,16 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:complexType name="MarkupMultilineType">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" ref="p"/>
-    </xs:sequence>
-  </xs:complexType>    
-
-  <xs:element name="schema-name">
+  <xs:element name="schema-name" type="markupLineType">
     <xs:annotation>
       <xs:documentation>The name of the information model to be represented by derived schemas.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true">
-      <xs:choice maxOccurs="unbounded">
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="code"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="q"/>
-      </xs:choice>
-    </xs:complexType>
   </xs:element>
 
-  <xs:element name="schema-version">
+  <xs:element name="schema-version" type="xs:token">
     <xs:annotation>
       <xs:documentation>The version of the information model to be represented by derived schemas.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true"/>
   </xs:element>
 
   <xs:element name="short-name" type="xs:NCName">
@@ -335,7 +312,7 @@
     <xs:annotation>
       <xs:documentation>To import a set of declarations from an out-of-line schema, supporting reuse of common information structures.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true">
+    <xs:complexType>
       <xs:attribute name="href" type="xs:anyURI" use="required">
         <xs:annotation>
           <xs:documentation>A relative or absolute URI for retrieving an out-of-line metaschema module.</xs:documentation>
@@ -491,7 +468,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="MarkupLineType">
+        <xs:extension base="markupLineType">
           <xs:attribute name="value" use="required" type="xs:string">
             <xs:annotation>
               <xs:documentation>A value recognized for a flag or field.</xs:documentation>
@@ -508,23 +485,6 @@
       <xs:documentation>The associated construct has been deprecated at the specified version. Its use should be avoided if possible.</xs:documentation>
     </xs:annotation>    
   </xs:attribute>
-
-  <xs:element name="p" type="MarkupLineType">
-    <xs:annotation>
-      <xs:documentation>A paragraph or paragraph fragment, in documentation.</xs:documentation>
-    </xs:annotation>
-  </xs:element>
-
-  <xs:element name="a">
-    <xs:complexType mixed="true">
-      <xs:attribute name="href"/>
-    </xs:complexType>
-  </xs:element>
-
-  <xs:element name="q" type="xs:string"/>
-  <xs:element name="code" type="xs:string"/>
-  <xs:element name="em" type="xs:string"/>
-  <xs:element name="strong" type="xs:string"/>
 
   <xs:element name="flag">
     <xs:complexType>
@@ -909,8 +869,8 @@
       <xs:choice maxOccurs="unbounded">
         <xs:element ref="assembly"/>
         <xs:element ref="field"/>
-        <xs:element name="define-assembly" type="LocalAssemblyDefinitionType"/>
-        <xs:element name="define-field" type="LocalFieldDefinitionType"/>
+        <xs:element name="define-assembly" type="InlineAssemblyDefinitionType"/>
+        <xs:element name="define-field" type="InlineFieldDefinitionType"/>
       </xs:choice>
     </xs:complexType>
   </xs:element>
