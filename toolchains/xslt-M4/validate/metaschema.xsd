@@ -135,7 +135,7 @@
         is to be labeled in the JSON with the value of the flag.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="name-ref" type="xs:NCName"/>
+      <xs:attribute name="flag-ref" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
 
