@@ -4,12 +4,18 @@
   xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
   targetNamespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
 
-  <xs:include schemaLocation="../schema-gen/oscal-prose-module.xsd">
+  <xs:include schemaLocation="metaschema-prose-module.xsd">
     <xs:annotation>
       <xs:documentation>This prose module provides support for line and multiline markup.</xs:documentation>
     </xs:annotation>
   </xs:include>
 
+  <xs:include schemaLocation="metaschema-datatypes.xsd">
+    <xs:annotation>
+      <xs:documentation>This datatypes module provides support for all other built-in Metaschema data types.</xs:documentation>
+    </xs:annotation>
+  </xs:include>
+  
   <!-- Import any OSCAL schemas needed for samples... -->
   <!--<xs:import namespace="http://csrc.nist.gov/ns/oscal/1.0"
     schemaLocation="../../../schema/xml/oscal-catalog-schema.xsd"/>-->
@@ -64,6 +70,13 @@
     </xs:sequence>
   </xs:group>
 
+  <xs:simpleType name="ModelNameType">
+    <xs:annotation>
+      <xs:documentation>The type of all definition and instance names.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="TokenDatatype"/>
+  </xs:simpleType>
+
   <xs:complexType name="GlobalAssemblyDefinitionType">
     <xs:annotation>
       <xs:documentation>An element with structured element content in XML; in JSON, an object with
@@ -72,8 +85,8 @@
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
       <xs:choice>
-        <xs:element minOccurs="0" name="root-name" type="xs:NCName"/>
-        <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
+        <xs:element minOccurs="0" name="root-name" type="ModelNameType"/>
+        <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
       </xs:choice>
       <xs:element minOccurs="0" maxOccurs="1" ref="json-key"/>
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
@@ -86,7 +99,7 @@
       <xs:element minOccurs="0" ref="remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="example"/>
     </xs:sequence>
-    <xs:attribute name="name" use="required" type="xs:NCName"/>
+    <xs:attribute name="name" use="required" type="ModelNameType"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
     <xs:attribute ref="deprecated"/>
     <xs:anyAttribute processContents="lax"/>
@@ -119,7 +132,7 @@
      when given as a child of a flag (reference), designates that flag's value to serve as
      the key (JSON property label) for the field's value. Inside flag this element
      must be empty.  -->
-  <xs:element name="json-value-key" type="xs:NCName">
+  <xs:element name="json-value-key" type="ModelNameType">
     <xs:annotation>
       <xs:documentation>Used inside a field definition, designates
         a flag to be used as a label (key) to be used for the field value in the JSON on
@@ -135,7 +148,7 @@
         is to be labeled in the JSON with the value of the flag.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="flag-ref" type="xs:NCName"/>
+      <xs:attribute name="flag-ref" type="ModelNameType"/>
     </xs:complexType>
   </xs:element>
 
@@ -147,21 +160,20 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
+      <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="json-key"/>
       <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="flag"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-          type="InlineFlagDefinitionType"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="InlineFlagDefinitionType"/>
       </xs:choice>
       <xs:element minOccurs="0" name="constraint" type="DefineFieldConstraintsType"/>
       <xs:element minOccurs="0" ref="remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="example"/>
     </xs:sequence>
     <xs:attribute name="as-type" type="FieldDatatypesType" default="string"/>
-    <xs:attribute name="collapsible" type="BooleanType" default="no"/>
-    <xs:attribute name="name" use="required" type="xs:NCName"/>
+    <xs:attribute name="collapsible" type="YesNoType" default="no"/>
+    <xs:attribute name="name" use="required" type="ModelNameType"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
     <xs:attribute ref="deprecated"/>
     <xs:anyAttribute processContents="lax"/>
@@ -176,12 +188,12 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
+      <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
       <xs:element name="constraint" minOccurs="0" type="DefineFlagConstraintsType"/>
       <xs:element minOccurs="0" ref="remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="example"/>
     </xs:sequence>
-    <xs:attribute name="name" use="required" type="xs:NCName"/>
+    <xs:attribute name="name" use="required" type="ModelNameType"/>
     <!-- datatype should default to 'string' -->
     <xs:attribute name="as-type" type="SimpleDatatypesType" default="string"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
@@ -197,7 +209,7 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
+      <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="json-key"/>
       <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:element minOccurs="0" ref="group-as"/>
@@ -212,7 +224,7 @@
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="example"/>
     </xs:sequence>
     <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
-    <xs:attribute name="name" use="required" type="xs:NCName"/>
+    <xs:attribute name="name" use="required" type="ModelNameType"/>
     <xs:attribute ref="deprecated"/>
     <xs:anyAttribute processContents="lax"/>
   </xs:complexType>
@@ -226,7 +238,7 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
+      <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="json-key"/>
       <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:element minOccurs="0" ref="group-as"/>
@@ -240,9 +252,9 @@
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="example"/>
     </xs:sequence>
     <xs:attribute name="as-type" type="FieldDatatypesType" default="string"/>
-    <xs:attribute name="collapsible" type="BooleanType" default="no"/>
+    <xs:attribute name="collapsible" type="YesNoType" default="no"/>
     <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
-    <xs:attribute name="name" use="required" type="xs:NCName"/>
+    <xs:attribute name="name" use="required" type="ModelNameType"/>
     <xs:attribute name="in-xml" type="InXmlWrappedType" default="WITH_WRAPPER">
       <xs:annotation>
         <xs:documentation>A field with assigned datatype 'markup-multiline' may be designated for representation with or without a containing (wrapper) element
@@ -263,15 +275,15 @@
       <xs:element minOccurs="0" ref="remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="example"/>
     </xs:sequence>
-    <xs:attribute name="name" use="required" type="xs:NCName"/>
+    <xs:attribute name="name" use="required" type="ModelNameType"/>
     <!-- datatype should default to 'string' -->
     <xs:attribute name="as-type" type="SimpleDatatypesType" default="string"/>
-    <xs:attribute name="required" type="BooleanType" default="no"/>
+    <xs:attribute name="required" type="YesNoType" default="no"/>
     <xs:attribute ref="deprecated"/>
     <xs:anyAttribute processContents="lax"/>
   </xs:complexType>
 
-  <xs:element name="formal-name" type="xs:string">
+  <xs:element name="formal-name" type="StringDatatype">
     <xs:annotation>
       <xs:documentation>A formal name for the data construct, to be presented in documentation. It
         is permissible for a formal name to provide nothing but an expanson of what is already given
@@ -280,7 +292,7 @@
     </xs:annotation>
   </xs:element>
 
-  <xs:element name="namespace" type="xs:anyURI">
+  <xs:element name="namespace" type="URIDatatype">
     <xs:annotation>
       <xs:documentation>The XML namespace governing the names of elements in XML documents, which
         expect to be conformant to the schemas expressed by this metaschema. By using this
@@ -291,13 +303,13 @@
     </xs:annotation>
   </xs:element>
   
-  <xs:element name="json-base-uri" type="xs:anyURI">
+  <xs:element name="json-base-uri" type="URIDatatype">
     <xs:annotation>
       <xs:documentation>The JSON Base URI is nominal base URI assigned to a JSON Schema instance expressing the model defined by this metaschema.</xs:documentation>
     </xs:annotation>
   </xs:element>
  
-  <xs:element name="description" type="markupLineType">
+  <xs:element name="description" type="MarkupLineDatatype">
     <xs:annotation>
       <xs:documentation>A short description of the data construct, to be inserted into
         documentation. Unlike 'formal-name' this should not simply repeat what is readily
@@ -313,30 +325,44 @@
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="markupMultilineType">
-          <xs:attribute name="class" type="xs:NMTOKENS">
+        <xs:extension base="MarkupMultilineDatatype">
+          <xs:attribute name="class">
             <xs:annotation>
               <xs:documentation>Mark as 'XML' for XML-only or 'JSON' for JSON-only remarks.</xs:documentation>
             </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="TokenDatatype">
+                <xs:enumeration value="XML">
+                  <xs:annotation>
+                    <xs:documentation>The remark applies to only XML representations.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="JSON">
+                  <xs:annotation>
+                    <xs:documentation>The remark applies to only JSON and YAML representations.</xs:documentation>
+                  </xs:annotation>
+                </xs:enumeration>
+              </xs:restriction>
+            </xs:simpleType>
           </xs:attribute>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="schema-name" type="markupLineType">
+  <xs:element name="schema-name" type="MarkupLineDatatype">
     <xs:annotation>
       <xs:documentation>The name of the information model to be represented by derived schemas.</xs:documentation>
     </xs:annotation>
   </xs:element>
 
-  <xs:element name="schema-version" type="xs:token">
+  <xs:element name="schema-version" type="StringDatatype">
     <xs:annotation>
       <xs:documentation>The version of the information model to be represented by derived schemas.</xs:documentation>
     </xs:annotation>
   </xs:element>
 
-  <xs:element name="short-name" type="xs:NCName">
+  <xs:element name="short-name" type="TokenDatatype">
     <xs:annotation>
       <xs:documentation>A short (code) name to be used for the metaschema, for example as a constituent of names assigned to
         derived artifacts such as schemas and conversion utilities.</xs:documentation>
@@ -348,7 +374,7 @@
       <xs:documentation>To import a set of declarations from an out-of-line schema, supporting reuse of common information structures.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="href" type="xs:anyURI" use="required">
+      <xs:attribute name="href" type="URIReferenceDatatype" use="required">
         <xs:annotation>
           <xs:documentation>A relative or absolute URI for retrieving an out-of-line metaschema module.</xs:documentation>
         </xs:annotation>
@@ -362,11 +388,11 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
+        <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
         <xs:element minOccurs="0" ref="group-as"/>
         <xs:element minOccurs="0" ref="remarks"/>
       </xs:sequence>
-      <xs:attribute name="ref" use="required" type="xs:NCName"/>
+      <xs:attribute name="ref" use="required" type="ModelNameType"/>
       <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
       <xs:attribute ref="deprecated"/>
       <xs:anyAttribute processContents="lax"/>
@@ -379,11 +405,11 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
+        <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
         <xs:element minOccurs="0" ref="group-as"/>
         <xs:element minOccurs="0" ref="remarks"/>
       </xs:sequence>
-      <xs:attribute name="ref" use="required" type="xs:NCName"/>
+      <xs:attribute name="ref" use="required" type="ModelNameType"/>
       <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
       <xs:attribute name="in-xml" type="InXmlWrappedType" default="WITH_WRAPPER">
         <xs:annotation>
@@ -397,7 +423,7 @@
   </xs:element>
 
   <xs:simpleType name="InXmlWrappedType">
-    <xs:restriction base="xs:string">
+    <xs:restriction base="TokenDatatype">
       <xs:enumeration value="WITH_WRAPPER">
         <xs:annotation>
           <xs:documentation>Any paragraph or block contents of a markup-multiline field will be represented with a containing (wrapper) element in the XML.</xs:documentation>
@@ -412,7 +438,7 @@
   </xs:simpleType>
 
   <xs:attributeGroup name="CardinalitySpecificationGroup">
-    <xs:attribute name="min-occurs" type="xs:nonNegativeInteger" default="0">
+    <xs:attribute name="min-occurs" type="NonNegativeIntegerDatatype" default="0">
       <xs:annotation>
         <xs:documentation>Minimum occurrence of assemblies or fields within a valid model. The default value is 0, for an optional occurrence.</xs:documentation>
       </xs:annotation>
@@ -425,9 +451,9 @@
   </xs:attributeGroup>
 
   <xs:simpleType name="NaturalNumberOrUnboundedType">
-    <xs:union memberTypes="xs:positiveInteger">
+    <xs:union memberTypes="PositiveIntegerDatatype">
       <xs:simpleType>
-        <xs:restriction base="xs:string">
+        <xs:restriction base="StringDatatype">
           <xs:enumeration value="unbounded"/>
         </xs:restriction>
       </xs:simpleType>
@@ -439,7 +465,7 @@
       <xs:element ref="formal-name" minOccurs="0"/>
       <xs:element ref="description" minOccurs="0"/>
     </xs:sequence>
-    <xs:attribute name="id" type="xs:NCName" use="optional"/>
+    <xs:attribute name="id" type="TokenDatatype" use="optional"/>
     <xs:attribute name="level" type="LevelType" default="ERROR"/>
   </xs:complexType>
 
@@ -450,7 +476,7 @@
   </xs:group>
 
   <xs:simpleType name="LevelType">
-    <xs:restriction base="xs:token">
+    <xs:restriction base="TokenDatatype">
       <xs:enumeration value="CRITICAL">
         <xs:annotation>
           <xs:documentation>A violation of the constraint represents a serious fault in the content
@@ -488,7 +514,7 @@
           <xs:element maxOccurs="unbounded" ref="enum"/>
           <xs:group ref="ConstraintContentsGroup"/>
         </xs:sequence>
-        <xs:attribute name="allow-other" type="BooleanType" default="no">
+        <xs:attribute name="allow-other" type="YesNoType" default="no">
           <xs:annotation>
             <xs:documentation>The given enumerated value or values are inclusive of other values ('yes') or not ('no', the default)</xs:documentation>
           </xs:annotation>
@@ -503,8 +529,8 @@
     </xs:annotation>
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="markupLineType">
-          <xs:attribute name="value" use="required" type="xs:string">
+        <xs:extension base="MarkupLineDatatype">
+          <xs:attribute name="value" use="required" type="StringDatatype">
             <xs:annotation>
               <xs:documentation>A value recognized for a flag or field.</xs:documentation>
             </xs:annotation>
@@ -524,11 +550,11 @@
   <xs:element name="flag">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="use-name" minOccurs="0" type="xs:NCName"/>
+        <xs:element name="use-name" minOccurs="0" type="ModelNameType"/>
         <xs:element minOccurs="0" ref="remarks"/>
       </xs:sequence>
-      <xs:attribute name="ref" use="required" type="xs:NCName"/>
-      <xs:attribute name="required" type="BooleanType" default="no"/>
+      <xs:attribute name="ref" use="required" type="ModelNameType"/>
+      <xs:attribute name="required" type="YesNoType" default="no"/>
       <xs:attribute ref="deprecated"/>
       <xs:anyAttribute processContents="lax"/>
     </xs:complexType>
@@ -538,13 +564,11 @@
     <xs:annotation>
       <xs:documentation>A regex subset that is conformant to both https://www.w3.org/TR/xmlschema11-2/#regexes and https://www.ecma-international.org/ecma-262/11.0/index.html#sec-patterns.</xs:documentation>
     </xs:annotation>
-    <xs:restriction base="xs:string"/>
+    <xs:restriction base="StringDatatype"/>
   </xs:simpleType>
 
   <xs:simpleType name="MetaschemaPathType">
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="collapse"/>
-    </xs:restriction>
+    <xs:restriction base="StringDatatype"/>
   </xs:simpleType>
 
   <xs:complexType name="MatchesConstraintType">
@@ -724,7 +748,7 @@
     </xs:annotation>
     <xs:complexContent>
       <xs:extension base="KeyConstraintType">
-        <xs:attribute name="name" type="xs:NCName" use="required">
+        <xs:attribute name="name" type="ModelNameType" use="required">
           <xs:annotation>
             <xs:documentation>Specifies the name of the index, a reference to an index, or the name of a uniqueness constraint.</xs:documentation>
           </xs:annotation>
@@ -760,7 +784,7 @@
             <xs:documentation>Specifies the value objects to be included in the index constraint, or the object that contains a reference to an item in an index. If the value is ".", then the key is targeting the current metaschema object.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="name" type="xs:NCName" use="required">
+        <xs:attribute name="name" type="ModelNameType" use="required">
           <xs:annotation>
             <xs:documentation>Specifies the name of the index, a reference to an index, or the name of a uniqueness constraint.</xs:documentation>
           </xs:annotation>
@@ -773,7 +797,7 @@
     <xs:complexContent>
       <xs:extension base="ConstraintType">
         <xs:sequence>
-          <xs:element name="message" type="xs:string" minOccurs="0"/>
+          <xs:element name="message" type="StringDatatype" minOccurs="0"/>
           <xs:group ref="ConstraintContentsGroup"/>
         </xs:sequence>
         <xs:attribute name="test" type="MetaschemaPathType" use="required">
@@ -838,14 +862,14 @@
               used.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="min-occurs" type="xs:nonNegativeInteger">
+        <xs:attribute name="min-occurs" type="NonNegativeIntegerDatatype">
           <xs:annotation>
             <xs:documentation>Minimum occurrence of assemblies or fields within the set of objects
               identified by the <code>target</code>. This value cannot be less than the
               corresponding value defined on the target.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="max-occurs" type="xs:nonNegativeInteger">
+        <xs:attribute name="max-occurs" type="NonNegativeIntegerDatatype">
           <xs:annotation>
             <xs:documentation>Maximum occurrence of assemblies or fields within the set of objects
               identified by the <code>target</code>. This value must be less than the corresponding
@@ -925,8 +949,8 @@
           <xs:any namespace="##other" processContents="lax"/>
         </xs:choice>
       </xs:sequence>
-      <xs:attribute name="href" type="xs:anyURI"/>
-      <xs:attribute name="path" type="xs:string"/>
+      <xs:attribute name="href" type="URIDatatype"/>
+      <xs:attribute name="path" type="StringDatatype"/>
     </xs:complexType>
   </xs:element>
 
@@ -935,7 +959,7 @@
       <xs:documentation>In the XML, produces an attribute with the given name, whose value is used as a key value (aka object property name) in the JSON, enabling objects to be 'lifted' out of arrays when such values are distinct. Implies that siblings will never share values. Overloading with datatype 'ID' and naming the key 'id' is legitimate and useful. Even without ID validation, uniqueness of these values among siblings is validable.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="flag-name" type="xs:NCName"/>
+      <xs:attribute name="flag-ref" type="ModelNameType"/>
       <!-- do not have to flag if required; it always will be <xs:attribute name="required" type="xs:NCName"/>-->
     </xs:complexType>
   </xs:element>
@@ -945,7 +969,7 @@
       <xs:documentation>When a given referenced field or assembly must be wrapped in an outer grouping, these settings apply, including a name for the group, and how to express the grouping in the respective formats. Not necessary when a field or assembly has max-occurs='1'</xs:documentation>
     </xs:annotation>
     <xs:complexType>
-      <xs:attribute name="name" type="xs:NCName" use="required"/>
+      <xs:attribute name="name" type="ModelNameType" use="required"/>
       <xs:attribute name="in-json" type="JsonGroupAsBehaviorType" use="optional"
         default="SINGLETON_OR_ARRAY">
         <!-- TODO: change the default to "ARRAY" -->
@@ -962,7 +986,7 @@
   </xs:element>
 
   <xs:simpleType name="JsonGroupAsBehaviorType">
-    <xs:restriction base="xs:string">
+    <xs:restriction base="TokenDatatype">
       <xs:enumeration value="ARRAY">
         <xs:annotation>
           <xs:documentation>Always use an array</xs:documentation>
@@ -981,7 +1005,7 @@
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="XmlGroupAsBehaviorType">
-    <xs:restriction base="xs:string">
+    <xs:restriction base="TokenDatatype">
       <xs:enumeration value="GROUPED">
         <xs:annotation>
           <xs:documentation>Use a wrapper element</xs:documentation>
@@ -996,44 +1020,49 @@
   </xs:simpleType>
 
   <xs:simpleType name="SimpleDatatypesType">
-    <xs:restriction base="xs:string">
+    <xs:restriction base="TokenDatatype">
+      <xs:enumeration value="base64"/>
       <xs:enumeration value="boolean"/>
+      <xs:enumeration value="date"/>
+      <xs:enumeration value="date-time"/>
+      <xs:enumeration value="date-time-with-timezone"/>
+      <xs:enumeration value="date-with-timezone"/>
+      <xs:enumeration value="day-time-duration"/>
+      <xs:enumeration value="decimal"/>
+      <!-- Not supporting float or double -->
+      <!--<xs:enumeration value="float" />-->
+      <!--<xs:enumeration value="double" />-->
+      <xs:enumeration value="email-address"/>
+      <xs:enumeration value="hostname"/>
+      <xs:enumeration value="integer"/>
+      <xs:enumeration value="ip-v4-address"/>
+      <xs:enumeration value="ip-v6-address"/>
+      <xs:enumeration value="non-negative-integer"/>
+      <xs:enumeration value="positive-integer"/>
       <xs:enumeration value="string">
         <xs:annotation>
           <xs:documentation>A string with no leading or trailing whitespace.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
-      <xs:enumeration value="decimal"/>
-      <!-- Not supporting float or double -->
-      <!--<xs:enumeration value="float" />
-      <xs:enumeration value="double" />-->
-      <xs:enumeration value="integer"/>
-      <xs:enumeration value="nonNegativeInteger"/>
-      <xs:enumeration value="positiveInteger"/>
-      <xs:enumeration value="dateTime"/>
-      <xs:enumeration value="date"/>
-      <xs:enumeration value="base64Binary"/>
-
-      <!-- specialized datatypes -->
-      <xs:enumeration value="dateTime-with-timezone"/>
-      <xs:enumeration value="date-with-timezone"/>
-      <!--<xs:enumeration value="percent"/>-->
-      <xs:enumeration value="email"/>
-      <xs:enumeration value="hostname"/>
-      <xs:enumeration value="ip-v4-address"/>
-      <xs:enumeration value="ip-v6-address"/>
       <xs:enumeration value="token"/>
       <xs:enumeration value="uri"/>
       <xs:enumeration value="uri-reference"/>
       <xs:enumeration value="uuid"/>
-      
+
+      <!-- deprecated names to remove -->
+      <xs:enumeration value="base64Binary"/>
+      <xs:enumeration value="dateTime"/>
+      <xs:enumeration value="dateTime-with-timezone"/>
+      <xs:enumeration value="email"/>
+      <xs:enumeration value="nonNegativeInteger"/>
+      <xs:enumeration value="positiveInteger"/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="FieldDatatypesType">
     <xs:union memberTypes="SimpleDatatypesType">
       <xs:simpleType>
-        <xs:restriction base="xs:string">
+        <xs:restriction base="TokenDatatype">
           <!--<xs:enumeration value="empty"/>-->
           <xs:enumeration value="markup-line"/>
           <xs:enumeration value="markup-multiline"/>
@@ -1043,15 +1072,15 @@
   </xs:simpleType>
 
   <!-- TODO: check if both forms are handled. In some cases only 'yes' is handled, and 'true' is not. -->
-  <xs:simpleType name="BooleanType">
-    <xs:restriction base="xs:string">
+  <xs:simpleType name="YesNoType">
+    <xs:restriction base="TokenDatatype">
       <xs:enumeration value="yes"/>
       <xs:enumeration value="no"/>
     </xs:restriction>
   </xs:simpleType>
 
   <xs:simpleType name="ScopeType">
-    <xs:restriction base="xs:string">
+    <xs:restriction base="TokenDatatype">
       <xs:enumeration value="local">
         <xs:annotation>
           <xs:documentation>This definition is only available in the context of the current metaschema.</xs:documentation>
@@ -1066,8 +1095,6 @@
   </xs:simpleType>
   
   <xs:simpleType name="VersionType">
-    <xs:restriction base="xs:string">
-      <xs:whiteSpace value="preserve"/>
-    </xs:restriction>
+    <xs:restriction base="StringDatatype"/>
   </xs:simpleType>
 </xs:schema>

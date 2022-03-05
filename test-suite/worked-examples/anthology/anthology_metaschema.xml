@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <?xml-stylesheet type="text/css" href="../../..//metaschema-author.css"?>
-<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../toolchains/xslt-M4/validate/metaschema.xsd"
- xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>Anthology Metaschema</schema-name>
     <schema-version>1.0</schema-version>
     <short-name>ανθ</short-name>
@@ -114,21 +112,17 @@ Under 'widget'
                 <formal-name>Key word</formal-name>
                 <description>A string</description>
                 <group-as name="keywords"/>
-                <constraint>
-                    <is-unique name="distinct-keyword" target=".">
-                        <key-field target="."/>
-                    </is-unique>
-                </constraint>
             </define-field>
             <field ref="remarks"/>
         </model>
         <constraint>
+            <is-unique id="distinct-keyword" target="keyword">
+                <key-field target="."/>
+            </is-unique>
             <allowed-values id="type-check" target="@type">
                 <enum value="YYYY">Four-digit year (CE)</enum>
             </allowed-values>
-            <require when="@type='YYYY'">
-                <matches id="when-yyyy-regex-check" target="@date" regex="[1-9]\d?\d?\d?"/>
-            </require>
+            <matches id="when-yyyy-regex-check" target=".[@type='YYYY']/@date" regex="[1-9]\d?\d?\d?"/>
         </constraint>
     </define-assembly>
     
@@ -195,9 +189,7 @@ Under 'widget'
             </choice>
         </model>
         <constraint>
-            <require when="@type='quatrain'">
-                <has-cardinality id="quatrain-cardinality-check" target="line" max-occurs="4" min-occurs="4"/>
-            </require>
+            <has-cardinality id="quatrain-cardinality-check" target=".[@type='quatrain']/line" max-occurs="4" min-occurs="4"/>
         </constraint>
     </define-assembly>
     
@@ -297,7 +289,7 @@ Under 'widget'
     <define-assembly name="author">
         <formal-name>Author</formal-name>
         <description>A single author cited in the anthology, with relevant info</description>
-        <json-key flag-name="id"/>
+        <json-key flag-ref="id"/>
         <flag ref="id" required="yes"/>
         <model>
             <field    ref="name"/>
@@ -383,7 +375,7 @@ Under 'widget'
         <constraint>
             <!--if floruit is given, birth and death should not be?-->
             <matches id="birth-matches-date-datatype" target="@birth" datatype="date"/>
-            <expect id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>
+            <expect id="chronology-check" target="." test="@birth &lt; @death"/>
         </constraint>
     </define-assembly>
     
