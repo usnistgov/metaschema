@@ -51,14 +51,20 @@
     </xs:keyref>
 -->  </xs:element>
 
+  <xs:group name="DefinitionMetadataGroup">
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="formal-name"/>
+      <xs:element minOccurs="0" ref="description"/>
+    </xs:sequence>
+  </xs:group>
+
   <xs:complexType name="GlobalAssemblyDefinitionType">
     <xs:annotation>
       <xs:documentation>An element with structured element content in XML; in JSON, an object with
         properties. Defined globally, an assembly can be assigned to appear in the <code>model</code> of any assembly (another assembly type, or itself), by <code>assembly</code> reference.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element minOccurs="0" ref="formal-name"/>
-      <xs:element minOccurs="0" ref="description"/>
+      <xs:group ref="DefinitionMetadataGroup"/>
       <xs:choice>
         <xs:element minOccurs="0" name="root-name" type="xs:NCName"/>
         <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
@@ -93,6 +99,40 @@
     </xs:sequence>
   </xs:complexType>
 
+
+  <xs:group name="JsonValueKeyChoiceGroup">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="1">
+        <xs:element ref="json-value-key"/>
+        <xs:element ref="json-value-key-flag"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+
+  <!-- a value-key provides a literal to be used in JSON as a key for the field value;
+     when given as a child of a flag (reference), designates that flag's value to serve as
+     the key (JSON property label) for the field's value. Inside flag this element
+     must be empty.  -->
+  <xs:element name="json-value-key" type="xs:NCName">
+    <xs:annotation>
+      <xs:documentation>Used inside a field definition, designates
+        a flag to be used as a label (key) to be used for the field value in the JSON on
+        the field being defined. When a flag-name is provided, indicates that the value of the field
+        is to be labeled in the JSON with the value of the flag.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element name="json-value-key-flag">
+    <xs:annotation>
+      <xs:documentation>Used inside a field definition, designates
+        a flag to be used as a label (key) to be used for the field value in the JSON on
+        the field being defined. When a flag-name is provided, indicates that the value of the field
+        is to be labeled in the JSON with the value of the flag.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="name-ref" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+
   <xs:complexType name="GlobalFieldDefinitionType">
     <xs:annotation>
       <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
@@ -100,15 +140,13 @@
         content. Defined globally, a field can be assigned to appear in the <code>model</code> of any assembly by <code>field</code> reference.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element minOccurs="0" ref="formal-name"/>
-      <xs:element minOccurs="0" ref="description"/>
+      <xs:group ref="DefinitionMetadataGroup"/>
       <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="json-key"/>
-      <xs:element minOccurs="0" maxOccurs="1" ref="json-value-key"/>
+      <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="flag"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-          type="LocalFlagDefinitionType"/>
+        <xs:element name="define-flag" type="LocalFlagDefinitionType"/>
       </xs:choice>
       <xs:element minOccurs="0" name="constraint" type="DefineFieldConstraintsType"/>
       <xs:element minOccurs="0" ref="remarks"/>
@@ -130,8 +168,7 @@
         applies. Defined globally, a flag can be assigned to any field or assembly by <code>flag</code> reference.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element minOccurs="0" ref="formal-name"/>
-      <xs:element minOccurs="0" ref="description"/>
+      <xs:group ref="DefinitionMetadataGroup"/>
       <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       <xs:element name="constraint" minOccurs="0" type="DefineFlagConstraintsType"/>
       <xs:element minOccurs="0" ref="remarks"/>
@@ -152,16 +189,14 @@
         content. A local definition describes and constrains the appearance of the field only in this (assembly) context.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element minOccurs="0" ref="formal-name"/>
-      <xs:element minOccurs="0" ref="description"/>
+      <xs:group ref="DefinitionMetadataGroup"/>
       <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="json-key"/>
-      <xs:element minOccurs="0" maxOccurs="1" ref="json-value-key"/>
+      <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:element minOccurs="0" ref="group-as"/>
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="flag"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-          type="LocalFlagDefinitionType"/>
+        <xs:element name="define-flag" type="LocalFlagDefinitionType"/>
       </xs:choice>
       <xs:element name="model" minOccurs="0" type="AssemblyModelType"/>
       <xs:element minOccurs="0" name="constraint" type="DefineAssemblyConstraintsType"/>
@@ -182,11 +217,10 @@
         content. A local definition describes and constrains the appearance of the field only in this (assembly) context.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element minOccurs="0" ref="formal-name"/>
-      <xs:element minOccurs="0" ref="description"/>
+      <xs:group ref="DefinitionMetadataGroup"/>
       <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
       <xs:element minOccurs="0" maxOccurs="1" ref="json-key"/>
-      <xs:element minOccurs="0" maxOccurs="1" ref="json-value-key"/>
+      <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:element minOccurs="0" ref="group-as"/>
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element ref="flag"/>
@@ -216,8 +250,7 @@
       <xs:documentation>A data point to be expressed as an attribute in the XML or a name/value pair in the JSON. A local definition describes and constrains the appearance of the flag only in its parent (assembly or field) context.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element minOccurs="0" ref="formal-name"/>
-      <xs:element minOccurs="0" ref="description"/>
+      <xs:group ref="DefinitionMetadataGroup"/>
       <xs:element name="constraint" minOccurs="0" type="DefineFlagConstraintsType"/>
       <xs:element minOccurs="0" ref="remarks"/>
       <xs:element minOccurs="0" maxOccurs="unbounded" ref="example"/>
@@ -999,26 +1032,6 @@
       </xs:enumeration>
     </xs:restriction>
   </xs:simpleType>
-
-  <!-- a value-key provides a literal to be used in JSON as a key for the field value;
-     when given as a child of a flag (reference), designates that flag's value to serve as
-     the key (JSON property label) for the field's value. Inside flag this element
-     must be empty.  -->
-  <xs:element name="json-value-key">
-    <xs:annotation>
-      <xs:documentation>Used inside a field definition, designates
-        a flag to be used as a label (key) to be used for the field value in the JSON on
-        the field being defined. When a flag-name is provided, indicates that the value of the field
-        is to be labeled in the JSON with the value of the flag.</xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:simpleContent>
-        <xs:extension base="xs:NCName">
-          <xs:attribute name="flag-name" type="xs:NCName"/>
-        </xs:extension>
-      </xs:simpleContent>
-    </xs:complexType>
-  </xs:element>
 
   <xs:simpleType name="SimpleDatatypesType">
     <xs:restriction base="xs:string">
