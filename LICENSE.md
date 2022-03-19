@@ -4,7 +4,7 @@ As a work of the United States government, this project is in the public domain 
 
 Additionally, we waive copyright and related rights in the work worldwide through the [CC0 1.0 Universal public domain dedication](https://creativecommons.org/publicdomain/zero/1.0/).
 
-As a work of the United States government, this project is in the public domain within the United States under the [National Institute of Standards and Technology License](#national-institute-of-standards-and-technology-license). Additionally, we waive copyright and related rights in the work worldwide through the [CC0 1.0 Universal public domain dedication](https://creativecommons.org/publicdomain/zero/1.0/).
+As a work of the United States government, this project is in the public domain within the United States under the [National Institute of Standards and Technology License](https://www.nist.gov/open/license)). Additionally, copyright and related rights in the work worldwide are waived through the [CC0 1.0 Universal public domain dedication](https://creativecommons.org/publicdomain/zero/1.0/).
 
 ### CC0 1.0 Universal Summary
 
