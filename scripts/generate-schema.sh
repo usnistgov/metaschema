@@ -119,13 +119,10 @@ fi
 if [ "$VALIDATE_SCHEMA" == "true" ]; then
   result=$(validate_schema "$GENERATE_SCHEMA_FORMAT" "$GENERATED_SCHEMA")
   cmd_exitcode=$?
-  if [ -n "$result" ]; then
-    >&2 echo -e "${result}"
-  fi
   if [ $cmd_exitcode -ne 0 ]; then
     echo -e "${P_ERROR}Schema validation failed for '${P_END}${GENERATED_SCHEMA}${P_ERROR}'.${P_END}"
     echo -e "${P_ERROR}${result}${P_END}"
-    exitcode=1
+    exit 2
   else
     if [ "$VERBOSE" != "true" ]; then
       echo -e "${P_OK}Schema generation complete for '${P_END}${METASCHEMA}${P_OK}' as '${P_END}${GENERATED_SCHEMA}${P_OK}', which is valid.${P_END}"
