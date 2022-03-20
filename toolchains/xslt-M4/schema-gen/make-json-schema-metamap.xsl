@@ -51,7 +51,7 @@
             <!--<xsl:apply-templates select="schema-version"/>-->
             <string key="type">object</string>
             <map key="definitions">
-                <xsl:apply-templates select="*"/>
+                <xsl:apply-templates select="define-assembly | define-field"/>
             </map>           
             <xsl:apply-templates select="." mode="require-a-root"/>
         </map>

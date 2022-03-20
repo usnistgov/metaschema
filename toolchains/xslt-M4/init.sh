@@ -18,6 +18,7 @@ generate_xml_schema() {
     return $cmd_exitcode
   else
     echo -e "${result}"
+    echo "Using transform: ${transform}"
   fi
   return 0;
 }
@@ -35,6 +36,7 @@ generate_json_schema() {
     return $cmd_exitcode
   else
     echo -e "${result}"
+    echo "Using transform: ${transform}"
   fi
   return 0;
 }
