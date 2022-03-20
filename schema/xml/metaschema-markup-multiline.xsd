@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  
+  <xs:include schemaLocation="metaschema-prose-base.xsd"/>
+
+  <xs:complexType name="MarkupMultilineDatatype">
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
+      <xs:group ref="blockElementGroup"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:group name="blockElementGroup">
+    <xs:choice>
+      <xs:element name="h1"    type="inlineType"/>
+      <xs:element name="h2"    type="inlineType"/>
+      <xs:element name="h3"    type="inlineType"/>
+      <xs:element name="h4"    type="inlineType"/>
+      <xs:element name="h5"    type="inlineType"/>
+      <xs:element name="h6"    type="inlineType"/>
+      <xs:element name="p"     type="inlineType"/>
+      <xs:element name="ul"    type="listType"/>
+      <xs:element name="ol"    type="listType"/>
+      <xs:element name="pre"   type="preformattedType"/>
+      <xs:element name="table" type="tableType"/>
+      <xs:element name="img" type="imageType"/>
+      <!-- TODO: need to add support for blockquote, which can contain block elements. usnistgov/metaschema#70 -->
+    </xs:choice>
+  </xs:group>
+
+  <!--
+    headers: phrase inline markup, a, insert (phrase)
+    p: phrase inline markup, a, insert, img (phrase+img)
+    li: phrase inline markup, a, insert, img (phrase+img)
+    pre: phrase inline markup, a, insert (phrase)
+    td th: phrase inline markup, a, insert, img (phrase+img)
+  -->
+
+
+  <xs:complexType name="inlineType" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="inlineMarkupGroup"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="preformattedType" mixed="true">
+    <xs:complexContent>
+      <xs:extension base="inlineType">
+        <xs:annotation>
+          <xs:documentation>The content model is the same as inlineType, but line endings need
+            to be preserved, since this is preformatted.</xs:documentation>
+        </xs:annotation>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="listType">
+    <xs:sequence>
+      <xs:element name="li" type="listItemType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="listItemType" mixed="true">
+    <!-- TODO: is this the correct construction? -->
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="inlineMarkupGroup"/>
+      <xs:element name="ul" type="listType"/>
+      <xs:element name="ol" type="listType"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="tableType">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="tr" type="tableRowType"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tableRowType">
+    <!-- QUESTION: Should we allow TH and TD to be mixed? -->
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
+      <xs:element name="td" type="tableCellType" maxOccurs="unbounded"/>
+      <xs:element name="th" type="tableCellType" maxOccurs="unbounded"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="tableCellType" mixed="true">
+    <xs:complexContent>
+      <!-- TODO: consider adding a choice between the inline or paragraphs. We need to figure out what is supported in Markdown. -->
+      <xs:extension base="inlineType">
+        <!-- TODO: need to add support for alignment. usnistgov/metaschema#70 -->
+        <xs:attribute name="align" type="alignType" default="left"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="alignType">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="left"/>
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="right"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

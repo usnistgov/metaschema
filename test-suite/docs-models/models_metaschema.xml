@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/css" href="../../../toolchains/xslt-M4/lib/metaschema-author.css"?>
+<?xml-stylesheet type="text/css" href="../../toolchains/xslt-M4/util/metaschema-author.css"?>
 <?xml-model href="../../toolchains/xslt-M4/validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
-<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../toolchains/xslt-M4/validate/metaschema.xsd"
- xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>NIST Metaschema Everything</schema-name>
     <schema-version>1.0</schema-version>
     <short-name>test-model</short-name>
-    <namespace>http://csrc.nist.gov/metaschema/ns/everything</namespace>
+    <namespace>http://csrc.nist.gov/ns/metaschema/everything</namespace>
     <json-base-uri>http://csrc.nist.gov/metaschema/ns/everything</json-base-uri>
     
     <remarks>
@@ -142,7 +140,7 @@
         <flag ref="integer-flag"/>
     </define-field>
     
-    <define-field name="field-base64" as-type="base64Binary">
+    <define-field name="field-base64" as-type="base64">
         <formal-name>Lexically constrainted field</formal-name>
         <description>field field-base64</description>
     </define-field>
@@ -180,7 +178,7 @@
     <define-field name="field-by-key">
         <formal-name>Keyed field</formal-name>
         <description>field field-by-key</description>
-        <json-key flag-name="id"/>
+        <json-key flag-ref="id"/>
         <flag ref="id" required="yes"/>
     </define-field>
     
@@ -194,7 +192,7 @@
     <define-field name="field-dynamic-value-key">
         <formal-name>Dynamic value key field</formal-name>
         <description>field field-dynamic-value-key</description>
-        <json-value-key flag-name="id"/>
+        <json-value-key-flag flag-ref="id"/>
         <flag ref="id" required="yes"/>
         <define-flag name="color">
             <formal-name>COLOR</formal-name>
@@ -311,7 +309,7 @@
     <define-assembly name="assembly-by-key">
         <formal-name>Keyed assembly</formal-name>
         <description>assembly assembly-by-key</description>
-        <json-key flag-name="id"/>
+        <json-key flag-ref="id"/>
         <flag ref="id" required="yes"/>
         
         <model>

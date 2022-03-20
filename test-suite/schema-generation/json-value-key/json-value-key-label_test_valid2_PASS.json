@@ -1,0 +1,20 @@
+{
+  "parent": {
+    "links": [
+      {
+        "href": "./path",
+        "text": "value1"
+      },
+      {
+        "text": "value1",
+        "href": "https://nist.gov/blah",
+        "rel": "rel1"
+      },
+      {
+        "text": "value1",
+        "href": "https://nist.gov/blah",
+        "rel": "rel2"
+      }
+    ]
+  }
+}
