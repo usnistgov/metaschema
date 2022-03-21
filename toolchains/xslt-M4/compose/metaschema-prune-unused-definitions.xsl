@@ -34,24 +34,22 @@
 
     <xsl:variable name="root-assembly-definitions" select="//METASCHEMA/define-assembly[exists(root-name)]"/>
 
-
-    <xsl:variable name="reference-counts" select="accumulator-after('definition-count')"/>
-    
-    <xsl:accumulator name="definition-count" as="map(xs:string, xs:integer)"
-        initial-value="map{}">
-        <xsl:accumulator-rule match="m:assembly|m:field|m:flag">
+    <xsl:variable name="reference-counts" as="map(xs:string, xs:integer)">
+        <xsl:iterate select="//(m:assembly | m:field | m:flag)">
+            <xsl:param name="counts" as="map(xs:string, xs:integer)" select="map{}"/>
+            <xsl:on-completion select="$counts"/>
             <xsl:variable name="key" select="(name(.), @_key-ref) => string-join('#')"/>
-            <xsl:choose>
-                <xsl:when test="map:contains($value, $key)">
-                    <xsl:sequence select="map:put($value, string($key), 
-                        $value($key)+1)"/>
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:sequence select="map:put($value, string($key), 1)"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:accumulator-rule>  
-    </xsl:accumulator>
+            <xsl:variable name="new-counts" as="map(xs:string, xs:integer)" select="
+                if (map:contains($counts, $key))
+                then
+                map:put($counts, string($key), $counts($key)+1)
+                else
+                map:put($counts, string($key), 1)"/>
+            <xsl:next-iteration>
+                <xsl:with-param name="counts" select="$new-counts"/>
+            </xsl:next-iteration>
+        </xsl:iterate>
+    </xsl:variable>
 
     <xsl:template match="/METASCHEMA">
         <xsl:copy>
