@@ -643,7 +643,7 @@
         <!-- https://raw.githubusercontent.com/usnistgov/metaschema/feature-metaschema-relocation-plus-enhancements
             /schema/json/metaschema-datatypes.json       -->
         
-        <xsl:copy-of select="( unparsed-text('metaschema-v090-datatypes.json') => json-to-xml() )/map/map[@key='definitions']/map"/>
+        <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text('metaschema-v090-datatypes.json') => json-to-xml() )/map/map[@key='definitions']/map"/>
         
         <!-- Now the old names, for backward compatibility, amended with new definitions. -->
         <map key="decimal"><!-- DecimalDatatype -->
