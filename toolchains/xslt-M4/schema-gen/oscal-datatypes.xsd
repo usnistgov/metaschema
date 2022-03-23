@@ -184,7 +184,7 @@
 
   <xs:simpleType name="uuid">
     <xs:annotation>
-      <xs:documentation>A Type 4 ('random' or 'pseudorandom' UUID per RFC 4122</xs:documentation>
+      <xs:documentation>A Type 4 or 5 'random' or 'pseudorandom' UUID per RFC 4122</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:whiteSpace value="collapse"/>
@@ -199,7 +199,7 @@
   <!-- This could be renamed 'ncname-token' if we wish to loosen 'token', as this is pretty strict. -->
   <xs:simpleType name="token">
     <xs:annotation>
-      <xs:documentation>A string token intended for use in controlled (enumerated) values, robust for purposes of machine processing.</xs:documentation>
+      <xs:documentation>A string token intended for use as a controlled (enumerated) value</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:whiteSpace value="preserve"/>
@@ -371,7 +371,7 @@
   </xs:simpleType>
   <xs:simpleType name="UUIDDatatype">
     <xs:annotation>
-      <xs:documentation>A type 4 ('random' or 'pseudorandom') or type 5 UUID per RFC 4122.</xs:documentation>
+      <xs:documentation>A type 4 or 5 ('random' or 'pseudorandom') or type 5 UUID per RFC 4122.</xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
       <xs:whiteSpace value="preserve"/>
