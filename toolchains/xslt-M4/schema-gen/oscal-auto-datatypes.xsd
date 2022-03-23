@@ -127,12 +127,16 @@
    <xs:simpleType name="NonNegativeIntegerDatatype">
       <xs:restriction base="xs:string">
          <xs:whiteSpace value="preserve"/>
-         <!-- $ref: #/definitions/IntegerDatatype -->0</xs:restriction>
+         <!-- $ref: #/definitions/IntegerDatatype -->
+         <!-- minimum: 0 -->
+      </xs:restriction>
    </xs:simpleType>
    <xs:simpleType name="PositiveIntegerDatatype">
       <xs:restriction base="xs:string">
          <xs:whiteSpace value="preserve"/>
-         <!-- $ref: #/definitions/IntegerDatatype -->1</xs:restriction>
+         <!-- $ref: #/definitions/IntegerDatatype -->
+         <!-- minimum: 1 -->
+      </xs:restriction>
    </xs:simpleType>
    <xs:simpleType name="StringDatatype">
       <xs:restriction base="xs:string">

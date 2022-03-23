@@ -113,7 +113,7 @@
     
     <xsl:template match="string[@key='description']"/>
     
-    <xsl:template match="string">
+    <xsl:template match="string | number | boolean">
         <xsl:comment expand-text="true"> { @key }: {.} </xsl:comment>
     </xsl:template>
     
