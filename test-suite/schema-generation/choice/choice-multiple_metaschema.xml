@@ -3,8 +3,8 @@
     <schema-name>Metaschema Unit Test: choice multiple choices</schema-name>
     <schema-version>1.0</schema-version>
     <short-name>json-value-key-label</short-name>
-    <namespace>http://csrc.nist.gov/ns/metaschema/unit-test/json-value-key-label</namespace>
-    <json-base-uri>http://csrc.nist.gov/ns/metaschema/unit-test/json-value-key-label</json-base-uri>
+    <namespace>http://csrc.nist.gov/ns/metaschema/unit-test/choice</namespace>
+    <json-base-uri>http://csrc.nist.gov/ns/metaschema/unit-test/choice</json-base-uri>
 
     <define-assembly name="parent">
         <formal-name>parent</formal-name>
