@@ -3,11 +3,25 @@
 	elementFormDefault="qualified">
 
 	<xs:simpleType name="Base64Datatype">
-		<xs:restriction base="xs:base64Binary"/>
+		<xs:restriction base="xs:base64Binary">
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>A trimmed string, at least one character with no
+						leading or trailing whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
+		</xs:restriction>
 	</xs:simpleType>
 	
 	<xs:simpleType name="BooleanDatatype">
-		<xs:restriction base="xs:boolean"/>
+		<xs:restriction base="xs:boolean">
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>A trimmed string, at least one character with no
+						leading or trailing whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
+		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="DateDatatype">
@@ -47,7 +61,14 @@
 	</xs:simpleType>
 
 	<xs:simpleType name="DecimalDatatype">
-		<xs:restriction base="xs:decimal"/>
+		<xs:restriction base="xs:decimal">
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>A trimmed string, at least one character with no
+						leading or trailing whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
+		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:simpleType name="EmailAddressDatatype">
@@ -55,7 +76,7 @@
 			<xs:documentation>An email address</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="StringDatatype">
-			<xs:pattern value=".+@.+">
+			<xs:pattern value="\S.*@.*\S">
 				<xs:annotation>
 					<xs:documentation>Need a better pattern.</xs:documentation>
 				</xs:annotation>
@@ -73,7 +94,14 @@
 	</xs:simpleType>
 	
 	<xs:simpleType name="IntegerDatatype">
-		<xs:restriction base="xs:integer"/>
+		<xs:restriction base="xs:integer">
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>A trimmed string, at least one character with no
+						leading or trailing whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
+		</xs:restriction>
 	</xs:simpleType>
 	
 	<xs:simpleType name="IPV4AddressDatatype">
@@ -102,11 +130,25 @@
 	</xs:simpleType>
 
 	<xs:simpleType name="NonNegativeIntegerDatatype">
-		<xs:restriction base="xs:nonNegativeInteger"/>
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>A trimmed string, at least one character with no
+						leading or trailing whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
+		</xs:restriction>
 	</xs:simpleType>
 	
 	<xs:simpleType name="PositiveIntegerDatatype">
-		<xs:restriction base="xs:positiveInteger"/>
+		<xs:restriction base="xs:positiveInteger">
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>A trimmed string, at least one character with no
+						leading or trailing whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
+		</xs:restriction>
 	</xs:simpleType>
 	
 	<xs:simpleType name="StringDatatype">
@@ -156,7 +198,6 @@
 			<xs:documentation>A URI</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:anyURI">
-			<xs:whiteSpace value="preserve" />
 			<xs:pattern value="[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S">
 				<xs:annotation>
 					<xs:documentation>Requires a scheme with colon per RFC 3986.</xs:documentation>
@@ -171,7 +212,6 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:anyURI">
-			<xs:whiteSpace value="preserve" />
 			<xs:pattern value="\S(.*\S)?">
 				<xs:annotation>
 					<xs:documentation>A trimmed URI, at least one character with no
