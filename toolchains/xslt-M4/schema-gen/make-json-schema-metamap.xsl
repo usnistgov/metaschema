@@ -626,9 +626,9 @@
     <xsl:mode name="acquire-types" on-no-match="shallow-copy"/>
     
     <xsl:template mode="acquire-types" xpath-default-namespace="http://www.w3.org/2005/xpath-functions" match="string[@key='description']">
-      <string key="datatype-description">
+      <!--<string key="datatype-description">
           <xsl:apply-templates/>
-      </string>    
+      </string>  -->  
     </xsl:template>
     
     <xsl:key name="datatypes-by-name" xpath-default-namespace="http://www.w3.org/2005/xpath-functions"
