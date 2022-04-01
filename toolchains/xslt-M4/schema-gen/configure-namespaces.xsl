@@ -56,11 +56,10 @@
         <xsl:copy-of select="."/>
     </xsl:template>
     
-   <!-- <xsl:key name="datatype-invocation" use="substring-after(@base,'metaschema-datatypes:')"
-        match="xs:extension[starts-with(@base,'metaschema-datatypes:')]
-        | xs:restriction[starts-with(@base,'metaschema-datatypes:')]"/>
+    <xsl:key name="datatype-invocation" use="substring-after(@base,':')"
+        match="xs:extension | xs:restriction"/>
     
-    <xsl:key name="datatype-invocation" use="@type"
+    <xsl:key name="datatype-invocation" use="substring-after(@type,':')"
         match="xs:element[exists(@type)]
         | xs:attribute[exists(@type)]"/>
     
@@ -68,7 +67,7 @@
         <xsl:if test="exists(key('datatype-invocation',@name))">
           <xsl:next-match/>
         </xsl:if>
-    </xsl:template>-->
+    </xsl:template>
     
 <!-- matching xs:restriction/@base rewrite m: as {$declaration-prefix}: -->
     <xsl:template match="text()" mode="wire-ns"/>
