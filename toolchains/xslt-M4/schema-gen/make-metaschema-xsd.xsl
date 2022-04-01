@@ -78,9 +78,8 @@
                 </xsl:if>-->
                 <xsl:apply-templates mode="acquire-prose" select="$prose-module-xsd"/>
             </xsl:if>
-            <xsl:variable name="all-types" select="$metaschema//@as-type"/>
             
-            <xsl:copy-of select="$types-library/xs:simpleType[@name = $all-types]"/>
+            <xsl:copy-of select="$types-library/xs:simpleType"/>
         </xs:schema>
     </xsl:template>
     

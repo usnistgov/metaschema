@@ -11,6 +11,9 @@
     <!-- Output: A JSON Schema (v7) describing a JSON format consistent with definitions given in the input metaschema -->
     <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
     
+    <!-- Debug variant writes out JSON Schema as XPath XML subject to validation -->
+    <!-- Check its fitness for serialization by validating against XSD ../../support/xml/xpath-json.xsd -->
+    
     <xsl:output method="xml" indent="yes"/>
 
     <!-- Turning $trace to 'on' will
