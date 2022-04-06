@@ -5,20 +5,19 @@
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    exclude-result-prefixes="xs math m xsi" version="3.0">
-
+    exclude-result-prefixes="#all" version="3.0">
+    
     <xsl:output indent="yes"/>
-
+    
     <xsl:strip-space
         elements="METASCHEMA define-flag define-field define-assembly remarks model choice"/>
-
+    
     <xsl:variable name="show-warnings" as="xs:string">yes</xsl:variable>
     <xsl:variable name="verbose" select="lower-case($show-warnings) = ('yes', 'y', '1', 'true')"/>
-
-    <xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly" use="@_key-name"/>
-    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field"    use="@_key-name"/>
+    
+    <!--<xsl:key name="global-assembly-definition" match="METASCHEMA/define-assembly" use="@_key-name"/>
+    <xsl:key name="global-field-definition"    match="METASCHEMA/define-field"    use="@_key-name"/>-->
     
     
     <!-- ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== -->
@@ -31,36 +30,58 @@
     -->
     
     <xsl:mode on-no-match="shallow-copy"/>
-
+    
+    <!-- potentially we have nested //METASCHEMA elements -->
     <xsl:variable name="root-assembly-definitions" select="//METASCHEMA/define-assembly[exists(root-name)]"/>
-
-    <xsl:variable name="reference-counts" as="map(xs:string, xs:integer)">
-        <xsl:iterate select="//(m:assembly | m:field | m:flag)">
-            <xsl:param name="counts" as="map(xs:string, xs:integer)" select="map{}"/>
-            <xsl:on-completion select="$counts"/>
-            <xsl:variable name="key" select="(name(.), @_key-ref) => string-join('#')"/>
-            <xsl:variable name="new-counts" as="map(xs:string, xs:integer)" select="
-                if (map:contains($counts, $key))
-                then
-                map:put($counts, string($key), $counts($key)+1)
-                else
-                map:put($counts, string($key), 1)"/>
-            <xsl:next-iteration>
-                <xsl:with-param name="counts" select="$new-counts"/>
-            </xsl:next-iteration>
-        </xsl:iterate>
+    
+    <xsl:function name="m:definition-key" as="xs:string">
+        <xsl:param name="d"/>
+        <xsl:sequence select="$d ! (substring-after(name(.),'define-'), @_key-name) => string-join('#')"/>
+    </xsl:function>
+    
+    <xsl:key name="m:definition-by-key" match="METASCHEMA/define-assembly |
+        METASCHEMA/define-field | METASCHEMA/define-flag" use="m:definition-key(.)"/>
+    
+    <xsl:function name="m:referencing-key" as="xs:string">
+        <xsl:param name="r"/>
+        <xsl:sequence select="$r ! (name(.), @_key-ref) => string-join('#')"/>
+    </xsl:function>
+    
+    <xsl:variable name="definitions" as="xs:string*">
+        <xsl:apply-templates select="$root-assembly-definitions" mode="collect-definitions">
+            <xsl:with-param name="keys-so-far" tunnel="true" select="()"/>
+        </xsl:apply-templates>
     </xsl:variable>
-
+    
+    <xsl:template mode="collect-definitions" match="METASCHEMA/define-assembly |
+        METASCHEMA/define-field | METASCHEMA/define-flag">
+        <xsl:param tunnel="true" name="keys-so-far"/>
+        <xsl:variable name="key" select="m:definition-key(.)"/>
+        <!-- guarding against infinite loops with recursive calls -->
+        <xsl:if test="not($key = $keys-so-far)">
+            <!-- emitting the key as a string value into the result -->
+            <xsl:value-of select="m:definition-key(.)"/>
+            <!-- now traversing to descendant references -->
+            <xsl:apply-templates select="descendant::flag | descendant::field | descendant::assembly" mode="#current">
+                <xsl:with-param name="keys-so-far" tunnel="true" select="$keys-so-far, $key"/>
+            </xsl:apply-templates>
+        </xsl:if>
+    </xsl:template>
+    
+    <xsl:template mode="collect-definitions" match="assembly | field | flag">
+        <xsl:apply-templates select="key('m:definition-by-key',m:referencing-key(.))" mode="#current"/>
+    </xsl:template>
+    
+    
+    
+    
     <xsl:template match="/METASCHEMA">
-        <xsl:copy>
+        <xsl:copy expand-text="true">
             <xsl:copy-of select="@*"/>
+            <EXCEPTION>Seeing { $definitions => string-join(', ') }</EXCEPTION>
             <xsl:if test="not(@abstract='yes') and empty($root-assembly-definitions)">
                 <EXCEPTION problem-type="missing-root">No root found in this metaschema composition.</EXCEPTION>
             </xsl:if>
-            <xsl:for-each select="map:keys($reference-counts)">
-                <xsl:comment expand-text="true">{ . } = { $reference-counts(.) }</xsl:comment>
-                <xsl:text>&#xa;</xsl:text>
-            </xsl:for-each>
             
             <xsl:apply-templates/>
             
@@ -68,9 +89,9 @@
     </xsl:template>
     
     <!-- 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 -->    
-
-    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-assembly[not(exists(m:root-name) or map:contains($reference-counts,string((substring-after(name(.),'define-'), @_key-name) => string-join('#'))))]">
-<!--        <xsl:comment>Root Name? <xsl:value-of select="exists(m:root-name)"/></xsl:comment>
+    
+    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-assembly[not(exists(m:root-name) or (m:definition-key(.) = $definitions))]">
+        <!--        <xsl:comment>Root Name? <xsl:value-of select="exists(m:root-name)"/></xsl:comment>
         <xsl:comment>Map Key <xsl:value-of select="string((substring-after(name(.),'define-'), @_key-name) => string-join('#'))"/></xsl:comment>
         <xsl:comment>Map Contains? <xsl:value-of select="map:contains($reference-counts,string((substring-after(name(.),'define-'), @_key-ref) => string-join('#')))"/></xsl:comment>
 -->
@@ -79,27 +100,27 @@
                  silenced and/or rendered as a comment -->
             <xsl:with-param name="type">unused-definition</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">REMOVING unused assembly definition for '{ @name }' from { ancestor::METASCHEMA[1]/@module
-                }</xsl:with-param>
+                } ::: { m:definition-key(.) } : { $definitions => string-join(', ') }</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
     
-    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-field[not(map:contains($reference-counts,string((substring-after(name(.),'define-'), @_key-name) => string-join('#'))))]">
+    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-field[not(m:definition-key(.) = $definitions)]">
         <xsl:call-template name="warning">
             <!-- since we can detect unused definitions a better way, this can be
                  silenced and/or rendered as a comment -->
             <xsl:with-param name="type">unused-definition</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">REMOVING unused field definition for '{ @name }' from { ancestor::METASCHEMA[1]/@module
-                }</xsl:with-param>
+                } ::: { m:definition-key(.) }</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
     
-    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-flag[not(map:contains($reference-counts,string((substring-after(name(.),'define-'), @_key-name) => string-join('#'))))]">
+    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-flag[not(m:definition-key(.) = $definitions)]">
         <xsl:call-template name="warning">
             <!-- since we can detect unused definitions a better way, this can be
                  silenced and/or rendered as a comment -->
             <xsl:with-param name="type">unused-definition</xsl:with-param>
             <xsl:with-param name="msg" expand-text="true">REMOVING unused flag definition for '{ @name }' from { ancestor::METASCHEMA[1]/@module
-                }</xsl:with-param>
+                } ::: { m:definition-key(.) }</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
     
