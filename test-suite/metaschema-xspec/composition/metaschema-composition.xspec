@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               stylesheet="../../../toolchains/xslt-M4/nist-metaschema-COMPOSE.xsl"
+               run-as="external"
+               xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+               xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+               xmlns:ov="http://csrc.nist.gov/ns/oscal/test/variable">
+   
+   <x:helper stylesheet="../metaschema-test-helper.xsl"/>
+   
+   <x:scenario label="Unused definitions">
+      <!-- Scrubbing both the result and the expected result for comparison -->
+      <x:context href="nestedmessy_metaschema.xml"/>
+      <x:variable name="ov:expected-output"
+         href="expected/nestedmessy_metaschema-composed.xml"/>
+      <x:expect label="Base test - fully resolved"
+         test="m:scrub($x:result)" select="m:scrub($ov:expected-output)"/>
+   </x:scenario>
+   
+   
+</x:description>
