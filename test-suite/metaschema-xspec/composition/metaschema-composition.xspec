@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
-               stylesheet="../../../toolchains/xslt-M4/nist-metaschema-COMPOSE.xsl"
+               stylesheet="../../../toolchains/xslt-M4/"
                run-as="external"
                xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
                xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
@@ -8,13 +8,55 @@
    
    <x:helper stylesheet="../metaschema-test-helper.xsl"/>
    
-   <x:scenario label="Unused definitions">
+   <x:scenario label="Unused definitions - standoff">
       <!-- Scrubbing both the result and the expected result for comparison -->
       <x:context href="nestedmessy_metaschema.xml"/>
       <x:variable name="ov:expected-output"
          href="expected/nestedmessy_metaschema-composed.xml"/>
       <x:expect label="Base test - fully resolved"
          test="m:scrub($x:result)" select="m:scrub($ov:expected-output)"/>
+   </x:scenario>
+   <x:scenario label="Unused definitions - reports">
+      <!-- Scrubbing both the result and the expected result for comparison -->
+      <x:context>
+         <METASCHEMA>
+            <define-assembly name="BOX">
+               <formal-name>BOX</formal-name>
+               <description>Empty box (contains nothing)</description>
+            </define-assembly>
+            <define-assembly name="unused-assembly">
+               <formal-name>Unused Assembly</formal-name>
+               <description>Unused assembly</description>
+               <model>
+                  <field ref="unused-field"/>
+               </model>
+            </define-assembly>
+            <define-field name="unused-field">
+               <formal-name>Unused Field</formal-name>
+               <description>Unused field</description>
+            </define-field>
+         </METASCHEMA>
+      </x:context>
+      <x:expect label="take a look:">
+         <METASCHEMA>
+            <define-assembly name="BOX">
+               <formal-name>BOX</formal-name>
+               <description>Empty box (contains nothing)</description>
+            </define-assembly>
+            <define-assembly name="unused-assembly">
+               <formal-name>Unused Assembly</formal-name>
+               <description>Unused assembly</description>
+               <model>
+                  <field ref="unused-field"/>
+               </model>
+            </define-assembly>
+            <define-field name="unused-field">
+               <formal-name>Unused Field</formal-name>
+               <description>Unused field</description>
+            </define-field>
+         </METASCHEMA>
+      </x:expect>
+      <x:expect label="Detecting two unused fields" test="count($x:result//m:EXCEPTION) eq 2"/>
    </x:scenario>
    
    

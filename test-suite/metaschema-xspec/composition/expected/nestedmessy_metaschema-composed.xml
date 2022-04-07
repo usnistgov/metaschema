@@ -2,7 +2,8 @@
             abstract="no"
             module="nestedmessy"
             _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/nestedmessy_metaschema.xml">
-  <schema-name>Nested Reference Test</schema-name>
+   <INFO info-type="objects-used">Seeing assembly#nestedmessy:box, assembly#nestedmessy:envelope, field#nestedmessy:page, flag#nestedmessy:no, assembly#nestedmessy:folder</INFO>
+   <schema-name>Nested Reference Test</schema-name>
    <schema-version>1.0</schema-version>
    <short-name>nestedmessy</short-name>
    <namespace>http://csrc.nist.gov/metaschema/ns/nested</namespace>
