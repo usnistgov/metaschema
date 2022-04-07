@@ -4,58 +4,22 @@
     xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    stylesheet="../metaschema-prune-unused-definitions.xsl"
+    stylesheet="../../metaschema-prune-unused-definitions.xsl"
     run-as="external">
     <x:scenario label="During Metaschema composition">
         <x:scenario label="during the pruning phase">
             <x:scenario label="a single root assembly with no references">
-                <x:context>
-                    <METASCHEMA module="pruning001">
-                        <define-assembly name="box">
-                            <formal-name>BOX</formal-name>
-                            <description>Just a box, no relationship to anything else.</description>
-                            <root-name>BOX</root-name>
-                        </define-assembly>
-                    </METASCHEMA>
-                </x:context>
+                <x:context href="./pruning001.xml"/>
                 <x:expect label="should not throw an exception"
                     test="$x:result//m:EXCEPTION => empty()"/>
             </x:scenario>
             <x:scenario label="top-level definitions with correct references.">
-                <x:context>
-                    <METASCHEMA module="pruning002">
-                        <define-assembly name="box">
-                            <formal-name>BOX</formal-name>
-                            <description>Just a box, no relationship to anything else.</description>
-                            <root-name>BOX</root-name>
-                            <model>
-                                <assembly ref="folder"/>
-                            </model>
-                        </define-assembly>
-                        <define-assembly name="folder">
-                            <formal-name>Folder</formal-name>
-                            <description>One or more folders belong in a box.</description>
-                        </define-assembly>
-                    </METASCHEMA>
-                </x:context>
+                <x:context href="./pruning002.xml"/>
                 <x:expect label="should not throw an exception"
                     test="$x:result//m:EXCEPTION => empty()"/>
             </x:scenario>
             <x:scenario label="top-level definitions with unused.">
-                <x:context>
-                    <METASCHEMA module="pruning003">
-                        <define-assembly name="box">
-                            <formal-name>BOX</formal-name>
-                            <description>Just a box, no relationship to anything else.</description>
-                            <root-name>BOX</root-name>
-                            <model/>
-                        </define-assembly>
-                        <define-assembly name="folder">
-                            <formal-name>Folder</formal-name>
-                            <description>One or more folders belong in a box.</description>
-                        </define-assembly>
-                    </METASCHEMA>
-                </x:context>
+                <x:context href="./pruning003.xml"/>                
                 <x:expect label="throws only exception for an unused definition."
                     test="count($x:result//m:EXCEPTION) eq 1"/>
                 <x:expect label="and should be of type unused-definition with the proper message."
