@@ -6,15 +6,14 @@
                xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
                xmlns:mv="http://csrc.nist.gov/ns/metaschema/test/variable">
    
-   <x:helper stylesheet="../metaschema-test-helper.xsl"/>
+   <!-- no need for helper <x:helper stylesheet="../metaschema-test-helper.xsl"/> -->
    
    <x:scenario label="Unused definitions - reports">
-      <!-- Scrubbing both the result and the expected result for comparison -->
       <x:context>
          <METASCHEMA module="nestedmessy">
             <define-assembly name="unused-assembly" module="nestedmessy" _key-name="nestedmessy:unused-assembly">
                <formal-name>Unused assembly</formal-name>
-               <description>Unused</description>
+               <description>Unused assembly</description>
                <model>
                   <field max-occurs="1" min-occurs="0" ref="unused-field" _key-ref="nestedmessy:unused-field"/>
                </model>
@@ -25,8 +24,7 @@
                <root-name>BOX</root-name>
                <model/>
             </define-assembly>
-            <define-field as-type="string" name="unused-field" module="nestedmessy"
-               _key-name="nestedmessy:unused-field">
+            <define-field as-type="string" name="unused-field" module="nestedmessy" _key-name="nestedmessy:unused-field">
                <formal-name>Unused field</formal-name>
                <description>Unused field</description>
             </define-field>
@@ -48,7 +46,6 @@
       <x:expect label="Detecting two unused fields" test="count($x:result//m:EXCEPTION[@problem-type='unused-definition']) eq 2"/>
       <x:expect label="Seeing unused assembly" test="$x:result//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused assembly definition for ''unused-assembly'' from nestedmessy.'"/>
       <x:expect label="Seeing unused field" test="$x:result//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused field definition for ''unused-field'' from nestedmessy.'"/>
-      
    </x:scenario>
    
    
