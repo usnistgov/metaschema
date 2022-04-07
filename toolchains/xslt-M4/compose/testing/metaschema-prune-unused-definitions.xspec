@@ -18,7 +18,7 @@
                     </METASCHEMA>
                 </x:context>
                 <x:expect label="should not throw an exception"
-                    test="count($x:result//m:EXCEPTION) = 1"/>
+                    test="count($x:result//m:EXCEPTION) = 0"/>
             </x:scenario>
             <x:scenario label="top level definitions with correct references">
                 <x:context>
@@ -27,6 +27,9 @@
                             <formal-name>BOX</formal-name>
                             <description>Just a box, no relationship to anything else.</description>
                             <root-name>BOX</root-name>
+                            <model>
+                                <assembly ref="folder"   max-occurs="unbounded"/>
+                            </model>
                         </define-assembly>
                         <define-assembly name="folder">
                             <formal-name>Folder</formal-name>
@@ -36,7 +39,7 @@
                     </METASCHEMA>
                 </x:context>
                 <x:expect label="should not throw an exception"
-                    test="count($x:result//m:EXCEPTION) = 1"/>
+                    test="count($x:result//m:EXCEPTION) = 0"/>
             </x:scenario>
         </x:scenario>
     </x:scenario>
