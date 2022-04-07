@@ -18,9 +18,9 @@
                     </METASCHEMA>
                 </x:context>
                 <x:expect label="should not throw an exception"
-                    test="count($x:result//m:EXCEPTION) = 0"/>
+                    test="$x:result//m:EXCEPTION => empty()"/>
             </x:scenario>
-            <x:scenario label="top level definitions with correct references">
+            <x:scenario label="top-level definitions with correct references.">
                 <x:context>
                     <METASCHEMA>
                         <define-assembly name="box">
@@ -28,18 +28,36 @@
                             <description>Just a box, no relationship to anything else.</description>
                             <root-name>BOX</root-name>
                             <model>
-                                <assembly ref="folder"   max-occurs="unbounded"/>
+                                <assembly ref="folder"/>
                             </model>
                         </define-assembly>
                         <define-assembly name="folder">
                             <formal-name>Folder</formal-name>
                             <description>One or more folders belong in a box.</description>
-                            <model/>
                         </define-assembly>
                     </METASCHEMA>
                 </x:context>
                 <x:expect label="should not throw an exception"
-                    test="count($x:result//m:EXCEPTION) = 0"/>
+                    test="$x:result//m:EXCEPTION => empty()"/>
+            </x:scenario>
+            <x:scenario label="top-level definitions with unused.">
+                <x:context>
+                    <METASCHEMA>
+                        <short-name>pruning003</short-name>
+                        <define-assembly name="box">
+                            <formal-name>BOX</formal-name>
+                            <description>Just a box, no relationship to anything else.</description>
+                            <root-name>BOX</root-name>
+                            <model/>
+                        </define-assembly>
+                        <define-assembly name="folder">
+                            <formal-name>Folder</formal-name>
+                            <description>One or more folders belong in a box.</description>
+                        </define-assembly>
+                    </METASCHEMA>
+                </x:context>
+                <x:expect label="should throw an 'unused-definition' exception."
+                    test="$x:result//m:EXCEPTION[@problem-type = 'unused-definition'] => string() => empty()"/>
             </x:scenario>
         </x:scenario>
     </x:scenario>
