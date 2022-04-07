@@ -21,9 +21,7 @@
     
     <xsl:mode on-no-match="shallow-copy"/>
 
-    <!-- potentially we have nested //METASCHEMA elements -->
-    <xsl:variable name="root-assembly-definitions" select="//METASCHEMA/define-assembly[exists(root-name)]"/>
-
+    
     <xsl:function name="m:definition-key" as="xs:string">
         <xsl:param name="d"/>
         <xsl:sequence select="$d ! (substring-after(name(.),'define-'), @_key-name) => string-join('#')"/>
@@ -89,6 +87,7 @@
         <xsl:param name="defined-so-far" tunnel="true" select="()" as="xs:string*"/>
         <xsl:variable name="key" select="m:definition-key(.)"/>
         <xsl:if test="not($key = $defined-so-far)">
+            <!-- emitting the value of $key into the result -->
             <xsl:sequence select="$key"/>
             <!-- now providing definitions for any references
                 (an empty sequence for flags, fields with no flags, empty assemblies with no flags) -->
@@ -107,7 +106,7 @@
         <xsl:copy expand-text="true">
             <xsl:copy-of select="@*"/>
             <INFO info-type="objects-used">Seeing { $definitions => string-join(', ') }</INFO>
-            <xsl:if test="not(@abstract='yes') and empty($root-assembly-definitions)">
+            <xsl:if test="not(@abstract='yes') and empty(define-assembly/root-name)">
                 <EXCEPTION problem-type="missing-root">No root found in this metaschema composition.</EXCEPTION>
             </xsl:if>
             <xsl:apply-templates/>
@@ -116,28 +115,13 @@
     
     <!-- Given $definitions, top-level definitions can be filtered out if not referenced. -->
     
-    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-assembly[not(m:definition-key(.) = $definitions)]">
+    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-assembly[not(m:definition-key(.) = $definitions)] |
+        METASCHEMA[not(@abstract='yes')]/define-field[not(m:definition-key(.) = $definitions)] | 
+        METASCHEMA[not(@abstract='yes')]/define-flag[not(m:definition-key(.) = $definitions)]">
+        <xsl:variable name="def-type" select="('assembly','field','flag')[contains(current()!local-name(),.)]"/>
         <xsl:call-template name="warning">
             <xsl:with-param name="type">unused-definition</xsl:with-param>
-            <xsl:with-param name="msg" expand-text="true">REMOVING unused assembly definition for '{ @name }' from { 
-                (ancestor::METASCHEMA[1]/@module,'[unnamed module]')[1]
-                }.</xsl:with-param>
-        </xsl:call-template>
-    </xsl:template>
-    
-    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-field[not(m:definition-key(.) = $definitions)]">
-        <xsl:call-template name="warning">
-            <xsl:with-param name="type">unused-definition</xsl:with-param>
-            <xsl:with-param name="msg" expand-text="true">REMOVING unused field definition for '{ @name }' from {  (ancestor::METASCHEMA[1]/@module,'[unnamed module]')[1]
-                }.</xsl:with-param>
-        </xsl:call-template>
-    </xsl:template>
-    
-    <xsl:template match="METASCHEMA[not(@abstract='yes')]/define-flag[not(m:definition-key(.) = $definitions)]">
-        <xsl:call-template name="warning">
-            <xsl:with-param name="type">unused-definition</xsl:with-param>
-            <xsl:with-param name="msg" expand-text="true">REMOVING unused flag definition for '{ @name }' from { (ancestor::METASCHEMA[1]/@module,'[unnamed module]')[1]
-                }.</xsl:with-param>
+            <xsl:with-param name="msg" expand-text="true">REMOVING unused { $def-type } definition for '{ @name }' from { (ancestor::METASCHEMA[1]/@module,'[unnamed module]')[1] }.</xsl:with-param>
         </xsl:call-template>
     </xsl:template>
     
