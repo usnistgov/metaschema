@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
@@ -9,7 +10,7 @@
         <x:scenario label="during the pruning phase">
             <x:scenario label="a single root assembly with no references">
                 <x:context>
-                    <METASCHEMA>
+                    <METASCHEMA module="pruning001">
                         <define-assembly name="box">
                             <formal-name>BOX</formal-name>
                             <description>Just a box, no relationship to anything else.</description>
@@ -22,7 +23,7 @@
             </x:scenario>
             <x:scenario label="top-level definitions with correct references.">
                 <x:context>
-                    <METASCHEMA>
+                    <METASCHEMA module="pruning002">
                         <define-assembly name="box">
                             <formal-name>BOX</formal-name>
                             <description>Just a box, no relationship to anything else.</description>
@@ -42,8 +43,7 @@
             </x:scenario>
             <x:scenario label="top-level definitions with unused.">
                 <x:context>
-                    <METASCHEMA>
-                        <short-name>pruning003</short-name>
+                    <METASCHEMA module="pruning003">
                         <define-assembly name="box">
                             <formal-name>BOX</formal-name>
                             <description>Just a box, no relationship to anything else.</description>
@@ -56,8 +56,12 @@
                         </define-assembly>
                     </METASCHEMA>
                 </x:context>
-                <x:expect label="should throw an 'unused-definition' exception."
-                    test="$x:result//m:EXCEPTION[@problem-type = 'unused-definition'] => string() => empty()"/>
+                <x:expect label="throws only exception for an unused definition."
+                    test="count($x:result//m:EXCEPTION) eq 1"/>
+                <x:expect label="and should be of type unused-definition with the proper message."
+                    test="$x:result//m:EXCEPTION[@problem-type = 'unused-definition'] => exists()"/>
+                <x:expect label="and the error message indicates the specific definition that's unused."
+                    test="$x:result//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused assembly definition for ''folder'' from pruning003'"/>
             </x:scenario>
         </x:scenario>
     </x:scenario>
