@@ -9,6 +9,7 @@
    <schema-version>0.0</schema-version>
    <short-name>oscal-test</short-name>
    <namespace>http://csrc.nist.gov/ns/metaschema/test</namespace>
+   <json-base-uri>http://csrc.nist.gov/ns/metaschema/test</json-base-uri>
    <remarks>
       <p>For exercising Metaschema semantics with respect to modular assembly and composition.</p>
    </remarks>

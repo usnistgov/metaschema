@@ -8,9 +8,9 @@
    
    <x:helper stylesheet="../metaschema-test-helper.xsl"/>
    
-   <x:scenario label="Unused definitions - standoff">
+   <x:scenario label="Metaschema with unused definitions">
       <!-- Scrubbing both the result and the expected result for comparison -->
-      <x:context href="nestedmessy_metaschema.xml"/>
+      <x:context href="input/nestedmessy_metaschema.xml"/>
       <x:variable name="ov:expected-output"
          href="expected/nestedmessy_metaschema-composed.xml"/>
       <x:expect label="Base test - fully resolved"

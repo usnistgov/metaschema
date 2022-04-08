@@ -56,7 +56,11 @@
             <xsl:apply-templates mode="#current"/>
         </xsl:copy>
     </xsl:template>
-
+    
+    <xsl:template mode="scrubbing" match="@_base-uri">
+        <xsl:attribute name="{ name() }">...</xsl:attribute>
+    </xsl:template>
+    
     <!-- some defense against whitespace/indentation glitches -->
     <xsl:template mode="scrubbing" match="text()[matches(.,'\S') => not()]">
         <xsl:variable name="wrapper" select="ancestor::p[1] | ancestor::li[1]"/>

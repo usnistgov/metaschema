@@ -1,7 +1,7 @@
 <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
             abstract="no"
             module="nestedmessy"
-            _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/nestedmessy_metaschema.xml">
+            _base-uri="...">
    <INFO info-type="objects-used">Seeing assembly#nestedmessy:box, assembly#nestedmessy:envelope, field#nestedmessy:page, flag#nestedmessy:no, assembly#nestedmessy:folder</INFO>
    <schema-name>Nested Reference Test</schema-name>
    <schema-version>1.0</schema-version>
@@ -19,7 +19,7 @@
                  scope="global"
                  name="page"
                  module="nestedmessy"
-                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/nestedmessy_metaschema.xml"
+                 _base-uri="..."
                  _key-name="nestedmessy:page">
       <formal-name>PAGE</formal-name>
       <description>PAGE</description>
@@ -41,7 +41,7 @@
                 scope="global"
                 name="no"
                 module="nestedmessy"
-                _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/nestedmessy_metaschema.xml"
+                _base-uri="..."
                 _key-name="nestedmessy:no"/>
    <EXCEPTION problem-type="unused-definition">REMOVING unused field definition for 'unused-field' from nestedmessy.</EXCEPTION>
    <define-assembly _metaschema-xml-id="/assembly/nestedmessy/envelope"
@@ -49,7 +49,7 @@
                     scope="global"
                     name="envelope"
                     module="nestedmessy"
-                    _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/nestedmessy_metaschema.xml"
+                    _base-uri="..."
                     _key-name="nestedmessy:envelope">
       <formal-name>ENVELOPE</formal-name>
       <description>ENVELOPE</description>
@@ -72,7 +72,7 @@
                     scope="global"
                     name="box"
                     module="nestedmessy"
-                    _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/nestedmessy_metaschema.xml"
+                    _base-uri="..."
                     _key-name="nestedmessy:box"
                     _using-root-name="BOX">
       <formal-name>BOX</formal-name>
@@ -108,7 +108,7 @@
                     scope="global"
                     name="folder"
                     module="nestedmessy"
-                    _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/nestedmessy_metaschema.xml"
+                    _base-uri="..."
                     _key-name="nestedmessy:folder">
       <formal-name>FOLDER</formal-name>
       <description>FOLDER</description>

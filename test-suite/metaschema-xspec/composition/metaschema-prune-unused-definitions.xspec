@@ -1,53 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
-               stylesheet="../../../toolchains/xslt-M4/compose/metaschema-prune-unused-definitions-a9.xsl"
-               run-as="external"
-               xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-               xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-               xmlns:mv="http://csrc.nist.gov/ns/metaschema/test/variable">
-   
-   <!-- no need for helper <x:helper stylesheet="../metaschema-test-helper.xsl"/> -->
-   
-   <x:scenario label="Unused definitions - reports">
-      <x:context>
-         <METASCHEMA module="nestedmessy">
-            <define-assembly name="unused-assembly" module="nestedmessy" _key-name="nestedmessy:unused-assembly">
-               <formal-name>Unused assembly</formal-name>
-               <description>Unused assembly</description>
-               <model>
-                  <field max-occurs="1" min-occurs="0" ref="unused-field" _key-ref="nestedmessy:unused-field"/>
-               </model>
-            </define-assembly>
-            <define-assembly name="BOX" module="nestedmessy" _key-name="nestedmessy:BOX">
-               <formal-name>BOX</formal-name>
-               <description>An empty box</description>
-               <root-name>BOX</root-name>
-               <model/>
-            </define-assembly>
-            <define-field as-type="string" name="unused-field" module="nestedmessy" _key-name="nestedmessy:unused-field">               <formal-name>Unused field</formal-name>
-               <description>Unused field</description>
-            </define-field>
-         </METASCHEMA>
-      </x:context>
-      <x:expect label="Unused definitions replaced">
-         <METASCHEMA module="nestedmessy">
-            <INFO info-type="objects-used">Seeing assembly#nestedmessy:BOX</INFO>
-            <EXCEPTION problem-type="unused-definition">REMOVING unused assembly definition for 'unused-assembly' from nestedmessy.</EXCEPTION>
-            <define-assembly name="BOX" module="nestedmessy" _key-name="nestedmessy:BOX">
-               <formal-name>BOX</formal-name>
-               <description>An empty box</description>
-               <root-name>BOX</root-name>
-               <model/>
-            </define-assembly>
-            <EXCEPTION problem-type="unused-definition">REMOVING unused field definition for 'unused-field' from nestedmessy.</EXCEPTION>
-         </METASCHEMA>
-      </x:expect>
-      <x:expect label="Detecting two unused fields" test="count($x:result//m:EXCEPTION[@problem-type='unused-definition']) eq 2"/>
-      <x:expect label="Seeing exception reporting unused assembly" test="$x:result//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused assembly definition for ''unused-assembly'' from nestedmessy.'"/>
-      <x:expect label="Seeing exception reporting unused field" test="$x:result//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused field definition for ''unused-field'' from nestedmessy.'"/>
-      <x:expect label="Result has no assembly defined for 'unused-assembly'" test="empty($x:result//m:define-assembly[@name='unused-assembly'])"/>
-      <x:expect label="Result has no field defined for 'unused field'" test="empty($x:result//m:define-field[@name='unused-field'])"/>
-   </x:scenario>
-   
-   
+<x:description 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    stylesheet="../../../toolchains/xslt-M4/nist-metaschema-COMPOSE.xsl"
+    run-as="external">
+    <x:scenario label="In Metaschema composition pruning phase">
+        <x:scenario label="during the pruning phase">
+            <x:scenario label="a single root assembly with no references">
+                <x:context href="./input/pruning001.xml"/>
+                <x:expect label="should not throw an exception"
+                    test="$x:result//m:EXCEPTION => empty()"/>
+            </x:scenario>
+            <x:scenario label="top-level definitions with correct references.">
+                <x:context href="./input/pruning002.xml"/>
+                <x:expect label="should not throw an exception"
+                    test="$x:result//m:EXCEPTION => empty()"/>
+            </x:scenario>
+            <x:scenario label="top-level definitions with an unused definition.">
+                <x:context href="./input/pruning003.xml"/>                
+                <x:expect label="throws only exception for an unused definition."
+                    test="count($x:result//m:EXCEPTION) eq 1"/>
+                <x:expect label="and should be of type unused-definition with the proper message."
+                    test="$x:result//m:EXCEPTION[@problem-type = 'unused-definition'] => exists()"/>
+                <x:variable name="m:ec" as="xs:string">REMOVING unused assembly definition for 'folder' from pruning003.</x:variable>
+                <x:expect label="and the error message indicates the specific definition that's unused."
+                    test="$x:result//m:EXCEPTION[@problem-type='unused-definition'] = $m:ec"/>
+            </x:scenario>
+            <x:scenario label="top-level definitions with an unused definition and an orphan (not used by anything used).">
+                <x:context href="./input/pruning004.xml"/>                
+                <x:expect label="throws two exceptions for unused definitions"
+                    test="count($x:result//m:EXCEPTION) eq 2"/>
+                <x:expect label="and has neither unused model defined."
+                    test="($x:result//m:define-assembly[@name='folder'] |
+                           $x:result//m:define-field[@name='page']) => empty()"/>
+            </x:scenario>
+        </x:scenario>
+    </x:scenario>
 </x:description>

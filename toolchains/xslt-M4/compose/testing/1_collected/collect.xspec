@@ -13,7 +13,7 @@
     <x:scenario label="Working metaschema">
         <!-- Mysteriously, sometimes select="*" makes XSpec problems go away, other times not. -->
         <x:context href="../working_metaschema.xml"/>
-        <x:expect label="Modules collected, no loops" href="working_metaschema-COLLECTED.xml"/>
+        <x:expect label="Modules collected, no loops" href="working_metaschema-COLLECTED.xml" select="/*"/>
     </x:scenario>
 
     <x:scenario label="Metaschema skeleton">
