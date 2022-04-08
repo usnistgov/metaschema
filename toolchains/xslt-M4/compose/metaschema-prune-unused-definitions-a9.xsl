@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:math="http://www.w3.org/2005/xpath-functions/math"
-    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
@@ -15,13 +13,13 @@
 
     
     <!-- ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== ====== -->
-    <!-- Pass Three: filter definitions (2) - keep only top-level definitions that are actually
-         called by references in the models descending from assemblies with root-name.
+    <!-- Pass: filter definitions (2) - keep only top-level definitions that are actually
+         called by references in the models descending from assemblies with root-name
+         (evaluated recursively, to include (*only*) definitions referenced by the referenced definitions).
     -->
     
     <xsl:mode on-no-match="shallow-copy"/>
 
-    
     <xsl:function name="m:definition-key" as="xs:string">
         <xsl:param name="d"/>
         <xsl:sequence select="$d ! (substring-after(name(.),'define-'), @_key-name) => string-join('#')"/>

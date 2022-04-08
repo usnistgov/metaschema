@@ -11,7 +11,7 @@
    <remarks>
       <p>If any 'unused' definition appears in a schema, we have a bug.</p>
    </remarks>
-   <EXCEPTION problem-type="unused-definition">REMOVING unused assembly definition for 'unused-assembly' from nestedmessy</EXCEPTION>
+   <EXCEPTION problem-type="unused-definition">REMOVING unused assembly definition for 'unused-assembly' from nestedmessy.</EXCEPTION>
    <define-field _metaschema-xml-id="/field/nestedmessy/page"
                  _metaschema-json-id="/field/nestedmessy/page"
                  collapsible="no"
@@ -43,7 +43,7 @@
                 module="nestedmessy"
                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/nestedmessy_metaschema.xml"
                 _key-name="nestedmessy:no"/>
-   <EXCEPTION problem-type="unused-definition">REMOVING unused field definition for 'unused-field' from nestedmessy</EXCEPTION>
+   <EXCEPTION problem-type="unused-definition">REMOVING unused field definition for 'unused-field' from nestedmessy.</EXCEPTION>
    <define-assembly _metaschema-xml-id="/assembly/nestedmessy/envelope"
                     _metaschema-json-id="/assembly/nestedmessy/envelope"
                     scope="global"
