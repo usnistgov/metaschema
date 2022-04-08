@@ -24,8 +24,7 @@
                <root-name>BOX</root-name>
                <model/>
             </define-assembly>
-            <define-field as-type="string" name="unused-field" module="nestedmessy" _key-name="nestedmessy:unused-field">
-               <formal-name>Unused field</formal-name>
+            <define-field as-type="string" name="unused-field" module="nestedmessy" _key-name="nestedmessy:unused-field">               <formal-name>Unused field</formal-name>
                <description>Unused field</description>
             </define-field>
          </METASCHEMA>
@@ -44,8 +43,10 @@
          </METASCHEMA>
       </x:expect>
       <x:expect label="Detecting two unused fields" test="count($x:result//m:EXCEPTION[@problem-type='unused-definition']) eq 2"/>
-      <x:expect label="Seeing unused assembly" test="$x:result//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused assembly definition for ''unused-assembly'' from nestedmessy.'"/>
-      <x:expect label="Seeing unused field" test="$x:result//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused field definition for ''unused-field'' from nestedmessy.'"/>
+      <x:expect label="Seeing exception reporting unused assembly" test="$x:result//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused assembly definition for ''unused-assembly'' from nestedmessy.'"/>
+      <x:expect label="Seeing exception reporting unused field" test="$x:result//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused field definition for ''unused-field'' from nestedmessy.'"/>
+      <x:expect label="Result has no assembly defined for 'unused-assembly'" test="empty($x:result//m:define-assembly[@name='unused-assembly'])"/>
+      <x:expect label="Result has no field defined for 'unused field'" test="empty($x:result//m:define-field[@name='unused-field'])"/>
    </x:scenario>
    
    
