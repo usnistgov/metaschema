@@ -6,7 +6,7 @@
 <!-- Basic starter XSpec shows both callout and inline scenarios. -->
     
     <x:scenario label="poc-on-remote-file">
-        <x:context href="shadow-importing_metaschema.xml"/>
+        <x:context href="including_metaschema.xml"/>
             
         <x:scenario label="An example of a pre-publication QA step">
             <!--<x:expect-not-assert

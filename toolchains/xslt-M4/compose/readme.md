@@ -51,7 +51,7 @@ Single metaschema input, with its imports available, run in an XPrc pipeline wit
 1. `metaschema-collect.xsl`
 1. `metaschema-build-refs.xsl`
 1. `metaschema-trim-extra-modules.xsl`
-1. `metaschema-prune-unused-definitions-a9.xsl`
+1. `metaschema-prune-unused-definitions.xsl`
 1. `metaschema-resolve-use-names.xsl`
 1. `metaschema-resolve-sibling-names.xsl`
 1. `metaschema-digest.xsl`

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    schematron="../../../toolchains/xslt-M4/validate/metaschema-composition-check.sch">
+    schematron="../../../toolchains/xslt-M4/validate/metaschema-composition-check.sch"
+    run-as="external">
     
-    <x:param name="global-context" select="document('scope-local-importing_metaschema.xml')"/>
+    <!--<x:param name="global-context" select="document('scope-local-importing_metaschema.xml')"/>-->
     <x:param name="allow-foreign">true</x:param>
 
     <!-- Basic starter XSpec shows both callout and inline scenarios. -->
     <x:scenario label="poc-on-remote-file">
-        <x:context href="scope-local-importing_metaschema.xml"/><!--
+        <x:context  href="scope-local-importing_metaschema.xml"/><!--
             <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
                 <short-name>boohoo</short-name>
             </METASCHEMA>

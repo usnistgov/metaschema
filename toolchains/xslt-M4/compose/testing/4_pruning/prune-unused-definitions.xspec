@@ -8,7 +8,7 @@
    
    <!-- no need for helper <x:helper stylesheet="../metaschema-test-helper.xsl"/> -->
    
-   <x:scenario label="Pruning unused definitions">
+   <x:scenario label="When presented with unused definitions in a metaschema source">
       <x:context>
          <METASCHEMA module="nestedmessy">
             <define-assembly name="unused-assembly" module="nestedmessy" _key-name="nestedmessy:unused-assembly">
@@ -30,7 +30,7 @@
             </define-field>
          </METASCHEMA>
       </x:context>
-      <x:expect label="two unused definitions are detected and replaced">
+      <x:expect label="the unused definitions are detected and replaced">
          <METASCHEMA module="nestedmessy">
             <INFO info-type="objects-used">Seeing assembly#nestedmessy:BOX</INFO>
             <EXCEPTION problem-type="unused-definition">REMOVING unused assembly definition for 'unused-assembly' from nestedmessy.</EXCEPTION>
