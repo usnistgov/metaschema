@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<x:description xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    xmlns:opr="http://csrc.nist.gov/ns/oscal/profile-resolution" xmlns:x="http://www.jenitennison.com/xslt/xspec" stylesheet="../../metaschema-digest.xsl">
-    
+<x:description stylesheet="../../metaschema-digest.xsl"
+        run-as="external"
+        xmlns:x="http://www.jenitennison.com/xslt/xspec"
+        xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+        xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+        xmlns:mv="http://csrc.nist.gov/ns/metaschema/test/variable">
+        
 <!-- metaschema-digest.xsl
-    - flattens modular structure
+    - flattens modular structure (removing any residual METASCHEMA/METASCHEMA)
     - marks definitions with their module of origin
     - copies @as-type info for defaulting
     - casts example markup into target namespace (as found in the metaschema)
     -->
-    <x:scenario label="Working metaschema">
-        <x:context href="../2_reduced2/working_metaschema-REDUCED1.xml" select="*" mode="digest" />
+    <x:scenario label="Working metaschema" pending="build out">
+        <!-- TODO wire to result of predecessor step      -->
+        <x:context href="../6_resolved2/expected/working_metaschema-RESOLVED.xml" select="*" mode="digest" />
         <x:expect label="Basic metaschema composition" href="working_metaschema-DIGESTED.xml" select="*"/>
     </x:scenario>
-    
+    <x:scenario label="Handling nested METASCHEMAs from modules">
+        <x:context mode="digest">
+            <METASCHEMA>
+                <METASCHEMA>
+                    <METASCHEMA/>
+                </METASCHEMA>
+                <METASCHEMA/>
+            </METASCHEMA>
+        </x:context>
+        <x:expect label="only a top-level METASCHEMA is given">
+            <METASCHEMA/>
+        </x:expect>
+        <x:expect label="while a query also finds no others" test="count(descendant::m:METASCHEMA) eq 1"/>
+    </x:scenario>
 </x:description>
