@@ -1,0 +1,106 @@
+name: Metaschema Generate Website
+on:
+  workflow_call:
+    inputs:
+      hugo_version:
+        description: 'the version of Hugo to use'
+        required: false
+        default: '0.83.1'
+        type: string
+      commit_resources:
+        description: 'commit the resources after generating them. Requires the access_token to be passed'
+        required: false
+        default: false
+        type: boolean
+    secrets:
+      access_token:
+        description: 'the access token to use for commits'
+        required: false
+  workflow_dispatch:
+    inputs:
+      hugo_version:
+        description: 'the version of Hugo to use'
+        required: false
+        default: '0.83.1'
+        type: string
+      commit_resources:
+        description: 'commit the resources after generating them. Requires a PAT defined as secrets.COMMIT_TOKEN'
+        required: true
+        default: false
+        type: boolean
+jobs:
+  build-and-push-website:
+    name: Build and Push Website
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: ${{ github.event.inputs.hugo_version }}${{ inputs.hugo_version }}
+    steps:
+    # use this for builds triggered from the UI on protected branches
+    - name: Checkout Latest (using COMMIT_TOKEN)
+      if: github.event_name == 'workflow_dispatch' && github.event.inputs.commit_resources == true
+      uses: actions/checkout@v3 # current: dcd71f646680f2efd8db4afa5ad64fdcba30e748
+      with:
+        token: ${{ secrets.COMMIT_TOKEN }}
+        submodules: recursive
+    # use this for builds triggered from other workflows on protected branches
+    - name: Checkout Latest (using access_token)
+      if: github.event_name == 'push' && inputs.commit_resources == true
+      uses: actions/checkout@v3 # current: dcd71f646680f2efd8db4afa5ad64fdcba30e748
+      with:
+        token: ${{ secrets.access_token }}
+        submodules: recursive
+    # use this for overything else (i.e., pull requests) where publication is not needed
+    - name: Checkout Latest
+      if: ${{ inputs.commit_resources == false }}
+      uses: actions/checkout@v3 # current: dcd71f646680f2efd8db4afa5ad64fdcba30e748
+      with:
+        submodules: recursive
+    # Install Hugo
+    - name: Install Hugo
+      run: |
+        wget https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_Linux-64bit.deb
+        sudo apt-get install ./hugo_extended_${HUGO_VERSION}_Linux-64bit.deb
+    - name: Run Hugo
+      run: |
+          hugo --config "config.yaml,development-config.yaml" -v --debug --minify
+      working-directory: ${{ github.workspace }}/website
+    - name: Zip Artifacts for Upload
+      run: |
+        zip ${{ runner.temp }}/metaschema-website.zip -r public/
+      working-directory: ${{ github.workspace }}/website
+    - uses: actions/upload-artifact@v3 # current: 6673cd052c4cd6fcf4b4e6e60ea986c889389535
+      with:
+        name: website
+        path: |
+          ${{ runner.temp }}/metaschema-website.zip
+        retention-days: 5
+    - name: Link Checker
+      id: linkchecker
+      uses: lycheeverse/lychee-action@f1da3291e1d03cbe11a413ae9f16b62fec99e6b6 # v1.4.1
+      with:
+        args: --exclude-file ./build/config/.lycheeignore --verbose --no-progress './website/public/**/*.html'
+        format: json
+        output: html_link_report.json
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/upload-artifact@v3 # current: 6673cd052c4cd6fcf4b4e6e60ea986c889389535
+      with:
+        name: html_link_report
+        path: html_link_report.json
+        retention-days: 5
+    - uses: actions/github-script@v3 # current: f05a81df23035049204b043b50c3322045ce7eb3
+      if: steps.linkchecker.outputs.exit_code != 0
+      with:
+        script: |
+          core.setFailed('Link checker detected broken or invalid links, read attached report.')
+    - name: Deploy Website
+      uses: peaceiris/actions-gh-pages@068dc23d9710f1ba62e86896f84735d869951305 # current: v3
+      if: |
+        github.ref_name == 'main' && 
+        (github.event.inputs.commit_resources == true || inputs.commit_resources == true)
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        enable_jekyll: false
+        publish_dir: ./website/public
+        publish_branch: nist-pages
+        commit_message: Deploying website [ci deploy skip]

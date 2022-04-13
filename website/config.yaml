@@ -1,6 +1,9 @@
 title: "Metaschema"
 baseURL: https://pages.nist.gov/metaschema/
+relativeURLs: true
+canonifyURLs: true
 defaultContentLanguage: en
+disableAliases: false
 languages:
   en:
     lang: en
@@ -9,12 +12,21 @@ languages:
 MetaDataFormat: "yaml"
 theme: "uswds"
 googleAnalytics: UA-42404149-54
-canonifyurls: true
 enableGitInfo: true
 enableRobotsTXT: true
 pygmentsCodeFences: true
 pygmentsCodefencesGuessSyntax: true
 pygmentsUseClasses: true
+markup:
+  goldmark:
+    extensions:
+      typographer: false
+    parser:
+      autoHeadingID: true
+    renderer:
+      unsafe: true
+  highlight:
+    guessSyntax: true
 params:
   header:
     project_shortname: "Metaschema"
@@ -30,3 +42,7 @@ menu:
     url: /contribute/contact/
   - name: Github
     url: https://github.com/usnistgov/metaschema
+module:
+  mounts:
+  - source: static
+    target: static
