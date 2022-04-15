@@ -620,7 +620,15 @@
     <!--Not supporting float or double--> 
 
     <xsl:template priority="2.1" match="*[@as-type = $datatypes/*/@key]" mode="object-type">
-        <xsl:copy-of select="key('datatypes-by-name',@as-type,$datatypes)/*"/>
+        <xsl:apply-templates mode="acquire-types" select="key('datatypes-by-name',@as-type,$datatypes)/*"/>
+    </xsl:template>
+    
+    <xsl:mode name="acquire-types" on-no-match="shallow-copy"/>
+    
+    <xsl:template mode="acquire-types" xpath-default-namespace="http://www.w3.org/2005/xpath-functions" match="string[@key='description']">
+      <!--<string key="datatype-description">
+          <xsl:apply-templates/>
+      </string>  -->  
     </xsl:template>
     
     <xsl:key name="datatypes-by-name" xpath-default-namespace="http://www.w3.org/2005/xpath-functions"
@@ -630,103 +638,73 @@
         <dummy/>
     </xsl:variable>-->
         
-        
-    <!-- Must be kept aligned with oscal-datatypes.xsd... -->
     <xsl:variable name="datatypes" expand-text="false">
-        <map key="decimal">
+        <!-- First, grabbing raw JSON out of line definitions copied from -->
+        <!-- https://raw.githubusercontent.com/usnistgov/metaschema/feature-metaschema-relocation-plus-enhancements
+            /schema/json/metaschema-datatypes.json       -->
+        
+        <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text('metaschema-v090-datatypes.json') => json-to-xml() )/map/map[@key='definitions']/map"/>
+        
+        <!-- Now the old names, for backward compatibility, amended with new definitions. -->
+        <map key="decimal"><!-- DecimalDatatype -->
             <string key="type">number</string>
-            <string key="pattern">^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$</string>
+            <!--<string key="pattern">^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$</string>-->
         </map>
-        <map key="date">
+        <map key="date"><!-- DateDatatype -->
             <string key="type">string</string>
-            <!--<string key="format">date</string> JQ 'date' implementation does not permit time zone -->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
-        <map key="dateTime">
+        <map key="dateTime"><!-- DateTimeDatatype -->
             <string key="type">string</string>
-            <!--<string key="format">date-time</string> JQ/AJV 'date-time' implementations require time zone--> 
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
-        <map key="date-with-timezone">
+        <map key="date-with-timezone"><!-- DateWithTimezoneDatatype -->
             <string key="type">string</string>
-            <!--The xs:date with a required timezone.-->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})$</string>
         </map>
-        <map key="dateTime-with-timezone">
+        <map key="dateTime-with-timezone"><!-- DateTimeWithTimezoneDatatype -->
             <string key="type">string</string>
             <string key="format">date-time</string>
-            <!--The xs:dateTime with a required timezone.-->
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$</string>
         </map>
-        <map key="email">
+        <map key="email"><!-- EmailAddressDatatype -->
             <string key="type">string</string>
             <string key="format">email</string>
-            <!---->
-            <string key="pattern">^.+@.+</string>
+            <string key="pattern">^.+@.+$</string>
         </map>
-        <map key="ip-v4-address">
+        <map key="ip-v4-address"><!-- IPV4AddressDatatype -->
             <string key="type">string</string>
             <string key="format">ipv4</string>
-            <!--The ip-v4-address type specifies an IPv4 address in dot decimal notation.-->
             <string key="pattern">^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$</string>
         </map>
-        <map key="ip-v6-address">
+        <map key="ip-v6-address"><!-- IPV6AddressDatatype -->
             <string key="type">string</string>
             <string key="format">ipv6</string>
-            <!--The ip-v6-address type specifies an IPv6 address represented in 8 hextets separated by colons.This is based on the pattern provided here: https://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses with some customizations.-->
             <string key="pattern">^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|[fF][eE]80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::([fF]{4}(:0{1,4}){0,1}:){0,1}((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]))$</string>
         </map>
-        <map key="hostname">
-            <string key="type">string</string>
+        <map key="hostname"><!-- HostnameDatatype -->
+            <string key="$ref">#/definitions/StringDatatype</string>
             <string key="format">idn-hostname</string>
-            <!---->
-            <string key="pattern">^.+$</string>
         </map>
-        <map key="uri">
+        <map key="uri"><!-- URIDatatype -->
             <string key="type">string</string>
             <string key="format">uri</string>
-            <!---->
+            <string key="pattern">^[a-zA-Z][a-zA-Z0-9+\-.]+:.+$</string>
         </map>
-        <map key="uri-reference">
+        <map key="uri-reference"><!-- URIReferenceDatatype -->
             <string key="type">string</string>
             <string key="format">uri-reference</string>
-            <!---->
         </map>
-        <map key="uuid">
-            <!-- A Type 4 ('random' or 'pseudorandom' UUID per RFC 4122-->
+        <map key="uuid"><!-- UUIDDatatype -->
             <string key="type">string</string>
-            <!-- A sequence of 8-4-4-4-12 hex digits, with extra constraints in the 13th and 17-18th places for version 4-->
-            <string key="pattern">^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-4[0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$</string>
+            <string key="description">A type 4 ('random' or 'pseudorandom') or type 5 UUID per RFC 4122.</string>
+            <string key="pattern">^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$</string>
         </map>
-        <map key="token">
-            <!-- 
-Emulating XSD [\i-[:]][\c-[:]]*
-
-From https://www.w3.org/TR/xml11/#NT-NameChar
-
-PRODUCTION 4 NameStartChar	   ::=
-   	":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
-
-excluding [#x10000-#xEFFFF] since we can't match them in Javascript regex without extra somersaults
-
--> Javascript regex NameStartChar (no colon) [_A-Za-z\uC0-\uD6\uD8-\uF6\uF8-\u2FF\u370-\u37D\u37F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]
-
-PRODUCTION 4a NameChar	   ::=
-   	NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
-
--> Javascript regex NameChar (no colon)
-[_\-\.\u00B7\u0300-\u036F\u203F-\u2040 + NameStartChar ]
-
-        -->
+        <map xmlns="http://www.w3.org/2005/xpath-functions" key="token"><!-- TokenDatatype -->
             <string key="type">string</string>
-            <xsl:sequence expand-text="true">
-                <!--<xsl:variable name="test">_A-Z123\u00C0-\u00D6</xsl:variable>-->
-                <xsl:variable name="initial-name-chars" as="xs:string">_A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD<!--\u10000-\uEFFFF--></xsl:variable>
-                <xsl:variable as="xs:string" name="name-chars">{ $initial-name-chars }\-\.0-9\u00B7\u0300-\u036F\u203F-\u2040</xsl:variable>
-                <!--<string key="pattern">^[{ $test }]+$</string>-->
-                <string key="pattern">^[{ $initial-name-chars }][{ $name-chars }]*$</string>
-            </xsl:sequence>
+            <string key="pattern">^(\p{L}|_)(\p{L}|\p{N}|[.\-_])*$</string>
         </map>
+        
         <map key="string">
             <string key="type">string</string>
             <string key="pattern">^\S(.*\S)?$</string>

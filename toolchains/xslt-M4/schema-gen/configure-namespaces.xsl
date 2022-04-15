@@ -5,7 +5,7 @@
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     exclude-result-prefixes="xs math m"
-    version="2.0"
+    version="3.0"
     
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
@@ -49,13 +49,27 @@
     <xsl:template name="namespace-fixup">
         <xsl:namespace name="m">http://csrc.nist.gov/ns/oscal/metaschema/1.0</xsl:namespace>
         <xsl:namespace name="{$declaration-prefix}" select="$target-namespace"/>
-        <xsl:namespace name="oscal-prose" select="$target-namespace"/>
+        <xsl:namespace name="metaschema-datatypes" select="$target-namespace"/>
     </xsl:template>
     
     <xsl:template match="xs:documentation//text() | m:*//text()" mode="wire-ns">
         <xsl:copy-of select="."/>
     </xsl:template>
     
+    <xsl:key name="datatype-invocation" use="substring-after(@base,':')"
+        match="xs:extension | xs:restriction"/>
+    
+    <xsl:key name="datatype-invocation" use="substring-after(@type,':')"
+        match="xs:element[exists(@type)]
+        | xs:attribute[exists(@type)]"/>
+    
+    <xsl:template match="/*/xs:simpleType" mode="wire-ns">
+        <xsl:if test="exists(key('datatype-invocation',@name))">
+          <xsl:next-match/>
+        </xsl:if>
+    </xsl:template>
+    
+<!-- matching xs:restriction/@base rewrite m: as {$declaration-prefix}: -->
     <xsl:template match="text()" mode="wire-ns"/>
         
 </xsl:stylesheet>

@@ -5,12 +5,15 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     exclude-result-prefixes="#all">
 
-    <!-- Purpose: Produce an XML Schema Definition (XSD) reflecting constraints defined in a metaschema -->
+    <!-- Purpose: Produce a JSON Schema reflecting constraints defined in a metaschema -->
     <!-- Dependencies: This is a 'shell' XSLT and calls several steps in sequence, each implemented as an XSLT -->
     <!-- Input: A top-level metaschema; this XSLT also composes metaschema input so composition is not necessary -->
-    <!-- Output: An XSD describing an XML format consistent with definitions given in the input metaschema -->
+    <!-- Output: A JSON Schema (v7) describing a JSON format consistent with definitions given in the input metaschema -->
     <!-- Note: This XSLT uses the transform() function to execute a series of transformations (referenced out of line) over its input -->
-
+    
+    <!-- Debug variant writes out JSON Schema as XPath XML subject to validation -->
+    <!-- Check its fitness for serialization by validating against XSD ../../support/xml/xpath-json.xsd -->
+    
     <xsl:output method="xml" indent="yes"/>
 
     <!-- Turning $trace to 'on' will
@@ -19,7 +22,7 @@
     
     <xsl:param name="trace" as="xs:string">off</xsl:param>
     <xsl:variable name="louder" select="$trace = 'on'"/>
-    
+
     <xsl:variable name="xslt-base" select="document('')/document-uri()"/>
     
     <xsl:import href="nist-metaschema-metaprocess.xsl"/>
@@ -35,8 +38,8 @@
         <nm:transform version="3.0">compose/metaschema-digest.xsl</nm:transform>
         <nm:transform version="3.0">compose/annotate-composition.xsl</nm:transform>
         
-        <nm:transform version="3.0">schema-gen/make-metaschema-xsd.xsl</nm:transform>
-        <nm:transform version="3.0">schema-gen/configure-namespaces.xsl</nm:transform>
+        <nm:transform version="3.0">schema-gen/make-json-schema-metamap.xsl</nm:transform>
+        <!--<nm:transform version="3.0">util/xpath-json-to-json.xsl</nm:transform>-->
     </xsl:variable>
     
 </xsl:stylesheet>
