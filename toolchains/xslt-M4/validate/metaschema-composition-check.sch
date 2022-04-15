@@ -63,7 +63,7 @@
 -->            
             <xsl:variable name="as-composed" as="element()?" select="nm:as-composed(.)"/>
             <xsl:variable name="is-multiple"  select="count($as-composed) gt 1"/>
-            <xsl:variable name="defs-for-reference" as="element()*" select="nm:definitions-for-reference($as-composed)"/>
+            <xsl:variable name="defs-for-reference" as="element()*" select="$as-composed/nm:definitions-for-reference(.)"/>
 
             <sch:assert id="require-unambiguous-reference-in-composition" test="count($defs-for-reference) le 1" >Ambiguous reference to '<sch:value-of select="@ref"/>' found in <sch:name/>. The reference resolved to define-<sch:name/> <sch:value-of select="if (count($defs-for-reference) gt 1) then ' definitions' else 'definition'"/> with the name '<sch:value-of select="@ref"/>' in: <xsl:value-of select="$defs-for-reference/@_base-uri" separator=", "/>. Is this due to a duplicated METASCHEMA/short-name in a module?</sch:assert>
 
