@@ -13,20 +13,20 @@
          <METASCHEMA module="nestedmessy">
             <define-assembly name="unused-assembly" module="nestedmessy" _key-name="nestedmessy:unused-assembly">
                <formal-name>Unused assembly</formal-name>
-               <description>Unused assembly</description>
+               <description>Should not be copied</description>
                <model>
                   <field max-occurs="1" min-occurs="0" ref="unused-field" _key-ref="nestedmessy:unused-field"/>
                </model>
             </define-assembly>
             <define-assembly name="BOX" module="nestedmessy" _key-name="nestedmessy:BOX">
                <formal-name>BOX</formal-name>
-               <description>An empty box</description>
+               <description>An empty box, the root of the model, should be copied</description>
                <root-name>BOX</root-name>
                <model/>
             </define-assembly>
             <define-field as-type="string" name="unused-field" module="nestedmessy" _key-name="nestedmessy:unused-field">
                <formal-name>Unused field</formal-name>
-               <description>Unused field</description>
+               <description>Unused field is used only by unused-assembly</description>
             </define-field>
          </METASCHEMA>
       </x:context>
@@ -47,6 +47,6 @@
       <x:expect label="an exception is reported for the unused assembly" test="//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused assembly definition for ''unused-assembly'' from nestedmessy.'"/>
       <x:expect label="an exception is reported for the unused field" test="//m:EXCEPTION[@problem-type='unused-definition'] = 'REMOVING unused field definition for ''unused-field'' from nestedmessy.'"/>
       <x:expect label="no assembly is defined for an assembly named 'unused-assembly'" test="empty(//m:define-assembly[@name='unused-assembly'])"/>
-      <x:expect label="no field is defined for a field named 'unused field'" test="empty(//m:define-field[@name='unused-field'])"/>
+      <x:expect label="no field is defined for a field named 'unused-field'" test="empty(//m:define-field[@name='unused-field'])"/>
    </x:scenario>
 </x:description>
