@@ -25,7 +25,7 @@ Currently checks if unused definitions are correctly filtered away from a metasc
 
 Also testing the same bug, but using standoff instances, with a start at to some more comprehensive tests.
 
-### NOT CURRENTLY FUNCTIONAL
+### REQUIRING REFRESH / EXTENSION
 
 * XSpec `metaschema-basic-schematron.xspec` testing Schematron:  `../../toolchains/xslt-M4/validate/metaschema-simple-check.sch`
 
