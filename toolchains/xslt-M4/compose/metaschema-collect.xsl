@@ -66,7 +66,7 @@
         <xsl:copy>
             <xsl:attribute name="abstract" select="$metaschema-abstract-default"/>
             <xsl:copy-of select="@* except @xsi:*"/>
-            <xsl:attribute name="module" select="short-name"/>
+            <xsl:attribute name="module" select="(@module[matches(.,'\S')],short-name)[1]"/>
             <xsl:attribute name="_base-uri" select="base-uri(.)"/>
             <xsl:apply-templates select="* except import" mode="#current"/>
             <xsl:apply-templates select="import" mode="#current"/>

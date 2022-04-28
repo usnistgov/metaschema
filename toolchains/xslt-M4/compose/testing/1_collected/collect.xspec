@@ -13,10 +13,10 @@
     <x:scenario label="Working metaschema">
         <!-- Mysteriously, sometimes select="*" makes XSpec problems go away, other times not. -->
         <x:context href="../working_metaschema.xml"/>
-        <x:expect label="Modules collected, no loops" href="working_metaschema-COLLECTED.xml"/>
+        <x:expect label="Modules collected, no loops" href="working_metaschema-COLLECTED.xml" select="/*"/>
     </x:scenario>
 
-    <x:scenario label="Metaschema skeleton">
+    <x:scenario label="Metaschema skeleton" pending="update">
         <!-- Mysteriously, sometimes select="*" makes XSpec problems go away, other times not. -->
         <x:context mode="acquire">
             <METASCHEMA>
@@ -74,7 +74,7 @@
             
         </x:expect>
     </x:scenario>
-    <x:scenario label="Nested locals">
+    <x:scenario label="Nested locals" pending="update">
         <!-- Mysteriously, sometimes select="*" makes XSpec problems go away, other times not. -->
         <x:context mode="acquire">
             <METASCHEMA>
