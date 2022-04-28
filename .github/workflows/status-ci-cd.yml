@@ -1,4 +1,4 @@
-name: Metachema CI/CD
+name: Metaschema CI/CD
 on:
   push:
     branches:
@@ -6,10 +6,12 @@ on:
     - develop
     - "feature-*"
     - "release-*"
-    - "*"
   pull_request:
     branches:
-    - "*"
+    - main
+    - develop
+    - "feature-*"
+    - "release-*"
   workflow_dispatch:
 jobs:
   validate-repo-markdown:
