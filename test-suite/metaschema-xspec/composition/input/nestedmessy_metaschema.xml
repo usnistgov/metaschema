@@ -61,5 +61,4 @@
             <field ref="page" max-occurs="unbounded"/>
         </model>
     </define-assembly>
-    
 </METASCHEMA>
