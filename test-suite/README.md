@@ -8,17 +8,15 @@ An example metaschema for mocking up documentation generation.
 
 ### `schema-generation`
 
+Unit testing over handmade mini metaschemas. Due for maintenance.
+
 To use: under Bash, run ./run-tests.sh in folder schema-generation
 
 ./run-tests --help gives help.
 
 ./run-tests.sh [testdir] runs tests only in a particular test directory.
 
-### `schema-generation`
-
-Unit testing over handmade mini metaschemas. Due for maintenance.
-
-### `worked-exaples`
+### `worked-examples`
 
 With one more testing metaschemas exercising different features. 
 

@@ -169,11 +169,12 @@
   </p:xslt>
   <!--  With EXCEPTION for broken references (error) or shadowing definitions (warning) -->
   
+  <!--<p:identity name="prune-defs"/>-->
   <p:xslt name="prune-defs">
     <p:input port="stylesheet">
       <p:document href="metaschema-prune-unused-definitions.xsl"/>
     </p:input>
-    <p:with-param name="show-warnings" select="'yes'"/>
+    <!--<p:with-param name="show-warnings" select="'yes'"/>-->
     <!-- With EXCEPTION problem-type="missing-root" for no roots found when the metaschema is not abstract -->
     <!-- With EXCEPTION problem-type="unused-definition" for definitions removed as unused -->
   </p:xslt>
