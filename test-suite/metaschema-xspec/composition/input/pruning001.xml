@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    module="pruning001">
+    <define-assembly name="box">
+        <formal-name>BOX</formal-name>
+        <description>Just a box, no relationship to anything else.</description>
+        <root-name>BOX</root-name>
+    </define-assembly>
+</METASCHEMA>

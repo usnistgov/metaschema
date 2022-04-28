@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
     xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-    schematron="../../toolchains/xslt-M4/validate/metaschema-simple-check.sch">
+    schematron="../../../toolchains/xslt-M4/validate/metaschema-simple-check.sch">
     
 <!-- Basic starter XSpec shows both callout and inline scenarios. -->
     
     <x:scenario label="poc-on-remote-file">
-        <x:context href="shadow-importing_metaschema.xml"/>
+        <x:context href="including_metaschema.xml"/>
             
         <x:scenario label="An example of a pre-publication QA step">
             <!--<x:expect-not-assert

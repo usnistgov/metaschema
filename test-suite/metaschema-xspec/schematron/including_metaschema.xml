@@ -8,6 +8,7 @@
     <schema-version>1.0</schema-version>
     <short-name>including</short-name>
     <namespace>http://csrc.nist.gov/ns/oscal/1.0</namespace>
+    <json-base-uri>http://csrc.nist.gov/ns/oscal/1.0</json-base-uri>
 
     <import href="included_metaschema.xml"/>
 

@@ -1,6 +1,8 @@
 
 ## What we are testing explicitly
 
+Following checklist applies to work in the `schema-generation` folder.
+
 ### Flag definitions
 
 ### Datatypes
