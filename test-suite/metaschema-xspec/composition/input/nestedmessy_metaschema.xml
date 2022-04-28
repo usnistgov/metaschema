@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="../../../toolchains/xslt-M4/lib/metaschema-author.css"?>
+<?xml-model href="../validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>Nested Reference Test</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>nestedmessy</short-name>
+    <namespace>http://csrc.nist.gov/metaschema/ns/nested</namespace>
+    <json-base-uri>http://csrc.nist.gov/metaschema/ns/nested</json-base-uri>
+    
+    <remarks>
+        <p>If any 'unused' definition appears in a schema, we have a bug.</p>
+    </remarks>
+
+    <define-assembly name="unused-assembly">
+        <formal-name>Unused</formal-name>
+        <description>Unused</description>
+        <model>
+            <field ref="unused-field"/>
+        </model>
+    </define-assembly>
+    
+    <define-field name="page">
+        <formal-name>PAGE</formal-name>
+        <description>PAGE</description>
+        <flag ref="no"/>
+    </define-field>
+    
+    <define-flag name="no" as-type="positiveInteger"/>
+    
+    <define-field name="unused-field">
+        <formal-name>Unused field</formal-name>
+        <description>Unused field</description>
+    </define-field>
+
+    <define-assembly name="envelope">
+        <formal-name>ENVELOPE</formal-name>
+        <description>ENVELOPE</description>
+        <model>
+            <field ref="page" max-occurs="unbounded"/>
+        </model>
+        
+    </define-assembly>
+    
+    <define-assembly name="box">
+        <formal-name>BOX</formal-name>
+        <description>BOX</description>
+        <root-name>BOX</root-name>
+        <model>
+            <assembly ref="envelope" max-occurs="unbounded"/>
+            <assembly ref="folder"   max-occurs="unbounded"/>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="folder">
+        <formal-name>FOLDER</formal-name>
+        <description>FOLDER</description>
+        <model>
+            <assembly ref="envelope" max-occurs="unbounded"/>
+            <assembly ref="folder"   max-occurs="unbounded"/>
+            <field ref="page" max-occurs="unbounded"/>
+        </model>
+    </define-assembly>
+</METASCHEMA>

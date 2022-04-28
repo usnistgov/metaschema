@@ -2,20 +2,34 @@ Transformations in this subdirectory support Metaschema composition, that is the
 
 Generally, metaschema composition will be a necessary preliminary to producing a schema, documentation or analysis of a single metaschema.
 
-### Metaschema Composition
 
-The following transformations executed in sequence provide for composition of Metaschema inputs into a standalone metaschema instance.
+### Implicit in many pipelines
 
-- `metaschema-collect.xsl`
-- `metaschema-build-refs.xsl`
-- `metaschema-trim-extra-modules.xsl`
-- `metaschema-prune-unused-definitions.xsl` 
-- `metaschema-resolve-use-names.xsl`
-- `metaschema-resolve-sibling-names.xsl` 
-- `metaschema-digest.xsl`
-- `annotate-composition.xsl`
+The composition process is implicit in many (most) end-to-end metaschema processes including both schema and docs generation.
 
-### Additional
+For testing, entry points are also isolated for standalone metaschema composition.
+
+(TBD: a consistent way to unify these and keep them aligned)
+
+### XSLT for end-to-end
+
+Single metaschema input, with its imports available, produces single compose metaschema results.
+
+* `../nist-metaschema-COMPOSE.xsl`
+* With that XSLT as context, executing path `/*/*[@name='transformation-sequence']/*/('1. &#96;' || replace(.,'.*/','') || '&#96;') => string-join('&#xA;')` we get (in Markdown):
+
+(NB: keeping this up to date enables us to track deltas in the documentation so please do edit/amend as this pipeline changes)
+
+1. `metaschema-collect.xsl`
+1. `metaschema-build-refs.xsl`
+1. `metaschema-trim-extra-modules.xsl`
+1. `metaschema-prune-unused-definitions.xsl`
+1. `metaschema-resolve-use-names.xsl`
+1. `metaschema-resolve-sibling-names.xsl`
+1. `metaschema-digest.xsl`
+1. `annotate-composition.xsl`
+
+### Additional processes
 
 The following are used in the documentation pipeline:
 
@@ -24,27 +38,21 @@ The following are used in the documentation pipeline:
 - `unfold-model-map.xsl`
 - `annotate-model-map.xsl`
 
-### xpl
+### XProc for debugging (with more transparency as to step results)
 
-#### metaschema-compose.xpl
+Single metaschema input, with its imports available, run in an XPrc pipeline with configurable results (write any or none) giving greater transparency over intermediate steps.
 
-- XProc pipeline version 1.0 (10 steps)
-- **Purpose:** Produce a standalone Metaschema instance representing a data model, suitable for further processing
-- **Input:** A valid and correct OSCAL Metaschema instance linked to its modules (also valid and correct)
-- **Output:** A completely standalone Metaschema instance fully resolving and disambiguating links among definitions, suitable for further processing.
+* `metaschema-compose.xpl`
+* With the XProc as context, execute
+`/*/*:xslt/*:input/*:document/@href/('1. &#96;' || . || '&#96;') => string-join('&#xA;')`
 
-- Runtime dependency: `annotate-composition.xsl`
+(NB: as above, please help keep this listing up to date)
 
-- Runtime dependency: `metaschema-build-refs.xsl`
-
-- Runtime dependency: `metaschema-collect.xsl`
-
-- Runtime dependency: `metaschema-digest.xsl`
-
-- Runtime dependency: `metaschema-prune-unused-definitions.xsl`
-
-- Runtime dependency: `metaschema-resolve-sibling-names.xsl`
-
-- Runtime dependency: `metaschema-resolve-use-names.xsl`
-
-- Runtime dependency: `metaschema-trim-extra-modules.xsl`
+1. `metaschema-collect.xsl`
+1. `metaschema-build-refs.xsl`
+1. `metaschema-trim-extra-modules.xsl`
+1. `metaschema-prune-unused-definitions.xsl`
+1. `metaschema-resolve-use-names.xsl`
+1. `metaschema-resolve-sibling-names.xsl`
+1. `metaschema-digest.xsl`
+1. `annotate-composition.xsl`
