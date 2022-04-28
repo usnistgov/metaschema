@@ -18,14 +18,12 @@ jobs:
     uses: ./.github/workflows/workflow-validate-repo-markdown.yml
   validate-website:
     if: github.event_name == 'pull_request'
-    needs: validate-repo-markdown
     uses: ./.github/workflows/workflow-generate-website.yml
     with:
       hugo_version: 0.83.1
       commit_resources: false
   push-website:
     if: github.event_name == 'push'
-    needs: validate-website
     uses: ./.github/workflows/workflow-generate-website.yml
     with:
       hugo_version: 0.83.1
