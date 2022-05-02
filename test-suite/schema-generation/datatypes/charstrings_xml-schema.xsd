@@ -1,278 +1,158 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-           xmlns:metaschema-datatypes-dateTime="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
-           xmlns:oscal-prose="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
-           elementFormDefault="qualified"
-           targetNamespace="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
-           version="1.0-milestone1">
+<xs:schema xmlns="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
+   xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+   targetNamespace="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
+   elementFormDefault="qualified"
+   vc:minVersion="1.0"
+   vc:maxVersion="1.1"
+   version="1.0-milestone1">
    <xs:annotation>
       <xs:appinfo>
-         <m:schema-name>Metaschema Unit Test: datatypes-dateTime</m:schema-name>
-         <m:schema-version>1.0-milestone1</m:schema-version>
-         <m:short-name>metaschema-datatypes-dateTime</m:short-name>
-         <m:root>examples</m:root>
+         <schema-name>Metaschema Unit Test: datatypes-dateTime</schema-name>
+         <schema-version>1.0-milestone1</schema-version>
+         <short-name>metaschema-datatypes-dateTime</short-name>
       </xs:appinfo>
    </xs:annotation>
-   <xs:element name="examples" type="metaschema-datatypes-dateTime:examples-ASSEMBLY"/>
-   <xs:complexType name="examples-ASSEMBLY">
+   <xs:element name="examples" type="MetaschemaDatatypesDatetimeExamplesAssemblyType"/>
+   <xs:complexType name="MetaschemaDatatypesDatetimeExamplesAssemblyType">
       <xs:annotation>
          <xs:appinfo>
-            <m:formal-name>Examples</m:formal-name>
-            <m:description>Some character strings of different sorts</m:description>
+            <formal-name>Examples</formal-name>
+            <description>Some character strings of different sorts</description>
          </xs:appinfo>
          <xs:documentation>
-            <b>Examples</b>: Some character strings of different sorts</xs:documentation>
+            <p>
+               <b>Examples</b>: Some character strings of different sorts</p>
+         </xs:documentation>
       </xs:annotation>
+      <!--AssemblyDefinitionComplexType MetaschemaDatatypesDatetimeExamplesAssemblyType: inline(false:false)-->
       <xs:sequence>
          <xs:element name="charstring"
-                     type="metaschema-datatypes-dateTime:charstring-FIELD"
-                     minOccurs="0"
-                     maxOccurs="unbounded"/>
+            minOccurs="0"
+            maxOccurs="unbounded"
+            type="StringDatatype">
+            <xs:annotation>
+               <xs:appinfo>
+                  <formal-name>Character string</formal-name>
+                  <description>String of characters</description>
+               </xs:appinfo>
+               <xs:documentation>
+                  <p>
+                     <b>Character string</b>: String of characters</p>
+               </xs:documentation>
+            </xs:annotation>
+            <!--NamedModelInstance MetaschemaDatatypesDatetimeCharstringFieldType: inline(false:false)-->
+         </xs:element>
          <xs:element name="markupline"
-                     type="metaschema-datatypes-dateTime:markupline-FIELD"
-                     minOccurs="0"
-                     maxOccurs="unbounded"/>
+            minOccurs="0"
+            maxOccurs="unbounded"
+            type="MarkupLineDatatype">
+            <xs:annotation>
+               <xs:appinfo>
+                  <formal-name>Markup line</formal-name>
+                  <description>Characters, and more</description>
+               </xs:appinfo>
+               <xs:documentation>
+                  <p>
+                     <b>Markup line</b>: Characters, and more</p>
+               </xs:documentation>
+            </xs:annotation>
+            <!--NamedModelInstance MetaschemaDatatypesDatetimeMarkuplineFieldType: inline(false:false)-->
+         </xs:element>
       </xs:sequence>
    </xs:complexType>
-   <xs:complexType name="charstring-FIELD">
+   <!--FieldDefinitionComplexType MetaschemaDatatypesDatetimeCharstringFieldType: inline(false:false)-->
+   <!--FieldDefinitionComplexType MetaschemaDatatypesDatetimeMarkuplineFieldType: inline(false:false)-->
+   <!-- ===================== -->
+   <!-- core metaschema types -->
+   <!-- ===================== -->
+   <xs:simpleType name="StringDatatype">
       <xs:annotation>
-         <xs:appinfo>
-            <m:formal-name>Character string</m:formal-name>
-            <m:description>String of characters</m:description>
-         </xs:appinfo>
-         <xs:documentation>
-            <b>Character string</b>: String of characters</xs:documentation>
+         <xs:documentation>A string, but not empty and not whitespace-only
+            (whitespace is U+9, U+10, U+32 or [ \n\t]+ )</xs:documentation>
       </xs:annotation>
-      <xs:simpleContent>
-         <xs:extension base="xs:string"/>
-      </xs:simpleContent>
+      <xs:restriction base="xs:string">
+         <xs:annotation>
+            <xs:documentation>The OSCAL 'string' datatype restricts the XSD type by prohibiting leading 
+               and trailing whitespace, and something (not only whitespace) is required.</xs:documentation>
+         </xs:annotation>
+         <xs:whiteSpace value="preserve"/>
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>A trimmed string, at least one character with no
+                  leading or trailing whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <!-- ====================== -->
+   <!-- markup multiline types -->
+   <!-- ====================== -->
+   <!-- ================= -->
+   <!-- markup line types -->
+   <!-- ================= -->
+   <xs:complexType name="MarkupLineDatatype" mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="inlineMarkupGroup"/>
+      </xs:choice>
    </xs:complexType>
-   <xs:complexType mixed="true" name="markupline-FIELD">
-      <xs:group ref="metaschema-datatypes-dateTime:everything-inline"/>
+   <!-- ================ -->
+   <!-- prose base types -->
+   <!-- ================ -->
+   <xs:group name="inlineMarkupGroup">
+      <xs:choice>
+         <xs:element name="a" type="anchorType"/>
+         <xs:element name="insert" type="insertType"/>
+         <xs:group ref="phraseMarkupGroup"/>
+         <xs:group ref="imageMarkupGroup"/>
+      </xs:choice>
+   </xs:group>
+   <xs:group name="imageMarkupGroup">
+      <xs:choice>
+         <xs:element name="img" type="imageType"/>
+      </xs:choice>
+   </xs:group>
+   <xs:group name="phraseMarkupGroup">
+      <xs:choice>
+         <xs:element name="code" type="inlineMarkupType" minOccurs="1"/>
+         <xs:element name="em" type="inlineMarkupType" minOccurs="1"/>
+         <xs:element name="i" type="inlineMarkupType" minOccurs="1"/>
+         <xs:element name="b" type="inlineMarkupType" minOccurs="1"/>
+         <xs:element name="strong" type="inlineMarkupType" minOccurs="1"/>
+         <xs:element name="sub" type="inlineMarkupType" minOccurs="1"/>
+         <xs:element name="sup" type="inlineMarkupType" minOccurs="1"/>
+         <xs:element name="q" type="inlineMarkupType" minOccurs="1"/>
+      </xs:choice>
+   </xs:group>
+   <xs:complexType name="inlineMarkupType" mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="inlineMarkupGroup"/>
+      </xs:choice>
    </xs:complexType>
-   <xs:element name="h1">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="h2">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="h3">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="h4">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="h5">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="h6">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:inlines"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="p">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:everything-inline"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="pre">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="ol">
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element maxOccurs="unbounded" ref="oscal-prose:li"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="li">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:everything-inline"/>
-            <xs:element ref="oscal-prose:ol"/>
-            <xs:element ref="oscal-prose:ul"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="ul">
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element maxOccurs="unbounded" ref="oscal-prose:li"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="table">
-      <xs:complexType>
-         <xs:sequence>
-            <xs:element maxOccurs="unbounded" ref="oscal-prose:tr"/>
-         </xs:sequence>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="tr">
-      <xs:complexType>
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element maxOccurs="unbounded" ref="oscal-prose:td"/>
-            <xs:element maxOccurs="unbounded" ref="oscal-prose:th"/>
-         </xs:choice>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="th">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:everything-inline"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="td">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:everything-inline"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:group name="everything-inline">
-      <xs:sequence>
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:group ref="oscal-prose:special"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-      </xs:sequence>
-   </xs:group>
-   <xs:group name="mix">
-      <xs:sequence>
-         <xs:group minOccurs="0" maxOccurs="unbounded" ref="oscal-prose:inlines"/>
-      </xs:sequence>
-   </xs:group>
-   <xs:group name="inlines">
-      <xs:sequence>
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element ref="oscal-prose:q"/>
-            <xs:element ref="oscal-prose:code"/>
-            <xs:element ref="oscal-prose:em"/>
-            <xs:element ref="oscal-prose:i"/>
-            <xs:element ref="oscal-prose:strong"/>
-            <xs:element ref="oscal-prose:b"/>
-            <xs:element ref="oscal-prose:sub"/>
-            <xs:element ref="oscal-prose:sup"/>
-            <xs:element ref="oscal-prose:img"/>
-         </xs:choice>
-      </xs:sequence>
-   </xs:group>
-   <xs:element name="q">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element ref="oscal-prose:code"/>
-            <xs:element ref="oscal-prose:em"/>
-            <xs:element ref="oscal-prose:i"/>
-            <xs:element ref="oscal-prose:b"/>
-            <xs:element ref="oscal-prose:strong"/>
-            <xs:element ref="oscal-prose:sub"/>
-            <xs:element ref="oscal-prose:sup"/>
-         </xs:choice>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="code">
-      <xs:complexType mixed="true">
-         <xs:group ref="oscal-prose:mix"/>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="strong">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="em">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="i">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="b">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:group ref="oscal-prose:mix"/>
-            <xs:element ref="oscal-prose:a"/>
-         </xs:choice>
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="sub">
-      <xs:complexType mixed="true">
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="sup">
-      <xs:complexType mixed="true">
-         <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="img">
-      <xs:complexType>
-         <xs:attribute name="alt"/>
-         <xs:attribute name="src" use="required" type="xs:anyURI"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:element name="a">
-      <xs:complexType mixed="true">
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element ref="oscal-prose:q"/>
-            <xs:element ref="oscal-prose:code"/>
-            <xs:element name="em">
-               <xs:complexType mixed="true">
-                  <xs:attributeGroup ref="oscal-prose:optionalClass"/>
-               </xs:complexType>
-            </xs:element>
-         </xs:choice>
-         <xs:attribute name="href"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:group name="special">
-      <xs:sequence>
-         <xs:choice minOccurs="0" maxOccurs="unbounded">
-            <xs:element ref="oscal-prose:insert"/>
-         </xs:choice>
-      </xs:sequence>
-   </xs:group>
-   <xs:element name="insert">
-      <xs:complexType>
-         <xs:attribute name="param-id" use="required" type="xs:NCName"/>
-      </xs:complexType>
-   </xs:element>
-   <xs:attributeGroup name="requiredClass"/>
-   <xs:attributeGroup name="optionalClass"/>
-   <xs:attributeGroup name="hrefAttr">
-      <xs:attribute name="href"/>
-   </xs:attributeGroup>
+   <xs:complexType name="imageType">
+      <xs:attribute name="alt" type="xs:string"/>
+      <xs:attribute name="src" use="required" type="xs:anyURI"/>
+   </xs:complexType>
+   <xs:complexType name="anchorType" mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+         <xs:group ref="phraseMarkupGroup"/>
+         <xs:group ref="imageMarkupGroup"/>
+      </xs:choice>
+      <xs:attribute name="href" type="xs:anyURI"/>
+   </xs:complexType>
+   <xs:complexType name="insertType">
+      <xs:annotation>
+         <xs:documentation>An insert can be used to identify a placeholder for dynamically inserting text related to a specific object, which is referenced by the object's identifier using an <code xmlns="">id-ref</code>. This insert mechanism allows the selection of which text value from the object to dynamically include based on the application's display requirements.</xs:documentation>
+      </xs:annotation>
+      <xs:attribute name="type" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:documentation>The type of object to include from (e.g., parameter, control, component, role, etc.)</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="id-ref" use="required" type="xs:NCName">
+         <xs:annotation>
+            <xs:documentation>The identity of the object to insert a value for. The identity will be selected from the index of objects of the specified <code xmlns="">type</code>. The specific value to include is based on the application's display requirements, which will likely use a specific data element associated with the <code xmlns="">type</code> (e.g., title, identifier, value, etc.) that is appropriate for the application.</xs:documentation>
+         </xs:annotation>
+      </xs:attribute>
+   </xs:complexType>
 </xs:schema>

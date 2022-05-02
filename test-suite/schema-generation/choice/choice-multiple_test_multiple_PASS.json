@@ -1,5 +1,4 @@
 {
-    "$schema": "../../../../../metaschema-schema-generator/test-schemagen/choice-schema.json",
   "parent": {
     "children": [
       {
