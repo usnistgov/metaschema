@@ -1,8 +1,41 @@
+
+# TODO
+
+- [x] Generate nominal targets (present results) of stable examples
+- [ ] Validate all samples to these nominal targets
+- [ ] compare to DAW
+- [x] Stabilize XSpec testing
+- [ ] Isolate unstable examples
+- [ ] Mock up examples with intended targets
+  - [ ] (confirm DAW schema?) 
+- [ ] Build unit tests
+- [ ] Repair code - foreach
+  - [ ] Isolate problem
+  - [ ] Unit test (to verify solution)
+    - [ ] composition - `../metaschema-xspec`
+    - [ ] JSON Schema
+    - [ ] XSD (should be okay)
+    - [ ] converter generators
+
 # Running the unit tests
 
-So far we have unit testing in place for JSON schema generation and for validating correctness of generated schemas by validating instances known to be good or bad.
+Each subdirectory contains unit tests for a family of functionalities in Metaschema. They can overlap.
 
-We will be extending this to cover XSD generation, generation of XML and JSON conversion tooling, and the correctness of those conversions.
+Within each subdirectory:
+
+- One or more metaschemas exercise features of Metaschema
+- One or more pass/fail test instances show examples of instance documents that either conform to constraints defined by their metaschema (PASS), or violate them (FAIL).
+- `target` contains nominal schema results of schema generation, as XSD or JSON Schema. These are *non-normative* and tooling should ordinarily ignore them - they are kept temporarily for alignment purposes (external process validation)
+- `actual` is excluded from Git via `.gitignore` so that tools can write schemas into folders named `actual` for testing.
+
+For testing:
+- Generate schemas.
+- Validate PASS/FAIL samples against schemas.
+
+Optionally:
+- Compare generated schemas with targets kept in `target`
+
+## Test metaschema - naming
 
 Metaschemas should follow this naming convention. Note the use of underscores as delimiters between parts of this name.
 
