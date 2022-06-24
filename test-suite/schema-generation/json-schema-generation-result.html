@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><html xmlns="http://www.w3.org/1999/xhtml">
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <title>Test Report for C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/nist-metaschema-MAKE-JSON-SCHEMA.xsl (passed: 1 / pending: 0 / failed: 0 / total: 1)</title>
+      <title>Test Report for C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/nist-metaschema-MAKE-JSON-SCHEMA.xsl (passed: 1 / pending: 0 / failed: 1 / total: 2)</title>
       <style type="text/css">/****************************************************************************/
 /*  File:       test-report.css                                             */
 /*  Author:     Jeni Tennison                                               */
@@ -592,7 +592,7 @@ span.scenario-totals {
       <h1>Test Report</h1>
       <p>Stylesheet: <a href="file:/C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/nist-metaschema-MAKE-JSON-SCHEMA.xsl">C:/Users/wap1/Documents/usnistgov/metaschema/toolchains/xslt-M4/nist-metaschema-MAKE-JSON-SCHEMA.xsl</a></p>
       <p>XSpec: <a href="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/schema-generation/json-schema-generation.xspec">C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/schema-generation/json-schema-generation.xspec</a></p>
-      <p>Tested: 23 June 2022 at 12:19</p>
+      <p>Tested: 24 June 2022 at 16:53</p>
       <h2>Contents</h2>
       <table class="xspec">
          <colgroup>
@@ -607,13 +607,20 @@ span.scenario-totals {
                <th></th>
                <th class="totals">passed: 1</th>
                <th class="totals">pending: 0</th>
-               <th class="totals">failed: 0</th>
-               <th class="totals">total: 1</th>
+               <th class="totals">failed: 1</th>
+               <th class="totals">total: 2</th>
             </tr>
          </thead>
          <tbody>
+            <tr class="failed">
+               <th><a href="#top_scenario1">Allowed values constraints</a></th>
+               <th class="totals">0</th>
+               <th class="totals">0</th>
+               <th class="totals">1</th>
+               <th class="totals">1</th>
+            </tr>
             <tr class="successful">
-               <th><a href="#top_scenario1">Token datatype format</a></th>
+               <th><a href="#top_scenario2">Token datatype format</a></th>
                <th class="totals">1</th>
                <th class="totals">0</th>
                <th class="totals">0</th>
@@ -622,8 +629,272 @@ span.scenario-totals {
          </tbody>
       </table>
       <div id="top_scenario1">
-         <h2 class="successful">Token datatype format<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <h2 class="failed">Allowed values constraints<span class="scenario-totals">passed: 0 / pending: 0 / failed: 1 / total: 1</span></h2>
          <table class="xspec" id="table_scenario1">
+            <colgroup>
+               <col style="width:75%" />
+               <col style="width:25%" />
+            </colgroup>
+            <tbody>
+               <tr class="failed">
+                  <th>Allowed values constraints</th>
+                  <th>passed: 0 / pending: 0 / failed: 1 / total: 1</th>
+               </tr>
+               <tr class="failed">
+                  <td><a href="#scenario1-expect1">JSON Schema expressing enumerated allowed values constraints checking</a></td>
+                  <td>Failure</td>
+               </tr>
+            </tbody>
+         </table>
+         <div id="scenario1">
+            <h3>Allowed values constraints</h3>
+            <div id="scenario1-expect1" class="xTestReport">
+               <h4 class="xTestReportTitle">JSON Schema expressing enumerated allowed values constraints checking</h4>
+               <div class="xTestReportHint"><a href="https://github.com/xspec/xspec/wiki/Understanding-Test-Results" target="_blank" title="What does this report mean?">[?]</a></div>
+               <table class="xspecResult">
+                  <thead>
+                     <tr>
+                        <th>Result</th>
+                        <th>Expected Result</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>
+                           <p>XPath <code class="same">/self::document-node()</code> from:</p>
+                           <pre>&lt;<span class="inner-diff">map</span> <span class="xmlns">xmlns="http://www.w3.org/2005/xpath-functions"</span>&gt;
+   &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$schema"</span>&gt;<span class="same">http://json-schema.org/draft-07/schema#</span>&lt;/string&gt;
+   &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$id"</span>&gt;<span class="same">http://csrc.nist.gov/ns/metaschema/unit-test/allowed-values/1.0-milestone1/metaschema-allowed-values-schema.json</span>&lt;/string&gt;
+   &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$comment"</span>&gt;<span class="same">Metaschema Unit Test: allowed values: JSON Schema</span>&lt;/string&gt;
+   &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">object</span>&lt;/string&gt;
+   &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"definitions"</span>&gt;
+      &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"metaschema-allowed-values-metaschema-allowed-values:parent"</span>&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"title"</span>&gt;<span class="same">parent</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"description"</span>&gt;<span class="same">parent assembly</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$id"</span>&gt;<span class="same">#assembly_metaschema-allowed-values_parent</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">object</span>&lt;/string&gt;
+         &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"properties"</span>&gt;
+            &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"odd-flag"</span>&gt;
+               &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"title"</span>&gt;<span class="same">Small odd flag</span>&lt;/string&gt;
+               &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"description"</span>&gt;<span class="same">Odd integers from 1 to 11 inclusive</span>&lt;/string&gt;
+               &lt;<span class="inner-diff">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="diff">string</span>&lt;/string&gt;
+               &lt;<span class="inner-diff">array</span> <span class="same">key</span>=<span class="same">"enum"</span>&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">1</span>&lt;/string&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">3</span>&lt;/string&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">5</span>&lt;/string&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">7</span>&lt;/string&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">9</span>&lt;/string&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">11</span>&lt;/string&gt;
+               &lt;/array&gt;
+            &lt;/map&gt;
+            &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"field-dates"</span>&gt;
+               &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"anyOf"</span>&gt;
+                  &lt;<span class="same">map</span>&gt;
+                     &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#field_metaschema-allowed-values_field-date</span>&lt;/string&gt;
+                  &lt;/map&gt;
+                  &lt;<span class="same">map</span>&gt;
+                     &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">array</span>&lt;/string&gt;
+                     &lt;<span class="same">number</span> <span class="same">key</span>=<span class="same">"minItems"</span>&gt;<span class="same">1</span>&lt;/number&gt;
+                     &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"items"</span>&gt;
+                        &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#field_metaschema-allowed-values_field-date</span>&lt;/string&gt;
+                     &lt;/map&gt;
+                  &lt;/map&gt;
+               &lt;/array&gt;
+            &lt;/map&gt;
+            &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"children"</span>&gt;
+               &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"anyOf"</span>&gt;
+                  &lt;<span class="same">map</span>&gt;
+                     &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#assembly_metaschema-allowed-values_child</span>&lt;/string&gt;
+                  &lt;/map&gt;
+                  &lt;<span class="same">map</span>&gt;
+                     &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">array</span>&lt;/string&gt;
+                     &lt;<span class="same">number</span> <span class="same">key</span>=<span class="same">"minItems"</span>&gt;<span class="same">1</span>&lt;/number&gt;
+                     &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"items"</span>&gt;
+                        &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#assembly_metaschema-allowed-values_child</span>&lt;/string&gt;
+                     &lt;/map&gt;
+                  &lt;/map&gt;
+               &lt;/array&gt;
+            &lt;/map&gt;
+         &lt;/map&gt;
+         &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"required"</span>&gt;
+            &lt;<span class="same">string</span>&gt;<span class="same">odd-flag</span>&lt;/string&gt;
+         &lt;/array&gt;
+         &lt;<span class="same">boolean</span> <span class="same">key</span>=<span class="same">"additionalProperties"</span>&gt;<span class="same">false</span>&lt;/boolean&gt;
+      &lt;/map&gt;
+      &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"metaschema-allowed-values-metaschema-allowed-values:child"</span>&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"title"</span>&gt;<span class="same">child</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"description"</span>&gt;<span class="same">child assembly</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$id"</span>&gt;<span class="same">#assembly_metaschema-allowed-values_child</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">object</span>&lt;/string&gt;
+         &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"properties"</span>&gt;
+            &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"even-flag"</span>&gt;
+               &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"title"</span>&gt;<span class="same">Small even flag</span>&lt;/string&gt;
+               &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"description"</span>&gt;<span class="same">Even integers from 2 to 10 inclusive</span>&lt;/string&gt;
+               &lt;<span class="inner-diff">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="diff">string</span>&lt;/string&gt;
+               &lt;<span class="inner-diff">array</span> <span class="same">key</span>=<span class="same">"enum"</span>&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">2</span>&lt;/string&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">4</span>&lt;/string&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">6</span>&lt;/string&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">8</span>&lt;/string&gt;
+                  &lt;<span class="diff">string</span>&gt;<span class="same">10</span>&lt;/string&gt;
+               &lt;/array&gt;
+            &lt;/map&gt;
+            &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"field-date"</span>&gt;
+               &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#field_metaschema-allowed-values_field-date</span>&lt;/string&gt;
+            &lt;/map&gt;
+         &lt;/map&gt;
+         &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"required"</span>&gt;
+            &lt;<span class="same">string</span>&gt;<span class="same">field-date</span>&lt;/string&gt;
+         &lt;/array&gt;
+         &lt;<span class="same">boolean</span> <span class="same">key</span>=<span class="same">"additionalProperties"</span>&gt;<span class="same">false</span>&lt;/boolean&gt;
+      &lt;/map&gt;
+      &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"metaschema-allowed-values-metaschema-allowed-values:field-date"</span>&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"title"</span>&gt;<span class="same">Date</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"description"</span>&gt;<span class="same">One of several 2020 dates</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$id"</span>&gt;<span class="same">#field_metaschema-allowed-values_field-date</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">string</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"pattern"</span>&gt;<span class="same">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$</span>&lt;/string&gt;
+         &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"enum"</span>&gt;
+            &lt;<span class="same">string</span>&gt;<span class="same">2020-01-01</span>&lt;/string&gt;
+            &lt;<span class="same">string</span>&gt;<span class="same">2020-02-29</span>&lt;/string&gt;
+            &lt;<span class="same">string</span>&gt;<span class="same">2020-07-04</span>&lt;/string&gt;
+         &lt;/array&gt;
+      &lt;/map&gt;
+   &lt;/map&gt;
+   &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"properties"</span>&gt;
+      &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"parent"</span>&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#assembly_metaschema-allowed-values_parent</span>&lt;/string&gt;
+      &lt;/map&gt;
+   &lt;/map&gt;
+   &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"required"</span>&gt;
+      &lt;<span class="same">string</span>&gt;<span class="same">parent</span>&lt;/string&gt;
+   &lt;/array&gt;
+   &lt;<span class="same">boolean</span> <span class="same">key</span>=<span class="same">"additionalProperties"</span>&gt;<span class="same">false</span>&lt;/boolean&gt;
+   &lt;<span class="same">number</span> <span class="same">key</span>=<span class="same">"maxProperties"</span>&gt;<span class="same">1</span>&lt;/number&gt;
+&lt;/map&gt;</pre>
+                        </td>
+                        <td>
+                           <p>XPath <code class="same">/self::document-node()</code> from:</p>
+                           <pre>&lt;<span class="inner-diff">map</span> <span class="xmlns">xmlns="http://www.w3.org/2005/xpath-functions"</span>&gt;
+   &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$schema"</span>&gt;<span class="same">http://json-schema.org/draft-07/schema#</span>&lt;/string&gt;
+   &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$id"</span>&gt;<span class="same">http://csrc.nist.gov/ns/metaschema/unit-test/allowed-values/1.0-milestone1/metaschema-allowed-values-schema.json</span>&lt;/string&gt;
+   &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$comment"</span>&gt;<span class="same">Metaschema Unit Test: allowed values: JSON Schema</span>&lt;/string&gt;
+   &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">object</span>&lt;/string&gt;
+   &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"definitions"</span>&gt;
+      &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"metaschema-allowed-values-metaschema-allowed-values:parent"</span>&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"title"</span>&gt;<span class="same">parent</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"description"</span>&gt;<span class="same">parent assembly</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$id"</span>&gt;<span class="same">#assembly_metaschema-allowed-values_parent</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">object</span>&lt;/string&gt;
+         &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"properties"</span>&gt;
+            &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"odd-flag"</span>&gt;
+               &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"title"</span>&gt;<span class="same">Small odd flag</span>&lt;/string&gt;
+               &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"description"</span>&gt;<span class="same">Odd integers from 1 to 11 inclusive</span>&lt;/string&gt;
+               &lt;<span class="inner-diff">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="diff">integer</span>&lt;/string&gt;
+               &lt;<span class="inner-diff">array</span> <span class="same">key</span>=<span class="same">"enum"</span>&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">1</span>&lt;/number&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">3</span>&lt;/number&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">5</span>&lt;/number&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">7</span>&lt;/number&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">9</span>&lt;/number&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">11</span>&lt;/number&gt;
+               &lt;/array&gt;
+            &lt;/map&gt;
+            &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"field-dates"</span>&gt;
+               &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"anyOf"</span>&gt;
+                  &lt;<span class="same">map</span>&gt;
+                     &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#field_metaschema-allowed-values_field-date</span>&lt;/string&gt;
+                  &lt;/map&gt;
+                  &lt;<span class="same">map</span>&gt;
+                     &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">array</span>&lt;/string&gt;
+                     &lt;<span class="same">number</span> <span class="same">key</span>=<span class="same">"minItems"</span>&gt;<span class="same">1</span>&lt;/number&gt;
+                     &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"items"</span>&gt;
+                        &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#field_metaschema-allowed-values_field-date</span>&lt;/string&gt;
+                     &lt;/map&gt;
+                  &lt;/map&gt;
+               &lt;/array&gt;
+            &lt;/map&gt;
+            &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"children"</span>&gt;
+               &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"anyOf"</span>&gt;
+                  &lt;<span class="same">map</span>&gt;
+                     &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#assembly_metaschema-allowed-values_child</span>&lt;/string&gt;
+                  &lt;/map&gt;
+                  &lt;<span class="same">map</span>&gt;
+                     &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">array</span>&lt;/string&gt;
+                     &lt;<span class="same">number</span> <span class="same">key</span>=<span class="same">"minItems"</span>&gt;<span class="same">1</span>&lt;/number&gt;
+                     &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"items"</span>&gt;
+                        &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#assembly_metaschema-allowed-values_child</span>&lt;/string&gt;
+                     &lt;/map&gt;
+                  &lt;/map&gt;
+               &lt;/array&gt;
+            &lt;/map&gt;
+         &lt;/map&gt;
+         &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"required"</span>&gt;
+            &lt;<span class="same">string</span>&gt;<span class="same">odd-flag</span>&lt;/string&gt;
+         &lt;/array&gt;
+         &lt;<span class="same">boolean</span> <span class="same">key</span>=<span class="same">"additionalProperties"</span>&gt;<span class="same">false</span>&lt;/boolean&gt;
+      &lt;/map&gt;
+      &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"metaschema-allowed-values-metaschema-allowed-values:child"</span>&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"title"</span>&gt;<span class="same">child</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"description"</span>&gt;<span class="same">child assembly</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$id"</span>&gt;<span class="same">#assembly_metaschema-allowed-values_child</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">object</span>&lt;/string&gt;
+         &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"properties"</span>&gt;
+            &lt;<span class="inner-diff">map</span> <span class="same">key</span>=<span class="same">"even-flag"</span>&gt;
+               &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"title"</span>&gt;<span class="same">Small even flag</span>&lt;/string&gt;
+               &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"description"</span>&gt;<span class="same">Even integers from 2 to 10 inclusive</span>&lt;/string&gt;
+               &lt;<span class="inner-diff">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="diff">integer</span>&lt;/string&gt;
+               &lt;<span class="inner-diff">array</span> <span class="same">key</span>=<span class="same">"enum"</span>&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">2</span>&lt;/number&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">4</span>&lt;/number&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">6</span>&lt;/number&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">8</span>&lt;/number&gt;
+                  &lt;<span class="diff">number</span>&gt;<span class="same">10</span>&lt;/number&gt;
+               &lt;/array&gt;
+            &lt;/map&gt;
+            &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"field-date"</span>&gt;
+               &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#field_metaschema-allowed-values_field-date</span>&lt;/string&gt;
+            &lt;/map&gt;
+         &lt;/map&gt;
+         &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"required"</span>&gt;
+            &lt;<span class="same">string</span>&gt;<span class="same">field-date</span>&lt;/string&gt;
+         &lt;/array&gt;
+         &lt;<span class="same">boolean</span> <span class="same">key</span>=<span class="same">"additionalProperties"</span>&gt;<span class="same">false</span>&lt;/boolean&gt;
+      &lt;/map&gt;
+      &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"metaschema-allowed-values-metaschema-allowed-values:field-date"</span>&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"title"</span>&gt;<span class="same">Date</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"description"</span>&gt;<span class="same">One of several 2020 dates</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$id"</span>&gt;<span class="same">#field_metaschema-allowed-values_field-date</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"type"</span>&gt;<span class="same">string</span>&lt;/string&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"pattern"</span>&gt;<span class="same">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$</span>&lt;/string&gt;
+         &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"enum"</span>&gt;
+            &lt;<span class="same">string</span>&gt;<span class="same">2020-01-01</span>&lt;/string&gt;
+            &lt;<span class="same">string</span>&gt;<span class="same">2020-02-29</span>&lt;/string&gt;
+            &lt;<span class="same">string</span>&gt;<span class="same">2020-07-04</span>&lt;/string&gt;
+         &lt;/array&gt;
+      &lt;/map&gt;
+   &lt;/map&gt;
+   &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"properties"</span>&gt;
+      &lt;<span class="same">map</span> <span class="same">key</span>=<span class="same">"parent"</span>&gt;
+         &lt;<span class="same">string</span> <span class="same">key</span>=<span class="same">"$ref"</span>&gt;<span class="same">#assembly_metaschema-allowed-values_parent</span>&lt;/string&gt;
+      &lt;/map&gt;
+   &lt;/map&gt;
+   &lt;<span class="same">array</span> <span class="same">key</span>=<span class="same">"required"</span>&gt;
+      &lt;<span class="same">string</span>&gt;<span class="same">parent</span>&lt;/string&gt;
+   &lt;/array&gt;
+   &lt;<span class="same">boolean</span> <span class="same">key</span>=<span class="same">"additionalProperties"</span>&gt;<span class="same">false</span>&lt;/boolean&gt;
+   &lt;<span class="same">number</span> <span class="same">key</span>=<span class="same">"maxProperties"</span>&gt;<span class="same">1</span>&lt;/number&gt;
+&lt;/map&gt;</pre>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+         </div>
+      </div>
+      <div id="top_scenario2">
+         <h2 class="successful">Token datatype format<span class="scenario-totals">passed: 1 / pending: 0 / failed: 0 / total: 1</span></h2>
+         <table class="xspec" id="table_scenario2">
             <colgroup>
                <col style="width:75%" />
                <col style="width:25%" />

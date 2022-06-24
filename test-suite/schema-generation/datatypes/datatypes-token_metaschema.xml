@@ -13,10 +13,10 @@
       <description>parent assembly</description>
       <root-name>parent</root-name>
       <model>
-         <define-field name="token-flag" as-type="token" min-occurs="1" max-occurs="unbounded">
-            <formal-name>Universal Resource Identifier Flag</formal-name>
-            <description>Per W3C</description>
-            <group-as name="token-flag" in-json="ARRAY"  />
+         <define-field name="token-field" as-type="token" min-occurs="1" max-occurs="unbounded">
+            <formal-name>Token fields</formal-name>
+            <description>Each field a single token</description>
+            <group-as name="token-fields" in-json="ARRAY"  />
          </define-field>
       </model>
    </define-assembly>

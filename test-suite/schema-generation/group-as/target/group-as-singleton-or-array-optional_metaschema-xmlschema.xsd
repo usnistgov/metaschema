@@ -1,35 +1,198 @@
-
-  { "$schema" : "http://json-schema.org/draft-07/schema#",
-    "$id" : "http://csrc.nist.gov/ns/metaschema/unit-test/group-as-singleton-or-array-optional/1.0-milestone1/metaschema-group-as-schema.json",
-    "$comment" : "Metaschema Unit Test: group-as: JSON Schema",
-    "type" : "object",
-    "definitions" : 
-    { "metaschema-group-as-metaschema-group-as:parent" : 
-      { "title" : "parent",
-        "description" : "parent assembly",
-        "$id" : "#assembly_metaschema-group-as_parent",
-        "type" : "object",
-        "properties" : 
-        { "props" : 
-          { "anyOf" : 
-            [ 
-              { "$ref" : "#field_metaschema-group-as_prop" },
-              
-              { "type" : "array",
-                "minItems" : 1,
-                "items" : 
-                { "$ref" : "#field_metaschema-group-as_prop" } } ] } },
-        "additionalProperties" : false },
-      "metaschema-group-as-metaschema-group-as:prop" : 
-      { "title" : "prop",
-        "description" : "prop field",
-        "$id" : "#field_metaschema-group-as_prop",
-        "type" : "string",
-        "pattern" : "^\\S(.*\\S)?$" } },
-    "properties" : 
-    { "parent" : 
-      { "$ref" : "#assembly_metaschema-group-as_parent" } },
-    "required" : 
-    [ "parent" ],
-    "additionalProperties" : false,
-    "maxProperties" : 1 }
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+           xmlns:metaschema-datatypes="http://csrc.nist.gov/ns/metaschema/unit-test/group-as-singleton-or-array-optional"
+           xmlns:metaschema-group-as="http://csrc.nist.gov/ns/metaschema/unit-test/group-as-singleton-or-array-optional"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           targetNamespace="http://csrc.nist.gov/ns/metaschema/unit-test/group-as-singleton-or-array-optional"
+           version="1.0-milestone1">
+   <xs:annotation>
+      <xs:appinfo>
+         <m:schema-name>Metaschema Unit Test: group-as</m:schema-name>
+         <m:schema-version>1.0-milestone1</m:schema-version>
+         <m:short-name>metaschema-group-as</m:short-name>
+         <m:root>parent</m:root>
+      </xs:appinfo>
+   </xs:annotation>
+   <xs:element name="parent"
+               type="metaschema-group-as:metaschema-group-as-parent-ASSEMBLY"/>
+   <xs:complexType name="metaschema-group-as-parent-ASSEMBLY">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>parent</m:formal-name>
+            <m:description>parent assembly</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>parent</b>: parent assembly</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="prop"
+                     type="metaschema-group-as:metaschema-group-as-prop-FIELD"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="metaschema-group-as-prop-FIELD">
+      <xs:annotation>
+         <xs:appinfo>
+            <m:formal-name>prop</m:formal-name>
+            <m:description>prop field</m:description>
+         </xs:appinfo>
+         <xs:documentation>
+            <b>prop</b>: prop field</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="metaschema-group-as:string"/>
+   </xs:simpleType>
+   <xs:simpleType name="string">
+      <xs:annotation>
+         <xs:documentation>A string, but not empty and not whitespace-only (whitespace is U+9, U+10, U+32 or [ \n\t]+ )</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="metaschema-datatypes:StringDatatype"/>
+   </xs:simpleType>
+   <xs:simpleType name="Base64Datatype">
+      <xs:restriction base="xs:base64Binary">
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>A trimmed string, at least one character with no
+              leading or trailing whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="DateDatatype">
+      <xs:restriction base="xs:date">
+         <xs:pattern value="(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|[+-][0-9]{2}:[0-9]{2})?"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="DateWithTimezoneDatatype">
+      <xs:annotation>
+         <xs:documentation>The xs:date with a required timezone.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="metaschema-datatypes:DateDatatype">
+         <xs:pattern value="(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))(Z|[+-][0-9]{2}:[0-9]{2})"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="DateTimeDatatype">
+      <xs:restriction base="xs:dateTime">
+         <xs:pattern value="(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))T((2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?)(Z|[+-][0-9]{2}:[0-9]{2})?"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="DateTimeWithTimezoneDatatype">
+      <xs:annotation>
+         <xs:documentation>The xs:dateTime with a required timezone.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="metaschema-datatypes:DateTimeDatatype">
+         <xs:pattern value="(((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30)))T((2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?)(Z|[+-][0-9]{2}:[0-9]{2})"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="EmailAddressDatatype">
+      <xs:annotation>
+         <xs:documentation>An email address</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="metaschema-datatypes:StringDatatype">
+         <xs:pattern value="\S.*@.*\S">
+            <xs:annotation>
+               <xs:documentation>Need a better pattern.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="HostnameDatatype">
+      <xs:annotation>
+         <xs:documentation>A host name</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="metaschema-datatypes:StringDatatype"><!-- TODO: Need a good hostname pattern --></xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="IPV4AddressDatatype">
+      <xs:annotation>
+         <xs:documentation>The ip-v4-address type specifies an IPv4 address in
+          dot decimal notation.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="metaschema-datatypes:StringDatatype">
+         <xs:pattern value="((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="IPV6AddressDatatype">
+      <xs:annotation>
+         <xs:documentation>The ip-v6-address type specifies an IPv6 address
+          represented in 8 hextets separated by colons.</xs:documentation>
+         <xs:documentation>This is based on the pattern provided here:
+          https://stackoverflow.com/questions/53497/regular-expression-that-matches-valid-ipv6-addresses
+          with some customizations.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:whiteSpace value="collapse"/>
+         <xs:pattern value="(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|[fF][eE]80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::([fF]{4}(:0{1,4}){0,1}:){0,1}((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]))"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="PositiveIntegerDatatype">
+      <xs:restriction base="xs:positiveInteger">
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>A trimmed string, at least one character with no
+              leading or trailing whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="StringDatatype">
+      <xs:annotation>
+         <xs:documentation>A string, but not empty and not whitespace-only
+          (whitespace is U+9, U+10, U+32 or [ \n\t]+ )</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:string">
+         <xs:annotation>
+            <xs:documentation>The OSCAL 'string' datatype restricts the XSD type by prohibiting leading 
+            and trailing whitespace, and something (not only whitespace) is required.</xs:documentation>
+         </xs:annotation>
+         <xs:whiteSpace value="preserve"/>
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>A trimmed string, at least one character with no
+              leading or trailing whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="URIDatatype">
+      <xs:annotation>
+         <xs:documentation>A URI</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:anyURI">
+         <xs:pattern value="[a-zA-Z][a-zA-Z0-9+\-.]+:.*\S">
+            <xs:annotation>
+               <xs:documentation>Requires a scheme with colon per RFC 3986.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="URIReferenceDatatype">
+      <xs:annotation>
+         <xs:documentation>A URI reference, such as a relative URL
+        </xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:anyURI">
+         <xs:pattern value="\S(.*\S)?">
+            <xs:annotation>
+               <xs:documentation>A trimmed URI, at least one character with no
+              leading or trailing whitespace.</xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="UUIDDatatype">
+      <xs:annotation>
+         <xs:documentation>A type 4 ('random' or 'pseudorandom') or type 5 UUID per RFC
+          4122.</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="metaschema-datatypes:StringDatatype">
+         <xs:pattern value="[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}">
+            <xs:annotation>
+               <xs:documentation>A sequence of 8-4-4-4-12 hex digits, with extra
+              constraints in the 13th and 17-18th places for version 4 and 5
+            </xs:documentation>
+            </xs:annotation>
+         </xs:pattern>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>

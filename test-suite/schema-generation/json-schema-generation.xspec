@@ -47,6 +47,17 @@
          test="json-to-xml( $x:result/string() )" select="m:scrub($ov:expected-schema)"/>
    </x:scenario>-->
    
+   <x:scenario label="Allowed values constraints">
+      <!-- Scrubbing both the result and the expected result for comparison -->
+      <x:context href="allowed-values/allowed-values-basic_metaschema.xml"/>
+      <x:variable name="ov:expected-json-schema-path" as="xs:string">allowed-values/target/allowed-values-basic_metaschema-jsonschema.json</x:variable>
+      <x:variable name="ov:expected-schema" select="('../' || $ov:expected-json-schema-path) => unparsed-text() => json-to-xml()"/>
+      <!--<x:variable name="ov:expected-output"
+         href="expected/nestedmessy_metaschema-composed.xml"/>-->
+      <x:expect label="JSON Schema expressing enumerated allowed values constraints checking"
+         test="json-to-xml( $x:result/string() )" select="m:scrub($ov:expected-schema)"/>
+   </x:scenario>
+   
    <x:scenario label="Token datatype format">
       <!-- Scrubbing both the result and the expected result for comparison -->
       <x:context href="token/datatypes-token_metaschema.xml"/>

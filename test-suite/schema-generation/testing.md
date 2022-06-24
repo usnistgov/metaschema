@@ -3,6 +3,7 @@
 
 - [x] Generate nominal targets (present results) of stable examples
 - [ ] Validate all samples to these nominal target schema instances
+  - [ ] XProc 1.0 to do XSD run 
 - [ ] compare to DAW
 - [x] Stabilize XSpec testing
 - [ ] Isolate unstable examples
@@ -44,7 +45,6 @@ where
 - `$SCOPE` is a keyword for a subset of tests in `$TESTSET`, such as `date`
 - `$KEYWORD` is a keyword indicating a particular teste
 - `$EXPECT` is `PASS` or `FAIL` depending on whether a test instance is known to be valid (it should PASS) or invalid (it should FAIL)
-
 
 `$TESTSET-$SCOPE_metaschema.xml` is recognized as a Metaschema
 

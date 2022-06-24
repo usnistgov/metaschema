@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-           xmlns:metaschema-datatypes="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri"
-           xmlns:metaschema-datatypes-uri="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri"
+           xmlns:metaschema-datatypes="http://csrc.nist.gov/ns/metaschema/unit-test/group-as-by-key"
+           xmlns:metaschema-group-as="http://csrc.nist.gov/ns/metaschema/unit-test/group-as-by-key"
            xmlns:xs="http://www.w3.org/2001/XMLSchema"
            elementFormDefault="qualified"
-           targetNamespace="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri"
+           targetNamespace="http://csrc.nist.gov/ns/metaschema/unit-test/group-as-by-key"
            version="1.0-milestone1">
    <xs:annotation>
       <xs:appinfo>
-         <m:schema-name>Metaschema Unit Test: URIs</m:schema-name>
+         <m:schema-name>Metaschema Unit Test: group-as</m:schema-name>
          <m:schema-version>1.0-milestone1</m:schema-version>
-         <m:short-name>metaschema-datatypes-uri</m:short-name>
+         <m:short-name>metaschema-group-as</m:short-name>
          <m:root>parent</m:root>
       </xs:appinfo>
    </xs:annotation>
    <xs:element name="parent"
-               type="metaschema-datatypes-uri:metaschema-datatypes-uri-parent-ASSEMBLY"/>
-   <xs:complexType name="metaschema-datatypes-uri-parent-ASSEMBLY">
+               type="metaschema-group-as:metaschema-group-as-parent-ASSEMBLY"/>
+   <xs:complexType name="metaschema-group-as-parent-ASSEMBLY">
       <xs:annotation>
          <xs:appinfo>
             <m:formal-name>parent</m:formal-name>
@@ -26,77 +26,48 @@
             <b>parent</b>: parent assembly</xs:documentation>
       </xs:annotation>
       <xs:sequence>
-         <xs:element name="uri-field"
-                     type="metaschema-datatypes-uri:metaschema-datatypes-uri-uri-field-FIELD"
-                     minOccurs="0"
-                     maxOccurs="unbounded"/>
-         <xs:element name="uri-reference-field"
-                     type="metaschema-datatypes-uri:metaschema-datatypes-uri-uri-reference-field-FIELD"
-                     minOccurs="0"
+         <xs:element name="prop"
+                     type="metaschema-group-as:metaschema-group-as-prop-FIELD"
+                     minOccurs="1"
                      maxOccurs="unbounded"/>
       </xs:sequence>
-      <xs:attribute name="uri-flag" use="required" type="metaschema-datatypes-uri:uri">
-         <xs:annotation>
-            <xs:appinfo>
-               <m:formal-name>Universal Resource Identifier Flag</m:formal-name>
-               <m:description>Per W3C</m:description>
-            </xs:appinfo>
-            <xs:documentation>
-               <b>Universal Resource Identifier Flag</b>: Per W3C</xs:documentation>
-         </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="uri-reference-flag"
-                    use="required"
-                    type="metaschema-datatypes-uri:uri-reference">
-         <xs:annotation>
-            <xs:appinfo>
-               <m:formal-name>Universal Resource Identifier Reference Flag</m:formal-name>
-               <m:description>Per W3C, can be a relative URI</m:description>
-            </xs:appinfo>
-            <xs:documentation>
-               <b>Universal Resource Identifier Reference Flag</b>: Per W3C, can be a relative URI</xs:documentation>
-         </xs:annotation>
-      </xs:attribute>
    </xs:complexType>
-   <xs:simpleType name="metaschema-datatypes-uri-uri-field-FIELD">
+   <xs:complexType name="metaschema-group-as-prop-FIELD">
       <xs:annotation>
          <xs:appinfo>
-            <m:formal-name>Universal Resource Identifier Flag</m:formal-name>
-            <m:description>Per W3C</m:description>
+            <m:formal-name>prop</m:formal-name>
+            <m:description>prop field</m:description>
          </xs:appinfo>
          <xs:documentation>
-            <b>Universal Resource Identifier Flag</b>: Per W3C</xs:documentation>
+            <b>prop</b>: prop field</xs:documentation>
       </xs:annotation>
-      <xs:restriction base="metaschema-datatypes-uri:uri"/>
-   </xs:simpleType>
-   <xs:simpleType name="metaschema-datatypes-uri-uri-reference-field-FIELD">
-      <xs:annotation>
-         <xs:appinfo>
-            <m:formal-name>Universal Resource Identifier Flag</m:formal-name>
-            <m:description>Per W3C</m:description>
-         </xs:appinfo>
-         <xs:documentation>
-            <b>Universal Resource Identifier Flag</b>: Per W3C</xs:documentation>
-      </xs:annotation>
-      <xs:restriction base="metaschema-datatypes-uri:uri-reference"/>
-   </xs:simpleType>
+      <xs:simpleContent>
+         <xs:extension base="metaschema-group-as:string">
+            <xs:attribute name="id" use="required" type="metaschema-group-as:token">
+               <xs:annotation>
+                  <xs:appinfo>
+                     <m:formal-name>ID</m:formal-name>
+                     <m:description>Identifier</m:description>
+                  </xs:appinfo>
+                  <xs:documentation>
+                     <b>ID</b>: Identifier</xs:documentation>
+               </xs:annotation>
+            </xs:attribute>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
    <xs:simpleType name="string">
       <xs:annotation>
          <xs:documentation>A string, but not empty and not whitespace-only (whitespace is U+9, U+10, U+32 or [ \n\t]+ )</xs:documentation>
       </xs:annotation>
       <xs:restriction base="metaschema-datatypes:StringDatatype"/>
    </xs:simpleType>
-   <xs:simpleType name="uri">
-      <xs:annotation>
-         <xs:documentation>A URI</xs:documentation>
+   <xs:simpleType name="token">
+      <xs:annotation><!--<xs:documentation>Matching XSD NCName, except whitespace is not collapsed.</xs:documentation>-->
+         <xs:documentation>A string token following the rules of XML "no colon" names, with no whitespace. (XML names are single alphabetic characters
+      followed by alphanumeric characters, periods, underscores or dashes.)</xs:documentation>
       </xs:annotation>
-      <xs:restriction base="metaschema-datatypes:URIDatatype"/>
-   </xs:simpleType>
-   <xs:simpleType name="uri-reference">
-      <xs:annotation>
-         <xs:documentation>A URI reference, such as a relative URL</xs:documentation>
-      </xs:annotation>
-      <xs:restriction base="metaschema-datatypes:URIReferenceDatatype"/>
+      <xs:restriction base="metaschema-datatypes:StringDatatype"/>
    </xs:simpleType>
    <xs:simpleType name="Base64Datatype">
       <xs:restriction base="xs:base64Binary">
