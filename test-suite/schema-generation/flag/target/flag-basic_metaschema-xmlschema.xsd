@@ -1,0 +1,39 @@
+
+  { "$schema" : "http://json-schema.org/draft-07/schema#",
+    "$id" : "http://csrc.nist.gov/ns/oscal/unit-testing/flag-basic/1.0-milestone1/metaschema-group-as-schema.json",
+    "$comment" : "Metaschema Unit Test: flag: basic flag: JSON Schema",
+    "type" : "object",
+    "definitions" : 
+    { "metaschema-group-as-metaschema-group-as:parent" : 
+      { "title" : "parent",
+        "description" : "parent assembly",
+        "$id" : "#assembly_metaschema-group-as_parent",
+        "type" : "object",
+        "properties" : 
+        { "flag" : 
+          { "title" : "Flag",
+            "description" : "A basic flag",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
+          "flag-required" : 
+          { "title" : "Required Flag",
+            "description" : "A basic required flag",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
+          "flag-constrained" : 
+          { "title" : "Constrained Flag",
+            "description" : "With decimal values",
+            "type" : "number",
+            "enum" : 
+            [ 1,
+              1.1 ] } },
+        "required" : 
+        [ "flag-required" ],
+        "additionalProperties" : false } },
+    "properties" : 
+    { "parent" : 
+      { "$ref" : "#assembly_metaschema-group-as_parent" } },
+    "required" : 
+    [ "parent" ],
+    "additionalProperties" : false,
+    "maxProperties" : 1 }

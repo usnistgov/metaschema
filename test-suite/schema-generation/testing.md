@@ -2,13 +2,13 @@
 # TODO
 
 - [x] Generate nominal targets (present results) of stable examples
-- [ ] Validate all samples to these nominal targets
+- [ ] Validate all samples to these nominal target schema instances
 - [ ] compare to DAW
 - [x] Stabilize XSpec testing
 - [ ] Isolate unstable examples
 - [ ] Mock up examples with intended targets
   - [ ] (confirm DAW schema?) 
-- [ ] Build unit tests
+- [ ] Repair or build unit tests
 - [ ] Repair code - foreach
   - [ ] Isolate problem
   - [ ] Unit test (to verify solution)

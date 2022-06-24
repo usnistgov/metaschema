@@ -1,0 +1,28 @@
+
+  { "$schema" : "http://json-schema.org/draft-07/schema#",
+    "$id" : "http://csrc.nist.gov/ns/metaschema/unit-test/group-as/1.0-milestone1/metaschema-group-as-schema.json",
+    "$comment" : "Metaschema Unit Test: group-as: JSON Schema",
+    "type" : "object",
+    "definitions" : 
+    { "metaschema-group-as-metaschema-group-as:parent" : 
+      { "title" : "parent",
+        "description" : "parent assembly",
+        "$id" : "#assembly_metaschema-group-as_parent",
+        "type" : "object",
+        "properties" : 
+        { "prop" : 
+          { "$ref" : "#field_metaschema-group-as_prop" } },
+        "additionalProperties" : false },
+      "metaschema-group-as-metaschema-group-as:prop" : 
+      { "title" : "prop",
+        "description" : "prop field",
+        "$id" : "#field_metaschema-group-as_prop",
+        "type" : "string",
+        "pattern" : "^\\S(.*\\S)?$" } },
+    "properties" : 
+    { "parent" : 
+      { "$ref" : "#assembly_metaschema-group-as_parent" } },
+    "required" : 
+    [ "parent" ],
+    "additionalProperties" : false,
+    "maxProperties" : 1 }
