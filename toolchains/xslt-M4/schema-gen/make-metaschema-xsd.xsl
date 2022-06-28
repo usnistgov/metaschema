@@ -154,7 +154,7 @@
         <xsl:param name="whose"  select="(ancestor::define-assembly | ancestor::define-field)[last()]"/>
         <xs:unique name="{ m:local-key-name($whose) }-{ m:local-key-name($whose/..) }-keys">
             <xs:selector xpath="{ $declaration-prefix}:{ m:local-key-name($whose/..) }"/>
-            <xs:field xpath="@{ @flag-name }"/>
+            <xs:field xpath="@{ @flag-ref }"/>
         </xs:unique>
     </xsl:template>
     
@@ -394,7 +394,7 @@
         <!--<xsl:variable name="value-list" select="(constraint/allowed-values,key('global-flag-by-name',@ref)/constraint/allowed-values)[1]"/>-->
         <xs:attribute name="{ $gi }">
             
-            <xsl:if test="(@required='yes') or (@name=(../json-key/@flag-name,../json-value-key/@flag-name))">
+            <xsl:if test="(@required='yes') or (@name=(../json-key/@flag-ref,../json-value-key-flag/@flag-ref))">
                 <xsl:attribute name="use">required</xsl:attribute>
             </xsl:if>
             <!-- annotate as datatype or string unless an exclusive value-list is given -->
@@ -418,7 +418,7 @@
         <xsl:variable name="datatype" select="(@as-type,'string')[1]"/>
         <!--<xsl:variable name="value-list" select="constraint/allowed-values"/>-->
         <xs:attribute name="{ $gi }">
-            <xsl:if test="(@required='yes') or (@name=(../json-key/@flag-name,../json-value-key/@flag-name))">
+            <xsl:if test="(@required='yes') or (@name=(../json-key/@flag-ref,../json-value-key-flag/@flag-ref))">
                 <xsl:attribute name="use">required</xsl:attribute>
             </xsl:if>
             <!--<xsl:if test="empty($value-list)">-->

@@ -82,6 +82,7 @@
             </xsl:for-each>
             <xsl:apply-templates select="($instance/json-key,json-key)[1]" mode="build"/>
             <xsl:apply-templates select="($instance/json-value-key,json-value-key)[1]" mode="build"/>
+            <xsl:apply-templates select="($instance/json-value-key-flag,json-value-key-flag)[1]" mode="build"/>
             <xsl:for-each select="$group-name">
                 <xsl:attribute name="group-name" select="."/>
             </xsl:for-each>
@@ -152,16 +153,12 @@
         </xsl:copy>
     </xsl:template>
     
-    <xsl:template mode="build" match="json-value-key[matches(@flag-name,'\S')]">
-        <xsl:attribute name="json-value-flag" select="@flag-name"/>
+    <xsl:template mode="build" match="json-value-key-flag[matches(@flag-ref,'\S')]">
+        <xsl:attribute name="json-value-flag" select="@flag-ref"/>
     </xsl:template>
     
-    <!--<xsl:template mode="build" match="json-value-key">
-        <xsl:attribute name="{ local-name() }" select="."/>
-    </xsl:template>-->
-    
     <xsl:template mode="build" match="json-key">
-        <xsl:attribute name="json-key-flag" select="@flag-name"/>
+        <xsl:attribute name="json-key-flag" select="@flag-ref"/>
     </xsl:template>
     
     <xsl:template match="@module | @ref" mode="build"/>
@@ -251,14 +248,14 @@
     <xsl:variable name="markdown-value-label">RICHTEXT</xsl:variable>
     <xsl:variable name="markdown-multiline-label">PROSE</xsl:variable>
 
-    <xsl:template priority="3" match="define-field[exists(json-value-key/@flag-name)]" mode="value-key">
-        <xsl:attribute name="key-flag" select="json-value-key/@flag-name"/>
+    <xsl:template priority="3" match="define-field[exists(json-value-key-flag/@flag-ref)]" mode="value-key">
+        <xsl:attribute name="key-flag" select="json-value-key-flag/@flag-ref"/>
     </xsl:template>
 
     <!-- When a field has no flags not designated as a json-value-flag, it is 'naked'; its value is given without a key
          (in target JSON it will be the value of a (scalar) property, not a value on a property of an object property. -->
     
-    <xsl:template mode="value-key" priority="3" match="define-field[empty(flag[not(@ref=../json-value-key/@flag-name)] | define-flag[not(@ref=../json-value-key/@flag-name)])]"/>
+    <xsl:template mode="value-key" priority="3" match="define-field[empty(flag[not(@ref=../json-value-key-flag/@flag-ref)] | define-flag[not(@ref=../json-value-key-flag/@flag-ref)])]"/>
     
     <xsl:template match="define-field" mode="value-key">
         <xsl:attribute name="key">

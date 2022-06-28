@@ -94,12 +94,12 @@
         <p><span class="usa-tag">value key</span>&#xA0;<code class="name">{ . }</code></p>
     </xsl:template>
     
-    <xsl:template match="json-key[@flag-name]" expand-text="true">
-        <p><span class="usa-tag">object key flag</span>&#xA0;<code class="name">{ @flag-name }</code></p>
+    <xsl:template match="json-key[@flag-ref]" expand-text="true">
+        <p><span class="usa-tag">object key flag</span>&#xA0;<code class="name">{ @flag-ref }</code></p>
     </xsl:template>
     
-    <xsl:template match="json-value-key[@flag-name]" expand-text="true">
-        <p><span class="usa-tag">value key flag</span>&#xA0;<code class="name">{ @flag-name }</code></p>
+    <xsl:template match="json-value-key-flag[@flag-ref]" expand-text="true">
+        <p><span class="usa-tag">value key flag</span>&#xA0;<code class="name">{ @flag-ref }</code></p>
     </xsl:template>
     
     <xsl:template match="use-name" expand-text="true">
@@ -157,7 +157,7 @@
                     <!-- pick up a description from the definition if none is present -->
                     <xsl:apply-templates select="(.,$definition)[1]/description"/>
 
-                    <xsl:apply-templates select="(.|$definition)/(root-name, use-name, group-as, json-value-key, json-key)"/>
+                    <xsl:apply-templates select="(.|$definition)/(root-name, use-name, group-as, json-value-key, json-value-key-flag, json-key)"/>
                     <xsl:call-template name="remarks-group">
                         <xsl:with-param name="these-remarks" as="element(remarks)*">
                             <!-- returns remarks off the definition, which could be self::node(). -->
@@ -168,7 +168,7 @@
                     </xsl:call-template>
                     <xsl:apply-templates select="constraint"/>
                     
-                    <!--  description | root-name | remarks | use-name | group-as | constraint | json-value-key | flag | example -->
+                    <!--  description | root-name | remarks | use-name | group-as | constraint | json-value-key | json-value-key-flag | flag | example -->
                     <!-- emits contents only for define-assembly and define-field -->
                     <xsl:apply-templates select="." mode="model"/>
                     <!-- emits contents only for references -->

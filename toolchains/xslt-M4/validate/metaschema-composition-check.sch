@@ -160,9 +160,9 @@
         <!-- flag references and inline definitions -->
         <sch:rule context="m:flag | m:define-field/m:define-flag | m:define-assembly/m:define-flag">
             <sch:assert id="json-value-key-flag-is-required"
-                test="not((@name | @ref) = ../m:json-value-key/@flag-ref) or @required = 'yes'">A flag declared as a value key must be required (@required='yes')</sch:assert>
+                test="not((@name | @ref) = ../m:json-value-key-flag/@flag-ref) or @required = 'yes'">A flag declared as a value key must be required (@required='yes')</sch:assert>
             <sch:assert id="json-value-flag-is-required"
-                test="not((@name | @ref) = ../m:json-key/@flag-ref) or @required = 'yes'">A flag declared as a key must be required (@required='yes')</sch:assert>
+                test="not((@name | @ref) = ../m:json-key-flag/@flag-ref) or @required = 'yes'">A flag declared as a key must be required (@required='yes')</sch:assert>
         </sch:rule>
         
         <!--field references and inline definitions -->
@@ -186,10 +186,8 @@
             <sch:assert test="exists($json-key-flag)" id="require-json-key-flag-is-a-flag">JSON key indicates no flag on this <sch:value-of select="substring-after(local-name(..),'define-')"/> <xsl:if test="exists(../m:flag | ../m:define-flag)">Should be (one of) <xsl:value-of select="../m:flag/@ref | ../m:define-flag/@name" separator=", "/></xsl:if></sch:assert>
         </sch:rule>
         
-        <sch:rule context="m:json-value-key">
-            <sch:assert test="empty(@flag-ref) or (@flag-ref != ../(m:flag/@ref | m:define-flag/@name) )" id="locate-json-value-key-flag"><sch:name/> as flag/<sch:value-of select="@flag-ref"/> will be inoperative as the value will be given the field key -- no other flags are given <xsl:value-of select="../(m:flag|m:define-flag)/@ref" separator=", "/></sch:assert>
-            <!-- <sch:report test="exists(@flag-ref) and matches(.,'\S')" id="require-unambiguous-value-key">JSON value key may be set to a value or a flag's value, but not both.</sch:report> -->
-            <sch:assert test="empty(@flag-ref) or @flag-ref = (../m:flag/@ref|../m:define-flag/@name)" id="locate-json-key-name">flag '<sch:value-of select="@flag-ref"/>' not found for JSON value key</sch:assert>
+        <sch:rule context="m:json-value-key-flag">
+            <sch:assert test="@flag-ref = (../m:flag/@ref|../m:define-flag/@name)" id="locate-json-key-name">flag '<sch:value-of select="@flag-ref"/>' not found for JSON value key</sch:assert>
         </sch:rule>
         
         <sch:rule context="m:allowed-values/m:enum">

@@ -159,7 +159,7 @@
             <xsl:apply-templates select="constraint/allowed-values"/>
     </xsl:template>
     
-    <xsl:template match="define-field[exists(json-value-key/@flag-name)]">
+    <xsl:template match="define-field[exists(json-value-key-flag/@flag-ref)]">
             <xsl:apply-templates select="formal-name, description"/>
             <xsl:call-template name="give-id"/>
             <string key="type">object</string>
@@ -172,14 +172,14 @@
             
             <!-- calculating required properties to allow for a single property whose
                  key will not be controlled (since it will map to the value-key flag -->
-            <xsl:variable name="value-key-name" select="json-value-key/@flag-name"/>
+            <xsl:variable name="value-key-name" select="json-value-key-flag/@flag-ref"/>
             <xsl:variable name="all-properties" select="flag[not(@ref = $value-key-name)] |
                 define-flag[not(@name = $value-key-name)] |
                 model/(*|choice)/(field | assembly | define-field | define-assembly)"/>
             <xsl:comment> we require an unspecified property, with any key, to carry the nominal value </xsl:comment>
             <number key="minProperties">
                 <xsl:value-of
-                    select="count(json-value-key[exists(@flag-name)] | $all-properties[@required = 'yes' or @min-occurs &gt; 0])"
+                    select="count(json-value-key-flag[exists(@flag-ref)] | $all-properties[@required = 'yes' or @min-occurs &gt; 0])"
                 />
             </number>
             <number key="maxProperties">
@@ -193,7 +193,7 @@
     
     
     <!-- no flags means no properties; but it could be a string or scalar type not an object -->
-    <xsl:template match="define-field[empty(flag|define-flag)]">
+    <xsl:template priority="2" match="define-field[empty(flag[not(@name=../json-key/@flag-ref)] | define-flag[not(@name=../json-key/@flag-ref)] )]">
             <xsl:apply-templates select="formal-name, description"/>
             <xsl:call-template name="give-id"/>
             <xsl:apply-templates select="." mode="object-type"/>
@@ -254,7 +254,7 @@
                 </string>
             </xsl:for-each>
             
-            <xsl:variable name="implicit-flags" select="(json-key | json-value-key)/@flag-name"/>
+            <xsl:variable name="implicit-flags" select="(json-key | json-value-key-flag)/@flag-ref"/>
             <xsl:apply-templates mode="property-name"
                 select="flag[@required = 'yes'][not(@ref = $implicit-flags)] |
                         define-flag[@required = 'yes'][not(@name = $implicit-flags)] |
@@ -267,7 +267,7 @@
         </xsl:if>
         <boolean key="additionalProperties">
             <xsl:choose>
-                <xsl:when test="exists(model/(.|choice)/any)">true</xsl:when>
+                <xsl:when test="exists(json-value-key-flag | model/(.|choice)/any)">true</xsl:when>
                 <xsl:otherwise>false</xsl:otherwise>
             </xsl:choose>
         </boolean>
@@ -315,8 +315,8 @@
         <xsl:value-of select="json-value-key"/>
     </xsl:template>
     
-     <!-- No property is declared for a value whose key is assigned by a json-value-key   -->
-    <xsl:template priority="3" match="define-field[matches(json-value-key/@flag-name,'\S')]" mode="value-key"/>
+     <!-- No property is declared for a value whose key is assigned by a json-value-key-flag   -->
+    <xsl:template priority="3" match="define-field[matches(json-value-key-flag/@flag-ref,'\S')]" mode="value-key"/>
         
     <!--<xsl:template priority="3" match="define-field[exists(flag/value-key)]" mode="text-key"/>-->
 
@@ -324,14 +324,14 @@
     <xsl:template match="define-assembly" mode="properties">
         <xsl:apply-templates mode="define" select="flag | define-flag | model"/>
         <!-- to be excluded, flags assigned to be keys -->
-        <!--<xsl:variable name="json-key-flag" select="json-key/@flag-name"/>
+        <!--<xsl:variable name="json-key-flag" select="json-key/@flag-ref"/>
         <xsl:apply-templates mode="declaration"
             select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)], model"/>-->
     </xsl:template>
 
     <!-- not having a model, the properties of a field are its flags and its value -->
     <xsl:template match="define-field" mode="properties">
-        <!--<xsl:variable name="json-key-flag" select="json-key/@flag-name"/>
+        <!--<xsl:variable name="json-key-flag" select="json-key/@flag-ref"/>
         <xsl:apply-templates mode="declaration" select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)]"/>-->
         <xsl:apply-templates mode="define" select="flag | define-flag"/>
         <xsl:variable name="this-key" as="xs:string?">
@@ -348,7 +348,7 @@
          a string or an array of strings
     turned off for now until we reinstate collapsing into conversion scripts (2020-09-21) -->
     <!--<xsl:template match="define-field[@collapsible='yes']" mode="properties">
-        <!-\-<xsl:variable name="json-key-flag" select="json-key/@flag-name"/>
+        <!-\-<xsl:variable name="json-key-flag" select="json-key/@flag-ref"/>
         <xsl:apply-templates mode="declaration" select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)]"/>-\->
         <xsl:apply-templates mode="define" select="flag | define-flag"/>
         <xsl:variable name="this-key" as="xs:string?">
@@ -396,8 +396,8 @@
     <!--A flag declared as a key or value key gets no declaration since it
     will not show up in the JSON as a separate property -->
     
-    <xsl:template mode="define" priority="5" match="define-flag[@name=../(json-value-key|json-key)/@flag-name] |
-        flag[@ref=../(json-value-key|json-key)/@flag-name]"/>
+    <xsl:template mode="define" priority="5" match="define-flag[@name=../(json-value-key-flag|json-key)/@flag-ref] |
+        flag[@ref=../(json-value-key-flag|json-key)/@flag-ref]"/>
     
     
     <xsl:template mode="define" match="flag">
@@ -441,11 +441,6 @@
                 <array key="allOf">
                     <map>
                         <xsl:apply-templates select="." mode="definition-or-reference"/>
-                    </map>
-                    <map>
-                        <map key="not">
-                            <string key="type">string</string>
-                        </map>
                     </map>
                 </array>
             </map>
@@ -544,7 +539,7 @@
     </xsl:template>
     
     <xsl:template match="define-field" mode="object-type">
-        <xsl:variable name="implicit-flags" select="(json-key | json-value-key)/@flag-name"/>
+        <xsl:variable name="implicit-flags" select="(json-key | json-value-key-flag)/@flag-ref"/>
         <xsl:choose>
             <xsl:when test="empty(flag[not(@ref=$implicit-flags)] | define-flag[not(@name=$implicit-flags)])">
                 <string key="type">string</string>        
