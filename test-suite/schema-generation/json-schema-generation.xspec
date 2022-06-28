@@ -47,6 +47,16 @@
          test="json-to-xml( $x:result/string() )" select="m:scrub($ov:expected-schema)"/>
    </x:scenario>-->
    
+<!-- 
+   Tweaks to
+     group-as by key
+     json value
+     json value key
+     combination
+     allowed-values
+     any/all others we can include
+     
+   -->
    <x:scenario label="Allowed values constraints">
       <!-- Scrubbing both the result and the expected result for comparison -->
       <x:context href="allowed-values/allowed-values-basic_metaschema.xml"/>

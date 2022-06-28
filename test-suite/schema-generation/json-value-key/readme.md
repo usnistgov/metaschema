@@ -4,6 +4,11 @@
 
 These tests are known to have run in the past but current status is not confirmed.
 
+## Tasks
+
+- replace `flag-name` with `flag-ref` throughout
+- follow `@json-key-flag` assignment downstream in metaschema pipeline
+
 ## Summary
 
 Assignment of either static or dynamic value keys for fields in JSON data
