@@ -105,8 +105,9 @@
             </xsl:if>
             
             <!--<xsl:message expand-text="true">Types in library: { $types-library/xs:simpleType/@name }</xsl:message>-->
-            
-            <xsl:copy-of select="$types-library/xs:simpleType"/>
+            <xsl:variable name="all-used-types" select="//@as-type => distinct-values()"/>
+            <xsl:variable name="used-atomic-types" select="$type-map[@as-type = $all-used-types]"/>
+            <xsl:copy-of select="$types-library/xs:simpleType[@name = $used-atomic-types]"/>
         </xs:schema>
     </xsl:template>
     

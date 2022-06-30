@@ -15,7 +15,7 @@
   - [ ] Unit test (to verify solution)
     - [ ] composition - `../metaschema-xspec`
     - [ ] JSON Schema
-    - [ ] XSD (should be okay)
+    - [ ] XSD
     - [ ] converter generators
 
 # Running the unit tests
