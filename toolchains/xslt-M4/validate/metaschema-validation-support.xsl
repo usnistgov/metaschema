@@ -31,6 +31,7 @@
         <nm:transform version="3.0">../compose/metaschema-resolve-use-names.xsl</nm:transform>
         <nm:transform version="3.0">../compose/metaschema-resolve-sibling-names.xsl</nm:transform>
         <nm:transform version="3.0">../compose/metaschema-digest.xsl</nm:transform>
+        <nm:transform version="3.0">../compose/annotate-composition.xsl</nm:transform>
     </xsl:variable>
     
     <xsl:function name="nm:compose-metaschema" as="document-node()?">

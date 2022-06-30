@@ -633,69 +633,67 @@
         <dummy/>
     </xsl:variable>-->
         
+    <xsl:variable name="json-datatypes-path" as="xs:string">../../../schema/json/metaschema-datatypes.json</xsl:variable>
+    
     <xsl:variable name="datatypes" expand-text="false">
-        <!-- First, grabbing raw JSON out of line definitions copied from -->
-        <!-- https://raw.githubusercontent.com/usnistgov/metaschema/feature-metaschema-relocation-plus-enhancements
-            /schema/json/metaschema-datatypes.json       -->
-        
-        <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text('metaschema-v090-datatypes.json') => json-to-xml() )/map/map[@key='definitions']/map"/>
+        <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text($json-datatypes-path) => json-to-xml() )/map/map[@key='definitions']/map"/>
         
         <!-- Now the old names, for backward compatibility, amended with new definitions. -->
-        <map key="decimal"><!-- DecimalDatatype -->
+        <!--<map key="decimal"><!-\- DecimalDatatype -\->
             <string key="type">number</string>
-            <!--<string key="pattern">^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$</string>-->
+            <!-\-<string key="pattern">^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$</string>-\->
         </map>
-        <map key="date"><!-- DateDatatype -->
+        <map key="date"><!-\- DateDatatype -\->
             <string key="type">string</string>
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
-        <map key="dateTime"><!-- DateTimeDatatype -->
+        <map key="dateTime"><!-\- DateTimeDatatype -\->
             <string key="type">string</string>
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
-        <map key="date-with-timezone"><!-- DateWithTimezoneDatatype -->
+        <map key="date-with-timezone"><!-\- DateWithTimezoneDatatype -\->
             <string key="type">string</string>
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})$</string>
         </map>
-        <map key="dateTime-with-timezone"><!-- DateTimeWithTimezoneDatatype -->
+        <map key="dateTime-with-timezone"><!-\- DateTimeWithTimezoneDatatype -\->
             <string key="type">string</string>
             <string key="format">date-time</string>
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$</string>
         </map>
-        <map key="email"><!-- EmailAddressDatatype -->
+        <map key="email"><!-\- EmailAddressDatatype -\->
             <string key="type">string</string>
             <string key="format">email</string>
             <string key="pattern">^.+@.+$</string>
         </map>
-        <map key="ip-v4-address"><!-- IPV4AddressDatatype -->
+        <map key="ip-v4-address"><!-\- IPV4AddressDatatype -\->
             <string key="type">string</string>
             <string key="format">ipv4</string>
             <string key="pattern">^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$</string>
         </map>
-        <map key="ip-v6-address"><!-- IPV6AddressDatatype -->
+        <map key="ip-v6-address"><!-\- IPV6AddressDatatype -\->
             <string key="type">string</string>
             <string key="format">ipv6</string>
             <string key="pattern">^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|[fF][eE]80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::([fF]{4}(:0{1,4}){0,1}:){0,1}((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]))$</string>
         </map>
-        <map key="hostname"><!-- HostnameDatatype -->
+        <map key="hostname"><!-\- HostnameDatatype -\->
             <string key="$ref">#/definitions/StringDatatype</string>
             <string key="format">idn-hostname</string>
         </map>
-        <map key="uri"><!-- URIDatatype -->
+        <map key="uri"><!-\- URIDatatype -\->
             <string key="type">string</string>
             <string key="format">uri</string>
             <string key="pattern">^[a-zA-Z][a-zA-Z0-9+\-.]+:.+$</string>
         </map>
-        <map key="uri-reference"><!-- URIReferenceDatatype -->
+        <map key="uri-reference"><!-\- URIReferenceDatatype -\->
             <string key="type">string</string>
             <string key="format">uri-reference</string>
         </map>
-        <map key="uuid"><!-- UUIDDatatype -->
+        <map key="uuid"><!-\- UUIDDatatype -\->
             <string key="type">string</string>
             <string key="description">A type 4 ('random' or 'pseudorandom') or type 5 UUID per RFC 4122.</string>
             <string key="pattern">^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$</string>
         </map>
-        <map xmlns="http://www.w3.org/2005/xpath-functions" key="token"><!-- TokenDatatype -->
+        <map xmlns="http://www.w3.org/2005/xpath-functions" key="token"><!-\- TokenDatatype -\->
             <string key="type">string</string>
             <string key="pattern">^(\p{L}|_)(\p{L}|\p{N}|[.\-_])*$</string>
         </map>
@@ -703,8 +701,8 @@
         <map key="string">
             <string key="type">string</string>
             <string key="pattern">^\S(.*\S)?$</string>
-            <!---->
-        </map>
+            <!-\-\-\->
+        </map>-->
     </xsl:variable>
 
 </xsl:stylesheet>

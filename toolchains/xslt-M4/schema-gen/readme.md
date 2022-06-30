@@ -2,11 +2,6 @@
 
 ### xsl
 
-#### configure-namespaces.xsl
-
-- XSLT stylesheet version 2.0 (7 templates)
-- Runtime parameter `$debug` with default ''no''
-
 #### make-json-schema-metamap.xsl
 
 - XSLT stylesheet version 3.0 (63 templates)
@@ -44,7 +39,6 @@
 #### test-make-metaschema-xsd.xpl
 
 - XProc pipeline version 1.0 (5 steps)
-- Runtime dependency: `configure-namespaces.xsl`
 - Runtime dependency: `make-metaschema-xsd.xsl`
 
 ### xsd
