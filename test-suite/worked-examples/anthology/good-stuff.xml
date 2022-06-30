@@ -1,22 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?xml-stylesheet type="text/css" href="anthology.css"?>
 <!--<?xml-model href="anthology_metaschema_METATRON.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>-->
-<ANTHOLOGY xmlns="http://csrc.nist.gov/metaschema/ns/anthology"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/anthology file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/worked-examples/anthology/anthology_metaschema_XML-SCHEMA.xsd">
-    
+<ANTHOLOGY xmlns="http://csrc.nist.gov/metaschema/ns/anthology">
     <meta>
-        <creator role="editor">Wendell Piez</creator>
+        <creator role="editor">Anne Editor</creator>
         <keyword>poetry</keyword>
         <keyword>verse</keyword>
-        
+
         <remarks>
             <h1>Demo anthology</h1>
-            <p>Compiled for purposes of testing and demonstrating validations against constraints
-                defined by NIST Metaschema.</p>
+            <p>Compiled for purposes of testing and demonstrating validations defined by NIST
+                Metaschema.</p>
         </remarks>
     </meta>
+    <piece>
+        <meta>
+            <creator role="author" who="#archimedes">Archimedes</creator>
+        </meta>
+        <prose>
+            <p>δῶς μοι πᾶ στῶ καὶ τὰν γᾶν κινάσω</p>
+        </prose>
+        <translated lang="en">
+            <prose>
+                <p>Give me someplace to stand and I'll move the earth.</p>
+            </prose>
+        </translated>
+        <translated lang="de">
+            <prose>
+                <p>Gib mir was Stehplatz und die Erde bewege ich.</p>
+            </prose>
+        </translated>
+        <translated lang="fr">
+            <prose>
+                <p>Donnez-moi un point d’appui et je soulèverai le monde.</p>
+            </prose>
+        </translated>
+    </piece>
+
+    <piece>
+        <meta>
+            <creator role="author" who="#t.berners-lee">Tim Berners-Lee</creator>
+        </meta>
+        <prose>
+            <p>Computer Science in the 1960s to 80s spent a lot of effort making languages that were
+                as powerful as possible. Nowadays we have to appreciate the reasons for picking not
+                the most powerful solution but the least powerful. The reason for this is that the
+                less powerful the language, the more you can do with the data stored in that
+                language. If you write it in a simple declarative form, anyone can write a program
+                to analyze it in many ways. The Semantic Web is an attempt, largely, to map large
+                quantities of existing data onto a common language so that the data can be analyzed
+                in ways never dreamed of by its creators. If, for example, a web page with weather
+                data has RDF describing that data, a user can retrieve it as a table, perhaps
+                average it, plot it, deduce things from it in combination with other information. At
+                the other end of the scale is the weather information portrayed by the cunning Java
+                applet. While this might allow a very cool user interface, it cannot be analyzed at
+                all. The search engine finding the page will have no idea of what the data is or
+                what it is about. The only way to find out what a Java applet means is to set it
+                running in front of a person.</p>
+        </prose>
+    </piece>
     <piece>
         <meta>
             <creator role="author" who="#w.h.auden">W.H. Auden</creator>
@@ -24,29 +66,23 @@
         </meta>
         <verse type="quatrain">
             <line base="trochee" feet="4">Guard, Civility, with guns</line>
-            <line base="iamb"    feet="4">Your modes and your declensions:</line>
+            <line base="iamb" feet="4">Your modes and your declensions:</line>
             <line base="trochee" feet="4">Any lout can spear with ease</line>
             <line base="trochee" feet="4">Singular Archimedes.</line>
         </verse>
     </piece>
-    <piece>
-        <include>
-            <html:h1 xmlns:html="h1">Header</html:h1>
-        </include>
-    </piece>
     <back>
         <author-index>
+            <author id="archimedes">
+                <name>Archimedes</name>
+                <dates birth="ca 287 BCE" death="ca 212 BCE"/>
+            </author>
+            <author id="t.berners-lee">
+                <name>Tim Berners-Lee</name>
+            </author>
             <author id="w.h.auden">
                 <name>Wystan Hugh Auden</name>
                 <dates birth="1907-02-21" death="1973-09-29"/>
-                <bio>
-                    <facts>
-                        <dates birth="1907-02-21" death="1973-09-29"/>
-                        <!--<residence>
-                            <dates start="1970-01-01" end="1972-01-01"/>
-                        </residence>-->
-                    </facts>
-                </bio>
             </author>
         </author-index>
     </back>
