@@ -3,12 +3,11 @@
 
 - [x] Generate nominal targets (present results) of stable examples
 - [ ] Validate all samples to these nominal target schema instances
-  - [ ] XProc 1.0 to do XSD run 
-- [ ] compare to DAW
+  - [ ] XProc 1.0 to do XSD runs? 
+- [ ] try comparing variants (java-oscalcli vs/and XSLT M4 schemas)
 - [x] Stabilize XSpec testing
 - [ ] Isolate unstable examples
 - [ ] Mock up examples with intended targets
-  - [ ] (confirm DAW schema?) 
 - [ ] Repair or build unit tests
 - [ ] Repair code - foreach
   - [ ] Isolate problem
@@ -48,7 +47,7 @@ where
 
 `$TESTSET-$SCOPE_metaschema.xml` is recognized as a Metaschema
 
-`$TESTSET-$SCOPE_test_$KEYWORD_$EXPECT.json is` recognized as a JSON instance to be tested against the Schema produced for the `$TESTSET-$SCOPE` metaschema.
+`$TESTSET-$SCOPE_test_$KEYWORD_$EXPECT.json` is recognized as a JSON instance to be tested against the Schema produced for the `$TESTSET-$SCOPE` metaschema.
 
 Note that different keywords can be used to distinguish tests expected to be valid or invalid to the metaschema indicated by `$TESTSET-$SCOPE`.
 
