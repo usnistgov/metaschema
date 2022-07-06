@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="../../../toolchains/xslt-M4/lib/metaschema-author.css"?>
+<?xml-model href="../validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>JSON Naming Tests</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>jsonnaming</short-name>
+    <namespace>http://csrc.nist.gov/metaschema/ns/nested</namespace>
+    <json-base-uri>http://csrc.nist.gov/metaschema/ns/nested</json-base-uri>
+    
+    <remarks>
+        <p>Exercises features wrt naming JSON properties on fields
+          static value key assignment
+          dynamic value key assignment</p>
+    </remarks>
+
+    <define-field name="page">
+        <formal-name>PAGE</formal-name>
+        <description>PAGE</description>
+        <flag ref="no"/>
+    </define-field>
+    
+    <define-flag name="no" as-type="positiveInteger">
+        <formal-name>Number</formal-name>
+        <description>A number, not a negation.</description>
+    </define-flag>
+    
+    <define-flag name="color">
+        <formal-name>Color</formal-name>
+        <description>A color or pattern.</description>
+    </define-flag>
+    
+    <define-field name="button">
+        <formal-name>BUTTON</formal-name>
+        <description>BUTTON</description>
+        <flag ref="color"/>
+    </define-field>
+    
+    <define-field name="scrap">
+        <formal-name>SCRAP</formal-name>
+        <description>SCRAPS</description>
+        <!--<json-key flag-name="fabric"/>--> 
+        <json-value-key>stuff</json-value-key>
+        <flag ref="color"/>
+        <define-flag name="fabric" required="yes">
+            <formal-name>Fabric</formal-name>
+            <description>Scrap of what</description>
+        </define-flag>
+    </define-field>
+    
+    <define-assembly name="envelope">
+        <formal-name>ENVELOPE</formal-name>
+        <description>ENVELOPE</description>
+        <model>
+            <field ref="page" max-occurs="unbounded">
+                <group-as name="pages"/>
+            </field>
+            <field ref="button" max-occurs="unbounded">
+                <group-as name="buttons"/>
+            </field>
+            <field ref="scrap" max-occurs="unbounded">
+                <group-as name="scraps"/>
+            </field>
+        </model>
+    </define-assembly>
+    
+    <define-assembly name="box">
+        <formal-name>BOX</formal-name>
+        <description>BOX</description>
+        <root-name>BOX</root-name>
+        <model>
+            <assembly ref="envelope" max-occurs="unbounded">
+                <group-as name="envelopes"/>
+            </assembly>
+        </model>
+    </define-assembly>   
+
+</METASCHEMA>
