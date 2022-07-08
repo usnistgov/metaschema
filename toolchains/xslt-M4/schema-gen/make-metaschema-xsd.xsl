@@ -80,12 +80,12 @@
         
         <!-- these old names are permitted for now, while only deprecated       -->
         <!--../../../schema/xml/metaschema.xsd line 1052 inside  /*/xs:simpleType[@name='SimpleDatatypesType']> -->
-        <type as-type="base64Binary">Base64Datatype</type>
-        <type as-type="dateTime">DateTimeDatatype</type>
-        <type as-type="dateTime-with-timezone">DateTimeWithTimezoneDatatype</type>
-        <type as-type="email">EmailAddressDatatype</type>
-        <type as-type="nonNegativeInteger">NonNegativeIntegerDatatype</type>
-        <type as-type="positiveInteger">PositiveIntegerDatatype</type>
+        <type prefer="base64" as-type="base64Binary">Base64Datatype</type>
+        <type prefer="date-time" as-type="dateTime">DateTimeDatatype</type>
+        <type prefer="date-time-with-timezone" as-type="dateTime-with-timezone">DateTimeWithTimezoneDatatype</type>
+        <type prefer="email-address" as-type="email">EmailAddressDatatype</type>
+        <type prefer="non-negative-integer" as-type="nonNegativeInteger">NonNegativeIntegerDatatype</type>
+        <type prefer="positive-integer" as-type="positiveInteger">PositiveIntegerDatatype</type>
     </xsl:variable>
     <xsl:variable name="prose-xsd-definitions" select="$prose-modules/document(string(.))/*/*"/>
     

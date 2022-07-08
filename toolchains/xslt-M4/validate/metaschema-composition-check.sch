@@ -17,10 +17,10 @@
     
     <xsl:import href="metaschema-validation-support.xsl"/>
     
-    <xsl:import href="oscal-datatypes-check.xsl"/>
-    
-    
     <!--<xsl:import href="oscal-datatypes-check.xsl"/>-->
+    
+    
+    <xsl:import href="oscal-datatypes-check.xsl"/>
     
     <xsl:param    name="global-context" select="/"/>
     
@@ -133,8 +133,27 @@
     </sch:pattern>
 
 
+    <sch:pattern id="atomic_datatypes">
+        <sch:let name="more-types" value="'markup-line','markup-multiline'"/>
+        <sch:rule context="m:field | m:define-field | m:flag | m:define-flag">
+            <sch:let name="given-type" value="(@as-type,'string')[1]"/>
+            <sch:let name="bound-type" value="$type-map[@as-type = $given-type]"/>
+            <sch:assert test="($given-type = $more-types) or exists($bound-type)">type <sch:value-of select="@as-type"/> is unknown.</sch:assert>
+            <sch:report sqf:fix="updateDatatype" id="warn-if-datatype-name-is-deprecated" role="warning"
+                test="matches($bound-type/@prefer,'\S')">Type name '<sch:value-of select="$given-type" />' is deprecated: '<sch:value-of select="$bound-type/@prefer"/>' is preferred</sch:report>
+            
+            <sqf:fix id="updateDatatype">
+                <sqf:description>
+                    <sqf:title>Update the datatype to '<sch:value-of select="$bound-type/@prefer"/>'</sqf:title>
+                </sqf:description>
+                <sqf:replace match="@as-type" node-type="attribute" target="as-type">
+                    <sch:value-of select="$bound-type/@prefer"/>
+                </sqf:replace>
+            </sqf:fix>
+        </sch:rule>
+    </sch:pattern>
+    
     <sch:pattern id="flags_and_fields_and_datatypes">
-        
         <!-- flag references and inline definitions -->
         <sch:rule context="m:flag | m:define-field/m:define-flag | m:define-assembly/m:define-flag">
             <sch:assert id="json-value-key-flag-is-required"
@@ -151,6 +170,8 @@
             <sch:assert id="permit-a-single-unwrapped-markupmultiline" test="empty($as-composed) or not($as-composed/@in-xml='UNWRAPPED') or not($as-composed/@as-type='markup-multiline') or not(preceding-sibling::*[$as-composed/@in-xml='UNWRAPPED']/@as-type='markup-multiline')">Only one field may be marked as 'markup-multiline' (without xml wrapping) within a model.</sch:assert>
             <sch:report id="forbid-multiple-unwrapped-fields" test="($as-composed/@in-xml='UNWRAPPED') and (@max-occurs!='1')">An 'unwrapped' field must have a max occurrence of 1</sch:report>
             <sch:assert id="forbid-unwrapped-xml-except-markupmultiline" test="$as-composed/key('composed-definition-by-key-name',nm:composed-definition-identifier(.),$composed-metaschema)/@as-type='markup-multiline' or not(@in-xml='UNWRAPPED')">Only 'markup-multiline' fields may be unwrapped in XML. SEEING '<sch:value-of select="nm:composed-definition-identifier(.)"/>'</sch:assert>
+            
+            
         </sch:rule>
         
         <sch:rule context="m:define-field">
