@@ -638,7 +638,9 @@
     <xsl:variable name="datatypes" expand-text="false">
         <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text($json-datatypes-path) => json-to-xml() )/map/map[@key='definitions']/map"/>
         
-        <!-- Now the old names, for backward compatibility, amended with new definitions. -->
+        <!-- Some old datatype names are preserved for backward compatibility -->
+        <!-- see ../../../schema/xml/metaschema.xsd line 1052 inside  /*/xs:simpleType[@name='SimpleDatatypesType']> -->
+        
         <!--<map key="decimal"><!-\- DecimalDatatype -\->
             <string key="type">number</string>
             <!-\-<string key="pattern">^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$</string>-\->
@@ -646,26 +648,26 @@
         <map key="date"><!-\- DateDatatype -\->
             <string key="type">string</string>
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
-        </map>
-        <map key="dateTime"><!-\- DateTimeDatatype -\->
+        </map>-->
+        <map key="dateTime"><!-- DateTimeDatatype -->
             <string key="type">string</string>
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
         </map>
-        <map key="date-with-timezone"><!-\- DateWithTimezoneDatatype -\->
+        <!--<map key="date-with-timezone"><!-\- DateWithTimezoneDatatype -\->
             <string key="type">string</string>
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})$</string>
-        </map>
-        <map key="dateTime-with-timezone"><!-\- DateTimeWithTimezoneDatatype -\->
+        </map>-->
+        <map key="dateTime-with-timezone"><!-- DateTimeWithTimezoneDatatype -->
             <string key="type">string</string>
             <string key="format">date-time</string>
             <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$</string>
         </map>
-        <map key="email"><!-\- EmailAddressDatatype -\->
+        <map key="email"><!-- EmailAddressDatatype -->
             <string key="type">string</string>
             <string key="format">email</string>
             <string key="pattern">^.+@.+$</string>
         </map>
-        <map key="ip-v4-address"><!-\- IPV4AddressDatatype -\->
+        <!--<map key="ip-v4-address"><!-\- IPV4AddressDatatype -\->
             <string key="type">string</string>
             <string key="format">ipv4</string>
             <string key="pattern">^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$</string>
@@ -701,7 +703,6 @@
         <map key="string">
             <string key="type">string</string>
             <string key="pattern">^\S(.*\S)?$</string>
-            <!-\-\-\->
         </map>-->
     </xsl:variable>
 

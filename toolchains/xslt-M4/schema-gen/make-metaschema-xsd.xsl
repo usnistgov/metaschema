@@ -77,6 +77,15 @@
         <type as-type="uri">URIDatatype</type>
         <type as-type="uri-reference">URIReferenceDatatype</type>
         <type as-type="uuid">UUIDDatatype</type>
+        
+        <!-- these old names are permitted for now, while only deprecated       -->
+        <!--../../../schema/xml/metaschema.xsd line 1052 inside  /*/xs:simpleType[@name='SimpleDatatypesType']> -->
+        <type as-type="base64Binary">Base64Datatype</type>
+        <type as-type="dateTime">DateTimeDatatype</type>
+        <type as-type="dateTime-with-timezone">DateTimeWithTimezoneDatatype</type>
+        <type as-type="email">EmailAddressDatatype</type>
+        <type as-type="nonNegativeInteger">NonNegativeIntegerDatatype</type>
+        <type as-type="positiveInteger">PositiveIntegerDatatype</type>
     </xsl:variable>
     <xsl:variable name="prose-xsd-definitions" select="$prose-modules/document(string(.))/*/*"/>
     
