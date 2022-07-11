@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/css" href="anthology.css"?>
 <!--<?xml-model href="anthology_metaschema_METATRON.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>-->
-<ANTHOLOGY xmlns="http://csrc.nist.gov/metaschema/ns/anthology">
+<ANTHOLOGY xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/metaschema/ns/anthology temp/anthology_metaschema_m4xmlschema.xsd"
+ xmlns="http://csrc.nist.gov/metaschema/ns/anthology">
     <meta>
         <creator role="editor">Anne Editor</creator>
         <keyword>poetry</keyword>

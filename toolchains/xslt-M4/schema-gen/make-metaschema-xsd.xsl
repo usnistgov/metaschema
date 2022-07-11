@@ -6,7 +6,6 @@
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     exclude-result-prefixes="xs math m"
     version="3.0"
-    
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     
@@ -183,8 +182,8 @@
                     <m:formal-name>{ group-as/@name }</m:formal-name>
                     <m:description>A group of '{ @name }' elements</m:description>
                 </xs:appinfo>
-                <xs:documentation>
-                    <b>{ group-as/@name }</b>: A group of '{ @name }' elements</xs:documentation>
+                <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
+                    <b xmlns="http://www.w3.org/1999/xhtml">{ group-as/@name }</b>: A group of '{ @name }' elements</xs:documentation>
             </xs:annotation>
             <xs:complexType>
                 <xs:sequence>
@@ -306,7 +305,7 @@
             <xs:appinfo>
                 <xsl:apply-templates select="formal-name, description" mode="copy"/>
             </xs:appinfo>
-            <xs:documentation>
+            <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
                 <xsl:apply-templates select="formal-name, description"/>
             </xs:documentation>
         </xs:annotation>
@@ -534,7 +533,7 @@
         <xs:enumeration value="{@value}">
             <xsl:if test="matches(.,'\S')">
                 <xs:annotation>
-                    <xs:documentation>
+                    <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
                         <p>
                             <xsl:apply-templates/>
                         </p>
@@ -566,10 +565,25 @@
             <xsl:apply-templates mode="#current"/>
         </xsl:element>
     </xsl:template>
-
+    
+    <xsl:template match="m:remarks[exists(descendant::*)] | m:description[exists(descendant::*)] | m:formal-name[exists(descendant::*)]" mode="copy">
+        <xsl:element name="m:{local-name(.)}" namespace="{namespace-uri(.)}">
+            <xsl:namespace name="">http://www.w3.org/1999/xhtml</xsl:namespace>
+            <xsl:apply-templates mode="#current"/>
+        </xsl:element>
+    </xsl:template>
+    
+   <!-- <xsl:template mode="copy" match="remarks">
+        <xsl:copy copy-namespaces="no">
+            <xsl:copy-of select="@*"/>
+            <xsl:namespace name="boo">boo</xsl:namespace>
+            <xsl:apply-templates/>
+        </xsl:copy>
+    </xsl:template>-->
+        
     <!-- copying contents of remarks we pull them out into no-namespace -->
-    <xsl:template mode="copy" match="remarks//*">
-        <xsl:element name="{local-name()}">
+    <xsl:template mode="copy" match="remarks//* | formal-name//* | description//*">
+        <xsl:element name="{local-name()}" namespace="http://www.w3.org/1999/xhtml">
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates mode="#current"/>
         </xsl:element>

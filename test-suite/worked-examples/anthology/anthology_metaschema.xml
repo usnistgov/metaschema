@@ -11,12 +11,12 @@
     <json-base-uri>http://csrc.nist.gov/metaschema/anthology</json-base-uri>
     
    <remarks>
-       <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
+       <p>A <q>mini</q> metaschema produced for testing purposes. Use at your own risk.</p>
    </remarks>
     
    <define-assembly name="anthology">
        <formal-name>Anthology</formal-name>
-       <description>A collection of literary excerpts</description>
+       <description>A <b>collection</b> of literary excerpts</description>
        <root-name>ANTHOLOGY</root-name>
        <flag ref="id"/>
        <model>
