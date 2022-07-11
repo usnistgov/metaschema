@@ -19,6 +19,9 @@
        <description>A <b>collection</b> of literary excerpts</description>
        <root-name>ANTHOLOGY</root-name>
        <flag ref="id"/>
+       <define-flag name="uuid" as-type="uuid">
+           <formal-name>UUID</formal-name>
+       </define-flag>
        <model>
            <assembly ref="meta" min-occurs="1" max-occurs="1"/>
            <assembly ref="piece" max-occurs="unbounded" min-occurs="0">

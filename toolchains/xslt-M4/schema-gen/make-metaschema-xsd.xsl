@@ -84,6 +84,7 @@
         <type prefer="non-negative-integer" as-type="nonNegativeInteger">NonNegativeIntegerDatatype</type>
         <type prefer="positive-integer" as-type="positiveInteger">PositiveIntegerDatatype</type>
     </xsl:variable>
+    
     <xsl:variable name="prose-xsd-definitions" select="$prose-modules/document(string(.))/*/*"/>
     
     <xsl:variable name="types-library"    select="$atomictype-modules/document(string(.))/*"/>

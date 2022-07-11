@@ -30,6 +30,11 @@
     <xsl:key name="field-definition-by-name"    match="METASCHEMA/define-field"    use="@_key-name"/>
     <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag"     use="@_key-name"/>
     
+    <!--Keys for retrieving datatypes:
+    
+    <xsl:key name="typename-for-syntax"
+    
+    -->
     <!-- Produces composed metaschema (imports resolved) -->
     <!--<xsl:import href="../lib/metaschema-compose.xsl"/>-->
     <xsl:variable name="composed-metaschema" select="/"/>
@@ -41,7 +46,9 @@
 
    
     <xsl:template match="/METASCHEMA" expand-text="true">
+        
         <map>
+            
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
             <string key="$id">{ json-base-uri }/{ schema-version }/{ short-name }-schema.json</string>
             <xsl:for-each select="schema-name">
@@ -614,8 +621,11 @@
     
     <!--Not supporting float or double--> 
 
-    <xsl:template priority="2.1" match="*[@as-type = $datatypes/*/@key]" mode="object-type">
-        <xsl:apply-templates mode="acquire-types" select="key('datatypes-by-name',@as-type,$datatypes)/*"/>
+<xsl:variable name="datatype-map" select="document('make-metaschema-xsd.xsl')/*/xsl:variable[@name='type-map']/*" as="element()*"/>
+    
+    <xsl:template priority="2.1" match="*[@as-type = $datatype-map/@as-type]" mode="object-type">
+        <xsl:variable name="assigned-type" select="$datatype-map[@as-type=current()/@as-type]/string(.)"/>
+        <xsl:apply-templates mode="acquire-types" select="key('datatypes-by-name',$assigned-type,$datatypes)/*"/>
     </xsl:template>
     
     <xsl:mode name="acquire-types" on-no-match="shallow-copy"/>
@@ -635,6 +645,7 @@
         
     <xsl:variable name="json-datatypes-path" as="xs:string">../../../schema/json/metaschema-datatypes.json</xsl:variable>
     
+
     <xsl:variable name="datatypes" expand-text="false">
         <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text($json-datatypes-path) => json-to-xml() )/map/map[@key='definitions']/map"/>
         
