@@ -14,64 +14,6 @@
        <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
    </remarks>
     
-   <!-- so far: index, is-unique, allowed-values, require, matches, index-has-key
-       need examples: has-cardinality, matches[@regex], allowed-values[@extends='yes']
-   
-   XSD - index, is-unique (xs:unique), index-has-key (xs:keyref);
-           constraint/(allowed-values, matches/@regex, matches/@datatype)
-   
-   Schematron - require[@when]/*
-   
-     require[@when]/allowed-values
-     require[@when]/is-unique
-     require[@when]/index-has-key
-     require[@when]/has-cardinality
-     require[@when]/matches/@regex
-     require[@when]/matches/@datatype
-
-     require[@when]/index-has-key[@target]
-
-Under 'stanza'
-     require[@when]/has-cardinality[@target]
-
-Under 'widget'
-     require[@when]/allowed-values[@target]
-     require[@when]/is-unique[@target]
-     require[@when]/matches[@target]/@regex
-     require[@when]/matches[@target]/@datatype
-
-
-     index[target="value()"] - is indexed from the root / implicitly across dynamic scope
-     
-     Build out examples in OSCAL schemas
-     Document examples on an Issue for testing/tracking
-     unit tests?
-   -->
-<!-- 
-     ASSEMBLY
-        singleton
-        grouped
-          with and without @in-xml
-        root-name
-        use-name
-        json-key
-        choice
-        @in-json
-        
-     FIELD
-       json-value-key literal
-       json-value-key flag
-       value datatypes
-         markup-line
-         markup-multiline
-           with and without in-xml="wrapped"
-       value constraints (allowed-values)
-    
-     FLAG
-       value datatypes
-    
-    -->
-    
    <define-assembly name="anthology">
        <formal-name>Anthology</formal-name>
        <description>A collection of literary excerpts</description>
