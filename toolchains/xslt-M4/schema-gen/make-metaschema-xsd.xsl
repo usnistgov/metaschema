@@ -22,9 +22,7 @@
     <xsl:strip-space elements="METASCHEMA define-assembly define-field define-flag model choice allowed-values remarks"/>
     
     <xsl:variable name="target-namespace" select="string(/METASCHEMA/namespace)"/>
-    
-    <xsl:variable name="declaration-prefixx" select="string(/METASCHEMA/short-name)"/>
-    
+        
     <xsl:key name="global-assembly-by-name" match="/METASCHEMA/define-assembly" use="@_key-name"/>
     <xsl:key name="global-field-by-name"    match="/METASCHEMA/define-field"    use="@_key-name"/>
     <xsl:key name="global-flag-by-name"     match="/METASCHEMA/define-flag"     use="@_key-name"/>
@@ -142,7 +140,9 @@
         <xsl:sequence select="$whose/@_key-name/replace(.,':','-')"/>
     </xsl:function>
     
-    <xsl:template match="INFO | EXCEPTION">
+    <xsl:template match="INFO"/>
+    
+    <xsl:template match="EXCEPTION">
         <xsl:comment expand-text="true">{ local-name()}{ (@info-type | @problem-type)/(' (' || . || ')' ) }: { . } </xsl:comment>
         <!--<xs:annotation xsl:expand-text="true">
             <xs:appinfo>
@@ -150,7 +150,7 @@
             </xs:appinfo>
         </xs:annotation>-->
     </xsl:template>
-
+    
     <xsl:template match="/METASCHEMA/schema-name | /METASCHEMA/short-name |
         /METASCHEMA/schema-version | /METASCHEMA/remarks"/>
     
