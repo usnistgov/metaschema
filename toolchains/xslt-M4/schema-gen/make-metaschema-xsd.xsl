@@ -183,8 +183,10 @@
                     <m:formal-name>{ group-as/@name }</m:formal-name>
                     <m:description>A group of '{ @name }' elements</m:description>
                 </xs:appinfo>
-                <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
-                    <b xmlns="http://www.w3.org/1999/xhtml">{ group-as/@name }</b>: A group of '{ @name }' elements</xs:documentation>
+                <xs:documentation>
+                    <xsl:element name="b" namespace="{$target-namespace}">{ group-as/@name }</xsl:element>
+                    <xsl:text>: A group of '{ @name }' elements</xsl:text>
+                </xs:documentation>
             </xs:annotation>
             <xs:complexType>
                 <xs:sequence>
@@ -306,14 +308,14 @@
             <xs:appinfo>
                 <xsl:apply-templates select="formal-name, description" mode="copy"/>
             </xs:appinfo>
-            <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
+            <xs:documentation>
                 <xsl:apply-templates select="formal-name, description"/>
             </xs:documentation>
         </xs:annotation>
     </xsl:template>
     
     <xsl:template match="formal-name">
-        <b><xsl:apply-templates/></b>
+        <xsl:element name="b" namespace="{$target-namespace}"><xsl:apply-templates/></xsl:element>
         <xsl:for-each select="../description">: </xsl:for-each>
     </xsl:template>
     
@@ -534,10 +536,10 @@
         <xs:enumeration value="{@value}">
             <xsl:if test="matches(.,'\S')">
                 <xs:annotation>
-                    <xs:documentation xmlns="http://www.w3.org/1999/xhtml">
-                        <p>
+                    <xs:documentation>
+                        <xsl:element name="p" namespace="{$target-namespace}">
                             <xsl:apply-templates/>
-                        </p>
+                        </xsl:element>
                     </xs:documentation>
                 </xs:annotation>
             </xsl:if>
@@ -567,13 +569,6 @@
         </xsl:element>
     </xsl:template>
     
-    <xsl:template match="m:remarks[exists(descendant::*)] | m:description[exists(descendant::*)] | m:formal-name[exists(descendant::*)]" mode="copy">
-        <xsl:element name="m:{local-name(.)}" namespace="{namespace-uri(.)}">
-            <xsl:namespace name="">http://www.w3.org/1999/xhtml</xsl:namespace>
-            <xsl:apply-templates mode="#current"/>
-        </xsl:element>
-    </xsl:template>
-    
    <!-- <xsl:template mode="copy" match="remarks">
         <xsl:copy copy-namespaces="no">
             <xsl:copy-of select="@*"/>
@@ -584,7 +579,7 @@
         
     <!-- copying contents of remarks we pull them out into no-namespace -->
     <xsl:template mode="copy" match="remarks//* | formal-name//* | description//*">
-        <xsl:element name="{local-name()}" namespace="http://www.w3.org/1999/xhtml">
+        <xsl:element name="{local-name()}" namespace="{$target-namespace}">
             <xsl:copy-of select="@*"/>
             <xsl:apply-templates mode="#current"/>
         </xsl:element>

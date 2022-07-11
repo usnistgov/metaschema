@@ -48,7 +48,7 @@
     <xsl:template match="/METASCHEMA" expand-text="true">
         
         <map>
-            
+            <!--<xsl:copy-of select="$datatype-map"/>-->
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
             <string key="$id">{ json-base-uri }/{ schema-version }/{ short-name }-schema.json</string>
             <xsl:for-each select="schema-name">
@@ -59,7 +59,12 @@
             <string key="type">object</string>
             <map key="definitions">
                 <xsl:apply-templates select="define-assembly | define-field"/>
-            </map>           
+                
+                <xsl:variable name="all-used-types" select="//@as-type => distinct-values()"/>
+                <xsl:variable name="used-atomic-types" select="$datatype-map[@as-type = $all-used-types]"/>
+                <xsl:copy-of select="$used-atomic-types/key('datatypes-by-name',string(.),$datatypes)"/>
+            </map>
+            
             <xsl:apply-templates select="." mode="require-a-root"/>
         </map>
     </xsl:template>
@@ -203,8 +208,30 @@
     <xsl:template priority="2" match="define-field[empty(flag[not(@name=../json-key/@flag-ref)] | define-flag[not(@name=../json-key/@flag-ref)] )]">
             <xsl:apply-templates select="formal-name, description"/>
             <xsl:call-template name="give-id"/>
-            <xsl:apply-templates select="." mode="object-type"/>
-            <xsl:apply-templates select="constraint/allowed-values"/>
+            
+            <xsl:call-template name="enumerated-type"/>
+    </xsl:template>
+    
+    <xsl:template name="enumerated-type">
+        <xsl:param name="decl" select="."/>
+        <xsl:variable name="enumerations" as="node()*">
+            <xsl:apply-templates select="$decl/constraint/allowed-values"/>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="exists($enumerations)">
+                <array key="allOf">
+                    <map>
+                        <xsl:apply-templates select="." mode="object-type"/>
+                    </map>
+                    <map>
+                        <xsl:sequence select="$enumerations"/>
+                    </map>
+                </array>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates select="." mode="object-type"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     
     <xsl:template match="formal-name" mode="#all">
@@ -224,6 +251,7 @@
     <!-- No restriction is introduced when allow others is 'yes' -->
     <xsl:template match="allowed-values[@allow-other='yes']"/>
     
+    <!--<xsl:template match="allowed-values"/>-->
     <xsl:template match="allowed-values">
         <array key="enum">
             <xsl:apply-templates/>
@@ -411,24 +439,16 @@
         <xsl:variable name="decl" select="key('flag-definition-by-name', @_key-ref)"/>
         <map key="{ (use-name,$decl/use-name,$decl/@name)[1] }">
             <xsl:apply-templates select="$decl/(formal-name | description)"/>
-            <xsl:apply-templates select="." mode="object-type"/>
-            <xsl:apply-templates select="$decl/constraint/allowed-values"/>
+            <xsl:call-template name="enumerated-type">
+                <xsl:with-param name="decl" select="$decl"/>
+            </xsl:call-template>
         </map>
     </xsl:template>
-    
-    <!--<xsl:template mode="declaration" match="model//define-field">
-        <map key="{ (group-as/@name,use-name,@name)[1] }">
-            <xsl:apply-templates select="formal-name | description"/>
-            <xsl:apply-templates select="." mode="object-type"/>
-            <xsl:apply-templates select="constraint/allowed-values"/>    
-        </map>
-    </xsl:template>-->
     
     <xsl:template mode="define" match="define-assembly/define-flag | define-field/define-flag">
         <map key="{ (use-name,@name)[1] }">
             <xsl:apply-templates select="formal-name | description"/>
-            <xsl:apply-templates select="." mode="object-type"/>
-            <xsl:apply-templates select="constraint/allowed-values"/>    
+            <xsl:call-template name="enumerated-type"/>
         </map>
     </xsl:template>
     
@@ -624,8 +644,13 @@
 <xsl:variable name="datatype-map" select="document('make-metaschema-xsd.xsl')/*/xsl:variable[@name='type-map']/*" as="element()*"/>
     
     <xsl:template priority="2.1" match="*[@as-type = $datatype-map/@as-type]" mode="object-type">
-        <xsl:variable name="assigned-type" select="$datatype-map[@as-type=current()/@as-type]/string(.)"/>
-        <xsl:apply-templates mode="acquire-types" select="key('datatypes-by-name',$assigned-type,$datatypes)/*"/>
+        <xsl:variable name="assigned-type" select="$datatype-map[(@as-type|@prefer)=current()/@as-type]/string(.)"/>
+        <!--"$ref" : "#/definitions/UUIDDatatype"-->
+        <string key="$ref">#/definitions/{$assigned-type}</string><!--
+        <xsl:message expand-text="true">@as-type: { @as-type } assigns type { $assigned-type }</xsl:message>
+        <xsl:variable name="makesTypes" select="key('datatypes-by-name',$assigned-type,$datatypes)/*"/>
+        <xsl:message expand-text="true">{ serialize($makesTypes) } </xsl:message>
+        <xsl:apply-templates mode="acquire-types" select="$makesTypes"/>-->
     </xsl:template>
     
     <xsl:mode name="acquire-types" on-no-match="shallow-copy"/>

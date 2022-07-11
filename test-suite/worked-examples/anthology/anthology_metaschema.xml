@@ -19,8 +19,13 @@
        <description>A <b>collection</b> of literary excerpts</description>
        <root-name>ANTHOLOGY</root-name>
        <flag ref="id"/>
+       <define-flag name="fans" as-type="nonNegativeInteger">
+           <formal-name>fans</formal-name>
+           <description>How many fans?</description>
+       </define-flag>
        <define-flag name="uuid" as-type="uuid">
            <formal-name>UUID</formal-name>
+           <description>Identifying this anthology</description>
        </define-flag>
        <model>
            <assembly ref="meta" min-occurs="1" max-occurs="1"/>
