@@ -48,7 +48,7 @@
     <xsl:template match="/METASCHEMA" expand-text="true">
         
         <map>
-            <!--<xsl:copy-of select="$datatype-map"/>-->
+            <!--<xsl:variable name="wanted-atomic-types" "$datatypes//*:string[@key='$ref']"/>-->
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
             <string key="$id">{ json-base-uri }/{ schema-version }/{ short-name }-schema.json</string>
             <xsl:for-each select="schema-name">
@@ -62,7 +62,9 @@
                 
                 <xsl:variable name="all-used-types" select="//@as-type => distinct-values()"/>
                 <xsl:variable name="used-atomic-types" select="$datatype-map[@as-type = $all-used-types]"/>
-                <xsl:copy-of select="$used-atomic-types/key('datatypes-by-name',string(.),$datatypes)"/>
+                <xsl:variable name="invoked-atomic-types" select="$used-atomic-types/key('datatypes-by-name',string(.),$datatypes)"/>
+                <xsl:variable name="referenced-types" select="$invoked-atomic-types//*:string[@key='$ref']/substring-after(.,'#/definitions/') ! key('datatypes-by-name',string(.),$datatypes)"/>
+                <xsl:copy-of select="$invoked-atomic-types | $referenced-types"/>
             </map>
             
             <xsl:apply-templates select="." mode="require-a-root"/>
