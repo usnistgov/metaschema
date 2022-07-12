@@ -34,6 +34,8 @@
         </div>
     </xsl:template>
     
+    <xsl:template match="INFO | EXCEPTION"/>
+    
     <xsl:template name="reference-class"/>
 
     <xsl:template match="METASCHEMA/namespace">

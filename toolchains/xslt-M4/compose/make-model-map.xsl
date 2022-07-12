@@ -16,7 +16,7 @@
         <map namespace="{child::namespace ! normalize-space(.) }"
             prefix="{child::short-name ! normalize-space(.) }">
             <metadata>
-                <xsl:copy-of copy-namespaces="no" select="* except (define-assembly | define-field | define-flag)"/>
+                <xsl:copy-of copy-namespaces="no" select="* except (INFO | EXCEPTION | define-assembly | define-field | define-flag)"/>
             </metadata>
             <xsl:apply-templates select="child::*[exists(root-name)]" mode="build"/>
         </map>
@@ -25,6 +25,8 @@
     <xsl:key name="global-assemblies" match="METASCHEMA/define-assembly" use="@_key-name"/>
     <xsl:key name="global-fields"     match="METASCHEMA/define-field"    use="@_key-name"/>
     <xsl:key name="global-flags"      match="METASCHEMA/define-flag"     use="@_key-name"/>
+    
+    <xsl:template match="INFO | EXCEPTION"/>
     
     <xsl:template match="define-assembly | define-field" mode="build">
         <xsl:param name="visited" select="()" tunnel="true"/>
