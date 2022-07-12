@@ -44,8 +44,10 @@
       "pattern": "^.+@.+$"
     },
     "HostnameDatatype": {
-      "$ref": "#/definitions/StringDatatype",
-      "format": "idn-hostname"
+           "allOf": [
+           {"$ref": "#/definitions/StringDatatype"},
+           {"format": "idn-hostname"}
+       ]     
     },
     "IntegerDatatype": {
       "type": "integer"
@@ -68,12 +70,16 @@
       "type": "string"
     },
     "NonNegativeIntegerDatatype": {
-      "$ref": "#/definitions/IntegerDatatype",
-      "minimum": 0
+       "allOf": [
+           {"$ref": "#/definitions/IntegerDatatype"},
+           {"minimum": 0}
+       ]
     },
     "PositiveIntegerDatatype": {
-      "$ref": "#/definitions/IntegerDatatype",
-      "minimum": 1
+       "allOf": [
+           {"$ref": "#/definitions/IntegerDatatype"},
+           {"minimum": 1}
+       ]
     },
     "StringDatatype": {
       "type": "string",
