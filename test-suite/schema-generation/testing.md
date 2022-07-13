@@ -1,22 +1,4 @@
 
-# TODO
-
-- [x] Generate nominal targets (present results) of stable examples
-- [ ] Validate all samples to these nominal target schema instances
-  - [ ] XProc 1.0 to do XSD runs? 
-- [ ] try comparing variants (java-oscalcli vs/and XSLT M4 schemas)
-- [x] Stabilize XSpec testing
-- [ ] Isolate unstable examples
-- [ ] Mock up examples with intended targets
-- [ ] Repair or build unit tests
-- [ ] Repair code - foreach
-  - [ ] Isolate problem
-  - [ ] Unit test (to verify solution)
-    - [ ] composition - `../metaschema-xspec`
-    - [ ] JSON Schema
-    - [ ] XSD
-    - [ ] converter generators
-
 # Running the unit tests
 
 Each subdirectory contains unit tests for a family of functionalities in Metaschema. They can overlap.
