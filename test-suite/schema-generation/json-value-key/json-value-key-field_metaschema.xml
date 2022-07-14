@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- OSCAL CATALOG METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
-<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-            xsi:schemaLocation="../../../toolchains/xslt-M4/validate/metaschema.xsd">
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
    <schema-name>Metaschema Unit Test: json-value-key-field</schema-name>
    <schema-version>1.0-milestone1</schema-version>
    <short-name>json-value-key-field</short-name>
    <namespace>http://csrc.nist.gov/ns/metaschema/unit-test/json-value-key-field</namespace>
+   <json-base-uri>http://csrc.nist.gov/ns/metaschema/unit-test/json-value-key-field</json-base-uri>
    <define-assembly name="parent">
       <formal-name>parent</formal-name>
       <description>parent assembly</description>
@@ -22,7 +21,7 @@
    <define-field name="prop">
       <formal-name>Property</formal-name>
       <description>A value with a name, attributed to the containing control, subcontrol, part, or group.</description>
-      <json-value-key flag-name="name"/>
+      <json-value-key-flag flag-ref="name"/>
       <flag ref="name" required="yes"/>
       <flag ref="id"/>
       <flag ref="ns"/>
@@ -32,7 +31,7 @@
       <formal-name>Name</formal-name>
       <description>Identifying the purpose and intended use of the property, part or other object.</description>
    </define-flag>
-   <define-flag name="id" as-type="NCName">
+   <define-flag name="id" as-type="token">
       <formal-name>Identifier</formal-name>
       <description>Unique identifier of the containing object</description>
    </define-flag>

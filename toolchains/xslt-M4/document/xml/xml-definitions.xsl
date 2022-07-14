@@ -69,7 +69,7 @@ exclude-result-prefixes="#all">
     <xsl:variable name="json-definitions-link" select="$path-to-common || $json-definitions-page"/>
     
     <!-- JSON values dropped in default traversal for XML docs   -->
-    <xsl:template match="json-value-key | json-key"/>
+    <xsl:template match="json-value-key | json-key | json-key-flag"/>
     
     <xsl:template match="group-as" expand-text="true">
         <xsl:if test="@in-xml='GROUPED'">

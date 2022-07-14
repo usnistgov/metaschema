@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+  <xs:group name="inlineMarkupGroup">
+    <xs:choice>
+      <xs:element name="a" type="anchorType"/>
+      <xs:element name="insert" type="insertType"/>
+      <xs:group ref="phraseMarkupGroup"/>
+      <xs:group ref="imageMarkupGroup"/>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="imageMarkupGroup">
+    <xs:choice>
+      <xs:element name="img" type="imageType"/>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="phraseMarkupGroup">
+    <xs:choice>
+      <xs:element name="code" type="inlineMarkupType" minOccurs="1"/>
+      <xs:element name="em" type="inlineMarkupType" minOccurs="1"/>
+      <xs:element name="i" type="inlineMarkupType" minOccurs="1"/>
+      <xs:element name="b" type="inlineMarkupType" minOccurs="1"/>
+      <xs:element name="strong" type="inlineMarkupType" minOccurs="1"/>
+      <xs:element name="sub" type="inlineMarkupType" minOccurs="1"/>
+      <xs:element name="sup" type="inlineMarkupType" minOccurs="1"/>
+      <xs:element name="q" type="inlineMarkupType" minOccurs="1"/>
+    </xs:choice>
+  </xs:group>
+  <xs:complexType name="inlineMarkupType" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="inlineMarkupGroup"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="imageType">
+    <xs:attribute name="alt" type="xs:string"/>
+    <xs:attribute name="src" use="required" type="xs:anyURI"/>
+  </xs:complexType>
+
+  <xs:complexType name="anchorType" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="phraseMarkupGroup"/>
+      <xs:group ref="imageMarkupGroup"/>
+    </xs:choice>
+    <xs:attribute name="href" type="xs:anyURI"/>
+  </xs:complexType>
+
+  <!--
+    A value to be assigned by responder via parameter
+    (a parameter must be available)
+  -->
+  <xs:complexType name="insertType">
+    <xs:annotation>
+      <xs:documentation>An insert can be used to identify a placeholder for dynamically inserting text related to a specific object, which is referenced by the object's identifier using an <code>id-ref</code>. This insert mechanism allows the selection of which text value from the object to dynamically include based on the application's display requirements.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="type" use="required" type="xs:NCName">
+      <xs:annotation>
+        <xs:documentation>The type of object to include from (e.g., parameter, control, component, role, etc.)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="id-ref" use="required" type="xs:NCName">
+      <xs:annotation>
+        <xs:documentation>The identity of the object to insert a value for. The identity will be selected from the index of objects of the specified <code>type</code>. The specific value to include is based on the application's display requirements, which will likely use a specific data element associated with the <code>type</code> (e.g., title, identifier, value, etc.) that is appropriate for the application.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <!--
+    Within a selection, a choice - tbd
+    unlike 'value', choice may have inline stuff as well as 'assign' elements
+    choice = element choice { (assign | mix)* }
+  -->
+  <!--
+    IDs are required everywhere for now
+    idAttr      = attribute id { xsd:ID }
+  -->
+</xs:schema>

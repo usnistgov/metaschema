@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<!-- OSCAL CATALOG METASCHEMA -->
+<!-- validate with XSD and Schematron (linked) -->
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+   <schema-name>Metaschema Unit Test: URIs</schema-name>
+   <schema-version>1.0-milestone1</schema-version>
+   <short-name>metaschema-datatypes-uri</short-name>
+   <namespace>http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri</namespace>
+   <json-base-uri>http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri</json-base-uri>
+   <define-assembly name="numSet">
+      <formal-name>Number set</formal-name>
+      <description>Block of four different numbers</description>
+      <root-name>numSet</root-name>
+      <model>
+         <define-field name="int" as-type="integer" min-occurs="1" max-occurs="1">
+            <formal-name>Integer</formal-name>
+            <description>Per W3C</description>
+         </define-field>
+         <define-field name="posInt" as-type="positiveInteger" min-occurs="1" max-occurs="1">
+            <formal-name>Positive Integer</formal-name>
+            <description>1 or more</description>
+         </define-field>
+         <define-field name="nonNegInt" as-type="nonNegativeInteger" min-occurs="1" max-occurs="1">
+            <formal-name>Non-negative Integer</formal-name>
+            <description>zero or more</description>
+         </define-field>
+         <define-field name="decimal" as-type="decimal" min-occurs="1" max-occurs="1">
+            <formal-name>Decimal</formal-name>
+            <description>Floating point</description>
+         </define-field>
+      </model>
+   </define-assembly>
+</METASCHEMA>

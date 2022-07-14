@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <?xml-stylesheet type="text/css" href="../../../toolchains/xslt-M4/lib/metaschema-author.css"?>
-<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../support/lib/metaschema.xsd"
- xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>NIST Metaschema Everything</schema-name>
     <schema-version>1.0</schema-version>
     <short-name>everything</short-name>
     <namespace>http://csrc.nist.gov/metaschema/ns/everything</namespace>
-   
+    <json-base-uri>http://csrc.nist.gov/metaschema/ns/everything</json-base-uri>
+    
    <remarks>
        <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
    </remarks>
@@ -114,9 +113,9 @@ Under 'widget'
             <field ref="color" max-occurs="unbounded">
                 <group-as name="colors" in-xml="GROUPED" in-json="BY_KEY"/>
             </field>
-            <field ref="point" max-occurs="unbounded">
+            <assembly ref="point" max-occurs="unbounded">
                 <group-as name="lattice" in-xml="GROUPED" in-json="BY_KEY"/>
-            </field>
+            </assembly>
             <assembly ref="widget" max-occurs="unbounded">
                 <group-as name="widgetry" in-xml="UNGROUPED"/>
             </assembly>
@@ -140,7 +139,7 @@ Under 'widget'
             <!--<allowed-values target="widget/@banner-type">
                 <enum value="color"></enum>
             </allowed-values>-->
-            <is-unique target="expectation[@type='oneof']" name="unique-expectation-oneof">
+            <is-unique target="expectation[@type='oneof']" id="unique-expectation-oneof">
                 <key-field target="value()"/>
             </is-unique>
             
@@ -179,24 +178,16 @@ Under 'widget'
         <constraint>
             <!--lines must start with non-space characters -->
             <matches target="line" regex="^\S"/>
-            <require when="@banner-type='date'">
-                <matches target="@banner" datatype="date"/>
-            </require>
-            <require when="@banner-type='color'">
-                <allowed-values target="@banner">
-                    <enum value="red">Red</enum>
-                    <enum value="blue">Blue</enum>
-                    <enum value="green">Green</enum>
-                </allowed-values>
-            </require>
-            <require when="@banner-type='wholeNo'">
-                <matches target="@banner" regex="^\d+$"/>
-            </require>
-            <require when="@banner-type='ID'">
-                <is-unique name="widget-banner" target=".">
-                    <key-field target="@banner"/>
-                </is-unique>
-            </require>
+            <matches target=".[@banner-type='date']/@banner" datatype="date"/>
+            <allowed-values target=".[@banner-type='color']/@banner">
+                <enum value="red">Red</enum>
+                <enum value="blue">Blue</enum>
+                <enum value="green">Green</enum>
+            </allowed-values>
+            <matches target=".[@banner-type='wholeNo']/@banner" regex="^\d+$"/>
+            <is-unique id="widget-banner" target=".[@banner-type='ID']">
+                <key-field target="@banner"/>
+            </is-unique>
         </constraint>
     </define-assembly>
     
@@ -220,16 +211,9 @@ Under 'widget'
             </field>
         </model>
         <constraint>
-            <require when="@type='couplet'">
-                <has-cardinality target="line" max-occurs="2" min-occurs="2"/>
-            </require>
-            <require when="@type='tercet'">
-                <has-cardinality target="line" max-occurs="3" min-occurs="3"/>
-            </require>
-            <require when="@type='quatrain'">
-                <has-cardinality target="line" max-occurs="4" min-occurs="4"/>
-            </require>
-            
+            <has-cardinality target=".[@type='couplet']/line" max-occurs="2" min-occurs="2"/>
+            <has-cardinality target=".[@type='tercet']/line" max-occurs="3" min-occurs="3"/>
+            <has-cardinality target=".[@type='quatrain']/line" max-occurs="4" min-occurs="4"/>
         </constraint>
     </define-assembly>
     
@@ -251,20 +235,14 @@ Under 'widget'
             </constraint>
         </define-flag>
         <constraint>
-            <require when="@type='type'">
-                <allowed-values target=".">
-                    <enum value="start">start</enum>
-                    <enum value="end">end</enum>
-                </allowed-values>
-            </require>
-            <require when="@type='date'">
-                <matches datatype="date" target="some/path"/>
-            </require>
-            <require when="@type='roleref'">
-                <index-has-key target="some/node()" name="role-index">
-                    <key-field target="value()"/>
-                </index-has-key>
-            </require>
+            <allowed-values target=".[@type='type']">
+                <enum value="start">start</enum>
+                <enum value="end">end</enum>
+            </allowed-values>
+            <matches datatype="date" target=".[@type='date']/some/path"/>
+            <index-has-key target=".[@type='roleref']/some/node()" name="role-index">
+                <key-field target="value()"/>
+            </index-has-key>
         </constraint>
     </define-field>
         
@@ -282,8 +260,8 @@ Under 'widget'
     <define-assembly name="section">
         <formal-name>Section</formal-name>
         <description>.</description>
-        <json-key flag-name="id"/>
-        <define-flag name="id" as-type="NCName">
+        <json-key flag-ref="id"/>
+        <define-flag name="id" as-type="token" required="yes">
             <formal-name>id</formal-name>
             <description>.</description>
         </define-flag>
@@ -304,42 +282,42 @@ Under 'widget'
     <define-field name="color" as-type="string">
         <formal-name>Color</formal-name>
         <description>Name and code</description>
-        <json-key flag-name="code"/>
+        <json-key flag-ref="code"/>
         <define-flag name="code" required="yes">
             <formal-name>Code</formal-name>
             <description>The six-digit hex code, so FF0000 for red</description>
         </define-flag>
     </define-field>
     
-<define-field name="point" as-type="empty">
-    <formal-name>Point</formal-name>
-    <description>Point location</description>
-    <json-key flag-name="point-id"/>
-    <define-flag name="point-id" required="yes">
-        <formal-name>Point ID</formal-name>
-        <description>A name for the point</description>
-    </define-flag>
-    <define-flag name="x" as-type="decimal">
-        <formal-name>X</formal-name>
-        <description>Abscissa</description>
-    </define-flag>
-    <define-flag name="y" as-type="decimal">
-        <formal-name>Y</formal-name>
-        <description>ordinate</description>
-    </define-flag>
-    <constraint>
-        <matches target="x" datatype="decimal"/>
-        <matches target="y" datatype="decimal"/>
-        <is-unique target="." name="point-identifiers">
-            <key-field target="@point-id"/>
-        </is-unique>
-    </constraint>
-</define-field>
+    <define-assembly name="point">
+        <formal-name>Point</formal-name>
+        <description>Point location</description>
+        <json-key flag-ref="point-id"/>
+        <define-flag name="point-id" required="yes">
+            <formal-name>Point ID</formal-name>
+            <description>A name for the point</description>
+        </define-flag>
+        <define-flag name="x" as-type="decimal">
+            <formal-name>X</formal-name>
+            <description>Abscissa</description>
+        </define-flag>
+        <define-flag name="y" as-type="decimal">
+            <formal-name>Y</formal-name>
+            <description>ordinate</description>
+        </define-flag>
+        <constraint>
+            <matches target="x" datatype="decimal"/>
+            <matches target="y" datatype="decimal"/>
+            <is-unique target="." id="point-identifiers">
+                <key-field target="@point-id"/>
+            </is-unique>
+        </constraint>
+    </define-assembly>
     
     <define-assembly name="role">
         <formal-name>Role</formal-name>
         <description>.</description>
-        <json-key flag-name="role-id"/>
+        <json-key flag-ref="role-id"/>
         <define-flag name="role-id" required="yes">
             <formal-name>Role ID</formal-name>
             <description>A unique identifier for the role</description>
@@ -352,7 +330,7 @@ Under 'widget'
             <index name="all-roles" target=".">
                 <key-field target="@role-id"/>
             </index>
-            <is-unique name="role-is-unique" target=".">
+            <is-unique id="role-is-unique" target=".">
                 <key-field target="@role-id"/>
             </is-unique>
         </constraint>
@@ -387,14 +365,10 @@ Under 'widget'
                     <description>Who speaks the line</description>
                 </define-flag>
                 <constraint>
-                    <require when="@who='ghost'">
-                       <allowed-values target=".">
-                            <enum value="Boo!"/>
-                        </allowed-values>
-                    </require>
-                    <require when="@class='has-a'">
-                        <matches target="." regex="a|A"/>
-                    </require>
+                    <allowed-values target=".[@who='ghost']">
+                        <enum value="Boo!"/>
+                    </allowed-values>
+                    <matches target=".[@class='has-a']" regex="a|A"/>
                 </constraint>
             </define-field>
         </model>
@@ -423,7 +397,7 @@ Under 'widget'
     <define-field name="named-value" as-type="string">
         <formal-name>Named value</formal-name>
         <description>A field with a json value flag</description>
-        <json-value-key flag-name="name"/>
+        <json-value-key-flag flag-ref="name"/>
         <flag ref="class"/>
         <define-flag name="name" required="yes">
             <formal-name>Name</formal-name>
@@ -450,12 +424,12 @@ Under 'widget'
         <description>Not before yesterday.</description>
     </define-flag>
 
-    <define-flag name="required-ncname" as-type="NCName">
+    <define-flag name="required-ncname" as-type="token">
         <formal-name>Required NCName</formal-name>
         <description>A no-colon name.</description>
     </define-flag>
     
-    <define-flag name="class" as-type="NCName">
+    <define-flag name="class" as-type="token">
         <formal-name>Class</formal-name>
         <description>Some class.</description>
     </define-flag>

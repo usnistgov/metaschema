@@ -1,82 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <?xml-stylesheet type="text/css" href="../../..//metaschema-author.css"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../toolchains/xslt-M4/validate/metaschema.xsd"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../schema/xml/metaschema.xsd"
  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>Anthology Metaschema</schema-name>
     <schema-version>1.0</schema-version>
-    <short-name>ανθ</short-name>
+    <short-name>anthology</short-name>
     <namespace>http://csrc.nist.gov/metaschema/ns/anthology</namespace>
     <json-base-uri>http://csrc.nist.gov/metaschema/anthology</json-base-uri>
     
    <remarks>
-       <p>A mini metaschema produced for testing purposes. Use at your own risk.</p>
+       <p>A <q>mini</q> metaschema produced for testing purposes. Use at your own risk.</p>
    </remarks>
-    
-   <!-- so far: index, is-unique, allowed-values, require, matches, index-has-key
-       need examples: has-cardinality, matches[@regex], allowed-values[@extends='yes']
-   
-   XSD - index, is-unique (xs:unique), index-has-key (xs:keyref);
-           constraint/(allowed-values, matches/@regex, matches/@datatype)
-   
-   Schematron - require[@when]/*
-   
-     require[@when]/allowed-values
-     require[@when]/is-unique
-     require[@when]/index-has-key
-     require[@when]/has-cardinality
-     require[@when]/matches/@regex
-     require[@when]/matches/@datatype
-
-     require[@when]/index-has-key[@target]
-
-Under 'stanza'
-     require[@when]/has-cardinality[@target]
-
-Under 'widget'
-     require[@when]/allowed-values[@target]
-     require[@when]/is-unique[@target]
-     require[@when]/matches[@target]/@regex
-     require[@when]/matches[@target]/@datatype
-
-
-     index[target="value()"] - is indexed from the root / implicitly across dynamic scope
-     
-     Build out examples in OSCAL schemas
-     Document examples on an Issue for testing/tracking
-     unit tests?
-   -->
-<!-- 
-     ASSEMBLY
-        singleton
-        grouped
-          with and without @in-xml
-        root-name
-        use-name
-        json-key
-        choice
-        @in-json
-        
-     FIELD
-       json-value-key literal
-       json-value-key flag
-       value datatypes
-         markup-line
-         markup-multiline
-           with and without in-xml="wrapped"
-       value constraints (allowed-values)
-    
-     FLAG
-       value datatypes
-    
-    -->
     
    <define-assembly name="anthology">
        <formal-name>Anthology</formal-name>
-       <description>A collection of literary excerpts</description>
+       <description>A <b>collection</b> of literary excerpts</description>
        <root-name>ANTHOLOGY</root-name>
        <flag ref="id"/>
+       <define-flag name="fans" as-type="nonNegativeInteger">
+           <formal-name>fans</formal-name>
+           <description>How many fans?</description>
+       </define-flag>
+       <define-flag name="uuid" as-type="uuid">
+           <formal-name>UUID</formal-name>
+           <description>Identifying this anthology</description>
+       </define-flag>
        <model>
            <assembly ref="meta" min-occurs="1" max-occurs="1"/>
            <assembly ref="piece" max-occurs="unbounded" min-occurs="0">
@@ -110,28 +60,30 @@ Under 'widget'
                 <group-as name="creators"/>
             </field>
             <field ref="date"/>
+            <field ref="title" max-occurs="1"/>
             <define-field name="keyword" max-occurs="unbounded">
                 <formal-name>Key word</formal-name>
                 <description>A string</description>
                 <group-as name="keywords"/>
-                <constraint>
-                    <is-unique name="distinct-keyword" target=".">
-                        <key-field target="."/>
-                    </is-unique>
-                </constraint>
             </define-field>
             <field ref="remarks"/>
         </model>
         <constraint>
+            <is-unique id="distinct-keyword" target="keyword">
+                <key-field target="."/>
+            </is-unique>
             <allowed-values id="type-check" target="@type">
                 <enum value="YYYY">Four-digit year (CE)</enum>
             </allowed-values>
-            <require when="@type='YYYY'">
-                <matches id="when-yyyy-regex-check" target="@date" regex="[1-9]\d?\d?\d?"/>
-            </require>
+            <matches id="when-yyyy-regex-check" target=".[@type='YYYY']/@date" regex="[1-9]\d?\d?\d?"/>
         </constraint>
     </define-assembly>
     
+    <define-field name="title" as-type="markup-line">
+        <formal-name>Title</formal-name>
+        <description>As represented</description>
+    </define-field>
+        
     <define-field name="date">
         <formal-name>Date</formal-name>
         <description>As represented</description>
@@ -174,11 +126,34 @@ Under 'widget'
             <choice>
                 <assembly ref="verse"/>
                 <field ref="prose" in-xml="WITH_WRAPPER"/>
-                <assembly ref="include"/>
             </choice>
+            <assembly ref="translated" max-occurs="unbounded">
+                <group-as name="translations" in-json="BY_KEY"/>                
+            </assembly>
         </model>
     </define-assembly>
     
+    <define-assembly name="translated">
+        <formal-name>Translation</formal-name>
+        <description>A single translation of the text given in the piece.</description>
+        <json-key flag-ref="lang"/>
+        <define-flag name="lang" as-type="token">
+            <formal-name>Language</formal-name>
+            <description>An ISO code in lower case, e.g. 'en', 'de', 'jp'</description>
+        </define-flag>
+        <model>
+            <choice>
+                <assembly ref="verse"/>
+                <field ref="prose" in-xml="WITH_WRAPPER"/>
+            </choice>
+        </model>
+        <constraint>
+            <!-- the name of an element child must be the same as the name of a sibling -->
+            <expect test="child::*/name() = ../child::name()" target=".">
+                <message>In a translation, a child must be of the same type of the main contents of the piece.</message>
+            </expect>
+        </constraint>
+    </define-assembly>
     <define-assembly name="verse">
         <formal-name>Verse</formal-name>
         <description>A composition in lines, or an excerpt from such a composition</description>
@@ -187,7 +162,6 @@ Under 'widget'
             <choice>
                 <field ref="line" max-occurs="unbounded">
                     <group-as name="lines"/>
-                    
                 </field>
                 <assembly ref="stanza" max-occurs="unbounded">
                     <group-as name="stanzas"/>
@@ -195,9 +169,7 @@ Under 'widget'
             </choice>
         </model>
         <constraint>
-            <require when="@type='quatrain'">
-                <has-cardinality id="quatrain-cardinality-check" target="line" max-occurs="4" min-occurs="4"/>
-            </require>
+            <has-cardinality id="quatrain-cardinality-check" target=".[@type='quatrain']/line" max-occurs="4" min-occurs="4"/>
         </constraint>
     </define-assembly>
     
@@ -244,6 +216,8 @@ Under 'widget'
         <formal-name>Stanza</formal-name>
         <description>A group of lines within a verse</description>
         <flag ref="type"/>
+        <flag ref="feet"/>
+        <flag ref="base"/>
         <model>
             <field ref="line" max-occurs="unbounded">
                 <group-as name="lines"/>
@@ -255,18 +229,6 @@ Under 'widget'
         <formal-name>Prose</formal-name>
         <description>Short prose or an excerpt</description>
     </define-field>
-    
-    <define-assembly name="include">
-        <formal-name>Include other</formal-name>
-        <description>Some other sort of markup altogether</description>
-        <define-flag name="lang">
-            <formal-name>Language</formal-name>
-            <description>Describing the notation used</description>
-        </define-flag>
-        <model>
-            <any/>
-        </model>
-    </define-assembly>
     
     <define-assembly name="back">
         <formal-name>Back matter</formal-name>
@@ -297,7 +259,7 @@ Under 'widget'
     <define-assembly name="author">
         <formal-name>Author</formal-name>
         <description>A single author cited in the anthology, with relevant info</description>
-        <json-key flag-name="id"/>
+        <json-key flag-ref="id"/>
         <flag ref="id" required="yes"/>
         <model>
             <field    ref="name"/>
@@ -367,23 +329,24 @@ Under 'widget'
         <formal-name>Dates</formal-name>
         <description>As a range (birth-death) or floruit</description>
         <!--nb: the Schematron does not presently validate datatypes on definitions only on constraint/matches-->
-        <define-flag name="birth" as-type="date">
+        <define-flag name="birth">
             <formal-name>Birth date</formal-name>
             <description>If only the year is known use June 30.</description>
         </define-flag>
         <!-- validate: after birth date, if given? -->
-        <define-flag name="death" as-type="date">
+        <define-flag name="death">
             <formal-name>Death date</formal-name>
             <description>If only the year is known use July 1.</description>
         </define-flag>
-        <define-flag name="floruit" as-type="date">
+        <define-flag name="floruit">
             <formal-name>Floruit date</formal-name>
             <description>Do not use along with both birth and death</description>
         </define-flag>
         <constraint>
             <!--if floruit is given, birth and death should not be?-->
-            <matches id="birth-matches-date-datatype" target="@birth" datatype="date"/>
-            <expect id="chronology-check" test="xs:date(@birth) &lt; xs:date(@death)"/>
+            <matches id="birth-matches-date-datatype" target="@birth" level="WARNING" datatype="date"/>
+            <matches id="death-matches-date-datatype" target="@death" level="WARNING" datatype="date"/>
+            <!--<expect id="chronology-check" target="." test="@birth &lt; @death"/>-->
         </constraint>
     </define-assembly>
     

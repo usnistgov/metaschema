@@ -160,7 +160,6 @@
 
 - XProc pipeline version 1.0 (5 steps)
 
-- Runtime dependency: `schema-gen/configure-namespaces.xsl`
 - Runtime dependency: `schema-gen/make-metaschema-xsd.xsl`
 
 #### write-hugo-metaschema-docs.xpl
