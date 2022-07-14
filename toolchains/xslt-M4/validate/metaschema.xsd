@@ -362,6 +362,16 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
+        <xs:element minOccurs="0" ref="formal-name">
+          <xs:annotation>
+            <xs:documentation>A redefinition of the formal name specified in the referenced assembly.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" ref="description">
+          <xs:annotation>
+            <xs:documentation>A redefinition of the description specified in the referenced assembly.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
         <xs:element minOccurs="0" ref="group-as"/>
         <xs:element minOccurs="0" ref="remarks"/>
@@ -379,6 +389,16 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
+        <xs:element minOccurs="0" ref="formal-name">
+          <xs:annotation>
+            <xs:documentation>A redefinition of the formal name specified in the referenced assembly.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" ref="description">
+          <xs:annotation>
+            <xs:documentation>A redefinition of the description specified in the referenced assembly.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element minOccurs="0" name="use-name" type="xs:NCName"/>
         <xs:element minOccurs="0" ref="group-as"/>
         <xs:element minOccurs="0" ref="remarks"/>
@@ -524,6 +544,16 @@
   <xs:element name="flag">
     <xs:complexType>
       <xs:sequence>
+        <xs:element minOccurs="0" ref="formal-name">
+          <xs:annotation>
+            <xs:documentation>A redefinition of the formal name specified in the referenced assembly.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element minOccurs="0" ref="description">
+          <xs:annotation>
+            <xs:documentation>A redefinition of the description specified in the referenced assembly.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element name="use-name" minOccurs="0" type="xs:NCName"/>
         <xs:element minOccurs="0" ref="remarks"/>
       </xs:sequence>

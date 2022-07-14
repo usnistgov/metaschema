@@ -442,6 +442,7 @@
       <xs:documentation>Referencing an assembly definition to include an assembly or assemblies of a given type in a model.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
+      <xs:group ref="DefinitionMetadataGroup"/>
       <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
@@ -456,6 +457,7 @@
       <xs:documentation>Referencing a field definition to include a field or fields of a given type in a model.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
+      <xs:group ref="DefinitionMetadataGroup"/>
       <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
@@ -620,6 +622,7 @@
 
   <xs:complexType name="FlagReferenceType">
     <xs:sequence>
+      <xs:group ref="DefinitionMetadataGroup"/>
       <xs:element name="use-name" minOccurs="0" type="ModelNameType"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
     </xs:sequence>
