@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/css" href="../../../toolchains/xslt-M4/lib/metaschema-author.css"?>
-<?xml-model href="../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>NIST Metaschema Everything</schema-name>
     <schema-version>1.0</schema-version>
     <short-name>test-model</short-name>
     <namespace>http://csrc.nist.gov/metaschema/ns/everything</namespace>
-
+    <json-base-uri>http://csrc.nist.gov/metaschema/ns/everything</json-base-uri>
+    
     <remarks>
         <p>A mini metaschema produced for <em>documentation</em> testing purposes.</p>
         <p>This metaschema exercises modeling with a mix of global, modular (local) and inline
@@ -144,7 +144,7 @@
     <define-field name="field-by-key">
         <formal-name>Keyed field</formal-name>
         <description>field field-by-key</description>
-        <json-key flag-name="id"/>
+        <json-key flag-ref="id"/>
         <flag ref="id" required="yes"/>
     </define-field>
     
@@ -158,7 +158,7 @@
     <define-field name="field-dynamic-value-key">
         <formal-name>Dynamic value key field</formal-name>
         <description>field field-dynamic-value-key</description>
-        <json-value-key flag-name="id"/>
+        <json-value-key-flag flag-ref="id"/>
         <flag ref="id" required="yes"/>
         <define-flag name="color">
             <formal-name>COLOR</formal-name>
@@ -275,7 +275,7 @@
     <define-assembly name="assembly-by-key">
         <formal-name>Keyed assembly</formal-name>
         <description>assembly assembly-by-key</description>
-        <json-key flag-name="id"/>
+        <json-key flag-ref="id"/>
         <flag ref="id" required="yes"/>
         
         <model>

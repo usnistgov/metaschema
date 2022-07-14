@@ -76,16 +76,16 @@ exclude-result-prefixes="#all">
       <xsl:value-of select="json-value-key"/>   
    </xsl:template>
    
-   <xsl:template priority="2" match="*[exists(json-value-key/@flag-name)]" mode="get-field-value-name"  as="xs:string">
-      <xsl:value-of select="'{' || json-value-key/@flag-name || '}'"/>
+   <xsl:template priority="2" match="*[exists(json-value-key-flag/@flag-ref)]" mode="get-field-value-name"  as="xs:string">
+      <xsl:value-of select="'{' || json-value-key-flag/@flag-ref || '}'"/>
    </xsl:template>
    
    <xsl:template match="*" mode="get-field-value-description">
       <m:description>This property provides the (nominal) value for this object as a whole.</m:description>
    </xsl:template>
    
-   <xsl:template priority="2" match="*[exists(json-value-key/@flag-name)]" mode="get-field-value-description">
-      <m:description>A property whose name is distinct from assigned properties for this object is taken as its (nominal) value, while its key is taken to be the value of the <code><xsl:value-of select="json-value-key/@flag-name"/></code> property.</m:description>
+   <xsl:template priority="2" match="*[exists(json-value-key-flag/@flag-ref)]" mode="get-field-value-description">
+      <m:description>A property whose name is distinct from assigned properties for this object is taken as its (nominal) value, while its key is taken to be the value of the <code><xsl:value-of select="json-value-key-flag/@flag-ref"/></code> property.</m:description>
    </xsl:template>
    
    <xsl:template match="short-name" mode="converter-link" expand-text="true">

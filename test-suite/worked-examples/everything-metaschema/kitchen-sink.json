@@ -1,7 +1,0 @@
-{
-  "EVERYTHING": { "todays-date": "2020-02-19",
-  "one-string": "Alpha",
-  "required-integer": 3,
-  "required-local-field": "um",
-  "SINGLETON": { "title": "My Summer Vacation" } }
-}

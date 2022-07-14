@@ -1,0 +1,84 @@
+
+  { "$schema" : "http://json-schema.org/draft-07/schema#",
+    "$id" : "http://csrc.nist.gov/ns/metaschema/test/1.0.0-milestone3/oscal-catalog-schema.json",
+    "$comment" : "OSCAL Control Catalog Format: JSON Schema",
+    "type" : "object",
+    "definitions" : 
+    { "oscal-catalog-oscal-catalog:root" : 
+      { "title" : "Nominal root",
+        "description" : "XXX",
+        "$id" : "#assembly_oscal-catalog_root",
+        "type" : "object",
+        "properties" : 
+        { "top-level-flag" : 
+          { "title" : "Flag, defined at top level",
+            "description" : "XXX",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
+          "local-flag" : 
+          { "title" : "Locally defined flag",
+            "description" : "XXX",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
+          "top-level-global-field" : 
+          { "$ref" : "#field_oscal-catalog_top-level-global-field" },
+          "top-level-local-field" : 
+          { "$ref" : "#field_oscal-catalog_top-level-local-field" },
+          "local-field" : 
+          { "title" : "Locally defined field",
+            "description" : "XXX",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" } },
+        "additionalProperties" : false },
+      "oscal-catalog-oscal-catalog:top-level-global-field" : 
+      { "title" : "Field, defined at top level (global by default)",
+        "description" : "XXX",
+        "$id" : "#field_oscal-catalog_top-level-global-field",
+        "type" : "string",
+        "pattern" : "^\\S(.*\\S)?$" },
+      "oscal-catalog-oscal-catalog:top-level-local-field" : 
+      { "title" : "Field, defined at top level as 'local'",
+        "description" : "XXX",
+        "$id" : "#field_oscal-catalog_top-level-local-field",
+        "type" : "string",
+        "pattern" : "^\\S(.*\\S)?$" },
+      "oscal-catalog-oscal-catalog:module-assembly" : 
+      { "title" : "Assembly defined in a module",
+        "description" : "XXX",
+        "$id" : "#assembly_oscal-catalog_module-assembly",
+        "type" : "object",
+        "properties" : 
+        { "local-flag" : 
+          { "title" : "Locally defined flag",
+            "description" : "XXX",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
+          "module-global-field" : 
+          { "$ref" : "#field_oscal-catalog_module-global-field" },
+          "module-top-level-local-field" : 
+          { "$ref" : "#field_oscal-catalog_module-top-level-local-field" },
+          "module-local-field" : 
+          { "title" : "Locally defined field",
+            "description" : "XXX",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" } },
+        "additionalProperties" : false },
+      "oscal-catalog-oscal-catalog:module-global-field" : 
+      { "title" : "Field, defined in a module (global by default)",
+        "description" : "XXX",
+        "$id" : "#field_oscal-catalog_module-global-field",
+        "type" : "string",
+        "pattern" : "^\\S(.*\\S)?$" },
+      "oscal-catalog-oscal-catalog:module-top-level-local-field" : 
+      { "title" : "Field, defined in a module as 'local'",
+        "description" : "XXX",
+        "$id" : "#field_oscal-catalog_module-top-level-local-field",
+        "type" : "string",
+        "pattern" : "^\\S(.*\\S)?$" } },
+    "properties" : 
+    { "root-assembly" : 
+      { "$ref" : "#assembly_oscal-catalog_root" } },
+    "required" : 
+    [ "root-assembly" ],
+    "additionalProperties" : false,
+    "maxProperties" : 1 }

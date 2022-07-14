@@ -1,6 +1,6 @@
 {
     "$schema": "../../../../../metaschema-schema-generator/test-schemagen/datatypes/datatypes-token_schema.json",
     "parent": {
-        "token-flag": [ "Straßer", "Müller", "Adèle", "Yiğit", "ğ0·." ]
+        "token-field": [ "Straßer", "Müller", "Adèle", "Yiğit", "ğ0·." ]
     }
 }
