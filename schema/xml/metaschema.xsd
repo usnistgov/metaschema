@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
   elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
   xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
   targetNamespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
 
@@ -59,7 +60,7 @@
           </xs:complexType>
         </xs:element>
 
-        <xs:choice maxOccurs="unbounded">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
           <xs:element name="define-assembly" type="GlobalAssemblyDefinitionType"/>
           <xs:element name="define-field" type="GlobalFieldDefinitionType"/>
           <xs:element name="define-flag" type="GlobalFlagDefinitionType"/>
@@ -198,7 +199,7 @@
     </xs:sequence>
     <xs:attribute name="name" use="required" type="ModelNameType"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
-    <xs:attribute ref="deprecated"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
   <xs:complexType name="AssemblyModelType">
@@ -260,7 +261,7 @@
     <xs:attribute name="collapsible" type="YesNoType" default="no"/>
     <xs:attribute name="name" use="required" type="ModelNameType"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
-    <xs:attribute ref="deprecated"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
 
@@ -281,7 +282,7 @@
     <!-- datatype should default to 'string' -->
     <xs:attribute name="as-type" type="SimpleDatatypesType" default="string"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
-    <xs:attribute ref="deprecated"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
   <xs:complexType name="InlineAssemblyDefinitionType">
@@ -298,8 +299,7 @@
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-          type="InlineFlagDefinitionType"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="InlineFlagDefinitionType"/>
       </xs:choice>
       <xs:element name="model" minOccurs="0" type="AssemblyModelType"/>
       <xs:element minOccurs="0" name="constraint" type="DefineAssemblyConstraintsType"/>
@@ -308,7 +308,7 @@
     </xs:sequence>
     <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
     <xs:attribute name="name" use="required" type="ModelNameType"/>
-    <xs:attribute ref="deprecated"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
 
@@ -326,8 +326,7 @@
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-          type="InlineFlagDefinitionType"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="InlineFlagDefinitionType"/>
       </xs:choice>
       <xs:element minOccurs="0" name="constraint" type="DefineFieldConstraintsType"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
@@ -343,7 +342,7 @@
           in XML.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute ref="deprecated"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
   <xs:complexType name="InlineFlagDefinitionType">
@@ -360,7 +359,7 @@
     <!-- datatype should default to 'string' -->
     <xs:attribute name="as-type" type="SimpleDatatypesType" default="string"/>
     <xs:attribute name="required" type="YesNoType" default="no"/>
-    <xs:attribute ref="deprecated"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
   <xs:simpleType name="FormalNameType">
@@ -388,7 +387,7 @@
         it.</xs:documentation>
     </xs:annotation>
     <xs:complexContent>
-      <xs:restriction base="MarkupLineDatatype"/>
+      <xs:extension base="MarkupLineDatatype"/>
     </xs:complexContent>
   </xs:complexType>
 
@@ -449,7 +448,7 @@
     </xs:sequence>
     <xs:attribute name="ref" use="required" type="ModelNameType"/>
     <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
-    <xs:attribute ref="deprecated"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
   <xs:complexType  name="FieldReferenceType">
@@ -470,7 +469,7 @@
           in XML.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute ref="deprecated"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
   <xs:simpleType name="InXmlWrappedType">
@@ -609,16 +608,18 @@
             <xs:documentation>A value recognized for a flag or field.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="deprecated" type="VersionType"/>
+        <xs:attributeGroup ref="DeprecationAttributeGroup"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:attribute name="deprecated" type="VersionType">
-    <xs:annotation>
-      <xs:documentation>The associated construct has been deprecated at the specified version. Its use should be avoided if possible.</xs:documentation>
-    </xs:annotation>    
-  </xs:attribute>
+  <xs:attributeGroup name="DeprecationAttributeGroup">
+    <xs:attribute name="deprecated" type="VersionType">
+      <xs:annotation>
+        <xs:documentation>The associated construct has been deprecated at the specified version. Its use should be avoided if possible.</xs:documentation>
+      </xs:annotation>    
+    </xs:attribute>
+  </xs:attributeGroup>
 
   <xs:complexType name="FlagReferenceType">
     <xs:sequence>
@@ -628,7 +629,7 @@
     </xs:sequence>
     <xs:attribute name="ref" use="required" type="ModelNameType"/>
     <xs:attribute name="required" type="YesNoType" default="no"/>
-    <xs:attribute ref="deprecated"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
   <xs:simpleType name="RegexType">
