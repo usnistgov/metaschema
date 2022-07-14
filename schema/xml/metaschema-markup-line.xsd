@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  
+  <xs:include schemaLocation="metaschema-prose-base.xsd"/>
+
+  <xs:complexType name="MarkupLineDatatype" mixed="true">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="inlineMarkupGroup"/>
+    </xs:choice>
+  </xs:complexType>
+</xs:schema>
