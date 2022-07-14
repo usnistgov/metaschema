@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/css" href="../../../toolchains/xslt-M4/lib/metaschema-author.css"?>
+<?xml-stylesheet type="text/css" href="../util/metaschema-author.css"?>
 
 <!--bugs:
   not string
@@ -157,7 +157,7 @@
     <define-field name="field-by-key">
         <formal-name>FIELD-BY-KEY</formal-name>
         <description>field field-by-key</description>
-        <json-key flag-name="id"/>
+        <json-key flag-ref="id"/>
         <flag ref="id" required="yes"/>
     </define-field>
     
@@ -171,7 +171,7 @@
     <define-field name="field-dynamic-value-key">
         <formal-name>FIELD-DYNAMIC-VALUE-KEY</formal-name>
         <description>field field-dynamic-value-key</description>
-        <json-value-key flag-name="id"></json-value-key>
+        <json-value-key-flag flag-ref="id"/>
         <flag ref="id" required="yes"/>
         <define-flag name="color">
             <formal-name>COLOR</formal-name>
@@ -321,7 +321,7 @@
     <define-assembly name="assembly-by-key">
         <formal-name>ASSEMBLY-BY-KEY</formal-name>
         <description>assembly assembly-by-key</description>
-        <json-key flag-name="id"/>
+        <json-key flag-ref="id"/>
         <flag ref="id" required="yes"/>
         
         <model>

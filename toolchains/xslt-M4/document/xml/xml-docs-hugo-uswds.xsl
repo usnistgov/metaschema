@@ -268,7 +268,7 @@
      flags that must be properties. -->
    <xsl:function name="m:has-properties" as="xs:boolean">
       <xsl:param name="who" as="element()"/>
-      <xsl:sequence select="exists($who/(define-flag|flag)[not((@name|@ref)=../(json-key | json-value-key)/@flag-name)])"/>
+      <xsl:sequence select="exists($who/(define-flag|flag)[not((@name|@ref)=../(json-key | json-value-key-flag)/@flag-ref)])"/>
    </xsl:function>
    
    <!-- ^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V^V -->

@@ -22,7 +22,7 @@
     
 <!-- Feature set
        support 'value()' on terminal step 
-         including json-value-key/@flag-name
+         including json-value-key/@flag-ref
        correct ws inside predicates
        review data types on templates and functions
        better error trapping, handling and reporting (parameterized?)

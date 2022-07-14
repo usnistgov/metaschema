@@ -36,7 +36,6 @@
         <nm:transform version="3.0">compose/annotate-composition.xsl</nm:transform>
         
         <nm:transform version="3.0">schema-gen/make-metaschema-xsd.xsl</nm:transform>
-        <nm:transform version="3.0">schema-gen/configure-namespaces.xsl</nm:transform>
     </xsl:variable>
     
 </xsl:stylesheet>

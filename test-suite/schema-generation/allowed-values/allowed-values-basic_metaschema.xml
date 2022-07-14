@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<?xml-model href="../../../toolchains/xslt-M4/validate/metaschema-composition-check.sch" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
 <!-- OSCAL CATALOG METASCHEMA -->
 <!-- validate with XSD and Schematron (linked) -->
-<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-            xsi:schemaLocation="../../../toolchains/xslt-M4/validate/metaschema.xsd">
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
    <schema-name>Metaschema Unit Test: allowed values</schema-name>
    <schema-version>1.0-milestone1</schema-version>
    <short-name>metaschema-allowed-values</short-name>
    <namespace>http://csrc.nist.gov/ns/metaschema/unit-test/allowed-values</namespace>
+   <json-base-uri>http://csrc.nist.gov/ns/metaschema/unit-test/allowed-values</json-base-uri>
    <define-assembly name="parent">
       <formal-name>parent</formal-name>
       <description>parent assembly</description>
       <root-name>parent</root-name>
-      <define-flag name="odd-flag" as-type="positiveInteger" required="yes">
+      <define-flag name="odd-flag" as-type="positive-integer" required="yes">
          <formal-name>Small odd flag</formal-name>
          <description>Odd integers from 1 to 11 inclusive</description>
          <constraint>
@@ -55,7 +54,7 @@
          </allowed-values>
       </constraint>
    </define-field>
-   <define-flag name="even-flag" as-type="positiveInteger">
+   <define-flag name="even-flag" as-type="positive-integer">
       <formal-name>Small even flag</formal-name>
       <description>Even integers from 2 to 10 inclusive</description>
       <constraint>

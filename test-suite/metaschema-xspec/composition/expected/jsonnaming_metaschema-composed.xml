@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            abstract="no"
+            module="jsonnaming"
+            _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/input/jsonnaming_metaschema.xml">
+   <INFO info-type="objects-used">Seeing assembly#jsonnaming:box, assembly#jsonnaming:envelope, field#jsonnaming:page, flag#jsonnaming:no, field#jsonnaming:button, flag#jsonnaming:color, field#jsonnaming:scrap</INFO>
+   <schema-name>JSON Naming Tests</schema-name>
+   <schema-version>1.0</schema-version>
+   <short-name>jsonnaming</short-name>
+   <namespace>http://csrc.nist.gov/metaschema/ns/nested</namespace>
+   <json-base-uri>http://csrc.nist.gov/metaschema/ns/nested</json-base-uri>
+   <remarks>
+      <p>Exercises features wrt naming JSON properties on fields static value key assignment dynamic value key assignment</p>
+   </remarks>
+   <define-field _metaschema-xml-id="/field/jsonnaming/page"
+                 _metaschema-json-id="/field/jsonnaming/page"
+                 collapsible="no"
+                 as-type="string"
+                 scope="global"
+                 name="page"
+                 module="jsonnaming"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/input/jsonnaming_metaschema.xml"
+                 _key-name="jsonnaming:page">
+      <formal-name>PAGE</formal-name>
+      <description>PAGE</description>
+      <flag _step="no"
+            _key="no"
+            _metaschema-xml-id="/field/jsonnaming/page/no"
+            _metaschema-json-id="/field/jsonnaming/page/no"
+            as-type="positiveInteger"
+            required="no"
+            ref="no"
+            _key-ref="jsonnaming:no"
+            _using-name="no"
+            _in-xml-name="no"
+            _in-json-name="no"/>
+   </define-field>
+   <define-flag _metaschema-xml-id="/flag/jsonnaming/no"
+                _metaschema-json-id="/flag/jsonnaming/no"
+                as-type="positiveInteger"
+                scope="global"
+                name="no"
+                module="jsonnaming"
+                _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/input/jsonnaming_metaschema.xml"
+                _key-name="jsonnaming:no">
+      <formal-name>Number</formal-name>
+      <description>A number, not a negation.</description>
+   </define-flag>
+   <define-flag _metaschema-xml-id="/flag/jsonnaming/color"
+                _metaschema-json-id="/flag/jsonnaming/color"
+                as-type="string"
+                scope="global"
+                name="color"
+                module="jsonnaming"
+                _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/input/jsonnaming_metaschema.xml"
+                _key-name="jsonnaming:color">
+      <formal-name>Color</formal-name>
+      <description>A color or pattern.</description>
+   </define-flag>
+   <define-field _metaschema-xml-id="/field/jsonnaming/button"
+                 _metaschema-json-id="/field/jsonnaming/button"
+                 collapsible="no"
+                 as-type="string"
+                 scope="global"
+                 name="button"
+                 module="jsonnaming"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/input/jsonnaming_metaschema.xml"
+                 _key-name="jsonnaming:button">
+      <formal-name>BUTTON</formal-name>
+      <description>BUTTON</description>
+      <flag _step="color"
+            _key="color"
+            _metaschema-xml-id="/field/jsonnaming/button/color"
+            _metaschema-json-id="/field/jsonnaming/button/color"
+            as-type="string"
+            required="no"
+            ref="color"
+            _key-ref="jsonnaming:color"
+            _using-name="color"
+            _in-xml-name="color"
+            _in-json-name="color"/>
+   </define-field>
+   <define-field _metaschema-xml-id="/field/jsonnaming/scrap"
+                 _metaschema-json-id="/field/jsonnaming/scrap"
+                 collapsible="no"
+                 as-type="string"
+                 scope="global"
+                 name="scrap"
+                 module="jsonnaming"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/input/jsonnaming_metaschema.xml"
+                 _key-name="jsonnaming:scrap">
+      <formal-name>SCRAP</formal-name>
+      <description>SCRAPS</description>
+      <json-value-key>stuff</json-value-key>
+      <flag _step="color"
+            _key="color"
+            _metaschema-xml-id="/field/jsonnaming/scrap/color"
+            _metaschema-json-id="/field/jsonnaming/scrap/color"
+            as-type="string"
+            required="no"
+            ref="color"
+            _key-ref="jsonnaming:color"
+            _using-name="color"
+            _in-xml-name="color"
+            _in-json-name="color"/>
+      <define-flag _step="fabric"
+                   _key="fabric"
+                   _metaschema-xml-id="/field/jsonnaming/scrap/fabric"
+                   _metaschema-json-id="/field/jsonnaming/scrap/fabric"
+                   required="yes"
+                   as-type="string"
+                   name="fabric"
+                   _using-name="fabric"
+                   _in-xml-name="fabric"
+                   _in-json-name="fabric">
+         <formal-name>Fabric</formal-name>
+         <description>Scrap of what</description>
+      </define-flag>
+   </define-field>
+   <define-assembly _metaschema-xml-id="/assembly/jsonnaming/envelope"
+                    _metaschema-json-id="/assembly/jsonnaming/envelope"
+                    scope="global"
+                    name="envelope"
+                    module="jsonnaming"
+                    _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/input/jsonnaming_metaschema.xml"
+                    _key-name="jsonnaming:envelope">
+      <formal-name>ENVELOPE</formal-name>
+      <description>ENVELOPE</description>
+      <model>
+         <field _step="page"
+                _key="pages"
+                _group-name="pages"
+                _metaschema-xml-id="/assembly/jsonnaming/envelope/page"
+                _metaschema-json-id="/assembly/jsonnaming/envelope/pages"
+                max-occurs="unbounded"
+                min-occurs="0"
+                ref="page"
+                _key-ref="jsonnaming:page"
+                _using-name="page"
+                _in-xml-name="page"
+                _in-json-name="pages">
+            <group-as name="pages"/>
+         </field>
+         <field _step="button"
+                _key="buttons"
+                _group-name="buttons"
+                _metaschema-xml-id="/assembly/jsonnaming/envelope/button"
+                _metaschema-json-id="/assembly/jsonnaming/envelope/buttons"
+                max-occurs="unbounded"
+                min-occurs="0"
+                ref="button"
+                _key-ref="jsonnaming:button"
+                _using-name="button"
+                _in-xml-name="button"
+                _in-json-name="buttons">
+            <group-as name="buttons"/>
+         </field>
+         <field _step="scrap"
+                _key="scraps"
+                _group-name="scraps"
+                _metaschema-xml-id="/assembly/jsonnaming/envelope/scrap"
+                _metaschema-json-id="/assembly/jsonnaming/envelope/scraps"
+                max-occurs="unbounded"
+                min-occurs="0"
+                ref="scrap"
+                _key-ref="jsonnaming:scrap"
+                _using-name="scrap"
+                _in-xml-name="scrap"
+                _in-json-name="scraps">
+            <group-as name="scraps"/>
+         </field>
+      </model>
+   </define-assembly>
+   <define-assembly _metaschema-xml-id="/assembly/jsonnaming/box"
+                    _metaschema-json-id="/assembly/jsonnaming/box"
+                    scope="global"
+                    name="box"
+                    module="jsonnaming"
+                    _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/composition/input/jsonnaming_metaschema.xml"
+                    _key-name="jsonnaming:box"
+                    _using-root-name="BOX">
+      <formal-name>BOX</formal-name>
+      <description>BOX</description>
+      <root-name>BOX</root-name>
+      <model>
+         <assembly _step="envelope"
+                   _key="envelopes"
+                   _group-name="envelopes"
+                   _metaschema-xml-id="/assembly/jsonnaming/box/envelope"
+                   _metaschema-json-id="/assembly/jsonnaming/box/envelopes"
+                   max-occurs="unbounded"
+                   min-occurs="0"
+                   ref="envelope"
+                   _key-ref="jsonnaming:envelope"
+                   _using-name="envelope"
+                   _in-xml-name="envelope"
+                   _in-json-name="envelopes">
+            <group-as name="envelopes"/>
+         </assembly>
+      </model>
+   </define-assembly>
+</METASCHEMA>
