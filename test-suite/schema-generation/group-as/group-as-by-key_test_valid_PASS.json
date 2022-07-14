@@ -1,9 +1,9 @@
 {
   "parent": {
     "props": {
-      "id3": {"STRVALUE": "test3"},
-      "id2": {"STRVALUE": ""},
-      "id1": {"STRVALUE": "test1"}
+      "id3": "test3",
+      "id2": "some text",
+      "id1": "test1"
     }
   }
 }

@@ -21,6 +21,7 @@
         <xsl:variable name="xpath-json">
             <xsl:apply-templates select="*" mode="cast"/>
         </xsl:variable>
+        <!--<xsl:copy-of select="$xpath-json"/>-->
         <xsl:value-of select="xml-to-json($xpath-json,$write-options)"/>
     </xsl:template>
 
@@ -28,32 +29,61 @@
         <xsl:apply-templates select="*" mode="cast"/>
     </xsl:template>
 
-    <xsl:template match="*" mode="cast">
+    <xsl:template match="element()" mode="cast" expand-text="true">
         <map>
-            <string key="element">
-                <xsl:value-of select="local-name(.)"/>
-            </string>
-            <xsl:apply-templates select="@*" mode="cast"/>
-            <xsl:if test="boolean(node())">
-                <array key="content">
+            <xsl:call-template name="node-name"/>
+            <xsl:where-populated>
+                <map key="attributes">
+                    <xsl:apply-templates select="@*" mode="cast"/>
+                </map>
+            </xsl:where-populated>
+            <xsl:where-populated>
+                <array key="contents">
                     <xsl:apply-templates mode="cast"/>
                 </array>
-            </xsl:if>
+            </xsl:where-populated>
         </map>
+    </xsl:template>
+    
+    <xsl:template match="attribute()[matches(namespace-uri(.),'\S') and not(namespace-uri(.) = namespace-uri(parent::*))]" mode="cast" expand-text="true">
+        <map key="{name()}">
+            <xsl:call-template name="node-name"/>
+            <string key="value">{ . }</string>
+        </map>
+    </xsl:template>
+    
+    <!-- An attribute in no namespace or the namespace of its parent is emitted as a string -->
+    <xsl:template match="attribute()" mode="cast" expand-text="true">
+        <string key="{name()}">{ . }</string>
+    </xsl:template>
+    
+    <xsl:template name="node-name" expand-text="true">
+        <xsl:choose>
+            <xsl:when test="namespace-uri(.) = namespace-uri(parent::*)">
+                <string key="name">{ local-name() }</string>
+            </xsl:when>
+            <xsl:otherwise>
+                <map key="name">
+                    <string key="lp">{ local-name(.) }</string>
+                    <xsl:if test="not(name() = local-name())">
+                        <string key="name">{ name(.) }</string>
+                    </xsl:if>
+                    <xsl:where-populated>
+                        <string key="ns">{ namespace-uri(.) }</string>
+                    </xsl:where-populated>
+                </map>
+            </xsl:otherwise>
+        </xsl:choose>
+        
     </xsl:template>
 
     <xsl:template match="text()" mode="cast">
         <string>
-            <xsl:value-of select="replace(.,'\s+',' ')"/>
-        </string>
-    </xsl:template>
-
-    <xsl:template match="@*" mode="cast">
-        <string key="@{ local-name() }">
             <xsl:value-of select="."/>
         </string>
     </xsl:template>
 
+    
 <!-- Comments and PIs are dropped. -->
 
 </xsl:stylesheet>
