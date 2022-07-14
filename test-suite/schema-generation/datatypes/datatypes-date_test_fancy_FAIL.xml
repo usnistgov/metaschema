@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<parent xmlns="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/schema-generation/datatypes/datatypes-date_xml-schema.xsd" flag-date="2020-06-23Z">
+<parent xmlns="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime" flag-date="2020-06-23Z">
     <field-date>jUNE 23</field-date>
     <field-date>2020.06.23</field-date>
     <field-date>6/23/2020</field-date>

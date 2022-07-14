@@ -257,7 +257,7 @@
    <xsl:function name="m:has-properties" as="xs:boolean">
       <xsl:param name="who" as="element()"/>
       <xsl:sequence
-         select="exists($who/(define-flag | flag)[not((@name | @ref) = ../(json-key | json-value-key)/@flag-name)])"
+         select="exists($who/(define-flag | flag)[not((@name | @ref) = ../(json-key | json-value-key-flag)/@flag-ref)])"
       />
    </xsl:function>
 
@@ -294,7 +294,7 @@
    </xsl:template>
 
    <xsl:template match="define-field" mode="make-definition">
-      <xsl:variable name="showing-flags" select="(define-flag | flag)[not(@name=../json-value-key/@flag-name)]"/>
+      <xsl:variable name="showing-flags" select="(define-flag | flag)[not(@name=../json-value-key-flag/@flag-ref)]"/>
       <section class="definition define-field" id="global_{@name}">
          <xsl:call-template name="definition-header">
             <xsl:with-param name="make-page-links" tunnel="true" select="true()"/>
@@ -1068,10 +1068,10 @@
       <xsl:value-of select="json-value-key"/>   
    </xsl:template>
    
-   <xsl:template priority="2" match="*[exists(json-value-key/@flag-name)]" mode="get-field-value-name">
+   <xsl:template priority="2" match="*[exists(json-value-key-flag/@flag-ref)]" mode="get-field-value-name">
       <xsl:text>{{taken as the </xsl:text>
       <em>
-      <xsl:value-of select="json-value-key/@flag-name"/>
+      <xsl:value-of select="json-value-key-flag/@flag-ref"/>
       </em>
       <xsl:text> property}}</xsl:text>
    </xsl:template>
@@ -1080,8 +1080,8 @@
       <m:description>This property provides the (nominal) value for this object as a whole.</m:description>
    </xsl:template>
    
-   <xsl:template priority="2" match="*[exists(json-value-key/@flag-name)]" mode="get-field-value-description">
-      <m:description>A property whose name is distinct from assigned properties for this object is taken as its (nominal) value, while its key is taken to be the value of the <code><xsl:value-of select="json-value-key/@flag-name"/></code> property.</m:description>
+   <xsl:template priority="2" match="*[exists(json-value-key-flag/@flag-ref)]" mode="get-field-value-description">
+      <m:description>A property whose name is distinct from assigned properties for this object is taken as its (nominal) value, while its key is taken to be the value of the <code><xsl:value-of select="json-value-key-flag/@flag-ref"/></code> property.</m:description>
    </xsl:template>
    
    <xsl:template match="*" mode="type-annotation"/>

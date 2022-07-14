@@ -20,7 +20,7 @@
 								<Integer>2</Integer>
 							</field>
 							<field name="uri">
-								<String>${framework}/../../../../toolchains/xslt-M4/validate/metaschema.xsd</String>
+								<String>${framework}/../../../../schema/xml/metaschema.xsd</String>
 							</field>
 						</docTypeSchema>
 					</field>
@@ -786,7 +786,7 @@
 														<Integer>2</Integer>
 													</field>
 													<field name="uri">
-														<String>${framework}/../../../../toolchains/xslt-M4/validate/metaschema.xsd</String>
+														<String>${framework}/../../../../schema/xml/metaschema.xsd</String>
 													</field>
 												</validationUnitSchema>
 											</field>

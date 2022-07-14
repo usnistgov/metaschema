@@ -92,7 +92,7 @@ The XSLT `nist-metaschema-metaprocess.xsl` is a utility XSLT providing a unified
 
 ### Metaschema schemas / `validate` folder
 
-Any metaschema, metaschema module, or composed metaschema, should all be valid to the Metaschema XSD `validate/metaschema.xsd` and to the `validate/metaschema-check.sch` Schematron.
+Any metaschema, metaschema module, or composed metaschema, should all be valid to the Metaschema XSD `../../../schema/xml/metaschema.xsd` and to the `validate/metaschema-check.sch` Schematron.
 
 A composed metaschema is essentially what a metaschema will look like with all imports resolved (last appearing definition prevailing, imports read before main definitions); so a metaschema with no imports maps directly to its own composed expression. In composition, pointers are also written into the metaschema representation to provide useful information for downstream processing in resolving referential ambiguities (resulting from unintended or intended import clashes).
 
