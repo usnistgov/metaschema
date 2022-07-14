@@ -1,0 +1,30 @@
+
+  { "$schema" : "http://json-schema.org/draft-07/schema#",
+    "$id" : "http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-uri/1.0-milestone1/metaschema-datatypes-uri-schema.json",
+    "$comment" : "Metaschema Unit Test: URIs: JSON Schema",
+    "type" : "object",
+    "definitions" : 
+    { "metaschema-datatypes-uri-metaschema-datatypes-uri:parent" : 
+      { "title" : "parent",
+        "description" : "parent assembly",
+        "$id" : "#assembly_metaschema-datatypes-uri_parent",
+        "type" : "object",
+        "properties" : 
+        { "token-flag" : 
+          { "type" : "array",
+            "minItems" : 1,
+            "items" : 
+            { "title" : "Universal Resource Identifier Flag",
+              "description" : "Per W3C",
+              "type" : "string",
+              "pattern" : "^(\\p{L}|_)(\\p{L}|\\p{N}|[.\\-_])*$" } } },
+        "required" : 
+        [ "token-flag" ],
+        "additionalProperties" : false } },
+    "properties" : 
+    { "parent" : 
+      { "$ref" : "#assembly_metaschema-datatypes-uri_parent" } },
+    "required" : 
+    [ "parent" ],
+    "additionalProperties" : false,
+    "maxProperties" : 1 }

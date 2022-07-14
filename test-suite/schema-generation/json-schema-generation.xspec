@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+               stylesheet="../../toolchains/xslt-M4/nist-metaschema-MAKE-JSON-SCHEMA.xsl"
+               run-as="external"
+               xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+               xmlns:ov="http://csrc.nist.gov/ns/oscal/test/variable">
+   
+   
+   <x:helper stylesheet="schemagen-test-helper.xsl"/>
+   
+   <!--
+   Source: A metaschema
+   Result: A JSON Schema
+   invoke the XSLT to produce the XML JSON
+   
+   This doesn't test the adequacy or correctness of the schema
+   instead it tests the resemblance of the resulting schema to an expressed 'expected' target
+   so this has to be aligned
+   
+   Could we use XProc to unit test the dynamic generation and application of schemas?
+    
+   To do: rewire ../../toolchains/xslt-M4/nist-metaschema-MAKE-JSON-SCHEMA.xsl to accept runtime parameter
+     for serializing out JSON - xsl:output method?
+   -->
+   
+   <!--<x:scenario label="JSON Key (addressing) functionality">
+      <!-\- Scrubbing both the result and the expected result for comparison -\->
+      <x:context href="group-as/group-as-by-key_metaschema.xml"/>
+      <x:variable name="ov:expected-json-schema-path" as="xs:string">group-as/target/group-as-by-key_metaschema-jsonschema.json</x:variable>
+      <x:variable name="ov:expected-schema" select="('../' || $ov:expected-json-schema-path) => unparsed-text() => json-to-xml()"/>
+      <!-\-<x:variable name="ov:expected-output"
+         href="expected/nestedmessy_metaschema-composed.xml"/>-\->
+      <x:expect label="JSON Schema expressing JSON value key"
+         test="json-to-xml( $x:result/string() )" select="m:scrub($ov:expected-schema)"/>
+   </x:scenario>-->
+   
+   <!--<x:scenario label="JSON Value Key functionality">
+      <!-\- Scrubbing both the result and the expected result for comparison -\->
+      <x:context href="json-value-key/json-value-key-field_metaschema.xml"/>
+      <x:variable name="ov:expected-json-schema-path" as="xs:string">json-value-key/target/json-value-key-field_metaschema-jsonschema.json</x:variable>
+      <x:variable name="ov:expected-schema" select="('../' || $ov:expected-json-schema-path) => unparsed-text() => json-to-xml()"/>
+      <!-\-<x:variable name="ov:expected-output"
+         href="expected/nestedmessy_metaschema-composed.xml"/>-\->
+      <x:expect label="JSON Schema expressing JSON value key"
+         test="json-to-xml( $x:result/string() )" select="m:scrub($ov:expected-schema)"/>
+   </x:scenario>-->
+   
+<!-- 
+   Tweaks to
+     group-as by key
+     json value
+     json value key
+     combination
+     allowed-values
+     any/all others we can include
+     
+   -->
+   <x:scenario label="Allowed values constraints">
+      <!-- Scrubbing both the result and the expected result for comparison -->
+      <x:context href="allowed-values/allowed-values-basic_metaschema.xml"/>
+      <x:variable name="ov:expected-json-schema-path" as="xs:string">allowed-values/target/allowed-values-basic_metaschema-jsonschema.json</x:variable>
+      <x:variable name="ov:expected-schema" select="('../' || $ov:expected-json-schema-path) => unparsed-text() => json-to-xml()"/>
+      <!--<x:variable name="ov:expected-output"
+         href="expected/nestedmessy_metaschema-composed.xml"/>-->
+      <x:expect label="JSON Schema expressing enumerated allowed values constraints checking"
+         test="json-to-xml( $x:result/string() )" select="m:scrub($ov:expected-schema)"/>
+   </x:scenario>
+   
+   <x:scenario label="Token datatype format">
+      <!-- Scrubbing both the result and the expected result for comparison -->
+      <x:context href="token/datatypes-token_metaschema.xml"/>
+      <x:variable name="ov:expected-json-schema-path" as="xs:string">token/target/datatypes-token_metaschema-jsonschema.json</x:variable>
+      <x:variable name="ov:expected-schema" select="('../' || $ov:expected-json-schema-path) => unparsed-text() => json-to-xml()"/>
+      <!--<x:variable name="ov:expected-output"
+         href="expected/nestedmessy_metaschema-composed.xml"/>-->
+      <x:expect label="JSON Schema expressing JSON value key"
+         test="json-to-xml( $x:result/string() )" select="m:scrub($ov:expected-schema)"/>
+   </x:scenario>
+   
+</x:description>

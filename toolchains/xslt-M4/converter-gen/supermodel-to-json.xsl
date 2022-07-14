@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:math="http://www.w3.org/2005/xpath-functions/math"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0/supermodel"
     xmlns="http://www.w3.org/2005/xpath-functions"
-    exclude-result-prefixes="xs math"
+    exclude-result-prefixes="#all"
     default-mode="write-json"
     version="3.0">
     
@@ -138,13 +137,17 @@
         <xsl:variable name="key-flag-name" select="@key-flag"/>
         <xsl:element name="{(@in-json[matches(.,'\S')],'string')[1]}"
             namespace="http://www.w3.org/2005/xpath-functions">
-            <xsl:copy-of
-                select="((../flag[@key=$key-flag-name],parent::field[@in-json = 'SCALAR'])/@key, @key)[1]"/>
-            <!-- overriding the key           -->
-            <xsl:if test="exists(@key-flag)">
-                <xsl:attribute name="key">
-                    <xsl:apply-templates select="../flag[@name=$key-flag-name]" mode="cast-data"/>
-                </xsl:attribute>
+            <!-- emit a key only if needed -->
+            <xsl:if test="exists(parent::field/child::flag) or exists(parent::field/parent::assembly) or count(parent::field/parent::group[@in-json='SINGLETON_OR_ARRAY']/child::*) eq 1">
+                <xsl:copy-of
+                    select="((../flag[@key = $key-flag-name], parent::field[@in-json = 'SCALAR'])/@key, @key)[1]"/>
+                <!-- overriding the key           -->
+                <xsl:if test="exists(@key-flag)">
+                    <xsl:attribute name="key">
+                        <xsl:apply-templates select="../flag[@name = $key-flag-name]"
+                            mode="cast-data"/>
+                    </xsl:attribute>
+                </xsl:if>
             </xsl:if>
             <xsl:apply-templates select="." mode="cast-data"/>
         </xsl:element>

@@ -26,7 +26,10 @@
         <flag ref="no"/>
     </define-field>
     
-    <define-flag name="no" as-type="positiveInteger"/>
+    <define-flag name="no" as-type="positiveInteger">
+        <formal-name>Number</formal-name>
+        <description>A number, not a negation.</description>
+    </define-flag>
     
     <define-field name="unused-field">
         <formal-name>Unused field</formal-name>
@@ -37,7 +40,9 @@
         <formal-name>ENVELOPE</formal-name>
         <description>ENVELOPE</description>
         <model>
-            <field ref="page" max-occurs="unbounded"/>
+            <field ref="page" max-occurs="unbounded">
+                <group-as name="pages"/>
+            </field>
         </model>
         
     </define-assembly>
@@ -47,8 +52,12 @@
         <description>BOX</description>
         <root-name>BOX</root-name>
         <model>
-            <assembly ref="envelope" max-occurs="unbounded"/>
-            <assembly ref="folder"   max-occurs="unbounded"/>
+            <assembly ref="envelope" max-occurs="unbounded">
+                <group-as name="envelopes"/>
+            </assembly>
+            <assembly ref="folder"   max-occurs="unbounded">
+                <group-as name="folders"/>
+            </assembly>
         </model>
     </define-assembly>
     
@@ -56,9 +65,14 @@
         <formal-name>FOLDER</formal-name>
         <description>FOLDER</description>
         <model>
-            <assembly ref="envelope" max-occurs="unbounded"/>
-            <assembly ref="folder"   max-occurs="unbounded"/>
-            <field ref="page" max-occurs="unbounded"/>
+            <assembly ref="envelope" max-occurs="unbounded">
+                <group-as name="envelopes"/></assembly>
+            <assembly ref="folder"   max-occurs="unbounded">
+                <group-as name="folders"/>
+            </assembly>
+            <field ref="page" max-occurs="unbounded">
+                <group-as name="pages"/>
+            </field>
         </model>
     </define-assembly>
 </METASCHEMA>
