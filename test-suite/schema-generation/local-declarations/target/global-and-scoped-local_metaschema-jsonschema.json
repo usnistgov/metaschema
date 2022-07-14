@@ -1,0 +1,75 @@
+
+  { "$schema" : "http://json-schema.org/draft-07/schema#",
+    "$id" : "http://csrc.nist.gov/ns/metaschema/unit-test/group-as-singleton-or-array-optional/1.0-milestone1/metaschema-group-as-schema.json",
+    "$comment" : "Metaschema Unit Test: group-as: JSON Schema",
+    "type" : "object",
+    "definitions" : 
+    { "metaschema-group-as-metaschema-group-as:parent" : 
+      { "title" : "parent",
+        "description" : "parent assembly",
+        "$id" : "#assembly_metaschema-group-as_parent",
+        "type" : "object",
+        "properties" : 
+        { "local-flag" : 
+          { "title" : "Flag defined locally",
+            "description" : "Has a local definition",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
+          "global-flag" : 
+          { "title" : "Flag defined globally",
+            "description" : "Has a global definition",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
+          "global-field" : 
+          { "$ref" : "#field_metaschema-group-as_global-field" },
+          "top-level-local-field" : 
+          { "$ref" : "#field_metaschema-group-as_top-level-local-field" },
+          "top-level-local-assembly" : 
+          { "$ref" : "#assembly_metaschema-group-as_top-level-local-assembly" },
+          "global-assembly" : 
+          { "$ref" : "#assembly_metaschema-group-as_global-assembly" } },
+        "additionalProperties" : false },
+      "metaschema-group-as-metaschema-group-as:top-level-local-field" : 
+      { "title" : "Field defined with scope='local', at top level",
+        "description" : "Should result in a local definition",
+        "$id" : "#field_metaschema-group-as_top-level-local-field",
+        "type" : "string",
+        "pattern" : "^\\S(.*\\S)?$" },
+      "metaschema-group-as-metaschema-group-as:top-level-local-assembly" : 
+      { "title" : "Assembly defined with scope='local', at top level",
+        "description" : "Should result as local",
+        "$id" : "#assembly_metaschema-group-as_top-level-local-assembly",
+        "type" : "object",
+        "properties" : 
+        { "top-level-local-field" : 
+          { "$ref" : "#field_metaschema-group-as_top-level-local-field" },
+          "global-field" : 
+          { "$ref" : "#field_metaschema-group-as_global-field" } },
+        "additionalProperties" : false },
+      "metaschema-group-as-metaschema-group-as:global-field" : 
+      { "title" : "Field defined globally",
+        "description" : "Has a global definition",
+        "$id" : "#field_metaschema-group-as_global-field",
+        "type" : "string",
+        "pattern" : "^\\S(.*\\S)?$" },
+      "metaschema-group-as-metaschema-group-as:global-assembly" : 
+      { "title" : "Assembly defined globally",
+        "description" : "Has a global definition",
+        "$id" : "#assembly_metaschema-group-as_global-assembly",
+        "type" : "object",
+        "properties" : 
+        { "local-field2" : 
+          { "title" : "Field defined locally",
+            "description" : "Has a local definition",
+            "type" : "string",
+            "pattern" : "^\\S(.*\\S)?$" },
+          "global-field" : 
+          { "$ref" : "#field_metaschema-group-as_global-field" } },
+        "additionalProperties" : false } },
+    "properties" : 
+    { "parent" : 
+      { "$ref" : "#assembly_metaschema-group-as_parent" } },
+    "required" : 
+    [ "parent" ],
+    "additionalProperties" : false,
+    "maxProperties" : 1 }

@@ -20,14 +20,9 @@
     <p:pipe        port="result"     step="composed"/>
   </p:output>
   
-  <p:serialization port="c0.pre-XSD" indent="true"/>
-  <p:output        port="c0.pre-XSD" primary="false">
+  <p:serialization port="c.XSD" indent="true"/>
+  <p:output        port="c.XSD" primary="false">
     <p:pipe        port="result" step="make-xsd"/>
-  </p:output>
-  
-  <p:serialization port="c1.XSD" indent="true"/>
-  <p:output        port="c1.XSD" primary="false">
-    <p:pipe        port="result" step="rewire-xsd"/>
   </p:output>
   
   <p:serialization port="f.final" indent="true" method="xml" omit-xml-declaration="false"/>
@@ -52,12 +47,6 @@
   <p:xslt name="make-xsd">
     <p:input port="stylesheet">
       <p:document href="make-metaschema-xsd.xsl"/>
-    </p:input>
-  </p:xslt>
-  
-  <p:xslt name="rewire-xsd">
-    <p:input port="stylesheet">
-      <p:document href="configure-namespaces.xsl"/>
     </p:input>
   </p:xslt>
   

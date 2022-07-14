@@ -104,7 +104,7 @@
         <xsl:copy expand-text="true">
             <xsl:copy-of select="@*"/>
             <INFO info-type="objects-used">Seeing { $definitions => string-join(', ') }</INFO>
-            <xsl:if test="not(@abstract='yes') and empty(define-assembly/root-name)">
+            <xsl:if test="not(@abstract='yes') and empty(//METASCHEMA/define-assembly/root-name)">
                 <EXCEPTION problem-type="missing-root">No root found in this metaschema composition.</EXCEPTION>
             </xsl:if>
             <xsl:apply-templates/>

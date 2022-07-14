@@ -1,0 +1,9 @@
+{
+  "parent": {
+    "links": 
+      {
+        "href": "#fragment",
+        "text": "link text"
+      }
+  }
+}

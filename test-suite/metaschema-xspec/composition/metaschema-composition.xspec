@@ -17,4 +17,13 @@
          test="m:scrub($x:result)" select="m:scrub($ov:expected-output)"/>
    </x:scenario>
    
+   <x:scenario label="Metaschema with JSON naming usage">
+      <!-- Scrubbing both the result and the expected result for comparison -->
+      <x:context href="input/jsonnaming_metaschema.xml"/>
+      <x:variable name="ov:expected-output"
+         href="expected/jsonnaming_metaschema-composed.xml"/>
+      <x:expect label="Base test - fully resolved"
+         test="m:scrub($x:result)" select="m:scrub($ov:expected-output)"/>
+   </x:scenario>
+   
 </x:description>
