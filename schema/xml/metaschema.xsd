@@ -165,8 +165,15 @@
     <xs:sequence>
       <xs:element name="formal-name" type="FormalNameType" minOccurs="0"/>
       <xs:element name="description" type="DescriptionType" minOccurs="0"/>
+      <xs:element name="prop" type="PropertyType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:group>
+  
+  <xs:complexType name="PropertyType">
+    <xs:attribute name="namespace" type="URIDatatype" default="http://csrc.nist.gov/ns/oscal/metaschema/1.0"/>
+    <xs:attribute name="name" type="TokenDatatype" use="required"/>
+    <xs:attribute name="value" type="TokenDatatype" use="required"/>
+  </xs:complexType>
 
   <xs:simpleType name="ModelNameType">
     <xs:annotation>
