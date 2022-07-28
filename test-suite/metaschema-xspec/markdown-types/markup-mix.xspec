@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description 
+    xmlns:x="http://www.jenitennison.com/xslt/xspec"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    stylesheet="../../../toolchains/xslt-M4/converter-gen/xml-to-markdown.xsl"
+    run-as="external">
+    
+    <!-- For testing conversions from Markup to Markdown -->
+ 
+    <!-- source elements in metaschema namespace, which the XSLT matches
+        - this XSLT is cloned (not copied) into derivative converters -->
+    
+<x:scenario label="When converting markdown to markup">
+    
+    <x:scenario label="to show it works on a simple line of content">
+        <x:context mode="md">
+            <p>Here's some <em>paragraph</em> content.</p>
+        </x:context>
+        <x:expect label="one line shows a case of italic" xmlns="http://www.w3.org/2005/xpath-functions">
+            <string>Here's some *paragraph* content.</string>
+        </x:expect>
+    </x:scenario>
+    
+    <x:scenario label="and also working on a couple of lines">
+        <x:context mode="md">
+            <p>Here's some <em>paragraph</em> content.</p>
+            <p>And a <strong>second</strong> paragraph.</p>
+        </x:context>
+        <x:expect label="double-spaced lines show some italics and bold" xmlns="http://www.w3.org/2005/xpath-functions">
+            <string>Here's some *paragraph* content.</string>
+            <string/>
+            <string>And a **second** paragraph.</string>
+        </x:expect>
+    </x:scenario>
+    
+</x:scenario>
+</x:description>
