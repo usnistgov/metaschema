@@ -264,7 +264,7 @@
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="as-type" type="FieldDatatypesType" default="string"/>
+    <xs:attributeGroup ref="FieldValueAttributeGroup"/>
     <xs:attribute name="collapsible" type="YesNoType" default="no"/>
     <xs:attribute name="name" use="required" type="ModelNameType"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
@@ -286,8 +286,7 @@
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" use="required" type="ModelNameType"/>
-    <!-- datatype should default to 'string' -->
-    <xs:attribute name="as-type" type="SimpleDatatypesType" default="string"/>
+    <xs:attributeGroup ref="FlagValueAttributeGroup"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
@@ -318,7 +317,6 @@
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
-
   <xs:complexType name="InlineFieldDefinitionType">
     <xs:annotation>
       <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
@@ -339,7 +337,7 @@
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="as-type" type="FieldDatatypesType" default="string"/>
+    <xs:attributeGroup ref="FieldValueAttributeGroup"/>
     <xs:attribute name="collapsible" type="YesNoType" default="no"/>
     <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
     <xs:attribute name="name" use="required" type="ModelNameType"/>
@@ -363,8 +361,7 @@
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" use="required" type="ModelNameType"/>
-    <!-- datatype should default to 'string' -->
-    <xs:attribute name="as-type" type="SimpleDatatypesType" default="string"/>
+    <xs:attributeGroup ref="FlagValueAttributeGroup"/>
     <xs:attribute name="required" type="YesNoType" default="no"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
@@ -505,6 +502,17 @@
         <xs:documentation>Maximum occurrence of assemblies or fields within a valid model. The default value is 1, for a single occurrence. 'unbounded' permits any number of assemblies of the designated type.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="FieldValueAttributeGroup">
+    <xs:attribute name="as-type" type="FieldDatatypesType" default="string"/>
+    <xs:attribute name="default" type="StringDatatype" default="string"/>
+  </xs:attributeGroup>
+
+  <xs:attributeGroup name="FlagValueAttributeGroup">
+    <!-- datatype should default to 'string' -->
+    <xs:attribute name="as-type" type="SimpleDatatypesType" default="string"/>
+    <xs:attribute name="default" type="StringDatatype"/>
   </xs:attributeGroup>
 
   <xs:simpleType name="NaturalNumberOrUnboundedType">
