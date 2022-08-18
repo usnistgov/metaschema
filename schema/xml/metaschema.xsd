@@ -166,6 +166,30 @@
       <xs:element name="formal-name" type="FormalNameType" minOccurs="0"/>
       <xs:element name="description" type="DescriptionType" minOccurs="0"/>
       <xs:element name="prop" type="PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+      <!--
+        When using:
+        <prop name="value-type" value="identifier"/>
+
+        The "identifier-type" must be one of:
+        <prop name="identifier-type" value="machine-oriented"/>
+        <prop name="identifier-type" value="human-oriented"/>
+        
+        Multiple instances of "identifier-type" can be used to support both cases.
+
+        TODO: Need to update the documentation to clarify that the value set is constrained and what the options are.
+
+        The "identifier-uniqueness" must be one of:
+        <prop name="identifier-uniqueness" value="global"/> - for a globally unique identifier (i.e., UUID)
+        <prop name="identifier-uniqueness" value="local-instance"/> - for an identifier that is unqiue within the containing instance
+
+        The "identifier-scope" must be one of:
+        <prop name="identifier-scope" value="instance"/>
+        <prop name="identifier-scope" value="cross-instance"/>
+
+        Must be one of:
+        <prop name="identifier-persistence" value="per-instance"/>
+        <prop name="identifier-persistence" value="change-on-write"/>
+     -->
     </xs:sequence>
   </xs:group>
   
