@@ -114,9 +114,31 @@
             <!--<xsl:message expand-text="true">Types in library: { $types-library/xs:simpleType/@name }</xsl:message>-->
             <xsl:variable name="all-used-types" select="//@as-type => distinct-values()"/>
             <xsl:variable name="used-atomic-types" select="$type-map[@as-type = $all-used-types]"/>
-            <xsl:copy-of select="$types-library/xs:simpleType[@name = $used-atomic-types]"/>
+            
+            <!-- these aren't enough as some of them have further dependencies           -->
+            <!--<xsl:copy-of select="$types-library/xs:simpleType[@name = $used-atomic-types]"/>-->
+            <xsl:sequence select="$types-library/xs:simpleType[@name = $used-atomic-types] => m:gather-types()"/>
         </xs:schema>
     </xsl:template>
+    
+    <xsl:key name="simpleType-by-name" match="xs:simpleType" use="@name"/>
+    
+    <!--Given a set of simpletypes such as in ../../../schema/xml/metaschema-datatypes.xsd i.e. $types-library -->
+    <xsl:function name="m:gather-types">
+        <xsl:param name="so-far" as="element()*"/>
+        <!-- picks up all types referenced as a  restriction/@base       -->
+        <xsl:variable name="base-types" select="$so-far/xs:restriction/key('simpleType-by-name',@base)"/>
+        <xsl:choose>
+            <!-- if there are any new ones, add and recurse -->
+            <xsl:when test="exists($base-types except $so-far)">
+                <xsl:sequence select="m:gather-types($so-far | $base-types)"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="$so-far"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+    
     
     <xsl:template match="namespace | json-base-uri"/>
         
