@@ -1,36 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-
-  <xs:group name="inlineMarkupGroup">
-    <xs:choice>
-      <xs:element name="a" type="anchorType"/>
-      <xs:element name="insert" type="insertType"/>
-      <xs:group ref="phraseMarkupGroup"/>
-      <xs:group ref="imageMarkupGroup"/>
-    </xs:choice>
-  </xs:group>
-  <xs:group name="imageMarkupGroup">
-    <xs:choice>
-      <xs:element name="img" type="imageType"/>
-    </xs:choice>
-  </xs:group>
-  <xs:group name="phraseMarkupGroup">
-    <xs:choice>
-      <xs:element name="code" type="inlineMarkupType" minOccurs="1"/>
-      <xs:element name="em" type="inlineMarkupType" minOccurs="1"/>
-      <xs:element name="i" type="inlineMarkupType" minOccurs="1"/>
-      <xs:element name="b" type="inlineMarkupType" minOccurs="1"/>
-      <xs:element name="strong" type="inlineMarkupType" minOccurs="1"/>
-      <xs:element name="sub" type="inlineMarkupType" minOccurs="1"/>
-      <xs:element name="sup" type="inlineMarkupType" minOccurs="1"/>
-      <xs:element name="q" type="inlineMarkupType" minOccurs="1"/>
-    </xs:choice>
-  </xs:group>
   <xs:complexType name="inlineMarkupType" mixed="true">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:group ref="inlineMarkupGroup"/>
     </xs:choice>
   </xs:complexType>
+  
+  <xs:group name="inlineMarkupGroup">
+    <xs:choice>
+      <xs:element name="a" type="anchorType"/>
+      <xs:element name="insert" type="insertType"/>
+      <xs:group ref="phraseMarkupGroup"/>
+    </xs:choice>
+  </xs:group>
+  <xs:group name="phraseMarkupGroup">
+    <xs:choice>
+      <xs:element name="code" type="inlineMarkupType"/>
+      <xs:element name="em" type="inlineMarkupType"/>
+      <xs:element name="i" type="inlineMarkupType"/>
+      <xs:element name="b" type="inlineMarkupType"/>
+      <xs:element name="strong" type="inlineMarkupType"/>
+      <xs:element name="sub" type="inlineMarkupType"/>
+      <xs:element name="sup" type="inlineMarkupType"/>
+      <xs:element name="q" type="inlineMarkupType"/>
+      <xs:element name="img" type="imageType"/>
+    </xs:choice>
+  </xs:group>
   <xs:complexType name="imageType">
     <xs:attribute name="alt" type="xs:string"/>
     <xs:attribute name="src" use="required" type="xs:anyURI"/>
@@ -39,7 +34,6 @@
   <xs:complexType name="anchorType" mixed="true">
     <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:group ref="phraseMarkupGroup"/>
-      <xs:group ref="imageMarkupGroup"/>
     </xs:choice>
     <xs:attribute name="href" type="xs:anyURI"/>
   </xs:complexType>
