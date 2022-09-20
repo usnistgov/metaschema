@@ -47,18 +47,7 @@
         <xs:element name="json-base-uri" type="JsonBaseUriType"/>
         <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
 
-        <xs:element name="import" minOccurs="0" maxOccurs="unbounded">
-          <xs:annotation>
-            <xs:documentation>To import a set of Metaschema definitions from an out-of-line resource, supporting reuse of common information structures.</xs:documentation>
-          </xs:annotation>
-          <xs:complexType>
-            <xs:attribute name="href" type="URIReferenceDatatype" use="required">
-              <xs:annotation>
-                <xs:documentation>A relative or absolute URI for retrieving an out-of-line Metaschema definition.</xs:documentation>
-              </xs:annotation>
-            </xs:attribute>
-          </xs:complexType>
-        </xs:element>
+        <xs:element name="import" type="MetaschemaImportType" minOccurs="0" maxOccurs="unbounded"/>
 
         <xs:choice minOccurs="0" maxOccurs="unbounded">
           <xs:element name="define-assembly" type="GlobalAssemblyDefinitionType"/>
@@ -96,7 +85,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="name" type="MarkupLineDatatype">
+        <xs:element name="name" type="StringDatatype">
           <xs:annotation>
             <xs:documentation>The name of this constraint set.</xs:documentation>
           </xs:annotation>
@@ -161,10 +150,25 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:complexType name="MetaschemaImportType">
+    <xs:annotation>
+      <xs:documentation>Imports a set of Metaschema definitions from an out-of-line resource, supporting reuse of common information structures.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="href" type="URIReferenceDatatype" use="required">
+      <xs:annotation>
+        <xs:documentation>A relative or absolute URI for retrieving an out-of-line Metaschema definition.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  
   <xs:group name="DefinitionMetadataGroup">
     <xs:sequence>
       <xs:element name="formal-name" type="FormalNameType" minOccurs="0"/>
-      <xs:element name="description" type="DescriptionType" minOccurs="0"/>
+      <xs:element name="description" type="MarkupLineDatatype" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A short description of the data construct that provides basic documentation of the construct's purpose.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element name="prop" type="PropertyType" minOccurs="0" maxOccurs="unbounded"/>
       <!--
         When using:
@@ -187,7 +191,7 @@
         <prop name="identifier-scope" value="cross-instance"/>
 
         Must be one of:
-        <prop name="identifier-persistence" value="per-instance"/>
+        <prop name="identifier-persistence" value="per-subject"/>
         <prop name="identifier-persistence" value="change-on-write"/>
      -->
     </xs:sequence>
@@ -407,18 +411,6 @@
     <xs:restriction base="URIDatatype"/>
   </xs:simpleType>
  
-  <xs:complexType name="DescriptionType">
-    <xs:annotation>
-      <xs:documentation>A short description of the data construct, to be inserted into
-        documentation. Unlike 'formal-name' this should not simply repeat what is readily
-        discernible from a tag (element name or JSON label), but say a little more about
-        it.</xs:documentation>
-    </xs:annotation>
-    <xs:complexContent>
-      <xs:extension base="MarkupLineDatatype"/>
-    </xs:complexContent>
-  </xs:complexType>
-
   <xs:complexType name="RemarksType">
     <xs:annotation>
       <xs:documentation>Any explanatory or helpful information to be provided in the
@@ -1049,7 +1041,12 @@
 
   <xs:complexType name="ExampleType">
     <xs:sequence>
-      <xs:element name="description" type="DescriptionType" minOccurs="0"/>
+      <xs:element name="description" type="MarkupLineDatatype" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A short description of the example that provides basic documentation about the example's purpose.</xs:documentation>
+        </xs:annotation>
+        
+      </xs:element>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:any namespace="##other" processContents="lax"/>
