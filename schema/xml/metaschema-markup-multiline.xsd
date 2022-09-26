@@ -11,13 +11,13 @@
 
   <xs:group name="blockElementGroup">
     <xs:choice>
-      <xs:element name="h1"    type="inlineType"/>
-      <xs:element name="h2"    type="inlineType"/>
-      <xs:element name="h3"    type="inlineType"/>
-      <xs:element name="h4"    type="inlineType"/>
-      <xs:element name="h5"    type="inlineType"/>
-      <xs:element name="h6"    type="inlineType"/>
-      <xs:element name="p"     type="inlineType"/>
+      <xs:element name="h1"    type="inlineMarkupType"/>
+      <xs:element name="h2"    type="inlineMarkupType"/>
+      <xs:element name="h3"    type="inlineMarkupType"/>
+      <xs:element name="h4"    type="inlineMarkupType"/>
+      <xs:element name="h5"    type="inlineMarkupType"/>
+      <xs:element name="h6"    type="inlineMarkupType"/>
+      <xs:element name="p"     type="inlineMarkupType"/>
       <xs:element name="ul"    type="listType"/>
       <xs:element name="ol"    type="listType"/>
       <xs:element name="pre"   type="preformattedType"/>
@@ -35,18 +35,11 @@
     td th: phrase inline markup, a, insert, img (phrase+img)
   -->
 
-
-  <xs:complexType name="inlineType" mixed="true">
-    <xs:choice minOccurs="0" maxOccurs="unbounded">
-      <xs:group ref="inlineMarkupGroup"/>
-    </xs:choice>
-  </xs:complexType>
-
   <xs:complexType name="preformattedType" mixed="true">
     <xs:complexContent>
-      <xs:extension base="inlineType">
+      <xs:extension base="inlineMarkupType">
         <xs:annotation>
-          <xs:documentation>The content model is the same as inlineType, but line endings need
+          <xs:documentation>The content model is the same as inlineMarkupType, but line endings need
             to be preserved, since this is preformatted.</xs:documentation>
         </xs:annotation>
       </xs:extension>
@@ -85,7 +78,7 @@
   <xs:complexType name="tableCellType" mixed="true">
     <xs:complexContent>
       <!-- TODO: consider adding a choice between the inline or paragraphs. We need to figure out what is supported in Markdown. -->
-      <xs:extension base="inlineType">
+      <xs:extension base="inlineMarkupType">
         <!-- TODO: need to add support for alignment. usnistgov/metaschema#70 -->
         <xs:attribute name="align" type="alignType" default="left"/>
       </xs:extension>
