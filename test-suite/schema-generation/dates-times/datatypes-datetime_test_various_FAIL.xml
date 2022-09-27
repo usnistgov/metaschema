@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <parent xmlns="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
     flag-datetime="2022-08-29T16:00:00-04:00">
-    <!--<field-datetime>2022-08-29T16:01:39.9080374-04:00</field-datetime>
-    <field-datetime>2022-08-29T16:01:50-04:00</field-datetime> these are okay -->
     <field-datetime>2022-08-29T16:01:50-4:00</field-datetime><!-- missing a leading zero s/4:00/04:00 --> 
     <field-datetime>2022-08-29T16:01:500-04:00</field-datetime><!-- too many zeros s/01:500/01:50 -->
     <field-datetime>2022-08-29T16:01:50.010-04:00</field-datetime><!-- insignificant 'decimal' sequence trailing zero s/01:5010/01:501 -->
-    <!--<field-datetime>2022-08-29T16:01:50</field-datetime>
-    <field-datetime>2020-01-01T12:00:00</field-datetime>-->
      <child>
          <field-datetime>2022-08-29T16:01:39.90803740-04:00</field-datetime> <!-- insignificant 'decimal' sequence trailing zero s/90803740/9080374 -->
     </child>
