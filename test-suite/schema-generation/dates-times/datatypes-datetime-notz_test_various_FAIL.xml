@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<parent xmlns="http://csrc.nist.gov/ns/metaschema/unit-test/datatypes-dateTime"
+    flag-datetime-notz="2022-08-29T16:00:00-0400">
+    <field-datetime-notz>2022-08-29T16:01:50-4:00</field-datetime-notz><!-- missing a leading zero s/4:00/04:00 --> 
+    <field-datetime-notz>2022-08-29T16:01:500-000</field-datetime-notz><!-- Not a tz, not not a tz -->
+    <field-datetime-notz>2022-08-29T16:01:50.010</field-datetime-notz><!-- insignificant 'decimal' sequence trailing zero s/01:500/01:50 -->
+    <child>
+         <field-datetime-notz>2022-08-29T16:01:39.90803740-04:00</field-datetime-notz> <!-- insignificant 'decimal' sequence trailing zero s/90803740/9080374 -->
+    </child>
+</parent>
