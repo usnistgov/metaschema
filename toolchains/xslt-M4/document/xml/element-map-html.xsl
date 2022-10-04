@@ -78,7 +78,7 @@ div.OM-map p { margin: 0ex }
    
    <xsl:template match="m:formal-name | m:description | m:remarks | m:constraint"/>
    
-   <xsl:template match="m:formal-name | m:description | m:remarks" mode="contents"/>
+   <xsl:template match="m:formal-name | m:description | m:remarks | m:constraint" mode="contents"/>
    
    
    <xsl:template match="*[exists(@_tree-xml-id)]" mode="linked-name">
