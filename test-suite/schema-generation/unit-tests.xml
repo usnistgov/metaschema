@@ -44,27 +44,6 @@
             <validation-case source-format="JSON" location="charstrings_test_okay_PASS.json"/>
             <validation-case source-format="XML" location="charstrings_test_okay_PASS.xml"/>
         </test-scenario>
-        <test-scenario name="Date">
-            <generate-schema>
-                <metaschema location="datatypes-date_metaschema.xml"/>
-            </generate-schema>
-            <validation-case source-format="XML" location="datatypes-date_test_fancy_FAIL.xml" validation-result="INVALID"/>
-            <validation-case source-format="JSON" location="datatypes-date_test_tricky_FAIL.json" validation-result="INVALID"/>
-            <validation-case source-format="JSON" location="datatypes-date_test_valid_PASS.json"/>
-            <validation-case source-format="XML" location="datatypes-date_test_valid_PASS.xml"/>
-        </test-scenario>
-        <test-scenario name="Date/Time w/ optional timezone">
-            <generate-schema>
-                <metaschema location="datatypes-datetime-no-tz_metaschema.xml"/>
-            </generate-schema>
-            <validation-case source-format="JSON" location="datatypes-datetime-no-tz_test_valid_PASS.json"/>
-        </test-scenario>
-        <test-scenario name="Date/Time w/ required timezone">
-            <generate-schema>
-                <metaschema location="datatypes-datetime_metaschema.xml"/>
-            </generate-schema>
-            <validation-case source-format="JSON" location="datatypes-datetime_test_valid_PASS.json"/>
-        </test-scenario>
         <test-scenario name="Prose">
             <generate-schema>
                 <metaschema location="datatypes-prose_metaschema.xml"/>
@@ -85,6 +64,35 @@
             </generate-schema>
             <validation-case source-format="JSON" location="datatypes-uuid_test_version-1-invalid_FAIL.json" validation-result="INVALID"/>
             <validation-case source-format="JSON" location="datatypes-uuid_test_valid_PASS.json"/>
+        </test-scenario>
+    </test-collection>
+    <test-collection name="Feature: Datatype" location="dates-times/">
+        <test-scenario name="Date">
+            <generate-schema>
+                <metaschema location="datatypes-date_metaschema.xml"/>
+            </generate-schema>
+            <validation-case source-format="XML" location="datatypes-date_test_fancy_FAIL.xml" validation-result="INVALID"/>
+            <validation-case source-format="JSON" location="datatypes-date_test_tricky_FAIL.json" validation-result="INVALID"/>
+            <validation-case source-format="JSON" location="datatypes-date_test_valid_PASS.json"/>
+            <validation-case source-format="XML" location="datatypes-date_test_valid_PASS.xml"/>
+        </test-scenario>
+        <test-scenario name="Date/Time w/ optional timezone">
+            <generate-schema>
+                <metaschema location="datatypes-datetime-no-tz_metaschema.xml"/>
+            </generate-schema>
+            <validation-case source-format="JSON" location="datatypes-datetime-no-tz_test_valid_PASS.json"/>
+<!--
+            <validation-case source-format="XML" location="datatypes-datetime-notz_test_various_FAIL.xml"/>
+-->
+        </test-scenario>
+        <test-scenario name="Date/Time w/ required timezone">
+            <generate-schema>
+                <metaschema location="datatypes-datetime_metaschema.xml"/>
+            </generate-schema>
+            <validation-case source-format="JSON" location="datatypes-datetime_test_valid_PASS.json"/>
+            <validation-case source-format="XML" location="datatypes-datetime_test_various_FAIL.xml" validation-result="INVALID"/>
+            <validation-case source-format="XML" location="datatypes-datetime_test_working_FAIL.xml" validation-result="INVALID"/>
+            <validation-case source-format="XML" location="datatypes-datetime_test_working_PASS.xml"/>
         </test-scenario>
     </test-collection>
     <test-collection name="Feature: Flag" location="flag/">
