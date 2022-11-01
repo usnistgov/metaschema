@@ -218,6 +218,11 @@
         <sch:rule context="m:p | m:li | m:pre">
             <sch:assert test="matches(.,'\S')" id="discourage-whitespace-only">Empty <name/> (is likely to distort rendition)</sch:assert>
         </sch:rule>
+
+        <sch:rule context="m:description">
+            <sch:assert role="error" test="ends-with(.,'.')" id="description-ends-with-dot">Description should end with a period.</sch:assert>
+            <sch:assert role="error" test="string-length(.) gt 6" id="description-long-enough">Description is too short.</sch:assert>
+        </sch:rule>
     </sch:pattern>
     
     
