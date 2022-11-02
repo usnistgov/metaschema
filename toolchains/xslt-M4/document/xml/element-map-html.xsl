@@ -117,12 +117,10 @@ div.OM-map p { margin: 0ex }
       </details>
    </xsl:template>
 
-   <xsl:template match="m:element[empty(* except (m:attribute|m:value))]">
+   <xsl:template match="m:element[(@recursive='true') or empty(* except (m:attribute|m:value))]">
       <div class="OM-entry">
          <p class="OM-line">
-            <!--<div class="OM-flex">-->
             <xsl:call-template name="summary-line-content"/>
-            <!--</div>-->
          </p>
       </div>
    </xsl:template>
