@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>issue-235-test-schema</schema-name>
+    <schema-version>0.1</schema-version>
+    <short-name>oscal-value-testing-mini</short-name>
+    <namespace>http://csrc.nist.gov/ns/metaschema/unit-tests</namespace>
+    <json-base-uri>http://csrc.nist.gov/ns/oscal</json-base-uri>
+    <define-assembly name="root-assembly">
+        <formal-name>Issue 235 Regression Test</formal-name>
+        <description>A sample Metaschema definition for <a href="https://github.com/usnistgov/metaschema/issues/235">regression testing</a>.</description>
+        <root-name>root</root-name>
+        <model>
+            <define-field name="field1" as-type="uri">
+                <formal-name>Field 1</formal-name>
+                <description>An example field with a flag constrained with optional values.</description>
+                <!--<json-value-key>id</json-value-key>-->
+                <define-flag name="optional-flag" as-type="string">
+                    <constraint>
+                        <allowed-values allow-other="yes">
+                            <enum value="value1"/>
+                            <enum value="value2"/>
+                        </allowed-values>
+                    </constraint>
+                </define-flag>
+            </define-field>
+        </model>
+    </define-assembly>
+</METASCHEMA>
