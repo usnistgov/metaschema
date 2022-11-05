@@ -646,23 +646,20 @@ Additionally, line feed (LF) characters must be escaped as "\\n" when appearing 
 
 Additionally, flags may be constrained to a set of known values listed in advance.
 
-This restriction can be either strict (values must be in the list for document validity) or loose (i.e. for documentation only, no effect in schemas).
+This restriction can be either strict (values must be in the list for document validity with `allow-other="no"` attribute for an `allowed-values` element) or loose (i.e. for documentation only, no effect in schemas, with `allow-other="yes"`). If a `constraint` has an `allowed-values` element and the `allow-other` attribute is not explicitly defined, the default is `allow-other="no"`, validation is strict, and the only valid values are those in the list.
 
-Use the `valid-values` element to restrict the permissible values for a flag. Set its attribute `allow-other='yes'` if the list is not exclusive.
-
-Within it `valid-values`, a `value` element's `@name` attribute assigns the permissible value, while its data content provides documentation. For example:
+Within `allowed-values` of a `constraint`, an `enum` element's `@value` attribute assigns the permissible value, while its data content provides documentation. For example:
 
 ```xml
 <define-flag name="algorithm" datatype="string">
     <formal-name>Hash algorithm</formal-name>
     <description>Method by which a hash is derived</description>
-    <valid-values allow-other="yes">
-      <value name="SHA-224"/>
-      <value name="SHA-256"/>
-      <value name="SHA-384"/>
-      <value name="SHA-512"/>
-      <value name="RIPEMD-160"/>
-    </valid-values> ...
+    <constraint>
+      <allowed-values allow-other="yes">
+        <enum value="SHA-224">Documentation for one permissible option.</enum>
+        <enum value="SHA-256">Documentation for another permissible option.</enum>
+      </allowed-values>
+    </constraint> ...
 ```
 ## Metaschema modeling
 
