@@ -646,7 +646,12 @@ Additionally, line feed (LF) characters must be escaped as "\\n" when appearing 
 
 Additionally, flags may be constrained to a set of known values listed in advance.
 
-This restriction can be either strict (values must be in the list for document validity with `allow-other="no"` attribute for an `allowed-values` element) or loose (i.e. for documentation only, no effect in schemas, with `allow-other="yes"`). If a `constraint` has an `allowed-values` element and the `allow-other` attribute is not explicitly defined, the default is `allow-other="no"`, validation is strict, and the only valid values are those in the list.
+This restriction can be either:
+
+1. strict (values must be in the list for document validity with `allow-other="no"` attribute for an `allowed-values` element) or
+2. loose (i.e. for documentation only, no effect in schemas, with `allow-other="yes"`).
+
+If an `allowed-values` constraint does not have the `allow-other` attribute defined, the default is `allow-other="no"`, resulting in strict validation where the only valid values are those in the list.
 
 Within `allowed-values` of a `constraint`, an `enum` element's `@value` attribute assigns the permissible value, while its data content provides documentation. For example:
 
