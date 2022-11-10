@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            abstract="no"
+            module="oscal-value-testing-mini"
+            _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/json-schema-gen/json-value-testing-mini-metaschema.xml">
+   <INFO info-type="objects-used">Seeing assembly#oscal-value-testing-mini:root, field#oscal-value-testing-mini:unconstrained, field#oscal-value-testing-mini:constrained-open, field#oscal-value-testing-mini:constrained-closed, field#oscal-value-testing-mini:constrained-narrow, field#oscal-value-testing-mini:constrained-sortof</INFO>
+   <schema-name>JSON value testing mini metaschema</schema-name>
+   <schema-version>0.1</schema-version>
+   <short-name>oscal-value-testing-mini</short-name>
+   <namespace>http://csrc.nist.gov/ns/oscal/1.0</namespace>
+   <json-base-uri>http://csrc.nist.gov/ns/oscal</json-base-uri>
+   <define-assembly _metaschema-xml-id="/assembly/oscal-value-testing-mini/root"
+                    _metaschema-json-id="/assembly/oscal-value-testing-mini/root"
+                    scope="global"
+                    name="root"
+                    module="oscal-value-testing-mini"
+                    _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/json-schema-gen/json-value-testing-mini-metaschema.xml"
+                    _key-name="oscal-value-testing-mini:root"
+                    _using-root-name="root">
+      <formal-name>Root</formal-name>
+      <description>Root root root.</description>
+      <root-name>root</root-name>
+      <model>
+         <field _step="unconstrained"
+                _key="unconstrained"
+                _metaschema-xml-id="/assembly/oscal-value-testing-mini/root/unconstrained"
+                _metaschema-json-id="/assembly/oscal-value-testing-mini/root/unconstrained"
+                max-occurs="1"
+                min-occurs="0"
+                ref="unconstrained"
+                _key-ref="oscal-value-testing-mini:unconstrained"
+                _using-name="unconstrained"
+                _in-xml-name="unconstrained"
+                _in-json-name="unconstrained"/>
+         <field _step="constrained-open"
+                _key="constrained-open"
+                _metaschema-xml-id="/assembly/oscal-value-testing-mini/root/constrained-open"
+                _metaschema-json-id="/assembly/oscal-value-testing-mini/root/constrained-open"
+                max-occurs="1"
+                min-occurs="0"
+                ref="constrained-open"
+                _key-ref="oscal-value-testing-mini:constrained-open"
+                _using-name="constrained-open"
+                _in-xml-name="constrained-open"
+                _in-json-name="constrained-open"/>
+         <field _step="constrained-closed"
+                _key="constrained-closed"
+                _metaschema-xml-id="/assembly/oscal-value-testing-mini/root/constrained-closed"
+                _metaschema-json-id="/assembly/oscal-value-testing-mini/root/constrained-closed"
+                max-occurs="1"
+                min-occurs="0"
+                ref="constrained-closed"
+                _key-ref="oscal-value-testing-mini:constrained-closed"
+                _using-name="constrained-closed"
+                _in-xml-name="constrained-closed"
+                _in-json-name="constrained-closed"/>
+         <field _step="constrained-narrow"
+                _key="constrained-narrow"
+                _metaschema-xml-id="/assembly/oscal-value-testing-mini/root/constrained-narrow"
+                _metaschema-json-id="/assembly/oscal-value-testing-mini/root/constrained-narrow"
+                max-occurs="1"
+                min-occurs="0"
+                ref="constrained-narrow"
+                _key-ref="oscal-value-testing-mini:constrained-narrow"
+                _using-name="constrained-narrow"
+                _in-xml-name="constrained-narrow"
+                _in-json-name="constrained-narrow"/>
+         <field _step="constrained-sortof"
+                _key="constrained-sortof"
+                _metaschema-xml-id="/assembly/oscal-value-testing-mini/root/constrained-sortof"
+                _metaschema-json-id="/assembly/oscal-value-testing-mini/root/constrained-sortof"
+                max-occurs="1"
+                min-occurs="0"
+                ref="constrained-sortof"
+                _key-ref="oscal-value-testing-mini:constrained-sortof"
+                _using-name="constrained-sortof"
+                _in-xml-name="constrained-sortof"
+                _in-json-name="constrained-sortof"/>
+      </model>
+   </define-assembly>
+   <define-field _metaschema-xml-id="/field/oscal-value-testing-mini/unconstrained"
+                 _metaschema-json-id="/field/oscal-value-testing-mini/unconstrained"
+                 collapsible="no"
+                 as-type="token"
+                 scope="global"
+                 name="unconstrained"
+                 module="oscal-value-testing-mini"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/json-schema-gen/json-value-testing-mini-metaschema.xml"
+                 _key-name="oscal-value-testing-mini:unconstrained">
+      <formal-name>Unconstrained</formal-name>
+      <description>A field whose value is constrained only by its nominal datatype, 'token'.</description>
+      <json-value-key>token-value</json-value-key>
+      <define-flag _step="some"
+                   _key="some"
+                   _metaschema-xml-id="/field/oscal-value-testing-mini/unconstrained/some"
+                   _metaschema-json-id="/field/oscal-value-testing-mini/unconstrained/some"
+                   required="no"
+                   as-type="string"
+                   name="some"
+                   _using-name="some"
+                   _in-xml-name="some"
+                   _in-json-name="some">
+         <formal-name>Some Flag</formal-name>
+         <description>Some flag some flag some flag.</description>
+      </define-flag>
+   </define-field>
+   <define-field _metaschema-xml-id="/field/oscal-value-testing-mini/constrained-open"
+                 _metaschema-json-id="/field/oscal-value-testing-mini/constrained-open"
+                 collapsible="no"
+                 as-type="token"
+                 scope="global"
+                 name="constrained-open"
+                 module="oscal-value-testing-mini"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/json-schema-gen/json-value-testing-mini-metaschema.xml"
+                 _key-name="oscal-value-testing-mini:constrained-open">
+      <formal-name>Constrained open</formal-name>
+      <description>Because allow-other is 'yes' no enumeration can be given in the JSON Schema.</description>
+      <json-value-key>token-value</json-value-key>
+      <define-flag _step="some"
+                   _key="some"
+                   _metaschema-xml-id="/field/oscal-value-testing-mini/constrained-open/some"
+                   _metaschema-json-id="/field/oscal-value-testing-mini/constrained-open/some"
+                   required="no"
+                   as-type="string"
+                   name="some"
+                   _using-name="some"
+                   _in-xml-name="some"
+                   _in-json-name="some">
+         <formal-name>Some Flag</formal-name>
+         <description>Some flag some flag some flag.</description>
+      </define-flag>
+      <constraint>
+         <allowed-values target="." allow-other="yes">
+            <enum value="one"/>
+            <enum value="two"/>
+            <enum value="three"/>
+            <enum value="four"/>
+         </allowed-values>
+      </constraint>
+   </define-field>
+   <define-field _metaschema-xml-id="/field/oscal-value-testing-mini/constrained-closed"
+                 _metaschema-json-id="/field/oscal-value-testing-mini/constrained-closed"
+                 collapsible="no"
+                 as-type="token"
+                 scope="global"
+                 name="constrained-closed"
+                 module="oscal-value-testing-mini"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/json-schema-gen/json-value-testing-mini-metaschema.xml"
+                 _key-name="oscal-value-testing-mini:constrained-closed">
+      <formal-name>Constrained closed</formal-name>
+      <description>Because allow-other is 'no' an enumeration can be given in the JSON Schema.</description>
+      <json-value-key>token-value</json-value-key>
+      <define-flag _step="some"
+                   _key="some"
+                   _metaschema-xml-id="/field/oscal-value-testing-mini/constrained-closed/some"
+                   _metaschema-json-id="/field/oscal-value-testing-mini/constrained-closed/some"
+                   required="no"
+                   as-type="string"
+                   name="some"
+                   _using-name="some"
+                   _in-xml-name="some"
+                   _in-json-name="some">
+         <formal-name>Some Flag</formal-name>
+         <description>Some flag some flag some flag.</description>
+      </define-flag>
+      <constraint>
+         <allowed-values target="." allow-other="no">
+            <enum value="one"/>
+            <enum value="two"/>
+            <enum value="three"/>
+            <enum value="four"/>
+         </allowed-values>
+      </constraint>
+   </define-field>
+   <define-field _metaschema-xml-id="/field/oscal-value-testing-mini/constrained-narrow"
+                 _metaschema-json-id="/field/oscal-value-testing-mini/constrained-narrow"
+                 collapsible="no"
+                 as-type="token"
+                 scope="global"
+                 name="constrained-narrow"
+                 module="oscal-value-testing-mini"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/json-schema-gen/json-value-testing-mini-metaschema.xml"
+                 _key-name="oscal-value-testing-mini:constrained-narrow">
+      <formal-name>Constrained narrow</formal-name>
+      <description>Although allow-other is 'no' an enumeration can't be given in the JSON Schema since it targets a qualified set (only a subset) of the elements in scope.</description>
+      <json-value-key>token-value</json-value-key>
+      <define-flag _step="some"
+                   _key="some"
+                   _metaschema-xml-id="/field/oscal-value-testing-mini/constrained-narrow/some"
+                   _metaschema-json-id="/field/oscal-value-testing-mini/constrained-narrow/some"
+                   required="no"
+                   as-type="string"
+                   name="some"
+                   _using-name="some"
+                   _in-xml-name="some"
+                   _in-json-name="some">
+         <formal-name>Some Flag</formal-name>
+         <description>Some flag some flag some flag.</description>
+      </define-flag>
+      <constraint>
+         <allowed-values target=".[not(false())]" allow-other="no">
+            <enum value="one"/>
+            <enum value="two"/>
+            <enum value="three"/>
+            <enum value="four"/>
+         </allowed-values>
+      </constraint>
+   </define-field>
+   <define-field _metaschema-xml-id="/field/oscal-value-testing-mini/constrained-sortof"
+                 _metaschema-json-id="/field/oscal-value-testing-mini/constrained-sortof"
+                 collapsible="no"
+                 as-type="token"
+                 scope="global"
+                 name="constrained-sortof"
+                 module="oscal-value-testing-mini"
+                 _base-uri="file:/C:/Users/wap1/Documents/usnistgov/metaschema/test-suite/metaschema-xspec/json-schema-gen/json-value-testing-mini-metaschema.xml"
+                 _key-name="oscal-value-testing-mini:constrained-sortof">
+      <formal-name>Constrained, sort of</formal-name>
+      <description>Although allow-other is 'no' an enumeration can't be given in the JSON Schema since it targets a qualified set (only a subset) of the elements in scope.</description>
+      <json-value-key>token-value</json-value-key>
+      <define-flag _step="some"
+                   _key="some"
+                   _metaschema-xml-id="/field/oscal-value-testing-mini/constrained-sortof/some"
+                   _metaschema-json-id="/field/oscal-value-testing-mini/constrained-sortof/some"
+                   required="no"
+                   as-type="string"
+                   name="some"
+                   _using-name="some"
+                   _in-xml-name="some"
+                   _in-json-name="some">
+         <formal-name>Some Flag</formal-name>
+         <description>Some flag some flag some flag.</description>
+      </define-flag>
+      <constraint>
+         <allowed-values target=".[not(false())]" allow-other="yes">
+            <enum value="one"/>
+            <enum value="two"/>
+            <enum value="three"/>
+            <enum value="four"/>
+         </allowed-values>
+      </constraint>
+   </define-field>
+</METASCHEMA>
