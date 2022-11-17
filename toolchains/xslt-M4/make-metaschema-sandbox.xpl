@@ -48,7 +48,7 @@
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Import (subpipeline) -->
   
-  <p:import href="metaschema-compose.xpl"/>
+  <p:import href="compose/metaschema-compose.xpl"/>
   
   <!-- &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& &&& -->
   <!-- Pipeline -->
@@ -58,15 +58,5 @@
   <metaschema:metaschema-compose name="compose"/>
   
   <p:identity name="composed"/>
-  
-  <!--<p:identity  name="render-xml-model-map"/>-->
-  <p:xslt name="make-definition-map">
-    <p:input port="source">
-      <p:pipe port="result" step="composed"/>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:document href="compose/make-definition-map.xsl"/>
-    </p:input>
-  </p:xslt>
-  
+ 
 </p:declare-step>
