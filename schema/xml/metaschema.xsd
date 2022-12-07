@@ -522,7 +522,7 @@
 
   <xs:attributeGroup name="FieldValueAttributeGroup">
     <xs:attribute name="as-type" type="FieldDatatypesType" default="string"/>
-    <xs:attribute name="default" type="StringDatatype" default="string"/>
+    <xs:attribute name="default" type="StringDatatype"/>
   </xs:attributeGroup>
 
   <xs:attributeGroup name="FlagValueAttributeGroup">
