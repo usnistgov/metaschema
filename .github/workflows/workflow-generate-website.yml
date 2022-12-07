@@ -142,7 +142,7 @@ jobs:
         name: html-link-report
         path: html-link-report.md
         retention-days: 5
-    - uses: actions/github-script@d556feaca394842dc55e4734bf3bb9f685482fa0
+    - uses: actions/github-script@v6 # current: f05a81df23035049204b043b50c3322045ce7eb3
       if: steps.linkchecker.outputs.exit_code != 0
       with:
         script: |
