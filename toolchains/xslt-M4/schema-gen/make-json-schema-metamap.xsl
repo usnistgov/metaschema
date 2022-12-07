@@ -36,7 +36,7 @@
     
     -->
     <!-- Produces composed metaschema (imports resolved) -->
-    <!--<xsl:import href="../lib/metaschema-compose.xsl"/>-->
+    <!--<xsl:import href="../nist-metaschema-COMPOSE.xsl"/>
     <xsl:variable name="composed-metaschema" select="/"/>
     
     <!-- bypasses composition to operate on the 'raw' metaschema for debugging -->
