@@ -1,10 +1,31 @@
 {
   "ignorePatterns": [
-    {
-      "pattern": "^../../issues"
-    },
-    {
-      "pattern": "^../../projects"
-    }
-  ]
+        {
+            "pattern": "https://docs.github.com"
+        },
+        {
+            "pattern": "https://guides.github.com"
+        },
+        {
+            "pattern": "https://help.github.com"
+        }
+  ],
+  "replacementPatterns": [
+        {
+            "pattern": "^../../issues",
+            "replacement": "https://github.com/usnistgov/metaschema/issues"
+        },
+        {
+            "pattern": "^../../projects",
+            "replacement": "https://github.com/usnistgov/metaschema/projects"
+        },
+        {
+            "pattern": "^../../releases",
+            "replacement": "https://github.com/usnistgov/metaschema/releases"
+        },
+        {
+            "pattern": "^../../tree",
+            "replacement": "https://github.com/usnistgov/metaschema/tree"
+        }
+    ]
 }

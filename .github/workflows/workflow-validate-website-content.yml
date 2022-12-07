@@ -1,0 +1,50 @@
+name: Validate Website Content
+
+on:
+  workflow_call:
+    inputs:
+      site_git_ref:
+        description: 'git ref, a SHA commit or branch or tag, for the published HTML content'
+        required: true
+        default: 'nist-pages'
+        type: string
+      site_git_ref_path:
+        description: 'the subdirectory to check out git ref and check links in website content'
+        required: true
+        default: 'published'
+        type: string
+      create_issue:
+        description: 'create new GitHub issue if broken links found'
+        required: false
+        default: false
+        type: boolean
+jobs:
+  schedule-validate-website-links:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout Latest
+      uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      with:
+        fetch-depth: 0 # this ensures that the tag and commit history are available
+    - name: Checkout git ref of published website content
+      uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      with:
+        ref: ${{ inputs.site_git_ref }}
+        path: ${{ inputs.site_git_ref_path }}
+    - name: Check website HTML content links
+      id: linkchecker
+      uses: lycheeverse/lychee-action@4a5af7cd2958a2282cefbd9c10f63bdb89982d76
+      with:
+        args: --exclude-file ./build/config/.lycheeignore --verbose --no-progress --accept 200,206,429 "./${INPUT_SITE_GIT_REF}/**/*.html" --remap "https://pages.nist.gov/metaschema/ file://${GITHUB_WORKSPACE}/${INPUT_SITE_GIT_REF}/" --exclude-mail
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create issue if bad links detected
+      if: steps.linkchecker.outputs.exit_code != 0 && inputs.create_issue
+      uses: peter-evans/create-issue-from-file@433e51abf769039ee20ba1293a088ca19d573b7f
+      with:
+        title: Scheduled Check of Website Content Found Bad Hyperlinks
+        content-filepath: ./lychee/out.md
+        labels: |
+          bug
+          Scope: Documentation
+          Scope: Website          
