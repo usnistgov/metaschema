@@ -6,12 +6,14 @@
         <test-scenario name="basic">
             <generate-schema>
                 <metaschema location="allowed-values-basic_metaschema.xml"/>
-                <generation-case source-format="XML" location="expected/allowed-values-basic_schema.xsd" />
-                <generation-case source-format="JSON" location="expected/allowed-values-basic_schema.json"/>
+                <generation-case source-format="XML" location="allowed-values-basic_schema.xsd" />
+                <generation-case source-format="JSON" location="allowed-values-basic_schema.json"/>
             </generate-schema>
             <validation-case source-format="JSON" location="allowed-values-basic_test_baddates_FAIL.json" validation-result="INVALID"/>
             <validation-case source-format="JSON" location="allowed-values-basic_test_badvalues_FAIL.json" validation-result="INVALID"/>
+            <validation-case source-format="XML" location="allowed-values-basic_test_valid_FAIL.xml" validation-result="INVALID"/>
             <validation-case source-format="JSON" location="allowed-values-basic_test_valid_PASS.json"/>
+            <validation-case source-format="XML" location="allowed-values-basic_test_valid_PASS.xml"/>
         </test-scenario>
     </test-collection>
     <test-collection name="Feature: Choice" location="choice/">
