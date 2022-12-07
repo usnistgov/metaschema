@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "markdown-link-check": "^3.10.0"
+    "markdown-link-check": "^3.10.3"
   }
 }
