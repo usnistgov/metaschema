@@ -6,5 +6,8 @@
         "ajv-formats": "^2.1.x",
         "markdown-link-check": "^3.10.3",
         "yaml-convert": "^1.0.x"
+    },
+    "overrides": {
+      "fast-json-patch": "^3.1.1"
     }
 }
