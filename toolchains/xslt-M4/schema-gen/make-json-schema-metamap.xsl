@@ -2,25 +2,34 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math" exclude-result-prefixes="xs math"
+    xmlns:nm="http://csrc.nist.gov/ns/metaschema"
     version="3.0" xmlns="http://www.w3.org/2005/xpath-functions"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0" expand-text="true">
 
-<!-- Purpose: Produce an XPath-JSON document representing JSON Schema declarations from Metaschema source data.
-     The results are conformant to the rules for the XPath 3.1 definition of an XML format capable of being cast
-     (using the xml-to-json() function) into JSON. -->
-    
-<!-- Note: this XSLT will only be used on its own for development and debugging.
-     It is however imported by `produce-json-converter.xsl` and possibly other stylesheets. -->
+    <!-- Purpose: Produce an XPath-JSON document representing JSON Schema declarations from Metaschema source data.
+        The results are conformant to the rules for the XPath 3.1 definition of an XML format capable of being cast
+        (using the xml-to-json() function) into JSON. -->
+        
+    <!-- Note: this XSLT will only be used on its own for development and debugging.
+        It is however imported by `produce-json-converter.xsl` and possibly other stylesheets. -->
     
     <xsl:strip-space elements="METASCHEMA define-assembly define-field model"/>
     
     <xsl:output indent="yes" method="xml"/>
     
-    <xsl:template match="/" priority="2">
-        <xsl:apply-templates/>
-    </xsl:template>
+    <xsl:import href="../nist-metaschema-COMPOSE.xsl"/>
     
-    <xsl:variable name="home" select="/"/>
+    <!-- This parameter controls whether this transform will compose the source metaschema as part of running this
+         stylesheet in standalone mode for debugging. In the CI and CD pipelines for production, this is unusual and
+         not desired, so this parameter is not enabled by default and set to false(). For unit testing and local debug
+         scenarios, you will want this so you do not save intermediate "composed" metaschemas needed for JSON Schema
+         generation, so with Oxygen, Saxon on the CLI, or Saxon via API you would set this to `true()`. -->
+    <xsl:param name="compose-metaschema-first" select="true()"/>
+    <xsl:variable name="composed-metaschema" select="if ($compose-metaschema-first) then nm:compose-metaschema(/) else /" />
+
+    <xsl:template match="/" priority="2">
+        <xsl:apply-templates />
+    </xsl:template>
     
     <xsl:variable name="string-value-label">STRVALUE</xsl:variable>
     <xsl:variable name="markdown-value-label">RICHTEXT</xsl:variable>
@@ -28,23 +37,16 @@
     
     <xsl:key name="assembly-definition-by-name" match="METASCHEMA/define-assembly" use="@_key-name"/>
     <xsl:key name="field-definition-by-name"    match="METASCHEMA/define-field"    use="@_key-name"/>
-    <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag"     use="@_key-name"/>
-    
-    <xsl:import href="../nist-metaschema-COMPOSE.xsl"/>
-    <xsl:variable name="composed-metaschema" select="/"/> 
-    
+    <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag"     use="@_key-name"/>   
    
     <xsl:template match="/METASCHEMA" expand-text="true">
-        
         <map>
-            <!--<xsl:variable name="wanted-atomic-types" "$datatypes//*:string[@key='$ref']"/>-->
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
             <string key="$id">{ json-base-uri }/{ schema-version }/{ short-name }-schema.json</string>
             <xsl:for-each select="schema-name">
                 <string key="$comment">{ . }: JSON Schema</string>
             </xsl:for-each>
             
-            <!--<xsl:apply-templates select="schema-version"/>-->
             <string key="type">object</string>
             <map key="definitions">
                 <xsl:apply-templates select="define-assembly | define-field"/>
@@ -95,10 +97,7 @@
     <xsl:template match="METASCHEMA/remarks"/>
     <xsl:template match="METASCHEMA/namespace"/>
     
-    <xsl:template match="METASCHEMA/schema-version" expand-text="true">
-        <!--property not permitted by JSON Schema v7 -->
-        <!--<string key="version">{ . }</string>-->
-    </xsl:template>
+    <xsl:template match="METASCHEMA/schema-version" expand-text="true"/>
     
     <!-- Flag declarations are all handled at the point of invocation -->
     <xsl:template match="define-flag"/>
@@ -124,7 +123,6 @@
 
     <xsl:template priority="100" match="METASCHEMA/define-assembly">
         <map key="{ $composed-metaschema/*/short-name }-{ @_key-name }">
-            <!--<string key="xslt-lineno">123</string>-->
             <xsl:next-match/>
         </map>
     </xsl:template>
@@ -157,8 +155,6 @@
                 </map>
             </xsl:where-populated>
             <xsl:call-template name="require-or-allow"/>
-            
-
     </xsl:template>
     
     <xsl:template match="define-field[exists(json-value-key-flag/@flag-ref)]">
@@ -256,7 +252,6 @@
                 <xsl:otherwise>string</xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <!--<xsl:copy-of select="$type-declaration"/>-->
         <xsl:element namespace="http://www.w3.org/2005/xpath-functions" name="{$nominal-type}">
             <xsl:apply-templates select="@value"/>
         </xsl:element>
@@ -325,16 +320,10 @@
     <!-- properties of an assembly include its flags and assemblies and fields in its model -->
     <xsl:template match="define-assembly" mode="properties">
         <xsl:apply-templates mode="define" select="flag | define-flag | model"/>
-        <!-- to be excluded, flags assigned to be keys -->
-        <!--<xsl:variable name="json-key-flag" select="json-key/@flag-ref"/>
-        <xsl:apply-templates mode="declaration"
-            select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)], model"/>-->
     </xsl:template>
 
     <!-- not having a model, the properties of a field are its flags and its value -->
     <xsl:template match="define-field" mode="properties">
-        <!--<xsl:variable name="json-key-flag" select="json-key/@flag-ref"/>
-        <xsl:apply-templates mode="declaration" select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)]"/>-->
         <xsl:apply-templates mode="define" select="flag | define-flag"/>
         <xsl:variable name="this-key" as="xs:string?">
             <xsl:apply-templates select="." mode="value-key"/>
@@ -579,7 +568,6 @@
     
     <xsl:template priority="2" match="*[@as-type='integer']" mode="object-type">
         <string key="type">integer</string>
-        <!--<number key="multipleOf">1.0</number>-->
     </xsl:template>
 
     <xsl:template priority="2" match="*[@as-type='positiveInteger']" mode="object-type">
@@ -600,47 +588,20 @@
     
     <xsl:template priority="2.1" match="*[@as-type = $datatype-map/@as-type]" mode="object-type">
         <xsl:variable name="assigned-type" select="$datatype-map[(@as-type|@prefer)=current()/@as-type]/string(.)"/>
-        <!--"$ref" : "#/definitions/UUIDDatatype"-->
-        <string key="$ref">#/definitions/{$assigned-type}</string><!--
-        <xsl:message expand-text="true">@as-type: { @as-type } assigns type { $assigned-type }</xsl:message>
-        <xsl:variable name="makesTypes" select="key('datatypes-by-name',$assigned-type,$datatypes)/*"/>
-        <xsl:message expand-text="true">{ serialize($makesTypes) } </xsl:message>
-        <xsl:apply-templates mode="acquire-types" select="$makesTypes"/>-->
+        <string key="$ref">#/definitions/{$assigned-type}</string>
     </xsl:template>
     
     <xsl:mode name="acquire-types" on-no-match="shallow-copy"/>
     
-    <xsl:template mode="acquire-types" xpath-default-namespace="http://www.w3.org/2005/xpath-functions" match="string[@key='description']">
-      <!--<string key="datatype-description">
-          <xsl:apply-templates/>
-      </string>  -->  
-    </xsl:template>
+    <xsl:template mode="acquire-types" xpath-default-namespace="http://www.w3.org/2005/xpath-functions" match="string[@key='description']"/>
     
     <xsl:key name="datatypes-by-name" xpath-default-namespace="http://www.w3.org/2005/xpath-functions"
         match="map" use="@key"/>
-    
-    <!--<xsl:variable name="datatypes" expand-text="false">
-        <dummy/>
-    </xsl:variable>-->
         
     <xsl:variable name="json-datatypes-path" as="xs:string">../../../schema/json/metaschema-datatypes.json</xsl:variable>
     
 
     <xsl:variable name="datatypes" expand-text="false">
         <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text($json-datatypes-path) => json-to-xml() )/map/map[@key='definitions']/map"/>
-        <map key="dateTime"><!-- DateTimeDatatype -->
-            <string key="type">string</string>
-            <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
-        </map>
-        <map key="dateTime-with-timezone">
-            <string key="type">string</string>
-            <string key="format">date-time</string>
-            <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$</string>
-        </map>
-        <map key="email">
-            <string key="type">string</string>
-            <string key="format">email</string>
-            <string key="pattern">^.+@.+$</string>
-        </map>
     </xsl:variable>
 </xsl:stylesheet>

@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://csrc.nist.gov/ns/metaschema-tests/0.1/json-schema-value-test-constrained-open-schema.json",
+  "$comment": "JSON value testing mini metaschema: JSON Schema",
+  "type": "object",
+  "definitions": {
+    "json-schema-value-test-constrained-open-json-schema-value-test-constrained-open:root": {
+      "title": "Root",
+      "description": "Root root root.",
+      "$id": "#assembly_json-schema-value-test-constrained-open_root",
+      "type": "object",
+      "properties": {
+        "constrained-open": {
+          "$ref": "#field_json-schema-value-test-constrained-open_constrained-open"
+        }
+      },
+      "additionalProperties": false
+    },
+    "json-schema-value-test-constrained-open-json-schema-value-test-constrained-open:constrained-open": {
+      "title": "Constrained open",
+      "description": "Because allow-other is 'yes' no enumeration can be given in the JSON Schema.",
+      "$id": "#field_json-schema-value-test-constrained-open_constrained-open",
+      "type": "object",
+      "properties": {
+        "some": {
+          "title": "Some Flag",
+          "description": "Some flag some flag some flag.",
+          "$ref": "#/definitions/StringDatatype"
+        },
+        "token-value": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TokenDatatype"
+            },
+            {
+              "enum": [
+                "one",
+                "two",
+                "three",
+                "four"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "token-value"
+      ],
+      "additionalProperties": false
+    },
+    "StringDatatype": {
+      "type": "string",
+      "pattern": "^\\S(.*\\S)?$"
+    },
+    "TokenDatatype": {
+      "type": "string",
+      "pattern": "^(\\p{L}|_)(\\p{L}|\\p{N}|[.\\-_])*$"
+    }
+  },
+  "properties": {
+    "root": {
+      "$ref": "#assembly_json-schema-value-test-constrained-open_root"
+    }
+  },
+  "required": [
+    "root"
+  ],
+  "additionalProperties": false,
+  "maxProperties": 1
+}
