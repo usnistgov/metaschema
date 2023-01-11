@@ -8,7 +8,7 @@ toc:
 
 ## Understanding the Domain and Designing the Model
 
-Metaschema is a framework for consistently organizing information into machine-readable data formats. For example, if we want to build tools to exchange information about computers, how do we represent a computer in a data format? How do we design it to be consistent and reusable across different software? How do we benefit from the right amout of structured information about computers in that format?
+Metaschema is a framework for consistently organizing information into machine-readable data formats. For example, if we want to build tools to exchange information about computers, how do we represent a computer in a data format? How do we design it to be consistent and reusable across different software? How do we benefit from the right amount of structured information about computers in that format?
 
 To start organizing this information consistently, we need to consider our mental model of what a computer is. We have to think of the different parts of a computer, sub-parts, and how to compose those parts into a whole. Let's consider a computer such as one visualized below.
 
@@ -20,7 +20,7 @@ In Metaschema terms, this design process is making an [information model](/speci
 
 ## Metaschema Concepts
 
-Metaschema helps developers to define models once, in a Metaschema definition. The definition specifies the model of information for the managed object in supported machine-readable data formats. A document in such a format is an instance of that definition. A schema can be used to check the instance is well-formed and valid against the definition's specification.
+Metaschema helps developers to define models once, in a Metaschema definition. The definition specifies the model of information for the managed object in supported machine-readable data formats. A document in such a format is an instance of that definition. A schema can be used to check the instance is well-formed and valid against the definition's specification. Such schemas can be derived deterministically and programmatically from a Metaschema definition (or "metaschema").
 
 {{<mermaid>}}
 
@@ -44,7 +44,7 @@ We start with an empty Metaschema definition, like the one below, saved in a fil
 </METASCHEMA>
 ```
 
-Metschema definitions, like the one above, are in XML. A definition begins and ends with capitalized `METASCHEMA` tags. This definition is an empty file, and it is not a valid, well-formed defintion. It is simply the base we will start with. Within those beginning and ending tags, we want to add useful metadata for both developers and Metaschema-enabled tools to consume this definition, like below.
+Metschema definitions, like the one above, are in XML. A definition begins and ends with capitalized `METASCHEMA` tags. This definition is an empty file, and it is not a valid, well-formed defintion. It is simply the base we will start with. Within those beginning and ending tags, we want to add useful metadata for both developers and Metaschema-enabled tools to consume this definition, as below.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -58,9 +58,9 @@ Metschema definitions, like the one above, are in XML. A definition begins and e
 </METASCHEMA>
 ```
 
-The metadata above provides useful information to to us Metaschema developers and ours tools that parse Metaschema definitions. The `schema-name` is the long-form, descriptive name of the computer model. The `schema-version` is to give the model itself a version number, for either developers or their tools to use. The `short-name` is the shortened form of the `schema-name`. Normally, Metaschema-enabled tools will parse or generate data with this name `computer`, not `Computer Model`. The `namespace` is a URI used to identify the model and its parts as belonging to a single scope for XML data and schemas. Similarly, the `json-base-uri` serves a similar purpose for JSON data and schemas.
+The metadata above provides useful information to us Metaschema developers and our tools that parse Metaschema definitions. The `schema-name` is the long-form, descriptive name of the computer model. The `schema-version` is to give the model itself a version number, for either developers or their tools to use. The `short-name` is the shortened form of the `schema-name`. Normally, Metaschema-enabled tools will parse or generate data with this name `computer`, not `Computer Model`. The `namespace` is a URI used to identify the model and its parts as belonging to a single scope for XML data and schemas. Similarly, the `json-base-uri` serves a similar purpose for JSON data and schemas.
 
-It is important to note this definition is just a starting point. This definition is the most minimally viable definition possible: it is well-formed and valid against [the XML Schema for the Metaschema syntax itself](), but our Metaschema-enabled tools should consider this an empty definition. We have not yet declared a `root-name` and there is no data model yet, so let's start one. We will begin by desinging a computer object to have just an identifier. 
+It is important to note this definition is just a starting point. This definition is the most minimally viable definition possible: it is well-formed and valid against [the XML Schema for the Metaschema syntax itself](), but our Metaschema-enabled tools should consider this an empty definition. We have not yet declared a `root-name` and there is no data model yet, so let's start one. We will begin by designing a computer object to have just an identifier. 
 
 We will now add to the [`assembly`](/specification/concepts/terminology/#assembly) for a computer itself and give it an identifier `flag`.
 
@@ -84,7 +84,7 @@ We will now add to the [`assembly`](/specification/concepts/terminology/#assembl
 </METASCHEMA>
 ```
 
-With the definition of the first `assembly` our Metaschema definition takes shape. Firstly, we now add the `root-name` element to identify for Metaschema-enabled tools this `assembly`, whether there are one or more top-level ones defined, is the root element of our data models. This will come in handy later. In the `assembly` declaration, we have defined a `computer` that must have an `id`, and it must the value of it must be a `string`. With Metaschema-enabled tooling, we can have information about a computer like below in their respective JSON, XML, and YAML data formats.
+With the definition of the first `assembly` our Metaschema definition takes shape. Firstly, we now add the `root-name` element to identify for Metaschema-enabled tools this `assembly`, whether there are one or more top-level ones defined, is the root element of our data models. This will come in handy later. In the `assembly` declaration, we have defined a `computer` that must have an `id`, the value of which must be `string`. With Metaschema-enabled tooling, we can have information about a computer like below in their respective JSON, XML, and YAML data formats.
 
 An instance for the model above is below in JSON, XML, and YAML data formats.
 
@@ -401,11 +401,11 @@ computer:
 
 With the expressive power of assemblies, flags, and fields, we can specify complex managed objects and control the structure of the intended information model in the resulting data formats.
 
-Our Metaschema-enabled tools can parse and generate the different data formats. We specify flags on the `computer` assembly, but all else we define in the `model` of the `assembly`. And within that model, we can define the motherboard `assembly` inline with its own `flag` and `model`. XML has different syntax and semantics from JSON and YAML that would lead to structural limitations we would need to work around ourselves by manually designing separate data formats without Metaschema. With Metaschema, we can use `group-as` declarations  in our definition, and Metaschema-enabled tools will generate and parse instances for us as instances of the same, despite these limitations, in different data formats automatically.
+Our Metaschema-enabled tools can parse and generate the different data formats. We specify flags on the `computer` assembly, but all else we define in the `model` of the `assembly`. And within that model, we can define the motherboard `assembly` inline with its own `flag` and `model`. These abstract definitions, along with information we provide with them such as names of groups, enables a Metaschema-enabled tool to sort out and distinguish the data points as we wish them to appear differently in a different syntax. A JSON schema can describe a JSON format that is idiomatic in JSON, while an XML Schema can do the same in XML with the same Metaschema model. As this example demonstrates, Metaschema allows developers to render the data independent of the notation used to represent it, and convert into any other notation their tools to support.
 
 We define the data types for different Metaschema fields and flags. Our Metaschema-enabled tools can leverage pre-compiled schemas or generate their own to enforce `field` and `flag` values that are valid for their type. For example, our Metaschema-enabled tools should accept a valid URI for the `website` field of the vendor `assembly`, but not any arbitrary string. For `byte-size`, they should only accept positive integer values greater than 0, not a decimal point number or string. Metaschema facilitates consistent enforcement of data typing so we developers do not have to.
 
-We also define the minimum and maximum number of elements for the different assemblies, flags, and field with `min-occurs` and `max-occurs` declarations. In our example, we have an opptional `expansion-card` field in the motherboard `assembly`. Our Metaschema-enabled tools will parse or generate instances as valid with optional fields missing. On the other hand, a motherboard `assembly` missing the CPU `field` should throw errors, as should parsing or generating instances with one that one CPU `field` in the JSON, XML, or YAML format.
+We also define the minimum and maximum number of elements for the different assemblies, flags, and field with `min-occurs` and `max-occurs` declarations. In our example, we have an optional `expansion-card` field in the motherboard `assembly`. Our Metaschema-enabled tools will parse or generate instances as valid with optional fields missing. On the other hand, a motherboard `assembly` missing the CPU `field` should throw errors, as should parsing or generating instances with one that one CPU `field` in the JSON, XML, or YAML format.
 
 ## Refactoring Metaschema Definitions and Deduplicating Code
 
@@ -413,7 +413,7 @@ We now have a robust information model for a computer we can express in JSON, XM
 
 Our stakeholders determine supply chain information is very important. We need to know vendor information for all the different parts of the computer, specifically a company name and where the company is headquartered. This information should be maintained for not just the computer, but all parts and sub-parts. How can we add this to the Metaschema definition?
 
-To get started, we can copy-paste vendor `assembly` into all relevent assemblies, not just the top-level computer assembly.
+For now, we can copy-paste vendor `assembly` into all relevent assemblies, not just the top-level computer assembly.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -947,7 +947,7 @@ We have updated our model to meet stakeholder needs, but the model itself is sig
 </METASCHEMA>
 ```
 
-We lifted the `assembly` definition for vendor and the definition of the product name `field` to outside the computer `assembly`. Because we have a `root-name` previously defined for the computer `assembly`, Metaschema enabled-tools will work just like before, generating and parsing the same instances with the computer `assembly` as the root, even with multiple top-level elements defined. At the same time, we reduced repeat copy-pasted code, and we can continue to add other requirements from our stakeholders and reuse their definitions across different elements of the model and maintain the original definition once.
+We lifted the `assembly` definition for vendor and the definition of the product name `field` to outside the computer `assembly`. Because we have a `root-name` previously defined for the computer `assembly`, Metaschema-enabled tools will work just as before, generating and parsing the same instances with the computer `assembly` as the root, even with multiple top-level elements defined. At the same time, we reduced repeat copy-pasted code, and we can continue to add other requirements from our stakeholders and reuse their definitions across different elements of the model and maintain the original definition once.
 
 ## Conclusion
 
