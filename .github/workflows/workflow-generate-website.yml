@@ -122,7 +122,7 @@ jobs:
       run: |
         zip ${{ runner.temp }}/metaschema-website.zip -r public/
       working-directory: ${{ github.workspace }}/website
-    - uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
+    - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
       with:
         name: website
         path: |
@@ -137,7 +137,7 @@ jobs:
         output: html-link-report.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb
+    - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
       with:
         name: html-link-report
         path: html-link-report.md
@@ -153,7 +153,7 @@ jobs:
         script: |
           core.setFailed('Link checker detected broken or invalid links, read attached report.')
     - name: Deploy Website (using access_token)
-      uses: peaceiris/actions-gh-pages@de7ea6f8efb354206b205ef54722213d99067935
+      uses: peaceiris/actions-gh-pages@64b46b4226a4a12da2239ba3ea5aa73e3163c75b
       if: github.event_name == 'push' && inputs.commit_resources == true && github.ref_name == 'main'
       with:
         github_token: ${{ secrets.access_token }}
@@ -162,7 +162,7 @@ jobs:
         publish_branch: nist-pages
         commit_message: Deploying website [ci deploy skip]
     - name: Deploy Website (using COMMIT_TOKEN)
-      uses: peaceiris/actions-gh-pages@de7ea6f8efb354206b205ef54722213d99067935
+      uses: peaceiris/actions-gh-pages@64b46b4226a4a12da2239ba3ea5aa73e3163c75b
       if: github.event_name == 'workflow_dispatch' && github.event.inputs.commit_resources == 'true' && github.ref_name == 'main'
       with:
         github_token: ${{ secrets.COMMIT_TOKEN }}
