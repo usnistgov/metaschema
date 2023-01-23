@@ -16,16 +16,8 @@
     <xsl:strip-space elements="METASCHEMA define-assembly define-field model"/>
     
     <xsl:output indent="yes" method="xml"/>
-    
-    <xsl:import href="../nist-metaschema-COMPOSE.xsl"/>
-    
-    <!-- This parameter controls whether this transform will compose the source metaschema as part of running this
-         stylesheet in standalone mode for debugging. In the CI and CD pipelines for production, this is unusual and
-         not desired, so this parameter is not enabled by default and set to false(). For unit testing and local debug
-         scenarios, you will want this so you do not save intermediate "composed" metaschemas needed for JSON Schema
-         generation, so with Oxygen, Saxon on the CLI, or Saxon via API you would set this to `true()`. -->
-    <xsl:param name="compose-metaschema-first" select="true()"/>
-    <xsl:variable name="composed-metaschema" select="if ($compose-metaschema-first) then nm:compose-metaschema(/) else /" />
+
+    <xsl:variable name="composed-metaschema" select="/" />
 
     <xsl:template match="/" priority="2">
         <xsl:apply-templates />
@@ -38,7 +30,7 @@
     <xsl:key name="assembly-definition-by-name" match="METASCHEMA/define-assembly" use="@_key-name"/>
     <xsl:key name="field-definition-by-name"    match="METASCHEMA/define-field"    use="@_key-name"/>
     <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag"     use="@_key-name"/>   
-   
+
     <xsl:template match="/METASCHEMA" expand-text="true">
         <map>
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
