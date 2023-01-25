@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://csrc.nist.gov/ns/metaschema-tests/0.1/json-schema-value-test-constrained-closed-schema.json",
+  "$comment": "JSON value testing mini metaschema: JSON Schema",
+  "type": "object",
+  "definitions": {
+    "json-schema-value-test-constrained-closed-json-schema-value-test-constrained-closed:root": {
+      "title": "Root",
+      "description": "Root root root.",
+      "$id": "#assembly_json-schema-value-test-constrained-closed_root",
+      "type": "object",
+      "properties": {
+        "constrained-closed": {
+          "$ref": "#field_json-schema-value-test-constrained-closed_constrained-closed"
+        }
+      },
+      "additionalProperties": false
+    },
+    "json-schema-value-test-constrained-closed-json-schema-value-test-constrained-closed:constrained-closed": {
+      "title": "Constrained closed",
+      "description": "Because allow-other is 'no' an enumeration can be given in the JSON Schema.",
+      "$id": "#field_json-schema-value-test-constrained-closed_constrained-closed",
+      "type": "object",
+      "properties": {
+        "some": {
+          "title": "Some Flag",
+          "description": "Some flag some flag some flag.",
+          "$ref": "#/definitions/StringDatatype"
+        },
+        "token-value": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/TokenDatatype"
+            },
+            {
+              "enum": [
+                "one",
+                "two",
+                "three",
+                "four"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "token-value"
+      ],
+      "additionalProperties": false
+    },
+    "StringDatatype": {
+      "type": "string",
+      "pattern": "^\\S(.*\\S)?$"
+    },
+    "TokenDatatype": {
+      "type": "string",
+      "pattern": "^(\\p{L}|_)(\\p{L}|\\p{N}|[.\\-_])*$"
+    }
+  },
+  "properties": {
+    "root": {
+      "$ref": "#assembly_json-schema-value-test-constrained-closed_root"
+    }
+  },
+  "required": [
+    "root"
+  ],
+  "additionalProperties": false,
+  "maxProperties": 1
+}

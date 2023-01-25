@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://csrc.nist.gov/ns/metaschema-tests/0.1/json-schema-value-test-constrained-sortof-schema.json",
+  "$comment": "JSON value testing mini metaschema: JSON Schema",
+  "type": "object",
+  "definitions": {
+    "json-schema-value-test-constrained-sortof-json-schema-value-test-constrained-sortof:root": {
+      "title": "Root",
+      "description": "Root root root.",
+      "$id": "#assembly_json-schema-value-test-constrained-sortof_root",
+      "type": "object",
+      "properties": {
+        "constrained-sortof": {
+          "$ref": "#field_json-schema-value-test-constrained-sortof_constrained-sortof"
+        }
+      },
+      "additionalProperties": false
+    },
+    "json-schema-value-test-constrained-sortof-json-schema-value-test-constrained-sortof:constrained-sortof": {
+      "title": "Constrained, sort of",
+      "description": "Although allow-other is 'no' an enumeration can't be given in the JSON Schema since it targets a qualified set (only a subset) of the elements in scope.",
+      "$id": "#field_json-schema-value-test-constrained-sortof_constrained-sortof",
+      "type": "object",
+      "properties": {
+        "some": {
+          "title": "Some Flag",
+          "description": "Some flag some flag some flag.",
+          "$ref": "#/definitions/StringDatatype"
+        },
+        "token-value": {
+          "$ref": "#/definitions/TokenDatatype"
+        }
+      },
+      "required": [
+        "token-value"
+      ],
+      "additionalProperties": false
+    },
+    "StringDatatype": {
+      "type": "string",
+      "pattern": "^\\S(.*\\S)?$"
+    },
+    "TokenDatatype": {
+      "type": "string",
+      "pattern": "^(\\p{L}|_)(\\p{L}|\\p{N}|[.\\-_])*$"
+    }
+  },
+  "properties": {
+    "root": {
+      "$ref": "#assembly_json-schema-value-test-constrained-sortof_root"
+    }
+  },
+  "required": [
+    "root"
+  ],
+  "additionalProperties": false,
+  "maxProperties": 1
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="metaschema-author.css"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../schema/xml/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" abstract="no">
+    <schema-name>JSON value testing mini metaschema</schema-name>
+    <schema-version>0.1</schema-version>
+    <short-name>json-schema-value-test-constrained-sortof</short-name>
+    <namespace>http://csrc.nist.gov/ns/metaschema-tests/1.0</namespace>
+    <json-base-uri>http://csrc.nist.gov/ns/metaschema-tests</json-base-uri>
+    <define-assembly name="root">
+        <formal-name>Root</formal-name>
+        <description>Root root root.</description>
+        <root-name>root</root-name>
+        <model>
+            <field ref="constrained-sortof"/>
+        </model>
+    </define-assembly>
+    <define-field 
+        as-type="token"
+        name="constrained-sortof">
+        <formal-name>Constrained, sort of</formal-name>
+        <description>Although allow-other is 'no' an enumeration can't be given in the JSON Schema since it targets a qualified set (only a subset) of the elements in scope.</description>
+        <json-value-key>token-value</json-value-key>
+        <define-flag name="some">
+            <formal-name>Some Flag</formal-name>
+            <description>Some flag some flag some flag.</description>
+        </define-flag>
+        <constraint>
+            <allowed-values target=".[not(false())]" allow-other="yes">
+                <enum value="one"/>
+                <enum value="two"/>
+                <enum value="three"/>
+                <enum value="four"/>
+            </allowed-values>
+        </constraint>
+    </define-field>
+</METASCHEMA>
