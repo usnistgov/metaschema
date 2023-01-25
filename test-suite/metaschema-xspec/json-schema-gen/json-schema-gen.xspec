@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.jenitennison.com/xslt/xspec"
+   xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+   xmlns:j="http://www.w3.org/2005/xpath-functions"
+   stylesheet="../../../toolchains/xslt-M4/nist-metaschema-MAKE-JSON-SCHEMA.xsl" run-as="external">
+
+   <x:scenario label="When generating a JSON schema from composed Metaschema definitions">
+      <x:scenario label="if it has a defined field with no constraint and no allowed-values">
+         <x:context href="json-value_unconstrained_metaschema.xml"/>
+         <x:expect label="the resulting JSON Schema should not have an enum to enforce it." 
+            test="$x:result => j:json-to-xml()" select="'../json-value_unconstrained.json' => j:unparsed-text() => j:json-to-xml()"/>
+      </x:scenario>
+      
+      <x:scenario label="if it has a defined field with a constraint, allowed-values, strict enforcement of allow-other='no' and explicit target of '.'">
+         <x:context href="json-value_constrained-closed_metaschema.xml"/>
+         <x:expect label="the resulting JSON Schema should have an enum to enforce it."
+            test="$x:result => j:json-to-xml()" select="'../json-value_constrained-closed.json' => j:unparsed-text() => j:json-to-xml()"/> 
+      </x:scenario>
+   
+      <x:scenario label="if it has a defined field with a constraint, allowed-values, no explicit target, and permissive enforcement of allow-other='yes'">
+         <x:context href="json-value_constrained-open_metaschema.xml"/>
+         <x:expect label="the resulting JSON Schema should not have an enum to enforce it."
+            test="$x:result => j:json-to-xml()" select="'../json-value_constrained-open.json' => j:unparsed-text() => j:json-to-xml()"/>
+      </x:scenario>
+
+      <x:scenario label="if it has a defined field with a constraint, allowed-values, strict enforcement of allow-other='no' and explicit target other than '.'">
+         <x:context href="json-value_constrained-narrow_metaschema.xml"/>
+         <x:expect label="the resulting JSON Schema should not have an enum to enforce it."
+            test="$x:result => j:json-to-xml()" select="'../json-value_constrained-narrow.json' => j:unparsed-text() => j:json-to-xml()"/>
+      </x:scenario>
+   
+      <x:scenario label="if it has a defined field with a constraint, allowed-values, permissive enforcement of allow-other='yes' and explicit target other than '.'">
+         <x:context href="json-value_constrained-sortof_metaschema.xml"/>
+         <x:expect label="the resulting JSON Schema should not have an enum to enforce it."
+            test="$x:result => j:json-to-xml()" select="'../json-value_constrained-sortof.json' => j:unparsed-text() => j:json-to-xml()"/>
+      </x:scenario>
+   </x:scenario>
+</x:description>

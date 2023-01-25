@@ -2,25 +2,26 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:math="http://www.w3.org/2005/xpath-functions/math" exclude-result-prefixes="xs math"
+    xmlns:nm="http://csrc.nist.gov/ns/metaschema"
     version="3.0" xmlns="http://www.w3.org/2005/xpath-functions"
     xpath-default-namespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0" expand-text="true">
 
-<!-- Purpose: Produce an XPath-JSON document representing JSON Schema declarations from Metaschema source data.
-     The results are conformant to the rules for the XPath 3.1 definition of an XML format capable of being cast
-     (using the xml-to-json() function) into JSON. -->
-    
-<!-- Note: this XSLT will only be used on its own for development and debugging.
-     It is however imported by `produce-json-converter.xsl` and possibly other stylesheets. -->
+    <!-- Purpose: Produce an XPath-JSON document representing JSON Schema declarations from Metaschema source data.
+        The results are conformant to the rules for the XPath 3.1 definition of an XML format capable of being cast
+        (using the xml-to-json() function) into JSON. -->
+        
+    <!-- Note: this XSLT will only be used on its own for development and debugging.
+        It is however imported by `produce-json-converter.xsl` and possibly other stylesheets. -->
     
     <xsl:strip-space elements="METASCHEMA define-assembly define-field model"/>
     
     <xsl:output indent="yes" method="xml"/>
-    
+
+    <xsl:variable name="composed-metaschema" select="/" />
+
     <xsl:template match="/" priority="2">
-        <xsl:apply-templates/>
+        <xsl:apply-templates />
     </xsl:template>
-    
-    <xsl:variable name="home" select="/"/>
     
     <xsl:variable name="string-value-label">STRVALUE</xsl:variable>
     <xsl:variable name="markdown-value-label">RICHTEXT</xsl:variable>
@@ -28,34 +29,16 @@
     
     <xsl:key name="assembly-definition-by-name" match="METASCHEMA/define-assembly" use="@_key-name"/>
     <xsl:key name="field-definition-by-name"    match="METASCHEMA/define-field"    use="@_key-name"/>
-    <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag"     use="@_key-name"/>
-    
-    <!--Keys for retrieving datatypes:
-    
-    <xsl:key name="typename-for-syntax"
-    
-    -->
-    <!-- Produces composed metaschema (imports resolved) -->
-    <!--<xsl:import href="../nist-metaschema-COMPOSE.xsl"/>
-    <xsl:variable name="composed-metaschema" select="/"/>
-    
-    <!-- bypasses composition to operate on the 'raw' metaschema for debugging -->
-    <!--<xsl:template mode="debug"  match="/METASCHEMA">
-        <xsl:apply-templates select="*"/>
-    </xsl:template>-->
+    <xsl:key name="flag-definition-by-name"     match="METASCHEMA/define-flag"     use="@_key-name"/>   
 
-   
     <xsl:template match="/METASCHEMA" expand-text="true">
-        
         <map>
-            <!--<xsl:variable name="wanted-atomic-types" "$datatypes//*:string[@key='$ref']"/>-->
             <string key="$schema">http://json-schema.org/draft-07/schema#</string>
             <string key="$id">{ json-base-uri }/{ schema-version }/{ short-name }-schema.json</string>
             <xsl:for-each select="schema-name">
                 <string key="$comment">{ . }: JSON Schema</string>
             </xsl:for-each>
             
-            <!--<xsl:apply-templates select="schema-version"/>-->
             <string key="type">object</string>
             <map key="definitions">
                 <xsl:apply-templates select="define-assembly | define-field"/>
@@ -106,10 +89,7 @@
     <xsl:template match="METASCHEMA/remarks"/>
     <xsl:template match="METASCHEMA/namespace"/>
     
-    <xsl:template match="METASCHEMA/schema-version" expand-text="true">
-        <!--property not permitted by JSON Schema v7 -->
-        <!--<string key="version">{ . }</string>-->
-    </xsl:template>
+    <xsl:template match="METASCHEMA/schema-version" expand-text="true"/>
     
     <!-- Flag declarations are all handled at the point of invocation -->
     <xsl:template match="define-flag"/>
@@ -135,7 +115,6 @@
 
     <xsl:template priority="100" match="METASCHEMA/define-assembly">
         <map key="{ $composed-metaschema/*/short-name }-{ @_key-name }">
-            <!--<string key="xslt-lineno">123</string>-->
             <xsl:next-match/>
         </map>
     </xsl:template>
@@ -168,9 +147,6 @@
                 </map>
             </xsl:where-populated>
             <xsl:call-template name="require-or-allow"/>
-            
-            <!-- allowed-values only present on fields -->
-            <xsl:apply-templates select="constraint/allowed-values"/>
     </xsl:template>
     
     <xsl:template match="define-field[exists(json-value-key-flag/@flag-ref)]">
@@ -200,8 +176,6 @@
                 <xsl:value-of
                     select="count($all-properties | self::define-field)"/>
             </number>
-            <!-- allowed-values only present on fields -->
-            <xsl:apply-templates select="constraint/allowed-values"/>
     </xsl:template>
     
     
@@ -250,13 +224,10 @@
     
     <xsl:template match="remarks | example"/>
     
-    <!-- No restriction is introduced when allow others is 'yes' -->
-    <xsl:template match="allowed-values[@allow-other='yes']"/>
-    
     <!--<xsl:template match="allowed-values"/>-->
     <xsl:template match="allowed-values">
         <array key="enum">
-            <xsl:apply-templates/>
+            <xsl:apply-templates select="child::*"/>
         </array>
     </xsl:template>
     
@@ -273,7 +244,6 @@
                 <xsl:otherwise>string</xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <!--<xsl:copy-of select="$type-declaration"/>-->
         <xsl:element namespace="http://www.w3.org/2005/xpath-functions" name="{$nominal-type}">
             <xsl:apply-templates select="@value"/>
         </xsl:element>
@@ -310,24 +280,6 @@
         </boolean>
     </xsl:template>
     
-    <!--<xsl:template name="string-or-array-of-strings">
-        <array key="oneOf">
-            <map>
-                <string key="type">string</string>
-            </map>
-            <map>
-                <string key="type">array</string>
-                <array key="items">
-                    <map>
-                        <string key="type">string</string>
-                    </map>
-                </array>
-                <string key="minItems">2</string>
-            </map>
-        </array>
-    </xsl:template>-->
-    
-    
     <xsl:template match="*" mode="text-property"/>
     
     <xsl:template match="define-field" mode="text-property">
@@ -360,64 +312,47 @@
     <!-- properties of an assembly include its flags and assemblies and fields in its model -->
     <xsl:template match="define-assembly" mode="properties">
         <xsl:apply-templates mode="define" select="flag | define-flag | model"/>
-        <!-- to be excluded, flags assigned to be keys -->
-        <!--<xsl:variable name="json-key-flag" select="json-key/@flag-ref"/>
-        <xsl:apply-templates mode="declaration"
-            select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)], model"/>-->
     </xsl:template>
 
     <!-- not having a model, the properties of a field are its flags and its value -->
     <xsl:template match="define-field" mode="properties">
-        <!--<xsl:variable name="json-key-flag" select="json-key/@flag-ref"/>
-        <xsl:apply-templates mode="declaration" select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)]"/>-->
         <xsl:apply-templates mode="define" select="flag | define-flag"/>
         <xsl:variable name="this-key" as="xs:string?">
             <xsl:apply-templates select="." mode="value-key"/>
         </xsl:variable>
         <xsl:if test="matches($this-key, '\S')">
             <map key="{$this-key}">
-                <string key="type">string</string>
+                <xsl:variable name="nominal-object-type" as="element()">
+                    <xsl:apply-templates select="." mode="object-type"/>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="constraint/allowed-values/@allow-other = 'yes' and (constraint/allowed-values/@target = '.' or empty(constraint/allowed-values/@target))">
+                        <array key="anyOf">
+                            <map>
+                                <xsl:sequence select="$nominal-object-type"/>
+                            </map>
+                            <map>
+                                <xsl:apply-templates select="constraint/allowed-values"/>
+                            </map>
+                        </array>                        
+                    </xsl:when>
+                    <xsl:when test="constraint/allowed-values/@allow-other = 'no' and (constraint/allowed-values/@target = '.' or empty(constraint/allowed-values/@target))">
+                        <array key="allOf">
+                            <map>
+                                <xsl:sequence select="$nominal-object-type"/>
+                            </map>
+                            <map>
+                                <xsl:apply-templates select="constraint/allowed-values"/>
+                            </map>
+                        </array>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="$nominal-object-type"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </map>
         </xsl:if>
     </xsl:template>
-
-    <!-- A collapsible field is represented as an object containing
-         a string or an array of strings
-    turned off for now until we reinstate collapsing into conversion scripts (2020-09-21) -->
-    <!--<xsl:template match="define-field[@collapsible='yes']" mode="properties">
-        <!-\-<xsl:variable name="json-key-flag" select="json-key/@flag-ref"/>
-        <xsl:apply-templates mode="declaration" select="flag[not(@ref = $json-key-flag)], define-flag[not(@name = $json-key-flag)]"/>-\->
-        <xsl:apply-templates mode="define" select="flag | define-flag"/>
-        <xsl:variable name="this-key" as="xs:string?">
-            <xsl:apply-templates select="." mode="value-key"/>
-        </xsl:variable>
-        <xsl:if test="matches($this-key, '\S')">
-            <map key="{$this-key}">
-                <array key="anyOf">
-                    <map><string key="type">string</string></map>
-                    <map>
-                        <string key="type">array</string>
-                        <map key="items">
-                            <string key="type">string</string>
-                        </map>
-                        <number key="minItems">1</number><!-\- See Issue #536 -\->
-                    </map>
-                </array>
-            </map>
-        </xsl:if>
-    </xsl:template>-->
-    
-    <!--<xsl:template priority="2" mode="property-name" match="assembly">
-        <xsl:apply-templates mode="#current" select="key('assembly-definition-by-name',@_key-ref)"/>
-    </xsl:template>
-    
-    <xsl:template priority="2" mode="property-name" match="field">
-        <xsl:apply-templates mode="#current" select="key('field-definition-by-name',@_key-ref)"/>
-    </xsl:template>
-    
-    <xsl:template priority="2" mode="property-name" match="flag">
-        <xsl:apply-templates mode="#current" select="key('flag-definition-by-name',@_key-ref)"/>
-    </xsl:template>-->
     
     <xsl:template priority="2" mode="property-name" match="define-field | define-assembly | define-flag | assembly | field | flag" expand-text="true">
         <string>{ @_in-json-name }</string>
@@ -432,7 +367,6 @@
     
     <!--A flag declared as a key or value key gets no declaration since it
     will not show up in the JSON as a separate property -->
-    
     <xsl:template mode="define" priority="5" match="define-flag[@name=../(json-value-key-flag|json-key)/@flag-ref] |
         flag[@ref=../(json-value-key-flag|json-key)/@flag-ref]"/>
     
@@ -626,7 +560,6 @@
     
     <xsl:template priority="2" match="*[@as-type='integer']" mode="object-type">
         <string key="type">integer</string>
-        <!--<number key="multipleOf">1.0</number>-->
     </xsl:template>
 
     <xsl:template priority="2" match="*[@as-type='positiveInteger']" mode="object-type">
@@ -647,101 +580,20 @@
     
     <xsl:template priority="2.1" match="*[@as-type = $datatype-map/@as-type]" mode="object-type">
         <xsl:variable name="assigned-type" select="$datatype-map[(@as-type|@prefer)=current()/@as-type]/string(.)"/>
-        <!--"$ref" : "#/definitions/UUIDDatatype"-->
-        <string key="$ref">#/definitions/{$assigned-type}</string><!--
-        <xsl:message expand-text="true">@as-type: { @as-type } assigns type { $assigned-type }</xsl:message>
-        <xsl:variable name="makesTypes" select="key('datatypes-by-name',$assigned-type,$datatypes)/*"/>
-        <xsl:message expand-text="true">{ serialize($makesTypes) } </xsl:message>
-        <xsl:apply-templates mode="acquire-types" select="$makesTypes"/>-->
+        <string key="$ref">#/definitions/{$assigned-type}</string>
     </xsl:template>
     
     <xsl:mode name="acquire-types" on-no-match="shallow-copy"/>
     
-    <xsl:template mode="acquire-types" xpath-default-namespace="http://www.w3.org/2005/xpath-functions" match="string[@key='description']">
-      <!--<string key="datatype-description">
-          <xsl:apply-templates/>
-      </string>  -->  
-    </xsl:template>
+    <xsl:template mode="acquire-types" xpath-default-namespace="http://www.w3.org/2005/xpath-functions" match="string[@key='description']"/>
     
     <xsl:key name="datatypes-by-name" xpath-default-namespace="http://www.w3.org/2005/xpath-functions"
         match="map" use="@key"/>
-    
-    <!--<xsl:variable name="datatypes" expand-text="false">
-        <dummy/>
-    </xsl:variable>-->
         
     <xsl:variable name="json-datatypes-path" as="xs:string">../../../schema/json/metaschema-datatypes.json</xsl:variable>
     
 
     <xsl:variable name="datatypes" expand-text="false">
         <xsl:copy-of xpath-default-namespace="http://www.w3.org/2005/xpath-functions" select="( unparsed-text($json-datatypes-path) => json-to-xml() )/map/map[@key='definitions']/map"/>
-        
-        <!-- Some old datatype names are preserved for backward compatibility -->
-        <!-- see ../../../schema/xml/metaschema.xsd line 1052 inside  /*/xs:simpleType[@name='SimpleDatatypesType']> -->
-        
-        <!--<map key="decimal"><!-\- DecimalDatatype -\->
-            <string key="type">number</string>
-            <!-\-<string key="pattern">^(\+|-)?([0-9]+(\.[0-9]*)?|\.[0-9]+)$</string>-\->
-        </map>
-        <map key="date"><!-\- DateDatatype -\->
-            <string key="type">string</string>
-            <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
-        </map>-->
-        <map key="dateTime"><!-- DateTimeDatatype -->
-            <string key="type">string</string>
-            <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})?$</string>
-        </map>
-        <!--<map key="date-with-timezone"><!-\- DateWithTimezoneDatatype -\->
-            <string key="type">string</string>
-            <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))(Z|[+-][0-9]{2}:[0-9]{2})$</string>
-        </map>-->
-        <map key="dateTime-with-timezone"><!-- DateTimeWithTimezoneDatatype -->
-            <string key="type">string</string>
-            <string key="format">date-time</string>
-            <string key="pattern">^((2000|2400|2800|(19|2[0-9](0[48]|[2468][048]|[13579][26])))-02-29)|(((19|2[0-9])[0-9]{2})-02-(0[1-9]|1[0-9]|2[0-8]))|(((19|2[0-9])[0-9]{2})-(0[13578]|10|12)-(0[1-9]|[12][0-9]|3[01]))|(((19|2[0-9])[0-9]{2})-(0[469]|11)-(0[1-9]|[12][0-9]|30))T(2[0-3]|[01][0-9]):([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-][0-9]{2}:[0-9]{2})$</string>
-        </map>
-        <map key="email"><!-- EmailAddressDatatype -->
-            <string key="type">string</string>
-            <string key="format">email</string>
-            <string key="pattern">^.+@.+$</string>
-        </map>
-        <!--<map key="ip-v4-address"><!-\- IPV4AddressDatatype -\->
-            <string key="type">string</string>
-            <string key="format">ipv4</string>
-            <string key="pattern">^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$</string>
-        </map>
-        <map key="ip-v6-address"><!-\- IPV6AddressDatatype -\->
-            <string key="type">string</string>
-            <string key="format">ipv6</string>
-            <string key="pattern">^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|[fF][eE]80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::([fF]{4}(:0{1,4}){0,1}:){0,1}((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]).){3,3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9]))$</string>
-        </map>
-        <map key="hostname"><!-\- HostnameDatatype -\->
-            <string key="$ref">#/definitions/StringDatatype</string>
-            <string key="format">idn-hostname</string>
-        </map>
-        <map key="uri"><!-\- URIDatatype -\->
-            <string key="type">string</string>
-            <string key="format">uri</string>
-            <string key="pattern">^[a-zA-Z][a-zA-Z0-9+\-.]+:.+$</string>
-        </map>
-        <map key="uri-reference"><!-\- URIReferenceDatatype -\->
-            <string key="type">string</string>
-            <string key="format">uri-reference</string>
-        </map>
-        <map key="uuid"><!-\- UUIDDatatype -\->
-            <string key="type">string</string>
-            <string key="description">A type 4 ('random' or 'pseudorandom') or type 5 UUID per RFC 4122.</string>
-            <string key="pattern">^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[45][0-9A-Fa-f]{3}-[89ABab][0-9A-Fa-f]{3}-[0-9A-Fa-f]{12}$</string>
-        </map>
-        <map xmlns="http://www.w3.org/2005/xpath-functions" key="token"><!-\- TokenDatatype -\->
-            <string key="type">string</string>
-            <string key="pattern">^(\p{L}|_)(\p{L}|\p{N}|[.\-_])*$</string>
-        </map>
-        
-        <map key="string">
-            <string key="type">string</string>
-            <string key="pattern">^\S(.*\S)?$</string>
-        </map>-->
     </xsl:variable>
-
 </xsl:stylesheet>
