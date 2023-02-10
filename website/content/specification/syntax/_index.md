@@ -208,7 +208,7 @@ TBD
 
 ## Data types
 
-A data type can be specified in a metaschema definition within a `define-field`, `define-assembly`, `define-flag`, or `flag` component definition using the `@as-type` attribute. The following are the allowed data types.
+A data type can be specified in a metaschema definition within a `define-field`, `field`, `define-flag`, or `flag` component definition using the `@as-type` attribute. The following are the allowed data types.
 
 ### Simple Data types
 
