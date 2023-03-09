@@ -7,7 +7,7 @@
     "Base64Datatype": {
       "description": "Binary data encoded using the Base 64 encoding algorithm as defined by RFC4648.",
       "type": "string",
-      "pattern": "^[0-9A-Za-z+/]+$",
+      "pattern": "^[0-9A-Za-z+/]+={0,2}$",
       "contentEncoding": "base64"
     },
     "BooleanDatatype": {
