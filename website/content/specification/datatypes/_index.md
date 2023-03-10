@@ -128,6 +128,8 @@ In XML Schema this is represented as a restriction on the built-in type [boolean
 </xs:simpleType>
 ```
 
+The pattern `true|false|0|1` above ensures that leading and trailing whitespace is not allowed in XML-based Metaschema instances using this data type.
+
 In JSON Schema, this is represented as:
 
 ```JSON
@@ -472,6 +474,8 @@ In XML Schema this is represented as a restriction on the built-in type [nonNega
 </xs:simpleType>
 ```
 
+Note: The pattern above ensures that leading and trailing whitespace is not allowed in XML-based Metaschema instances using this data type.
+
 In JSON Schema, this is represented as:
 
 ```JSON
@@ -494,6 +498,8 @@ In XML Schema this is represented as a restriction on the built-in type [positiv
   </xs:restriction>
 </xs:simpleType>
 ```
+
+Note: The pattern above ensures that leading and trailing whitespace is not allowed in XML-based Metaschema instances using this data type.
 
 In JSON Schema, this is represented as:
 
@@ -520,6 +526,8 @@ In XML Schema this is represented as a restriction on the built in type [string]
   </xs:restriction>
 </xs:simpleType>
 ```
+
+Note: The pattern above ensures that leading and trailing whitespace is not allowed in XML-based Metaschema instances using this data type.
 
 In JSON Schema, this is represented as:
 
@@ -598,6 +606,8 @@ In XML Schema this is represented as a restriction on the built in type [anyURI]
   </xs:restriction>
 </xs:simpleType>
 ```
+
+Note: The pattern above ensures that leading and trailing whitespace is not allowed in XML-based Metaschema instances using this data type.
 
 In JSON Schema, this is represented as:
 

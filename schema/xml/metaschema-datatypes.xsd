@@ -68,10 +68,17 @@
 
 	<xs:simpleType name="DecimalDatatype">
 		<xs:annotation>
-			<xs:documentation>A real number expressed using a whole and optional fractional part separated by a period.</xs:documentation>
+			<xs:documentation>A real number expressed using a whole and optional fractional part
+				separated by a period.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:decimal">
-			<xs:pattern value="\S(.*\S)?"/>
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -100,7 +107,13 @@
 			<xs:documentation>A whole number value.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:integer">
-			<xs:pattern value="\S(.*\S)?"/>
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
 		</xs:restriction>
 	</xs:simpleType>
 	
@@ -133,7 +146,13 @@
 			<xs:documentation>An integer value that is equal to or greater than 0.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:nonNegativeInteger">
-			<xs:pattern value="\S(.*\S)?"/>
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
 		</xs:restriction>
 	</xs:simpleType>
 	
@@ -142,7 +161,13 @@
 			<xs:documentation>An integer value that is greater than 0.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:positiveInteger">
-			<xs:pattern value="\S(.*\S)?"/>
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
 		</xs:restriction>
 	</xs:simpleType>
 	
@@ -157,7 +182,13 @@
 					and trailing whitespace, and something (not only whitespace) is required.</xs:documentation>
 			</xs:annotation>
 			<xs:whiteSpace value="preserve" />
-			<xs:pattern value="\S(.*\S)?"/>
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
 		</xs:restriction>
 	</xs:simpleType>
 	
@@ -199,7 +230,13 @@
 			<xs:documentation>A URI Reference, either a URI or a relative-reference, formatted according to section 4.1 of RFC3986.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:anyURI">
-			<xs:pattern value="\S(.*\S)?"/>
+			<xs:pattern value="\S(.*\S)?">
+				<xs:annotation>
+					<xs:documentation>This pattern ensures that leading and trailing whitespace is
+						disallowed. This helps to even the user experience between implementations
+						related to whitespace.</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
 		</xs:restriction>
 	</xs:simpleType>
 
