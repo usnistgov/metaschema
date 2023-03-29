@@ -465,7 +465,7 @@ For now, we can copy-paste the `vendor` assembly into all relevant assemblies, n
             <formal-name>Vendor Address</formal-name>
             <description>The physical address of an office location for the vendor.</description>
           </define-field>
-          <define-field name="website" min-occurs="1" max-occurs="1">
+          <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
             <formal-name>Vendor Website</formal-name>
             <description>A public website made by the vendor documenting their parts as used in the computer.</description>
           </define-field>
@@ -491,7 +491,7 @@ For now, we can copy-paste the `vendor` assembly into all relevant assemblies, n
                 <formal-name>Vendor Address</formal-name>
                 <description>The physical address of an office location for the vendor.</description>
               </define-field>
-              <define-field name="website" min-occurs="1" max-occurs="1">
+              <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
                 <formal-name>Vendor Website</formal-name>
                 <description>A public website made by the vendor documenting their parts as used in the computer.</description>
               </define-field>
@@ -525,7 +525,7 @@ For now, we can copy-paste the `vendor` assembly into all relevant assemblies, n
                     <formal-name>Vendor Address</formal-name>
                     <description>The physical address of an office location for the vendor.</description>
                   </define-field>
-                  <define-field name="website" min-occurs="1" max-occurs="1">
+                  <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
                     <formal-name>Vendor Website</formal-name>
                     <description>A public website made by the vendor documenting their parts as used in the computer.</description>
                   </define-field>
@@ -565,7 +565,7 @@ For now, we can copy-paste the `vendor` assembly into all relevant assemblies, n
                     <formal-name>Vendor Address</formal-name>
                     <description>The physical address of an office location for the vendor.</description>
                   </define-field>
-                  <define-field name="website" min-occurs="1" max-occurs="1">
+                  <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
                     <formal-name>Vendor Website</formal-name>
                     <description>A public website made by the vendor documenting their parts as used in the computer.</description>
                   </define-field>
@@ -602,7 +602,7 @@ For now, we can copy-paste the `vendor` assembly into all relevant assemblies, n
                     <formal-name>Vendor Address</formal-name>
                     <description>The physical address of an office location for the vendor.</description>
                   </define-field>
-                  <define-field name="website" min-occurs="1" max-occurs="1">
+                  <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
                     <formal-name>Vendor Website</formal-name>
                     <description>A public website made by the vendor documenting their parts as used in the computer.</description>
                   </define-field>
@@ -639,7 +639,7 @@ For now, we can copy-paste the `vendor` assembly into all relevant assemblies, n
                     <formal-name>Vendor Address</formal-name>
                     <description>The physical address of an office location for the vendor.</description>
                   </define-field>
-                  <define-field name="website" min-occurs="1" max-occurs="1">
+                  <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
                     <formal-name>Vendor Website</formal-name>
                     <description>A public website made by the vendor documenting their parts as used in the computer.</description>
                   </define-field>
@@ -871,7 +871,7 @@ At this point we have updated our model to meet stakeholder needs, but the model
         <formal-name>Vendor Address</formal-name>
         <description>The physical address of an office location for the vendor.</description>
       </define-field>
-      <define-field name="website" min-occurs="1" max-occurs="1">
+      <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
         <formal-name>Vendor Website</formal-name>
         <description>A public website made by the vendor documenting their parts as used in the computer.</description>
       </define-field>

@@ -20,11 +20,12 @@ An *assembly* is defined as follows:
 
 An assembly does not have an associated value.
 
-An assembly may reference or directly define zero or more [*flags*](#flag).
+An assembly may reference or directly define zero or more [*flags*](#flag). Flag instances associated with an assembly definition typically provide additional metadata used to identify or characterize the object represented by the assembly.
 
-An Assembly has a model consisting of references to zero or more [*assemblies*](#assembly) or [*fields*](#field).
+An Assembly has an optional model consisting of references to zero or more [*assemblies*](#assembly) or [*fields*](#field) as model instances. These model instances allow complex data to be composed within an assembly.
 
-An *assembly definition* is a type of [* definition*](#definition) within a given [*Metaschema module*](#metaschema-module) used to represent a complex [*information element*](#information-element).
+An *assembly definition* is a type of [*definition*](#definition) within a given [*Metaschema module*](#metaschema-module) used to represent the implementation of a complex [*information element*](#information-element) as an assembly.
+
 ## Data Model
 
 A *data model*, abbreviated as DM, is defined as follows:
@@ -60,7 +61,10 @@ A *flag* is a pairing of a name and a value.
 
 A flag typically provides identifying or classifying information for the containing [*assembly*](#assembly) or [*field*](#field).
 
-A *flag definition* is a type of [*definition*](#definition) within a given [*Metaschema module*](#metaschema-module) used to represent a simple, named [*information element*](#information-element) with an associated primitive value.
+The flag's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types).
+
+A *flag definition* is a type of [*definition*](#definition) within a given [*Metaschema module*](#metaschema-module) used to represent the implementation of a simple, named [*information element*](#information-element) with an associated primitive value as a flag.
+
 ## Field
 
 A *field* is defined as follows:
@@ -69,7 +73,9 @@ A *field* is defined as follows:
 
 A field is typically used to provide supporting information for a containing [*assembly*](#assembly).
 
-A *field definition* is a type of [*definition*](#definition) within a given [*Metaschema module*](#metaschema-module) used to represent a named complex [*information element*](#information-element) with an associated primitive or markup typed value, and zero or more [*flags*](#flag).
+The field's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types).
+
+A *field definition* is a type of [*definition*](#definition) within a given [*Metaschema module*](#metaschema-module) used to represent the implementation of a named complex [*information element*](#information-element) with an associated primitive or markup typed value, and zero or more [*flags*](#flag) as a field.
 
 ## Information Element
 
