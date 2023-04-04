@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>Computer Model</schema-name>
+    <schema-version>0.0.5</schema-version>
+    <short-name>computer</short-name>
+    <namespace>http://example.com/ns/computer</namespace>
+    <json-base-uri>http://example.com/ns/computer</json-base-uri>
+    <define-assembly name="vendor">
+        <formal-name>Vendor Information</formal-name>
+        <description>Information about a vendor of a computer part.</description>
+        <define-flag name="id" required="yes">
+            <formal-name>Vendor Identifier</formal-name>
+            <description>An identifier for classifying a unique computer parts vendor.</description>
+        </define-flag>
+        <model>
+            <define-field name="name" min-occurs="1">
+                <formal-name>Vendor Name</formal-name>
+                <description>The registered company name of the vendor.</description>
+            </define-field>
+            <define-field name="address" min-occurs="1">
+                <formal-name>Vendor Address</formal-name>
+                <description>The physical address of an office location for the vendor.</description>
+            </define-field>
+            <define-field name="website" as-type="uri" min-occurs="1">
+                <formal-name>Vendor Website</formal-name>
+                <description>A public website made by the vendor documenting their parts as used in the computer.</description>
+            </define-field>
+        </model>
+    </define-assembly>
+    <define-field name="product-name">
+        <formal-name>Product Name</formal-name>
+        <description>The product name from the vendor of the computer part.</description>
+    </define-field>
+    <define-assembly name="computer">
+        <formal-name>Computer Assembly</formal-name>
+        <description>A container object for a computer, its parts, and its sub-parts.</description>
+        <root-name>computer</root-name>
+        <define-flag name="id" required="yes">
+            <formal-name>Computer Identifier</formal-name>
+            <description>An identifier for classifying a unique make and model of computer.</description>
+        </define-flag>
+        <model>
+            <define-field name="build-date" as-type="date-time-with-timezone">
+                <formal-name>Build Date and Time</formal-name>
+                <description>The date and time the computer build was completed.</description>
+            </define-field>
+            <define-assembly name="motherboard">
+                <formal-name>Motherboard Assembly</formal-name>
+                <description>A container object for a motherboard in a computer and its sub-parts.</description>
+                <model>
+                    <assembly ref="vendor"/>
+                    <define-field name="motherboard-type" min-occurs="1">
+                        <formal-name>Motherboard Type</formal-name>
+                        <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
+                        <use-name>type</use-name>
+                    </define-field>
+                    <define-assembly name="cpu">
+                        <formal-name>Motherboard Central Processing Unit (CPU)</formal-name>
+                        <description>The model number of the CPU on the motherboard of a computer.</description>
+                        <model>
+                            <assembly ref="vendor"/>
+                            <field ref="product-name" min-occurs="1"/>
+                            <field ref="cost"/>
+                            <define-field name="architecture" min-occurs="1">
+                                <formal-name>CPU Architecture</formal-name>
+                                <description>The Instruction Set Architecture (ISA) of the processor, <code>x86</code>, <code>x86-64</code>, <code>arm</code>, or an alternative.</description>
+                            </define-field>
+                            <define-field name="speed" min-occurs="1">
+                                <formal-name>CPU Speed</formal-name>
+                                <description>The clock speed of the CPU in megahertz or gigahertz.</description>
+                            </define-field>
+                            <field ref="remarks" in-xml="UNWRAPPED"/>
+                        </model>
+                    </define-assembly>
+                    <define-assembly name="ata-socket">
+                        <formal-name>Motherboard Advanced Technology Attachment (ATA) Socket</formal-name>
+                        <description>The model number of ATA socket on the motherboard of a computer. There will only be one socket on any motherboard.</description>
+                        <model>
+                            <assembly ref="vendor"/>        
+                            <field ref="product-name" min-occurs="1"/>
+                            <field ref="cost"/>
+                            <define-field name="socket-type" min-occurs="1">
+                                <formal-name>ATA Socket Type</formal-name>
+                                <description>The type of ATA socket on the motherboard , <code>pata</code> (parallel ATA), <code>sata</code> (Serial ATA), or an alternative.</description>
+                                <use-name>type</use-name>
+                            </define-field>
+                            <field ref="remarks" in-xml="UNWRAPPED"/>
+                        </model>
+                    </define-assembly>
+                    <define-assembly name="memory" min-occurs="1" max-occurs="unbounded">
+                        <formal-name>Motherboard Random Access Memory (RAM) Module(s)</formal-name>
+                        <description>Random access memory hardware installed on the motherboard of a computer.</description>
+                        <group-as name="memory-modules" in-json="ARRAY"/>
+                        <model>
+                            <assembly ref="vendor"/>
+                            <field ref="product-name" min-occurs="1"/>
+                            <field ref="cost"/>
+                            <define-field name="byte-size" as-type="positive-integer" min-occurs="1">
+                                <formal-name>Memory Module Size</formal-name>
+                                <description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</description>
+                            </define-field>
+                            <field ref="remarks" in-xml="UNWRAPPED"/>
+                        </model>
+                    </define-assembly>
+                    <define-assembly name="expansion-card" max-occurs="unbounded">
+                        <formal-name>Motherboard Expansion Card</formal-name>
+                        <description>The model number of an expansion card connected to the motherboard of a computer.</description>
+                        <group-as name="expansion-cards" in-json="ARRAY"/>
+                        <model>
+                            <assembly ref="vendor"/>
+                            <field ref="product-name" min-occurs="1"/>
+                            <field ref="cost"/>
+                            <define-field name="type" min-occurs="1">
+                                <formal-name>Expansion Card Type</formal-name>
+                                <description>The type of expansion card on a motherboard of a computer, such as <code>pci</code> (PCI, e.g. Peripheral Component Interconnect), <code>pcie</code> (PCI Express), or an alternative.</description>
+                                <constraint>
+                                    <allowed-values target=".">
+                                        <enum value="pci">Peripheral Component Interconnect</enum>
+                                        <enum value="pcie">Peripheral Component Interconnect Express</enum>
+                                    </allowed-values>
+                                </constraint>
+                            </define-field>
+                            <field ref="remarks" in-xml="UNWRAPPED"/>
+                        </model>
+                    </define-assembly>
+                </model>
+            </define-assembly>
+            <define-assembly name="usb-device" max-occurs="unbounded">
+                <formal-name>Universal Serial Bus Device</formal-name>
+                <description>A USB expansion device.</description>
+                <json-key flag-ref="uuid"/>
+                <group-as name="usb-devices" in-json="BY_KEY"/>
+                <define-flag name="uuid" as-type="uuid">
+                    <formal-name>USB Device Universally Unique Identifier</formal-name>
+                    <description>An identifier, based on a type 4 UUID, for the USB device.</description>
+                </define-flag>
+                <model>
+                    <assembly ref="vendor"/>
+                    <field ref="product-name" min-occurs="1"/>
+                    <field ref="cost"/>
+                    <field ref="remarks" in-xml="UNWRAPPED"/>
+                </model>
+            </define-assembly>
+            <field ref="remarks" in-xml="UNWRAPPED"/>
+        </model>
+        <constraint>
+            <is-unique target="usb-device">
+                <formal-name>Unique USB Device UUID</formal-name>
+                <description>Ensures that each USB device has a unique UUID.</description>
+                <key-field target="@uuid"/>
+            </is-unique>
+        </constraint>
+    </define-assembly>
+    <define-field name="cost" as-type="decimal">
+        <formal-name>Part Cost</formal-name>
+        <description>The price paid in the specified currency.</description>
+        <json-value-key>price</json-value-key>
+        <define-flag name="currency" required="yes">
+            <formal-name>Currency Type</formal-name>
+            <description>The type of currency.</description>
+        </define-flag>
+    </define-field>
+    <define-field name="remarks" as-type="markup-multiline">
+        <formal-name>Remarks</formal-name>
+        <description>Additional remarks related to the containing computer component.</description>
+    </define-field>
+</METASCHEMA>
