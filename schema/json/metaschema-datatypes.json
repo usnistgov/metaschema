@@ -6,7 +6,7 @@
   "definitions" : {
     "Base64Datatype": {
       "type": "string",
-      "pattern": "^[0-9A-Fa-f]+$",
+      "pattern": "^[0-9A-Za-z+/]+={0,2}$",
       "contentEncoding": "base64"
     },
     "BooleanDatatype": {
@@ -32,22 +32,30 @@
     "DayTimeDurationDatatype": {
       "type": "string",
       "format": "duration",
-      "pattern": "^[-+]?P([-+]?[0-9]+D)?(T([-+]?[0-9]+H)?([-+]?[0-9]+M)?([-+]?[0-9]+([.,][0-9]{0,9})?S)?)?$"
+      "pattern": "^-?P([0-9]+D(T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\\.[0-9]+)?)S))?)|T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\\.[0-9]+)?)S)$"
     },
     "DecimalDatatype": {
       "type": "number",
       "pattern": "^(\\+|-)?([0-9]+(\\.[0-9]*)?|\\.[0-9]+)$"
     },
     "EmailAddressDatatype": {
-      "type": "string",
-      "format": "email",
-      "pattern": "^.+@.+$"
+      "allOf": [
+        {"$ref": "#/definitions/StringDatatype"},
+        {
+          "type": "string",
+          "format": "email",
+          "pattern": "^.+@.+$"
+        }
+      ]
     },
     "HostnameDatatype": {
-           "allOf": [
-           {"$ref": "#/definitions/StringDatatype"},
-           {"format": "idn-hostname"}
-       ]     
+      "allOf": [
+        {"$ref": "#/definitions/StringDatatype"},
+        {
+          "type": "string",
+          "format": "idn-hostname"
+        }
+      ]
     },
     "IntegerDatatype": {
       "type": "integer"
@@ -70,18 +78,22 @@
       "type": "string"
     },
     "NonNegativeIntegerDatatype": {
-       "allOf": [
-           {"$ref": "#/definitions/IntegerDatatype"},
-           {"minimum": 0,
-            "type": "number"}
-       ]
+      "allOf": [
+        {"$ref": "#/definitions/IntegerDatatype"},
+        {
+          "type": "number",
+          "minimum": 0
+        }
+      ]
     },
     "PositiveIntegerDatatype": {
-       "allOf": [
-           {"$ref": "#/definitions/IntegerDatatype"},
-           {"minimum": 1,
-            "type": "number"}
-       ]
+      "allOf": [
+        {"$ref": "#/definitions/IntegerDatatype"},
+        {
+          "type": "number",
+          "minimum": 1
+        }
+      ]
     },
     "StringDatatype": {
       "type": "string",
@@ -108,7 +120,7 @@
     "YearMonthDurationDatatype": {
       "type": "string",
       "format": "duration",
-      "pattern": "^[-+]?P([-+]?[0-9]+Y)?([-+]?[0-9]+M)?([-+]?[0-9]+W)?([-+]?[0-9]+D)?$"
+      "pattern": "^-?P([0-9]+Y([0-9]+M)?)|[0-9]+M$"
     }
   }
 }

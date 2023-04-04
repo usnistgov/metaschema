@@ -55,14 +55,7 @@
           <xs:element name="define-flag" type="GlobalFlagDefinitionType"/>
         </xs:choice>
       </xs:sequence>
-      <xs:attribute name="abstract">
-        <xs:simpleType>
-          <xs:restriction base="xs:string">
-            <xs:enumeration value="yes"/>
-            <xs:enumeration value="no"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
+      <xs:attribute name="abstract" type="YesNoType" default="no"/>
     </xs:complexType>
     <xs:unique name="unique-constraint-ids">
       <xs:selector xpath=".//allowed-values|.//matches|.//index-has-key|.//is-unique|.//has-cardinality|.//expect|.//index"/>
