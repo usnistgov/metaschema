@@ -4,23 +4,13 @@
 
 	<xs:simpleType name="Base64Datatype">
 		<xs:restriction base="xs:base64Binary">
-			<xs:pattern value="\S(.*\S)?">
-				<xs:annotation>
-					<xs:documentation>A trimmed string, at least one character with no
-						leading or trailing whitespace.</xs:documentation>
-				</xs:annotation>
-			</xs:pattern>
+			<xs:pattern value="[0-9A-Za-z+/]+={0,2}"/>
 		</xs:restriction>
 	</xs:simpleType>
 	
 	<xs:simpleType name="BooleanDatatype">
 		<xs:restriction base="xs:boolean">
-			<xs:pattern value="\S(.*\S)?">
-				<xs:annotation>
-					<xs:documentation>A trimmed string, at least one character with no
-						leading or trailing whitespace.</xs:documentation>
-				</xs:annotation>
-			</xs:pattern>
+			<xs:pattern value="true|1|false|0"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -56,7 +46,7 @@
 
 	<xs:simpleType name="DayTimeDurationDatatype">
 		<xs:restriction base="xs:duration">
-			<xs:pattern value="[-+]?P([-+]?[0-9]+D)?(T([-+]?[0-9]+H)?([-+]?[0-9]+M)?([-+]?[0-9]+([.,][0-9]{0,9})?S)?)?"/>
+			<xs:pattern value="-?P([0-9]+D(T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\.[0-9]+)?)S))?)|T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\.[0-9]+)?)S)"/>
 		</xs:restriction>
 	</xs:simpleType>
 
@@ -76,7 +66,7 @@
 			<xs:documentation>An email address</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="StringDatatype">
-			<xs:pattern value="\S.*@.*\S">
+			<xs:pattern value=".+@.+">
 				<xs:annotation>
 					<xs:documentation>Need a better pattern.</xs:documentation>
 				</xs:annotation>
@@ -237,5 +227,10 @@
 			</xs:pattern>
 		</xs:restriction>
 	</xs:simpleType>
-</xs:schema>
 
+	<xs:simpleType name="YearMonthDurationDatatype">
+		<xs:restriction base="xs:duration">
+			<xs:pattern value="-?P([0-9]+Y([0-9]+M)?)|[0-9]+M"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
