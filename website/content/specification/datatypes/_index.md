@@ -37,7 +37,7 @@ The data type JSON schema uses regular expression patterns to enforce the syntax
 
 Multiple XML Schemas are provided that support different groups of data types.
 
-An XML Schema is [provided](https://github.com/usnistgov/metaschema/blob/develop/schema/xml/metaschema-datatypes.xsd) for the [Simple data types](#simple-data-types).
+The [Simple data types](#simple-data-types) are defined in [a single XML Schema](https://github.com/usnistgov/metaschema/blob/develop/schema/xml/metaschema-datatypes.xsd).
 
 The [markup data types](#markup-data-types) are supported by multiple schemas.
 
@@ -65,7 +65,7 @@ Regular expression features used include:
 - Class negation
 - Quantifiers
 
-These features tend to be widely supported by implementations based on the [Perl Compatible Regular Expression (PCRE)](https://www.pcre.org/), [ECMA](https://262.ecma-international.org/#sec-regexp-regular-expression-objects), [Java](https://cr.openjdk.org/~iris/se/19/latestSpec/api/java.base/java/util/regex/Pattern.html), and [XML Schema 1.0](https://www.w3.org/TR/xmlschema-2/#regexs)
+These features tend to be widely supported by implementations based on the [Perl Compatible Regular Expression (PCRE)](https://www.pcre.org/), [ECMA](https://262.ecma-international.org/#sec-regexp-regular-expression-objects), [Java](https://cr.openjdk.org/~iris/se/19/latestSpec/api/java.base/java/util/regex/Pattern.html), and [XML Schema 1.0](https://www.w3.org/TR/xmlschema-2/#regexs) regex dialects. As a result, implementations based on any of these standards should be able to support the patterns used in the Metaschema JSON and XML data type schemas.
 
 ## Simple Data Types
 
