@@ -178,7 +178,7 @@
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:annotation>
-				<xs:documentation>The OSCAL 'string' datatype restricts the XSD type by prohibiting leading 
+				<xs:documentation>The 'string' datatype restricts the XSD type by prohibiting leading 
 					and trailing whitespace, and something (not only whitespace) is required.</xs:documentation>
 			</xs:annotation>
 			<xs:whiteSpace value="preserve" />

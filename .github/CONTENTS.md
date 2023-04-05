@@ -1,4 +1,4 @@
-# OSCAL GitHub Supporting Files
+# GitHub Files
 
 This directory contains supporting files for Metaschema GitHub repository use. The structure and contents of the directory are as follows:
 

@@ -169,7 +169,7 @@ jobs:
         enable_jekyll: false
         publish_dir: ./website/public
         publish_branch: nist-pages
-        commit_user_name: OSCAL GitHub Actions Bot
-        commit_user_email: oscal@nist.gov
-        commit_author: OSCAL GitHub Actions Bot <oscal@nist.gov>
+        commit_user_name: GitHub Actions Bot
+        commit_user_email: metaschema@nist.gov
+        commit_author: GitHub Actions Bot <metaschema@nist.gov>
         commit_message: Deploying website [ci deploy skip]

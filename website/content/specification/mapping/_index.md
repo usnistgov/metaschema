@@ -8,9 +8,9 @@ XML, JSON, and YAML each use specialized terminology and format primatives. As a
 
 For example, a data point represented as an attribute on an element in XML, for example, might be a string property on a data object in JSON. The metaschema moderates this distinction by providing rules regarding its own semantic constructs and how they are to be represented in the target format. As a result, a mapping between JSON and XML concepts is implicitly available through the corresponding metaschema.
 
-Within OSCAL models, all constructs are optional unless marked otherwise.
+Within Metaschema-based models, all constructs are optional unless marked otherwise.
 
-| OSCAL Metaschema | XML | JSON and YAML |
+| Metaschema | XML | JSON and YAML |
 |------------------|-----|------|
 | Assembly | An element with element content |  An object, either a property or a member of an array property |
 | Field (with no flags) | A single element with text content | String property |
