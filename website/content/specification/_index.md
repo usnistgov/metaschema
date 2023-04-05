@@ -27,10 +27,10 @@ The Metaschema framework currently supports XML, JSON, and YAML data formats. Su
 
 The tight binding to supported derivative data formats has many advantages.
 
-1. Schema representations for a given supported data format can be automatically generated from a Metaschema module. Generated schemas can be used to validate that data is conformant to the associated format(s), ensuring that data is conformant to the model defined by the Metaschema module. When the model is changed, an updated schema representation can be automatically generated.
-1. Data represented in a given supported data format can be automatically translated into an alternate supported data format. This allows data to be maintained in a single data format, which can be easily converted into all of the other supported formats.
-1. Data format specific documentation can be automatically generated that is aligned with the concepts used in a given format. This can be used to provide a format-specific view of a model.
-1. Programming language specific parsing and content generation code can also be automatically generated using a Metaschema module supporting data deserialization and serialization code capable of reading and writing data in each supported format. This generative approach allows application developers to focus right away on business logic and user interface features instead of building the basic common data structures needed for all applications that work with information from a given domain.
+1. **Automated Schema Generation:** Schema representations for a given supported data format can be automatically generated from a Metaschema module. Generated schemas can be used to validate that data is conformant to the associated format(s), ensuring that data is conformant to the model defined by the Metaschema module. When the model is changed, an updated schema representation can be automatically generated.
+1. **Automated Translation of Content:** Data represented in a given supported data format can be automatically translated into an alternate supported data format. This allows data to be maintained in a single data format, which can be easily converted into all of the other supported formats.
+1. **Automated Documentation Generation:** Data format specific documentation can be automatically generated that is aligned with the concepts used in a given format. This can be used to provide a format-specific view of a model.
+1. **Automated Parsing Code Generation:** Programming language specific parsing and content generation code can also be automatically generated using a Metaschema module supporting data deserialization and serialization code capable of reading and writing data in each supported format. This generative approach allows application developers to focus right away on business logic and user interface features instead of building the basic common data structures needed for all applications that work with information from a given domain.
 
 The following illustrates the Metaschema Framework architecture as described above.
 
@@ -56,22 +56,22 @@ This specification provides a basis for the development of interoperable toolcha
 
 The design of the Metaschema modeling approach addresses the following needs:
 
-1. Reduce the implementation burden of supporting multiple formats, along with documentation, schemas, data, and related tooling.
-1. Reduce the cost of adopting a new supported data format.
-1. Unify support for compatible data descriptions in multiple formats, such as XML, JSON, YAML and potentially others over time.
-1. Produce schema documentation from the same source as schema files and tools.
-1. Enable distributed, semi-coordinated experimentation with the format(s) and related tools supported by a given Metaschema module.
+1. **Ease Maintenance:** Reduce the implementation burden of supporting multiple formats, along with documentation, schemas, data, and related tooling.
+1. **Ease Format Adoption Costs:** Reduce the cost of adopting a new supported data format.
+1. **Unified Format Support:** Unify support for compatible data descriptions in multiple formats, such as XML, JSON, YAML and potentially others over time.
+1. **Ease Production of Format Documentation:** Produce schema documentation from the same source as schema files and tools.
+1. **Promote Model Experimentation:** Enable distributed, semi-coordinated experimentation with the format(s) and related tools supported by a given Metaschema module.
 
 ## Design Approach
 
 The Metaschema provides a reduced, lightweight modeling language with constraints that apply at the level of the information model abstraction.
 
 The following philosophy was used in the current design:
-- Mediate between the structural differences in the XML, JSON, and YAML data formats by providing format-specific tailoring capabilities that improve the expression and conciseness of Metaschema-based data in a given format. This has the added benefit of making Metaschema easier to learn and use over learning the idiosyncrasies of each data format.
-- To the extent possible, maximize the use of data format specific features, while still aligning modeling functionality across all supported data formats. In some cases, support for specific data format and schema features may be reduced where these features do not align well across all supported data format. 
-- Use modeling constructs that map cleanly into features offered by XML and JSON schema technologies. This ensures that all information can be preserved, without data loss in bidirectional conversion.
-- Eliminate the need for additional inputs, reliance on arbitrary conventions, or runtime settings to reliably produce correspondent XML, JSON or YAML from any other supported format.
-- Focus on the production of a rich specification that facilitates running code supporting automated generation of schemas, documentation, tooling, and other model-related artifacts consistent with the model defined and documented by a given Metaschema module.
+- **Mediate Format Structural Differences:** Mediate between the structural differences in the XML, JSON, and YAML data formats by providing format-specific tailoring capabilities that improve the expression and conciseness of Metaschema-based data in a given format. This has the added benefit of making Metaschema easier to learn and use over learning the idiosyncrasies of each data format.
+- **Capitalize on Format Features:** To the extent possible, maximize the use of data format specific features, while still aligning modeling functionality across all supported data formats. In some cases, support for specific data format and schema features may be reduced where these features do not align well across all supported data format. 
+- **Unify Information Modeling Across Formats:** Use modeling constructs that map cleanly into features offered by XML and JSON schema technologies. This ensures that all information can be preserved, without data loss in bidirectional conversion.
+- **Reduce Runtime Complexities:** Eliminate the need for additional inputs, reliance on arbitrary conventions, or runtime settings to reliably produce correspondent XML, JSON or YAML from any other supported format.
+- **Focus on Running Code:** Focus on the production of a rich specification that facilitates running code supporting automated generation of schemas, documentation, tooling, and other model-related artifacts consistent with the model defined and documented by a given Metaschema module.
 
 # Information Modeling
 
@@ -171,29 +171,28 @@ For example:
 
 Attributes:
 
-| Attribute | Data Type | Use      | Default Value |
-|:---       |:---       |:---      |:---           |
-| [`@abstract`](#abstract-modules) | `yes` or `no` | optional | `no` |
+| Attribute | Data Type | Use      | Default Value | Section |
+|:---       |:---       |:---      |:---           |:---      |
+| [`@abstract`](#abstract-modules) | `yes` or `no` | optional | `no` | Header: [Abstract Module](#abstract-modules) |
 
 Elements:
 
-| Element | Data Type | Use      | section |
+| Element | Data Type | Use      | Section |
 |:---       |:---       |:---      |:---      |
-| [`<schema-name>`](#schema-name) | [`markup-line`](/specification/datatypes/#markup-line) | 1 | header |
-| [`<schema-version>`](#schema-version) | version ([`string`](/specification/datatypes/#string)) | 1 | header |
-| [`<short-name>`](#short-name) | [`token`](/specification/datatypes/#token) | 1 | header |
-| [`<namespace>`](#xml-namespace) | [`uri`](/specification/datatypes/#uri) | 1 | header |
-| [`<json-base-uri>`](#json-base-uri) | [`uri`](/specification/datatypes/#uri) | 1 | header |
-| [`<remarks>`](#remarks) | special | 0 or 1 | header |
-| [`<import>`](#module-imports) | special | 0 to ∞ | imports |
-| [`<define-assembly>`](#top-level-define-assembly),<br/>[`<define-field>`](#top-level-define-field), and<br/>[`<define-flag>`](#top-level-flag) | special | 0 to ∞ | definitions |
+| [`<schema-name>`](#schema-name) | [`markup-line`](/specification/datatypes/#markup-line) | 1 | Header: [Documentation](#module-documentation) |
+| [`<schema-version>`](#schema-version) | version ([`string`](/specification/datatypes/#string)) | 1 | Header: [Documentation](#module-documentation) |
+| [`<short-name>`](#short-name) | [`token`](/specification/datatypes/#token) | 1 | Header: [Documentation](#module-documentation) |
+| [`<namespace>`](#xml-namespace) | [`uri`](/specification/datatypes/#uri) | 1 | Header: [XML Namespace](#xml-namespace) |
+| [`<json-base-uri>`](#json-base-uri) | [`uri`](/specification/datatypes/#uri) | 1 | Header: [JSON Base URI](#json-base-uri) |
+| [`<remarks>`](#remarks) | special | 0 or 1 | Header: [Documentation](#module-documentation) |
+| [`<import>`](#module-imports) | special | 0 to ∞ | [Module Imports](#module-imports) |
+| [`<define-assembly>`](#top-level-define-assembly),<br/>[`<define-field>`](#top-level-define-field), and<br/>[`<define-flag>`](#top-level-flag) | special | 0 to ∞ | [Module Definitions](#definitions) |
 
 The first set of elements in a Metaschema module represent the *header*, which contains information about the instance as a whole. The remainder of this section discusses use of these elements.
 
 {{<callout>}}
-**Note:** There is no explicit separation between the header and the definitions. The header ends when the definitions start.
+**Note:** There is no explicit separation between the header and the definitions. The header ends where the `<import>`, `<define-assembly>`, `<define-field>`, and `<define-flag>` elements first appear.
 {{</callout>}}
-
 
 ## Module Documentation
 
@@ -300,9 +299,9 @@ Following the `METASCHEMA/remarks`, any number of definitions may follow. These 
 
 The 3 types of definitions are [`<define-flag>`](#top-level-define-flag), [`<define-field>`](#top-level-define-field), and [`<define-assembly>`](#top-level-define-assembly).
 
-The following subsections describe the syntax that is [common to all definition types](#common-object-definition-metadata), as well as each type of definition.
+The following subsections describe the syntax that is [common to all definition types](#common-definition-metadata), as well as each type of definition.
 
-## Common Object Definition Metadata
+## Common Definition Metadata
 
 The `define-assembly`, `define-field`, and `define-flag` child elements share a common syntax comprised of the following XML attributes and elements.
 
@@ -310,16 +309,16 @@ Attributes:
 
 | Attribute | Data Type | Use      | Default Value |
 |:---       |:---       |:---      |:---           |
-| [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | |
-| [`@name`](#name) | [`token`](/specification/datatypes/#token) | required | |
+| [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
+| [`@name`](#name) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
 | [`@scope`](#scope) | `local` or `global` | optional | `global` |
 
 Elements:
 
 | Element | Data Type | Use      |
 |:---       |:---       |:---      |
-| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 1 |
-| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 1 |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 |
 | [`<prop>`](#prop) | special | 0 to ∞ |
 | [`<use-name>`](#naming-and-use-name) | [`token`](/specification/datatypes/#token) | 0 or 1 |
 | [`<remarks>`](#remarks) | special | 0 or 1 |
@@ -329,9 +328,15 @@ These attributes and elements are described in the following subsections.
 
 ### `@deprecated` Version
 
-The optional deprecated attribute communicates that the given information element implemented by the definition represents a data object who's use is intended to be discontinued starting with the specified version. This version is a reference to the [`<schema-version>`](#schema-version) declared in the module header.
+The optional deprecated attribute communicates that the given information element implemented by the definition represents a data object who's use is intended to be discontinued starting with the specified version.
 
-For example, deprecating the flag named `flag-name` starting with version `1.1.0` would be represented as follows.
+This version is a reference to the [`<schema-version>`](#schema-version) declared in the module header.
+
+{{<callout>}}
+Use of `@deprecated` is intended to support communication with content creators about avoiding use of the data object. Supporting this use case, this annotation can be used in documentation generation and in Metaschema-aware tools that provide context around using the definition.
+{{</callout>}}
+
+For example, deprecating the flag named `flag-name` starting with the model version `1.1.0` would be represented as follows.
 
 ```xml {linenos=table,hl_lines=[3]}
 <define-flag
@@ -339,11 +344,9 @@ For example, deprecating the flag named `flag-name` starting with version `1.1.0
   deprecated="1.1.0">
 ```
 
-Use of `@deprecated` is intended to support communication with content creators about avoiding use of the data object. Supporting this use case, this annotation can be used in documentation generation and in Metaschema-aware tools that provide context around using the definition.
-
 ### `@name`
 
-The `@name` attribute provides the definition's identifier, which can be used in other parts of a module to reference the definition.
+The `@name` attribute provides the definition's identifier, which can be used in other parts of a module, or in an importing module, to reference the definition.
 
 The names of flags, fields, and assemblies are expected to be maintained as separate identifier sets. This allows a flag, field, and an assembly definition to each have the same name in a given Metaschema module.
 
@@ -358,49 +361,120 @@ Note: References to definitions in the same module are always possible regardles
 
 ### `<formal-name>`
 
-The required `<formal-name>` element provides a human-readable, short string label for the definition for use in documentation. The label is intended to provide an easy to recognize, meaningful name for the definition.
+The optional `<formal-name>` element provides a human-readable, short string label for the definition for use in documentation.
+
+{{<callout>}}
+The `<formal-name>` label is intended to provide an easy to recognize, meaningful name for the definition.
+
+While not required, it is best practice to include a `<formal-name>`.
+{{</callout>}}
 
 ### `<description>`
 
-The required `<description>` element is a [single line of markup](/specification/datatypes/#markup-line) that describes the semantic meaning and use of the definition.
+The optional `<description>` element is a [single line of markup](/specification/datatypes/#markup-line) that describes the semantic meaning and use of the definition.
 
+{{<callout>}}
 The description ties the definition to the related information element concept in the information domain that the definition is representing. This information is ideal for use in documentation.
+
+While not required, it is best practice to include a `<description>`.
+{{</callout>}}
 
 ### `<prop>`
 
-The `<prop>` element provides a structure for declaring arbitrary properties, which consist of a `@namespace`, `@name`, and `@value`.
+The optional `<prop>` element provides a structure for declaring arbitrary properties, which consist of a `@namespace`, `@name`, and `@value`.
 
 | Attribute | Data Type | Use      | Default Value |
 |:---       |:---       |:---      |:---           |
 | `@namespace` | [`uri`](/specification/datatypes/#uri) | optional | `http://csrc.nist.gov/ns/oscal/metaschema/1.0` |
-| `@name` | [`token`](/specification/datatypes/#token) | required | |
-| `@value` |  [`token`](/specification/datatypes/#token) | required | |
+| `@name` | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+| `@value` |  [`token`](/specification/datatypes/#token) | required | *(no default)* |
 
 The `@name` and `@namespace` is used in combination to define a semantically unique name, represented by the `@name` attribute, within the managed namespace defined by the `@namespace` attribute. If the `@namespace` attribute is omitted, the `@name` MUST be considered in the `http://csrc.nist.gov/ns/oscal/metaschema/1.0` namespace.
 
-The `@value` attribute represents the lexical value assignment for the semantically unique name. The lexical values of the `@value` attribute may be restricted by the specific semantically unique name, but such restrictions are not enforced in this model.
+The `@value` attribute represents the lexical value assignment for the semantically unique name represented by the combination of the `@name` and `@namespace`. The lexical values of the `@value` attribute may be restricted for the specific semantically unique name, but such restrictions are not enforced directly in this model.
 
-The definition property is useful for annotating a definition with additional information that might describe in a structured way the semantics, use, nature, or other significant information related to the definition. In many cases, a property might be used to tailor generated documentation or to support an experimental, non-standardized feature in Metaschema.
+{{<callout>}}
+A property on a definition is useful for annotating a definition with additional information that might describe, in a structured way, the semantics, use, nature, or other significant information related to the definition. In many cases, a property might be used to tailor generated documentation or to support an experimental, non-standardized feature in Metaschema.
+{{</callout>}}
 
 ### Naming and `<use-name>`
 
+The optional `<use-name>` changes the *effective name* to use for the information element in a data model.
+
+The `<use-name>` element is optional and may occur multiple times.
+
+By default the *effective name* of the information element in a data model is taken from the `@name` attribute. The `<use-name>` value overrides this behavior.
+
+{{<callout>}}
+Use of a `<use-name>` frees the module maintainer allowing them to use a sensible `@name` for the definition, while providing control over the name used in an instance of the definition in a data model.
+{{</callout>}}
+
+The first matching condition determines the *effective name* for the definition:
+
+1. A `<use-name>` is provided on the definition. The *effective name* is the value of the `<use-name>` element.
+1. No `<use-name>` is provided on the definition. The *effective name* is the value of the `@name` attribute.
+
+For example:
+
+```xml
+<define-field name="field">
+  <define-flag name="flag-a">
+    <use-name>flag-b</use-name>
+  </define-flag>
+</define-field>
+```
+
+In the example above, the *effective name* of the definition is `name-b`. If the `<use-name>` was omitted, the *effective name* would be `name-a`.
+
+The following content would is valid to the model above.
+
+{{< tabs JSON YAML XML >}}
+{{% tab %}}
+```json
+{
+  "field": {
+    "flag-b": "value"
+  }
+}
+```
+{{% /tab %}}
+{{% tab %}}
+```yaml
+---
+field:
+  flag-b: "value"
+```
+{{% /tab %}}
+{{% tab %}}
+```xml
+<field flag-b="value"/>
+```
+{{% /tab %}}
+{{% /tabs %}}
+
 ### `<remarks>`
 
-Provides notes on the use of the component that may clarify the semantic definition for the component for use in documentation. The `remarks` element is optional and may occur multiple times.
+The optional `<remarks>` element provides a place to add notes related to the use of the definition. Remarks can be used to clarify the semantics of the definition in specific conditions, or to better describe how the definition may be more fully utilized within a model. 
+
+The `<remarks>` element is optional and may occur multiple times.
 
 ### `<example>`
 
-Used to provide inline use examples in XML, which can then be automatically converted into other formats. The `example` element is optional and may occur multiple times.
+The optional `<example>` element is used to provide inline examples, which are intended to illustrate the use the information element implemented by the definition. Examples are provided in XML, which can then be automatically converted into other formats.
+
+The `example` element is optional and may occur multiple times.
 
 ## Top Level `<define-flag>`
 
-A flag definition is used to declare a reusable [flag](/specification/terminology/#flag) within a Metaschema module.
+A flag definition, represented by the `<define-flag>` element, is used to declare a reusable [flag](/specification/terminology/#flag) within a Metaschema module.
 
-A flag definition provides the means to implement a simple [*information element*](terminology/#information-element) with a name and value.
+A flag definition provides the means to implement a simple, named [*information element*](terminology/#information-element) with a value.
 
-Flag definitions are the primary leaf nodes in a Metaschema-based model.
+{{<callout>}}
+Flag definitions are the primary leaf nodes in a Metaschema-based model. Flags are intended to represent granular particles of identifying and qualifying information.
+{{</callout>}}
 
-Flags are intended to represent granular particles of identifying and qualifying information.
+The flag's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) identified by the `@as-type` attribute.
 
 The syntax of a flag is comprised of the following XML attributes and elements.
 
@@ -409,40 +483,183 @@ Attributes:
 | Attribute | Data Type | Use      | Default Value |
 |:---       |:---       |:---      |:---           |
 | [`@as-type`](#as-type) | [`token`](/specification/datatypes/#token) | optional | [`string`](/specification/datatypes/#string) |
-| [`@default`](#default) | [`string`](/specification/datatypes/#string) | optional | |
-| [`@deprecated`](#deprecated-version) | version | optional | |
-| [`@name`](#name) | [`token`](/specification/datatypes/#token) | required | |
-| [`@scope`](#scope) | special | `local` or `global` | `global` |
+| [`@default`](#default) | [`string`](/specification/datatypes/#string) | optional | *(no default)* |
+| [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
+| [`@name`](#name) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+| [`@scope`](#scope) | `local` or `global` | optional | `global` |
 
 Elements:
 
 | Element | Data Type | Use      |
 |:---       |:---       |:---      |
-| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 1 |
-| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 1 |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 |
 | [`<prop>`](#prop) | special | 0 to ∞ |
 | [`<use-name>`](#naming-and-use-name) | [`token`](/specification/datatypes/#token) | 0 or 1 |
 | [`<constraint>`](#define-flag-constraints) | special | 0 or 1 |
 | [`<remarks>`](#remarks) | special | 0 or 1 |
 | [`<example>`](#example) | special | 0 to ∞ |
 
+The attributes and elements specific to the `<define-flag>` are described in the following subsections. The elements and attributes common to all definitions are [defined earlier](#common-definition-metadata) in this specification.
+
 ### `@as-type`
 
-Defines the type of the flag's value.
+The `@as-type` attribute declares the type of the flag's value. If not provided, the default value is `string`.
 
-The `@as-type` attribute must have a value that corresponds to a [simple data type](#simple-data-types). As a result, markup in flag values is not permitted.
+The `@as-type` attribute must have a value that corresponds to one of the [simple data types](#simple-data-types). As a result, markup in flag values is not permitted.
+
+### `@default`
+
+The `@default` attribute specifies the default value for the flag. When a flag is specified as an optional child of a `<define-field>` or `<define-assembly>`, this value should be considered set for a content instance if the flag is omitted in that instance.
+
+### `<constraint>`
+
+Constraints are [covered later](#define-flag-constraints) in this specification.
 
 ## Top Level `<define-field>`
 
-- `in-xml`
+A field definition, represented by the `<define-field>` element, is used to declare a reusable [field](/specification/terminology/#field) within a metaschema module.
 
-Fields can be thought of as simple text values, either scalars or sequences of scalars, or when appropriate, of "rich text" or mixed content, i.e. text permitting inline formatting. Depending on modeling requirements, fields may also be used for even simpler bits of data, such as objects that carry specialized flags but have no values or structures otherwise. This means that fields can be more or less complex, depending on the need. 
+A field definition provides the means to implement a complex named [*information element*](terminology/#information-element) with a value and an optional set of [*flag*](#flag) instances.
+
+{{<callout>}}
+A field is an edge node in a Metaschema-based model. Fields are typically used to provide supporting information for a containing [*assembly*](#assembly). The flag instances, typically characterize or identify the fields value. With optional use of flags, a field can be more or less complex, depending on the modeling need.
+{{</callout>}}
+
+The field's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types) identified by the `@as-type` attribute.identified by the `@as-type` attribute.
+
 
 Attributes:
 
-- `@as-type`(type: string, use: optional, default: string): Defines the type of the field's value. The `@as-type` attribute must have a value that corresponds to a [data type](#data-types).
-- `@collapsible`(type: yes/no, use: optional, default: yes): Is a JSON and YAML specific behavior that allows multiple fields having the same set of flag values to be collapsed into a single object with a value property that is an array of values. This makes JSON and YAML formatted data more concise.
-- `@name`(type: NCName, use: required): Used to identify the field when it is referenced within the metaschema definition. 
+| Attribute | Data Type | Use      | Default Value |
+|:---       |:---       |:---      |:---           |
+| [`@as-type`](#as-type) | [`token`](/specification/datatypes/#token) | optional | [`string`](/specification/datatypes/#string) |
+| [`@collapsible`](#collapsible) | `yes` or `no` | optional | `no` |
+| [`@default`](#default-1) | [`string`](/specification/datatypes/#string) | optional | *(no default)* |
+| [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
+| [`@name`](#name) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+| [`@scope`](#scope) | `local` or `global` | optional | `global` |
+
+Elements:
+
+| Element | Data Type | Use      |
+|:---       |:---       |:---      |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 |
+| [`<prop>`](#prop) | special | 0 to ∞ |
+| [`<use-name>`](#naming-and-use-name) | [`token`](/specification/datatypes/#token) | 0 or 1 |
+| [`json-key`](#) | special | 0 or 1 |
+| [`json-value-key`](#json-value-key) or<br/>[`json-value-key-flag`](#json-value-key-flag) | special | 0 or 1 |
+| [`flag`](#flag-instance-children) or<br/>[`define-flag`](#define-flag-inline-definition) | special | 0 or ∞ |
+| [`<constraint>`](#define-flag-constraints) | special | 0 or 1 |
+| [`<remarks>`](#remarks) | special | 0 or 1 |
+| [`<example>`](#example) | special | 0 to ∞ |
+
+The attributes and elements specific to the `<define-flield>` are described in the following subsections. The elements and attributes common to all definitions are [defined earlier](#common-definition-metadata) in this specification.
+
+### `@as-type`
+
+The optional `@as-type` attribute declares the type of the field's value. If not provided, the default value is `string`.
+
+The `@as-type` attribute must have a value that corresponds to one of the built in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types).
+
+### `@collapsible`
+
+The optional `@collapsible` attribute controls a JSON and YAML specific behavior that allows multiple fields having the same set of flag values to be collapsed into a single object with a value property that is an array of values. This makes JSON and YAML formatted data more concise.
+
+If `@collapsible` is not specified, the default value is `no`.
+
+The following behavior is required to be used for each value of `@collapsible`:
+
+- `no` - Do not collapse. This is the default.
+- `yes` - Collapse values that have flags with equivalent values.
+
+A flag value is equivalent if the value, or default value if not provided, is an exact match. A non-default flag is considered to have no value and will match the same flag on another instance that has no value.
+
+Note: Collapsing may affect the relative ordering of field instances. If two field instances are non-adjacent and their flags match, then the later field instance will be moved to be adjacent to the first. **Do not use the collapsible feature if maintaining field sequences is important to your use.**
+
+An example a collapsible field definition might look like the following.
+
+```xml
+<define-assembly name="assembly">
+  <root-name>assembly</root-name>
+  <model>
+    <define-field name="field" max-occurs="unbounded" collapsible="yes">
+      <group-as name="fields" in-json="ARRAY"/>
+      <define-flag name="flag-default-a" default="a"/>
+      <define-flag name="flag-required" required="yes"/>
+      <define-flag name="flag-optional"/>
+    </define-field>
+  </model>
+</define-assembly>
+```
+
+An example set of content instances follow. XML is provided first to illustrate the use of uncollapsed fields, since this feature applies to JSON and YAML only. The JSON and YAML collapsed versions follow.
+
+```xml {linenos=table,hl_lines=[2,4]}
+<assembly>
+  <field flag-required="required 1">field-value-1</field>
+  <field flag-required="required 2">field-value-2</field>
+  <field flag-default-a="a" flag-required="required 1">field-value-3</field>
+</assembly>
+```
+
+The XML example above illustrates 2 fields, on lines 3 and 4, which will be collapsed together in the resulting JSON and YAML conversion. This is because they have the same flag values: `a` for the flag named `flag-default-a`, `required 1` for the flag named `flag-required`, and no value for the flag named `flag-optional`.
+
+When converted to JSON or YAML, these fields will be collapsed, resulting in the following content instances.
+
+{{< tabs JSON YAML >}}
+{{% tab %}}
+```json {linenos=table,hl_lines=["4-7"]}
+{
+"assembly": {
+  "fields": [
+    {
+      "flag-required": "required 1",
+      "STRVALUE": [ "field-value-1", "field-value-3"]
+    },
+    {
+      "flag-required": "required 2",
+      "STRVALUE": "field-value-2"
+    }
+  ]
+}
+```
+{{% /tab %}}
+{{% tab %}}
+```yaml {linenos=table,hl_lines=["4-7"]}
+---
+assembly:
+  fields:
+  - flag-required: "required 1"
+    STRVALUE:
+    - "field-value-1"
+    - "field-value-3"
+  - flag-required: "required 2"
+    STRVALUE: "field-value-2"
+```
+{{% /tab %}}
+{{% /tabs %}}
+
+If the JSON or YAML instance is converted back to XML, the sequencing of the fields will change due to use of the collapsible feature as follows.
+
+```xml {linenos=table,hl_lines=["2-3"]}
+<assembly>
+  <field flag-required="required 1">field-value-1</field>
+  <field flag-required="required 1">field-value-3</field>
+  <field flag-required="required 2">field-value-2</field>
+</assembly>
+```
+
+This is because the resulting JSON and YAML instance has no way of indicating the original sequencing.
+
+### `@default`
+
+The `@default` attribute specifies the default value for the field. When a flag is specified as an optional child of a `<define-field>` or `<define-assembly>`, this value should be considered set for a content instance if the field is omitted in that instance.
+
+A `@default`value MUST only be provided when the data type specified by the `@as-type` is a [simple data types](#simple-data-types). Specifying a `@default` value for a [markup data type](/specification/datatypes/#markup-data-types) MUST result in a Metaschema format error.
+
+Implementations when writing content instances MAY omit writing default values in order to produce a more concise expression of the content.
 
 ### `<flag>` Instance Children
 
@@ -450,27 +667,87 @@ A field may have zero or more flag instance children.
 
 See [flag instances](#flag-instances)
 
-### `<define-flag>` Inline Object Definition
+### `<define-flag>` Inline Definition
 
-See [`<define-flag>`](#inline-define-flag).
+See [inline `<define-flag>`](#inline-define-flag).
+
+### `<json-key>`
+
+TODO: Specify this. Note assembly points to this section.
 
 ### JSON Value Keys
 
-In XML, the value of a field appears as the child of the field's element. In JSON and YAML, a property name is needed for the value. The `json-value-key` element provides the property name in one of three possible ways:
+TODO: discuss use only when flags may be present.
 
-1. A value is provided that is used as the property name.
-2. A `@flag-name` value is provided that indicates the flag's value to use as the property name. This results in a property that is a combination of the referenced flag's value and the field's value. For example: "flag-value": "field-value".
-3. If the `json-value-key` is not specified, a default value will be chosen based on the data type as follows:
-    - If the data type is `empty` no property will exist, so no property name is needed.
-    - If the data type is `markup-line`, then the property name will be `RICHTEXT`.
-    - If the data type is `markup-multiline`, then the property name will be `prose`.
-    - Otherwise, the property name will be `STRVALUE`.
+In XML, the value of a field appears as the text child of the field's element. In JSON and YAML, a property name is needed for the value. The `<json-value-key>` and `<json-value-key-flag>` elements provide a means to control the behavior of how this value is represented.
 
-#### `json-value-key`
+If no `<json-value-key>` or `<json-value-key-flag>` element is declared, a property name value will be chosen based on the data type as follows:
+  - If the field's `@as-type` is `markup-line`, then the property name will be `RICHTEXT`.
+  - If the field's `@as-type` is `markup-multiline`, then the property name will be `prose`.
+  - Otherwise, the property name will be `STRVALUE`.
 
-#### `json-value-key-flag`
+This logic may result in less than ideal property names. Metaschema provides the <json-value-key>` and `<json-value-key-flag>` elements to override this behavior. Use of these elements are mutually exclusive.
 
-### `collapsible`
+The following subsections describe the use of these elements.
+
+#### `<json-value-key>`
+
+The `<json-value-key>` element can be declared to set the property name for the field's value. Its text value child MUST be used as the property name for the field's value.
+
+For example:
+
+```xml {linenos=table,hl_lines=[5]}
+<define-assembly name="assembly">
+  <root-name>assembly</root-name>
+  <model>
+    <define-field name="field" max-occurs="unbounded">
+      <json-value-key>value</json-value-key>
+      <group-as name="fields" in-json="ARRAY"/>
+      <define-flag name="flag-default-a" default="a"/>
+    </define-field>
+  </model>
+</define-assembly>
+```
+
+Would allow the following content in JSON and YAML.
+
+{{< tabs JSON YAML >}}
+{{% tab %}}
+```json {linenos=table,hl_lines=[6]}
+{
+  "assembly": {
+    "fields": [
+      {
+        "flag-default-a": "b",
+        "value": "value1"
+      }
+    ]
+  }
+}
+```
+{{% /tab %}}
+{{% tab %}}
+```yaml {linenos=table,hl_lines=[5]}
+---
+assembly:
+  fields:
+  - flag-default-a: "b"
+    value: "value1"
+```
+{{% /tab %}}
+{{% /tabs %}}
+
+#### `<json-value-key-flag>`
+
+The `<json-value-key>` element can be declared to use the value of specific flag on the field as the property name for the field's value.
+
+The `@flag-name` attribute MUST reference the [name](#name) of a flag on the field whose value is to be used as the property name.
+
+This results in a property that is a combination of the referenced flag's value and the field's value.
+
+For example:
+
+TODO: complete this example.
 
 ## Top Level `<define-assembly>`
 
@@ -537,12 +814,9 @@ Used to reference a `field-definition` who's `@name` matches the value of the `@
 
 ### Root Assemblies
 
-## `json-key`
+## `<json-key>`
 
-for fields and assemblies
-
-
-See [using `@json-key`](#using-json-key).
+Use of `<json-key>` for a `<define-assembly>` is the same as for a `<define-field>`. See [`<json-key>`](#json-key).
 
 ## `@deprecated` version
 
@@ -603,6 +877,8 @@ Metaschema built in data types a covered in the [data type section](/specificati
 # Module Imports
 
 The `<import>` element is used to import the components defined in another metaschema definition into this metaschema definition.
+
+TODO: Discuss name shadowing.
 
 # Constraints
 
