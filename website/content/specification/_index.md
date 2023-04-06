@@ -576,6 +576,12 @@ The following behavior is required to be used for each value of `@collapsible`:
 
 A flag value is equivalent if the value, or default value if not provided, is an exact match. A non-default flag is considered to have no value and will match the same flag on another instance that has no value.
 
+Field instances whose flags all match are considered to be in the same *collapse group*. Collapsing works by combining the values for all the instances in the the same *collapse group*.
+
+When collapsing values in the same *collapse group* the ordering of the field values MUST be in the same order as their original field instances. The ordering of all *collapse groups* MUST follow the ordering of the first field instance added to the collapse group.
+
+For example, given field instances in the sequence `{ A, B, C, D }`, if `{ A, C }` are a collapse group, and `{ B, D }` are a different collapse group. Then `{ A, C }` would be ordered before `{ B, D }`, since `A` is ordered before `B`.
+
 Note: Collapsing may affect the relative ordering of field instances. If two field instances are non-adjacent and their flags match, then the later field instance will be moved to be adjacent to the first. **Do not use the collapsible feature if maintaining field sequences is important to your use.**
 
 An example a collapsible field definition might look like the following.
@@ -604,9 +610,9 @@ An example set of content instances follow. XML is provided first to illustrate 
 </assembly>
 ```
 
-The XML example above illustrates 2 fields, on lines 3 and 4, which will be collapsed together in the resulting JSON and YAML conversion. This is because they have the same flag values: `a` for the flag named `flag-default-a`, `required 1` for the flag named `flag-required`, and no value for the flag named `flag-optional`.
+The XML example above illustrates 2 fields, on lines 2 and 4, which will be collapsed together into the same *collapse group* in the resulting JSON and YAML conversion. This is because they have the same flag values: `a` for the flag named `flag-default-a`, `required 1` for the flag named `flag-required`, and no value for the flag named `flag-optional`. The field on line 3 would be in a second *collapse group*.
 
-When converted to JSON or YAML, these fields will be collapsed, resulting in the following content instances.
+When converted to JSON or YAML, these fields will be collapsed based on their collapse grouping, resulting in the following content instances.
 
 {{< tabs JSON YAML >}}
 {{% tab %}}
@@ -651,7 +657,7 @@ If the JSON or YAML instance is converted back to XML, the sequencing of the fie
 </assembly>
 ```
 
-This is because the resulting JSON and YAML instance has no way of indicating the original sequencing.
+In the example above, the fields from the first *collapse group* would appear before the fields from the second *collapse group*. This is because the resulting JSON and YAML instance has no way of indicating the original sequencing, so it must rely on the sequencing provided by the ordering of the *collapse groups* and the values within each group.
 
 ### `@default`
 
