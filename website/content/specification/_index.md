@@ -468,7 +468,7 @@ The `example` element is optional and may occur multiple times.
 
 A flag definition, represented by the `<define-flag>` element, is used to declare a reusable [flag](/specification/terminology/#flag) within a Metaschema module.
 
-A flag definition provides the means to implement a simple, named [*information element*](terminology/#information-element) with a value.
+A flag definition provides the means to implement a simple, named [*information element*](/specification/terminology/#information-element) with a value.
 
 {{<callout>}}
 Flag definitions are the primary leaf nodes in a Metaschema-based model. Flags are intended to represent granular particles of identifying and qualifying information.
@@ -555,7 +555,7 @@ Elements:
 | [`<remarks>`](#remarks) | special | 0 or 1 |
 | [`<example>`](#example) | special | 0 to ∞ |
 
-The attributes and elements specific to the `<define-flield>` are described in the following subsections. The elements and attributes common to all definitions are [defined earlier](#common-definition-metadata) in this specification.
+The attributes and elements specific to the `<define-field>` are described in the following subsections. The elements and attributes common to all definitions are [defined earlier](#common-definition-metadata) in this specification.
 
 ### `@as-type`
 
@@ -757,19 +757,73 @@ TODO: complete this example.
 
 ## Top Level `<define-assembly>`
 
-The top level `<define-assembly>` element represents a *flag definition* that defines a reusable [flag](terminology/#flag).
+An assembly definition, represented by the `<define-assembly>` element, is used to declare a reusable [assembly](/specification/terminology/#assembly) within a Metaschema module.
+
+An assembly definition provides the means to implement a complex, composite, named [*information element*](/specification/terminology/#information-element) that has no value. An assembly definition consists of an optional set of [*flags*](#flag) and an optional sequence of model instances, which are instances of assemblies and fields.
+
+{{<callout>}}
+An assembly is a compositional node in a Metaschema-based model. Assemblies are typically used to represent complex data objects that combine multiple information elements together into a composite object representing a larger semantic concept. The flag instances, typically characterize or identify this composite object, while the model instances represent the information being composed.
+{{</callout>}}
 
 An assembly is similar to a field, except it contains structured content (objects or elements), not text or unstructured "rich text". The contents permitted in a particular (type of) assembly are indicated in its `model` element.
 
-An `@as-type` attribute is not permitted on an assembly definition.
+An assembly definition has no value, so the `@as-type` and `@default` attributes are not permitted.
 
-### `flag` Instances
+Attributes:
 
-### Model Instances
+| Attribute | Data Type | Use      | Default Value |
+|:---       |:---       |:---      |:---           |
+| [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
+| [`@name`](#name) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+| [`@scope`](#scope) | `local` or `global` | optional | `global` |
 
-This element is used to reference the `field` and `assembly` components that compose the assembly's model. A `choice` element is also provided to define mutually exclusive model members.
+Elements:
 
-#### Using cardinalities and `group-as`
+| Element | Data Type | Use      |
+|:---       |:---       |:---      |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 |
+| [`<prop>`](#prop) | special | 0 to ∞ |
+| [`<use-name>`](#naming-and-use-name) or<br/>[`<root-name>`](#root-name)  | [`token`](/specification/datatypes/#token) | 0 or 1 |
+| [`json-key`](#json-key) | special | 0 or 1 |
+| [`json-value-key`](#json-value-key) or<br/>[`json-value-key-flag`](#json-value-key-flag) | special | 0 or 1 |
+| [`flag`](#flag-instance-children-1) or<br/>[`define-flag`](#define-flag-inline-definition-1) | special | 0 or ∞ |
+| [`<model>`](#model) | special | 0 or 1 |
+| [`<constraint>`](#define-flag-constraints) | special | 0 or 1 |
+| [`<remarks>`](#remarks) | special | 0 or 1 |
+| [`<example>`](#example) | special | 0 to ∞ |
+
+The attributes and elements specific to the `<define-assembly>` are described in the following subsections. The elements and attributes common to all definitions are [defined earlier](#common-definition-metadata) in this specification.
+
+### `<root-name>`
+
+### `<flag>` Instance Children
+
+A field may have zero or more flag instance children.
+
+See [flag instances](#flag-instances)
+
+### `<define-flag>` Inline Definition
+
+See [inline `<define-flag>`](#inline-define-flag).
+
+### `<model>` Instances
+
+The `<model>` element is used to reference the `field` and `assembly` components that compose the assembly's model. A `choice` element is also provided to define mutually exclusive model members.
+
+# Instances
+
+## Redefining the `<formal-name>`
+
+## Redefining the `description`
+
+The optional `description` element of the child `field` and `assembly` elements can be used to provide a different description for when the referenced component is used in the specified model context.
+
+## `flag` Instances
+
+## Model Instances
+
+### Using cardinalities and `group-as`
 
 
 The child `field` and `assembly` elements share the following common set of attributes:
@@ -812,19 +866,11 @@ Used to reference a `field-definition` who's `@name` matches the value of the `@
 
 #### `choice`
 
-#### Inline Definitions
+##### Inline Definitions
 
 - do not allow `use-name` or `scope`
 
-#### `any`
-
-### Root Assemblies
-
-## `<json-key>`
-
-Use of `<json-key>` for a `<define-assembly>` is the same as for a `<define-field>`. See [`<json-key>`](#json-key).
-
-## `@deprecated` version
+##### `any`
 
 # Inline Definitions
 
@@ -833,19 +879,6 @@ Use of `<json-key>` for a `<define-assembly>` is the same as for a `<define-fiel
 ## Inline `<define-field>`
 
 ## Inline `<define-assembly>`
-
-# Object Instance Syntax
-
-redefine formal-name
-
-Figure out how best to handle instances
-## Redefining the `description`
-
-The optional `description` element of the child `field` and `assembly` elements can be used to provide a different description for when the referenced component is used in the specified model context.
-
-
-## `flag` Instance
-
 
 ### XML Representational Form
 
