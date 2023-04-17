@@ -97,13 +97,13 @@ Both field and assembly definitions optionally allow the inclusion of one or mor
 An assembly definition also has a model which contains a sequence of *model instances*. A model instance is an instance of a field or assembly.
 
 {{<callout>}}
-Within a Metaschema module, the information model implementation is composed of assemblies, each of which are composed of more assemblies and field instances. 
+Within a Metaschema module, the information model implementation consists of assemblies, each of which are composed of more assemblies, field, and flag instances. 
 
 Field instances represent edge nodes, while assembly instances represent groupings of multiple information elements.
 
 Flag instances may exist on fields and assemblies, providing identifying or characterizing data about their containing definition.
 
-The following example illustrates the use of each type of definition, and the use of flag and model instances.
+The following example illustrates the use of each type of definition, and the use of flag and model instances to create a more complex model through composition.
 
 ```mermaid
 graph TD
@@ -140,12 +140,20 @@ The example above declares 4 distinct object definitions, along with their insta
 - The field definition `fld-def-1` represents a reusable field.
 - The assembly definitions `asmb-def-1` and `asmb-def-2` represent reusable assemblies.
 
-In the example above, the assembly definition `asmb-def-1` and the field definition `fld-def-1` both instantiate the flag defined as `flg-def-1`. These instances, `flg-inst-1` and `flg-inst-2` respectively, are examples of *flag instances*.
+Through the use of flag instances and model instances, it is possible to compose a complex information element by declaring how smaller information elements are combined together through composition.
+
+![Composition Example](def-inst.svg)
+
+In the example above, the assembly definition `asmb-def-1` and the field definition `fld-def-1` both instantiate the flag defined as `flg-def-1`. These instances, `flg-inst-1` and `flg-inst-2` respectively, are examples of *flag instances*. The assembly `asmb-def-1` declares the flag instance `flg-inst-1` as a composite child by referencing the flag definition `flg-def-1`. Similarly, the field `fld-def-1` declares the flag instance `flg-inst-2` as a composite child by referencing the flag definition `flg-def-1`.
 
 Furthermore, the assembly definition `asmb-def-1` has a model that instantiates the assembly definition `asmb-def-2`, as `asmb-inst-1`, and the field definition `fld-def-1`, as `fld-inst-1`. These are examples of *model instances*.
 {{</callout>}}
 
 Assemblies and fields also allow *inline definitions* to be declared which represent a single use definition that is also an instance. In these cases the inline `<define-flag>`, `<define-field>`, and `<define-assembly>` elements are used. 
+
+# Conventions Used in this Document
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [BCP 14](https://www.rfc-editor.org/info/bcp14) [RFC2119](https://www.rfc-editor.org/rfc/rfc2119.html) [RFC8174](https://www.rfc-editor.org/rfc/rfc8174.html) when, and only when, they appear in all capitals, as shown here.
 
 # Metaschema Module
 
@@ -196,7 +204,7 @@ The first set of elements in a Metaschema module represent the *header*, which c
 
 ## Module Documentation
 
-Top level documentation for the Metaschema module appears at the beginning of the header section.
+top-level documentation for the Metaschema module appears at the beginning of the header section.
 
 {{<callout>}}
 The documentation within the Metaschema module's header applies to the whole Metaschema module. Each child object definition will also have associated documentation that appears within that object definition.
@@ -303,7 +311,7 @@ The following subsections describe the syntax that is [common to all definition 
 
 ## Common Definition Metadata
 
-The `define-assembly`, `define-field`, and `define-flag` child elements share a common syntax comprised of the following XML attributes and elements.
+The [`<define-assembly>`](#top-level-define-assembly), [`<define-field>`](#top-level-define-field), and [`<define-flag>`](#top-level-define-flag) child elements share a common syntax comprised of the following XML attributes and elements.
 
 Attributes:
 
@@ -328,12 +336,14 @@ These attributes and elements are described in the following subsections.
 
 ### `@deprecated` Version
 
-The optional deprecated attribute communicates that the given information element implemented by the definition represents a data object who's use is intended to be discontinued starting with the specified version.
+The optional `@deprecated` attribute communicates that the given information element implemented by the definition represents a data object who's use is intended to be discontinued starting with the specified version.
 
 This version is a reference to the [`<schema-version>`](#schema-version) declared in the module header.
 
 {{<callout>}}
-Use of `@deprecated` is intended to support communication with content creators about avoiding use of the data object. Supporting this use case, this annotation can be used in documentation generation and in Metaschema-aware tools that provide context around using the definition.
+Declaring the `@deprecated` attribute communicates to content creators that all use of the annotated information element is to be avoided. 
+
+This annotation can be used in documentation generation and in Metaschema-aware tools that provide context around use of the definition.
 {{</callout>}}
 
 For example, deprecating the flag named `flag-name` starting with the model version `1.1.0` would be represented as follows.
@@ -341,23 +351,25 @@ For example, deprecating the flag named `flag-name` starting with the model vers
 ```xml {linenos=table,hl_lines=[3]}
 <define-flag
   name="flag-name"
-  deprecated="1.1.0">
+  deprecated="1.1.0"/>
 ```
 
 ### `@name`
 
 The `@name` attribute provides the definition's identifier, which can be used in other parts of a module, or in an importing module, to reference the definition.
 
-The names of flags, fields, and assemblies are expected to be maintained as separate identifier sets. This allows a flag, field, and an assembly definition to each have the same name in a given Metaschema module.
+**Note:** The names of flags, fields, and assemblies are expected to be maintained as separate identifier sets. This allows a flag, field, and an assembly definition to each have the same name in a given Metaschema module.
 
 ### `@scope`
 
 The optional `@scope` attribute is used to communicate the intended visibility of the definition when accessed by another module through an [`<import>`](#module-imports) element.
 
-- `global` (default) - Indicates that the definition MUST be made available for reference within importing modules. Definitions in the same and importing modules can reference it.
+- `global` - Indicates that the definition MUST be made available for reference within importing modules. Definitions in the same and importing modules can reference it. This is the default behavior when `@scope` is not declared.
 - `local` - Indicates that the definition MUST NOT be made available for reference within importing modules. Only definitions in the same module can reference it.
 
 Note: References to definitions in the same module are always possible regardless of scope.
+
+The scope of a definition affects how the [definition's name is resolved](#definition-name-resolution).
 
 ### `<formal-name>`
 
@@ -379,6 +391,8 @@ The description ties the definition to the related information element concept i
 While not required, it is best practice to include a `<description>`.
 {{</callout>}}
 
+The optional [`<description>`](#description-1) element of the child [`<flag>`](#flag-instances), [`<field>`](#field-instances) and [`<assembly>`](#assembly-instances) elements can be used to provide a different description for when the referenced definition is used in a more specialized way for a given instance.
+
 ### `<prop>`
 
 The optional `<prop>` element provides a structure for declaring arbitrary properties, which consist of a `@namespace`, `@name`, and `@value`.
@@ -394,14 +408,14 @@ The `@name` and `@namespace` is used in combination to define a semantically uni
 The `@value` attribute represents the lexical value assignment for the semantically unique name represented by the combination of the `@name` and `@namespace`. The lexical values of the `@value` attribute may be restricted for the specific semantically unique name, but such restrictions are not enforced directly in this model.
 
 {{<callout>}}
-A property on a definition is useful for annotating a definition with additional information that might describe, in a structured way, the semantics, use, nature, or other significant information related to the definition. In many cases, a property might be used to tailor generated documentation or to support an experimental, non-standardized feature in Metaschema.
+A property is useful for annotating a definition with additional information that might describe, in a structured way, the semantics, use, nature, or other significant information related to the definition. In many cases, a property might be used to tailor generated documentation or to support an experimental, non-standardized feature in Metaschema.
 {{</callout>}}
 
 ### Naming and `<use-name>`
 
 The optional `<use-name>` changes the *effective name* to use for the information element in a data model.
 
-The `<use-name>` element is optional and may occur multiple times.
+The `<use-name>` element is optional and MAY only occur once.
 
 By default the *effective name* of the information element in a data model is taken from the `@name` attribute. The `<use-name>` value overrides this behavior.
 
@@ -411,22 +425,20 @@ Use of a `<use-name>` frees the module maintainer allowing them to use a sensibl
 
 The first matching condition determines the *effective name* for the definition:
 
-1. A `<use-name>` is provided on the definition. The *effective name* is the value of the `<use-name>` element.
-1. No `<use-name>` is provided on the definition. The *effective name* is the value of the `@name` attribute.
+1. A `<use-name>` is provided on the definition. The *effective name* is the value of the `<use-name>` element on the definition.
+1. No `<use-name>` is provided on the definition. The *effective name* is the value of the `@name` attribute on the definition.
 
 For example:
 
-```xml
-<define-field name="field">
-  <define-flag name="flag-a">
-    <use-name>flag-b</use-name>
-  </define-flag>
-</define-field>
+```xml {linenos=table,hl_lines=[2]}
+<define-flag name="flag-a">
+  <use-name>flag-b</use-name>
+</define-flag>
 ```
 
-In the example above, the *effective name* of the definition is `name-b`. If the `<use-name>` was omitted, the *effective name* would be `name-a`.
+In the example above, the *effective name* of the definition is `flag-b`. If the `<use-name>` was omitted, the *effective name* would be `flag-a`.
 
-The following content would is valid to the model above.
+The following content is valid to the model above.
 
 {{< tabs JSON YAML XML >}}
 {{% tab %}}
@@ -464,7 +476,7 @@ The optional `<example>` element is used to provide inline examples, which are i
 
 The `example` element is optional and may occur multiple times.
 
-## Top Level `<define-flag>`
+## top-level `<define-flag>`
 
 A flag definition, represented by the `<define-flag>` element, is used to declare a reusable [flag](/specification/terminology/#flag) within a Metaschema module.
 
@@ -516,7 +528,7 @@ The `@default` attribute specifies the default value for the flag. When a flag i
 
 Constraints are [covered later](#define-flag-constraints) in this specification.
 
-## Top Level `<define-field>`
+## top-level `<define-field>`
 
 A field definition, represented by the `<define-field>` element, is used to declare a reusable [field](/specification/terminology/#field) within a metaschema module.
 
@@ -569,9 +581,9 @@ The optional `@collapsible` attribute controls a JSON and YAML specific behavior
 
 If `@collapsible` is not specified, the default value is `no`.
 
-The following behavior is required to be used for each value of `@collapsible`:
+The following behaviors are REQUIRED to be used for each value of `@collapsible`.
 
-- `no` - Do not collapse. This is the default.
+- `no` - Do not collapse. This is the default behavior when `@collapsible` is not declared.
 - `yes` - Collapse values that have flags with equivalent values.
 
 A flag value is equivalent if the value, or default value if not provided, is an exact match. A non-default flag is considered to have no value and will match the same flag on another instance that has no value.
@@ -755,7 +767,7 @@ For example:
 
 TODO: complete this example.
 
-## Top Level `<define-assembly>`
+## top-level `<define-assembly>`
 
 An assembly definition, represented by the `<define-assembly>` element, is used to declare a reusable [assembly](/specification/terminology/#assembly) within a Metaschema module.
 
@@ -797,31 +809,285 @@ The attributes and elements specific to the `<define-assembly>` are described in
 
 ### `<root-name>`
 
+Declares the name to use when using the assembly as a top-level information element. Indicates that the assembly is an allowable root.
+
+For example:
+
+```xml {linenos=table,hl_lines=[2]}
+<define-assembly name="assembly">
+  <root-name>assembly</root-name>
+</define-assembly>
+```
+
+Would allow the following content in JSON, YAML, and XML.
+
+{{< tabs JSON YAML XML >}}
+{{% tab %}}
+```json {linenos=table,hl_lines=[2]}
+{
+  "assembly": { }
+}
+```
+{{% /tab %}}
+{{% tab %}}
+```yaml {linenos=table,hl_lines=[2]}
+---
+assembly: -
+```
+{{% /tab %}}
+{{% tab %}}
+```xml {linenos=table,hl_lines=[1]}
+<assembly/>
+```
+{{% /tab %}}
+{{% /tabs %}}
+
 ### `<flag>` Instance Children
 
-A field may have zero or more flag instance children.
+An assembly may have zero or more flag instance children.
 
-See [flag instances](#flag-instances)
+See [flag instances](#flag-instances).
 
 ### `<define-flag>` Inline Definition
 
+An assembly may have zero or more flag instance children, which can be inline definitions.
+
 See [inline `<define-flag>`](#inline-define-flag).
 
-### `<model>` Instances
+### `<model>`
 
-The `<model>` element is used to reference the `field` and `assembly` components that compose the assembly's model. A `choice` element is also provided to define mutually exclusive model members.
+The `<model>` element is used to establish the assembly's model. To do this, zero or more [model instances](#model-instances) are declared.
+
+There are 5 kinds of model instances, which are used to instantiate a definition as part of the assembly's model.
+
+- `field` - Instantiates a globally defined [field definition](#top-level-define-field) as a model instance.
+- `assembly` - Instantiates a globally defined [assembly definition](#top-level-define-assembly) as a model instance.
+- `define-field` - Defines a [single use field](#inline-define-field) for use as a model instance.
+- `define-assembly` - Defines a [single use assembly](#inline-define-field) for use as a model instance.
+- `choice` - Declares a mutually exclusive selection of child model instances.
+
+These different kinds of instances are discussed in the next section.
 
 # Instances
 
-## Redefining the `<formal-name>`
+In a Metaschema module, complex information elements are created through composition. Through composition, an information element can be built by indicating which other information elements are used as its constituent parts.
 
-## Redefining the `description`
+An *instance* is used to declare an information element *child* within a *parent* information element. In a Metaschema module, the parent information element is a definition, either a *field definition* or an *assembly definition*. The instance is a *flag instance*, *field instance*, or *assembly instance*, which in turn either references an existing [*top-level definition*](#definitions) by name or provides a [*inline definition*](#inline-definitions) as part of the instance declaration.
 
-The optional `description` element of the child `field` and `assembly` elements can be used to provide a different description for when the referenced component is used in the specified model context.
 
-## `flag` Instances
+The [`<define-assembly>`](#top-level-define-assembly), [`<define-field>`](#top-level-define-field), and [`<define-flag>`](#top-level-define-flag) child elements share a common syntax comprised of the following XML attributes and elements.
+
+## Common Instance Metadata
+
+The [`<assembly>`](#assembly-instances), [`<field>`](#field-instances), and [`<flag>`](#flag-instances) child elements share a common syntax comprised of the following XML attributes and elements.
+
+Attributes:
+
+| Attribute | Data Type | Use      | Default Value |
+|:---       |:---       |:---      |:---           |
+| [`@deprecated`](#deprecated-version-1) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
+| [`@ref`](#ref) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+
+Elements:
+
+| Element | Data Type | Use      |
+|:---       |:---       |:---      |
+| [`<formal-name>`](#formal-name-1) | [`string`](/specification/datatypes/#string) | 0 or 1 |
+| [`<description>`](#description-1) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 |
+| [`<prop>`](#prop-1) | special | 0 to ∞ |
+| [`<use-name>`](#naming-and-use-name-1) | [`token`](/specification/datatypes/#token) | 0 or 1 |
+| [`<remarks>`](#remarks-2) | special | 0 or 1 |
+
+These attributes and elements are described in the following subsections.
+
+### `@deprecated` Version
+
+The optional `@deprecated` attribute communicates that a given compositional use of the referenced information element is intended to be discontinued starting with the specified version.
+
+This version is a reference to the [`<schema-version>`](#schema-version) declared in the module header.
+
+If both the definition and the instance declare a `@deprecated` version, the value provided by the instance MUST override the value provided by the definition.
+
+{{<callout>}}
+Declaring the `@deprecated` attribute communicates to content creators that the use of a given instance of the information element is to be avoided. This is more fine-grained than deprecating all uses of the information element, which is supported by the [`@deprecated`](#deprecated-version) attribute on the referenced definition.
+
+This annotation can be used in documentation generation and in Metaschema-aware tools that provide context around use of the instance.
+{{</callout>}}
+
+For example, deprecating the use of the flag named `id` within the `computer` assembly starting with the model version `1.1.0` would be represented as follows.
+
+```xml {linenos=table,hl_lines=[6]}
+<define-flag name="id"/>
+<define-assembly name="computer">
+  <root-name>computer</root-name>
+  <flag ref="id"
+    required="yes"
+    deprecated="1.1.0"/>
+</define-assembly>
+```
+
+### `@ref`
+
+The `@ref` attribute declares the top-level definition that the instance represents through composition. The name indicated by the `@ref` attribute must be a definition of the corresponding type declared in the containing module or a globally scoped definition in an imported module. See [Definition Name Resolution](#definition-name-resolution).
+
+The instance type corresponds with the definition type as follows.
+
+| Instance Type | Top-Level Definition Type |
+|:---       |:---       |
+| [`<flag>`](#flag-instances) | [`<define-flag>`](#top-level-define-flag) |
+| [`<field>`](#field-instances) | [`<define-field>`](#top-level-define-field) |
+| [`<assembly>`](#assembly-instances) | [`<define-assembly>`](#top-level-define-assembly) |
+
+**Note:** The names of flags, fields, and assemblies are expected to be maintained as separate identifier sets. This allows a flag, field, and an assembly definition to each have the same name in a given Metaschema module.
+
+### `<formal-name>`
+
+The optional `<formal-name>` element provides a human-readable, short string label for the instance for use in documentation.
+
+If provided, this formal name MUST override the `<formal-name>` declared on the corresponding definition if one is declared. If not provided, the effective formal name of the instance MUST be the `<formal-name>` declared on the definition. If neither the instance or the definition provide a `<formal-name>`, then the instance MUST NOT have a declared formal name.
+
+{{<callout>}}
+The `<formal-name>` label is intended to provide an easy to recognize, meaningful name for the instance. This element can be used when the formal name of the instance differs in use from the formal name declared by the referenced definition.
+
+While not required, it is best practice to include a `<formal-name>` when the use case of the instance is more specialized than the intended use described by the definition.
+{{</callout>}}
+
+### `<description>`
+
+The optional `<description>` element is a [single line of markup](/specification/datatypes/#markup-line) that describes the semantic meaning and use of the definition. This information is ideal for use in documentation.
+
+If provided, this description MUST override the `<description>` declared on the corresponding definition if one is declared. If not provided, the effective formal name of the instance MUST be the `<description>` declared on the definition. If neither the instance or the definition provide a `<description>`, then the instance MUST NOT have a declared description.
+
+{{<callout>}}
+The description ties the instance to the related information element concept in the information domain that the instance is representing. This element can be used when the description of the instance differs in use from the description declared by the referenced definition.
+
+While not required, it is best practice to include a `<description>` when the use case of the instance is more specialized than the intended use described by the definition.
+{{</callout>}}
+
+### `<prop>`
+
+The optional `<prop>` element provides a structure for declaring arbitrary properties, which consist of a `@namespace`, `@name`, and `@value`.
+
+This data element uses the same syntax as the [`<prop>` allowed on a definition](#prop). When used on an instance, the set of properties MUST apply only to the instance.
+
+Properties declared on the definition MAY be inherited by the instance. Metaschema does not define any general rules for how to handle overlapping and conflicting properties. How to handle these cases SHOULD be defined and documented for each property.
+
+{{<callout>}}
+A property is useful for annotating an instance with additional information that might describe, in a structured way, the semantics, use, nature, or other significant information related to the instance. In many cases, a property might be used to tailor generated documentation or to support an experimental, non-standardized feature in Metaschema.
+{{</callout>}}
+
+### Naming and `<use-name>`
+
+Similar to the [`<use-name>`](#naming-and-use-name) allowed on the referenced definition, the optional `<use-name>` on a instance changes the *effective name* to use for the information element in a compositional data model.
+
+The `<use-name>` element is optional and MAY only occur once.
+
+By default the *effective name* of the information element in a data model is taken from the [*effective name* of the definition](#naming-and-use-name). The `<use-name>` value overrides this behavior for the instance.
+
+{{<callout>}}
+Use of a `<use-name>` frees the module maintainer allowing them to use a sensible *effective name* for the instance in a data model.
+{{</callout>}}
+
+The first matching condition determines the *effective name* for the definition:
+
+1. A `<use-name>` is provided on the instance. The *effective name* is the value of the `<use-name>` element on the instance.
+1. A `<use-name>` is provided on the definition. The *effective name* is the value of the `<use-name>` element on the definition.
+1. No `<use-name>` is provided on the definition. The *effective name* is the value of the `@name` attribute on the definition.
+
+For example:
+
+```xml
+<define-flag name="flag-a">
+  <use-name>flag-b</use-name>
+</define-flag>
+<define-field name="field">
+  <flag ref="flag-a">
+    <use-name>flag-c</use-name>
+  </flag>
+</define-field>
+```
+
+In the example above, the *effective name* of the definition is `flag-c`. If the `<use-name>` was omitted on the instance, the *effective name* would be `flag-b`. If the `<use-name>` was also omitted on the definition, the *effective name* would be `flag-a`.
+
+The following content is valid to the model above.
+
+{{< tabs JSON YAML XML >}}
+{{% tab %}}
+```json
+{
+  "field": {
+    "flag-c": "value"
+  }
+}
+```
+{{% /tab %}}
+{{% tab %}}
+```yaml
+---
+field:
+  flag-c: "value"
+```
+{{% /tab %}}
+{{% tab %}}
+```xml
+<field flag-c="value"/>
+```
+{{% /tab %}}
+{{% /tabs %}}
+
+### `<remarks>`
+
+The optional `<remarks>` element provides a place to add notes related to the use of the instance. Remarks can be used to clarify the semantics of the instance in specific conditions, or to better describe how the instance may be more fully utilized within a model. 
+
+The `<remarks>` element is optional and may occur multiple times.
+
+## `<flag>` Instances
+
+A *flag instance* is used to declare that a top-level flag is part of the model of a field or assembly definition.
+
+
+Attributes:
+
+| Attribute | Data Type | Use      | Default Value |
+|:---       |:---       |:---      |:---           |
+| [`@deprecated`](#deprecated-version-1) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
+| [`@ref`](#ref) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+| [`@required`](#required) | `yes` or `no` | optional | `no` |
+
+Elements:
+
+| Element | Data Type | Use      |
+|:---       |:---       |:---      |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 |
+| [`<prop>`](#prop) | special | 0 to ∞ |
+| [`<use-name>`](#naming-and-use-name) or<br/>[`<root-name>`](#root-name)  | [`token`](/specification/datatypes/#token) | 0 or 1 |
+| [`<remarks>`](#remarks) | special | 0 or 1 |
+
+The attributes and elements specific to a `<flag>` instance are described in the following subsections. The elements and attributes common to all instance types are [defined earlier](#common-instance-metadata) in this specification.
+
+For example:
+
+```xml {linenos=table,hl_lines=[4]}
+<define-flag name="id"/>
+<define-assembly name="computer">
+  <root-name>computer</root-name>
+  <flag ref="id" required="yes"/>
+</define-assembly>
+```
+
+### `@required`
+
+The optional `@required` attribute declares if the flag is required to be provided in an associated content instance.
+
+The following behaviors are REQUIRED to be used for each value of `@required`.
+
+- `no` - Do not require the flag to be present in content. This is the default behavior when `@required` is not declared.
+- `yes` - Require the flag to be present in content. Content missing the flag and its value will be considered invalid.
 
 ## Model Instances
+
+TODO: Continue from here
 
 ### Using cardinalities and `group-as`
 
@@ -854,25 +1120,23 @@ The `group-as` element has the following set of attributes:
     | GROUPED | The child elements will be placed within a wrapper element with a localname equal to the value of the `@name` attribute. Each child element's localname will be the `@name` of the referenced component. |
     | UNGROUPED | The `@name` attribute is ignored. Each child element's localname will be the `@name` of the referenced component. |
 
-#### `assembly`
+### `<assembly>` Instances
 
 Used to reference an `assembly-definition` who's `@name` matches the value of the `@ref` attribute.
-#### `field`
+### `<field>` Instances
 
 - see `in-xml` in `define-field`
 
 
 Used to reference a `field-definition` who's `@name` matches the value of the `@ref` attribute.
 
-#### `choice`
+### `<choice>` Selections
 
-##### Inline Definitions
-
-- do not allow `use-name` or `scope`
-
-##### `any`
+### `<any>`
 
 # Inline Definitions
+
+- do not allow `use-name` or `scope`
 
 ## Inline `<define-flag>`
 
@@ -918,6 +1182,8 @@ Metaschema built in data types a covered in the [data type section](/specificati
 The `<import>` element is used to import the components defined in another metaschema definition into this metaschema definition.
 
 TODO: Discuss name shadowing.
+
+## Definition Name Resolution
 
 # Constraints
 
