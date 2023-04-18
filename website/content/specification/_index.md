@@ -68,7 +68,7 @@ The Metaschema provides a reduced, lightweight modeling language with constraint
 
 The following philosophy was used in the current design:
 - **Mediate Format Structural Differences:** Mediate between the structural differences in the XML, JSON, and YAML data formats by providing format-specific tailoring capabilities that improve the expression and conciseness of Metaschema-based data in a given format. This has the added benefit of making Metaschema easier to learn and use over learning the idiosyncrasies of each data format.
-- **Capitalize on Format Features:** To the extent possible, maximize the use of data format specific features, while still aligning modeling functionality across all supported data formats. In some cases, support for specific data format and schema features may be reduced where these features do not align well across all supported data format. 
+- **Capitalize on Format Features:** To the extent possible, maximize the use of data format-specific features, while still aligning modeling functionality across all supported data formats. In some cases, support for specific data format and schema features may be reduced where these features do not align well across all supported data formats.
 - **Unify Information Modeling Across Formats:** Use modeling constructs that map cleanly into features offered by XML and JSON schema technologies. This ensures that all information can be preserved, without data loss in bidirectional conversion.
 - **Reduce Runtime Complexities:** Eliminate the need for additional inputs, reliance on arbitrary conventions, or runtime settings to reliably produce correspondent XML, JSON or YAML from any other supported format.
 - **Focus on Running Code:** Focus on the production of a rich specification that facilitates running code supporting automated generation of schemas, documentation, tooling, and other model-related artifacts consistent with the model defined and documented by a given Metaschema module.
@@ -94,7 +94,7 @@ Flag and assembly definitions have child instances, which represent an edge betw
 
 Both field and assembly definitions optionally allow the inclusion of one or more child *flag instances*.
 
-An assembly definition also has a model which contains a sequence of *model instances*. A model instance is an instance of a field or assembly.
+An assembly definition also has a model which contains a sequence of *model instances*, each model instance is an instance being either a field or assembly instance.
 
 {{<callout>}}
 Within a Metaschema module, the information model implementation consists of assemblies, each of which are composed of more assemblies, field, and flag instances. 
@@ -204,7 +204,7 @@ The first set of elements in a Metaschema module represent the *header*, which c
 
 ## Module Documentation
 
-top-level documentation for the Metaschema module appears at the beginning of the header section.
+Top-level documentation for the Metaschema module appears in the the header section.
 
 {{<callout>}}
 The documentation within the Metaschema module's header applies to the whole Metaschema module. Each child object definition will also have associated documentation that appears within that object definition.
@@ -214,7 +214,7 @@ A Metaschema module's header may include the following elements, in order:
 
 ### `<schema-name>`
 
-The required `schema-name` is a line of [structured markup](/specification/datatypes/#markup-line) that provides a human-readable name, suitable for display, for the information model represented by this Metaschema module.
+The required `<schema-name>` is a line of [structured markup](/specification/datatypes/#markup-line) that provides a human-readable name, suitable for display, for the information model represented by this Metaschema module.
 
 For example:
 
@@ -250,13 +250,13 @@ For example:
 <short-name>computer</short-name>
 ```
 
-Together, the `<short-name>` and `<schema-version>` provide an identification pair that unqiuely identifies a given Metaschema module revision. This pair of values is intended to be associated with any schemas, code, tools, or other derivative artifacts produced from the Metaschema module, providing for clear identification of the Metaschema module revision an artifact is derived from.
+Together, the `<short-name>` and `<schema-version>` provide an identification pair that uniquely identifies a given Metaschema module revision. This pair of values is intended to be associated with any schemas, code, tools, or other derivative artifacts produced from the Metaschema module, providing for clear identification of the Metaschema module revision from which an artifact is derived.
 
 ### `<remarks>`
 
 An optional sequence of [multiline markup](/specification/datatypes/#markup-multiline) used to provide additional supporting notes related to the Metaschema module.
 
-A `<remarks>` element is typically used to including explanatory commentary of any kind.
+A `<remarks>` element is typically used to include explanatory commentary of any kind.
 
 For example:
 
@@ -268,7 +268,7 @@ For example:
 ```
 
 {{<callout>}}
-As a general purpose element, the `remarks` element is also permitted to appear elsewhere in the Metaschema module model. Its scope of application is tied to the location of use in the document. Thus, the top-level remarks describe the entire metaschema, while remarks on an object definition describe the object definition.
+As a general purpose element, the `<remarks>` element is also permitted to appear elsewhere in the Metaschema module model. Its scope of application is tied to the location of use in the document. Thus, the top-level remarks describe the entire metaschema, while remarks on an object definition describe the object definition.
 {{</callout>}}
 
 ## XML `<namespace>`
@@ -336,7 +336,7 @@ These attributes and elements are described in the following subsections.
 
 ### `@deprecated` Version
 
-The optional `@deprecated` attribute communicates that the given information element implemented by the definition represents a data object who's use is intended to be discontinued starting with the specified version.
+The optional `@deprecated` attribute communicates that the given information element implemented by the definition represents a data object whose use is intended to be discontinued, starting with the specified version.
 
 This version is a reference to the [`<schema-version>`](#schema-version) declared in the module header.
 
@@ -472,7 +472,7 @@ The `<remarks>` element is optional and may occur multiple times.
 
 ### `<example>`
 
-The optional `<example>` element is used to provide inline examples, which are intended to illustrate the use the information element implemented by the definition. Examples are provided in XML, which can then be automatically converted into other formats.
+The optional `<example>` element is used to provide inline examples, which illustrate the use of the information element being defined. Examples are provided in XML, which can then be automatically converted into other formats.
 
 The `example` element is optional and may occur multiple times.
 
@@ -774,7 +774,7 @@ An assembly definition, represented by the `<define-assembly>` element, is used 
 An assembly definition provides the means to implement a complex, composite, named [*information element*](/specification/terminology/#information-element) that has no value. An assembly definition consists of an optional set of [*flags*](#flag) and an optional sequence of model instances, which are instances of assemblies and fields.
 
 {{<callout>}}
-An assembly is a compositional node in a Metaschema-based model. Assemblies are typically used to represent complex data objects that combine multiple information elements together into a composite object representing a larger semantic concept. The flag instances, typically characterize or identify this composite object, while the model instances represent the information being composed.
+An assembly is a compositional node in a Metaschema-based model. Assemblies are typically used to represent complex data objects, combining multiple information elements together into a composite object representing a larger semantic concept. An assembly's flag instances will typically characterize or identify this composite object, while its model instances represent the information being composed.
 {{</callout>}}
 
 An assembly is similar to a field, except it contains structured content (objects or elements), not text or unstructured "rich text". The contents permitted in a particular (type of) assembly are indicated in its `model` element.
@@ -1102,7 +1102,7 @@ The `group-as` element is required if the `@max-occurs` attribute has a value gr
 
 The `group-as` element has the following set of attributes:
 
-- `@name`(type: NCName, use: required): The grouping name to use in XML, JSON, and YAML. Use of this name is further clarified by the `@in-xml` attribute, when used.
+- `@name`(type: NCName, use: required): The grouping name to use in JSON, YAML and XML (when exposed). Use of this name is further clarified by the `@in-xml` attribute, when used.
 - `@in-json` (type: special, use: optional, default: SINGLETON_OR_ARRAY): 
 
     In all cases, `@name` value is used as the property name.
@@ -1115,10 +1115,10 @@ The `group-as` element has the following set of attributes:
 
 - `@in-xml` (type: special, use: optional, default: UNGROUPED): 
 
-    | Value | JSON Behavior |
+| Value | XML Behavior |
     |:--- |:--- |
-    | GROUPED | The child elements will be placed within a wrapper element with a localname equal to the value of the `@name` attribute. Each child element's localname will be the `@name` of the referenced component. |
-    | UNGROUPED | The `@name` attribute is ignored. Each child element's localname will be the `@name` of the referenced component. |
+| GROUPED | The child elements will be placed within a wrapper element with a local name equal to the value of the `@name` attribute. Each child element's local name will be the `@name` of the referenced component. |
+| UNGROUPED | In XML, the components will appear without a grouping (wrapper) element with their own effective names; the `group-as/@name is ignored. |
 
 ### `<assembly>` Instances
 
