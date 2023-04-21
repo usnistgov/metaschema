@@ -88,7 +88,7 @@ A Metaschema module contains a collection of reusable [*definitions*](terminolog
 
 # Definitions, Instances, and Local Definitions
 
-Metaschema uses 3 types of definitions to represent information elements with different structural shapes. These different types of definitions are: [`define-flag`](#top-level-define-flag), [`define-field`](#top-level-define-field), or [`define-assembly`](#top-level-define-assembly). These definition types are used as building blocks of a Metaschema-based model.
+Metaschema uses 3 types of definitions to represent information elements with different structural shapes: [`define-flag`](#top-level-define-flag), [`define-field`](#top-level-define-field), and [`define-assembly`](#top-level-define-assembly). These definition types are used as building blocks of a Metaschema-based model.
 
 Flag and assembly definitions have child instances, which represent an edge between the containing definition and another definition. Thus, an *instance* makes use of another definition, typically by reference.
 
@@ -571,7 +571,7 @@ The attributes and elements specific to the `<define-field>` are described in th
 
 ### `@as-type`
 
-The optional `@as-type` attribute declares the type of the field's value. If not provided, the default value is `string`.
+The optional `@as-type` attribute declares the type of the field's value. If not provided, the default type is `string`.
 
 The `@as-type` attribute must have a value that corresponds to one of the built in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types).
 
@@ -697,7 +697,7 @@ TODO: Specify this. Note assembly points to this section.
 
 TODO: discuss use only when flags may be present.
 
-In XML, the value of a field appears as the text child of the field's element. In JSON and YAML, a property name is needed for the value. The `<json-value-key>` and `<json-value-key-flag>` elements provide a means to control the behavior of how this value is represented.
+In XML, the value of a field appears as the textual data content of the field's element. In JSON and YAML, a property name is needed for the value. The `<json-value-key>` and `<json-value-key-flag>` elements provide a means to control the behavior of how this value is represented.
 
 If no `<json-value-key>` or `<json-value-key-flag>` element is declared, a property name value will be chosen based on the data type as follows:
   - If the field's `@as-type` is `markup-line`, then the property name will be `RICHTEXT`.
@@ -771,7 +771,9 @@ TODO: complete this example.
 
 An assembly definition, represented by the `<define-assembly>` element, is used to declare a reusable [assembly](/specification/terminology/#assembly) within a Metaschema module.
 
-An assembly definition provides the means to implement a complex, composite, named [*information element*](/specification/terminology/#information-element) that has no value. An assembly definition consists of an optional set of [*flags*](#flag) and an optional sequence of model instances, which are instances of assemblies and fields.
+An assembly definition provides the means to implement a complex, composite, named [*information element*](/specification/terminology/#information-element) that collects and organizes other information elements, with no value of its own. 
+
+An assembly definition consists of an optional set of [*flags*](#flag) and an optional sequence of [model instances](#model-instances).
 
 {{<callout>}}
 An assembly is a compositional node in a Metaschema-based model. Assemblies are typically used to represent complex data objects, combining multiple information elements together into a composite object representing a larger semantic concept. An assembly's flag instances will typically characterize or identify this composite object, while its model instances represent the information being composed.

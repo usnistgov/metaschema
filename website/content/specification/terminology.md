@@ -32,12 +32,12 @@ A *data model*, abbreviated as DM, is defined as follows:
 
 {{<callout>}}A representation of an [*information model*](#information-model) in a format specific serializable form (e.g., XML, JSON, YAML) expressed using a format-specific schema syntax.{{</callout>}}
 
-> As described by [RFC 3444](https://tools.ietf.org/html/rfc3444#section-4)), a data model is defined at a lower level of abstraction and include many details.
+> As described by [RFC 3444](https://tools.ietf.org/html/rfc3444#section-4)), a data model is defined at a lower level of abstraction than the information model it represents, and includes many details.
 >
 > - Intended for implementors
 > - Include protocol-specific constructs.
 
-In Metaschema, the format-specific schema (i.e., XML or JSON Schema) is generated within the Metaschema architecture from a [*Metaschema module*](#metaschema-module). These generated schemas can be used to validate that data is conformant to the associated format, and thus conformant to the *information model* defined by a given *Metaschema module*.
+In Metaschema, the format-specific schema (i.e., XML or JSON Schema) is generated within the Metaschema architecture from a [*Metaschema module*](#metaschema-module). By defining *data models* appropriate and tuned for each format, these generated schemas can be used to validate that data is conformant to the associated format, and thus conformant to the *information model* defined by a given *Metaschema module*.
 
 ## Definition
 
