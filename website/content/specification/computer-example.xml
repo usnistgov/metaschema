@@ -164,4 +164,8 @@
         <formal-name>Remarks</formal-name>
         <description>Additional remarks related to the containing computer component.</description>
     </define-field>
+    <define-flag name="id"/>
+    <define-assembly name="computer">
+        <flag ref="id" required="yes"/>
+    </define-assembly>
 </METASCHEMA>

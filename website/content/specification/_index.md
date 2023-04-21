@@ -858,16 +858,6 @@ See [inline `<define-flag>`](#inline-define-flag).
 
 The `<model>` element is used to establish the assembly's model. To do this, zero or more [model instances](#model-instances) are declared.
 
-There are 5 kinds of model instances, which are used to instantiate a definition as part of the assembly's model.
-
-- `field` - Instantiates a globally defined [field definition](#top-level-define-field) as a model instance.
-- `assembly` - Instantiates a globally defined [assembly definition](#top-level-define-assembly) as a model instance.
-- `define-field` - Defines a [single use field](#inline-define-field) for use as a model instance.
-- `define-assembly` - Defines a [single use assembly](#inline-define-field) for use as a model instance.
-- `choice` - Declares a mutually exclusive selection of child model instances.
-
-These different kinds of instances are discussed in the next section.
-
 # Instances
 
 In a Metaschema module, complex information elements are created through composition. Through composition, an information element can be built by indicating which other information elements are used as its constituent parts.
@@ -877,7 +867,7 @@ An *instance* is used to declare an information element *child* within a *parent
 
 The [`<define-assembly>`](#top-level-define-assembly), [`<define-field>`](#top-level-define-field), and [`<define-flag>`](#top-level-define-flag) child elements share a common syntax comprised of the following XML attributes and elements.
 
-## Common Instance Metadata
+## Common Instance Data
 
 The [`<assembly>`](#assembly-instances), [`<field>`](#field-instances), and [`<flag>`](#flag-instances) child elements share a common syntax comprised of the following XML attributes and elements.
 
@@ -1045,7 +1035,6 @@ The `<remarks>` element is optional and may occur multiple times.
 
 A *flag instance* is used to declare that a top-level flag is part of the model of a field or assembly definition.
 
-
 Attributes:
 
 | Attribute | Data Type | Use      | Default Value |
@@ -1087,52 +1076,126 @@ The following behaviors are REQUIRED to be used for each value of `@required`.
 
 ## Model Instances
 
-TODO: Continue from here
+A *model instance* is used to declare a relationship to other information elements in an assembly definition's model.
 
-### Using cardinalities and `group-as`
+There are 5 kinds of model instances, which can be declared as part of the assembly's model.
 
+- `<field>` - Instantiates a globally defined [field definition](#top-level-define-field) as a model instance.
+- `<define-field>` - Defines a [single use field](#inline-define-field) for use as a model instance.
+- `<assembly>` - Instantiates a globally defined [assembly definition](#top-level-define-assembly) as a model instance.
+- `<define-assembly>` - Defines a [single use assembly](#inline-define-assembly) for use as a model instance.
+- `<choice>` - Declares a [mutually exclusive selection](#choice-selections) of child model instances.
+- `<any>` - Declares a [placeholder for extra content](#any) that is not described by an assembly definition's model.
 
-The child `field` and `assembly` elements share the following common set of attributes:
+The `<field>`, `<define-field>`, `<assembly>`, `<define-assembly>` model instance types are considered [*named model instances*](#named-model-instances), since they all instantiate either a [top-level](#definitions) or [inline](#inline-definitions) definition that represent a named information element within an assembly's model.
 
-- `@ref`(type: NCName, use: required): References the name of the corresponding `define-field` or `define-assembly`.
-- `@min-occurs` (type: nonNegativeInteger, use: optional, default: 0): Indicates the minimum allowed occurance of the corresponding `define-field` or `define-assembly`.
-- `@max-occurs` (type: positiveInteger or "unbounded", use: optional, default: 1): Indicates the maximum allowed occurance of the corresponding `define-field` or `define-assembly`. The value `unbounded` indicates the the referenced component can occur any number of times.
+The `<choice>` and `<any>` elements represent special constructs which differ significantly in their semantics from the named model instances.
 
-The `group-as` element is required if the `@max-occurs` attribute has a value greater than '1' or `unbounded` to provide additional information about how to handle the collection of data.
+These different types of model instances are discussed in the following subsections.
+
+## Named Model Instances
+
+The `<field>`, `<define-field>`, `<assembly>`, `<define-assembly>` model instance types are considered [*named model instances*](#named-model-instances), which instantiate a definition within an assembly's model.
+
+The `<field>` and `<assembly>` elements are used to instantiate a referenced [top-level definition](#definitions).
+
+The `<define-field>` and `<define-assembly>` elements are used to both declare a single use [inline definition](#inline-definitions) and also instantiate the declared definition.
+
+### Common Named Model Instance Data
+
+All named model instances share a common common syntax comprised of the following XML attributes and elements. This syntax builds on the [common syntax and semantics](#common-instance-data) shared by all instance types.
+
+Attributes:
+
+| Attribute | Data Type | Use      | Default Value |
+|:---       |:---       |:---      |:---           |
+| [`@deprecated`](#deprecated-version-1) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
+| [`@ref`](#ref) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+| [`@max-occurs`](#ref) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | 1 |
+| [`@min-occurs`](#ref) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | 0 |
+
+Elements:
+
+| Element | Data Type | Use      |
+|:---       |:---       |:---      |
+| [`<formal-name>`](#formal-name-1) | [`string`](/specification/datatypes/#string) | 0 or 1 |
+| [`<description>`](#description-1) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 |
+| [`<prop>`](#prop-1) | special | 0 to ∞ |
+| [`<use-name>`](#naming-and-use-name-1) | [`token`](/specification/datatypes/#token) | 0 or 1 |
+| [`<group-as>`](#group-as) | special | 0 or 1 |
+| [`<remarks>`](#remarks-2) | special | 0 or 1 |
+
+The following subsections describe the XML attributes and elements that are specific to named model instances.
+
+#### `@max-occurs`
+
+The optional `@max-occurs` attribute declares the maximum cardinality bound for the named model instance, which defaults to `1`.
+
+This value can be either:
+
+- a [`positive-integer`](/specification/datatypes/#non-negative-integer) value, representing a bounded maximum cardinality; or
+- the `unbounded` value, representing a maximum cardinality with no upper bound.
+
+#### `@min-occurs`
+
+The optional `@min-occurs` attribute declares the minimum cardinality bound for the named model instance as a [`non-negative-integer`](/specification/datatypes/#non-negative-integer) value, which defaults to `0`.
+
+#### `<group-as>`
+
+The `<group-as>` element is required if the `@max-occurs` attribute has a value greater than '1' or is `unbounded`. This element provides additional information about how to handle the collection of data.
 
 The `group-as` element has the following set of attributes:
 
-- `@name`(type: NCName, use: required): The grouping name to use in JSON, YAML and XML (when exposed). Use of this name is further clarified by the `@in-xml` attribute, when used.
+
+| Attribute | Data Type | Use      | Default Value |
+|:---       |:---       |:---      |:---           |
+| `@in-json` |  `ARRAY`, `SINGLETON_OR_ARRAY`, or `BY_KEY` | optional | `SINGLETON_OR_ARRAY` |
+| `@in-xml` |  `GROUPED`, `UNGROUPED` | optional | `UNGROUPED` |
+| `@name` | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+
+##### `@in-json`
+
 - `@in-json` (type: special, use: optional, default: SINGLETON_OR_ARRAY): 
 
-    In all cases, `@name` value is used as the property name.
+In all cases, `@name` value is used as the property name.
 
-    | Value | JSON Behavior |
-    |:--- |:--- |
-    | ARRAY | The child objects are to be represented as an array of objects. |
-    | SINGLETON_OR_ARRAY | If a single object is provided, then the child will be an object, otherwise the child objects will be represented as an array of objects. |
-    | BY_KEY | An itermediate object will be used as the child, with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component. See [using `@json-key`](#using-json-key). |
+| Value | JSON and YAML Behavior |
+|:--- |:--- |
+| ARRAY | The child objects are to be represented as an array of objects. |
+| SINGLETON_OR_ARRAY | If a single object is provided, then the child will be an object, otherwise the child objects will be represented as an array of objects. |
+| BY_KEY | An intermediate object will be used as the child, with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component. See [using `@json-key`](#using-json-key). |
 
+##### `@in-xml`
 - `@in-xml` (type: special, use: optional, default: UNGROUPED): 
 
 | Value | XML Behavior |
-    |:--- |:--- |
+|:--- |:--- |
 | GROUPED | The child elements will be placed within a wrapper element with a local name equal to the value of the `@name` attribute. Each child element's local name will be the `@name` of the referenced component. |
 | UNGROUPED | In XML, the components will appear without a grouping (wrapper) element with their own effective names; the `group-as/@name is ignored. |
 
-### `<assembly>` Instances
+##### `@name`
 
-Used to reference an `assembly-definition` who's `@name` matches the value of the `@ref` attribute.
+`@name`(type: NCName, use: required): The grouping name to use in JSON, YAML and XML (when exposed). Use of this name is further clarified by the `@in-xml` attribute, when used.
+
 ### `<field>` Instances
 
 - see `in-xml` in `define-field`
 
-
 Used to reference a `field-definition` who's `@name` matches the value of the `@ref` attribute.
 
-### `<choice>` Selections
+### `<define-field>` Instances
 
-### `<any>`
+### `<assembly>` Instances
+
+Used to reference an `assembly-definition` who's `@name` matches the value of the `@ref` attribute.
+
+### `<define-assembly>` Instances
+
+
+
+## `<choice>` Selections
+
+## `<any>`
 
 # Inline Definitions
 
@@ -1144,7 +1207,7 @@ Used to reference a `field-definition` who's `@name` matches the value of the `@
 
 ## Inline `<define-assembly>`
 
-### XML Representational Form
+# XML Representational Form
 
 In XML, a flag instance is represented as an [attribute](https://www.w3.org/TR/xml/#attdecls).
 
@@ -1152,7 +1215,7 @@ In XML, a flag instance is represented as an [attribute](https://www.w3.org/TR/x
 <field-or-assembly @flag-name="flag value"/>
 ```
 
-### JSON Representational Form
+# JSON Representational Form
 
 In JSON a flag instance is represented as an [object member](https://datatracker.ietf.org/doc/html/rfc8259#section-2) (also called a "[property]()") with an associated value.
 
@@ -1162,7 +1225,7 @@ In JSON a flag instance is represented as an [object member](https://datatracker
 }
 ```
 
-### YAML Representational Form
+# YAML Representational Form
 
 The YAML representation is similar to JSON, where a [tagged value](https://yaml.org/spec/1.2.2/#24-tags) is used to represent a flag.
 
