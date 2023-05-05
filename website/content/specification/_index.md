@@ -17,20 +17,20 @@ aliases:
 - /specification/syntax/
 ---
 
-# Overview
+# Overview `test`
 
-The *Metaschema Modeling Framework* provides a means to represent an [*information model*](/specification/terminology/#information-model), consisting of many [*information elements*](/specification/terminology/#information-element), in a format neutral form. By abstracting information modeling away from format specific forms, the Metaschema Modeling Framework provides a means to consistently and sustainably maintain a model, while avoiding the need to maintain each derivative format individually. By consolidating model maintenance into a single format, significant time can be saved over other approaches that require each format to be maintained individually.
+The *Metaschema Modeling Framework* provides a means to represent an [*information model*](/specification/terminology/#information-model) for a given [*information domain*](/specification/terminology/#domain), consisting of many related [*information elements*](/specification/terminology/#information-element), in a *data format* neutral form. By abstracting information modeling away from *data format* specific forms, the Metaschema Modeling Framework provides a means to consistently and sustainably maintain an *information model*, while avoiding the need to maintain each derivative *data format* individually. By consolidating *information model* maintenance into a single representation, significant time can be saved over other approaches that require each *data format* to be maintained individually.
 
-A Metaschema-based model, called a [*Metaschema module*](/specification/terminology/#metaschema-module) represents implementations of the individual data elements of the information model using [*definitions*](/specification/terminology/#definition). These definitions are bound tightly to representational forms in each supported derivative data format, unifying representations for a given information model.
+A Metaschema-based *information model* is represented in an abstract XML-based format, called a [*Metaschema module*](/specification/terminology/#metaschema-module). A *Metaschema module* represents implementations of the individual *information elements* of the *information model* using [*definitions*](/specification/terminology/#definition). These *definitions* are bound tightly to representational forms in each supported derivative *data format*, unifying representations for a given information model. Based on the tight binding provided by the Metaschema Modeling Framework, a given *information model* can be used to deterministically generate a [*data model*](/specification/terminology/#data-model) in a *data format* specific form.
 
-The Metaschema framework currently supports XML, JSON, and YAML data formats. Support for YAML is limited to the subset of YAML that aligns with JSON representations.
+The Metaschema framework currently supports XML, JSON, and YAML *data formats*. Support for YAML is limited to the subset of YAML that aligns with JSON representations.
 
-The tight binding to supported derivative data formats has many advantages.
+This tight binding to supported derivative data formats has many advantages.
 
-1. **Automated Schema Generation:** Schema representations for a given supported data format can be automatically generated from a Metaschema module. Generated schemas can be used to validate that data is conformant to the associated format(s), ensuring that data is conformant to the model defined by the Metaschema module. When the model is changed, an updated schema representation can be automatically generated.
-1. **Automated Translation of Content:** Data represented in a given supported data format can be automatically translated into an alternate supported data format. This allows data to be maintained in a single data format, which can be easily converted into all of the other supported formats.
-1. **Automated Documentation Generation:** Data format specific documentation can be automatically generated that is aligned with the concepts used in a given format. This can be used to provide a format-specific view of a model.
-1. **Automated Parsing Code Generation:** Programming language specific parsing and content generation code can also be automatically generated using a Metaschema module supporting data deserialization and serialization code capable of reading and writing data in each supported format. This generative approach allows application developers to focus right away on business logic and user interface features instead of building the basic common data structures needed for all applications that work with information from a given domain.
+1. **Automated Schema Generation:** Schema representations for a given supported *data format* can be automatically generated from a Metaschema module. A generated schema can be used to validate that data is conformant to the associated *data model*, ensuring that this data is conformant to the *information model* defined by the *Metaschema module*. When the *information model* is changed, an updated schema representation can be automatically generated.
+1. **Automated Translation of Content:** Data represented using a *data model* derived from a *Metaschema module* can be automatically translated into an alternate *data model* based on the same *Metaschema module*. This allows data aligned with a derived *data model* to be automatically converted into data representations in all other *data models* derived from the same *Metaschema module*.
+1. **Automated Documentation Generation:** *Data model* specific documentation can be automatically generated from a *Metaschema module*. This generated documentation is oriented to the syntax and concepts of the *data format* used by the *data model*, providing a format-specific view of an *information model*.
+1. **Automated Parsing Code Generation:** Programming language specific parsing and content generation code can also be automatically generated using a *Metaschema module*, supporting data deserialization and serialization for all derived *data models*. The data structures generated represent the *information model* allowing data read from and written to all derived *data models* to be represented in a singular set of data structures. This generative approach allows application developers to focus right away on business logic and user interface features, instead of building the data structures needed to represent the *data models* for a given *information domain*.
 
 The following illustrates the Metaschema Framework architecture as described above.
 
@@ -48,30 +48,35 @@ class ms metasch
 class code,schema,doc,conv usecase
 ```
 
-These Metaschema-based capabilities, which can be applied to any information domain, serve both the needs of developers who need to support multiple data formats for a given domain, or that need to choose a format specific technology stack that is well-suited to their application. In either case, use of the generative capabilities supported by the Metaschema Framework, further reduces the time required to maintain format-specific documentation, schemas, data, and parsing code in multiple formats.
+These capabilities can be applied to any *information domain*, serving developers who need to support multiple *data models* for a given *information domain* or a format specific technology stack that is well-suited to their application based on a single *data model* equally. In either case, use of the generative capabilities supported by the Metaschema Framework, further reduces the time required to maintain format-specific documentation, schemas, data, and parsing code in one or multiple *data formats*.
 
-This specification provides a basis for the development of interoperable toolchains supporting the generative capabilities of the Metaschema Framework. This specification is also intended to serve as a reference for information modelers producing Metaschema-based information models.
+This specification provides a basis for the development of interoperable toolchains supporting the generative capabilities of the Metaschema Framework. This specification is also intended to serve as a reference for information modelers producing Metaschema-based *information models*.
 
 ## Design Goals
 
 The design of the Metaschema modeling approach addresses the following needs:
 
-1. **Ease Maintenance:** Reduce the implementation burden of supporting multiple formats, along with documentation, schemas, data, and related tooling.
-1. **Ease Format Adoption Costs:** Reduce the cost of adopting a new supported data format.
-1. **Unified Format Support:** Unify support for compatible data descriptions in multiple formats, such as XML, JSON, YAML and potentially others over time.
-1. **Ease Production of Format Documentation:** Produce schema documentation from the same source as schema files and tools.
-1. **Promote Model Experimentation:** Enable distributed, semi-coordinated experimentation with the format(s) and related tools supported by a given Metaschema module.
+1. **Ease Maintenance:** Reduce the implementation burden of supporting multiple *data formats* for a single *information model*, along with documentation, schemas, data, and related tooling.
+1. **Ease Format Adoption Costs:** Reduce the cost of adopting a new supported *data format* for use with a given *information model*. As bindings to new *data formats* are supported by the Metaschema Modeling Framework, users of supporting tools gain use of the new *data format*.
+1. **Unified Format Support:** Unify support for compatible data descriptions in multiple *data formats*, such as XML, JSON, YAML and potentially others over time. For a given *information model* data can be easily translated between *data models* in all supported *data formats*.
+1. **Ease Production of Data Format Documentation:** Produce *data model* documentation from the same source as schema files and associated tools.
+1. **Promote Information Model Experimentation:** Enable distributed, semi-coordinated experimentation around information concepts within a given *information domain*. *Information elements* can be easily added, modified, and removed. Documentation, schemas, and tools can be quickly updated using automated generative tools supported by a given *Metaschema module*.
 
 ## Design Approach
 
-The Metaschema provides a reduced, lightweight modeling language with constraints that apply at the level of the information model abstraction.
+The Metaschema Modeling Framework provides a reduced, lightweight modeling language with constraints that apply at the level of the information model abstraction.
 
 The following philosophy was used in the current design:
-- **Mediate Format Structural Differences:** Mediate between the structural differences in the XML, JSON, and YAML data formats by providing format-specific tailoring capabilities that improve the expression and conciseness of Metaschema-based data in a given format. This has the added benefit of making Metaschema easier to learn and use over learning the idiosyncrasies of each data format.
-- **Capitalize on Format Features:** To the extent possible, maximize the use of data format-specific features, while still aligning modeling functionality across all supported data formats. In some cases, support for specific data format and schema features may be reduced where these features do not align well across all supported data formats.
+
+- **Mediate Format Structural Differences:** Mediate between the structural differences in the XML, JSON, and YAML *data formats* by providing format-specific tailoring capabilities that improve the expression and conciseness of Metaschema-based data in a given format. This has the added benefit of making Metaschema easier to learn and use over learning the idiosyncrasies of each *data format*.
+- **Capitalize on Format Features:** To the extent possible, maximize the use of *data format*-specific features, while still aligning modeling functionality across all supported *data formats*. In some cases, support for specific *data format* and schema features may be omitted where these features do not align well across all supported *data formats*.
 - **Unify Information Modeling Across Formats:** Use modeling constructs that map cleanly into features offered by XML and JSON schema technologies. This ensures that all information can be preserved, without data loss in bidirectional conversion.
-- **Reduce Runtime Complexities:** Eliminate the need for additional inputs, reliance on arbitrary conventions, or runtime settings to reliably produce correspondent XML, JSON or YAML from any other supported format.
-- **Focus on Running Code:** Focus on the production of a rich specification that facilitates running code supporting automated generation of schemas, documentation, tooling, and other model-related artifacts consistent with the model defined and documented by a given Metaschema module.
+- **Reduce Runtime Complexities:** Eliminate the need for additional inputs, reliance on arbitrary conventions, or runtime settings to reliably produce correspondent XML, JSON or YAML from any other supported *data format*.
+- **Focus on Running Code:** Focus on the production of a rich specification that facilitates running code supporting automated generation of schemas, documentation, tooling, and other model-related artifacts consistent with the *information model* defined and documented by a given *Metaschema module*.
+
+# Conventions Used in this Document
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [BCP 14](https://www.rfc-editor.org/info/bcp14) [RFC2119](https://www.rfc-editor.org/rfc/rfc2119.html) [RFC8174](https://www.rfc-editor.org/rfc/rfc8174.html) when, and only when, they appear in all capitals, as shown here.
 
 # Information Modeling
 
@@ -83,27 +88,105 @@ An [*information model*](terminology/#information-model) is an abstract represen
 
 The primary purpose of the Metaschema Framework is to support the structured expression of an information model, which is represented as a [*Metaschema module*](terminology/#metaschema-module). A Metaschema module is used to represent the whole or a part of a information model for a given information domain in an information-centric, format-neutral form.
 
-A Metaschema module contains a collection of reusable [*definitions*](terminology/#definition) that each represent a given information element in an information model. Each definition contains documentation about the meaning (semantics), structure (syntax), and use of a given information element.
+## Graph Theoretical Basis of Metaschema
 
+In a *Metaschema module*, an *information model* is represented as a cyclic directed multigraph.
+
+*Information elements* are represented as the *nodes* of the graph, which are connected by *edges* that represent the relationships between *nodes*.
+
+```mermaid
+graph TB
+  a((a)) -- e<sub>1</sub> --> b((b))
+  b -- e<sub>2</sub> --> c((c))
+  a -- e<sub>3</sub> --> c
+```
+
+A *Metaschema module* is a *directed graph*, since the *edges* represent a set of ordered node pairs. This allows a *Metaschema module* to represent sequences of relationships. In the example above, `a` has two ordered relationships: <code>a</code> <code>-e<sub>1</sub>-></code> <code>b</code> and <code>a</code> <code>-e<sub>3</sub>-></code> <code>c</code>.
+
+A *Metaschema module* is a *multigraph*, since two *nodes* may have multiple edges representing distinct relationships between the two nodes. This allows a *Metaschema module* to represent different relationships between the same two information elements, such as the relationships <code>e<sub>3</sub></code> and <code>e<sub>4</sub></code> between `a` and `c` below.
+
+```mermaid
+graph TB
+  a((a)) -- e<sub>1</sub> --> b((b))
+  b -- e<sub>2</sub> --> c((c))
+  a -- e<sub>3</sub> --> c
+  a -- e<sub>4</sub> --> c
+```
+
+A *Metaschema module* is a *cyclic graph*, since a sequence of *nodes* and *edges* can form a circuit where the first and last *nodes* are the same. This allows a *Metaschema module* to represent recursive information structures. This is illustrated below where <code>a</code> <code>-e<sub>1</sub>-></code> <code>b</code> <code>-e<sub>2</sub>-></code> <code>c</code> <code>-e<sub>3</sub>-></code> <code>a</code> form a cycle with node `a` is the first and last node in the cycle.
+
+```mermaid
+graph TB
+  a((a)) -- e<sub>1</sub> --> b((b))
+  b -- e<sub>2</sub> --> c((c))
+  c -- e<sub>3</sub> --> a
+```
+
+In a *Metaschema module* a node is represented as a [*definition*](terminology/#definition). Each *definition* represents a given *information element* in an *information model*. Each *definition* contains data and documentation about the meaning (semantics), structure (syntax), and use of a given *information element*.
+
+In a *Metaschema module* an *edge* is represented as an [*instance*](#instances), which establishes a relationship between two *information elements* in an *information model*. Each *instance* contains data and documentation about the relationship, including data about the cardinality, meaning (semantics), structure (syntax), and use of the relationship.
+
+While a *Metaschema module* represents a cyclic directed multigraph, there are a few assumptions that ensure that data representations based on the information model conform to an oriented acyclic directed multigraph. This is necessary to support JSON and XML data representations which use a tree form.
+
+- At least one root node MUST be defined in the *information model*. A root node ensures that orientation is supported, providing a root of the data tree. Multiple root nodes are also possible allowing multiple resulting oriented acyclic directed multigraphs to be produced.
+- Nodes involved in a cycle MUST allow for cycle termination. This can be achieved by a zero minimum cardinality on an edge creating a cycle.
+
+## Object-Oriented Basis of Metaschema
+
+In a *Metaschema module*, the cyclic directed multigraph representing an *information model* is represented as a hierarchy using a *compositional* approach to describe *information elements*. This approach aligns well with the hierarchical form of JSON, YAML, and XML; and also supports programming language data structures that are based on object-oriented principles.
+
+In object-oriented programming languages, a *class* can be used to represent an *information element*. An *object* represents a data instance of a *class*, which can also be considered an instantiation of an *information element*. Each composite *member* of a *class* can be used to represent a relationship to an *object* of another class. Thus, a *class member* represents a specific type of relationship between two *information elements*. This compositional form is often referred to as a `has-a` relationship.
+
+For example:
+
+```mermaid
+classDiagram
+  class Computer {
+    -id : string
+  }
+  class ComputerPart {
+    -id : string
+  }
+  Computer "1" --o "*" ComputerPart : consistsOf
+  ComputerPart "0" --o "*" ComputerPart : consistsOf
+  Computer "1" --o "*" ComputerPart : usbConnectionTo
+```
+
+In this example the `Computer` class establishes an aggregate compositional relationship `consistsOf` to a `ComputerPart` class. This is a way of stating that a computer is made up of a set of parts.
+
+In a *Metaschema module*, the *information element* concepts of a `Computer` and a `ComputerPart` can be represented as a *definition*. Thus, a *definition* represents a *class*. The `consistsOf` relationship is represented as an *instance*. Thus, an *instance* represents a *class member*.
+
+The following illustrates how the object-oriented approach used to describe a computer can be represented as a cyclic directed multigraph.
+
+```mermaid
+graph TB
+  computer -- identifiedBy --> computer-id[id]
+  computer-part[ComputerPart] -- identifiedBy --> computer-part-id[id]
+  computer -- consistsOf --> computer-part
+  computer-part -- consistsOf --> computer-part
+  computer -- usbConnectionTo --> computer-part
+```
+
+The duality of the *Metaschema module* as both a representation of a cyclic directed multigraph and a set of object-oriented classes is explored in this specification.
 
 # Definitions, Instances, and Local Definitions
 
-Metaschema uses 3 types of definitions to represent information elements with different structural shapes: [`define-flag`](#top-level-define-flag), [`define-field`](#top-level-define-field), and [`define-assembly`](#top-level-define-assembly). These definition types are used as building blocks of a Metaschema-based model.
+Metaschema uses 3 types of [*definitions*](#definitions) to represent information elements with different structural shapes: [`define-flag`](#top-level-define-flag), [`define-field`](#top-level-define-field), and [`define-assembly`](#top-level-define-assembly). These *definition* types are used as building blocks of a Metaschema-based model.
 
-Flag and assembly definitions have child instances, which represent an edge between the containing definition and another definition. Thus, an *instance* makes use of another definition, typically by reference.
+*Field definitions* and *assembly definitions* allow the identification of edges through the declaration of an [*instance*](#instances). An *instance* represents an edge between the containing definition and another definition. Thus, an *instance* makes use of another definition, typically by reference.
 
-Both field and assembly definitions optionally allow the inclusion of one or more child *flag instances*.
+Both field and assembly definitions optionally allow the inclusion of one or more child [*flag instances*](#flag-instances).
 
-An assembly definition also has a model which contains a sequence of *model instances*, each model instance is an instance being either a field or assembly instance.
+An assembly definition also has a [complex model](#model) which contains a sequence of [*model instances*](#model-instances), each *model instance* is either a [*field instance*](#field-instances) or an [*assembly instance*](#assembly-instances).
 
 {{<callout>}}
-Within a Metaschema module, the information model implementation consists of assemblies, each of which are composed of more assemblies, field, and flag instances. 
+Within a *Metaschema module*, the *information model* implementation consists of assemblies, each of which are composed of more assembly, field, and flag instances. 
 
-Field instances represent edge nodes, while assembly instances represent groupings of multiple information elements.
+*Field instances* and *assembly instances* support the composition of complex *information elements*.
 
-Flag instances may exist on fields and assemblies, providing identifying or characterizing data about their containing definition.
+Flag instances may exist on fields and assemblies, providing identifying or qualifying data about their containing definition.
 
-The following example illustrates the use of each type of definition, and the use of flag and model instances to create a more complex model through composition.
+The following example illustrates the use of each type of *definition*, and the use of *flag instances* and *model instances* to create a more complex model through composition.
 
 ```mermaid
 graph TD
@@ -136,28 +219,24 @@ class flg-inst-1,flg-inst-2,fld-inst-1,asmb-inst-1 instance
 
 The example above declares 4 distinct object definitions, along with their instances.
 
-- The flag definition `flg-def-1` represents a reusable flag.
-- The field definition `fld-def-1` represents a reusable field.
-- The assembly definitions `asmb-def-1` and `asmb-def-2` represent reusable assemblies.
+- The *flag definition* `flg-def-1` represents a reusable [*flag*](/specification/terminology/#flag).
+- The *field definition* `fld-def-1` represents a reusable [*field*](/specification/terminology/#field).
+- The *assembly definitions* `asmb-def-1` and `asmb-def-2` represent reusable [*assemblies*](/specification/terminology/#assembly).
 
-Through the use of flag instances and model instances, it is possible to compose a complex information element by declaring how smaller information elements are combined together through composition.
+Through the compositional use of *flag instances* and *model instances*, it is possible to build a complex *information element* by declaring how smaller *information elements* are combined together through composition.
 
 ![Composition Example](def-inst.svg)
 
-In the example above, the assembly definition `asmb-def-1` and the field definition `fld-def-1` both instantiate the flag defined as `flg-def-1`. These instances, `flg-inst-1` and `flg-inst-2` respectively, are examples of *flag instances*. The assembly `asmb-def-1` declares the flag instance `flg-inst-1` as a composite child by referencing the flag definition `flg-def-1`. Similarly, the field `fld-def-1` declares the flag instance `flg-inst-2` as a composite child by referencing the flag definition `flg-def-1`.
+In the example above, the *assembly definition* `asmb-def-1` and the *field definition* `fld-def-1` both instantiate the flag defined as `flg-def-1`. These *instances*, `flg-inst-1` and `flg-inst-2` respectively, are examples of *flag instances*. The *assembly definition* `asmb-def-1` declares the *flag instance* `flg-inst-1` as a composite child by referencing the *flag definition* `flg-def-1`. Similarly, the *field definition* `fld-def-1` declares the *flag instance* `flg-inst-2` as a composite child by referencing the *flag definition* `flg-def-1`.
 
-Furthermore, the assembly definition `asmb-def-1` has a model that instantiates the assembly definition `asmb-def-2`, as `asmb-inst-1`, and the field definition `fld-def-1`, as `fld-inst-1`. These are examples of *model instances*.
+Furthermore, the *assembly definition* `asmb-def-1` has a complex model that instantiates the *assembly definition* `asmb-def-2`, as `asmb-inst-1`, and the *field definition* `fld-def-1`, as `fld-inst-1`. These are examples of *model instances*.
 {{</callout>}}
 
-Assemblies and fields also allow *inline definitions* to be declared which represent a single use definition that is also an instance. In these cases the inline `<define-flag>`, `<define-field>`, and `<define-assembly>` elements are used. 
-
-# Conventions Used in this Document
-
-The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in [BCP 14](https://www.rfc-editor.org/info/bcp14) [RFC2119](https://www.rfc-editor.org/rfc/rfc2119.html) [RFC8174](https://www.rfc-editor.org/rfc/rfc8174.html) when, and only when, they appear in all capitals, as shown here.
+*Assemblies* and *fields* also allow *inline definitions* to be declared which represent a single use *definition* that is also an *instance*. In these cases the inline `<define-flag>`, `<define-field>`, and `<define-assembly>` elements are used, which combine the data elements used to declare a *definition* and *instance* of the same type.
 
 # Metaschema Module
 
-A Metaschema module instance is represented using the top-level XML element `<METASCHEMA>`.
+A *Metaschema module* is represented using the top-level XML element `<METASCHEMA>`.
 
 For example:
 
@@ -196,25 +275,48 @@ Elements:
 | [`<import>`](#module-imports) | special | 0 to ∞ | [Module Imports](#module-imports) |
 | [`<define-assembly>`](#top-level-define-assembly),<br/>[`<define-field>`](#top-level-define-field), and<br/>[`<define-flag>`](#top-level-flag) | special | 0 to ∞ | [Module Definitions](#definitions) |
 
-The first set of elements in a Metaschema module represent the *header*, which contains information about the instance as a whole. The remainder of this section discusses use of these elements.
+The first set of elements in a *Metaschema module* represent the *header*, which contains information about the *Metaschema module* as a whole. The remainder of this section discusses the use of these elements.
 
 {{<callout>}}
-**Note:** There is no explicit separation between the header and the definitions. The header ends where the `<import>`, `<define-assembly>`, `<define-field>`, and `<define-flag>` elements first appear.
+**Note:** There is no explicit separation between the *header* and the *definitions* in a *Metaschema module*. The header ends where the [`<import>`](#module-imports), [`<define-assembly>`](#top-level-define-assembly), [`<define-field>`](#top-level-define-field), and [`<define-flag>`](#top-level-define-flag) elements first appear.
 {{</callout>}}
 
 ## Module Documentation
 
-Top-level documentation for the Metaschema module appears in the the header section.
+Top-level documentation for the *Metaschema module* appears in the the *header* section.
 
 {{<callout>}}
-The documentation within the Metaschema module's header applies to the whole Metaschema module. Each child object definition will also have associated documentation that appears within that object definition.
+The documentation within the *header* applies to the whole *Metaschema module*. Each child object *definition* will also have associated documentation that appears within that object's declaration.
 {{</callout>}}
 
-A Metaschema module's header may include the following elements, in order:
+The *header* may include the following elements, in order:
+
+## Abstract Modules
+
+The optional `@abstract` attribute indicates if the *Metaschema module* is intended to be used on its own or only for import into another *Metaschema module*.
+
+The following values describe the intent of `@abstract` attribute.
+
+- `no` - Indicates that the *Metaschema module* is usable on its own. This is the default behavior when `@abstract` is not declared.
+- `yes` - Indicates that the *Metaschema module* is not usable on its own. Instead, the *Metaschema module* SHOULD only be *imported* by other Metaschema modules.
+
+{{<callout>}}
+It's a best practice to mark *Metaschema modules* that are intended only for reuse in other *Metaschema modules* as `@abstract=yes`. This communicates to users of the module that the module is not standalone.
+{{</callout>}}
+
+For example:
+
+```xml {linenos=table,hl_lines=[3]}
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+  abstract="yes">
+  <!-- ... other content ... -->
+</METASCHEMA>
+```
 
 ### `<schema-name>`
 
-The required `<schema-name>` is a line of [structured markup](/specification/datatypes/#markup-line) that provides a human-readable name, suitable for display, for the information model represented by this Metaschema module.
+The required `<schema-name>` is a line of [structured markup](/specification/datatypes/#markup-line) that provides a human-readable name, suitable for display, for the *information model* represented by this *Metaschema module*.
 
 For example:
 
@@ -224,12 +326,12 @@ For example:
 
 ### `<schema-version>`
 
-A required, unique string literal value indicating the distinct version assigned to the Metaschema module.
+A required, unique string literal value indicating the distinct version assigned to the *Metaschema module*.
 
-This version provides a means to distinctly identify a given revision of the Metaschema module in a series of revisions.
+This version MUST provide a means to distinctly identify a given revision of the *Metaschema module* in a series of revisions. The value child of the `<schema-version>` SHOULD be a [semantic version](https://semver.org/), which allows for automatically determining if a given version precedes, matches, or succeeds another version.
 
 {{<callout>}}
-Use of [semantic versioning](https://semver.org/), also referred to as "semver", in a `<schema-version>` is encouraged, since semver provides a standardized set of rules for how version numbers are assigned and incremented.
+Use of [semantic versioning](https://semver.org/), also referred to as "semver", in a `<schema-version>` is encouraged, since semver provides a standardized set of rules for how version numbers are assigned and incremented. This allows computation over version ranges and comparison of individual versions.
 {{</callout>}}
 
 For example:
@@ -242,7 +344,7 @@ This example defines a semantic version with a major version of `0`, a minor ver
 
 ### `<short-name>`
 
-A required, unique string literal value that identifies a series of revisions of the Metaschema module. Each revision in the series will have the same `<short-name>`.
+A required, unique string literal value that identifies a series of revisions of the *Metaschema module*. Each revision in the series will have the same `<short-name>`.
 
 For example:
 
@@ -250,11 +352,11 @@ For example:
 <short-name>computer</short-name>
 ```
 
-Together, the `<short-name>` and `<schema-version>` provide an identification pair that uniquely identifies a given Metaschema module revision. This pair of values is intended to be associated with any schemas, code, tools, or other derivative artifacts produced from the Metaschema module, providing for clear identification of the Metaschema module revision from which an artifact is derived.
+Together, the `<short-name>` and `<schema-version>` provide an identification pair that uniquely identifies a given *Metaschema module* revision. This pair of values is intended to be associated with any schemas, code, tools, or other derivative artifacts produced from the *Metaschema module*, providing for clear identification of the revision from which an artifact is derived.
 
 ### `<remarks>`
 
-An optional sequence of [multiline markup](/specification/datatypes/#markup-multiline) used to provide additional supporting notes related to the Metaschema module.
+An optional sequence of [multiline markup](/specification/datatypes/#markup-multiline) used to provide additional supporting notes related to the *Metaschema module*.
 
 A `<remarks>` element is typically used to include explanatory commentary of any kind.
 
@@ -268,50 +370,38 @@ For example:
 ```
 
 {{<callout>}}
-As a general purpose element, the `<remarks>` element is also permitted to appear elsewhere in the Metaschema module model. Its scope of application is tied to the location of use in the document. Thus, the top-level remarks describe the entire metaschema, while remarks on an object definition describe the object definition.
+As a general purpose element, the `<remarks>` element is also permitted to appear elsewhere in the *Metaschema module* model. Its scope of application is tied to the location of use in the document. Thus, the top-level remarks relate to the entire *Metaschema module*, while remarks on a *definition* relate to the *definition*.
 {{</callout>}}
 
 ## XML `<namespace>`
 
 The required `<namespace>` element is a [uniform resource identifier](https://www.rfc-editor.org/rfc/rfc3986) (URI) that identifies the [XML Namespace](https://www.w3.org/TR/xml-names/#sec-namespaces) to use for XML instances of the model.
 
-All information objects defined in the Metaschema module will be assigned to this namespace when handling related XML data.
+All *information elements* defined in the *Metaschema module* will be assigned to this namespace when handling related XML data.
 
 {{<callout>}}
-Note: Information objects defined in an [imported Metaschema module](#metaschema-definition-imports), will be assigned the namespace declared in that module's header. This makes it possible to use object definitions defined with different namespaces.
+Note: *Information elements* defined in an [imported *Metaschema module*](#metaschema-definition-imports), will be assigned the namespace declared in that module's header. This makes it possible to use and differentiate *information elements* defined with different namespaces.
 {{</callout>}}
 
-The XML namespace defined using this element will be the target namespace used in an XML schema generated from this Metaschema module.
+The XML namespace defined using this element will be the target namespace used in an XML schema generated from this *Metaschema module*.
 
 ## `<json-base-uri>`
 
-The required `<json-base-uri>` element is a [uniform resource identifier](https://www.rfc-editor.org/rfc/rfc3986) (URI) that identifies the URI used in the [`$schema` keyword](https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-01#section-7) in JSON Schemas generated from this Metaschema module.
-
-## Abstract Modules
-
-A Metaschema module may be declared as *abstract* using the `@abstract` attribute. This indicates that the Metaschema module is not intended to be used on its own. Instead, the Metaschema module is intended to be only *imported* by other Metaschema modules.
-
-For example:
-
-```xml {linenos=table,hl_lines=[3]}
-<?xml version="1.0" encoding="UTF-8"?>
-<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-  abstract="yes">
-  <!-- ... other content ... -->
-</METASCHEMA>
-```
+The required `<json-base-uri>` element is a [uniform resource identifier](https://www.rfc-editor.org/rfc/rfc3986) (URI) that identifies the URI used in the [`$schema` keyword](https://datatracker.ietf.org/doc/html/draft-handrews-json-schema-01#section-7) in JSON Schemas generated from this *Metaschema module*.
 
 # Definitions
 
-Following the `METASCHEMA/remarks`, any number of definitions may follow. These describe the set of reusable [*information element*](terminology/#information-element) implementations within a Metaschema module.
+A *definition* in a *Metaschema module* declares a reusable [*information element*](/specification/terminology/#information-element) within an [*information model*](/specification/terminology/#information-model).
 
-The 3 types of definitions are [`<define-flag>`](#top-level-define-flag), [`<define-field>`](#top-level-define-field), and [`<define-assembly>`](#top-level-define-assembly).
+In graph theoretical terms, a *definition* provides a declaration of an graph *node* and any associated *edges* that form a given subgraph shape.
 
-The following subsections describe the syntax that is [common to all definition types](#common-definition-metadata), as well as each type of definition.
+In object-oriented terms, a *definition* provides a declaration of a *class*, along with any associated *class members*.
+
+The following subsections describe the [common syntax](#common-definition-metadata) for all *definition* types, followed by the semantic and syntax details of each type of *definition*. The 3 types of *definitions* are [`<define-flag>`](#top-level-define-flag), [`<define-field>`](#top-level-define-field), and [`<define-assembly>`](#top-level-define-assembly).
 
 ## Common Definition Metadata
 
-The [`<define-assembly>`](#top-level-define-assembly), [`<define-field>`](#top-level-define-field), and [`<define-flag>`](#top-level-define-flag) child elements share a common syntax comprised of the following XML attributes and elements.
+All *definition* types share a common syntax comprised of the following XML attributes and elements.
 
 Attributes:
 
@@ -336,17 +426,17 @@ These attributes and elements are described in the following subsections.
 
 ### `@deprecated` Version
 
-The optional `@deprecated` attribute communicates that the given information element implemented by the definition represents a data object whose use is intended to be discontinued, starting with the specified version.
+The optional `@deprecated` attribute communicates that use of the given *information element* implemented by the *definition* is intended to be discontinued, starting with the *information model* revision indicated by the attribute's value.
 
-This version is a reference to the [`<schema-version>`](#schema-version) declared in the module header.
+This *information model* revision is a reference to the [`<schema-version>`](#schema-version) declared in the *Metaschema module* *header*.
 
 {{<callout>}}
-Declaring the `@deprecated` attribute communicates to content creators that all use of the annotated information element is to be avoided. 
+Declaring the `@deprecated` attribute communicates to content creators that all use of the annotated *information element* is to be avoided. 
 
 This annotation can be used in documentation generation and in Metaschema-aware tools that provide context around use of the definition.
 {{</callout>}}
 
-For example, deprecating the flag named `flag-name` starting with the model version `1.1.0` would be represented as follows.
+The following example illustrates deprecating the flag named `flag-name` starting with the *information model* semantic version `1.1.0`.
 
 ```xml {linenos=table,hl_lines=[3]}
 <define-flag
@@ -356,9 +446,9 @@ For example, deprecating the flag named `flag-name` starting with the model vers
 
 ### `@name`
 
-The `@name` attribute provides the definition's identifier, which can be used in other parts of a module, or in an importing module, to reference the definition.
+The `@name` attribute provides the definition's identifier, which can be used in other parts of a module, or in an importing *Metaschema module*, to reference the definition.
 
-**Note:** The names of flags, fields, and assemblies are expected to be maintained as separate identifier sets. This allows a flag, field, and an assembly definition to each have the same name in a given Metaschema module.
+**Note:** The names of flags, fields, and assemblies are expected to be maintained as separate identifier sets. This allows a *flag definition*, a *field definition*, and an *assembly definition* to each have the same name in a given *Metaschema module*.
 
 ### `@scope`
 
@@ -692,6 +782,10 @@ See [inline `<define-flag>`](#inline-define-flag).
 ### `<json-key>`
 
 TODO: Specify this. Note assembly points to this section.
+
+
+The property names of this intermediate object will be the value of the flag as specified by the `@json-key` attribute on the definition referenced by the `@ref` on the instance. The value of the intermediate object property will be an object or value , with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component. See [using `@json-key`](#using-json-key). |
+
 
 ### JSON Value Keys
 
@@ -1157,15 +1251,17 @@ The `group-as` element has the following set of attributes:
 
 ##### `@in-json`
 
-- `@in-json` (type: special, use: optional, default: SINGLETON_OR_ARRAY): 
+The optional `@in-json` attribute controls the representation form of the instance in JSON and YAML.
 
-In all cases, `@name` value is used as the property name.
+When no attribute and value is provided for the `@in-json` attribute, the value MUST default to `SINGLETON_OR_ARRAY`.
+
+One of the following behaviors MUST be used based on the provided, or default value when no attribute and value is provided.
 
 | Value | JSON and YAML Behavior |
 |:--- |:--- |
-| ARRAY | The child objects are to be represented as an array of objects. |
-| SINGLETON_OR_ARRAY | If a single object is provided, then the child will be an object, otherwise the child objects will be represented as an array of objects. |
-| BY_KEY | An intermediate object will be used as the child, with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component. See [using `@json-key`](#using-json-key). |
+| `ARRAY` | The child value MUST be represented as an array of values. |
+| `SINGLETON_OR_ARRAY` | If a single value is provided, then the child value MUST be that value; otherwise, for multiple values, the child values MUST be represented as an array of values. |
+| `BY_KEY` | The child value MUST be an intermediate object based on the `<json-key>`. See [json keys](#json-key).
 
 ##### `@in-xml`
 - `@in-xml` (type: special, use: optional, default: UNGROUPED): 
@@ -1218,6 +1314,8 @@ In XML, a flag instance is represented as an [attribute](https://www.w3.org/TR/x
 ```
 
 # JSON Representational Form
+
+In all cases, `@name` value is used as the property name.
 
 In JSON a flag instance is represented as an [object member](https://datatracker.ietf.org/doc/html/rfc8259#section-2) (also called a "[property]()") with an associated value.
 
