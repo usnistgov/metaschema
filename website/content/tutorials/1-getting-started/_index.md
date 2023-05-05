@@ -612,7 +612,7 @@ For now, we can copy-paste the `vendor` assembly into all relevant assemblies, n
                 <formal-name>Product Name</formal-name>
                 <description>The product name from the vendor of the computer part.</description>
               </define-field>
-              <define-field name="byte-size" as-type="positiveInteger" min-occurs="1" max-occurs="1">
+              <define-field name="byte-size" as-type="positive-integer" min-occurs="1" max-occurs="1">
                 <formal-name>Memory Module Size</formal-name>
                 <description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</description>
               </define-field>
@@ -934,7 +934,7 @@ At this point we have updated our model to meet stakeholder needs, but the model
             <model>
               <assembly ref="vendor"/>
               <field ref="product-name" min-occurs="1" max-occurs="1"/>
-              <define-field name="byte-size" as-type="positiveInteger" min-occurs="1" max-occurs="1">
+              <define-field name="byte-size" as-type="positive-integer" min-occurs="1" max-occurs="1">
                 <formal-name>Memory Module Size</formal-name>
                 <description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</description>
               </define-field>
