@@ -1,9 +1,8 @@
 ---
-title: "Metaschema Terminology"
+title: "Metaschema Framework Specification Glossary"
+linktitle: "Glossary"
 Description: "Definitions of Metaschema Terms"
-weight: 20
-sidenav:
-  title: Terminology
+weight: 90
 toc:
   enabled: true
 alias:

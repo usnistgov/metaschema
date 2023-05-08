@@ -208,7 +208,7 @@ In JSON Schema, this is represented as:
 
 A string representing a point in time, optionally qualified by a timezone. This date and time value is formatted according to "date-time" as defined [RFC3339](https://tools.ietf.org/html/rfc3339#section-5.6), except the timezone (time-offset) is optional.
 
-This is the same as [dateTime-with-timezone](#datetime-with-timezone), except the timezone portion is optional. This can be used to support formats that have ambiguous timezones for date/time values.
+This is the same as [date-time-with-timezone](#date-time-with-timezone), except the timezone portion is optional. This can be used to support formats that have ambiguous timezones for date/time values.
 
 
 For example:

@@ -16,7 +16,7 @@ To start organizing this computer information consistently, we need to consider 
 
 Source: [Wikipedia](https://commons.wikimedia.org/wiki/File:Personal_computer,_exploded_5,_unlabeled.svg)
 
-Based on this picture, the knowledge [domain](/specification/terminology/#domain) we want to describe is information about the components of a personal computer. We need to design an [information model](/specification/terminology/#information-model) that can sufficiently describe the necessary information in this domain. At the core of this information model, we have the concept of a personal computer, which represents the root [information element](/specification/terminology/#information-element) of the information model. Our design process will focus around this domain, developing an information model focused on the personal computer and all related information elements that describe the parts and sub-parts of a computer.
+Based on this picture, the knowledge [domain](/specification/glossary/#domain) we want to describe is information about the components of a personal computer. We need to design an [information model](/specification/glossary/#information-model) that can sufficiently describe the necessary information in this domain. At the core of this information model, we have the concept of a personal computer, which represents the root [information element](/specification/glossary/#information-element) of the information model. Our design process will focus around this domain, developing an information model focused on the personal computer and all related information elements that describe the parts and sub-parts of a computer.
 
 We then want to represent this computer information model in one or more concrete data models that are aligned with commonly used data formats like JSON, XML, and YAML.
 
@@ -24,7 +24,7 @@ Once we understand the required information structure for a computer, how do we 
 
 ## Metaschema Concepts
 
-Metaschema helps developers to define information models once as a [Metaschema module](../../specification/terminology/#metaschema-module). A Metaschema module specifies the information elements of the information model and how that model is represented in supported machine-readable data formats (i.e. JSON, YAML, XML), which we call a [data model](/specification/terminology/#data-model). A document in such a format is an instance of that module. A schema can be used to check that a document is well-formed and valid against the model represented by the format. Such schemas can be derived deterministically and programmatically from a Metaschema module (or "metaschema").
+Metaschema helps developers to define information models once as a [Metaschema module](../../specification/glossary/#metaschema-module). A Metaschema module specifies the information elements of the information model and how that model is represented in supported machine-readable data formats (i.e. JSON, YAML, XML), which we call a [data model](/specification/glossary/#data-model). A document in such a format is an instance of that module. A schema can be used to check that a document is well-formed and valid against the model represented by the format. Such schemas can be derived deterministically and programmatically from a Metaschema module (or "metaschema").
 
 ```mermaid
 erDiagram

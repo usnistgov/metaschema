@@ -6,7 +6,7 @@ menu:
     weight: 10
 ---
 
-Currently, a Metaschema [module](/specification/terminology/#metaschema-module) is defined using an [XML-based format](https://github.com/usnistgov/metaschema/blob/develop/schema/xml/metaschema.xsd). Alternate formats (e.g., JSON, YAML) are currently being considered.
+Currently, a Metaschema [module](/specification/glossary/#metaschema-module) is defined using an [XML-based format](https://github.com/usnistgov/metaschema/blob/develop/schema/xml/metaschema.xsd). Alternate formats (e.g., JSON, YAML) are currently being considered.
 
 An [ISO Schematron](https://schematron.com/) ruleset is also [provided](https://github.com/usnistgov/metaschema/blob/master/toolchains/xslt-M4/validate/metaschema-composition-check.sch) to enforce some of the rules described in the Metaschema [specification](/specification/).
 
@@ -14,7 +14,7 @@ A [tutorial](/tutorials/1-getting-started/) covering basic concepts is provided 
 
 ## Schema Generation
 
-A Metaschema module can be used to generate a schema, expressed as an XML or JSON Schema, for the corresponding [*data model*](/specification/terminology/#data-model) in a format-specific, serializable form (e.g., XML, JSON, YAML). These generated schemas can be used to *validate* that data to be processed by the system is well-formed and consistent with the requirements of the data model.
+A Metaschema module can be used to generate a schema, expressed as an XML or JSON Schema, for the corresponding [*data model*](/specification/glossary/#data-model) in a format-specific, serializable form (e.g., XML, JSON, YAML). These generated schemas can be used to *validate* that data to be processed by the system is well-formed and consistent with the requirements of the data model.
 
 ## Other Generative Use Cases
 
