@@ -1,0 +1,11 @@
+.highlight .element .element {
+    margin-left: 1rem;
+}
+
+.highlight .element .attribute {
+    margin-left: 2rem;
+}
+
+.highlight a {
+    color: inherit;
+}

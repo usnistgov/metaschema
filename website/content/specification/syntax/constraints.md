@@ -4,8 +4,7 @@ Description: ""
 weight: 50
 ---
 
-
-# Constraints
+**Note: This section of the specification is still a work in progress.**
 
 ## Common Metadata
 

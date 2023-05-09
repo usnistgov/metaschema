@@ -10,9 +10,9 @@ In graph theoretical terms, a *definition* provides a declaration of an graph *n
 
 In object-oriented terms, a *definition* provides a declaration of a *class*, along with any associated *class members*.
 
-The following subsections describe the [common syntax](#common-definition-metadata) for all *definition* types, followed by the semantic and syntax details of each type of *definition*. The 3 types of *definitions* are [`<define-flag>`](#top-level-define-flag), [`<define-field>`](#top-level-define-field), and [`<define-assembly>`](#top-level-define-assembly).
+The following subsections describe the [common syntax](#common-definition-data) for all *definition* types, followed by the semantic and syntax details of each type of *definition*. The 3 types of *definitions* are [`<define-flag>`](#top-level-define-flag), [`<define-field>`](#top-level-define-field), and [`<define-assembly>`](#top-level-define-assembly).
 
-## Common Definition Metadata
+## Common Definition Data
 
 All *definition* types share a common syntax comprised of the following XML attributes and elements.
 
@@ -41,12 +41,10 @@ These attributes and elements are described in the following subsections.
 
 The optional `@deprecated` attribute communicates that use of the given *information element* implemented by the *definition* is intended to be discontinued, starting with the *information model* revision indicated by the attribute's value.
 
-This *information model* revision is a reference to the [`<schema-version>`](/specification/syntax/module/#schema-version) declared in the *Metaschema module* *header*.
+This attribute's value MUST be a version [string](/specification/datatypes/#string) that is equal to or comes before the [`<schema-version>`](/specification/syntax/module/#schema-version) declared in the *Metaschema module* *header*.
 
 {{<callout>}}
-Declaring the `@deprecated` attribute communicates to content creators that all use of the annotated *information element* is to be avoided. 
-
-This annotation can be used in documentation generation and in Metaschema-aware tools that provide context around use of the definition.
+Declaring the `@deprecated` attribute communicates to content creators that all use of the annotated *information element* is to be avoided. This annotation can be used in documentation generation and in Metaschema-aware tools that provide context around use of the definition.
 {{</callout>}}
 
 The following example illustrates deprecating the flag named `flag-name` starting with the *information model* semantic version `1.1.0`.
@@ -60,6 +58,8 @@ The following example illustrates deprecating the flag named `flag-name` startin
 ### `@name`
 
 The `@name` attribute provides the definition's identifier, which can be used in other parts of a module, or in an importing *Metaschema module*, to reference the definition.
+
+This attribute's value MUST be a [token](/specification/datatypes/#token) that is unique among sibling top-level flag definitions.
 
 **Note:** The names of flags, fields, and assemblies are expected to be maintained as separate identifier sets. This allows a *flag definition*, a *field definition*, and an *assembly definition* to each have the same name in a given *Metaschema module*.
 
@@ -93,8 +93,6 @@ The description ties the definition to the related information element concept i
 
 While not required, it is best practice to include a `<description>`.
 {{</callout>}}
-
-The optional [`<description>`](/specification/syntax/instances/#description) element of the child [`<flag>`](/specification/syntax/instances/#flag-instances), [`<field>`](/specification/syntax/instances/#field-instances) and [`<assembly>`](/specification/syntax/instances/#assembly-instances) elements can be used to provide a different description for when the referenced definition is used in a more specialized way for a given instance.
 
 ### `<prop>`
 
@@ -181,12 +179,12 @@ The `example` element is optional and may occur multiple times.
 
 ## top-level `<define-flag>`
 
-A flag definition, represented by the `<define-flag>` element, is used to declare a reusable [flag](/specification/glossary/#flag) within a Metaschema module.
+A *flag definition*, represented by the `<define-flag>` element, is used to declare a reusable [flag](/specification/glossary/#flag) within a Metaschema module.
 
-A flag definition provides the means to implement a simple, named [*information element*](/specification/glossary/#information-element) with a value.
+A *flag definition* provides the means to implement a simple, named [*information element*](/specification/glossary/#information-element) with a value.
 
 {{<callout>}}
-Flag definitions are the primary leaf nodes in a Metaschema-based model. Flags are intended to represent granular particles of identifying and qualifying information.
+*Flag definitions* are leaf nodes in a Metaschema-based model that are intended to represent granular particles of identifying and qualifying information.
 {{</callout>}}
 
 The flag's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) identified by the `@as-type` attribute.
@@ -215,7 +213,7 @@ Elements:
 | [`<remarks>`](#remarks) | special | 0 or 1 |
 | [`<example>`](#example) | special | 0 to ∞ |
 
-The attributes and elements specific to the `<define-flag>` are described in the following subsections. The elements and attributes common to all definitions are [defined earlier](#common-definition-metadata) in this specification.
+The attributes and elements specific to the `<define-flag>` are described in the following subsections. The elements and attributes common to all *definitions* are [defined earlier](#common-definition-data) in this specification.
 
 ### `@as-type`
 
@@ -225,11 +223,16 @@ The `@as-type` attribute must have a value that corresponds to one of the [simpl
 
 ### `@default`
 
-The `@default` attribute specifies the default value for the flag. When a flag is specified as an optional child of a `<define-field>` or `<define-assembly>`, this value should be considered set for a content instance if the flag is omitted in that instance.
+The `@default` attribute specifies the default value for the flag. When a flag is specified as an optional child of a `<define-field>` or `<define-assembly>`, this value SHOULD be considered set for a content instance if the flag is omitted in that instance.
 
-### `<constraint>`
 
-Constraints are [covered later](/specification/syntax/constraints/#define-flag-constraints) in this specification.
+## `<json-key>`
+
+Both the [`<define-field>`](#top-level-define-field) and [`<define-assembly>`](#top-level-define-assembly) definition types support the definition of a `<json-key>`.
+
+A `<json-key>` is used to identify a *flag instance* on the definition that is used to group a collection of [*named model instances*](/specification/syntax/instances/#named-model-instances) with the same name related to the definition when serializing to the JSON format. This is controlled using the [`group-as`](/specification/syntax/instances/#group-as) element using the [`in-json="BY_KEY"`](/specification/syntax/instances/#in-json) attribute value.
+
+For more information see [using `json-key`](/specification/syntax/instances/#using-json-key).
 
 ## top-level `<define-field>`
 
@@ -243,14 +246,13 @@ A field is an edge node in a Metaschema-based model. Fields are typically used t
 
 The field's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types) identified by the `@as-type` attribute.identified by the `@as-type` attribute.
 
-
 Attributes:
 
 | Attribute | Data Type | Use      | Default Value |
 |:---       |:---       |:---      |:---           |
-| [`@as-type`](#as-type) | [`token`](/specification/datatypes/#token) | optional | [`string`](/specification/datatypes/#string) |
+| [`@as-type`](#as-type-1) | [`token`](/specification/datatypes/#token) | optional | [`string`](/specification/datatypes/#string) |
 | [`@collapsible`](#collapsible) | `yes` or `no` | optional | `no` |
-| [`@default`](#default) | [`string`](/specification/datatypes/#string) | optional | *(no default)* |
+| [`@default`](#default-1) | [`string`](/specification/datatypes/#string) | optional | *(no default)* |
 | [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
 | [`@name`](#name) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
 | [`@scope`](#scope) | `local` or `global` | optional | `global` |
@@ -270,7 +272,7 @@ Elements:
 | [`<remarks>`](#remarks) | special | 0 or 1 |
 | [`<example>`](#example) | special | 0 to ∞ |
 
-The attributes and elements specific to the `<define-field>` are described in the following subsections. The elements and attributes common to all definitions are [defined earlier](#common-definition-metadata) in this specification.
+The attributes and elements specific to the `<define-field>` are described in the following subsections. The elements and attributes common to all definitions are [defined earlier](#common-definition-data) in this specification.
 
 ### `@as-type`
 
@@ -392,13 +394,6 @@ See [flag instances](/specification/syntax/instances/#flag-instances)
 
 See [inline `<define-flag>`](/specification/syntax/inline-definitions/#inline-define-flag).
 
-### `<json-key>`
-
-TODO: Specify this. Note assembly points to this section.
-
-
-The property names of this intermediate object will be the value of the flag as specified by the `@json-key` attribute on the definition referenced by the `@ref` on the instance. The value of the intermediate object property will be an object or value , with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component. See [`@json-key`](#json-key).
-
 ### JSON Value Keys
 
 TODO: discuss use only when flags may be present.
@@ -506,14 +501,13 @@ Elements:
 | [`<prop>`](#prop) | special | 0 to ∞ |
 | [`<use-name>`](#naming-and-use-name) or<br/>[`<root-name>`](#root-name)  | [`token`](/specification/datatypes/#token) | 0 or 1 |
 | [`json-key`](#json-key) | special | 0 or 1 |
-| [`json-value-key`](#json-value-key) or<br/>[`json-value-key-flag`](#json-value-key-flag) | special | 0 or 1 |
 | [`flag`](#flag-instance-children-1) or<br/>[`define-flag`](#define-flag-inline-definition-1) | special | 0 or ∞ |
 | [`<model>`](#model) | special | 0 or 1 |
 | [`<constraint>`](/specification/syntax/constraints/#define-flag-constraints) | special | 0 or 1 |
 | [`<remarks>`](#remarks) | special | 0 or 1 |
 | [`<example>`](#example) | special | 0 to ∞ |
 
-The attributes and elements specific to the `<define-assembly>` are described in the following subsections. The elements and attributes common to all definitions are [defined earlier](#common-definition-metadata) in this specification.
+The attributes and elements specific to the `<define-assembly>` are described in the following subsections. The elements and attributes common to all definitions are [defined earlier](#common-definition-data) in this specification.
 
 ### `<root-name>`
 

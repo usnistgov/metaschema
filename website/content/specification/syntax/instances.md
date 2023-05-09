@@ -4,8 +4,6 @@ Description: ""
 weight: 30
 ---
 
-# Instances
-
 In a Metaschema module, complex information elements are created through composition. Through composition, an information element can be built by indicating which other information elements are used as its constituent parts.
 
 An *instance* is used to declare an information element *child* within a *parent* information element. In a Metaschema module, the parent information element is a definition, either a *field definition* or an *assembly definition*. The instance is a *flag instance*, *field instance*, or *assembly instance*, which in turn either references an existing [*top-level definition*](/specification/syntax/definitions/) by name or provides a [*inline definition*](/specification/syntax/inline-definitions/) as part of the instance declaration.
@@ -292,9 +290,9 @@ The `group-as` element has the following set of attributes:
 
 | Attribute | Data Type | Use      | Default Value |
 |:---       |:---       |:---      |:---           |
-| `@in-json` |  `ARRAY`, `SINGLETON_OR_ARRAY`, or `BY_KEY` | optional | `SINGLETON_OR_ARRAY` |
-| `@in-xml` |  `GROUPED`, `UNGROUPED` | optional | `UNGROUPED` |
-| `@name` | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+| [`@in-json`](#in-json) | `ARRAY`, `SINGLETON_OR_ARRAY`, or `BY_KEY` | optional | `SINGLETON_OR_ARRAY` |
+| [`@in-xml`](#in-xml) | `GROUPED`, `UNGROUPED` | optional | `UNGROUPED` |
+| [`@name`](#name) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
 
 ##### `@in-json`
 
@@ -322,8 +320,9 @@ One of the following behaviors MUST be used based on the provided, or default va
 
 `@name`(type: NCName, use: required): The grouping name to use in JSON, YAML and XML (when exposed). Use of this name is further clarified by the `@in-xml` attribute, when used.
 
-#### Using `json-key`
+### Using `json-key`
 
+When used in this The property names of this intermediate object will be the value of the flag as specified by the `@json-key` attribute on the definition referenced by the `@ref` on the instance. The value of the intermediate object property will be an object or value , with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component.
 
 ### `<field>` Instances
 
