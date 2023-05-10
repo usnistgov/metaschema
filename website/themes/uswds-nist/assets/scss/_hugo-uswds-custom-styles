@@ -1,0 +1,18 @@
+/*
+----------------------------------------
+Hugo Module Styles
+----------------------------------------
+!! Copy this file to your module.
+----------------------------------------
+Custom module SASS goes here.
+
+i.e.
+@include u-padding-right('05');
+----------------------------------------
+*/
+
+@use "uswds-core" as *;
+
+.nist-footer {
+    font-family: inherit;
+}
