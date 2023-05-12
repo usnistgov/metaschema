@@ -6,7 +6,7 @@ weight: 50
 
 **Note: This section of the specification is still a work in progress.**
 
-## Common Metadata
+## Common Constrant Data
 
 ## Enumerated values
 

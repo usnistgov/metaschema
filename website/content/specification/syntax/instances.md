@@ -10,7 +10,7 @@ An *instance* is used to declare an information element *child* within a *parent
 
 ## Common Instance Data
 
-The [`<assembly>`](#assembly-instances), [`<field>`](#field-instances), and [`<flag>`](#flag-instances) child elements share a common syntax comprised of the following XML attributes and elements.
+The [`<assembly>`](#assembly-instance), [`<field>`](#field-instance), and [`<flag>`](#flag-instance) child elements share a common syntax comprised of the following XML attributes and elements.
 
 Attributes:
 
@@ -59,15 +59,15 @@ For example, deprecating the use of the flag named `id` within the `computer` as
 
 ### `@ref`
 
-The `@ref` attribute declares the top-level definition that the instance represents through composition. The name indicated by the `@ref` attribute must be a definition of the corresponding type declared in the containing module or a globally scoped definition in an imported module. See [Definition Name Resolution](/specification/syntax/module/#definition-name-resolution).
+The `@ref` attribute references the top-level definition that the instance represents through composition. The name indicated by the `@ref` attribute MUST be a definition of the corresponding type declared in the containing module or a globally scoped definition in an imported module. See [Definition Name Resolution](/specification/syntax/module/#definition-name-resolution).
 
 The instance type corresponds with the definition type as follows.
 
 | Instance Type | Top-Level Definition Type |
 |:---       |:---       |
-| [`<flag>`](#flag-instances) | [`<define-flag>`](/specification/syntax/definitions/#top-level-define-flag) |
-| [`<field>`](#field-instances) | [`<define-field>`](/specification/syntax/definitions/#top-level-define-field) |
-| [`<assembly>`](#assembly-instances) | [`<define-assembly>`](/specification/syntax/definitions/#top-level-define-assembly) |
+| [`<flag>`](#flag-instance) | [`<define-flag>`](/specification/syntax/definitions/#top-level-define-flag) |
+| [`<field>`](#field-instance) | [`<define-field>`](/specification/syntax/definitions/#top-level-define-field) |
+| [`<assembly>`](#assembly-instance) | [`<define-assembly>`](/specification/syntax/definitions/#top-level-define-assembly) |
 
 **Note:** The names of flags, fields, and assemblies are expected to be maintained as separate identifier sets. This allows a flag, field, and an assembly definition to each have the same name in a given Metaschema module.
 
@@ -172,9 +172,9 @@ The optional `<remarks>` element provides a place to add notes related to the us
 
 The `<remarks>` element is optional and may occur multiple times.
 
-## `<flag>` Instances
+## `<flag>` Instance
 
-A *flag instance* is used to declare that a top-level flag is part of the model of a field or assembly definition.
+A *flag instance* is used to declare that a top-level [*flag definition](/specification/syntax/definitions/#top-level-define-flag) is part of the model of a *field definition* or *assembly definition*.
 
 Attributes:
 
@@ -196,7 +196,9 @@ Elements:
 
 The attributes and elements specific to a `<flag>` instance are described in the following subsections. The elements and attributes common to all instance types are [defined earlier](#common-instance-data) in this specification.
 
-For example:
+The [`@ref`](#ref) attribute MUST reference a top-level *flag definition's* [`@name`](/specification/syntax/definitions/#name) that is in scope. See [Definition Name Resolution](/specification/syntax/module/#definition-name-resolution) for a detailed explanation of definition name scoping.
+
+The following is an example of a *flag instance*.
 
 ```xml {linenos=table,hl_lines=[4]}
 <define-flag name="id"/>
@@ -251,9 +253,9 @@ Attributes:
 | Attribute | Data Type | Use      | Default Value |
 |:---       |:---       |:---      |:---           |
 | [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
-| [`@ref`](#ref) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
 | [`@max-occurs`](#ref) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | 1 |
 | [`@min-occurs`](#ref) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | 0 |
+| [`@ref`](#ref) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
 
 Elements:
 
@@ -287,7 +289,6 @@ The `<group-as>` element is required if the `@max-occurs` attribute has a value 
 
 The `group-as` element has the following set of attributes:
 
-
 | Attribute | Data Type | Use      | Default Value |
 |:---       |:---       |:---      |:---           |
 | [`@in-json`](#in-json) | `ARRAY`, `SINGLETON_OR_ARRAY`, or `BY_KEY` | optional | `SINGLETON_OR_ARRAY` |
@@ -296,7 +297,7 @@ The `group-as` element has the following set of attributes:
 
 ##### `@in-json`
 
-The optional `@in-json` attribute controls the representation form of the instance in JSON and YAML.
+The optional `@in-json` attribute controls the representational form of a group of instances in JSON and YAML.
 
 When no attribute and value is provided for the `@in-json` attribute, the value MUST default to `SINGLETON_OR_ARRAY`.
 
@@ -304,42 +305,134 @@ One of the following behaviors MUST be used based on the provided, or default va
 
 | Value | JSON and YAML Behavior |
 |:--- |:--- |
-| `ARRAY` | The child value MUST be represented as an array of values. |
-| `SINGLETON_OR_ARRAY` | If a single value is provided, then the child value MUST be that value; otherwise, for multiple values, the child values MUST be represented as an array of values. |
-| `BY_KEY` | The child value MUST be an intermediate object based on the `<json-key>`. See [json keys](#using-json-key).
+| [`ARRAY`](#in-jsonarray) | The child value(s) MUST be represented as an array of values. |
+| [`SINGLETON_OR_ARRAY`](#in-jsonsingleton_or_array) | If a single value is provided, then the child value MUST be that value; otherwise, for multiple values, the child values MUST be represented as an array of values. |
+| [`BY_KEY`](#in-jsonby_key) | The child value MUST be an intermediate object based on the `<json-key>`.
+
+###### `@in-json="ARRAY"`
+
+TODO: complete this section.
+###### `@in-json="SINGLETON_OR_ARRAY"`
+
+TODO: complete this section.
+###### `@in-json="BY_KEY"`
+
+TODO: complete this section.
+
+When used in this way, the property names of this intermediate object will be the value of the flag as specified by the `@json-key` attribute on the definition referenced by the `@ref` on the instance. The value of the intermediate object property will be an object or value , with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component.
 
 ##### `@in-xml`
-- `@in-xml` (type: special, use: optional, default: UNGROUPED): 
+
+The optional `@in-xml` attribute controls the representational form of a group of instances in XML.
+
+When no attribute and value is provided for the `@in-xml` attribute, the value MUST default to `UNGROUPED`.
+
+One of the following behaviors MUST be used based on the provided, or default value when no attribute and value is provided.
 
 | Value | XML Behavior |
 |:--- |:--- |
-| GROUPED | The child elements will be placed within a wrapper element with a local name equal to the value of the `@name` attribute. Each child element's local name will be the `@name` of the referenced component. |
-| UNGROUPED | In XML, the components will appear without a grouping (wrapper) element with their own effective names; the `group-as/@name is ignored. |
+| [`GROUPED`](#in-xmlgrouped) | The child elements MUST be placed within a wrapper element with a local name equal to the value of the `@name` attribute. Each child element's local name will be the [effective name](#naming-and-use-name) of the instance. |
+| [`UNGROUPED`](#in-xmlungrouped) | The child elements MUST appear without a grouping (wrapper) element. The `group-as/@name` is ignored. Each child element's local name will be the [effective name](#naming-and-use-name) of the instance. |
+
+###### `@in-xml="GROUPED"`
+
+TODO: complete this section.
+
+###### `@in-xml="UNGROUPED"`
+
+TODO: complete this section.
 
 ##### `@name`
 
-`@name`(type: NCName, use: required): The grouping name to use in JSON, YAML and XML (when exposed). Use of this name is further clarified by the `@in-xml` attribute, when used.
+The REQUIRED `@name` attribute declares the grouping name to use in JSON, YAML and XML (when exposed).
 
-### Using `json-key`
+In JSON and YAML, this name is used as the property name.
 
-When used in this The property names of this intermediate object will be the value of the flag as specified by the `@json-key` attribute on the definition referenced by the `@ref` on the instance. The value of the intermediate object property will be an object or value , with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component.
+In XML, the specific use of the `@name` is based on the `@in-xml` attribute's value.
 
-### `<field>` Instances
+### `<field>` Instance
 
 - see `in-xml` in `define-field`
 
-Used to reference a `field-definition` who's `@name` matches the value of the `@ref` attribute.
+A *field instance* is used to declare that a top-level *field definition* is part of the model of an *assembly definition*.
 
-### `<define-field>` Instances
+Attributes:
 
-### `<assembly>` Instances
+| Attribute | Data Type | Use      | Default Value |
+|:---       |:---       |:---      |:---           |
+| [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
+| [`@in-xml`](#in-xml-1) | `WITH_WRAPPER` or `UNWRAPPED` | optional | `WITH_WRAPPER` |
+| [`@max-occurs`](#max-occurs) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | 1 |
+| [`@min-occurs`](#min-occurs) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | 0 |
+| [`@ref`](#ref) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
 
-Used to reference an `assembly-definition` who's `@name` matches the value of the `@ref` attribute.
+Elements:
 
-### `<define-assembly>` Instances
+| Element | Data Type | Use      |
+|:---       |:---       |:---      |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 |
+| [`<prop>`](#prop) | special | 0 to ∞ |
+| [`<use-name>`](#naming-and-use-name) | [`token`](/specification/datatypes/#token) | 0 or 1 |
+| [`<group-as>`](#group-as) | special | 0 or 1 |
+| [`<remarks>`](#remarks) | special | 0 or 1 |
 
+The attributes and elements specific to a `<field>` instance are described in the following subsections. The elements and attributes common to all named model instance types are [defined earlier](#common-named-model-instance-data) in this specification.
 
+The [`@ref`](#ref) attribute MUST reference a top-level *field definition's* [`@name`](/specification/syntax/definitions/#name) that is in scope. See [Definition Name Resolution](/specification/syntax/module/#definition-name-resolution) for a detailed explanation of definition name scoping.
 
-## `<choice>` Selections
+#### `@in-xml`
 
-## `<any>`
+TODO: describe this with examples
+
+### `<define-field>` Instance
+
+A `<define-field>` instance is a special type of *field instance* that also declares a new single use, local [*field definition* inline](/specification/syntax/inline-definitions/#inline-define-field). It combines a subset of the data used to declare a [*field definition*](/specification/syntax/definitions/#top-level-define-field) and a [*field instance*](#field-instance).
+
+The data model of the [inline `<define-field>` instance](/specification/syntax/inline-definitions/#inline-define-field) is covered in the section of the specification discussing [inline definitions](/specification/syntax/inline-definitions/).
+
+### `<assembly>` Instance
+
+An *assembly instance* is used to declare that a top-level *assembly definition* is part of the model of an *assembly definition*.
+
+Attributes:
+
+| Attribute | Data Type | Use      | Default Value |
+|:---       |:---       |:---      |:---           |
+| [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
+| [`@max-occurs`](#max-occurs) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | 1 |
+| [`@min-occurs`](#min-occurs) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | 0 |
+| [`@ref`](#ref) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+
+Elements:
+
+| Element | Data Type | Use      |
+|:---       |:---       |:---      |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 |
+| [`<prop>`](#prop) | special | 0 to ∞ |
+| [`<use-name>`](#naming-and-use-name) | [`token`](/specification/datatypes/#token) | 0 or 1 |
+| [`<group-as>`](#group-as) | special | 0 or 1 |
+| [`<remarks>`](#remarks) | special | 0 or 1 |
+
+There are no attributes and elements specific to an `<assembly>` instance. The elements and attributes common to all named model instance types are [defined earlier](#common-named-model-instance-data) in this specification.
+
+The [`@ref`](#ref) attribute MUST reference a top-level *assembly definition's* [`@name`](/specification/syntax/definitions/#name) that is in scope. See [Definition Name Resolution](/specification/syntax/module/#definition-name-resolution) for a detailed explanation of definition name scoping.
+
+### `<define-assembly>` Instance
+
+A `<define-assembly>` instance is a special type of *field instance* that also declares a new single use, local [*assembly definition* inline](/specification/syntax/inline-definitions/#inline-define-assembly). It combines a subset of the data used to declare a [*assembly definition*](/specification/syntax/definitions/#top-level-define-field) and a [*assembly instance*](#assembly-instance).
+
+The data model of the [inline `<define-assembly>` instance](/specification/syntax/inline-definitions/#inline-define-assembly) is covered in the section of the specification discussing [inline definitions](/specification/syntax/inline-definitions/).
+
+## Other Model Instance Types
+
+TODO: speak to these elements
+
+### `<choice>` Selections
+
+TODO: describe this with examples
+
+### `<any>`
+
+TODO: describe this with examples

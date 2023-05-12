@@ -10,7 +10,7 @@ custom_css:
 
 The following is an approximate outline of the Metaschema module syntax. Each element and attribute links to the specific specification section describing the element. Attribute value choices are indicated where possible, with default values highlighted.
 
-
+{{< rawhtml >}}
 <div class="highlight"><div class="chroma"><code class="language-xml" data-lang="xml">
 <div class="element">
   <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/module/#main-content">METASCHEMA</a></span> <span class="na">xmlns=</span><span class="s">"http://csrc.nist.gov/ns/oscal/metaschema/1.0"</span></div>
@@ -107,34 +107,34 @@ The following is an approximate outline of the Metaschema module syntax. Each el
     </div>
     <!-- define-assembly:define-flag -->
     <div class="element">
-      <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#inline-define-flag">define-flag</a></span> <span class="na"><a href="/specification/syntax/inline-definitions/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+      <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#inline-define-flag">define-flag</a></span> <span class="na"><a href="/specification/syntax/definitions/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
       <!-- define-assembly:define-flag:@as-type -->
-    <div class="attribute"><em><span class="na"><a href="/specification/syntax/inline-definitions/#as-type">as-type</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="c">(default: <a href="/specification/datatypes/#string">string</a>)</span></em></div>
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#as-type">as-type</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="c">(default: <a href="/specification/datatypes/#string">string</a>)</span></em></div>
       <!-- define-assembly:define-flag:@default -->
-    <div class="attribute"><em><span class="na"><a href="/specification/syntax/inline-definitions/#default">default</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em></div>
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#default">default</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em></div>
       <!-- define-assembly:define-flag:@required -->
-      <div class="attribute"><em><span class="na"><a href="/specification/syntax/inline-definitions/#required">required</a></span><span class="na">=</span><span class="s">"yes|no"</span></em> <span class="c">(default: no)</span></div>
+      <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#required">required</a></span><span class="na">=</span><span class="s">"yes|no"</span></em> <span class="c">(default: no)</span></div>
       <!-- define-assembly:define-flag:@deprecated -->
-      <div class="attribute"><em><span class="na"><a href="/specification/syntax/inline-definitions/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em><span class="nt">&gt;</span></div>
+      <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em><span class="nt">&gt;</span></div>
       <!-- define-assembly:define-flag:formal-name -->
-      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
       <!-- define-assembly:define-flag:description -->
-      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
       <!-- define-assembly:define-flag:prop -->
       <div class="element">
-        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
         <!-- define-assembly:define-flag:prop:@namespace -->
         <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
       </div>
       <!-- define-assembly:define-flag:constraint -->
       <div class="element cl nt"><em>&lt;<a href="/specification/syntax/constraints/#define-flag-constraints">constraint</a>/&gt;</em></div>
       <!-- define-assembly:define-flag:remarks -->
-      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
       <!-- define-assembly:define-flag:example -->
-      <div class="element cl nt"><em>&lt;<a href="/specification/syntax/inline-definitions/#example">example</a>/&gt;</em></div>
+      <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
       <div class="cl nt">&lt;/define-flag&gt;</div>
     </div>
-    <!-- model -->
+    <!-- TODO: model -->
     <div class="element cl nt"><em>&lt;<a href="/specification/syntax/constraints/#define-assembly-constraints">constraint</a>/&gt;</em></div>
     <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
     <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
@@ -183,3 +183,4 @@ The following is an approximate outline of the Metaschema module syntax. Each el
   <div class="cl nt">&lt;/METASCHEMA&gt;</div>
 </div>
 </code></div></div>
+{{< /rawhtml >}}

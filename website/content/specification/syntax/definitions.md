@@ -225,23 +225,22 @@ The `@as-type` attribute must have a value that corresponds to one of the [simpl
 
 The `@default` attribute specifies the default value for the flag. When a flag is specified as an optional child of a `<define-field>` or `<define-assembly>`, this value SHOULD be considered set for a content instance if the flag is omitted in that instance.
 
-
 ## `<json-key>`
 
 Both the [`<define-field>`](#top-level-define-field) and [`<define-assembly>`](#top-level-define-assembly) definition types support the definition of a `<json-key>`.
 
-A `<json-key>` is used to identify a *flag instance* on the definition that is used to group a collection of [*named model instances*](/specification/syntax/instances/#named-model-instances) with the same name related to the definition when serializing to the JSON format. This is controlled using the [`group-as`](/specification/syntax/instances/#group-as) element using the [`in-json="BY_KEY"`](/specification/syntax/instances/#in-json) attribute value.
+A `<json-key>` is used to identify a *flag instance* on the definition that is used to group a collection of [*named model instances*](/specification/syntax/instances/#named-model-instances) with the same name related to the definition when serializing to the JSON format. This is controlled using the [`group-as`](/specification/syntax/instances/#group-as) element using the [`in-json="BY_KEY"`](/specification/syntax/instances/#in-jsonby_key) attribute value.
 
-For more information see [using `json-key`](/specification/syntax/instances/#using-json-key).
+For more information see [using `<group-as in-json="BY_KEY">`](/specification/syntax/instances/#in-jsonby_key).
 
 ## top-level `<define-field>`
 
-A field definition, represented by the `<define-field>` element, is used to declare a reusable [field](/specification/glossary/#field) within a metaschema module.
+A *field definition*, represented by the `<define-field>` element, is used to declare a reusable [field](/specification/glossary/#field) within a metaschema module.
 
-A field definition provides the means to implement a complex named [*information element*](/specification/glossary/#information-element) with a value and an optional set of [*flag*](/specification/syntax/instances/#flag-instances) instances.
+A *field definition* provides the means to implement a complex named [*information element*](/specification/glossary/#information-element) with a value and an optional set of [*flag instances*](/specification/syntax/instances/#flag-instance).
 
 {{<callout>}}
-A field is an edge node in a Metaschema-based model. Fields are typically used to provide supporting information for a containing [*assembly*](/specification/syntax/definitions/#top-level-define-assembly). The flag instances, typically characterize or identify the fields value. With optional use of flags, a field can be more or less complex, depending on the modeling need.
+A *field definition* is an edge node in a Metaschema-based model. *Fields* are typically used to provide supporting information for a containing [*assembly definition*](/specification/syntax/definitions/#top-level-define-assembly). The optional set of *flag instances* declared on a *field definition*, typically characterize or identify the fields value. With optional use of flags, a field can be more or less complex, depending on the modeling need.
 {{</callout>}}
 
 The field's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types) identified by the `@as-type` attribute.identified by the `@as-type` attribute.
@@ -388,7 +387,7 @@ Implementations when writing content instances MAY omit writing default values i
 
 A field may have zero or more flag instance children.
 
-See [flag instances](/specification/syntax/instances/#flag-instances)
+See [flag instances](/specification/syntax/instances/#flag-instance)
 
 ### `<define-flag>` Inline Definition
 
@@ -474,7 +473,7 @@ An assembly definition, represented by the `<define-assembly>` element, is used 
 
 An assembly definition provides the means to implement a complex, composite, named [*information element*](/specification/glossary/#information-element) that collects and organizes other information elements, with no value of its own. 
 
-An assembly definition consists of an optional set of [*flags*](/specification/syntax/instances/#flag-instances) and an optional sequence of [model instances](/specification/syntax/instances/#model-instances).
+An assembly definition consists of an optional set of [*flags*](/specification/syntax/instances/#flag-instance) and an optional sequence of [model instances](/specification/syntax/instances/#model-instances).
 
 {{<callout>}}
 An assembly is a compositional node in a Metaschema-based model. Assemblies are typically used to represent complex data objects, combining multiple information elements together into a composite object representing a larger semantic concept. An assembly's flag instances will typically characterize or identify this composite object, while its model instances represent the information being composed.
@@ -548,7 +547,7 @@ assembly: -
 
 An assembly may have zero or more flag instance children.
 
-See [flag instances](/specification/syntax/instances/#flag-instances).
+See [flag instances](/specification/syntax/instances/#flag-instance).
 
 ### `<define-flag>` Inline Definition
 
@@ -559,3 +558,5 @@ See [inline `<define-flag>`](/specification/syntax/inline-definitions/#inline-de
 ### `<model>`
 
 The `<model>` element is used to establish the assembly's model. To do this, zero or more [model instances](/specification/syntax/instances/#model-instances) are declared.
+
+TODO: complete this section with syntax tables

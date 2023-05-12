@@ -25,12 +25,10 @@ graph TB
   ms -- generate --> doc[HTML-based Documentation]
   ms -- generate --> code[Parsing Code]
   ms -- support --> conv[Conversion between formats]
-
-classDef metasch fill:#dfe1e2,stroke:grey,stroke-width:4px,stroke-opacity:0.2
-classDef usecase fill:#f0f0f0,stroke:grey,stroke-width:4px,stroke-opacity:0.2
-
-class ms metasch
-class code,schema,doc,conv usecase
+  classDef metasch fill:#dfe1e2,stroke:grey,stroke-width:4px,stroke-opacity:0.2
+  classDef usecase fill:#f0f0f0,stroke:grey,stroke-width:4px,stroke-opacity:0.2
+  class ms metasch
+  class code,schema,doc,conv usecase
 ```
 
 These capabilities can be applied to any *information domain*, serving developers who need to support multiple *data models* for a given *information domain* or a format specific technology stack that is well-suited to their application based on a single *data model* equally. In either case, use of the generative capabilities supported by the Metaschema Framework, further reduces the time required to maintain format-specific documentation, schemas, data, and parsing code in one or multiple *data formats*.

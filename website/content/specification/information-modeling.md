@@ -99,9 +99,9 @@ Metaschema uses 3 types of [*definitions*](/specification/syntax/definitions/) t
 
 *Field definitions* and *assembly definitions* allow the identification of edges through the declaration of an [*instance*](/specification/syntax/instances/). An *instance* represents an edge between the containing definition and another definition. Thus, an *instance* makes use of another definition, typically by reference.
 
-Both field and assembly definitions optionally allow the inclusion of one or more child [*flag instances*](/specification/syntax/instances/#flag-instances).
+Both field and assembly definitions optionally allow the inclusion of one or more child [*flag instances*](/specification/syntax/instances/#flag-instance).
 
-An assembly definition also has a [complex model](/specification/syntax/definitions/#model) which contains a sequence of [*model instances*](/specification/syntax/instances/#model-instances), each *model instance* is either a [*field instance*](/specification/syntax/instances/#field-instances) or an [*assembly instance*](/specification/syntax/instances/#assembly-instances).
+An assembly definition also has a [complex model](/specification/syntax/definitions/#model) which contains a sequence of [*model instances*](/specification/syntax/instances/#model-instances), each *model instance* is either a [*field instance*](/specification/syntax/instances/#field-instance) or an [*assembly instance*](/specification/syntax/instances/#assembly-instance).
 
 {{<callout>}}
 Within a *Metaschema module*, the *information model* implementation consists of assemblies, each of which are composed of more assembly, field, and flag instances. 
