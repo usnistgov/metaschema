@@ -311,15 +311,21 @@ One of the following behaviors MUST be used based on the provided, or default va
 
 ###### `@in-json="ARRAY"`
 
-TODO: complete this section.
+TODO: P2: complete this section.
 ###### `@in-json="SINGLETON_OR_ARRAY"`
 
-TODO: complete this section.
+TODO: P2: complete this section.
 ###### `@in-json="BY_KEY"`
 
-TODO: complete this section.
+TODO: P2: complete this section using the text below.
 
 When used in this way, the property names of this intermediate object will be the value of the flag as specified by the `@json-key` attribute on the definition referenced by the `@ref` on the instance. The value of the intermediate object property will be an object or value , with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component.
+
+One problem with zero-or-more cardinality as supported by `fields` and `assemblies` is that in JSON, no suitable structure is available for the inclusion of truly arbitrary but repeatable properties or 'contents' (as to its structural type) on an object. The closest thing is an array, which can be pulled into use for this -- at the cost of not permitting a JSON property label on items in the array. In order to capture the same information as is transparently available on the XML, it is therefore necessary to 'finesse' the JSON object type: Metaschema does this by mapping each field or assembly in a zero-or-many set, to an array with the corresponding number of items. The name of the objects can thus be captured implicitly, by naming (labeling) their containing array.
+
+This works, but there are also occasions when a much more concise mapping may also be supported -- if the data can be ensured to follow another rule, namely that data elements (string data) can be known to be uniquely-valued. In these cases there is a different option, namely to promote a flag of a particular known (and controlled) type, to a role as "address" -- which can (incidentally) serve as a label on a JSON property, thus improving both presentation, and addressability.
+
+Accordingly, `@address` on `field` or `assemblies` indicates that their contents (components, that is each field or assembly in the series) may be addressed using the flag (attribute) of the given name. So if `address='id'`, for example, and an `id` flag is included on the field or assemply, such flag is assumed to be unique and validable as such (at least within the scope of its parent or containing structure), thus making it suitable for use as a label; consequently, in JSON, the field or assembly can be represented as a labeled property (of an object) rather than an unlabeled member of an array (of similar objects). This both reduces the data footprint and renders the data more addressable via key constructs such as identifiers.
 
 ##### `@in-xml`
 
@@ -336,11 +342,11 @@ One of the following behaviors MUST be used based on the provided, or default va
 
 ###### `@in-xml="GROUPED"`
 
-TODO: complete this section.
+TODO: P2: complete this section.
 
 ###### `@in-xml="UNGROUPED"`
 
-TODO: complete this section.
+TODO: P2: complete this section.
 
 ##### `@name`
 
@@ -350,9 +356,21 @@ In JSON and YAML, this name is used as the property name.
 
 In XML, the specific use of the `@name` is based on the `@in-xml` attribute's value.
 
-### `<field>` Instance
+### Instance Naming
 
-- see `in-xml` in `define-field`
+In JSON, YAML, and XML, the [effective names of named instances](#naming-and-use-name) and the [grouping name](#group-as) of named model instances need to be restricted to allow for distinct naming of resulting JSON and YAML properties, and XML elements.
+
+The following rules apply.
+
+TODO: P1: outline naming rules based on the old text below.
+
+we can choose either singles or plurals of named fields or assemblies (i.e., a binary choice between cardinality constraints to be applied). This gives us four choices; additionally, we have the opportunity to use an element `prose`, once inside any assembly's model.
+
+Among these elements, no single `@named` attribute value (which refers a model component to its definition) may be used more than once. Additionally, no `@group-as` (on a `fields` or `assemblies`) may be reused or be the same as any `@named`. The `prose` element may be used only once. Finally, no value of `@named` or `@group-as` must be the same as a recognized name of an element directly within prose, namely (at present) `p`, `ul`, `ol`, and `pre`.
+
+With these limitations, a model may be defined to contain any mix of fields and assemblies.
+
+### `<field>` Instance
 
 A *field instance* is used to declare that a top-level *field definition* is part of the model of an *assembly definition*.
 
@@ -383,7 +401,7 @@ The [`@ref`](#ref) attribute MUST reference a top-level *field definition's* [`@
 
 #### `@in-xml`
 
-TODO: describe this with examples
+TODO: P2: describe this with examples
 
 ### `<define-field>` Instance
 
@@ -427,12 +445,12 @@ The data model of the [inline `<define-assembly>` instance](/specification/synta
 
 ## Other Model Instance Types
 
-TODO: speak to these elements
+TODO: P1: speak to these elements
 
 ### `<choice>` Selections
 
-TODO: describe this with examples
+TODO: P1: describe this with examples
 
 ### `<any>`
 
-TODO: describe this with examples
+TODO: P1: describe this with examples

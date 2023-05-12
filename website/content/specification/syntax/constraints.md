@@ -6,6 +6,8 @@ weight: 50
 
 **Note: This section of the specification is still a work in progress.**
 
+TODO: P3: Address issue https://github.com/usnistgov/metaschema/issues/325
+
 ## Common Constrant Data
 
 ## Enumerated values

@@ -28,15 +28,46 @@ Within Metaschema-based models, all constructs are optional unless marked otherw
 
 ## XML Representational Form
 
+### Flag Instance
+
 In XML, a flag instance is represented as an [attribute](https://www.w3.org/TR/xml/#attdecls).
 
 ```xml
-<field-or-assembly @flag-name="flag value"/>
+<instance-effective-name @flag-name="flag value"/>
 ```
+
+### Field Instance
+
+
+In XML, a field is represented in two possible ways:
+
+1. As an XML element.
+
+   The representational form of a field varies based on the presence of child flags.
+
+   ```xml
+   <field-name>field value</field-name>
+   ```
+
+   or
+
+   ```xml
+   <field-name flag="flag1 value">field value</field-name>
+   ```
+
+   The form immediately above is used when the field has a child flag instance.
+
+1. As a text value in an unwrapped form.
+
+   ```xml
+   <some-assembly>field value</some-assembly>
+   ```
+
+   This form is only allowed when a field has no child flags.
 
 ## JSON Representational Form
 
-In all cases, `@name` value is used as the property name.
+### Flag Instance
 
 In JSON a flag instance is represented as an [object member](https://datatracker.ietf.org/doc/html/rfc8259#section-2) with an associated value.
 
@@ -47,6 +78,8 @@ In JSON a flag instance is represented as an [object member](https://datatracker
 ```
 
 ## YAML Representational Form
+
+### Flag Instance
 
 The YAML representation is similar to JSON, where a [tagged value](https://yaml.org/spec/1.2.2/#24-tags) is used to represent a flag.
 

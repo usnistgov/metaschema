@@ -163,4 +163,5 @@ The `<import>` element is used to import the definitions defined in another Meta
 
 ## Definition Name Resolution
 
-TODO: Discuss name shadowing.
+TODO: P1: Discuss name shadowing.
+TODO: P1: Address issue https://github.com/usnistgov/metaschema/issues/239

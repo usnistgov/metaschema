@@ -233,6 +233,7 @@ A `<json-key>` is used to identify a *flag instance* on the definition that is u
 
 For more information see [using `<group-as in-json="BY_KEY">`](/specification/syntax/instances/#in-jsonby_key).
 
+TODO: P2: Address issue https://github.com/usnistgov/metaschema/issues/316
 ## top-level `<define-field>`
 
 A *field definition*, represented by the `<define-field>` element, is used to declare a reusable [field](/specification/glossary/#field) within a metaschema module.
@@ -243,7 +244,9 @@ A *field definition* provides the means to implement a complex named [*informati
 A *field definition* is an edge node in a Metaschema-based model. *Fields* are typically used to provide supporting information for a containing [*assembly definition*](/specification/syntax/definitions/#top-level-define-assembly). The optional set of *flag instances* declared on a *field definition*, typically characterize or identify the fields value. With optional use of flags, a field can be more or less complex, depending on the modeling need.
 {{</callout>}}
 
-The field's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types) identified by the `@as-type` attribute.identified by the `@as-type` attribute.
+The field's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types) identified by the `@as-type` attribute.
+
+The syntax of an *field definition* is comprised of the following XML attributes and elements.
 
 Attributes:
 
@@ -395,7 +398,8 @@ See [inline `<define-flag>`](/specification/syntax/inline-definitions/#inline-de
 
 ### JSON Value Keys
 
-TODO: discuss use only when flags may be present.
+TODO: P2: discuss use only when flags may be present.
+TODO: P2: Address issue https://github.com/usnistgov/metaschema/issues/316
 
 In XML, the value of a field appears as the textual data content of the field's element. In JSON and YAML, a property name is needed for the value. The `<json-value-key>` and `<json-value-key-flag>` elements provide a means to control the behavior of how this value is represented.
 
@@ -465,7 +469,7 @@ This results in a property that is a combination of the referenced flag's value 
 
 For example:
 
-TODO: complete this example.
+TODO: P2: complete this example.
 
 ## top-level `<define-assembly>`
 
@@ -476,12 +480,14 @@ An assembly definition provides the means to implement a complex, composite, nam
 An assembly definition consists of an optional set of [*flags*](/specification/syntax/instances/#flag-instance) and an optional sequence of [model instances](/specification/syntax/instances/#model-instances).
 
 {{<callout>}}
-An assembly is a compositional node in a Metaschema-based model. Assemblies are typically used to represent complex data objects, combining multiple information elements together into a composite object representing a larger semantic concept. An assembly's flag instances will typically characterize or identify this composite object, while its model instances represent the information being composed.
+An *assembly definition* is a compositional node in a Metaschema-based model. Assemblies are typically used to represent complex data objects, combining multiple information elements together into a composite object representing a larger semantic concept. An assembly's flag instances will typically characterize or identify this composite object, while its model instances represent the information being composed.
 {{</callout>}}
 
 An assembly is similar to a field, except it contains structured content (objects or elements), not text or unstructured "rich text". The contents permitted in a particular (type of) assembly are indicated in its `model` element.
 
 An assembly definition has no value, so the `@as-type` and `@default` attributes are not permitted.
+
+The syntax of an *assembly definition* is comprised of the following XML attributes and elements.
 
 Attributes:
 
@@ -559,4 +565,4 @@ See [inline `<define-flag>`](/specification/syntax/inline-definitions/#inline-de
 
 The `<model>` element is used to establish the assembly's model. To do this, zero or more [model instances](/specification/syntax/instances/#model-instances) are declared.
 
-TODO: complete this section with syntax tables
+TODO: P1: complete this section with syntax tables

@@ -147,7 +147,7 @@ The following is an approximate outline of the Metaschema module syntax. Each el
       <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
       <div class="cl nt">&lt;/define-flag&gt;</div>
     </div>
-    <!-- TODO: model -->
+    <!-- TODO: P1: model -->
     <div class="element cl nt"><em>&lt;<a href="/specification/syntax/constraints/#define-assembly-constraints">constraint</a>/&gt;</em></div>
     <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
     <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
