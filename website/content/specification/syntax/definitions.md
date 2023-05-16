@@ -229,11 +229,10 @@ The `@default` attribute specifies the default value for the flag. When a flag i
 
 Both the [`<define-field>`](#top-level-define-field) and [`<define-assembly>`](#top-level-define-assembly) definition types support the definition of a `<json-key>`.
 
-A `<json-key>` is used to identify a *flag instance* on the definition that is used to group a collection of [*named model instances*](/specification/syntax/instances/#named-model-instances) with the same name related to the definition when serializing to the JSON format. This is controlled using the [`group-as`](/specification/syntax/instances/#group-as) element using the [`in-json="BY_KEY"`](/specification/syntax/instances/#in-jsonby_key) attribute value.
+A `<json-key>` is used to identify a *flag instance* on the *definition* that is used to group a collection of [*named model instances*](/specification/syntax/instances/#named-model-instances) with the same name related to the *definition* when serializing to the JSON format. This is controlled using the [`group-as`](/specification/syntax/instances/#group-as) element using the [`in-json="BY_KEY"`](/specification/syntax/instances/#in-jsonby_key) attribute value.
 
 For more information see [using `<group-as in-json="BY_KEY">`](/specification/syntax/instances/#in-jsonby_key).
 
-TODO: P2: Address issue https://github.com/usnistgov/metaschema/issues/316
 ## top-level `<define-field>`
 
 A *field definition*, represented by the `<define-field>` element, is used to declare a reusable [field](/specification/glossary/#field) within a metaschema module.

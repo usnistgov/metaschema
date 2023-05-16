@@ -96,8 +96,6 @@ An *information model*, abbreviated as IM, is defined as follows:
 > - Define relationships between managed objects
 > - Should hide all protocol or implementation details, allowing for different implementations
 
-A [*Metaschema module*](#metaschema-module) is a format for representing an *information model*. Each [*definition*](#definition) defined by a Metaschema module represents a managed object of the information model.
-
 ## Metaschema Module
 
 A *Metaschema module* is defined as follows:

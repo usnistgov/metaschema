@@ -317,6 +317,8 @@ TODO: P2: complete this section.
 TODO: P2: complete this section.
 ###### `@in-json="BY_KEY"`
 
+
+TODO: P2: Address issue https://github.com/usnistgov/metaschema/issues/316
 TODO: P2: complete this section using the text below.
 
 When used in this way, the property names of this intermediate object will be the value of the flag as specified by the `@json-key` attribute on the definition referenced by the `@ref` on the instance. The value of the intermediate object property will be an object or value , with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component.
