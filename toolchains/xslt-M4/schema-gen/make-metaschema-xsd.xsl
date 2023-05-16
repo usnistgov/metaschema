@@ -311,7 +311,7 @@
             </xs:complexType>
     </xsl:template>
     
-    <xsl:template priority="6" match="METASCHEMA/define-field[@as-type='markup-multiline'][not(@in-xml='WITH_WRAPPER')]"/>
+    <xsl:template priority="6" match="METASCHEMA/define-field[@as-type='markup-multiline'][not(@in-xml=('WITH_WRAPPER','WRAPPED'))]"/>
 
    <!-- Flags become attributes; this schema defines them all locally. -->
     <xsl:template match="define-flag"/>

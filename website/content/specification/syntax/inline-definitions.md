@@ -96,7 +96,7 @@ Attributes:
 | [`@collapsible`](/specification/syntax/definitions/#collapsible) | `yes` or `no` | optional | `no` |
 | [`@default`](/specification/syntax/definitions/#default-1) | [`string`](/specification/datatypes/#string) | optional | *(no default)* |
 | [`@deprecated`](/specification/syntax/definitions/#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
-| [`@in-xml`](/specification/syntax/instances/#in-xml-1) | `WITH_WRAPPER` or `UNWRAPPED` | optional | `WITH_WRAPPER` |
+| [`@in-xml`](/specification/syntax/instances/#in-xml-1) | `WRAPPED`, `WITH_WRAPPER` or `UNWRAPPED` | optional | `WRAPPED` |
 | [`@max-occurs`](/specification/syntax/instances/#max-occurs) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | 1 |
 | [`@min-occurs`](/specification/syntax/instances/#min-occurs) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | 0 |
 | [`@name`](/specification/syntax/definitions/#name) | [`token`](/specification/datatypes/#token) | required | *(no default)* |

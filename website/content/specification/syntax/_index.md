@@ -97,7 +97,8 @@ The following is an approximate outline of the Metaschema module syntax. Each el
     </div>
     <!-- define-assembly:flag -->
     <div class="element">
-      <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/definitions/#top-level-define-assembly">flag</a></span> <span class="na"><a href="/specification/syntax/instances/#ref">ref</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+      &lt;-- Flag Instance --&gt;<br/>
+      <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/instances/#flag-instance">flag</a></span> <span class="na"><a href="/specification/syntax/instances/#ref">ref</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
       <!-- define-assembly:flag:@required -->
       <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#required">required</a></span><span class="na">=</span><span class="s">"yes|no"</span></em> <span class="c">(default: no)</span></div>
       <!-- define-assembly:flag:@deprecated -->
@@ -120,6 +121,7 @@ The following is an approximate outline of the Metaschema module syntax. Each el
     </div>
     <!-- define-assembly:define-flag -->
     <div class="element">
+      &lt;-- Inline Flag Definition --&gt;<br/>
       <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#inline-define-flag">define-flag</a></span> <span class="na"><a href="/specification/syntax/definitions/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
       <!-- define-assembly:define-flag:@as-type -->
     <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#as-type">as-type</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="c">(default: <a href="/specification/datatypes/#string">string</a>)</span></em></div>
@@ -147,7 +149,101 @@ The following is an approximate outline of the Metaschema module syntax. Each el
       <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
       <div class="cl nt">&lt;/define-flag&gt;</div>
     </div>
-    <!-- TODO: P1: model -->
+    <div class="element">
+      <!-- define-assembly:model -->
+      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#model">model</a></span></em><span class="nt">/&gt;</span></div>
+      <!-- define-assembly:model:assembly -->
+      <div class="element">
+        &lt;-- Assembly Instance --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#assembly-instance">assembly</a></span></em> <span class="na"><a href="/specification/syntax/instances/#ref">ref</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+        <!-- define-assembly:model:assembly:@min-occurs -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#max-occurs">min-occurs</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#non-negative-integer">non-negative-integer</a>"</span></em> <span class="c">(default: 0)</span></div>
+        <!-- define-assembly:model:assembly:@max-occurs -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#max-occurs">max-occurs</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#positive-integer">positive-integer</a>|unbounded"</span></em> <span class="c">(default: 1)</span></div>
+        <!-- define-assembly:model:assembly:@deprecated -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em><span class="nt">&gt;</span></div>
+        <!-- define-assembly:model:assembly:formal-name -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+        <!-- define-assembly:model:assembly:description -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+        <!-- define-assembly:model:assembly:prop -->
+        <div class="element">
+          <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+          <!-- define-assembly:model:assembly:prop:@namespace -->
+          <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+        </div>
+        <!-- define-assembly:model:assembly:use-name -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#naming-and-use-name">use-name</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/use-name&gt;</span></em></div>
+        <!-- define-assembly:model:assembly:group-as -->
+        <div class="element">
+          <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#group-as">group-as</a></span></em> <span class="na"><a href="/specification/syntax/instances/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+          <!-- define-assembly:model:assembly:group-as:@in-json -->
+          <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#in-json">in-json</a></span><span class="na">=</span><span class="s">"<a href="/specification/syntax/instances/#in-jsonarray">ARRAY</a>|<a href="/specification/syntax/instances/#in-jsonsingleton_or_array">SINGLETON_OR_ARRAY</a>|<a href="/specification/syntax/instances/#in-jsonby_key">BY_KEY</a>"</span></em> <span class="c">(default: <a href="/specification/syntax/instances/#in-jsonsingleton_or_array">SINGLETON_OR_ARRAY</a>)</span></div>
+          <!-- define-assembly:model:assembly:group-as:@in-xml -->
+          <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#in-xml">in-xml</a></span><span class="na">=</span><span class="s">"<a href="/specification/syntax/instances/#in-xmlgrouped">GROUPED</a>|<a href="/specification/syntax/instances/#in-xmlungrouped">UNGROUPED</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: <a href="/specification/syntax/instances/#in-xmlungrouped">UNGROUPED</a>)</span></div>
+        </div>
+        <!-- define-assembly:model:assembly:remarks -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+        <div class="cl nt">&lt;/assembly&gt;</div>
+      </div>
+      <!-- define-assembly:model:field -->
+      <div class="element">
+        &lt;-- Field Instance --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#field-instance">field</a></span></em> <span class="na"><a href="/specification/syntax/instances/#ref">ref</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+        <!-- define-assembly:model:field:@min-occurs -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#max-occurs">min-occurs</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#non-negative-integer">non-negative-integer</a>"</span></em> <span class="c">(default: 0)</span></div>
+        <!-- define-assembly:model:field:@max-occurs -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#max-occurs">max-occurs</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#positive-integer">positive-integer</a>|unbounded"</span></em> <span class="c">(default: 1)</span></div>
+        <!-- define-assembly:model:field:@in-xml -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#in-xml-1">in-xml</a></span><span class="na">=</span><span class="s">"WRAPPED|UNWRAPPED"</span></em> <span class="c">(default: WRAPPED)</span></div>
+        <!-- define-assembly:model:field:@deprecated -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em><span class="nt">&gt;</span></div>
+        <!-- define-assembly:model:field:formal-name -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+        <!-- define-assembly:model:field:description -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+        <!-- define-assembly:model:field:prop -->
+        <div class="element">
+          <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+          <!-- define-assembly:model:field:prop:@namespace -->
+          <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+        </div>
+        <!-- define-assembly:model:field:use-name -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#naming-and-use-name">use-name</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/use-name&gt;</span></em></div>
+        <!-- define-assembly:model:field:group-as -->
+        <div class="element">
+          <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#group-as">group-as</a></span></em> <span class="na"><a href="/specification/syntax/instances/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+          <!-- define-assembly:model:field:group-as:@in-json -->
+          <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#in-json">in-json</a></span><span class="na">=</span><span class="s">"<a href="/specification/syntax/instances/#in-jsonarray">ARRAY</a>|<a href="/specification/syntax/instances/#in-jsonsingleton_or_array">SINGLETON_OR_ARRAY</a>|<a href="/specification/syntax/instances/#in-jsonby_key">BY_KEY</a>"</span></em> <span class="c">(default: <a href="/specification/syntax/instances/#in-jsonsingleton_or_array">SINGLETON_OR_ARRAY</a>)</span></div>
+          <!-- define-assembly:model:field:group-as:@in-xml -->
+          <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#in-xml">in-xml</a></span><span class="na">=</span><span class="s">"<a href="/specification/syntax/instances/#in-xmlgrouped">GROUPED</a>|<a href="/specification/syntax/instances/#in-xmlungrouped">UNGROUPED</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: <a href="/specification/syntax/instances/#in-xmlungrouped">UNGROUPED</a>)</span></div>
+        </div>
+        <!-- define-assembly:model:field:remarks -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+        <div class="cl nt">&lt;/field&gt;</div>
+      </div>
+      <!-- define-assembly:model:define-assembly -->
+      <div class="element">
+        &lt;-- Inline Assembly Definition --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#inline-define-assembly">define-assembly</a></span></em><span class="nt">/&gt;</span></div>
+      </div>
+      <!-- define-assembly:model:define-field -->
+      <div class="element">
+        &lt;-- Inline Field Definition --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#inline-define-field">define-field</a></span></em><span class="nt">/&gt;</span></div>
+      </div>
+      <!-- define-assembly:model:choice -->
+      <div class="element">
+        &lt;-- Choice --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#choice-selections">choice</a></span></em><span class="nt">/&gt;</span></div>
+      </div>
+      <!-- define-assembly:model:any -->
+      <div class="element">
+        &lt;-- Any --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#any">any</a></span></em><span class="nt">/&gt;</span></div>
+      </div>
+      <div class="cl nt">&lt;/model&gt;</div>
+    </div>
     <div class="element cl nt"><em>&lt;<a href="/specification/syntax/constraints/#define-assembly-constraints">constraint</a>/&gt;</em></div>
     <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
     <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
@@ -191,7 +287,8 @@ The following is an approximate outline of the Metaschema module syntax. Each el
     </div>
     <!-- define-field:flag -->
     <div class="element">
-      <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/definitions/#top-level-define-assembly">flag</a></span> <span class="na"><a href="/specification/syntax/instances/#ref">ref</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+      &lt;-- Flag Instance --&gt;<br/>
+      <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/instances/#flag-instance">flag</a></span> <span class="na"><a href="/specification/syntax/instances/#ref">ref</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
       <!-- define-field:flag:@required -->
       <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#required">required</a></span><span class="na">=</span><span class="s">"yes|no"</span></em> <span class="c">(default: no)</span></div>
       <!-- define-field:flag:@deprecated -->
@@ -214,6 +311,7 @@ The following is an approximate outline of the Metaschema module syntax. Each el
     </div>
     <!-- define-field:define-flag -->
     <div class="element">
+      &lt;-- Inline Flag Definition --&gt;<br/>
       <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#inline-define-flag">define-flag</a></span> <span class="na"><a href="/specification/syntax/definitions/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
       <!-- define-field:define-flag:@as-type -->
     <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#as-type">as-type</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="c">(default: <a href="/specification/datatypes/#string">string</a>)</span></em></div>

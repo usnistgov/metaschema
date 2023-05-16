@@ -565,4 +565,11 @@ See [inline `<define-flag>`](/specification/syntax/inline-definitions/#inline-de
 
 The `<model>` element is used to establish the assembly's model. To do this, zero or more [model instances](/specification/syntax/instances/#model-instances) are declared.
 
-TODO: P1: complete this section with syntax tables
+Zero or more of the following elements are allowed.
+
+- [`<field>`](/specification/syntax/instances/#field-instance) - Instantiates a globally defined [field definition](#top-level-define-field) as a model instance.
+- [`<define-field>`](/specification/syntax/inline-definitions/#inline-define-field) - Defines a [single use field](/specification/syntax/inline-definitions/#inline-define-field) for use as a model instance.
+- [`<assembly>`](/specification/syntax/instances/#assembly-instance) - Instantiates a globally defined [assembly definition](#top-level-define-assembly) as a model instance.
+- [`<define-assembly>`](/specification/syntax/inline-definitions/#inline-define-assembly) - Defines a [single use assembly](/specification/syntax/inline-definitions/#inline-define-assembly) for use as a model instance.
+- [`<choice>`](/specification/syntax/instances/#choice-selections) - Declares a mutually exclusive selection of child model instances.
+- [`<any>`](/specification/syntax/instances/#any) - Declares a placeholder for extra content that is not described by an assembly definition's model.

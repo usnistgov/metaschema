@@ -161,7 +161,110 @@ The required `<json-base-uri>` element is a [uniform resource identifier](https:
 
 The `<import>` element is used to import the definitions defined in another Metaschema module for use in the importing Metaschema module.
 
+An import cycle occurs when a *Metaschema module* imports itself directly or transitively.
+
+An example scenario is illustrated below.
+
+```mermaid
+graph TB
+  moduleA -- imports --> moduleB
+  moduleB -- imports --> moduleA
+```
+
+In this example a cycle is created `A -> B -> A`.
+
+When processing imports, an implementation MUST be capable of detecting and generating a fatal error when an import cycle is found.
+
 ## Definition Name Resolution
 
-TODO: P1: Discuss name shadowing.
-TODO: P1: Address issue https://github.com/usnistgov/metaschema/issues/239
+The [top-level *definition* names](/specification/syntax/definitions/#name) exported by a *Metaschema module* are controlled by the top-level *definition's* [`@scope`](/specification/syntax/definitions/#scope) attribute. Definitions with a given *Metaschema module* without an explicit `@scope` or with `@scope="global"` are exported for use by other *Metaschema modules* that import it directly or transitively. The possibility of name conflicts arises when two modules have different definitions of the same type (i.e. flag, field, assembly) with the same name, and these modules are both imported.
+
+The following rules MUST be applied to resolve naming conflicts that arise from [module imports](#import).
+
+1. A *definition* MUST be considered for import if the *definition* is in an [imported module](#import), and it either has no [`@scope`](/specification/syntax/definitions/#scope) or `@scope="global"`. A *definition* with `@scope="local"` MUST be ignored.
+1. When a *definition* of a given type is imported, if its name matches the name of a previously imported *definition* of the same type, the most recently imported *definition* MUST be used.
+1. If a *definition* of a given type exists in the importing *Metaschema module* that matches the name of a previously imported *definition* of the same type, the definition in the importing *Metaschema module* MUST be used.
+1. Each module uses the resulting set of named *definitions* to resolve references within the module.
+
+The following example illustrates how scoping affects definition name resolution.
+
+The following file is the `shadow-imported_metaschema.xml`.
+```xml {linenos=table,hl_lines=[8,12,"20-24"]}
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>Imported Metaschema</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>imported</short-name>
+    <namespace>http://csrc.nist.gov/ns/metaschema/example/1.0</namespace>
+
+    <define-assembly name="imported-flags" scope="global">
+        <formal-name>Assembly that includes global and local flags</formal-name>
+        <description>This assembly references a global flag that is shadowed by a global flag defined
+          in the importing metaschema module.</description>
+        <flag ref="global-flag">
+            <remarks>
+                <p>This reference should be to the globally scoped flag "global-flag" from the imported
+                  metaschema module.</p>
+            </remarks>
+        </flag>
+    </define-assembly>
+    
+    <define-flag name="global-flag" scope="global">
+        <formal-name>Global Flag - Imported Metaschema</formal-name>
+        <description>A flag from the imported metaschema. Its scope is global and it's shadowed by the
+          definition with the same name in the importing metaschema module.</description>
+    </define-flag>
+</METASCHEMA>
+```
+
+This file declares the globally scoped *assembly definition* named `imported-flags` (on line 8), which references the global scoped *flag definition* `global-flag` (on line 12). It also declares the globally scoped *flag definition* named `global-flag` (on line 20).
+
+The following file is the `shadow-importing_metaschema.xml`.
+```xml {linenos=table,hl_lines=[8,10,15,"32-35"]}
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>Importing Metaschema</schema-name>
+    <schema-version>1.0</schema-version>
+    <short-name>importing</short-name>
+    <namespace>http://csrc.nist.gov/ns/metaschema/example/1.0</namespace>
+
+    <import href="shadow-imported_metaschema.xml"/>
+
+    <define-assembly name="importing-A">
+        <formal-name>Assembly that global flags</formal-name>
+        <description>This assembly references a global flag that shadows a global flag defined in an
+          imported metaschema module.</description>
+        <root-name>including-flags</root-name>
+        <flag ref="global-flag">
+            <remarks>
+                <p>This reference is to the globally scoped flag "global-flag" from the importing
+                  metaschema. This definition is taking precedence over the other definition imported
+                  (with the same name).</p>
+            </remarks>
+        </flag>
+        <model>
+            <assembly ref="imported-flags">
+                <remarks>
+                    <p>This is the imported "imported-flags" assembly, complete with its full model
+                      from the imported metaschema module, including the global-flag defined there.</p>
+                </remarks>
+            </assembly>
+        </model>
+    </define-assembly>
+    
+    <define-flag name="global-flag">
+        <formal-name>Global Flag - Importing Metaschema</formal-name>
+        <description>A flag from the importing metaschema. Its scope is global. This should be marked
+          as a shadowing of another imported flag.</description>
+    </define-flag>
+</METASCHEMA>
+```
+
+This file imports the `shadow-imported_metaschema.xml` (on line 8). It also declares a global scoped *assembly definition* named `importing-A` (on line 10), which references the *flag definition* `global-flag` (on line 15). It also declares the globally scoped *flag definition* named `global-flag` (on line 32).
+
+Both files contain globally scoped *flag definitions* named `global-flag`.
+
+According to the rules above, the following is true.
+
+- The assembly named `imported-flags` uses the flag named `global-flag` from the `shadow-imported_metaschema.xml`. This is because definitions names are resolved in the local context of each model.
+- The assembly named `importing-A` uses the flag named `global-flag` from the `shadow-importing_metaschema.xml`. This is because definitions declared in the current module shadow imported definitions.

@@ -223,12 +223,12 @@ A *model instance* is used to declare a relationship to other information elemen
 
 There are 5 kinds of model instances, which can be declared as part of the assembly's model.
 
-- `<field>` - Instantiates a globally defined [field definition](/specification/syntax/definitions/#top-level-define-field) as a model instance.
-- `<define-field>` - Defines a [single use field](/specification/syntax/inline-definitions/#inline-define-field) for use as a model instance.
-- `<assembly>` - Instantiates a globally defined [assembly definition](/specification/syntax/definitions/#top-level-define-assembly) as a model instance.
-- `<define-assembly>` - Defines a [single use assembly](/specification/syntax/inline-definitions/#inline-define-assembly) for use as a model instance.
-- `<choice>` - Declares a [mutually exclusive selection](#choice-selections) of child model instances.
-- `<any>` - Declares a [placeholder for extra content](#any) that is not described by an assembly definition's model.
+- [`<field>`](#field-instance) - Instantiates a globally defined [field definition](/specification/syntax/definitions/#top-level-define-field) as a model instance.
+- [`<define-field>`](/specification/syntax/inline-definitions/#inline-define-field) - Defines a [single use field](/specification/syntax/inline-definitions/#inline-define-field) for use as a model instance.
+- [`<assembly>`](#assembly-instance) - Instantiates a globally defined [assembly definition](/specification/syntax/definitions/#top-level-define-assembly) as a model instance.
+- [`<define-assembly>`](/specification/syntax/inline-definitions/#inline-define-assembly) - Defines a [single use assembly](/specification/syntax/inline-definitions/#inline-define-assembly) for use as a model instance.
+- [`<choice>`](#choice-selections) - Declares a [mutually exclusive selection](#choice-selections) of child model instances.
+- [`<any>`](#any) - Declares a [placeholder for extra content](#any) that is not described by an assembly definition's model.
 
 The `<field>`, `<define-field>`, `<assembly>`, `<define-assembly>` model instance types are considered [*named model instances*](#named-model-instances), since they all instantiate either a [top-level](/specification/syntax/definitions/) or [inline](/specification/syntax/inline-definitions/) definition that represent a named information element within an assembly's model.
 
@@ -253,8 +253,8 @@ Attributes:
 | Attribute | Data Type | Use      | Default Value |
 |:---       |:---       |:---      |:---           |
 | [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
-| [`@max-occurs`](#ref) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | 1 |
-| [`@min-occurs`](#ref) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | 0 |
+| [`@max-occurs`](#ref) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | `1` |
+| [`@min-occurs`](#ref) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | `0` |
 | [`@ref`](#ref) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
 
 Elements:
@@ -356,19 +356,23 @@ In JSON and YAML, this name is used as the property name.
 
 In XML, the specific use of the `@name` is based on the `@in-xml` attribute's value.
 
+{{<callout>}}
+While not required, use of a plural form of the [effective name](#naming-and-use-name) for the instance is a general convention applied to `<group-as>` naming.
+{{</callout>}}
+
 ### Instance Naming
 
-In JSON, YAML, and XML, the [effective names of named instances](#naming-and-use-name) and the [grouping name](#group-as) of named model instances need to be restricted to allow for distinct naming of resulting JSON and YAML properties, and XML elements.
+Given the set of instance names for a *definition*, a given *instance* on that definition MUST have a unique effective name. If the instance allows a [maximum cardinality](#max-occurs) greater than `1`, the [`<group-as name>`](#name) MUST also be unique within the set of *instance names* for the *definition*.
 
-The following rules apply.
+For *field instance* values, the effective name of the value, based on a `<json-value-key>` or `<json-value-key-flag>` MUST also be unique within the set of *instance names* for the *definition*. This ensures that the property name for the *field* value is unique in JSON and YAML.
 
-TODO: P1: outline naming rules based on the old text below.
-
-we can choose either singles or plurals of named fields or assemblies (i.e., a binary choice between cardinality constraints to be applied). This gives us four choices; additionally, we have the opportunity to use an element `prose`, once inside any assembly's model.
-
-Among these elements, no single `@named` attribute value (which refers a model component to its definition) may be used more than once. Additionally, no `@group-as` (on a `fields` or `assemblies`) may be reused or be the same as any `@named`. The `prose` element may be used only once. Finally, no value of `@named` or `@group-as` must be the same as a recognized name of an element directly within prose, namely (at present) `p`, `ul`, `ol`, and `pre`.
+For *field instances* that use [`@in-xml="UNWRAPPED"`](#in-xml-1), no other effective instance name in the within the set of *instance names* for the *definition* MUST be named in a way that matches the allowed element contents of the [markup-multiline data type](/specification/datatypes/#markup-multiline) in XML. This ensures that a naming clash with markup data is disallowed.
 
 With these limitations, a model may be defined to contain any mix of fields and assemblies.
+
+{{<callout>}}
+In JSON, YAML, and XML, the [effective names of named instances](#naming-and-use-name) and the [grouping name](#group-as) of named model instances need to be restricted to allow for distinct naming of resulting JSON and YAML properties, and XML elements. By ensuring that names are unique, Metaschema aware parsers are able to map data elements in JSON, YAML, and XML into Metaschema module based *instances*.
+{{</callout>}}
 
 ### `<field>` Instance
 
@@ -379,9 +383,9 @@ Attributes:
 | Attribute | Data Type | Use      | Default Value |
 |:---       |:---       |:---      |:---           |
 | [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
-| [`@in-xml`](#in-xml-1) | `WITH_WRAPPER` or `UNWRAPPED` | optional | `WITH_WRAPPER` |
-| [`@max-occurs`](#max-occurs) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | 1 |
-| [`@min-occurs`](#min-occurs) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | 0 |
+| [`@in-xml`](#in-xml-1) | `WRAPPED`,`WITH_WRAPPER` or `UNWRAPPED` | optional | `WRAPPED` |
+| [`@max-occurs`](#max-occurs) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | `1` |
+| [`@min-occurs`](#min-occurs) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | `0` |
 | [`@ref`](#ref) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
 
 Elements:
@@ -405,7 +409,7 @@ TODO: P2: describe this with examples
 
 ### `<define-field>` Instance
 
-A `<define-field>` instance is a special type of *field instance* that also declares a new single use, local [*field definition* inline](/specification/syntax/inline-definitions/#inline-define-field). It combines a subset of the data used to declare a [*field definition*](/specification/syntax/definitions/#top-level-define-field) and a [*field instance*](#field-instance).
+A `<define-field>` instance is a special type of *field instance* that also declares a new single use, [inline *field definition*](/specification/syntax/inline-definitions/#inline-define-field). It combines a subset of the data used to declare a [*field definition*](/specification/syntax/definitions/#top-level-define-field) and a [*field instance*](#field-instance).
 
 The data model of the [inline `<define-field>` instance](/specification/syntax/inline-definitions/#inline-define-field) is covered in the section of the specification discussing [inline definitions](/specification/syntax/inline-definitions/).
 
@@ -418,8 +422,8 @@ Attributes:
 | Attribute | Data Type | Use      | Default Value |
 |:---       |:---       |:---      |:---           |
 | [`@deprecated`](#deprecated-version) | version ([`string`](/specification/datatypes/#string)) | optional | *(no default)* |
-| [`@max-occurs`](#max-occurs) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | 1 |
-| [`@min-occurs`](#min-occurs) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | 0 |
+| [`@max-occurs`](#max-occurs) | [`positive-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | `1` |
+| [`@min-occurs`](#min-occurs) | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | `0` |
 | [`@ref`](#ref) | [`token`](/specification/datatypes/#token) | required | *(no default)* |
 
 Elements:
@@ -439,18 +443,22 @@ The [`@ref`](#ref) attribute MUST reference a top-level *assembly definition's* 
 
 ### `<define-assembly>` Instance
 
-A `<define-assembly>` instance is a special type of *field instance* that also declares a new single use, local [*assembly definition* inline](/specification/syntax/inline-definitions/#inline-define-assembly). It combines a subset of the data used to declare a [*assembly definition*](/specification/syntax/definitions/#top-level-define-field) and a [*assembly instance*](#assembly-instance).
+A `<define-assembly>` instance is a special type of *field instance* that also declares a new single use, [inline *assembly definition*](/specification/syntax/inline-definitions/#inline-define-assembly). It combines a subset of the data used to declare a [*assembly definition*](/specification/syntax/definitions/#top-level-define-field) and a [*assembly instance*](#assembly-instance).
 
 The data model of the [inline `<define-assembly>` instance](/specification/syntax/inline-definitions/#inline-define-assembly) is covered in the section of the specification discussing [inline definitions](/specification/syntax/inline-definitions/).
 
 ## Other Model Instance Types
 
-TODO: P1: speak to these elements
-
+The elements [`<choice>`](#choice-selections) and [`<any>`](#any) are specialized model instance types that have different semantics from the [name model instances](#named-model-instances) above.
 ### `<choice>` Selections
 
-TODO: P1: describe this with examples
+Permits the mutually exclusive use of a non-empty set of [named model instances](#named-model-instances). 
+
+- [`<assembly>`](#assembly-instance) - Instantiates a globally defined [assembly definition](/specification/syntax/definitions/#top-level-define-assembly) as a model instance.
+- [`<field>`](#field-instance) - Instantiates a globally defined [field definition](/specification/syntax/definitions/#top-level-define-field) as a model instance.
+- [`<define-assembly>`](/specification/syntax/inline-definitions/#inline-define-assembly) - Defines a [single use assembly](/specification/syntax/inline-definitions/#inline-define-assembly) for use as a model instance.
+- [`<define-field>`](/specification/syntax/inline-definitions/#inline-define-field) - Defines a [single use field](/specification/syntax/inline-definitions/#inline-define-field) for use as a model instance.
 
 ### `<any>`
 
-TODO: P1: describe this with examples
+TODO: P2: describe this with examples
