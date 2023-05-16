@@ -114,6 +114,8 @@ jobs:
       run: |
         cd "${{ env.BUILD_PATH }}"
         go install -tags "extended" github.com/gohugoio/hugo
+    - name: Install Dart Sass Embedded
+      run: sudo snap install dart-sass-embedded
     - name: Run Hugo
       run: |
         hugo --config "config.yaml,development-config.yaml" -v --debug --minify
