@@ -1,4 +1,4 @@
-module github.com/usnistgov/OSCAL/build
+module github.com/usnistgov/metaschema/build
 
 go 1.18
 

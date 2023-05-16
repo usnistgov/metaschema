@@ -33,7 +33,6 @@ updates:
     target-branch: "develop"
 
   - package-ecosystem: "npm"
-    directory: "/build"
     schedule:
       interval: "daily"
     target-branch: "develop"
