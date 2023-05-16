@@ -33,7 +33,7 @@ jobs:
       with:
         node-version-file: 'build/.nvmrc'
         cache: 'npm'
-        cache-dependency-path: 'package-lock.json,**/package-lock.json'
+        cache-dependency-path: 'package-lock.json'
     - name: Setup Dependencies
       run: |
         # NodeJS
