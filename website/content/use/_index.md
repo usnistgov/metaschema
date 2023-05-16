@@ -20,6 +20,7 @@ A Metaschema module can be used to generate a schema, expressed as an XML or JSO
 
 Metaschema modules are used to generate other model-related artifacts based on the metaschema description. These artifacts include:
 
-- Conversion utilities that can convert content instances between the XML and JSON formats derived from a given metaschema definition, ensuring the resulting content is schema-valid and model-identical to its input (the conversion is lossless).
+- Conversion utilities that can convert content instances between the XML and JSON formats derived from a given metaschema definition, ensuring the resulting content is schema-valid, model-identical and equivalent to its input (without loss or addition when processed in a Metaschema-aware context).
+- Model-aware utilities and mock datasets for generic display, data conversion, reformatting, and testing.
 - XML and JSON model documentation for use on a website (e.g., the [OSCAL website](https://pages.nist.gov/OSCAL/documentation/schema/)).
 - Programming language APIs used for parsing data conformant to a given data model into a set of language-specific objects, and also writing data in language-specific objects out to one of the supported data model formats.
