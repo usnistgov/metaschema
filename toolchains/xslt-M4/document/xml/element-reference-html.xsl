@@ -58,18 +58,14 @@
          <div class="{ $header-class }">
 
             <!-- generates h1-hx headers picked up by Hugo ToC -->
-
-            <!-- ===!!! Anchor hard wrap-around of Headers 1-6 [see logic above with ($level le 6)] !!!=== -->               
-            <xsl:element expand-text="true" name="a" namespace="http://www.w3.org/1999/xhtml">
-
+            <xsl:element name="a" namespace="http://www.w3.org/1999/xhtml">
                <xsl:attribute name="href">#{@_tree-xml-id}</xsl:attribute>
                <xsl:attribute name="class">no-anchor-xslt toc{$level} name</xsl:attribute>
                <xsl:attribute name="title">Focus on {@gi} details</xsl:attribute>
 
-                  <!-- ===!!! The Headers 1-6 that are being wrapped around !!!=== -->
                <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
                   <xsl:attribute name="id" select="@_tree-xml-id"/>
-                  <xsl:attribute name="class">no-anchor-xslt toc{ $level} name Elem-Ref-Html--Xsl-72</xsl:attribute>
+                  <xsl:attribute name="class">no-anchor-xslt toc{ $level} name</xsl:attribute>
                   <xsl:text>{ @gi }</xsl:text>
                </xsl:element>
 

@@ -63,15 +63,12 @@
          <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
          <div class="{ $header-class }">
             <!-- ===!!! generates h1-hx headers picked up by Hugo toc !!!=== -->
-
-            <!-- ===!!! Anchor hard wrap-around of Headers 1-6 [see logic above with ($level le 6)] !!!=== -->               
-            <xsl:element expand-text="true" name="a" namespace="http://www.w3.org/1999/xhtml">
+            <xsl:element name="a" namespace="http://www.w3.org/1999/xhtml">
 
                <xsl:attribute name="href">#{@_tree-json-id}</xsl:attribute>
-               <xsl:attribute name="class">no-anchor-xslt Obj-Ref-Html--Xsl-71 toc{$level} name</xsl:attribute>
+               <xsl:attribute name="class">no-anchor-xslt toc{$level} name</xsl:attribute>
                <xsl:attribute name="title">Focus on {@key} details</xsl:attribute>
 
-               <!-- ===!!! The Headers 1-6 that are being wrapped around !!!=== --> 
                <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
                   <xsl:attribute name="id" select="@_tree-json-id"/>
                   <xsl:attribute name="class">no-anchor-xslt toc{$level} name </xsl:attribute>
