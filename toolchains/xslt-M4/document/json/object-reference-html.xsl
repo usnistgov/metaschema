@@ -64,7 +64,6 @@
          <div class="{ $header-class }">
             <!-- ===!!! generates h1-hx headers picked up by Hugo toc !!!=== -->
             <xsl:element name="a" namespace="http://www.w3.org/1999/xhtml">
-
                <xsl:attribute name="href">#{@_tree-json-id}</xsl:attribute>
                <xsl:attribute name="class">no-anchor-xslt toc{$level} name</xsl:attribute>
                <xsl:attribute name="title">Focus on {@key} details</xsl:attribute>
