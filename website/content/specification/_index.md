@@ -1,6 +1,6 @@
 ---
 title: "Metaschema Specification"
-Description: "Metaschema specification"
+description: "Metaschema specification"
 menu:
   primary:
     name: Specification
@@ -8,14 +8,9 @@ weight: 10
 aliases:
 - /specification/concepts/
 - /specification/concepts/architecture-mermaid/
-cascade:
-  suppresstopiclist: true
-  toc:
-    enabled: true
-    includeHtml: true
-    headingselectors: h2,h3,h4,h5,h6
-    collapsedepth: 4
 ---
+
+# Metaschema Specification
 
 The Metaschema Information Modeling Framework provides a standardized, format-agnostic information modeling approach supporting schema, code, and documentation generation *all in one*.
 

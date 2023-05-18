@@ -1,10 +1,13 @@
 ---
 title: "Using the Metaschema Framework"
+linkTitle: "Using Metaschema"
 menu:
   primary:
     name: Using
     weight: 10
 ---
+
+# Using the Metaschema Framework
 
 Currently, a Metaschema [module](/specification/glossary/#metaschema-module) is defined using an [XML-based format](https://github.com/usnistgov/metaschema/blob/develop/schema/xml/metaschema.xsd). Alternate formats (e.g., JSON, YAML) are currently being considered.
 

@@ -1,13 +1,13 @@
 ---
 title: "Metaschema Framework Specification Glossary"
 linktitle: "Glossary"
-Description: "Definitions of Metaschema Terms"
+description: "Definitions of Metaschema Terms"
 weight: 90
-toc:
-  enabled: true
 alias:
 - /specification/concepts/terminology/
 ---
+
+# Glossary
 
 The following terminology is used in this specification:
 

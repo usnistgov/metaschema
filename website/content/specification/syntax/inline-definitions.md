@@ -1,8 +1,10 @@
 ---
 title: "Inline Definitions"
-Description: ""
+description: ""
 weight: 40
 ---
+
+# Inline Definitions
 
 *Inline definitions* are a mechanism to both define a named [*information element*](/specification/glossary/#information-element) and instantiate it. In this way, *inline definitions* can be thought of as both [*definitions*](/specification/syntax/definitions/) and [*instances*](/specification/syntax/instances/), sharing most of the data elements of both.
 

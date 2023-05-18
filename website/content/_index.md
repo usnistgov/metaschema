@@ -1,5 +1,10 @@
 ---
 title: "Metaschema Information Modeling Framework"
+cascade:
+  suppresstopiclist: true
+  toc:
+    enabled: true
+    collapsedepth: 4
 ---
 {{< usa-hero image="automation-hero.png" calloutAltText="Efficient" calloutText="Information Modeling" buttonURL="/specification/" buttonText="Learn More" >}}
 Modeling information<br/>

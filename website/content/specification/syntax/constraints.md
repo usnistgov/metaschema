@@ -1,8 +1,10 @@
 ---
 title: "Constraints"
-Description: ""
+description: ""
 weight: 50
 ---
+
+# Constraints
 
 **Note: This section of the specification is still a work in progress.**
 

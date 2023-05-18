@@ -1,12 +1,15 @@
 ---
-title: "Syntax"
-Description: "Discusses the Metaschema module format and related structures."
+title: "Metaschema Syntax"
+linkTitle: "Syntax"
+description: "Discusses the Metaschema module format and related structures."
 weight: 30
 aliases:
 - /specification/syntax/
 custom_css:
 - /css/element-map.css
 ---
+
+# Metaschema Syntax
 
 The following is an approximate outline of the Metaschema module syntax. Each element and attribute links to the specific specification section describing the element. Attribute value choices are indicated where possible, with default values highlighted.
 

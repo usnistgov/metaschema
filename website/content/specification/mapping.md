@@ -1,11 +1,13 @@
 ---
 title: "Binding to XML, JSON, and YAML"
 linkTitle: Format Bindings
-Description: "Discussion of how Metaschema primitives map to XML, JSON, and YAML primitives"
+description: "Discussion of how Metaschema primitives map to XML, JSON, and YAML primitives"
 weight: 50
 aliases:
 - /specification/mapping/
 ---
+
+# Binding to XML, JSON, and YAML
 
 **Note: This section of the specification is still a work in progress.**
 

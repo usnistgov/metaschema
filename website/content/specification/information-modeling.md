@@ -1,8 +1,10 @@
 ---
 title: "Information Modeling"
-Description: "Discusses the information modeling concepts used by Metaschema."
+description: "Discusses the information modeling concepts used by Metaschema."
 weight: 20
 ---
+
+# Information Modeling
 
 The following diagram illustrates the relationships between information modeling concepts and the core structures provided by the Metaschema Framework.
 

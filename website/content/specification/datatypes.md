@@ -1,15 +1,11 @@
 ---
 title: "Metaschema Data Types"
-
+linkTitle: "Data Types"
 description: "A description of the built in data types supported by Metaschema."
-heading: Data Types Used in Metaschema
 weight: 60
-suppressintopiclist: true
-sidenav:
-  title: Data Types
-toc:
-  enabled: true
 ---
+
+# Data Types Used in Metaschema
 
 Metaschema is a strongly typed modeling language, that uses a collection of built in data types to represent data elements within a Metaschema-based model.
 

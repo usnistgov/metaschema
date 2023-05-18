@@ -1,8 +1,10 @@
 ---
 title: "Instances"
-Description: ""
+description: "Instances"
 weight: 30
 ---
+
+# Instances
 
 In a Metaschema module, complex information elements are created through composition. Through composition, an information element can be built by indicating which other information elements are used as its constituent parts.
 

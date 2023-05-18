@@ -1,6 +1,5 @@
 ---
 title: "Contribute"
-heading: Welcome to the Metaschema Community
 date: 2019-09-23T19:14:12-04:00
 aliases:
   - /community/
@@ -10,9 +9,11 @@ menu:
     weight: 50
 ---
 
+# Welcome to the Metaschema Community
+
 We are excited that you want to contribute to the Metaschema project. We are striving to provide a collaborative environment for professionals to contribute to the project's goals and objectives.
 
-# Contributing
+## Contributing
 
 We use GitHub as a collaboration platform for the development of the Metaschema framework. Within the project's GitHub repository you will find:
 

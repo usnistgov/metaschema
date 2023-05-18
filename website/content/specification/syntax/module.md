@@ -1,8 +1,11 @@
 ---
 title: "Metaschema Module"
-Description: ""
+linkTitle: "Module"
+description: "Metaschema module syntax."
 weight: 10
 ---
+
+# Metaschema Module
 
 A *Metaschema module* is represented using the top-level XML element `<METASCHEMA>`.
 

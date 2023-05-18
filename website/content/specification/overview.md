@@ -1,8 +1,10 @@
 ---
 title: "Overview"
-Description: "Discusses the information modeling concepts used by Metaschema."
+description: "Discusses the information modeling concepts used by Metaschema."
 weight: 10
 ---
+
+# Overview
 
 The *Metaschema Modeling Framework* provides a means to represent an [*information model*](/specification/glossary/#information-model) for a given [*information domain*](/specification/glossary/#domain), consisting of many related [*information elements*](/specification/glossary/#information-element), in a *data format* neutral form. By abstracting information modeling away from *data format* specific forms, the Metaschema Modeling Framework provides a means to consistently and sustainably maintain an *information model*, while avoiding the need to maintain each derivative *data format* individually. By consolidating *information model* maintenance into a single representation, significant time can be saved over other approaches that require each *data format* to be maintained individually.
 

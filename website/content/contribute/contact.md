@@ -3,6 +3,8 @@ title: Contact Us
 description: Contact Us
 ---
 
+# Contact Us
+
 Please email the [project team](mailto:metaschema@nist.gov) with any questions you have about this project or if you are interested in getting involved.
 
 Please visit our [GitHub repository](https://github.com/usnistgov/metaschema) for more information, schemas, and examples.

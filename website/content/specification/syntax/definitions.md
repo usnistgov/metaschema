@@ -1,8 +1,10 @@
 ---
 title: "Definitions"
-Description: ""
+description: ""
 weight: 20
 ---
+
+# Definitions
 
 A *definition* in a *Metaschema module* declares a reusable [*information element*](/specification/glossary/#information-element) within an [*information model*](/specification/glossary/#information-model).
 

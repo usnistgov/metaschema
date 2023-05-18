@@ -1,10 +1,9 @@
 ---
 title: "Getting Started with Metaschema"
-Description: ""
-heading: Getting Started with Metaschema
-toc:
-  enabled: true
+description: ""
 ---
+
+# Getting Started with Metaschema
 
 Metaschema is a framework for consistently organizing information into machine-readable data formats. For example, if we want to build tools to exchange information about computers, how do we represent a computer in a data format? How do we design it to be consistent and reusable across different software? How do we benefit from the right amount of structured information about computers in that format?
 
