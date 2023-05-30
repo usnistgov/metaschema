@@ -56,16 +56,21 @@
       <div class="model-entry definition { tokenize(@_metaschema-xml-id,'/')[2] }">
          <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
          <div class="{ $header-class }">
+            <!-- 
+               Generate the proper class attribute to match a given HTML header from $header-tag (h1, h2,...h6) 
+               to define the proper corresponding style (toc1, toc2,... toc6) as bound by toc{ $level } in Hugo.
 
-            <!-- generates h1-hx headers picked up by Hugo ToC -->
+               This build-time generation of anchor from template improves performance of website at load time 
+               to decrease page time to responsiveness in the browser.
+            -->
             <xsl:element name="a" namespace="http://www.w3.org/1999/xhtml">
                <xsl:attribute name="href">#{@_tree-xml-id}</xsl:attribute>
-               <xsl:attribute name="class">no-anchor-xslt toc{$level} name</xsl:attribute>
+               <xsl:attribute name="class">reference-element-anchor toc{ $level } name </xsl:attribute>
                <xsl:attribute name="title">Focus on {@gi} details</xsl:attribute>
 
                <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
                   <xsl:attribute name="id" select="@_tree-xml-id"/>
-                  <xsl:attribute name="class">no-anchor-xslt toc{ $level} name</xsl:attribute>
+                  <xsl:attribute name="class">reference-element-anchor toc{ $level} name</xsl:attribute>
                   <xsl:text>{ @gi }</xsl:text>
                </xsl:element>
 
