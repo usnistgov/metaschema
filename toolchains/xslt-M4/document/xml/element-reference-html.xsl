@@ -49,7 +49,7 @@
          <xsl:apply-templates/>
        </div>
    </xsl:template>
-   <!-- The Ancor-Template Generation that supposedly slows down the page response (for ALL MODLES especially) -->
+   <!-- additional build-time generation of anchor from template to improve performance -->
    <xsl:template match="*[exists(@gi)]" expand-text="true">
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
       <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
@@ -139,10 +139,10 @@
          <div class="{ $header-class }">
             <!-- generates h1-hx headers picked up by Hugo toc -->
 
-            <!-- ===!!! Anchor hard wrap-around of Headers 1-6 [see logic above with ($level le 6)] !!!=== -->               
+   <!-- additional build-time generation of anchor from template to improve performance -->
             <xsl:element expand-text="true" name="a" namespace="http://www.w3.org/1999/xhtml">
                <xsl:attribute name="href">#{@_tree-xml-id}</xsl:attribute>
-               <xsl:attribute name="class">anchor-xslt toc{ $level} name  Elem-Ref-Html--Xsl</xsl:attribute>
+               <xsl:attribute name="class">reference-element-anchor toc{ $level} name</xsl:attribute>
                <xsl:attribute name="title">Get {@_tree-xml-id} details</xsl:attribute>
 
                <!-- ===!!! The Headers 1-6 that are being wrapped around !!!=== --> 
