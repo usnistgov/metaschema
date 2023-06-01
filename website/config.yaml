@@ -3,7 +3,7 @@ baseURL: https://pages.nist.gov/metaschema/
 relativeURLs: true
 canonifyURLs: true
 defaultContentLanguage: en
-disableAliases: true
+disableAliases: false
 languageCode: "en-us"
 languages:
   en:
