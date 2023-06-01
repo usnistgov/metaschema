@@ -8,7 +8,12 @@ weight: 30
 
 In a Metaschema module, complex information elements are created through composition. Through composition, an information element can be built by indicating which other information elements are used as its constituent parts.
 
-An *instance* is used to declare an information element *child* within a *parent* information element. In a Metaschema module, the parent information element is a definition, either a *field definition* or an *assembly definition*. The instance is a *flag instance*, *field instance*, or *assembly instance*, which in turn either references an existing [*top-level definition*](/specification/syntax/definitions/) by name or provides a [*inline definition*](/specification/syntax/inline-definitions/) as part of the instance declaration.
+An *instance* is used to declare an information element *child* within a *parent* information element. Each instance is a *flag instance*, *field instance*, or *assembly instance*, and either references an existing [*top-level definition*](/specification/syntax/definitions/) by name or provides an [*inline definition*](/specification/syntax/inline-definitions/).
+
+In a Metaschema module, an instance appears inside the definition of its parent information element.
+- An *assembly definition* may contain flag, field or assembly instances reflecting the objects to be permitted in that assembly.
+- A *field definition* may only include flag instances.
+- A Flag definition will never contain instances since flags have no children in the model, only values.
 
 ## Common Instance Data
 
@@ -321,15 +326,6 @@ TODO: P2: complete this section.
 
 
 TODO: P2: Address issue https://github.com/usnistgov/metaschema/issues/316
-TODO: P2: complete this section using the text below.
-
-When used in this way, the property names of this intermediate object will be the value of the flag as specified by the `@json-key` attribute on the definition referenced by the `@ref` on the instance. The value of the intermediate object property will be an object or value , with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component.
-
-One problem with zero-or-more cardinality as supported by `fields` and `assemblies` is that in JSON, no suitable structure is available for the inclusion of truly arbitrary but repeatable properties or 'contents' (as to its structural type) on an object. The closest thing is an array, which can be pulled into use for this -- at the cost of not permitting a JSON property label on items in the array. In order to capture the same information as is transparently available on the XML, it is therefore necessary to 'finesse' the JSON object type: Metaschema does this by mapping each field or assembly in a zero-or-many set, to an array with the corresponding number of items. The name of the objects can thus be captured implicitly, by naming (labeling) their containing array.
-
-This works, but there are also occasions when a much more concise mapping may also be supported -- if the data can be ensured to follow another rule, namely that data elements (string data) can be known to be uniquely-valued. In these cases there is a different option, namely to promote a flag of a particular known (and controlled) type, to a role as "address" -- which can (incidentally) serve as a label on a JSON property, thus improving both presentation, and addressability.
-
-Accordingly, `@address` on `field` or `assemblies` indicates that their contents (components, that is each field or assembly in the series) may be addressed using the flag (attribute) of the given name. So if `address='id'`, for example, and an `id` flag is included on the field or assemply, such flag is assumed to be unique and validable as such (at least within the scope of its parent or containing structure), thus making it suitable for use as a label; consequently, in JSON, the field or assembly can be represented as a labeled property (of an object) rather than an unlabeled member of an array (of similar objects). This both reduces the data footprint and renders the data more addressable via key constructs such as identifiers.
 
 ##### `@in-xml`
 

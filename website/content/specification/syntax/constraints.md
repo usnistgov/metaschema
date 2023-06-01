@@ -10,7 +10,7 @@ weight: 50
 
 TODO: P3: Address issue https://github.com/usnistgov/metaschema/issues/325
 
-## Common Constrant Data
+## Common Constraint Data
 
 ## Enumerated values
 
