@@ -4,6 +4,7 @@ relativeURLs: true
 canonifyURLs: true
 defaultContentLanguage: en
 disableAliases: true
+languageCode: "en-us"
 languages:
   en:
     lang: en

@@ -16,3 +16,13 @@ i.e.
 .nist-footer {
     font-family: inherit;
 }
+
+#ln-messageHolder {
+    z-index: 1000;
+}
+
+@media print {
+  #nistheadergoeshere, #nistfootergoeshere {
+    display: none;
+  }
+}

@@ -1,25 +1,30 @@
 <div id="nistfootergoeshere"></div>
-<script type="text/javascript" src="https://pages.nist.gov/leaveNotice/js/jquery.leaveNotice-nist.min.js"></script>
+<script defer src="https://pages.nist.gov/leaveNotice/js/jquery.leaveNotice-nist.min.js"></script>
 <script>
-$(document).ready(function () {
-  // inject nist header
-  $.ajax({
-    url: "https://pages.nist.gov/nist-header-footer/boilerplate-header.html",
-    cache: false,
-    dataType: "html",
-    success: function (data) { $('#nistheadergoeshere').append(data); },
-  });
-  // inject nist footer
-  $.ajax({
-    url: "https://pages.nist.gov/nist-header-footer/boilerplate-footer.html",
-    cache: false,
-    dataType: "html",
-    success: function (data) { $('#nistfootergoeshere').append(data); },
-  });
+document.addEventListener('DOMContentLoaded', function(){
+  $(document).ready(function () {
+    
+    // inject nist header
+    $.ajax({
+      url: "https://pages.nist.gov/nist-header-footer/boilerplate-header.html",
+      cache: false,
+      dataType: "html",
+      success: function (data) { $('#nistheadergoeshere').append(data); },
+    });
+    // inject nist footer
+    $.ajax({
+      url: "https://pages.nist.gov/nist-header-footer/boilerplate-footer.html",
+      cache: false,
+      dataType: "html",
+      success: function (data) { $('#nistfootergoeshere').append(data); },
+    });
 
-  // add external link icon to non-nist pages
-  $('a[href*="//"]{{ if .Site.IsServer }}:not([href*="http://localhost:1313/"]){{ end }}:not([href*="pages.nist.gov"]):not([href*="www.nist.gov"]):not([href^="#"]):not([href^="/"])').addClass('usa-link usa-link--external');
-  // hook up NIST leave notice to external links
-  $('a.usa-link--external').leaveNotice();
+    // add external link icon to non-nist pages
+    $('a[href*="//"]{{ if .Site.IsServer }}:not([href*="http://localhost:1313/"]){{ end }}:not([href*="pages.nist.gov"]):not([href*="www.nist.gov"]):not([href^="#"]):not([href^="/"])').addClass('usa-link usa-link--external');
+    // hook up NIST leave notice to external links
+    $('a.usa-link--external').leaveNotice({{ with .Site.Params.leavenotice }}{
+      {{ if isset . "timeout" }}timeOut: {{ .timeout }}{{ end }}
+    }{{ end }});
+  });
 });
 </script>
