@@ -33,11 +33,10 @@ jobs:
       with:
         node-version-file: 'build/.nvmrc'
         cache: 'npm'
-        cache-dependency-path: '**/package-lock.json'
+        cache-dependency-path: 'package-lock.json'
     - name: Setup Dependencies
       run: |
         # NodeJS
-        cd "${{ github.workspace }}/build"
         # If you are a developer and need to modify the workflow, be sure to review
         # the package.json and package-lock.json to ensure the following deps are
         # at least installed (they will be updated by dependabot):

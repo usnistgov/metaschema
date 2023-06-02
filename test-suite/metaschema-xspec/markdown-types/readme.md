@@ -1,6 +1,6 @@
 # Metaschema processing XSpec testing - Markdown to Markup conversion and back
 
-Unit testing for Markdown processors supporting OSCAL Markdown.
+Unit testing for Markdown processors supporting Metaschema Markdown.
 
 By defining edge cases, this aims to show a deterministic bidirectional mapping, or failing that a demonstration of where issues remain in defining or implementing such a mapping.
 

@@ -1,280 +1,353 @@
 ---
 title: "Metaschema Syntax"
-description: "Overview of the Metaschema syntax"
-weight: 50
-sidenav:
-  toc:
-    includeHtml: true
-    headingselectors: h2,h3,h4,h5
+linkTitle: "Syntax"
+description: "Discusses the Metaschema module format and related structures."
+weight: 30
+aliases:
+- /specification/syntax/
+custom_css:
+- /css/element-map.css
 ---
 
-A Metaschema instance has two parts: a header (the `METASCHEMA` element), and a set of definitions for the model components or parts supported by the `define-assembly`, `define-field`, and `define-flag` elements.
-
-Top level documentation for the Metaschema instance appears in the header section, while documentation for all the model components appears with the definitions for those constructs. There is no explicit separation between the header and the definitions: the header ends when the definitions start.
-
-## Root Element
-### `METASCHEMA` element
-
-The root element is `METASCHEMA` using all capitals. To name the root element in all capitals (unlike the general rule) and to give it a name somewhat peculiar to its application, retains and expresses the information that it is intended to be the document root. This is the only element named in all caps.
-
-Attributes:
-
-- `@root`: indicates the root element or object for the schema, which must correspond to the `@name` of one of the (assembly) definitions in the metaschema.
-
-A metaschema definition may include these elements, in order:
-
-#### `schema-name`
-
-Describing the scope of application of the data format, for example "OSCAL Catalog".
-
-#### `schema-version`
-
-A literal value indicating the version to be assigned to schemas and tools produced from the Metaschema.
-
-#### `short-name`
-
-A coded version of the schema name, for use when a string-safe identifier is needed, for example on artifact file names. Expect this short name to be propagated anytime such a "handle" is needed. A short name for the OSCAL Catalog metaschema (and schemas) might be `oscal-catalog`.
-
-#### `namespace`
-
-An XML namespace identifier (URI) to be used for the resulting XSD. All elements in the metaschema will be assigned to this namespace, including elements defined in metaschema modules, that are designated with their own namespaces. (In other words, this data value is operative only for the top-level metaschema, not for any of its imported modules. This makes it possible to use modules in metaschemas defined with different namespaces.)
-
-#### `remarks`
-
-Paragraphs describing the metaschema.
-
-Note that the `remarks` element is also permitted to appear elsewhere; this is a general-purpose element for including explanatory commentary of any kind; its scope of application is generally shown by its location in the document - the top-level remarks should describe the entire metaschema.
-
-#### `import`
-
-Used to import the components defined in another metaschema definition into this metaschema definition.
-
-#### Component Definitions
-
-Following the `METASCHEMA/remarks`, any number of schema component definitions may follow. These describe each component, provide information determining details of its representation and handling (in XML and JSON), and include documentation.
-
-Each component is defined by one of the `define-assembly`, `define-field`, and `define-flag` child elements, which are described individually below.
-
-## Component Definitions
-
-The `define-assembly`, `define-field`, and `define-flag` child elements have a common base model.
-
-### Common Elements
-
-#### `formal-name`
-
-A label for use in documentation to provide a human-readable name for the component. The `formal-name` element is required.
-
-#### `description`
-
-A semantic definition for the component for use in documentation. This definition ties the component to the related concept in the information domain the model is representing. The `description` element is required.
-
-#### `remarks`
-
-Provides notes on the use of the component that may clarify the semantic definition for the component for use in documentation. The `remarks` element is optional and may occur multiple times.
-
-#### `example`
-
-Used to provide inline use examples in XML, which can then be automatically converted into other formats. The `example` element is optional and may occur multiple times.
-
-### `define-field`
-
-Fields can be thought of as simple text values, either scalars or sequences of scalars, or when appropriate, of "rich text" or mixed content, i.e. text permitting inline formatting. Depending on modeling requirements, fields may also be used for even simpler bits of data, such as objects that carry specialized flags but have no values or structures otherwise. This means that fields can be more or less complex, depending on the need. 
-
-Attributes:
-
-- `@as-type`(type: string, use: optional, default: string): Defines the type of the field's value. The `@as-type` attribute must have a value that corresponds to a [data type](#data-types).
-- `@collapsible`(type: yes/no, use: optional, default: yes): Is a JSON and YAML specific behavior that allows multiple fields having the same set of flag values to be collapsed into a single object with a value property that is an array of values. This makes JSON and YAML formatted data more concise.
-- `@name`(type: NCName, use: required): Used to identify the field when it is referenced within the metaschema definition. 
-
-The following elements are supported:
-
-#### `json-key`
-
-See [using `@json-key`](#using-json-key).
-
-#### `json-value-key`
-
-In XML, the value of a field appears as the child of the field's element. In JSON and YAML, a property name is needed for the value. The `json-value-key` element provides the property name in one of three possible ways:
-
-1. A value is provided that is used as the property name.
-2. A `@flag-name` value is provided that indicates the flag's value to use as the property name. This results in a property that is a combination of the referenced flag's value and the field's value. For example: "flag-value": "field-value".
-3. If the `json-value-key` is not specified, a default value will be chosen based on the data type as follows:
-    - If the data type is `empty` no property will exist, so no property name is needed.
-    - If the data type is `markup-line`, then the property name will be `RICHTEXT`.
-    - If the data type is `markup-multiline`, then the property name will be `prose`.
-    - Otherwise, the property name will be `STRVALUE`.
-
-#### `flag`
-
-See [local defintion of `flag` components](#local-defintion-of-flag-components).
-
-In addition to these settings, fields may be defined with flags. Do this by including `flag` elements directly in the definition.
-
-#### `allowed-values`
-
-See [using `allowed-values`](#using-allowed-values).
-
-### `define-assembly`
-
-An assembly is similar to a field, except it contains structured content (objects or elements), not text or unstructured "rich text". The contents permitted in a particular (type of) assembly are indicated in its `model` element.
-
-An `@as-type` attribute is not permitted on an assembly definition.
-
-#### `json-key`
-
-See [using `@json-key`](#using-json-key).
-
-#### `flag`
-
-See [local defintion of `flag` components](#local-defintion-of-flag-components).
-
-#### `model`
-
-This element is used to reference the `field` and `assembly` components that compose the assembly's model. A `choice` element is also provided to define mutually exclusive model members.
-
-##### Redefining the `description`
-
-The optional `description` element of the child `field` and `assembly` elements can be used to provide a different description for when the referenced component is used in the specified model context.
-
-##### Using cardinalities and `group-as`
-
-The child `field` and `assembly` elements share the following common set of attributes:
-
-- `@ref`(type: NCName, use: required): References the name of the corresponding `define-field` or `define-assembly`.
-- `@min-occurs` (type: nonNegativeInteger, use: optional, default: 0): Indicates the minimum allowed occurance of the corresponding `define-field` or `define-assembly`.
-- `@max-occurs` (type: positiveInteger or "unbounded", use: optional, default: 1): Indicates the maximum allowed occurance of the corresponding `define-field` or `define-assembly`. The value `unbounded` indicates the the referenced component can occur any number of times.
-
-The `group-as` element is required if the `@max-occurs` attribute has a value greater than '1' or `unbounded` to provide additional information about how to handle the collection of data.
-
-The `group-as` element has the following set of attributes:
-
-- `@name`(type: NCName, use: required): The grouping name to use in XML, JSON, and YAML. Use of this name is further clarified by the `@in-xml` attribute, when used.
-- `@in-json` (type: special, use: optional, default: SINGLETON_OR_ARRAY): 
-
-    In all cases, `@name` value is used as the property name.
-
-    | Value | JSON Behavior |
-    |:--- |:--- |
-    | ARRAY | The child objects are to be represented as an array of objects. |
-    | SINGLETON_OR_ARRAY | If a single object is provided, then the child will be an object, otherwise the child objects will be represented as an array of objects. |
-    | BY_KEY | An itermediate object will be used as the child, with property names equal to the value of the referenced `define-field` or `define-assembly` component's flag as specified by the `@json-key` attribute on that component. See [using `@json-key`](#using-json-key). |
-
-- `@in-xml` (type: special, use: optional, default: UNGROUPED): 
-
-    | Value | JSON Behavior |
-    |:--- |:--- |
-    | GROUPED | The child elements will be placed within a wrapper element with a localname equal to the value of the `@name` attribute. Each child element's localname will be the `@name` of the referenced component. |
-    | UNGROUPED | The `@name` attribute is ignored. Each child element's localname will be the `@name` of the referenced component. |
-
-##### `assembly`
-
-Used to reference an `assembly-definition` who's `@name` matches the value of the `@ref` attribute.
-
-##### `field`
-
-Used to reference a `field-definition` who's `@name` matches the value of the `@ref` attribute.
-
-- `@in-xml`
-
-See [using `allowed-values`](#using-allowed-values).
-
-### `define-flag`
-
-While data of arbitrary complexity is represented by assemblies (which may contain assemblies), at the other extreme, flags are available for the most granular bits of qualifying information. Since data already appears as text values of fields, flags might not be necessary. But they are extremely useful both for enabling more economical expression of data and especially process-oriented or "semantic" metadata such as controlled values, formal or informal taxonomic classifications etc. etc.
-
-Attributes:
-
-- `@as-type`(type: string, use: optional, default: string): Defines the type of the flag's value. The `@as-type` attribute must have a value that corresponds to a [simple](#simple-data-types) (excluding "empty") or [formatted string](#formatted-string-data-types) data type.
-- `@name`(type: NCName, use: required): Used to identify the flag when it is referenced within the metaschema definition. 
-
-#### `allowed-values`
-
-See [using `allowed-values`](#using-allowed-values).
-
-## Local Refinements
-
-### Local defintion of `flag` components
-
-TBD
-
-### Using `@json-key`
-
-TBD
-
-### Using `allowed-values`
-
-TBD
-
-## Data types
-
-A data type can be specified in a metaschema definition within a `define-field`, `field`, `define-flag`, or `flag` component definition using the `@as-type` attribute. The following are the allowed data types.
-
-## Enumerated values
-
-Additionally, flags may be constrained to a set of known values listed in advance.
-
-This restriction can be either:
-
-1. strict (values must be in the list for document validity with `allow-other="no"` attribute for an `allowed-values` element) or
-2. loose (i.e. for documentation only, no effect in schemas, with `allow-other="yes"`).
-
-If an `allowed-values` constraint does not have the `allow-other` attribute defined, the default is `allow-other="no"`, resulting in strict validation where the only valid values are those in the list.
-
-Within `allowed-values` of a `constraint`, an `enum` element's `@value` attribute assigns the permissible value, while its data content provides documentation. For example:
-
-```xml
-<define-flag name="algorithm" datatype="string">
-    <formal-name>Hash algorithm</formal-name>
-    <description>Method by which a hash is derived</description>
-    <constraint>
-      <allowed-values allow-other="yes">
-        <enum value="SHA-224">Documentation for one permissible option.</enum>
-        <enum value="SHA-256">Documentation for another permissible option.</enum>
-      </allowed-values>
-    </constraint> ...
-```
-## Metaschema modeling
-
-In the case of field and flag objects, the modeling constraints to be imposed by the result schemas (either XSD or JSON Schema) over the data set, can be determined on the basis of how they are described. Assembly definitions, however, permit not only flags to be assigned to assemblies of the defined type; additionally, they contain a `model` element for a *mode declaration*. This declaration names the subcomponents to be permitted (in documents valid to the target schemas) within any assembly of the type being defined.
-
-Five elements are used within `model` to define permissible contents of assemblies (elements or objects) being defined. Each of these represents a different object type. Flags are not assigned via `model` but directly in the definition; for the model, we can choose either singles or plurals of named fields or assemblies (i.e., a binary choice between cardinality constraints to be applied). This gives us four choices; additionally, we have the opportunity to use an element `prose`, once inside any assembly's model.
-
-Among these elements, no single `@named` attribute value (which refers a model component to its definition) may be used more than once. Additionally, no `@group-as` (on a `fields` or `assemblies`) may be reused or be the same as any `@named`. The `prose` element may be used only once. Finally, no value of `@named` or `@group-as` must be the same as a recognized name of an element directly within prose, namely (at present) `p`, `ul`, `ol`, and `pre`.
-
-With these limitations, a model may be defined to contain any mix of fields and assemblies.
-
-* `field` refers to a field definition and permits a single occurrence of the indicated field
-* `field/@required='yes'` a field component is to be required in a model by any schema based on the metaschema
-* `assembly` refers to an assembly definition and permits a single occurrence of the indicated assembly.
-* `fields` - same as `field`, but permits the field to be repeated. In the JSON representation the multiple values are represented as any array unless `@address` is given
-* `assemblies` - same as `fields`, but for assemblies. In JSON, this construct is also presented as an array unless there is an `@address`
-* `prose` refers to a "region of prose", that is, a section of prose text of unspecified length. In XML, prose is represented in conventional fashion as (a sequence of) `<p>` and list elements (`<ul>` or `<ol>`) perhaps with inline markup (indicating further formatting). For consistency across metaschema applications, the permitted tagging will always be conformant to the same model for prose, managed to reflect (echo) a clean HTML subset. This specification also permits the markup vocabulary to be mapped to a text-based markdown syntax, suitable for use within JSON expressions of the same or similar data. 
-
-
-## JSON Enhancement features
-
-### Use of `key`
-
-One problem with zero-or-more cardinality as supported by `fields` and `assemblies` is that in JSON, no suitable structure is available for the inclusion of truly arbitrary but repeatable properties or 'contents' (as to its structural type) on an object. The closest thing is an array, which can be pulled into use for this -- at the cost of not permitting a JSON property label on items in the array. In order to capture the same information as is transparently available on the XML, it is therefore necessary to 'finesse' the JSON object type: Metaschema does this by mapping each field or assembly in a zero-or-many set, to an array with the corresponding number of items. The name of the objects can thus be captured implicitly, by naming (labeling) their containing array.
-
-This works, but there are also occasions when a much more concise mapping may also be supported -- if the data can be ensured to follow another rule, namely that data elements (string data) can be known to be uniquely-valued. In these cases there is a different option, namely to promote a flag of a particular known (and controlled) type, to a role as "address" -- which can (incidentally) serve as a label on a JSON property, thus improving both presentation, and addressability.
-
-Accordingly, `@address` on `field` or `assemblies` indicates that their contents (components, that is each field or assembly in the series) may be addressed using the flag (attribute) of the given name. So if `address='id'`, for example, and an `id` flag is included on the field or assemply, such flag is assumed to be unique and validable as such (at least within the scope of its parent or containing structure), thus making it suitable for use as a label; consequently, in JSON, the field or assembly can be represented as a labeled property (of an object) rather than an unlabeled member of an array (of similar objects). This both reduces the data footprint and renders the data more addressable via key constructs such as identifiers.
-
-To support this, flags used as addresses should be declared as type `ID`, providing "an extra layer of protection". On the JSON side, validating the uniqueness of these values (on same-named properties across document scope) remains TBD.
-
-
-
-```
-<define-field name="title" as="mixed"/>
-```
-
-```
-<title>Water (H<sub>2</sub>0</title>
-```
- 
-```
-"title" : "Water (H~~2~~0)"
-```
-
+# Metaschema Syntax
+
+The following is an approximate outline of the Metaschema module syntax. Each element and attribute links to the specific specification section describing the element. Attribute value choices are indicated where possible, with default values highlighted.
+
+{{< rawhtml >}}
+<div class="highlight"><div class="chroma"><code class="language-xml" data-lang="xml">
+<div class="element">
+  &lt;-- ############# --&gt;<br/>
+  &lt;-- Module Header --&gt;<br/>
+  &lt;-- ############# --&gt;
+  <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/module/#main-content">METASCHEMA</a></span> <span class="na">xmlns=</span><span class="s">"http://csrc.nist.gov/ns/oscal/metaschema/1.0"</span></div>
+  <div class="attribute"><span class="na"><a href="/specification/syntax/module/#abstract-modules">abstract</a></span><span class="na">=</span><span class="s">"yes|no"</span><span class="nt">&gt;</span> <span class="c">(default: no)</span></div>
+
+  <div class="element cl"><span class="nt">&lt;<a href="/specification/syntax/module/#schema-name">schema-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/schema-name&gt;</span></div>
+
+  <div class="element cl"><span class="nt">&lt;<a href="/specification/syntax/module/#schema-version">schema-version</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/schema-version&gt;</span></div>
+  <div class="element cl"><span class="nt">&lt;<a href="/specification/syntax/module/#short-name">short-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/short-name&gt;</span></div>
+  <div class="element cl"><span class="nt">&lt;<a href="/specification/syntax/module/#xml-namespace">namespace</a>&gt;</span><a href="/specification/datatypes/#uri">uri</a><span class="nt">&lt;/namespace&gt;</span></div>
+  <div class="element cl"><span class="nt">&lt;<a href="/specification/syntax/module/#json-base-uri">json-base-uri</a>&gt;</span><a href="/specification/datatypes/#uri">uri</a><span class="nt">&lt;/json-base-uri&gt;</span></div>
+  <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/module/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+  <div class="element">
+    &lt;-- ############## --&gt;<br/>
+    &lt;-- Module Imports --&gt;<br/>
+    &lt;-- ############## --&gt;
+    <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/module/#import">import</a></span> <span class="na">href=</span><span class="s">"<a href="/specification/datatypes/#uri-reference">uri-reference</a>"</span><span class="nt">/&gt;</span></em></div>
+  </div>
+  <!-- define-flag -->
+  <div class="element">
+    &lt;-- ##################### --&gt;<br/>
+    &lt;-- Top-Level define-flag --&gt;<br/>
+    &lt;-- ##################### --&gt;
+    <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/definitions/#top-level-define-flag">define-flag</a></span> <span class="na"><a href="/specification/syntax/definitions/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+    <!-- define-flag:@as-type -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#as-type">as-type</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="c">(default: <a href="/specification/datatypes/#string">string</a>)</span></em></div>
+    <!-- define-flag:@default -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#default">default</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em></div>
+    <!-- define-flag:@deprecated -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em></div>
+    <!-- define-flag:@scope -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#scope">scope</a></span><span class="na">=</span><span class="s">"global|local"</span></em><span class="nt">&gt;</span> <span class="c">(default: global)</span></div>
+    <!-- define-flag:formal-name -->
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+    <!-- define-flag:description -->
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+    <!-- define-flag:prop -->
+    <div class="element">
+      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+      <!-- define-flag:prop:@namespace -->
+      <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+    </div>
+    <!-- define-flag:use-name -->
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#naming-and-use-name">use-name</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/use-name&gt;</span></em></div>
+    <!-- define-flag:constraint -->
+    <div class="element cl nt"><em>&lt;<a href="/specification/syntax/constraints/#define-flag-constraints">constraint</a>/&gt;</em></div>
+    <!-- define-flag:remarks -->
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+    <!-- define-flag:example -->
+    <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
+    <div class="cl nt">&lt;/define-flag&gt;</div>
+  </div>
+
+  <!-- define-assembly -->
+  <div class="element">
+    &lt;-- ######################### --&gt;<br/>
+    &lt;-- Top-Level define-assembly --&gt;<br/>
+    &lt;-- ######################### --&gt;
+    <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/definitions/#top-level-define-assembly">define-assembly</a></span> <span class="na"><a href="/specification/syntax/definitions/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+    <!-- define-assembly:@deprecated -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em></div>
+    <!-- define-assembly:@scope -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#scope">scope</a></span><span class="na">=</span><span class="s">"global|local"</span></em><span class="nt">&gt;</span> <span class="c">(default: global)</span></div>
+    <!-- define-assembly:formal-name -->
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+    <!-- define-assembly:description -->
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+    <!-- define-assembly:prop -->
+    <div class="element">
+      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+      <!-- define-assembly:prop:@namespace -->
+      <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+    </div>
+    <!-- define-assembly:use-name -->
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#naming-and-use-name">use-name</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/use-name&gt;</span></em></div>
+    <!-- define-assembly:root-name -->
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#root-name">root-name</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/root-name&gt;</span></em></div>
+    <!-- define-assembly:json-key -->
+    <div class="element">
+      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#json-key">json-key</a></span></em> <span class="na">flag-ref=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span><span class="nt">/&gt;</span></div>
+    </div>
+    <!-- define-assembly:flag -->
+    <div class="element">
+      &lt;-- Flag Instance --&gt;<br/>
+      <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/instances/#flag-instance">flag</a></span> <span class="na"><a href="/specification/syntax/instances/#ref">ref</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+      <!-- define-assembly:flag:@required -->
+      <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#required">required</a></span><span class="na">=</span><span class="s">"yes|no"</span></em> <span class="c">(default: no)</span></div>
+      <!-- define-assembly:flag:@deprecated -->
+      <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em><span class="nt">&gt;</span></div>
+      <!-- define-assembly:flag:formal-name -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+      <!-- define-assembly:flag:description -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+      <!-- define-assembly:flag:prop -->
+      <div class="element">
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+        <!-- define-assembly:flag:prop:@namespace -->
+        <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+      </div>
+      <!-- define-assembly:flag:use-name -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#naming-and-use-name">use-name</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/use-name&gt;</span></em></div>
+      <!-- define-assembly:flag:remarks -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+      <div class="cl nt">&lt;/flag&gt;</div>
+    </div>
+    <!-- define-assembly:define-flag -->
+    <div class="element">
+      &lt;-- Inline Flag Definition --&gt;<br/>
+      <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#inline-define-flag">define-flag</a></span> <span class="na"><a href="/specification/syntax/definitions/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+      <!-- define-assembly:define-flag:@as-type -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#as-type">as-type</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="c">(default: <a href="/specification/datatypes/#string">string</a>)</span></em></div>
+      <!-- define-assembly:define-flag:@default -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#default">default</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em></div>
+      <!-- define-assembly:define-flag:@required -->
+      <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#required">required</a></span><span class="na">=</span><span class="s">"yes|no"</span></em> <span class="c">(default: no)</span></div>
+      <!-- define-assembly:define-flag:@deprecated -->
+      <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em><span class="nt">&gt;</span></div>
+      <!-- define-assembly:define-flag:formal-name -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+      <!-- define-assembly:define-flag:description -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+      <!-- define-assembly:define-flag:prop -->
+      <div class="element">
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+        <!-- define-assembly:define-flag:prop:@namespace -->
+        <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+      </div>
+      <!-- define-assembly:define-flag:constraint -->
+      <div class="element cl nt"><em>&lt;<a href="/specification/syntax/constraints/#define-flag-constraints">constraint</a>/&gt;</em></div>
+      <!-- define-assembly:define-flag:remarks -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+      <!-- define-assembly:define-flag:example -->
+      <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
+      <div class="cl nt">&lt;/define-flag&gt;</div>
+    </div>
+    <div class="element">
+      <!-- define-assembly:model -->
+      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#model">model</a></span></em><span class="nt">/&gt;</span></div>
+      <!-- define-assembly:model:assembly -->
+      <div class="element">
+        &lt;-- Assembly Instance --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#assembly-instance">assembly</a></span></em> <span class="na"><a href="/specification/syntax/instances/#ref">ref</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+        <!-- define-assembly:model:assembly:@min-occurs -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#max-occurs">min-occurs</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#non-negative-integer">non-negative-integer</a>"</span></em> <span class="c">(default: 0)</span></div>
+        <!-- define-assembly:model:assembly:@max-occurs -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#max-occurs">max-occurs</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#positive-integer">positive-integer</a>|unbounded"</span></em> <span class="c">(default: 1)</span></div>
+        <!-- define-assembly:model:assembly:@deprecated -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em><span class="nt">&gt;</span></div>
+        <!-- define-assembly:model:assembly:formal-name -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+        <!-- define-assembly:model:assembly:description -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+        <!-- define-assembly:model:assembly:prop -->
+        <div class="element">
+          <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+          <!-- define-assembly:model:assembly:prop:@namespace -->
+          <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+        </div>
+        <!-- define-assembly:model:assembly:use-name -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#naming-and-use-name">use-name</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/use-name&gt;</span></em></div>
+        <!-- define-assembly:model:assembly:group-as -->
+        <div class="element">
+          <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#group-as">group-as</a></span></em> <span class="na"><a href="/specification/syntax/instances/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+          <!-- define-assembly:model:assembly:group-as:@in-json -->
+          <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#in-json">in-json</a></span><span class="na">=</span><span class="s">"<a href="/specification/syntax/instances/#in-jsonarray">ARRAY</a>|<a href="/specification/syntax/instances/#in-jsonsingleton_or_array">SINGLETON_OR_ARRAY</a>|<a href="/specification/syntax/instances/#in-jsonby_key">BY_KEY</a>"</span></em> <span class="c">(default: <a href="/specification/syntax/instances/#in-jsonsingleton_or_array">SINGLETON_OR_ARRAY</a>)</span></div>
+          <!-- define-assembly:model:assembly:group-as:@in-xml -->
+          <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#in-xml">in-xml</a></span><span class="na">=</span><span class="s">"<a href="/specification/syntax/instances/#in-xmlgrouped">GROUPED</a>|<a href="/specification/syntax/instances/#in-xmlungrouped">UNGROUPED</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: <a href="/specification/syntax/instances/#in-xmlungrouped">UNGROUPED</a>)</span></div>
+        </div>
+        <!-- define-assembly:model:assembly:remarks -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+        <div class="cl nt">&lt;/assembly&gt;</div>
+      </div>
+      <!-- define-assembly:model:field -->
+      <div class="element">
+        &lt;-- Field Instance --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#field-instance">field</a></span></em> <span class="na"><a href="/specification/syntax/instances/#ref">ref</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+        <!-- define-assembly:model:field:@min-occurs -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#max-occurs">min-occurs</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#non-negative-integer">non-negative-integer</a>"</span></em> <span class="c">(default: 0)</span></div>
+        <!-- define-assembly:model:field:@max-occurs -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#max-occurs">max-occurs</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#positive-integer">positive-integer</a>|unbounded"</span></em> <span class="c">(default: 1)</span></div>
+        <!-- define-assembly:model:field:@in-xml -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#in-xml-1">in-xml</a></span><span class="na">=</span><span class="s">"WRAPPED|UNWRAPPED"</span></em> <span class="c">(default: WRAPPED)</span></div>
+        <!-- define-assembly:model:field:@deprecated -->
+        <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em><span class="nt">&gt;</span></div>
+        <!-- define-assembly:model:field:formal-name -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+        <!-- define-assembly:model:field:description -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+        <!-- define-assembly:model:field:prop -->
+        <div class="element">
+          <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+          <!-- define-assembly:model:field:prop:@namespace -->
+          <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+        </div>
+        <!-- define-assembly:model:field:use-name -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#naming-and-use-name">use-name</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/use-name&gt;</span></em></div>
+        <!-- define-assembly:model:field:group-as -->
+        <div class="element">
+          <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#group-as">group-as</a></span></em> <span class="na"><a href="/specification/syntax/instances/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+          <!-- define-assembly:model:field:group-as:@in-json -->
+          <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#in-json">in-json</a></span><span class="na">=</span><span class="s">"<a href="/specification/syntax/instances/#in-jsonarray">ARRAY</a>|<a href="/specification/syntax/instances/#in-jsonsingleton_or_array">SINGLETON_OR_ARRAY</a>|<a href="/specification/syntax/instances/#in-jsonby_key">BY_KEY</a>"</span></em> <span class="c">(default: <a href="/specification/syntax/instances/#in-jsonsingleton_or_array">SINGLETON_OR_ARRAY</a>)</span></div>
+          <!-- define-assembly:model:field:group-as:@in-xml -->
+          <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#in-xml">in-xml</a></span><span class="na">=</span><span class="s">"<a href="/specification/syntax/instances/#in-xmlgrouped">GROUPED</a>|<a href="/specification/syntax/instances/#in-xmlungrouped">UNGROUPED</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: <a href="/specification/syntax/instances/#in-xmlungrouped">UNGROUPED</a>)</span></div>
+        </div>
+        <!-- define-assembly:model:field:remarks -->
+        <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+        <div class="cl nt">&lt;/field&gt;</div>
+      </div>
+      <!-- define-assembly:model:define-assembly -->
+      <div class="element">
+        &lt;-- Inline Assembly Definition --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#inline-define-assembly">define-assembly</a></span></em><span class="nt">/&gt;</span></div>
+      </div>
+      <!-- define-assembly:model:define-field -->
+      <div class="element">
+        &lt;-- Inline Field Definition --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#inline-define-field">define-field</a></span></em><span class="nt">/&gt;</span></div>
+      </div>
+      <!-- define-assembly:model:choice -->
+      <div class="element">
+        &lt;-- Choice --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#choice-selections">choice</a></span></em><span class="nt">/&gt;</span></div>
+      </div>
+      <!-- define-assembly:model:any -->
+      <div class="element">
+        &lt;-- Any --&gt;<br/>
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#any">any</a></span></em><span class="nt">/&gt;</span></div>
+      </div>
+      <div class="cl nt">&lt;/model&gt;</div>
+    </div>
+    <div class="element cl nt"><em>&lt;<a href="/specification/syntax/constraints/#define-assembly-constraints">constraint</a>/&gt;</em></div>
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+    <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
+    <div class="cl nt">&lt;/define-assembly&gt;</div>
+  </div>
+
+  <!-- define-field -->
+  <div class="element">
+    &lt;-- ###################### --&gt;<br/>
+    &lt;-- Top-Level define-field --&gt;<br/>
+    &lt;-- ###################### --&gt;
+    <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/definitions/#top-level-define-field">define-field</a></span> <span class="na"><a href="/specification/syntax/definitions/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+    <!-- define-field:@as-type -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#as-type">as-type</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="c">(default: <a href="/specification/datatypes/#string">string</a>)</span></em></div>
+    <!-- define-field:@default -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#default">default</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em></div>
+    <!-- define-field:@collapsible -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#collapsible">collapsible</a></span><span class="na">=</span><span class="s">"yes|no"</span> <span class="c">(default: no)</span></em></div>
+    <!-- define-field:@deprecated -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em></div>
+    <!-- define-field:@scope -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#scope">scope</a></span><span class="na">=</span><span class="s">"global|local"</span></em><span class="nt">&gt;</span> <span class="c">(default: global)</span></div>
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+    <div class="element">
+      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+      <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+    </div>
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#naming-and-use-name">use-name</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/use-name&gt;</span></em></div>
+    <!-- define-field:json-key -->
+    <div class="element">
+      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#json-key">json-key</a></span></em> <span class="na">flag-ref=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span><span class="nt">/&gt;</span></div>
+    </div>
+    <!-- define-field:json-value-key -->
+    <div class="element">
+      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#json-value-key">json-value-key</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/json-value-key&gt;</span></em></div>
+    </div>
+    <!-- define-field:json-value-key-flag -->
+    <div class="element">
+      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#json-value-key">json-value-key-flag</a></span></em> <span class="na">flag-ref=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span><span class="nt">/&gt;</span></div>
+    </div>
+    <!-- define-field:flag -->
+    <div class="element">
+      &lt;-- Flag Instance --&gt;<br/>
+      <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/instances/#flag-instance">flag</a></span> <span class="na"><a href="/specification/syntax/instances/#ref">ref</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+      <!-- define-field:flag:@required -->
+      <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#required">required</a></span><span class="na">=</span><span class="s">"yes|no"</span></em> <span class="c">(default: no)</span></div>
+      <!-- define-field:flag:@deprecated -->
+      <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em><span class="nt">&gt;</span></div>
+      <!-- define-field:flag:formal-name -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+      <!-- define-field:flag:description -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+      <!-- define-field:flag:prop -->
+      <div class="element">
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+        <!-- define-field:flag:prop:@namespace -->
+        <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+      </div>
+      <!-- define-field:flag:use-name -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#naming-and-use-name">use-name</a>&gt;</span><a href="/specification/datatypes/#token">token</a><span class="nt">&lt;/use-name&gt;</span></em></div>
+      <!-- define-field:flag:remarks -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/instances/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+      <div class="cl nt">&lt;/flag&gt;</div>
+    </div>
+    <!-- define-field:define-flag -->
+    <div class="element">
+      &lt;-- Inline Flag Definition --&gt;<br/>
+      <div class="cl"><span class="nt">&lt;<a href="/specification/syntax/inline-definitions/#inline-define-flag">define-flag</a></span> <span class="na"><a href="/specification/syntax/definitions/#name">name</a>=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+      <!-- define-field:define-flag:@as-type -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#as-type">as-type</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="c">(default: <a href="/specification/datatypes/#string">string</a>)</span></em></div>
+      <!-- define-field:define-flag:@default -->
+    <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#default">default</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em></div>
+      <!-- define-field:define-flag:@required -->
+      <div class="attribute"><em><span class="na"><a href="/specification/syntax/instances/#required">required</a></span><span class="na">=</span><span class="s">"yes|no"</span></em> <span class="c">(default: no)</span></div>
+      <!-- define-field:define-flag:@deprecated -->
+      <div class="attribute"><em><span class="na"><a href="/specification/syntax/definitions/#deprecated-version">deprecated</a></span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#string">string</a>"</span></em><span class="nt">&gt;</span></div>
+      <!-- define-field:define-flag:formal-name -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#formal-name">formal-name</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/formal-name&gt;</span></em></div>
+      <!-- define-field:define-flag:description -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#description">description</a>&gt;</span><a href="/specification/datatypes/#string">string</a><span class="nt">&lt;/description&gt;</span></em></div>
+      <!-- define-field:define-flag:prop -->
+      <div class="element">
+        <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#prop">prop</a></span></em> <span class="na">name=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span> <span class="na">value=</span><span class="s">"<a href="/specification/datatypes/#token">token</a>"</span></div>
+        <!-- define-field:define-flag:prop:@namespace -->
+        <div class="attribute"><em><span class="na">namespace</span><span class="na">=</span><span class="s">"<a href="/specification/datatypes/#uri">uri</a>"</span></em><span class="nt">/&gt;</span> <span class="c">(default: http://csrc.nist.gov/ns/oscal/metaschema/1.0)</span></div>
+      </div>
+      <!-- define-field:define-flag:constraint -->
+      <div class="element cl nt"><em>&lt;<a href="/specification/syntax/constraints/#define-flag-constraints">constraint</a>/&gt;</em></div>
+      <!-- define-field:define-flag:remarks -->
+      <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+      <!-- define-field:define-flag:example -->
+      <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
+      <div class="cl nt">&lt;/define-flag&gt;</div>
+    </div>
+    <div class="element cl nt"><em>&lt;<a href="/specification/syntax/constraints/#define-field-constraints">constraint</a>/&gt;</em></div>
+    <div class="element cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#remarks">remarks</a>&gt;</span><a href="/specification/datatypes/#markup-multiline">markup-multiline</a><span class="nt">&lt;/remarks&gt;</span></em></div>
+    <div class="element cl nt"><em>&lt;<a href="/specification/syntax/definitions/#example">example</a>/&gt;</em></div>
+    <div class="cl nt">&lt;/define-field&gt;</div>
+  </div>
+  <div class="cl nt">&lt;/METASCHEMA&gt;</div>
+</div>
+</code></div></div>
+{{< /rawhtml >}}

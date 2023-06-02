@@ -4,13 +4,16 @@ relativeURLs: true
 canonifyURLs: true
 defaultContentLanguage: en
 disableAliases: false
+languageCode: "en-us"
 languages:
   en:
     lang: en
     languageName: English
     weight: 1
 MetaDataFormat: "yaml"
-theme: "uswds"
+theme:
+- "uswds-nist"
+- "uswds"
 googleAnalytics: UA-66610693-1
 enableGitInfo: true
 enableRobotsTXT: true
@@ -31,9 +34,9 @@ params:
   header:
     project_shortname: "Metaschema"
     project_name: "Metaschema Information Modeling Framework"
-  custom_css:
   contentRepoPath: https://github.com/usnistgov/metaschema/tree/master/docs/content
   searchAffiliate: oscal
+  usabanner: true
 menu:
   secondary:
   - name: Get involved

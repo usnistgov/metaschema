@@ -109,11 +109,31 @@ jobs:
         go-version-file: '${{ env.BUILD_PATH }}/go.mod'
         cache: true
         cache-dependency-path: '${{ env.BUILD_PATH }}/go.sum'
+    - name: Set up NodeJS
+      uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c
+      with:
+        node-version-file: 'build/.nvmrc'
+        cache: 'npm'
+        cache-dependency-path: 'package-lock.json'
+    - name: Setup Dependencies
+      run: |
+        # NodeJS
+        # If you are a developer and need to modify the workflow, be sure to review
+        # the package.json and package-lock.json to ensure the following deps are
+        # at least installed (they will be updated by dependabot):
+        # - ajv-cli
+        # - ajv-formats
+        # - markdown-link-check
+        # - yaml-convert
+        npm install --loglevel verbose
+        echo "$PWD/node_modules/.bin/" >> $GITHUB_PATH
     - name: Install Hugo
       if: steps.cache-hugo.outputs.cache-hit != 'true'
       run: |
         cd "${{ env.BUILD_PATH }}"
         go install -tags "extended" github.com/gohugoio/hugo
+    - name: Install Dart Sass Embedded
+      run: sudo snap install dart-sass-embedded
     - name: Run Hugo
       run: |
         hugo --config "config.yaml,development-config.yaml" -v --debug --minify
@@ -169,7 +189,7 @@ jobs:
         enable_jekyll: false
         publish_dir: ./website/public
         publish_branch: nist-pages
-        commit_user_name: OSCAL GitHub Actions Bot
-        commit_user_email: oscal@nist.gov
-        commit_author: OSCAL GitHub Actions Bot <oscal@nist.gov>
+        commit_user_name: GitHub Actions Bot
+        commit_user_email: metaschema@nist.gov
+        commit_author: GitHub Actions Bot <metaschema@nist.gov>
         commit_message: Deploying website [ci deploy skip]

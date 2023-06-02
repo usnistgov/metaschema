@@ -17,12 +17,9 @@
     </xs:annotation>
   </xs:include>
   
-  <!-- Import any OSCAL schemas needed for samples... -->
-  <!--<xs:import namespace="http://csrc.nist.gov/ns/oscal/1.0"
-    schemaLocation="../../../schema/xml/oscal-catalog-schema.xsd"/>-->
   <xs:element name="METASCHEMA">
     <xs:annotation>
-      <xs:documentation>Root element of an OSCAL Metaschema definition. Defines a family of data
+      <xs:documentation>Root element of a Metaschema definition. Defines a family of data
         structures representing a model.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -36,12 +33,12 @@
         <xs:element name="short-name" type="ShortNameType"/>
         <xs:element name="namespace" type="URIDatatype">
           <xs:annotation>
-            <xs:documentation>The namespace for the collection of Metaschema models this Metaschema definition
+            <xs:documentation>The namespace for the collection of Metaschema models this Metaschema module
               belongs to. Also the XML namespace governing the names of elements in XML documents, which
               expect to be conformant to the schemas expressed by this metaschema. By using this
               namespace, documents and document fragments used in mixed-format environments may be
               distinguished from neighbor XML formats using other namespaces. This value is not reflected in
-              OSCAL JSON.</xs:documentation>
+              Metaschema JSON.</xs:documentation>
           </xs:annotation>
         </xs:element>
         <xs:element name="json-base-uri" type="JsonBaseUriType"/>
@@ -74,7 +71,7 @@
 
   <xs:element name="METASCHEMA-CONSTRAINTS">
     <xs:annotation>
-      <xs:documentation>Root element of an OSCAL Metaschema external constraints definition. Defines rules to be applied to an existing set of Metaschema models.</xs:documentation>
+      <xs:documentation>Root element of a Metaschema external constraints definition. Defines rules to be applied to an existing set of Metaschema models.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -320,7 +317,6 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
       <xs:element name="json-key" type="JsonKeyType" minOccurs="0" />
       <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
@@ -346,7 +342,6 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
       <xs:element name="json-key" type="JsonKeyType" minOccurs="0" />
       <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
@@ -362,7 +357,7 @@
     <xs:attribute name="collapsible" type="YesNoType" default="no"/>
     <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
     <xs:attribute name="name" use="required" type="ModelNameType"/>
-    <xs:attribute name="in-xml" type="InXmlWrappedType" default="WITH_WRAPPER">
+    <xs:attribute name="in-xml" type="InXmlWrappedType" default="WRAPPED">
       <xs:annotation>
         <xs:documentation>A field with assigned datatype 'markup-multiline' may be designated for representation with or without a containing (wrapper) element
           in XML.</xs:documentation>
@@ -476,7 +471,7 @@
     </xs:sequence>
     <xs:attribute name="ref" use="required" type="ModelNameType"/>
     <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
-    <xs:attribute name="in-xml" type="InXmlWrappedType" default="WITH_WRAPPER">
+    <xs:attribute name="in-xml" type="InXmlWrappedType" default="WRAPPED">
       <xs:annotation>
         <xs:documentation>A field with assigned datatype 'markup-multiline' may be designated for representation with or without a containing (wrapper) element
           in XML.</xs:documentation>
@@ -487,9 +482,14 @@
 
   <xs:simpleType name="InXmlWrappedType">
     <xs:restriction base="TokenDatatype">
-      <xs:enumeration value="WITH_WRAPPER">
+      <xs:enumeration value="WRAPPED">
         <xs:annotation>
           <xs:documentation>Any paragraph or block contents of a markup-multiline field will be represented with a containing (wrapper) element in the XML.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="WITH_WRAPPER">
+        <xs:annotation>
+          <xs:documentation>(deprecated)Alias for WRAPPED.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="UNWRAPPED">

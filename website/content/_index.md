@@ -1,13 +1,19 @@
 ---
 title: "Metaschema Information Modeling Framework"
+cascade:
+  suppresstopiclist: true
+  toc:
+    display: true
+  sidenav:
+    collapsedepth: 4
 ---
-{{% usa-hero image="automation-hero.png" calloutText="Efficient" calloutAltText="Information Modeling" buttonURL="/specification/" buttonText="Learn More" %}}
+{{< usa-hero image="automation-hero.png" calloutAltText="Efficient" calloutText="Information Modeling" buttonURL="/specification/" buttonText="Learn More" >}}
 Modeling information<br/>
 Quickly and Easily<br/>
 in Multiple Formats
-{{% /usa-hero %}}
+{{< /usa-hero >}}
 
-{{% usa-tagline caption="Maximizing your modeling efforts." %}}
+{{< usa-tagline caption="Maximizing your modeling efforts." >}}
 Metaschema provides a common, format-agnostic modeling framework supporting schema, code, and documentation generation *all in one*.
 
 Current modeling technologies (i.e. XML Schema, JSON Schema, Schematron) are:
@@ -34,4 +40,4 @@ Metaschema achieves this with:
 
 - A modeling abstraction that unifies the modeling and validation capabilities of existing schema and validation technologies.
 - Tools that automatically generate code, schemas, documentation, and format-appropriate content converters from Metaschema-based models.
-{{% /usa-tagline %}}
+{{< /usa-tagline >}}

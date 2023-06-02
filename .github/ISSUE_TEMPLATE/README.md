@@ -1,4 +1,4 @@
-# OSCAL GitHub Issue Template Files
+# GitHub Issue Template Files
 
 This directory contains templates for creating new project issues in GitHub. The structure and contents of the directory are as follows:
 

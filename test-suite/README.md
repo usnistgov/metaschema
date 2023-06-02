@@ -26,5 +26,5 @@ The *beginnings* of XSpec-based unit testing of metaschema
 
 ### `oscal`
 
-Copies of OSCAL metaschemas for testing (not normative).
+Copies of OSCAL Metaschema modules for testing (not normative).
 
