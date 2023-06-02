@@ -28,11 +28,11 @@ Metaschema helps developers to define information models once as a [Metaschema m
 ```mermaid
 erDiagram
 
-  "Metaschema module" }|..|{ "instance" : "must specify model of"
+  "Metaschema module" }|..|{ "document instance" : "must specify model of"
   "Metaschema tool" }|..|{ "Metaschema module" : "must parse"
-  "Metaschema tool" }|..|{ "instance" : "can parse"
+  "Metaschema tool" }|..|{ "document instance" : "can parse"
   "Metaschema tool" }|..|{ "schema" : "can generate"
-  "schema" }|..|{ "instance" : "must validate"
+  "schema" }|..|{ "document instance" : "must validate"
 ```
 
 ## Basic Modeling and Basic Metaschema Module
@@ -45,7 +45,7 @@ We start with an empty Metaschema module, like the one below, saved in a file ca
 </METASCHEMA>
 ```
 
-Metschema modules, like the one above, are expressed in XML. A module begins and ends with capitalized `METASCHEMA` tags. This module is an empty file, which means it is not a valid, well-formed module, since it lacks any of the required data elements. It is simply the base we will start with. Within the beginning and ending tags, we want to add the required and useful metadata needed for both developers and Metaschema-enabled tools to consume this module. We do this below.
+Metaschema modules, like the one above, are expressed in XML. A module begins and ends with capitalized `METASCHEMA` tags. This module is an empty file, which means it is not a valid, well-formed module, since it lacks any of the required data elements. It is simply the base we will start with. Within the beginning and ending tags, we want to add the required and useful metadata needed for both developers and Metaschema-enabled tools to consume this module. We do this below.
 
 ```xml {linenos=table,hl_lines=["3-7"]}
 <?xml version="1.0" encoding="UTF-8"?>
@@ -95,7 +95,7 @@ In the `<define-assembly>` declaration we have defined an object named `computer
 
 The computer object must have an `id`, the value of which must be [`string`](/specification/datatypes/#string) (see lines 12-15).
 
-The `<root-name>` element is used to identify to Metaschema-enabled tools that this assembly is allowed to be the root element of our data model (see line 11). This will come in handy later.
+The `<root-name>` element is used to identify to Metaschema-enabled tools that this assembly must be the root element of our data model (see line 11). This will come in handy later.
 
 With Metaschema-enabled tooling, we can now represent information about a computer in the respective JSON, XML, and YAML data formats. The following are equivalent content examples for the model above using JSON, XML, and YAML.
 
