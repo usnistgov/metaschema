@@ -21,7 +21,7 @@ An assembly does not have an associated value.
 
 An assembly may reference or directly define zero or more [*flags*](#flag). Flag instances associated with an assembly definition typically provide additional metadata used to identify or characterize the object represented by the assembly.
 
-An Assembly has an optional model consisting of references to zero or more [*assemblies*](#assembly) or [*fields*](#field) as model instances. These model instances allow complex data to be composed within an assembly.
+An assembly has an optional model consisting of references to zero or more [*assemblies*](#assembly) or [*fields*](#field) as model instances. These model instances allow complex data to be composed within an assembly.
 
 An *assembly definition* is a type of [*definition*](#definition) within a given [*Metaschema module*](#metaschema-module) used to represent the implementation of a complex [*information element*](#information-element) as an assembly.
 

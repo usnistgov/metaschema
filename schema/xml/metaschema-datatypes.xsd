@@ -4,7 +4,7 @@
 
 	<xs:simpleType name="Base64Datatype">
 		<xs:annotation>
-			<xs:documentation>Binary data encoded using the Base 64 encoding algorithm
+			<xs:documentation>Binary data encoded using the Base64 encoding algorithm
 				as defined by RFC4648.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:base64Binary">
@@ -173,7 +173,7 @@
 	
 	<xs:simpleType name="StringDatatype">
 		<xs:annotation>
-			<xs:documentation>A non-empty string of unicode characters with leading and trailing whitespace
+			<xs:documentation>A non-empty string of Unicode characters with leading and trailing whitespace
 				disallowed. Whitespace is: U+9, U+10, U+32 or [ \n\t]+</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -200,7 +200,6 @@
 				whitespace disallowed.</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="StringDatatype">
-			<!-- value="(\p{L}|_)(\p{L}|\p{N}|[.\-_]|\xb7|[#x0300-#x036F#x203F-#x2040])*"> -->
 			<xs:pattern value="(\p{L}|_)(\p{L}|\p{N}|[.\-_])*">
 				<xs:annotation>
 					<!--<xs:documentation>An XML initial character (but not colon), followed 

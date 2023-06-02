@@ -11,7 +11,7 @@ menu:
 
 # Welcome to the Metaschema Community
 
-We are excited that you want to contribute to the Metaschema project. We are striving to provide a collaborative environment for professionals to contribute to the project's goals and objectives.
+We are excited that you want to contribute to the Metaschema project. We are striving to provide a collaborative environment for professionals and hobbyists alike to contribute to the project's goals and objectives.
 
 ## Contributing
 

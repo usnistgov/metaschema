@@ -11,7 +11,7 @@ aliases:
 
 **Note: This section of the specification is still a work in progress.**
 
-XML, JSON, and YAML each use specialized terminology and format primitives. As a notation for an object-based data, YAML is fairly similar to JSON, while XML is quite different to the other two. While all data format describe tree structures (directed graphs), each format (with its implicit data model) has its peculiar design, which requires specification in detail.
+XML, JSON, and YAML each use specialized terminology and format primitives. As a notation for an object-based data, YAML is fairly similar to JSON, while XML is quite different to the other two. While all data format describe tree structures (directed graphs), each format (with its implicit data model) has its particular design, which requires specification in detail.
 
 For example, a data point represented as an attribute on an element in XML, for example, might be a string property on a data object in JSON. The metaschema moderates this distinction by providing rules regarding its own semantic constructs and how they are to be represented in the target format. As a result, a mapping between JSON and XML concepts is implicitly available through the corresponding metaschema.
 
@@ -35,7 +35,7 @@ Within Metaschema-based models, all constructs are optional unless marked otherw
 In XML, a flag instance is represented as an [attribute](https://www.w3.org/TR/xml/#attdecls).
 
 ```xml
-<instance-effective-name @flag-name="flag value"/>
+<instance-effective-name flag-name="flag value"/>
 ```
 
 ### Field Instance
