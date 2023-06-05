@@ -9,7 +9,7 @@
     </xs:choice>
   </xs:complexType>
 
-  <xs:group name="blockElementGroup">
+  <xs:group name="headingBlockElementGroup">
     <xs:choice>
       <xs:element name="h1"    type="inlineMarkupType"/>
       <xs:element name="h2"    type="inlineMarkupType"/>
@@ -17,15 +17,30 @@
       <xs:element name="h4"    type="inlineMarkupType"/>
       <xs:element name="h5"    type="inlineMarkupType"/>
       <xs:element name="h6"    type="inlineMarkupType"/>
-      <xs:element name="p"     type="inlineMarkupType"/>
-      <xs:element name="ul"    type="listType"/>
-      <xs:element name="ol"    type="listType"/>
-      <xs:element name="pre"   type="preformattedType"/>
-      <xs:element name="table" type="tableType"/>
-      <xs:element name="img" type="imageType"/>
-      <!-- TODO: need to add support for blockquote, which can contain block elements. usnistgov/metaschema#70 -->
     </xs:choice>
   </xs:group>
+
+  <xs:group name="blockElementGroup">
+    <xs:choice>
+      <xs:group ref="headingBlockElementGroup"/>
+      <xs:group ref="listsGroup"/>
+      <xs:group ref="blockTextGroup"/>
+      <xs:element name="p"     type="inlineMarkupType"/>
+      <xs:element name="table" type="tableType"/>
+      <!-- QUESTION: Deprecate this? -->
+      <xs:element name="img" type="imageType"/>
+    </xs:choice>
+  </xs:group>
+
+  <xs:group name="blockTextGroup">
+    <xs:choice>
+      <xs:element name="pre"   type="preformattedType"/>
+      <xs:element name="hr"/>
+      <!-- TODO: need to add support for blockquote, which can contain block elements. usnistgov/metaschema#70 -->
+      <xs:element name="blockquote" type="blockQuoteType"/>
+    </xs:choice>
+  </xs:group>
+  
 
   <!--
     headers: phrase inline markup, a, insert (phrase)
@@ -52,12 +67,30 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="orderedListType">
+    <xs:complexContent>
+      <xs:extension base="listType">
+		<!-- TODO: confirm if romans are allowed -->
+        <xs:attribute name="start" type="xs:nonNegativeInteger"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:group name="listsGroup">
+    <xs:choice>
+      <xs:element name="ul" type="listType"/>
+      <xs:element name="ol" type="orderedListType"/>
+    </xs:choice>
+  </xs:group>
+
   <xs:complexType name="listItemType" mixed="true">
     <!-- TODO: is this the correct construction? -->
     <xs:choice minOccurs="0" maxOccurs="unbounded">
       <xs:group ref="inlineMarkupGroup"/>
-      <xs:element name="ul" type="listType"/>
-      <xs:element name="ol" type="listType"/>
+      <xs:group ref="listsGroup"/>
+      <xs:group ref="blockTextGroup"/>
+      <xs:group ref="headingBlockElementGroup"/>
+      <xs:element name="p" type="inlineMarkupType"/>
     </xs:choice>
   </xs:complexType>
 
@@ -92,4 +125,11 @@
       <xs:enumeration value="right"/>
     </xs:restriction>
   </xs:simpleType>
+
+  <xs:complexType name="blockQuoteType">
+    <!-- TODO: confirm if nested blockquote is supported in markdown -->
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:group ref="blockElementGroup"/>
+    </xs:choice>
+  </xs:complexType>
 </xs:schema>

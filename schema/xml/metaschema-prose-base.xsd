@@ -10,12 +10,13 @@
     <xs:choice>
       <xs:element name="a" type="anchorType"/>
       <xs:element name="insert" type="insertType"/>
+      <xs:element name="br" />
       <xs:group ref="phraseMarkupGroup"/>
     </xs:choice>
   </xs:group>
   <xs:group name="phraseMarkupGroup">
     <xs:choice>
-      <xs:element name="code" type="inlineMarkupType"/>
+      <xs:element name="code" type="codeType"/>
       <xs:element name="em" type="inlineMarkupType"/>
       <xs:element name="i" type="inlineMarkupType"/>
       <xs:element name="b" type="inlineMarkupType"/>
@@ -26,9 +27,19 @@
       <xs:element name="img" type="imageType"/>
     </xs:choice>
   </xs:group>
+  
+  <xs:complexType name="codeType">
+    <xs:complexContent>
+      <xs:extension base="inlineMarkupType">
+        <xs:attribute name="class" type="xs:token"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
   <xs:complexType name="imageType">
     <xs:attribute name="alt" type="xs:string"/>
     <xs:attribute name="src" use="required" type="xs:anyURI"/>
+    <xs:attribute name="title" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="anchorType" mixed="true">
@@ -36,6 +47,7 @@
       <xs:group ref="phraseMarkupGroup"/>
     </xs:choice>
     <xs:attribute name="href" type="xs:anyURI"/>
+    <xs:attribute name="title" type="xs:string"/>
   </xs:complexType>
 
   <!--
