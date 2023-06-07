@@ -49,19 +49,33 @@
          <xsl:apply-templates/>
        </div>
    </xsl:template>
-   
+   <!-- additional build-time generation of anchor from template to improve performance -->
    <xsl:template match="*[exists(@gi)]" expand-text="true">
       <xsl:variable name="level" select="count(ancestor-or-self::*[exists(@gi)])"/>
       <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
       <div class="model-entry definition { tokenize(@_metaschema-xml-id,'/')[2] }">
          <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
          <div class="{ $header-class }">
-            <!-- generates h1-hx headers picked up by Hugo toc -->
-            <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
-               <xsl:attribute name="id" select="@_tree-xml-id"/>
-               <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
-               <xsl:text>{ @gi }</xsl:text>
+            <!-- 
+               Generate the proper class attribute to match a given HTML header from $header-tag (h1, h2,...h6) 
+               to define the proper corresponding style (toc1, toc2,... toc6) as bound by toc{ $level } in Hugo.
+
+               This build-time generation of anchor from template improves performance of website at load time 
+               to decrease page time to responsiveness in the browser.
+            -->
+            <xsl:element name="a" namespace="http://www.w3.org/1999/xhtml">
+               <xsl:attribute name="href">#{@_tree-xml-id}</xsl:attribute>
+               <xsl:attribute name="class">reference-element-anchor toc{ $level } name </xsl:attribute>
+               <xsl:attribute name="title">Focus on {@gi} details</xsl:attribute>
+
+               <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
+                  <xsl:attribute name="id" select="@_tree-xml-id"/>
+                  <xsl:attribute name="class">reference-element-anchor toc{ $level} name</xsl:attribute>
+                  <xsl:text>{ @gi }</xsl:text>
+               </xsl:element>
+
             </xsl:element>
+
             <!-- Only assign the @id here if there is a value and the type is not markup-multiline, since in the other cases it
                  is assigned to the header in the containing div -->
             <p class="type">
@@ -124,10 +138,19 @@
          <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
          <div class="{ $header-class }">
             <!-- generates h1-hx headers picked up by Hugo toc -->
-            <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
-               <xsl:attribute name="id" select="@_tree-xml-id"/>
-               <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
-               <xsl:text>(unwrapped)</xsl:text>
+
+   <!-- additional build-time generation of anchor from template to improve performance -->
+            <xsl:element expand-text="true" name="a" namespace="http://www.w3.org/1999/xhtml">
+               <xsl:attribute name="href">#{@_tree-xml-id}</xsl:attribute>
+               <xsl:attribute name="class">reference-element-anchor toc{ $level} name</xsl:attribute>
+               <xsl:attribute name="title">Get {@_tree-xml-id} details</xsl:attribute>
+
+               <!-- ===!!! The Headers 1-6 that are being wrapped around !!!=== --> 
+               <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
+                  <xsl:attribute name="id" select="@_tree-xml-id" />
+                  <xsl:attribute name="class">toc{ $level} name </xsl:attribute>
+                  <xsl:text>(unwrapped)               </xsl:text>
+               </xsl:element>
             </xsl:element>
             <p class="type">
                <xsl:apply-templates select="." mode="metaschema-type"/>

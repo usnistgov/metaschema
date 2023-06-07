@@ -58,15 +58,30 @@
       <xsl:variable name="header-tag" select="if ($level le 6) then ('h' || $level) else 'p'"/>
       <xsl:variable name="grouped-object" select="(self::array | self::singleton-or-array)/*"/>
       <xsl:variable name="me" select="($grouped-object,.)[1]"/>
+
       <div class="model-entry definition { tokenize($me/@_metaschema-json-id,'/')[2] }">
          <xsl:variable name="header-class" expand-text="true">{ if (exists(parent::map)) then 'definition' else 'instance' }-header</xsl:variable>
          <div class="{ $header-class }">
-            <!-- generates h1-hx headers picked up by Hugo toc -->
-            <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
-               <xsl:attribute name="id" select="@_tree-json-id"/>
-               <xsl:attribute name="class">toc{ $level} name</xsl:attribute>
-               <xsl:text>{ @key }</xsl:text>
+            <!-- 
+               Generate the proper class attribute to match a given HTML header from $header-tag (h1, h2,...h6) 
+               to define the proper corresponding style (toc1, toc2,... toc6) as bound by toc{ $level } in Hugo.
+
+               This build-time generation of anchor from template improves performance of website at load time 
+               and decreases page "time to responsiveness" in the browser.
+            -->
+            <xsl:element name="a" namespace="http://www.w3.org/1999/xhtml">
+               <xsl:attribute name="href">#{@_tree-json-id}</xsl:attribute>
+               <xsl:attribute name="class">reference-element-anchor toc{$level} name </xsl:attribute>
+               <xsl:attribute name="title">Focus on {@key} details</xsl:attribute>
+
+               <xsl:element expand-text="true" name="{ $header-tag }" namespace="http://www.w3.org/1999/xhtml">
+                  <xsl:attribute name="id" select="@_tree-json-id"/>
+                  <xsl:attribute name="class">reference-element-anchor toc{$level} name </xsl:attribute>
+                  <xsl:text>{ @key }</xsl:text>
+               </xsl:element>
+
             </xsl:element>
+
             <p class="type">
                <xsl:apply-templates select="." mode="metaschema-type"/>
             </p>
