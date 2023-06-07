@@ -15,3 +15,7 @@ nohup.out
 
 # Ignore NodeJS modules
 node_modules/
+
+# Ignore go files
+/build/vendor/
+
