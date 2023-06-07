@@ -104,7 +104,7 @@ jobs:
         echo "/home/runner/go/bin" >> $GITHUB_PATH
     - name: Setup Golang
       if: steps.cache-hugo.outputs.cache-hit != 'true'
-      uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9
+      uses: actions/setup-go@fac708d6674e30b6ba41289acaab6d4b75aa0753
       with:
         go-version-file: '${{ env.BUILD_PATH }}/go.mod'
         cache: true
