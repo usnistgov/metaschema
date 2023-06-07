@@ -688,17 +688,27 @@ Structured prose text is designed to map cleanly to equivalent subsets of HTML a
 
 The HTML-like syntax supports:
 
-- HTML paragraphs (`p`), headers (`h1`-`h6`), tables (`table`), preformatted text (`pre`), code blocks (`code`), and ordered and unordered lists (`ol` and `ul`.)
+- HTML paragraphs (`<p>`), headers (`<h1>`-`<h6>`), tables (`<table>`), preformatted text (`<pre>`), code blocks (`<code>`), block quotes (`<blockquote>`), and ordered and unordered lists (`<ol>` and `<ul>`.)
 
-- Within paragraphs or text content: `a`, `img`, `strong`, `em`, `b`, `i`, `sup`, `sub`.
+- Within paragraphs or text content: anchors (`<a>`), images (`<img>`), strong text (`<strong>` and `<b>`, normalized as `<strong>`), emphasis (`<em>` and `<i>`, normalized as `<em>`), superscript (`<sup>`), subscript (`<sub>`), and quote (`<q>`).
 
-In remarks below and throughout this documentation, this element set may be referred to as "prose content" or "prose". This tag set (and Markdown equivalent) is defined as a module.
+In remarks below and throughout this documentation, this element set may be referred to as "prose content" or "prose". This tag set (and the Markdown equivalent) is defined as a data type module.
 
-Note that elements such as `div`, `blockquote`, `section` or `aside`, used in HTML to provide structure, are *not permitted*. Instead, structures should be represented using specific model elements (or objects in JSON) such as `part`, which can include prose.
+Some tag attributes are also supported.
+
+- Anchors (`<a>`) require use of the `href` attribute and also allow the `title` attribute.
+- Images (`<img>`) require use of the `src` attribute and also allow the `alt` and `title` attributes.
+- Table cells  (`<th>` and `<td>`) allow the `align` attribute.
+
+Note that elements such as `<div>`, `<span>`, `<section>` and `<aside>`, used in HTML to provide structure, are *not permitted*. Instead, structures should be represented using specific model elements (or objects in JSON) such as `part`, which can include prose.
 
 In addition, there are contexts where prose usage may be further constrained by specific applications.
 
-The Markdown syntax is loosely based on [CommonMark](https://commonmark.org/). When in doubt about Markdown features and syntax, we look to CommonMark for guidance, largely because it is more rigorously tested than many other forms of Markdown.
+The Markdown syntax is based on [CommonMark](https://commonmark.org/), which also defines the translation of Markdown to HTML. When in doubt about Markdown features and syntax, we look to CommonMark for guidance, largely because it is more rigorously tested than many other forms of Markdown.
+
+All CommonMark features are supported, except:
+
+- Link references - i.e. `[text][id] [id]: http://b.org/ "title"`
 
 ### markup-line
 
@@ -706,24 +716,24 @@ The following table describes the equivalent constructs in HTML and Markdown use
 
 | Markup Type | HTML | Markdown |
 |:--- |:--- |:--- |
-| Emphasis (preferred) | &lt;em&gt;*text*&lt;/em&gt; | \**text*\*
-| Emphasis | &lt;i&gt;*text*&lt;/i&gt; | \**text*\*
-| Important Text (preferred) | &lt;strong&gt;*text*&lt;/strong&gt; | \*\**text*\*\*
-| Important Text | &lt;b&gt;*text*&lt;/b&gt; | \*\**text*\*\*
-| Inline code | &lt;code&gt;*text*&lt;/code&gt; | \`*text*\`
-| Quoted Text | &lt;q&gt;*text*&lt;/q&gt; | "*text*"
-| Subscript Text | &lt;sub&gt;*text*&lt;/sub&gt; | \~*text*\~
-| Superscript Text | &lt;sup&gt;*text*&lt;/sup&gt; | ^*text*^
-| Image | &lt;img alt="*alt text*" src="*url*" title="*title text*"/&gt; | !\[*alt text*](*url* "*title text*")
-| Link | &lt;a *href*="*url*"&gt;*text*&lt;/a&gt; | \[*text*](*url*)
+| Emphasis (preferred) | `<em>text</em>` | `*text*`
+| Emphasis | `<i>text</i>` | `*text*`
+| Important Text (preferred) | `<strong>text</strong>` | `**text**`
+| Important Text | `<b>text</b>` | `**text**`
+| Inline code | `<code>text</code>` | `` `text` ``
+| Quoted Text | `<q>text</q>` | `"text"`
+| Subscript Text | `<sub>text</sub>` | `~text~`
+| Superscript Text | `<sup>text</sup>` | `^text^`
+| Image | `<img alt="alt text" src="url" title="title text"/>` | `![alt text](url "title text")`
+| Link | `<a href="url">text</a>` | `[text](*url*)`
 
-Note: Markdown does not have an equivalent of the HTML &lt;i&gt; and &lt;b&gt; tags, which indicate italics and bold respectively. These concepts are mapped in markup text to &lt;em&gt; and &lt;strong&gt; (see [common mark](https://spec.commonmark.org/0.29/#emphasis-and-strong-emphasis)), which render equivalently in browsers, but do not have exactly the same semantics. While this mapping is imperfect, it represents the common uses of these HTML tags.
+Note: Markdown does not have an equivalent of the HTML `<i>` and `<b>` tags, which indicate italics and bold respectively. These concepts are mapped in markup text to `<em>` and `<strong>` respectively (see [CommonMark](https://spec.commonmark.org/0.29/#emphasis-and-strong-emphasis)), which render equivalently in browsers, but do not have exactly the same semantics. While this mapping is imperfect, it represents the common uses of these HTML tags.
 
 #### Parameter Insertion
 
 The Metaschema model allows object references to be referenced and injected into prose text.
 
-Reference injection is handled using the <code>&lt;insert&gt;</code> tag, where you must provide its <code>type</code> and the identifier reference with <code>id-ref</code>:
+Reference injection is handled using the `<insert>` tag, where you must provide its `type` and the identifier reference with `id-ref`:
 
 ```html
 This implements <insert type="param" id-ref="pm-9_prm_1"/> as required to address organizational changes.
@@ -739,61 +749,62 @@ This implements {{ insert: param, pm-9_prm_1 }} as required to address organizat
 
 The following characters have special handling in their HTML and/or Markdown forms.
 
-| Character                                      | XML HTML                             | (plain) Markdown | Markdown in JSON | Markdown in YAML |
-| ---                                            | ---                                  | ---              | ---              | ---              |
-| &amp; (ampersand)                              | &amp;amp;                            | &amp;            | &amp;            | &amp;            |
-| &lt; (less-than sign or left angle bracket)    | &amp;lt;                             | &lt;             | &lt;             | &lt;             |
-| &gt; (greater-than sign or right angle bracket) | &gt; **or** &amp;gt;                 | &gt;             | &gt;             | &gt;             |
-| &#34; (straight double quotation mark)         | &#34; **or** &amp;quot;              | \\&#34;          |  \\\\&#34;       | \\\\&#34;        |
-| &#39; (straight apostrophe)                    | &#39; **or** &amp;apos;              | \\&#39;          | \\\\&#39;        | \\\\&#39;        |
-| \* (asterisk)                                  | \*                                   | \\\*             | \\\\\*           | \\\\\*           |
-| &#96; (grave accent or back tick mark)         | &#96;                                | \\&#96;          | \\\\&#96;        | \\\\&#96;        |
-| ~ (tilde)                                      | ~                                    | \\~              | \\\\~            | \\\\~            |
-| ^ (caret)                                      | ^                                    | \\^              | \\\\^            | \\\\^            |
+| Character                                      | XML HTML            | (plain) Markdown | Markdown in JSON | Markdown in YAML |
+| ---                                            | ---                 | ---              | ---              | ---              |
+| `&` (ampersand)                                | `&amp;`             | `&`              | `&`              | `&`              |
+| `<` (less-than sign or left angle bracket)     | `&lt;`              | `<`              | `<`              | `<`              |
+| `>` (greater-than sign or right angle bracket) | `>` **or** `&gt;`   | `>`              | `>`              | `>`              |
+| `"` (straight double quotation mark)           | `"` **or** `&quot;` | `"`              | `\\"`            | `"` **or** `\\"` |
+| `'` (straight apostrophe)                      | `'` **or** `&apos;` | `'`              | `'`              | `'` **or** `\\'` |
+| `*` (asterisk)                                 | `*`                 | `\*`             | `\\*`            | `\\*`            |
+| `` ` `` (grave accent or back tick mark)       | `` ` ``             | `` \` ``         | `` \\` ``        | `` \\` ``        |
+| `~` (tilde)                                    | `~`                 | `\~`             | `\\~`            | `\\~`            |
+| `^` (caret)                                    | `^`                 | `\^`             | `\\^`            | `\\^`            |
 
 While the characters ``*`~^`` are valid for use unescaped in JSON strings and YAML double quoted strings, these characters have special meaning in Markdown markup. As a result, when these characters appear as literals in a Markdown representation, they must be escaped to avoid them being parsed as Markdown to indicate formatting. The escaped representation indicates these characters are to be represented as characters, not markup, when the Markdown is mapped to HTML.
 
-Because the character "\\" (back slash or reverse solidus) must be escaped in JSON, note that those characters that require a back slash to escape them in Markdown, such as "\*" (appearing as "\\\*"), must be *double escaped* (as "\\\\\*") to represent the escaped character in JSON or YAML. In conversion, the JSON or YAML processor reduces these to the simple escaped form, again permitting the Markdown processor to recognize them as character contents, not markup.
+Because the character `\` (back slash or reverse solidus) must be escaped in JSON, note that those characters that require a back slash to escape them in Markdown, such as `*` (appearing as `\*`), must be *double escaped* (as `\\*`) to represent the escaped character in JSON or YAML. In conversion, the JSON or YAML processor reduces these to the simple escaped form, again permitting the Markdown processor to recognize them as character contents, not markup.
 
-Since these characters are not markup delimiters in XML, they are safe to use there without special handling. The XML open markup delimiters "&lt;" and "&amp;", when appearing in XML contents, must as always be escaped as named entities or numeric character references, if they are to be read as literal characters not markup.
+Since these characters are not markup delimiters in XML, they are safe to use there without special handling. The XML open markup delimiters `<` and `&`, when appearing in XML contents, must as always be escaped as named entities or numeric character references, if they are to be read as literal characters not markup.
 
 ### markup-multiline
 
-All constructs supported by the [markup-line](#markup-line) data type are also supported by the `markup-multiline` data type, when appearing within a header (`h1`-`h6`), paragraph (`p`), list item (`li`) or table cell (`th` or `td`).
+All constructs supported by the [markup-line](#markup-line) data type are also supported by the `markup-multiline` data type, when appearing within a header (`<h1>`-`<h6>`), paragraph (`<p>`), list item (`<li>`) or table cell (`<th>` or `<td>`).
 
 The following additional constructs are also supported. Note that the syntax for these elements must appear on their own lines (i.e., with additional line feeds as delimiters), as is usual in Markdown.
 
 | Markup Type | HTML | Markdown |
 |:--- |:--- |:--- |
-| Heading: Level 1 | &lt;h1&gt;*text*&lt;/h1&gt; | # *text*
-| Heading: Level 2 | &lt;h2&gt;*text*&lt;/h2&gt; | ## *text*
-| Heading: Level 3 | &lt;h3&gt;*text*&lt;/h3&gt; | ### *text*
-| Heading: Level 4 | &lt;h4&gt;*text*&lt;/h4&gt; | #### *text*
-| Heading: Level 5 | &lt;h5&gt;*text*&lt;/h5&gt; | ##### *text*
-| Heading: Level 6 | &lt;h6&gt;*text*&lt;/h6&gt; | ###### *text*
-| Preformatted Text | &lt;pre&gt;*text*&lt;/pre&gt; | \`\`\`*text*\`\`\`
-| Ordered List, with a single item | &lt;ol&gt;&lt;li&gt;*text*&lt;/li&gt;&lt;/ol&gt; | 1. *text*
-| Unordered List with single item | &lt;ul&gt;&lt;li&gt;*text*&lt;/li&gt;&lt;/ul&gt; | - *text*
+| Heading: Level 1 | `<h1>text</h1>` | `# text`
+| Heading: Level 2 | `<h2>text</h2>` | `## text`
+| Heading: Level 3 | `<h3>text</h3>` | `### text`
+| Heading: Level 4 | `<h4>text</h4>` | `#### text`
+| Heading: Level 5 | `<h5>text</h5>` | `##### text`
+| Heading: Level 6 | `<h6>text</h6>` | `###### text`
+| Preformatted Text | `<pre>text</pre>` | <code>\`\`\`</code><br/><code>text</code><br/><code>\`\`\`</code>
+| Ordered List, with a single item | `<ol><li>text</li></ol>` | `1. text`
+| Unordered List with single item | `<ul><li>text</li></ul>` | `- text`
+| Blockquote | `<blockquote>text</blockquote>` | `> text`
 
 #### Paragraphs
 
-Additionally, the use of `p` tags in HTML is mapped to Markdown as two double, escaped newlines within a JSON or YAML string (i.e., "\\\\n\\\\n"). This allows Markdown text to be split into paragraphs when this data type is used.
+Additionally, the use of `<p>` tags in HTML is mapped to Markdown as two double, escaped newlines within a JSON or YAML string (i.e., "\\n\\n"). This allows Markdown text to be split into paragraphs when this data type is used.
 
 #### Tables
 
 Tables are also supported by `markup-multiline` which are mapped from Markdown to HTML as follows:
 
-- The first row in a Markdown table is considered a header row, with each cell mapped as a &lt;th&gt;.
-- The alignment formatting (second) row of the Markdown table is not converted to HTML. Formatting is currently ignored.
-- Each remaining row is mapped as a cell using the &lt;td&gt; tag.
+- The first row in a Markdown table is considered a header row, with each cell mapped as a `<th>`.
+- The alignment formatting (second) row of the Markdown table is used to drive cell alignment using `<th align="value">` and `<td align="value">` in HTML.
+- Each remaining row is mapped as a cell using the `<td>` tag.
 - HTML `colspan` and `rowspan` are not supported by Markdown, and so are excluded from use.
 
 Simple tables are mainly supported due to the prevalence of tables in legacy data sets. However, producers of Metaschema data should note that when they have tabular information, these are frequently semantic structures or matrices that can be described directly in model-based structures as named parts and properties or as parts, sub-parts and paragraphs. This ensures that their nominal or represented semantics are accessible for processing when this information would be lost in plain table cells. Table markup should be used only as a fallback option when stronger semantic labeling is not possible.
 
 Tables are mapped from HTML to Markdown as follows:
 
-* Only a single header row &lt;tr&gt;&lt;th&gt; is supported. This row is mapped to the Markdown table header, with header cells preceded, delimited, and terminated by `|`.
-* The second row is given as a sequence of `---`, as many as the table has columns, delimited by single `|`. In Markdown, a simple syntax here can be used to indicate the alignment of cells; the HTML binding does not support this feature.
+* Only a single header row `<tr><th>` is supported. This row is mapped to the Markdown table header, with header cells preceded, delimited, and terminated by `|`.
+* The second row is given as a sequence of `---`, as many as the table has columns, delimited by single `|`. In Markdown, a simple syntax here can be used to indicate the alignment of cells.
 * Each subsequent row is mapped to the Markdown table rows, with cells preceded, delimited, and terminated by `|`.
 
 For example:
@@ -802,8 +813,8 @@ The following HTML table:
 
 ```html
 <table>
-  <tr><th>Col A</th><th>Col B</th></tr>
-  <tr><td>Have some of</td><td>Try all of</td></tr>
+  <tr><th align="center">Col A</th><th align="center">Col B</th></tr>
+  <tr><td align="center">Have some of</td><td align="center">Try all of</td></tr>
 </table>
 ```
 
@@ -815,7 +826,6 @@ Is mapped to the Markdown table:
 | Have some of | Try all of |
 ```
 
-
 #### Line feeds in Markdown
 
-Additionally, line feed (LF) characters must be escaped as "\\n" when appearing in string contents in JSON and (depending on placement) in YAML. In Markdown, the line feed is used to delimit paragraphs and other block elements, represented using markup (tagging) in the XML version. When transcribed into JSON, these LF characters must also appear as "\\n".
+Additionally, line feed (LF) characters must be escaped as `\n` when appearing in string contents in JSON and (depending on placement) in YAML. In Markdown, the line feed is used to delimit paragraphs and other block elements, represented using markup (tagging) in the XML version. When transcribed into JSON, these LF characters must also appear as `\n`.
