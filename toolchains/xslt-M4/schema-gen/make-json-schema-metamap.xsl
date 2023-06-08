@@ -193,19 +193,11 @@
         <xsl:variable name="enumerations" as="node()*">
             <xsl:apply-templates select="$decl/constraint/allowed-values"/>
         </xsl:variable>
+        <xsl:variable name="allow-other" select="$enumerations/@allow-other = 'yes'"/>
+        <xsl:variable name="any-or-all" select="if ($allow-other) then 'anyOf' else 'allOf'"/> 
         <xsl:choose>
-            <xsl:when test="exists($enumerations) and $decl/constraint/allowed-values/@allow-other = 'yes'">
-                <array key="anyOf">
-                    <map>
-                        <xsl:apply-templates select="." mode="object-type"/>
-                    </map>
-                    <map>
-                        <xsl:sequence select="$enumerations"/>
-                    </map>
-                </array>
-            </xsl:when>
             <xsl:when test="exists($enumerations)">
-                <array key="allOf">
+                <array key="{$any-or-all}">
                     <map>
                         <xsl:apply-templates select="." mode="object-type"/>
                     </map>
