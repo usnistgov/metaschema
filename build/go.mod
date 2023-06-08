@@ -1,6 +1,6 @@
 module github.com/usnistgov/metaschema/build
 
-go 1.18
+go 1.20
 
 require github.com/gohugoio/hugo v0.113.0
 
