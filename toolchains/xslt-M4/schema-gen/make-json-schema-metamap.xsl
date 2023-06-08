@@ -196,7 +196,8 @@
         <xsl:variable name="allow-other" select="$enumerations/@allow-other = 'yes'"/>
         <xsl:variable name="any-or-all" select="if ($allow-other) then 'anyOf' else 'allOf'"/> 
         <xsl:choose>
-            <xsl:when test="exists($enumerations)">
+
+            <xsl:when test="exists($enumerations) and (constraint/allowed-values/@target = '.' or empty(constraint/allowed-values/@target))">
                 <array key="{$any-or-all}">
                     <map>
                         <xsl:apply-templates select="." mode="object-type"/>
