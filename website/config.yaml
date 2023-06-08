@@ -35,7 +35,7 @@ params:
     project_shortname: "Metaschema"
     project_name: "Metaschema Information Modeling Framework"
   contentRepoPath: https://github.com/usnistgov/metaschema/tree/master/docs/content
-  searchAffiliate: oscal
+  searchAffiliate: metaschema
   usabanner: true
 menu:
   secondary:
