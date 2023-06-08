@@ -212,10 +212,11 @@ For example:
 ```
 2019-09-28T23:20:50.52Z
 2019-09-28T23:20:50.52
+2019-09-28T23:20:50.1000
 2019-12-02T16:39:57-08:00
 2019-12-02T16:39:57
-2019-12-31T23:59:60Z
-2019-12-31T23:59:60
+2019-12-31T23:59:59Z
+2019-12-31T23:59:59
 ```
 
 In XML Schema this is represented as a restriction on the built-in type [dateTime](https://www.w3.org/TR/xmlschema11-2/#dateTime) as follows:
@@ -247,8 +248,9 @@ For example:
 
 ```
 2019-09-28T23:20:50.52Z
+2019-09-28T23:20:50.520Z
 2019-12-02T16:39:57-08:00
-2019-12-31T23:59:60Z
+2019-12-31T23:59:59Z
 ```
 
 In XML Schema this is represented as a restriction on the built in type [dateTime](https://www.w3.org/TR/xmlschema11-2/#dateTime) as follows:
