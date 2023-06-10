@@ -8,6 +8,9 @@
         },
         {
             "pattern": "https://help.github.com"
+        },
+        {
+            "pattern": "https://www.bottlecaps.de/rex/"
         }
   ],
   "replacementPatterns": [
