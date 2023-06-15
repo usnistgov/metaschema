@@ -194,8 +194,18 @@
             <xsl:apply-templates select="$decl/constraint/allowed-values"/>
         </xsl:variable>
         <xsl:choose>
-            <xsl:when test="exists($enumerations)">
-                <array key="allOf">
+            <xsl:when test="exists($enumerations) and $decl/constraint/allowed-values/@allow-other = 'yes' and (constraint/allowed-values/@target = '.' or empty(constraint/allowed-values/@target))">
+                <array key="anyOf">
+                    <map>
+                        <xsl:apply-templates select="." mode="object-type"/>
+                    </map>
+                    <map>
+                        <xsl:sequence select="$enumerations"/>
+                    </map>
+                </array>
+            </xsl:when>
+            <xsl:when test="exists($enumerations) and (constraint/allowed-values/@target = '.' or empty(constraint/allowed-values/@target))">
+                <array key="allOf">                    
                     <map>
                         <xsl:apply-templates select="." mode="object-type"/>
                     </map>

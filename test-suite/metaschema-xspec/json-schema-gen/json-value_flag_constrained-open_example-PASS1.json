@@ -1,0 +1,8 @@
+{
+    "test-root": {
+        "test-field": {
+            "test-flag": "anything1",
+            "test-json-key-value": "anything2"
+        }
+    }
+}
