@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://csrc.nist.gov/ns/metaschema-tests/0.1/schema-directive-no-imports-schema.json",
+  "$comment": "JSON value testing mini metaschema: JSON Schema",
+  "type": "object",
+  "definitions": {
+    "json-schema-directive": {
+      "title": "Schema Directive",
+      "description": "A JSON Schema directive to bind a specific schema to its document instance.",
+      "$id": "#json-schema-directive",
+      "$ref": "#/definitions/URIReferenceDatatype"
+    },
+    "schema-directive-no-imports-schema-directive-imported1:root1": {
+      "title": "Root",
+      "description": "Example root to test for schema directive in the imported module.",
+      "$id": "#assembly_schema-directive-imported1_root1",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "schema-directive-no-imports-schema-directive-imported2:root2": {
+      "title": "Root",
+      "description": "Example root to test for schema directive in the imported module.",
+      "$id": "#assembly_schema-directive-imported2_root2",
+      "type": "object",
+      "additionalProperties": false
+    },
+    "URIReferenceDatatype": {
+      "description": "A URI Reference, either a URI or a relative-reference, formatted according to section 4.1 of RFC3986.",
+      "type": "string",
+      "format": "uri-reference"
+    }
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "$schema": {
+          "$ref": "#json-schema-directive"
+        },
+        "root1": {
+          "$ref": "#assembly_schema-directive-imported1_root1"
+        }
+      },
+      "required": [
+        "root1"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "properties": {
+        "$schema": {
+          "$ref": "#json-schema-directive"
+        },
+        "root2": {
+          "$ref": "#assembly_schema-directive-imported2_root2"
+        }
+      },
+      "required": [
+        "root2"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

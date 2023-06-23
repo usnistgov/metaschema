@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="metaschema-author.css"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../schema/xml/metaschema.xsd"
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0" abstract="no">
+    <schema-name>JSON value testing mini metaschema</schema-name>
+    <schema-version>0.1</schema-version>
+    <short-name>schema-directive-no-imports</short-name>
+    <namespace>http://csrc.nist.gov/ns/metaschema-tests/1.0</namespace>
+    <json-base-uri>http://csrc.nist.gov/ns/metaschema-tests</json-base-uri>
+    <import href="schema_directive_imported1.xml"/>
+    <import href="schema_directive_imported2.xml"/>
+</METASCHEMA>
