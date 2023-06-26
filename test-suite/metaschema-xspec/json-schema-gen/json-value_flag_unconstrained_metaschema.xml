@@ -8,23 +8,23 @@
     <short-name>json-schema-value-test-unconstrained</short-name>
     <namespace>http://csrc.nist.gov/ns/metaschema-tests/1.0</namespace>
     <json-base-uri>http://csrc.nist.gov/ns/metaschema-tests</json-base-uri>
-    <define-assembly name="root">
+    <define-assembly name="test-root">
         <formal-name>Root</formal-name>
-        <description>Root root root.</description>
-        <root-name>root</root-name>
+        <description>The root assembly of this example module.</description>
+        <root-name>test-root</root-name>
         <model>
-            <field ref="unconstrained"/>
+            <field ref="test-field"/>
         </model>
     </define-assembly>
     <define-field 
         as-type="token"
-        name="unconstrained">
-        <formal-name>Unconstrained</formal-name>
-        <description>A field whose value is constrained only by its nominal datatype, 'token'.</description>
-        <json-value-key>token-value</json-value-key>
-        <define-flag name="some">
-            <formal-name>Some Flag</formal-name>
-            <description>Some flag some flag some flag.</description>
+        name="test-field">
+        <formal-name>Test Field</formal-name>
+        <description>A test field.</description>
+        <json-value-key>test-json-key-value</json-value-key>
+        <define-flag name="test-flag">
+            <formal-name>Test Flag</formal-name>
+            <description>A test flag.</description>
         </define-flag>
     </define-field>
 </METASCHEMA>
