@@ -41,9 +41,16 @@
             
             <string key="type">object</string>
             <map key="definitions">
+                <map key="json-schema-directive">
+                    <string key="title">Schema Directive</string>
+                    <string key="description">A JSON Schema directive to bind a specific schema to its document instance.</string>
+                    <string key="$id">#json-schema-directive</string>
+                    <string key="$ref">#/definitions/URIReferenceDatatype</string>
+                </map>
                 <xsl:apply-templates select="define-assembly | define-field"/>
                 
-                <xsl:variable name="all-used-types" select="//@as-type => distinct-values()"/>
+                <xsl:variable name="schema-directive-type" select="'uri-reference'"/>
+                <xsl:variable name="all-used-types" select="(//@as-type, $schema-directive-type) => distinct-values()"/>
                 <xsl:variable name="used-atomic-types" select="$datatype-map[@as-type = $all-used-types]"/>
                 <xsl:variable name="invoked-atomic-types" select="$used-atomic-types/key('datatypes-by-name',string(.),$datatypes)"/>
                 <xsl:variable name="referenced-types" select="$invoked-atomic-types//*:string[@key='$ref']/substring-after(.,'#/definitions/') ! key('datatypes-by-name',string(.),$datatypes)"/>
@@ -57,7 +64,6 @@
     <xsl:template match="/METASCHEMA" mode="require-a-root">
         <xsl:apply-templates select="define-assembly[exists(root-name)]" mode="root-requirement"/>
         <boolean key="additionalProperties">false</boolean>
-        <number key="maxProperties">1</number>
     </xsl:template>
     
    
@@ -67,7 +73,6 @@
                 <map>
                     <xsl:apply-templates select="." mode="root-requirement"/>
                     <boolean key="additionalProperties">false</boolean>
-                    <number key="maxProperties">1</number>
                 </map>
             </xsl:for-each>
         </array>
@@ -75,6 +80,9 @@
     
     <xsl:template match="define-assembly" mode="root-requirement">
         <map key="properties">
+            <map key="$schema">
+                <string key="$ref">#json-schema-directive</string>
+            </map>
             <map key="{root-name}">
                 <xsl:apply-templates select="." mode="make-ref"/>
             </map>
