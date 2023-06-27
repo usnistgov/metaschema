@@ -25,6 +25,13 @@
          </x:scenario>
       </x:scenario>
       <x:scenario label="if it has a defined field">
+         <!--
+            For allowed-value enumeration tests, the XSLT implementation's JSON schema gen prefixes the model short-name for its field definitions.
+            So, for the field 'test-field' in a Metaschema module with a short-name 'json-value_field_unconstrained' the final generated element
+            of the JSON schema struct is 'json-value_field_unconstrained-json-value_field_unconstrained:test-field.' This is why we do not match
+            on full field name in JSON schema struct by key from fn:json-to-xml() document-node() with the JSON data in XML form, and then use
+            fn: contains(@key, ':test-field') test to make tests less flaky if the module name in test data changes and just check the field name.
+         -->
          <x:scenario label="with no constraint and no allowed-values">
             <x:context href="json-value_field_unconstrained_metaschema.xml"/>
             <x:expect label="the resulting JSON Schema should not have an enum to enforce it." 
