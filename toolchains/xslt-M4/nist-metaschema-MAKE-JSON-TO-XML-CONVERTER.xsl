@@ -177,7 +177,7 @@
   
 <!--  -->
     <XSLT:template name="from-json">
-      <XSLT:if test="not(unparsed-text-available($file))" expand-text="true">
+      <XSLT:if test="matches($file, '\S') and not(unparsed-text-available($file))" expand-text="true">
         <nm:ERROR>No file found at { $file }</nm:ERROR>
       </XSLT:if>
       <XSLT:variable name="source">
