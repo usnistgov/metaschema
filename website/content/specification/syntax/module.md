@@ -269,5 +269,5 @@ Both files contain globally scoped *flag definitions* named `global-flag`.
 
 According to the rules above, the following is true.
 
-- The assembly named `imported-flags` uses the flag named `global-flag` from the `shadow-imported_metaschema.xml`. This is because definitions names are resolved in the local context of each model.
+- The assembly named `imported-flags` uses the flag named `global-flag` from the `shadow-imported_metaschema.xml`. This is because definition names are resolved in the local context of each model.
 - The assembly named `importing-A` uses the flag named `global-flag` from the `shadow-importing_metaschema.xml`. This is because definitions declared in the current module shadow imported definitions.

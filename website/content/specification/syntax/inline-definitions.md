@@ -8,11 +8,11 @@ weight: 40
 
 *Inline definitions* are a mechanism to both define a named [*information element*](/specification/glossary/#information-element) and instantiate it. In this way, *inline definitions* can be thought of as both [*definitions*](/specification/syntax/definitions/) and [*instances*](/specification/syntax/instances/), sharing most of the data elements of both.
 
-*Inline definitions* are provided as a convenience to allow single-use *information elements* to declared inline, within other *definitions*. Single-use, inline declarations are easier to maintain than a *top-level definition* that is referenced, since the maintainer doesn't have to trace the reference.
+*Inline definitions* are provided as a convenience to allow single-use *information elements* to be declared inline, within other *definitions*. Single-use, inline declarations are easier to maintain than a *top-level definition* that is referenced, since the maintainer doesn't have to trace the reference.
 
 ## Common Inline Definition Data
 
-All *inline definition* types share a common syntax comprised of the following XML attributes and elements.
+All *inline definition* types share a common syntax composed of the following XML attributes and elements.
 
 Attributes:
 
@@ -47,9 +47,9 @@ A *inline flag definition* provides the means to implement a simple, named [*inf
 An *inline flag definition* is a leaf node in a Metaschema-based model that is intended to represent a granular particle of identifying and qualifying information.
 {{</callout>}}
 
-The flag's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) identified by the `@as-type` attribute.
+The flag's value is strongly typed using one of the built-in [simple data types](/specification/datatypes/#simple-data-types) identified by the `@as-type` attribute.
 
-The syntax of an *inline flag definition* is comprised of the following XML attributes and elements.
+The syntax of an *inline flag definition* is composed of the following XML attributes and elements.
 
 Attributes:
 
@@ -83,12 +83,12 @@ An *inline field definition*, represented by the `<define-field>` element, is us
 A *inline field definition* provides the means to implement a complex named [*information element*](/specification/glossary/#information-element) with a value and an optional set of [*flag instances*](/specification/syntax/instances/#flag-instance).
 
 {{<callout>}}
-An *inline field definitions* is an edge node in a Metaschema-based model. *Fields* are typically used to provide supporting information for a containing [*assembly definition*](/specification/syntax/definitions/#top-level-define-assembly). The optional set of *flag instances* declared on an *inline field definition*, typically characterize or identify the fields value. With optional use of flags, a field can be more or less complex, depending on the modeling need.
+An *inline field definitions* is an edge node in a Metaschema-based model. *Fields* are typically used to provide supporting information for a containing [*assembly definition*](/specification/syntax/definitions/#top-level-define-assembly). The optional *flag instances*, declared on an *inline field definition*, typically characterize or identify the field's value. With optional use of flags, a field can be more or less complex, depending on the modeling need.
 {{</callout>}}
 
-The fields's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types) identified by the `@as-type` attribute.
+The fields's value is strongly typed using one of the built-in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types) identified by the `@as-type` attribute.
 
-The syntax of an *inline field definition* is comprised of the following XML attributes and elements.
+The syntax of an *inline field definition* is composed of the following XML attributes and elements.
 
 Attributes:
 
@@ -131,14 +131,14 @@ A *inline assembly definition* provides the means to implement a complex, compos
 An assembly definition consists of an optional set of [*flags*](/specification/syntax/instances/#flag-instance) and an optional sequence of [model instances](/specification/syntax/instances/#model-instances).
 
 {{<callout>}}
-An *inline assembly definition* is a compositional node in a Metaschema-based model. Assemblies are typically used to represent complex data objects, combining multiple information elements together into a composite object representing a larger semantic concept. An assembly's flag instances will typically characterize or identify this composite object, while its model instances represent the information being composed.
+An *inline assembly definition* is a compositional node in a Metaschema-based model. Assemblies are typically used to represent complex data objects, combining multiple information elements together into a composite object representing a larger semantic concept. An assembly's flag instances typically characterize or identify this composite object, while its model instances represent the information being composed.
 {{</callout>}}
 
-An assembly is similar to a field, except it contains structured content (objects or elements), not text or unstructured "rich text". The contents permitted in a particular (type of) assembly are indicated in its `model` element.
+An assembly is similar to a field, except it contains structured content (objects or elements), not text or unstructured "rich text." The contents permitted in a particular (type of) assembly are indicated in its `model` element.
 
 An assembly definition has no value, so the `@as-type` and `@default` attributes are not permitted.
 
-The syntax of an *inline assembly definition* is comprised of the following XML attributes and elements.
+The syntax of an *inline assembly definition* is composed of the following XML attributes and elements.
 
 Attributes:
 
