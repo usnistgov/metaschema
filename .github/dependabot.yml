@@ -1,21 +1,7 @@
-
 version: 2
 updates:
-
-  - package-ecosystem: "gitsubmodule"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    target-branch: "develop"
-
   - package-ecosystem: "github-actions"
     directory: "/"
-    schedule:
-      interval: "daily"
-    target-branch: "develop"
-
-  - package-ecosystem: "docker"
-    directory: "/build"
     schedule:
       interval: "daily"
     target-branch: "develop"
@@ -26,13 +12,14 @@ updates:
       interval: "daily"
     target-branch: "develop"
 
-  - package-ecosystem: "maven"
-    directory: "/build"
+  - package-ecosystem: "gomod"
+    directory: "/website"
     schedule:
       interval: "daily"
-    target-branch: "develop"
+    target-branch: "main"
 
   - package-ecosystem: "npm"
+    directory: /
     schedule:
       interval: "daily"
     target-branch: "develop"
