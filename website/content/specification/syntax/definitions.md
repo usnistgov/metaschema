@@ -8,7 +8,7 @@ weight: 20
 
 A *definition* in a *Metaschema module* declares a reusable [*information element*](/specification/glossary/#information-element) within an [*information model*](/specification/glossary/#information-model).
 
-In graph theoretical terms, a *definition* provides a declaration of an graph *node* and any associated *edges* that form a given subgraph shape.
+In graph theoretical terms, a *definition* provides a declaration of a graph *node* and any associated *edges* that form a given subgraph shape.
 
 In object-oriented terms, a *definition* provides a declaration of a *class*, along with any associated *class members*.
 
@@ -16,7 +16,7 @@ The following subsections describe the [common syntax](#common-definition-data) 
 
 ## Common Definition Data
 
-All *definition* types share a common syntax comprised of the following XML attributes and elements.
+All *definition* types share a common syntax composed of the following XML attributes and elements.
 
 Attributes:
 
@@ -61,7 +61,7 @@ The following example illustrates deprecating the flag named `flag-name` startin
 
 The `@name` attribute provides the definition's identifier, which can be used in other parts of a module, or in an importing *Metaschema module*, to reference the definition.
 
-This attribute's value MUST be a [token](/specification/datatypes/#token) that is unique among sibling top-level flag definitions.
+In top-level definitions, this attribute's value MUST be a [token](/specification/datatypes/#token) that is unique among sibling definitions of the same type.
 
 **Note:** The names of flags, fields, and assemblies are expected to be maintained as separate identifier sets. This allows a *flag definition*, a *field definition*, and an *assembly definition* to each have the same name in a given *Metaschema module*.
 
@@ -172,7 +172,7 @@ field:
 The optional `<remarks>` element provides a place to add notes related to the use of the definition. Remarks can be used to clarify the semantics of the definition in specific conditions, or to better describe how the definition may be more fully utilized within a model. 
 
 The `<remarks>` element is optional and may occur multiple times.
-It supports an optional `@class` attribute that can be used to identify format specific specific remarks, to be handled appropriately (or ignored when not useful) in a downstream application. Valid values for `@class` are:
+It supports an optional `@class` attribute that can be used to identify format specific remarks, to be handled appropriately (or ignored when not useful) in a downstream application. Valid values for `@class` are:
 - `XML`: The remark applies to the XML format binding.
 - `JSON`: The remark applies to the JSON or YAML format bindings.
 ### `<example>`
@@ -194,7 +194,7 @@ A *flag definition* provides the means to implement a simple, named [*informatio
 
 The flag's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) identified by the `@as-type` attribute.
 
-The syntax of a flag is comprised of the following XML attributes and elements.
+The syntax of a flag is composed of the following XML attributes and elements.
 
 Attributes:
 
@@ -245,12 +245,12 @@ A *field definition*, represented by the `<define-field>` element, is used to de
 A *field definition* provides the means to implement a complex named [*information element*](/specification/glossary/#information-element) with a value and an optional set of [*flag instances*](/specification/syntax/instances/#flag-instance).
 
 {{<callout>}}
-A *field definition* is an edge node in a Metaschema-based model. *Fields* are typically used to provide supporting information for a containing [*assembly definition*](/specification/syntax/definitions/#top-level-define-assembly). The optional set of *flag instances* declared on a *field definition*, typically characterize or identify the fields value. With optional use of flags, a field can be more or less complex, depending on the modeling need.
+A *field definition* is an edge node in a Metaschema-based model. *Fields* are typically used to provide supporting information for a containing [*assembly definition*](/specification/syntax/definitions/#top-level-define-assembly). The optional *flag instances*, declared on a *field definition*, typically characterize or identify the field's value. With optional use of flags, a field can be more or less complex, depending on the modeling need.
 {{</callout>}}
 
 The field's value is strongly typed using one of the built in [simple data types](/specification/datatypes/#simple-data-types) or [markup data types](/specification/datatypes/#markup-data-types) identified by the `@as-type` attribute.
 
-The syntax of an *field definition* is comprised of the following XML attributes and elements.
+The syntax of an *field definition* is composed of the following XML attributes and elements.
 
 Attributes:
 
@@ -488,11 +488,11 @@ An assembly definition consists of an optional set of [*flags*](/specification/s
 An *assembly definition* is a compositional node in a Metaschema-based model. Assemblies are typically used to represent complex data objects, combining multiple information elements together into a composite object representing a larger semantic concept. An assembly's flag instances will typically characterize or identify this composite object, while its model instances represent the information being composed.
 {{</callout>}}
 
-An assembly is similar to a field, except it contains structured content (objects or elements), not text or unstructured "rich text". The contents permitted in a particular (type of) assembly are indicated in its `model` element.
+An assembly is similar to a field, except it contains structured content (objects or elements), not text or unstructured "rich text." The contents permitted in a particular (type of) assembly are indicated in its `model` element.
 
 An assembly definition has no value, so the `@as-type` and `@default` attributes are not permitted.
 
-The syntax of an *assembly definition* is comprised of the following XML attributes and elements.
+The syntax of an *assembly definition* is composed of the following XML attributes and elements.
 
 Attributes:
 

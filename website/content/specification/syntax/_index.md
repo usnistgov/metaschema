@@ -154,7 +154,7 @@ The following is an approximate outline of the Metaschema module syntax. Each el
     </div>
     <div class="element">
       <!-- define-assembly:model -->
-      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#model">model</a></span></em><span class="nt">/&gt;</span></div>
+      <div class="cl"><em><span class="nt">&lt;<a href="/specification/syntax/definitions/#model">model</a></span></em><span class="nt">&gt;</span></div>
       <!-- define-assembly:model:assembly -->
       <div class="element">
         &lt;-- Assembly Instance --&gt;<br/>

@@ -12,7 +12,7 @@ The following diagram illustrates the relationships between information modeling
 
 An [*information model*](/specification/glossary/#information-model) is an abstract representation of information from a given information [*domain*](/specification/glossary/#domain). An *information model* is composed of a set of semantically well-defined information structures that each represent an [*information element*](/specification/glossary/#information-element) in the information domain.
 
-The primary purpose of the Metaschema Framework is to support the structured expression of an information model, which is represented as a [*Metaschema module*](/specification/glossary/#metaschema-module). A Metaschema module is used to represent the whole or a part of a information model for a given information domain in an information-centric, format-neutral form.
+The primary purpose of the Metaschema Framework is to support the structured expression of an information model, which is represented as a [*Metaschema module*](/specification/glossary/#metaschema-module). A Metaschema module is used to represent the whole or a part of an information model for a given information domain in an information-centric, format-neutral form.
 
 ## Graph Theoretical Basis of Metaschema
 

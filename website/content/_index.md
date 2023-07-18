@@ -21,7 +21,7 @@ Current modeling technologies (i.e. XML Schema, JSON Schema, Schematron) are:
 - Uneven in their modeling expressiveness and validation capability;
 - Unable to express a single model that applies to all supported formats;
 - Bound to specific formats (i.e., XML, JSON, YAML); and
-- Time-consuming and labor-intensive when maintain multiple format-specific models.
+- Time-consuming and labor-intensive when maintaining multiple format-specific models.
 
 In addition to these basic challenges, there is a need to:
 

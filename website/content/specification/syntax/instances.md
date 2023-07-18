@@ -13,11 +13,11 @@ An *instance* is used to declare an information element *child* within a *parent
 In a Metaschema module, an instance appears inside the definition of its parent information element.
 - An *assembly definition* may contain flag, field or assembly instances reflecting the objects to be permitted in that assembly.
 - A *field definition* may only include flag instances.
-- A Flag definition will never contain instances since flags have no children in the model, only values.
+- A flag definition never contains instances since flags have no children in the model, only values.
 
 ## Common Instance Data
 
-The [`<assembly>`](#assembly-instance), [`<field>`](#field-instance), and [`<flag>`](#flag-instance) child elements share a common syntax comprised of the following XML attributes and elements.
+The [`<assembly>`](#assembly-instance), [`<field>`](#field-instance), and [`<flag>`](#flag-instance) child elements share a common syntax composed of the following XML attributes and elements.
 
 Attributes:
 
@@ -82,7 +82,7 @@ The instance type corresponds with the definition type as follows.
 
 The optional `<formal-name>` element provides a human-readable, short string label for the instance for use in documentation.
 
-If provided, this formal name MUST override the `<formal-name>` declared on the corresponding definition, if a `<formal-name>` is declared there. If not provided, the effective formal name of the instance MUST be the `<formal-name>` declared on the definition. If neither the instance or the definition provide a `<formal-name>`, then the instance MUST NOT have a declared formal name.
+If provided, this formal name MUST override the `<formal-name>` declared on the corresponding definition, if a `<formal-name>` is declared there. If not provided, the effective formal name of the instance MUST be the `<formal-name>` declared on the definition. If neither the instance nor the definition provides a `<formal-name>`, then the instance MUST NOT have a declared formal name.
 
 {{<callout>}}
 The `<formal-name>` label is intended to provide an easy to recognize, meaningful name for the instance. This element can be used when the formal name of the instance differs in use from the formal name declared by the referenced definition.
@@ -94,7 +94,7 @@ While not required, it is best practice to include a `<formal-name>` when the us
 
 The optional `<description>` element is a [single line of markup](/specification/datatypes/#markup-line) that describes the semantic meaning and use of the instance. This information is ideal for use in documentation.
 
-If provided, this description MUST override the `<description>` declared on the corresponding definition, if a `<description>` is declared there. If not provided on an instance, the effective description of the instance MUST be the `<description>` declared on the definition. If neither the instance or the definition provide a `<description>`, then the instance MUST NOT have a declared description.
+If provided, this description MUST override the `<description>` declared on the corresponding definition, if a `<description>` is declared there. If not provided on an instance, the effective description of the instance MUST be the `<description>` declared on the definition. If neither the instance nor the definition provides a `<description>`, then the instance MUST NOT have a declared description.
 
 {{<callout>}}
 The description ties the instance to the related information element concept in the information domain that the instance is representing. This element can be used when the description of the instance differs in use from the description declared by the referenced definition.
@@ -116,7 +116,7 @@ A property is useful for annotating an instance with additional information that
 
 ### Naming and `<use-name>`
 
-Similar to the [`<use-name>`](/specification/syntax/definitions/#naming-and-use-name) allowed on the referenced definition, the optional `<use-name>` on a instance changes the *effective name* to use for the information element in a compositional data model.
+Similar to the [`<use-name>`](/specification/syntax/definitions/#naming-and-use-name) allowed on the referenced definition, the optional `<use-name>` on an instance changes the *effective name* to use for the information element in a compositional data model.
 
 The `<use-name>` element is optional and MAY only occur once.
 
@@ -145,7 +145,7 @@ For example:
 </define-field>
 ```
 
-In the example above, the *effective name* of the definition is `flag-c`. If the `<use-name>` was omitted on the instance, the *effective name* would be `flag-b`. If the `<use-name>` was also omitted on the definition, the *effective name* would be `flag-a`.
+In the example above, the *effective name* of the flag instance is `flag-c`. If the `<use-name>` was omitted on the instance, the *effective name* would be `flag-b`. If the `<use-name>` was also omitted on the definition, the *effective name* would be `flag-a`.
 
 The following content is valid to the model above.
 
@@ -181,7 +181,7 @@ The `<remarks>` element is optional and may occur multiple times.
 
 ## `<flag>` Instance
 
-A *flag instance* is used to declare that a top-level [*flag definition](/specification/syntax/definitions/#top-level-define-flag) is part of the model of a *field definition* or *assembly definition*.
+A *flag instance* is used to declare that a top-level [*flag definition*](/specification/syntax/definitions/#top-level-define-flag) is part of the model of a *field definition* or *assembly definition*.
 
 Attributes:
 
@@ -228,7 +228,7 @@ The following behaviors are REQUIRED to be used for each value of `@required`.
 
 A *model instance* is used to declare a relationship to other information elements in an assembly definition's model.
 
-There are 5 kinds of model instances, which can be declared as part of the assembly's model.
+The following kinds of model instances can be declared as part of the assembly's model.
 
 - [`<field>`](#field-instance) - Instantiates a globally defined [field definition](/specification/syntax/definitions/#top-level-define-field) as a model instance.
 - [`<define-field>`](/specification/syntax/inline-definitions/#inline-define-field) - Defines a [single use field](/specification/syntax/inline-definitions/#inline-define-field) for use as a model instance.
@@ -237,7 +237,7 @@ There are 5 kinds of model instances, which can be declared as part of the assem
 - [`<choice>`](#choice-selections) - Declares a [mutually exclusive selection](#choice-selections) of child model instances.
 - [`<any>`](#any) - Declares a [placeholder for extra content](#any) that is not described by an assembly definition's model.
 
-The `<field>`, `<define-field>`, `<assembly>`, `<define-assembly>` model instance types are considered [*named model instances*](#named-model-instances), since they all instantiate either a [top-level](/specification/syntax/definitions/) or [inline](/specification/syntax/inline-definitions/) definition that represent a named information element within an assembly's model.
+The `<field>`, `<define-field>`, `<assembly>`, and `<define-assembly>` model instance types are considered [*named model instances*](#named-model-instances), since they all instantiate either a [top-level](/specification/syntax/definitions/) or [inline](/specification/syntax/inline-definitions/) definition that represents a named information element within an assembly's model.
 
 The `<choice>` and `<any>` elements represent special constructs which differ significantly in their semantics from the named model instances.
 
@@ -245,7 +245,7 @@ These different types of model instances are discussed in the following subsecti
 
 ## Named Model Instances
 
-The `<field>`, `<define-field>`, `<assembly>`, `<define-assembly>` model instance types are considered [*named model instances*](#named-model-instances), which instantiate a definition within an assembly's model.
+The `<field>`, `<define-field>`, `<assembly>`, and `<define-assembly>` model instance types are considered [*named model instances*](#named-model-instances), which instantiate a definition within an assembly's model.
 
 The `<field>` and `<assembly>` elements are used to instantiate a referenced [top-level definition](/specification/syntax/definitions/).
 
@@ -253,7 +253,7 @@ The `<define-field>` and `<define-assembly>` elements are used to both declare a
 
 ### Common Named Model Instance Data
 
-All named model instances share a common common syntax comprised of the following XML attributes and elements. This syntax builds on the [common syntax and semantics](#common-instance-data) shared by all instance types.
+All named model instances share a common common syntax composed of the following XML attributes and elements. This syntax builds on the [common syntax and semantics](#common-instance-data) shared by all instance types.
 
 Attributes:
 
@@ -306,9 +306,9 @@ The `group-as` element has the following set of attributes:
 
 The optional `@in-json` attribute controls the representational form of a group of instances in JSON and YAML.
 
-When no attribute and value is provided for the `@in-json` attribute, the value MUST default to `SINGLETON_OR_ARRAY`.
+When the `@in-json` attribute and value are not provided, the value MUST default to `SINGLETON_OR_ARRAY`.
 
-One of the following behaviors MUST be used based on the provided, or default value when no attribute and value is provided.
+One of the following behaviors MUST be used based on the provided or default value.
 
 | Value | JSON and YAML Behavior |
 |:--- |:--- |
@@ -331,9 +331,9 @@ TODO: P2: Address issue https://github.com/usnistgov/metaschema/issues/316
 
 The optional `@in-xml` attribute controls the representational form of a group of instances in XML.
 
-When no attribute and value is provided for the `@in-xml` attribute, the value MUST default to `UNGROUPED`.
+When the `@in-xml` attribute and value are not provided, the value MUST default to `UNGROUPED`.
 
-One of the following behaviors MUST be used based on the provided, or default value when no attribute and value is provided.
+One of the following behaviors MUST be used based on the provided or default value.
 
 | Value | XML Behavior |
 |:--- |:--- |
@@ -371,7 +371,7 @@ For *field instances* that use [`@in-xml="UNWRAPPED"`](#in-xml-1), no other effe
 With these limitations, a model may be defined to contain any mix of fields and assemblies.
 
 {{<callout>}}
-In JSON, YAML, and XML, the [effective names of named instances](#naming-and-use-name) and the [grouping name](#group-as) of named model instances need to be restricted to allow for distinct naming of resulting JSON and YAML properties, and XML elements. By ensuring that names are unique, Metaschema aware parsers are able to map data elements in JSON, YAML, and XML into Metaschema module based *instances*.
+In JSON, YAML, and XML, the [effective names of named instances](#naming-and-use-name) and the [grouping name](#group-as) of named model instances need to be restricted to allow for distinct naming of resulting JSON and YAML properties, and XML elements. Uniqueness of names enables Metaschema aware parsers to map data elements in JSON, YAML, and XML into Metaschema module based *instances*.
 {{</callout>}}
 
 ### `<field>` Instance
@@ -437,7 +437,7 @@ Elements:
 | [`<group-as>`](#group-as) | special | 0 or 1 |
 | [`<remarks>`](#remarks) | special | 0 or 1 |
 
-There are no attributes and elements specific to an `<assembly>` instance. The elements and attributes common to all named model instance types are [defined earlier](#common-named-model-instance-data) in this specification.
+There are no attributes or elements specific to an `<assembly>` instance. The elements and attributes common to all named model instance types are [defined earlier](#common-named-model-instance-data) in this specification.
 
 The [`@ref`](#ref) attribute MUST reference a top-level *assembly definition's* [`@name`](/specification/syntax/definitions/#name) that is in scope. See [Definition Name Resolution](/specification/syntax/module/#definition-name-resolution) for a detailed explanation of definition name scoping.
 
