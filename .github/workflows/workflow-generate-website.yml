@@ -127,6 +127,8 @@ jobs:
         # - yaml-convert
         npm install --loglevel verbose
         echo "$PWD/node_modules/.bin/" >> $GITHUB_PATH
+        # Dart-Sass
+        sudo snap install dart-sass
     - name: Install Hugo
       if: steps.cache-hugo.outputs.cache-hit != 'true'
       run: |
