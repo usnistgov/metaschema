@@ -2,7 +2,7 @@ module github.com/usnistgov/metaschema/build
 
 go 1.20
 
-require github.com/gohugoio/hugo v0.115.3
+require github.com/gohugoio/hugo v0.115.4
 
 require (
 	cloud.google.com/go v0.110.0 // indirect
