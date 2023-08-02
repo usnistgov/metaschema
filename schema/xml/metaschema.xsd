@@ -283,7 +283,6 @@
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attributeGroup ref="FieldValueAttributeGroup"/>
-    <xs:attribute name="collapsible" type="YesNoType" default="no"/>
     <xs:attribute name="name" use="required" type="ModelNameType"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
