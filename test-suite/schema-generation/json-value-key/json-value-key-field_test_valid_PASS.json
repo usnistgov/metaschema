@@ -5,16 +5,16 @@
         "prop1": "value1"
       },
       {
-        "prop1": "value1",
-        "id": "id2",
+        "prop2": "value2",
+        "id": "id1",
         "ns": "https://nist.gov/blah",
         "class": "class1"
       },
       {
-        "prop1": "value1",
+        "prop3": "value3",
         "id": "id2",
-        "blah": "https://nist.gov/blah",
-        "class": "class1"
+        "ns": "https://nist.gov/blah",
+        "class": "class2"
       }
     ]
   }
