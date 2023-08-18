@@ -14,27 +14,25 @@ TODO: P3: Address issue https://github.com/usnistgov/metaschema/issues/325
 
 ## Enumerated values
 
-Additionally, flags may be constrained to a set of known values listed in advance.
+One kind of Metaschema constraint is restricting assembly, field, or flag value(s) with `allowed-values` enumerations. Metaschema processors MUST process `allowed-values` enumerations as defined with the `allow-other` attribute.
 
-This restriction can be either:
+1. When the `allow-other` attribute is defined as `allow-other="no"`, the processor MUST strictly validate content instances with enumerations: only defined `enum` values are valid for the given target(s).
+2. When the `allow-other` attribute is defined as `allow-other="yes"`, the processor MUST loosely validate content instances with enumerations: both `enum` values and other values are valid.
+3. When the `allow-other` attribute is not explicitly defined, the Metaschema processor MUST strictly validate content instances. The implied default is `allow-other="no"`.
 
-1. strict (values must be in the list for document validity with `allow-other="no"` attribute for an `allowed-values` element) or
-2. loose (i.e. for documentation only, no effect in schemas, with `allow-other="yes"`).
-
-If an `allowed-values` constraint does not have the `allow-other` attribute defined, the default is `allow-other="no"`, resulting in strict validation where the only valid values are those in the list.
-
-Within `allowed-values` of a `constraint`, an `enum` element's `@value` attribute assigns the permissible value, while its data content provides documentation. For example:
+Within `allowed-values` of a `constraint`, a Metaschema processor MUST strictly or loosely validate `enum` values with the `@value` attribute. A Metaschema processor MAY use the text value of the `enum`'s XML element as documentation for a given allowed value enumeration. Below is an example.
 
 ```xml
-<define-flag name="algorithm" datatype="string">
-    <formal-name>Hash algorithm</formal-name>
-    <description>Method by which a hash is derived</description>
+<define-flag name="form-factor">
+  <formal>Computer Form Factor</formal-name>
+    <description>The type of computer in the example application's data model.</description>
     <constraint>
       <allowed-values allow-other="yes">
-        <enum value="SHA-224">Documentation for one permissible option.</enum>
-        <enum value="SHA-256">Documentation for another permissible option.</enum>
+        <enum value="laptop">this text value documents the domain and information model's meaning of a laptop</enum>
+        <enum value="desktop">this text value documents the domain and information model's meaning of a desktop</enum>
       </allowed-values>
-    </constraint> ...
+    </constraint> ...  
+</define-flag>
 ```
 
 ## `define-flag` constraints
