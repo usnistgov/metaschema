@@ -14,7 +14,9 @@ TODO: P3: Address issue https://github.com/usnistgov/metaschema/issues/325
 
 ## Enumerated values
 
-One kind of Metaschema constraint is restricting assembly, field, or flag value(s) with `allowed-values` enumerations. Metaschema processors MUST process `allowed-values` enumerations as defined with the `allow-other` attribute.
+One kind of Metaschema constraint is restricting field, or flag value(s) with `allowed-values` enumerations. Metaschema processors MUST process `allowed-values` enumerations.
+
+For an `allowed-values` enumeration, the following applies for the `allow-other` attribute:
 
 1. When the `allow-other` attribute is defined as `allow-other="no"`, the processor MUST strictly validate content instances with enumerations: only defined `enum` values are valid for the given target(s).
 2. When the `allow-other` attribute is defined as `allow-other="yes"`, the processor MUST loosely validate content instances with enumerations: both `enum` values and other values are valid.
