@@ -18,9 +18,8 @@ One kind of Metaschema constraint is restricting field, or flag value(s) with `a
 
 For an `allowed-values` enumeration, the following applies for the `allow-other` attribute:
 
-1. When the `allow-other` attribute is defined as `allow-other="no"`, the processor MUST strictly validate content instances with enumerations: only defined `enum` values are valid for the given target(s).
+1. When the `allow-other` attribute is defined as `allow-other="no"` or not explicitly defined, the processor MUST strictly validate content instances with enumerations: only defined `enum` values are valid for the given target(s).
 2. When the `allow-other` attribute is defined as `allow-other="yes"`, the processor MUST loosely validate content instances with enumerations: both `enum` values and other values are valid.
-3. When the `allow-other` attribute is not explicitly defined, the Metaschema processor MUST strictly validate content instances. The implied default is `allow-other="no"`.
 
 Within `allowed-values` of a `constraint`, a Metaschema processor MUST strictly or loosely validate `enum` values with the `@value` attribute. A Metaschema processor MAY use the text value of the `enum`'s XML element as documentation for a given allowed value enumeration. Below is an example.
 
