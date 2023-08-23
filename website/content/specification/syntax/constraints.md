@@ -21,7 +21,9 @@ For an `allowed-values` enumeration, the following applies for the `allow-other`
 1. When the `allow-other` attribute is defined as `allow-other="no"` or not explicitly defined, the processor MUST strictly validate content instances with enumerations: only defined `enum` values are valid for the given target(s).
 2. When the `allow-other` attribute is defined as `allow-other="yes"`, the processor MUST loosely validate content instances with enumerations: both `enum` values and other values are valid.
 
-Within `allowed-values` of a `constraint`, a Metaschema processor MUST strictly or loosely validate `enum` values with the `@value` attribute. A Metaschema processor MAY use the text value of the `enum`'s XML element as documentation for a given allowed value enumeration. Below is an example.
+Within `allowed-values` of a `constraint`, a Metaschema processor MUST strictly or loosely validate `enum` values with the `@value` attribute.
+
+A Metaschema processor MAY use the text value of the `enum`'s XML element as documentation for a given allowed value enumeration. Below is an example.
 
 ```xml
 <define-flag name="form-factor">
