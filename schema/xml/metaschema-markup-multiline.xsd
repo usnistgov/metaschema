@@ -55,7 +55,7 @@
       <xs:extension base="inlineMarkupType">
         <xs:annotation>
           <xs:documentation>The content model is the same as inlineMarkupType, but line endings need
-            to be preserved, since this is preformatted.</xs:documentation>
+            to be preserved, since this is pre-formatted.</xs:documentation>
         </xs:annotation>
       </xs:extension>
     </xs:complexContent>
