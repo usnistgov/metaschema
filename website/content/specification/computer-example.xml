@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../../metaschema-java/core/metaschema/schema/xml/metaschema.xsd"
+ xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>Computer Model</schema-name>
     <schema-version>0.0.5</schema-version>
     <short-name>computer</short-name>
@@ -49,10 +51,16 @@
                 <description>A container object for a motherboard in a computer and its sub-parts.</description>
                 <model>
                     <assembly ref="vendor"/>
-                    <define-field name="motherboard-type" min-occurs="1">
+                    <define-field name="type" min-occurs="1">
                         <formal-name>Motherboard Type</formal-name>
                         <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
-                        <use-name>type</use-name>
+                        <constraint>
+                            <allowed-values target="." allow-other="yes">
+                                <enum value="at">Advanced Technology Form Factor</enum>
+                                <enum value="atx">Advanced Technology Extended Form Factor</enum>
+                                <enum value="mini-itx">Mini Information Technology eXtended Form Factor</enum>
+                            </allowed-values>
+                        </constraint>
                     </define-field>
                     <define-assembly name="cpu">
                         <formal-name>Motherboard Central Processing Unit (CPU)</formal-name>
@@ -64,11 +72,22 @@
                             <define-field name="architecture" min-occurs="1">
                                 <formal-name>CPU Architecture</formal-name>
                                 <description>The Instruction Set Architecture (ISA) of the processor, <code>x86</code>, <code>x86-64</code>, <code>arm</code>, or an alternative.</description>
+                                <constraint>
+                                    <allowed-values target="." allow-other="yes">
+                                        <enum value="x86">x86 32-bit</enum>
+                                        <enum value="x86-64">x86 64-bit</enum>
+                                        <enum value="arm">arm</enum>
+                                    </allowed-values>
+                                </constraint>
                             </define-field>
                             <define-field name="speed" min-occurs="1">
                                 <formal-name>CPU Speed</formal-name>
                                 <description>The clock speed of the CPU in megahertz or gigahertz.</description>
+                                <constraint>
+                                    <matches target="." regex="\d+(?:\.\d+)?(?:MHz|GHz)"></matches>
+                                </constraint>
                             </define-field>
+                            <assembly ref="property"/>
                             <field ref="remarks" in-xml="UNWRAPPED"/>
                         </model>
                     </define-assembly>
@@ -79,11 +98,17 @@
                             <assembly ref="vendor"/>        
                             <field ref="product-name" min-occurs="1"/>
                             <field ref="cost"/>
-                            <define-field name="socket-type" min-occurs="1">
+                            <define-field name="type" min-occurs="1">
                                 <formal-name>ATA Socket Type</formal-name>
                                 <description>The type of ATA socket on the motherboard , <code>pata</code> (parallel ATA), <code>sata</code> (Serial ATA), or an alternative.</description>
-                                <use-name>type</use-name>
+                                <constraint>
+                                    <allowed-values target="." allow-other="yes">
+                                        <enum value="pata">Parallel ATA</enum>
+                                        <enum value="sata">Serial ATA</enum>
+                                    </allowed-values>
+                                </constraint>
                             </define-field>
+                            <assembly ref="property"/>
                             <field ref="remarks" in-xml="UNWRAPPED"/>
                         </model>
                     </define-assembly>
@@ -99,6 +124,7 @@
                                 <formal-name>Memory Module Size</formal-name>
                                 <description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</description>
                             </define-field>
+                            <assembly ref="property"/>
                             <field ref="remarks" in-xml="UNWRAPPED"/>
                         </model>
                     </define-assembly>
@@ -120,6 +146,7 @@
                                     </allowed-values>
                                 </constraint>
                             </define-field>
+                            <assembly ref="property"/>
                             <field ref="remarks" in-xml="UNWRAPPED"/>
                         </model>
                     </define-assembly>
@@ -138,9 +165,11 @@
                     <assembly ref="vendor"/>
                     <field ref="product-name" min-occurs="1"/>
                     <field ref="cost"/>
+                    <assembly ref="property"/>
                     <field ref="remarks" in-xml="UNWRAPPED"/>
                 </model>
             </define-assembly>
+            <assembly ref="property"/>
             <field ref="remarks" in-xml="UNWRAPPED"/>
         </model>
         <constraint>
@@ -149,6 +178,19 @@
                 <description>Ensures that each USB device has a unique UUID.</description>
                 <key-field target="@uuid"/>
             </is-unique>
+            <allowed-values target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://csrc.nist.gov/ns/metaschema/computer/example')]/@name">
+                <enum value="model">CPU model</enum>
+            </allowed-values>
+            <has-cardinality level="WARNING" target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://csrc.nist.gov/ns/metaschema/computer/example')]" min-occurs="1">
+                <remarks>
+                    <p>Warn if a model is not provided.</p>
+                </remarks>
+            </has-cardinality>
+            <has-cardinality level="ERROR" target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://csrc.nist.gov/ns/metaschema/computer/example')]" max-occurs="1">
+                <remarks>
+                    <p>It is invalid to provide multiple models.</p>
+                </remarks>
+            </has-cardinality>
         </constraint>
     </define-assembly>
     <define-field name="cost" as-type="decimal">
@@ -164,8 +206,59 @@
         <formal-name>Remarks</formal-name>
         <description>Additional remarks related to the containing computer component.</description>
     </define-field>
-    <define-flag name="id"/>
-    <define-assembly name="computer">
-        <flag ref="id" required="yes"/>
+    <define-assembly name="property">
+        <formal-name>Property</formal-name>
+        <description>An attribute, characteristic, or quality of the containing object expressed as a namespace qualified name/value pair.</description>
+        <use-name>prop</use-name>
+        <define-flag name="name" as-type="token" required="yes">
+            <formal-name>Property Name</formal-name>
+            <description>A textual label, within a namespace, that uniquely identifies a specific attribute, characteristic, or quality of the property's containing object.</description>
+        </define-flag>
+        <define-flag name="uuid" as-type="uuid">
+            <formal-name>Property Universally Unique Identifier</formal-name>
+            <!-- identifier declaration -->
+            <description>A unique identifier for a property.</description>
+        </define-flag>
+        <define-flag name="ns" as-type="uri" default="http://csrc.nist.gov/ns/metaschema/computer/example">
+            <formal-name>Property Namespace</formal-name>
+            <description>A namespace qualifying the property's name. This allows different organizations to associate distinct semantics with the same name.</description>
+            <remarks>
+                <p>This value must be an <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-4.3">absolute URI</a> that serves as a naming system identifier.</p>
+                <p>When a <code>ns</code> is not provided, its value should be assumed to be <code>http://csrc.nist.gov/ns/oscal</code> and the name should be a name defined by the associated OSCAL model.</p>
+            </remarks>
+        </define-flag>
+        <define-flag name="value" as-type="string" required="yes">
+            <formal-name>Property Value</formal-name>
+            <description>Indicates the value of the attribute, characteristic, or quality.</description>
+        </define-flag>
+        <define-flag name="class" as-type="token">
+            <formal-name>Property Class</formal-name>
+            <description>A textual label that provides a sub-type or characterization of the
+                property's <code>name</code>.</description>
+            <remarks>
+                <p>This can be used to further distinguish or discriminate between the semantics of multiple properties of the same object with the same <code>name</code> and <code>ns</code>, or to group properties into categories.</p>
+                <p>A <code>class</code> can be used in validation rules to express extra constraints over named items of a specific <code>class</code> value. It is available for grouping, but unlike <code>group</code> is not expected specifically to designate any group membership as such.</p>
+            </remarks>
+        </define-flag>
+        <define-flag name="group" as-type="token">
+            <formal-name>Property Group</formal-name>
+            <description>An identifier for relating distinct sets of properties.</description>
+            <remarks>
+                <p>Different sets of properties may relate to separate contexts. Declare a group on a property to associate it with one or more other properties in a given context.</p>
+            </remarks>
+        </define-flag>
+        <model>
+            <field ref="remarks"/>
+        </model>
+        <constraint>
+            <allowed-values target=".[not(@ns) or @ns=('http://csrc.nist.gov/ns/metaschema/computer/example')]/@name">
+                <enum value="marking">A label or descriptor that is tied to a sensitivity or classification marking system. An optional class can be used to define the specific marking system used for the associated value.</enum>
+            </allowed-values>
+        </constraint>
+        <remarks>
+            <p>Properties permit the deployment and management of arbitrary controlled values, within OSCAL objects. A property can be included for any purpose useful to an application or implementation. Typically, properties will be used to sort, filter, select, order, and arrange OSCAL content objects, to relate OSCAL objects to one another, or to associate an OSCAL object to class hierarchies, taxonomies, or external authorities. Thus, the lexical composition of properties may be constrained by external processes to ensure consistency.</p>
+            <p>Property allows for associated remarks that describe why the specific property value was applied to the containing object, or the significance of the value in the context of the containing object.</p>
+        </remarks>
     </define-assembly>
+    
 </METASCHEMA>
