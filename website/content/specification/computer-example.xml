@@ -178,15 +178,15 @@
                 <description>Ensures that each USB device has a unique UUID.</description>
                 <key-field target="@uuid"/>
             </is-unique>
-            <allowed-values target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://csrc.nist.gov/ns/metaschema/computer/example')]/@name">
+            <allowed-values target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]/@name">
                 <enum value="model">CPU model</enum>
             </allowed-values>
-            <has-cardinality level="WARNING" target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://csrc.nist.gov/ns/metaschema/computer/example')]" min-occurs="1">
+            <has-cardinality level="WARNING" target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]" min-occurs="1">
                 <remarks>
                     <p>Warn if a model is not provided.</p>
                 </remarks>
             </has-cardinality>
-            <has-cardinality level="ERROR" target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://csrc.nist.gov/ns/metaschema/computer/example')]" max-occurs="1">
+            <has-cardinality level="ERROR" target="(motherboard|motherboard/cpu|motherboard/memory|motherboard/expansion-card|usb-device)/prop[not(@ns) or @ns=('http://example.com/ns/computer')]" max-occurs="1">
                 <remarks>
                     <p>It is invalid to provide multiple models.</p>
                 </remarks>
@@ -219,12 +219,12 @@
             <!-- identifier declaration -->
             <description>A unique identifier for a property.</description>
         </define-flag>
-        <define-flag name="ns" as-type="uri" default="http://csrc.nist.gov/ns/metaschema/computer/example">
+        <define-flag name="ns" as-type="uri" default="http://example.com/ns/computer">
             <formal-name>Property Namespace</formal-name>
             <description>A namespace qualifying the property's name. This allows different organizations to associate distinct semantics with the same name.</description>
             <remarks>
                 <p>This value must be an <a href="https://datatracker.ietf.org/doc/html/rfc3986#section-4.3">absolute URI</a> that serves as a naming system identifier.</p>
-                <p>When a <code>ns</code> is not provided, its value should be assumed to be <code>http://csrc.nist.gov/ns/oscal</code> and the name should be a name defined by the associated OSCAL model.</p>
+                <p>When a <code>ns</code> is not provided, its value should be assumed to be <code>http://example.com/ns/computer</code> and the name should be a name defined by this model.</p>
             </remarks>
         </define-flag>
         <define-flag name="value" as-type="string" required="yes">
@@ -251,12 +251,12 @@
             <field ref="remarks"/>
         </model>
         <constraint>
-            <allowed-values target=".[not(@ns) or @ns=('http://csrc.nist.gov/ns/metaschema/computer/example')]/@name">
+            <allowed-values target=".[not(@ns) or @ns=('http://example.com/ns/computer')]/@name">
                 <enum value="marking">A label or descriptor that is tied to a sensitivity or classification marking system. An optional class can be used to define the specific marking system used for the associated value.</enum>
             </allowed-values>
         </constraint>
         <remarks>
-            <p>Properties permit the deployment and management of arbitrary controlled values, within OSCAL objects. A property can be included for any purpose useful to an application or implementation. Typically, properties will be used to sort, filter, select, order, and arrange OSCAL content objects, to relate OSCAL objects to one another, or to associate an OSCAL object to class hierarchies, taxonomies, or external authorities. Thus, the lexical composition of properties may be constrained by external processes to ensure consistency.</p>
+            <p>A property can be included for any purpose useful to an application or implementation. Typically, properties will be used to sort, filter, select, order, and arrange content objects, to relate objects to one another, or to associate an object to class hierarchies, taxonomies, or external authorities. Thus, the lexical composition of properties may be constrained by external processes to ensure consistency.</p>
             <p>Property allows for associated remarks that describe why the specific property value was applied to the containing object, or the significance of the value in the context of the containing object.</p>
         </remarks>
     </define-assembly>
