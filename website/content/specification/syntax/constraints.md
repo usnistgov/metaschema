@@ -18,12 +18,6 @@ The `allowed-values` constraint is a kind of Metaschema constraint that restrict
 
 Metaschema processors MUST process `allowed-values` enumerations.
 
-
-- strict: only defined `enum` values are valid for the given target(s)
-- loose: both `enum` values and other values are valid
-
-### `<allowed-values>`
-
 The `@target` attribute of an `<allowed-values>` constraint is used to determine the specific content values the constraint applies to. By evaluating the `@target`, it is possible to identify the *target set* of `<allowed-values>` constraints targeting a given value.
 
 The *source* of each allowed `<allowed-values>` constraint in the *target set* is identified as one of the following sources:
@@ -37,7 +31,7 @@ Once the *target set* of `<allowed-values>` constraints is validated, the `@allo
 
 The following subsections detail the processing requirements for the `@extension` and `@allow-other` attributes.
 
-#### `@extension`
+### `@extension`
 
 For each `<allowed-values>` constraint, the `@extension` attribute MUST be one of the following values.
 
@@ -58,7 +52,7 @@ One of the following requirements MUST apply when processing a value's *target s
 1. All `<allowed-values>` constraints in the *target set* MUST have the `@extension` attribute value `external` and originate from either a *model* or *extension* source.
 1. An error MUST be raised indicating the *target set* is invalid.
 
-#### `@allow-other`
+### `@allow-other`
 
 The *expected value set* can be considered *open* or *closed*.
 
