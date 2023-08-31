@@ -18,7 +18,6 @@ The `allowed-values` constraint is a kind of Metaschema constraint that restrict
 
 Metaschema processors MUST process `allowed-values` enumerations.
 
-Value restriction can be either strict or loose.
 
 - strict: only defined `enum` values are valid for the given target(s)
 - loose: both `enum` values and other values are valid
