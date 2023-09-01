@@ -13,7 +13,7 @@ languages:
 MetaDataFormat: "yaml"
 theme:
   - "uswds-nist"
-# - "uswds"
+  - "uswds"
 googleAnalytics: UA-66610693-1
 enableGitInfo: true
 enableRobotsTXT: true
@@ -49,5 +49,3 @@ module:
   mounts:
     - source: static
       target: static
-  imports:
-    - path: "github.com/usnistgov/hugo-uswds"
