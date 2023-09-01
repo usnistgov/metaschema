@@ -3,11 +3,3 @@
 	url = https://github.com/usnistgov/hugo-uswds.git
 	branch = master
 	update = rebase
-[submodule "support/schematron"]
-	path = support/schematron
-	url = https://github.com/usnistgov/schematron.git
-	branch = master
-[submodule "support/xspec"]
-	path = support/xspec
-	url = https://github.com/xspec/xspec.git
-	branch = d8bbeca51eaccc8b3e07c82547f6aff4a2072aef

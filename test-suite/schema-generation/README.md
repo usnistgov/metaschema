@@ -38,6 +38,3 @@ Examples:
 - `datatypes-datetime-no-tz_metaschema.xml` - A metaschema for validating the `datatypes-datetime-no-tz` family of tests
 - `datatypes-date_test_valid_PASS.json` is a JSON instance expected to be found valid to the schema defined by (derived from) the metaschema
 - `datatypes-date_test_tricky_FAIL.json` is a JSON instance expected to be found *invalid* to the schema defined by (derived from) the metaschema
-
-
-

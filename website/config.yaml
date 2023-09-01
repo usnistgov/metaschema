@@ -12,8 +12,8 @@ languages:
     weight: 1
 MetaDataFormat: "yaml"
 theme:
-- "uswds-nist"
-- "uswds"
+  - "uswds-nist"
+  - "uswds"
 googleAnalytics: UA-66610693-1
 enableGitInfo: true
 enableRobotsTXT: true
@@ -39,13 +39,13 @@ params:
   usabanner: true
 menu:
   secondary:
-  - name: Get involved
-    url: /contribute/
-  - name: Contact Us
-    url: /contribute/contact/
-  - name: Github
-    url: https://github.com/usnistgov/metaschema
+    - name: Get involved
+      url: /contribute/
+    - name: Contact Us
+      url: /contribute/contact/
+    - name: Github
+      url: https://github.com/usnistgov/metaschema
 module:
   mounts:
-  - source: static
-    target: static
+    - source: static
+      target: static

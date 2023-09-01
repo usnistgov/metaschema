@@ -68,24 +68,6 @@ jobs:
       uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744
       with:
         submodules: recursive
-    - name: Set env
-      run: |
-        echo "SAXON_HOME=${JAVA_CLASSPATH}" >> $GITHUB_ENV
-        echo "CALABASH_HOME=${JAVA_CLASSPATH}" >> $GITHUB_ENV
-    # Setup runtime environment
-    # -------------------------
-    # Java JDK 11
-    - name: Set up JDK
-      uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2
-      with:
-        java-version: 11
-        distribution: 'temurin'
-        cache: 'maven'
-    - name: Install JDK Deps Saxon and XML Calabash
-      run: |
-        cd "${BUILD_PATH}"
-        mkdir -p "${JAVA_CLASSPATH}"
-        mvn dependency:copy-dependencies -DoutputDirectory="${JAVA_CLASSPATH}"
     - name: Setup Swap Space
       # Since Hugo is requiring more memory
       uses: pierotofy/set-swap-space@49819abfb41bd9b44fb781159c033dba90353a7c
