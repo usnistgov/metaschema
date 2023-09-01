@@ -12,8 +12,8 @@ languages:
     weight: 1
 MetaDataFormat: "yaml"
 theme:
-  - "uswds-nist"
-  - "uswds"
+- "uswds-nist"
+#- "uswds"
 googleAnalytics: UA-66610693-1
 enableGitInfo: true
 enableRobotsTXT: true
@@ -47,5 +47,7 @@ menu:
       url: https://github.com/usnistgov/metaschema
 module:
   mounts:
-    - source: static
-      target: static
+  - source: static
+    target: static
+  imports:
+  - path: "github.com/usnistgov/hugo-uswds"
