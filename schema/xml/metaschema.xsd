@@ -200,6 +200,49 @@
     <xs:restriction base="TokenDatatype"/>
   </xs:simpleType>
 
+  <xs:attributeGroup name="DefinitionNamingGroup">
+    <xs:annotation>
+      <xs:documentation>Common definition attributes that support definition naming.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="name" use="required" type="ModelNameType"/>
+    <xs:attribute name="int-tag" use="optional" type="PositiveIntegerDatatype"/>
+  </xs:attributeGroup>
+  
+  <xs:group name="RootDefinitionNamingGroup">
+    <xs:annotation>
+      <xs:documentation>Common definition attributes that support root definition naming.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="root-name">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="ModelNameType">
+              <xs:attribute name="int-tag" use="optional" type="PositiveIntegerDatatype"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  
+  
+  <xs:group name="UseNamingGroup">
+    <xs:annotation>
+      <xs:documentation>Common definition attributes that support instance naming.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="use-name" minOccurs="0">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="ModelNameType">
+              <xs:attribute name="int-tag" use="optional" type="PositiveIntegerDatatype"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  
   <xs:complexType name="GlobalAssemblyDefinitionType">
     <xs:annotation>
       <xs:documentation>An element with structured element content in XML; in JSON, an object with
@@ -207,9 +250,9 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:choice>
-        <xs:element minOccurs="0" name="root-name" type="ModelNameType"/>
-        <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
+      <xs:choice minOccurs="0">
+        <xs:group ref="RootDefinitionNamingGroup"/>
+        <xs:group ref="UseNamingGroup"/>
       </xs:choice>
       <xs:element name="json-key" type="JsonKeyType" minOccurs="0" />
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
@@ -222,7 +265,7 @@
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="name" use="required" type="ModelNameType"/>
+    <xs:attributeGroup ref="DefinitionNamingGroup"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
@@ -271,20 +314,20 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
+      <xs:group ref="UseNamingGroup"/>
       <xs:element name="json-key" type="JsonKeyType" minOccurs="0" />
       <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:choice  minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="InlineFlagDefinitionType"/>
+        <xs:element name="define-flag" type="InlineFlagDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
-      <xs:element minOccurs="0" name="constraint" type="DefineFieldConstraintsType"/>
+      <xs:element name="constraint" type="DefineFieldConstraintsType" minOccurs="0"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attributeGroup ref="FieldValueAttributeGroup"/>
     <xs:attribute name="collapsible" type="YesNoType" default="no"/>
-    <xs:attribute name="name" use="required" type="ModelNameType"/>
+    <xs:attributeGroup ref="DefinitionNamingGroup"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
@@ -298,12 +341,12 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
+      <xs:group ref="UseNamingGroup"/>
       <xs:element name="constraint" minOccurs="0" type="DefineFlagConstraintsType"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="name" use="required" type="ModelNameType"/>
+    <xs:attributeGroup ref="DefinitionNamingGroup"/>
     <xs:attributeGroup ref="FlagValueAttributeGroup"/>
     <xs:attribute name="scope" type="ScopeType" default="global"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
@@ -330,7 +373,7 @@
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
-    <xs:attribute name="name" use="required" type="ModelNameType"/>
+    <xs:attributeGroup ref="DefinitionNamingGroup"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
@@ -356,7 +399,7 @@
     <xs:attributeGroup ref="FieldValueAttributeGroup"/>
     <xs:attribute name="collapsible" type="YesNoType" default="no"/>
     <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
-    <xs:attribute name="name" use="required" type="ModelNameType"/>
+    <xs:attributeGroup ref="DefinitionNamingGroup"/>
     <xs:attribute name="in-xml" type="InXmlWrappedType" default="WRAPPED">
       <xs:annotation>
         <xs:documentation>A field with assigned datatype 'markup-multiline' may be designated for representation with or without a containing (wrapper) element
@@ -376,7 +419,7 @@
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="name" use="required" type="ModelNameType"/>
+    <xs:attributeGroup ref="DefinitionNamingGroup"/>
     <xs:attributeGroup ref="FlagValueAttributeGroup"/>
     <xs:attribute name="required" type="YesNoType" default="no"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
@@ -384,10 +427,7 @@
 
   <xs:simpleType name="FormalNameType">
     <xs:annotation>
-      <xs:documentation>A formal name for the data construct, to be presented in documentation. It
-        is permissible for a formal name to provide nothing but an expanson of what is already given
-        by a tag (for example, this element could have formal name "Formal name") but it should at
-        the very least confirm the intended semantics for the user, not confuse them.</xs:documentation>
+      <xs:documentation>A formal name for the data construct, to be presented in documentation.</xs:documentation>
     </xs:annotation>
     <xs:restriction base="StringDatatype"/>
   </xs:simpleType>
@@ -450,7 +490,7 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
+      <xs:group ref="UseNamingGroup"/>
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
     </xs:sequence>
@@ -465,7 +505,7 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element minOccurs="0" name="use-name" type="ModelNameType"/>
+      <xs:group ref="UseNamingGroup"/>
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
     </xs:sequence>
@@ -648,7 +688,7 @@
   <xs:complexType name="FlagReferenceType">
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element name="use-name" minOccurs="0" type="ModelNameType"/>
+      <xs:group ref="UseNamingGroup"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="ref" use="required" type="ModelNameType"/>
