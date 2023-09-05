@@ -5,9 +5,9 @@
 /website/resources
 /website/public
 /website/.hugo_build.lock
-# htmltest
+/website/hugo_stats.json
 /website/tmp
-
+/website/vendor/
 
 # other generated files
 nohup.out

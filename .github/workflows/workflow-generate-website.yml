@@ -43,7 +43,6 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       BUILD_PATH: ./build
-      CICD_PATH: ./build/ci-cd
     steps:
     # use this for builds triggered from the UI on protected branches
     - name: Checkout Latest (using COMMIT_TOKEN)
@@ -118,7 +117,7 @@ jobs:
       working-directory: ${{ github.workspace }}/website
     - name: Run Hugo
       run: |
-        hugo --config "config.yaml,development-config.yaml" -v --debug --minify
+        hugo -e production -v --logLevel debug --minify
       working-directory: ${{ github.workspace }}/website
     - name: Zip Artifacts for Upload
       run: |

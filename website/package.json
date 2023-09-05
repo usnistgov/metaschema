@@ -1,0 +1,20 @@
+{
+    "name": "metaschema-website",
+    "version": "1.0.0",
+    "dependencies": {
+        "ajv-cli": "^5.0.x",
+        "ajv-formats": "^2.1.x",
+        "markdown-link-check": "^3.11.2",
+        "yaml-convert": "^1.0.x"
+    },
+    "overrides": {
+        "fast-json-patch": "^3.1.1"
+    },
+    "devDependencies": {
+        "@fullhuman/postcss-purgecss": "^5.0.0",
+        "autoprefixer": "^10.4.14",
+        "postcss": "^8.4.23",
+        "postcss-cli": "^10.1.0",
+        "sass": "^1.66.1"
+    }
+}

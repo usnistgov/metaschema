@@ -3,7 +3,6 @@ baseURL: https://pages.nist.gov/metaschema/
 relativeURLs: true
 canonifyURLs: true
 defaultContentLanguage: en
-disableAliases: false
 languageCode: "en-us"
 languages:
   en:
@@ -47,7 +46,7 @@ menu:
       url: https://github.com/usnistgov/metaschema
 module:
   mounts:
-  - source: static
-    target: static
+#  - source: static
+#    target: static
   imports:
   - path: "github.com/usnistgov/hugo-uswds"
