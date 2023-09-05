@@ -18,7 +18,7 @@ The `allowed-values` constraint is a kind of Metaschema constraint that restrict
 
 Metaschema processors MUST process `allowed-values` enumerations.
 
-The `@target` attribute of an `<allowed-values>` constraint is used to determine the specific content values the constraint applies to. By evaluating the `@target`, it is possible to identify the *target set* of `<allowed-values>` constraints targeting a given value.
+The `@target` attribute of an `<allowed-values>` constraint is used to determine the specific content values the constraint applies to. For any given value or node, it is possible to identify the *targeting set* of `<allowed-values>` constraints based on their `@target` attributes. If the value or node among is among those being targeted, the constraint is a member of its targeting set.
 
 The *source* of each allowed `<allowed-values>` constraint in the *target set* is identified as one of the following sources:
 
@@ -27,7 +27,7 @@ The *source* of each allowed `<allowed-values>` constraint in the *target set* i
 
 The *target set* of `<allowed-values>` constraints is verified for correctness using the `@extension` attribute on each set member.
 
-Once the *target set* of `<allowed-values>` constraints is validated, the `@allow-other` attribute is used to determine the *expected value set* for a given content value.
+Once the *targeting set* of `<allowed-values>` constraints is determined, their respective `@allow-other` attributes are used to determine the *expected value set* for a given content value.
 
 The following subsections detail the processing requirements for the `@extension` and `@allow-other` attributes.
 
@@ -64,13 +64,13 @@ For each `<allowed-values>` constraint, the `@allow-other` attribute MUST be one
 - **`yes`:** Identifies the *expected value set* as *open*, as long as no other `<allowed-values>` constraint in the *target set* has `@allow-other="no"` declared explicitly or implicitly.
 - **`no`:** (default) Identifies the *expected value set* as *closed*. **This is the implicit default value if no `@allow-other` is provided.**
 
-One of the following requirements MUST apply when processing the a value's *target set* to determine the *expected value set*.
+One of the following requirements MUST apply when processing a value's *targeting set* of `<allowed-values>` constraints to determine the *expected value set*.
 
 1. One `<allowed-values>` constraint in the *target set* MUST have the `@allow-other` attribute value `no`. The *expected value set* is *closed*.
 
-    The actual value MUST match one of the enumerated values declared on any of the `<allowed-values>` constraints in the *target set**target set*. An error MUST be produced to indicate that the value doesn't match one of the enumerated values.
+    The actual value MUST match one of the enumerated values declared on any of the `<allowed-values>` constraints in the *targeting set*. An error MUST be produced to indicate that the value doesn't match one of the enumerated values.
     
-2. All `<allowed-values>` constraints in the *target set* MUST have the `@allow-other` attribute value `yes`.  The *expected value set* is *open*.
+2. All `<allowed-values>` constraints in the *targeting set* MUST have the `@allow-other` attribute value `yes`.  The *expected value set* is *open*.
 
     Any type-appropriate actual value MUST be allowed. A warning MAY be produced to indicate that the value doesn't match one of the enumerated values.
 
