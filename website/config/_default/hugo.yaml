@@ -4,11 +4,6 @@ relativeURLs: true
 canonifyURLs: true
 defaultContentLanguage: en
 languageCode: "en-us"
-languages:
-  en:
-    lang: en
-    languageName: English
-    weight: 1
 MetaDataFormat: "yaml"
 theme:
 - "uswds-nist"
