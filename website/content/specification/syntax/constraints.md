@@ -72,7 +72,7 @@ One of the following requirements MUST apply when processing the a value's *targ
     
 2. All `<allowed-values>` constraints in the *target set* MUST have the `@allow-other` attribute value `yes`.  The *expected value set* is *open*.
 
-    Any type appropriate actual value MUST be allowed. A warning MAY be produced to indicate that the value doesn't match one of the enumerated values.
+    Any type-appropriate actual value MUST be allowed. A warning MAY be produced to indicate that the value doesn't match one of the enumerated values.
 
 A Metaschema processor MAY use the text value of the `enum`'s XML element as documentation for a given allowed value enumeration. Below is an example.
 
