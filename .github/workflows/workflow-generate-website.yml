@@ -72,16 +72,16 @@ jobs:
       with:
         swap-size-gb: 10
     # Install Hugo
-    - name: Store Hugo Executable in Cache
-      uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
-      with:
-        path: /home/runner/go/bin/hugo
-        key: ${{ runner.os }}-hugo-${{ hashFiles(format('{0}/go.sum', env.BUILD_PATH)) }}
-      id: cache-hugo
-    - name: Add Cached Hugo Executable to PATH
-      if: steps.cache-hugo.outputs.cache-hit == 'true'
+    - name: Read .env
+      id: hugo-version
       run: |
-        echo "/home/runner/go/bin" >> $GITHUB_PATH
+        . ./.env
+        echo "HUGO_VERSION=${HUGO_VERSION}" >> "${GITHUB_OUTPUT}"
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+        hugo-version: '${{ steps.hugo-version.outputs.HUGO_VERSION }}'
+        extended: true
     - name: Setup Golang
       if: steps.cache-hugo.outputs.cache-hit != 'true'
       uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe
@@ -105,19 +105,21 @@ jobs:
         # - ajv-formats
         # - markdown-link-check
         # - yaml-convert
-        npm --prefix build install --loglevel verbose
+        npm install --loglevel verbose
         echo "$PWD/node_modules/.bin/" >> $GITHUB_PATH
         # Dart-Sass
         sudo snap install dart-sass
-    - name: Install Hugo
-      if: steps.cache-hugo.outputs.cache-hit != 'true'
-      run: |
-        go install -tags "extended" github.com/gohugoio/hugo
-      working-directory: ${{ github.workspace }}/website
+    # cache hugo modules
+    - uses: actions/cache@v2
+      with:
+        path: /tmp/hugo_cache
+        key: ${{ runner.os }}-hugomod-${{ hashFiles('**/go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-hugomod-        
     - name: Run Hugo
       run: |
         hugo mod vendor
-        hugo -e production -v --logLevel debug --minify
+        hugo -e production --logLevel debug --minify
       working-directory: ${{ github.workspace }}/website
     - name: Zip Artifacts for Upload
       run: |
