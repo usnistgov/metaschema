@@ -82,13 +82,6 @@ jobs:
       with:
         hugo-version: '${{ steps.hugo-version.outputs.HUGO_VERSION }}'
         extended: true
-    - name: Setup Golang
-      if: steps.cache-hugo.outputs.cache-hit != 'true'
-      uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe
-      with:
-        go-version-file: website/go.mod
-        cache: true
-        cache-dependency-path: website/go.sum
     - name: Set up NodeJS
       uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d
       with:
