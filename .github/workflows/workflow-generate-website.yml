@@ -116,6 +116,7 @@ jobs:
       working-directory: ${{ github.workspace }}/website
     - name: Run Hugo
       run: |
+        hugo mod vendor
         hugo -e production -v --logLevel debug --minify
       working-directory: ${{ github.workspace }}/website
     - name: Zip Artifacts for Upload

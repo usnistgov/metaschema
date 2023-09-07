@@ -1,10 +1,13 @@
 module github.com/usnistgov/metaschema/website
 
+//replace github.com/usnistgov/hugo-uswds => ../../hugo-uswds
+
 go 1.20
 
 require github.com/gohugoio/hugo v0.118.2
+
 // TODO replace with official release
-require github.com/usnistgov/hugo-uswds v1.0.1-0.20230905172308-b9fd7d35d52d // indirect
+require github.com/usnistgov/hugo-uswds v1.0.1-0.20230907132321-3e1389f75de0 // indirect
 
 require (
 	cloud.google.com/go v0.110.7 // indirect
