@@ -75,7 +75,7 @@ jobs:
         swap-size-gb: 10
     # Install Hugo
     - name: Store Hugo Executable in Cache
-      uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8
+      uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84
       with:
         path: /home/runner/go/bin/hugo
         key: ${{ runner.os }}-hugo-${{ hashFiles(format('{0}/go.sum', env.BUILD_PATH)) }}
