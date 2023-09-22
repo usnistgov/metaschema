@@ -126,7 +126,7 @@ jobs:
       run: |
         zip ${{ runner.temp }}/metaschema-website.zip -r public/
       working-directory: ${{ github.workspace }}/website
-    - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
+    - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32
       with:
         name: website
         path: |
@@ -141,7 +141,7 @@ jobs:
         output: html-link-report.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce
+    - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32
       with:
         name: html-link-report
         path: html-link-report.md
