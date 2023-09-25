@@ -49,7 +49,7 @@ jobs:
     # use this for builds triggered from the UI on protected branches
     - name: Checkout Latest (using COMMIT_TOKEN)
       if: github.event_name == 'workflow_dispatch' && github.event.inputs.commit_resources == 'true'
-      uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       with:
         token: ${{ secrets.COMMIT_TOKEN }}
         submodules: recursive
@@ -57,7 +57,7 @@ jobs:
     # use this for builds triggered from other workflows on protected branches
     - name: Checkout Latest (using access_token)
       if: github.event_name == 'push' && inputs.commit_resources == true
-      uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       with:
         token: ${{ secrets.access_token }}
         submodules: recursive
@@ -65,7 +65,7 @@ jobs:
     # use this for overything else (i.e., pull requests) where publication is not needed
     - name: Checkout Latest
       if: steps.checkout_latest_workflow.conclusion == 'skipped' && steps.checkout_latest_push.conclusion == 'skipped'
-      uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       with:
         submodules: recursive
     - name: Setup Swap Space
