@@ -30,7 +30,7 @@ params:
   header:
     project_shortname: "Metaschema"
     project_name: "Metaschema Information Modeling Framework"
-  contentRepoPath: https://github.com/usnistgov/metaschema/tree/master/docs/content
+  contentRepoPath: https://github.com/usnistgov/metaschema/tree/master/website/content
   searchAffiliate: metaschema
   usabanner: true
 markup:
