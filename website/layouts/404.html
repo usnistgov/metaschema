@@ -1,0 +1,9 @@
+{{- define "main" -}}
+  {{- partialCached "components/usa-header-extended.html" . -}}
+  <div class="site-content-container">
+    <main id="main" class="main-content usa-prose">
+        <h1>Page not found</h1>
+        <p>{{ .Kind }} The requested page does not exist. The latest content is found on our <a href="/">home page</a>.</p>
+    </main>
+  </div>
+{{- end -}}
