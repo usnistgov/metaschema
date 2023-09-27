@@ -1,0 +1,33 @@
+{
+  "ignorePatterns": [
+        {
+            "pattern": "https://docs.github.com"
+        },
+        {
+            "pattern": "https://guides.github.com"
+        },
+        {
+            "pattern": "https://help.github.com"
+        },
+        {
+            "pattern": "https://www.bottlecaps.de/rex/"
+        },
+        {
+            "pattern": "https://github.com/orgs/usnistgov/projects/"
+        }
+  ],
+  "replacementPatterns": [
+        {
+            "pattern": "^../../issues",
+            "replacement": "https://github.com/usnistgov/metaschema/issues"
+        },
+        {
+            "pattern": "^../../releases",
+            "replacement": "https://github.com/usnistgov/metaschema/releases"
+        },
+        {
+            "pattern": "^../../tree",
+            "replacement": "https://github.com/usnistgov/metaschema/tree"
+        }
+    ]
+}

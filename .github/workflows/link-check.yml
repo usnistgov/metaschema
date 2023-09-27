@@ -26,7 +26,7 @@ on:
         required: true
         default: 'published'
         type: string
-      create_issue:
+      linkcheck_create_issue:
         description: 'create new GitHub issue if broken links found'
         required: false
         default: true
@@ -38,25 +38,25 @@ jobs:
     with:
       ignorePattern: '^website/'
       markdownLinkCheckConfig: 'build/config/.markdown-link-check/config.json'
-      create_issue: true
+      linkcheck_create_issue: true
   schedule-validate-repo-markdown-links-debug:
     uses: ./.github/workflows/workflow-validate-repo-markdown.yml
     if: github.event_name == 'workflow_dispatch'
     with:
       ignorePattern: ${{ github.event.inputs.ignorePattern }}
       markdownLinkCheckConfig: ${{ github.event.inputs.markdownLinkCheckConfig }}
-      create_issue: ${{ contains('true', github.event.inputs.create_issue) }}
+      linkcheck_create_issue: ${{ contains('true', github.event.inputs.linkcheck_create_issue) }}
   schedule-validate-website-links:
     uses: ./.github/workflows/workflow-validate-website-content.yml
     if: github.event_name != 'workflow_dispatch'
     with:
       site_git_ref: 'nist-pages'
       site_git_ref_path: 'published'
-      create_issue: true
+      linkcheck_create_issue: true
   schedule-validate-website-links-debug:
     uses: ./.github/workflows/workflow-validate-website-content.yml
     if: github.event_name == 'workflow_dispatch'
     with:
       site_git_ref: ${{ github.event.inputs.site_git_ref }}
       site_git_ref_path: ${{ github.event.inputs.site_git_ref_path }}
-      create_issue: ${{ contains('true', github.event.inputs.create_issue) }}
+      linkcheck_create_issue: ${{ contains('true', github.event.inputs.linkcheck_create_issue) }}
