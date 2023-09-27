@@ -6,7 +6,7 @@ This page is for potential contributors to this project. It provides basic infor
 
 This project uses an agile approach for development. We’re trying to focus on the core capabilities that are needed to provide the greatest amount of benefit. Because we’re working on a small set of capabilities, this allows us to make very fast progress. We’re building the features that we believe solve the biggest problems to provide the most value to the most people. We provide extension points that allow uncovered cases to be supported by others.
 
-We track our current work items using GitHub [project cards](../../projects).
+We track our current work items using GitHub [project cards](https://github.com/orgs/usnistgov/projects/44).
 
 ## Making Contributions
 
@@ -45,7 +45,7 @@ This repository consists of the following directories and files pertaining to th
 
 ## Contributing as a Developer
 
-This project is using the GitHub [project cards](../../projects) feature to track development activities as part of the core project work stream.
+This project is using the GitHub [project cards](https://github.com/orgs/usnistgov/projects/44) feature to track development activities as part of the core project work stream.
 
 ### User Stories
 

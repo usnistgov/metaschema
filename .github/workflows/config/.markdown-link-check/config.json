@@ -11,16 +11,15 @@
         },
         {
             "pattern": "https://www.bottlecaps.de/rex/"
+        },
+        {
+            "pattern": "https://github.com/orgs/usnistgov/projects/"
         }
   ],
   "replacementPatterns": [
         {
             "pattern": "^../../issues",
             "replacement": "https://github.com/usnistgov/metaschema/issues"
-        },
-        {
-            "pattern": "^../../projects",
-            "replacement": "https://github.com/usnistgov/metaschema/projects"
         },
         {
             "pattern": "^../../releases",
