@@ -17,9 +17,6 @@ nohup.out
 # Ignore NodeJS modules
 node_modules/
 
-# Ignore go files
-/build/vendor/
-
 # Ignore XSpec reports and temp directories
 xspec/
 *report.html
