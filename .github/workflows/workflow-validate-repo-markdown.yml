@@ -10,9 +10,9 @@ on:
       markdownLinkCheckConfig:
         description: 'the path to the markdown link check config file'
         required: false
-        default: 'build/config/.markdown-link-check/config.json'
+        default: '.github/workflows/config/.markdown-link-check/config.json'
         type: string
-      create_issue:
+      linkcheck_create_issue:
         description: 'create new GitHub issue if broken links found'
         required: false
         default: false
@@ -21,6 +21,9 @@ jobs:
   validate-repo-markdown:
     name: Validate Repo Markdown
     runs-on: ubuntu-20.04
+    permissions:
+      contents: read
+      issues: write
     steps:
     # use this for pulls where checkout is anonymous
     - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
@@ -31,7 +34,7 @@ jobs:
     - name: Set up NodeJS
       uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d
       with:
-        node-version-file: 'build/.nvmrc'
+        node-version-file: '.github/workflows/config/.nvmrc'
         cache: 'npm'
         cache-dependency-path: 'package-lock.json'
     - name: Setup Dependencies
@@ -59,11 +62,11 @@ jobs:
         exit ${PIPESTATUS[2]}
       id: linkchecker
     - name: Create issue if bad links detected in repo
-      if: failure() && inputs.create_issue == true
+      if: failure() && inputs.linkcheck_create_issue == true
       uses: peter-evans/create-issue-from-file@433e51abf769039ee20ba1293a088ca19d573b7f # v3.0.0
       with:
         title: Scheduled Check of Markdown Documents Found Bad Hyperlinks
         content-filepath: mlc_report.log
         labels: |
           bug
-          Scope: Documentation
+          documentation

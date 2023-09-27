@@ -1,5 +1,4 @@
 name: Validate Website Content
-
 on:
   workflow_call:
     inputs:
@@ -13,7 +12,12 @@ on:
         required: true
         default: 'published'
         type: string
-      create_issue:
+      linkcheck_create_issue:
+        description: 'create new GitHub issue if broken links found'
+        required: false
+        default: false
+        type: boolean
+      linkcheck_fail_on_error:
         description: 'create new GitHub issue if broken links found'
         required: false
         default: false
@@ -21,6 +25,9 @@ on:
 jobs:
   schedule-validate-website-links:
     runs-on: ubuntu-20.04
+    permissions:
+      contents: read
+      issues: write
     steps:
     - name: Checkout Latest
       uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
@@ -35,16 +42,23 @@ jobs:
       id: linkchecker
       uses: lycheeverse/lychee-action@ec3ed119d4f44ad2673a7232460dc7dff59d2421
       with:
-        args: --exclude-file ./build/config/.lycheeignore --verbose --no-progress --accept 200,206,429 './${{ inputs.site_git_ref_path }}/**/*.html' --exclude-mail
+        args: --exclude-file .github/workflows/config/.lycheeignore --verbose --no-progress --accept 200,206,429 './${{ inputs.site_git_ref_path }}/**/*.html' --exclude-mail
+        fail: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
     - name: Create issue if bad links detected
-      if: steps.linkchecker.outputs.exit_code != 0 && inputs.create_issue
+      if: ${{ !cancelled() && env.lychee_exit_code != 0 && inputs.linkcheck_create_issue }}
       uses: peter-evans/create-issue-from-file@433e51abf769039ee20ba1293a088ca19d573b7f
       with:
         title: Scheduled Check of Website Content Found Bad Hyperlinks
         content-filepath: ./lychee/out.md
         labels: |
           bug
-          Scope: Documentation
-          Scope: Website
+          documentation
+    - name: Check coverage tolerance
+      if: ${{ env.lychee_exit_code != 0 && inputs.linkcheck_fail_on_error }}
+      uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410
+      with:
+        script: |
+          core.setFailed('Link checker detected broken or invalid links, read attached report.')

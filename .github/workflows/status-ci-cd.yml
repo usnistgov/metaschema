@@ -1,4 +1,4 @@
-name: Metaschema CI/CD
+name: CI/CD
 on:
   push:
     branches:
@@ -26,5 +26,3 @@ jobs:
     uses: ./.github/workflows/workflow-generate-website.yml
     with:
       commit_resources: true
-    secrets:
-      access_token: ${{ secrets.COMMIT_TOKEN }}
