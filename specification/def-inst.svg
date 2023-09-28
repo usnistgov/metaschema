@@ -29,9 +29,9 @@
 		<title>Page-1</title>
 		<g id="shape18-1" transform="translate(1,-1)">
 			<title>Rectangle.18</title>
-			<desc>Assmebly: asmb-def-1</desc>
+			<desc>Assembly: asmb-def-1</desc>
 			<rect x="0" y="2" width="103.543" height="121.5" class="st1"/>
-			<text x="5.79" y="15" class="st2">Assmebly: asmb-def-1</text>		</g>
+			<text x="5.79" y="15" class="st2">Assembly: asmb-def-1</text>		</g>
 		<g id="shape19-4" transform="translate(7.83656,-80.875)">
 			<title>Rectangle.19</title>
 			<desc>flg-inst-1</desc>
