@@ -12,6 +12,10 @@ on:
         required: false
         default: true
         type: boolean
+    secrets:
+      # Used to pass repo secrets to this called workflow, since secrets are not inherited
+      COMMIT_TOKEN:
+        required: false
   workflow_dispatch:
     branches:
     - main
@@ -39,8 +43,6 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       BUILD_PATH: ./build
-    permissions:
-      contents: write
     steps:
     # use this for builds triggered from the UI and from workflows on protected branches
     - id: checkout_latest_workflow
@@ -48,7 +50,7 @@ jobs:
       if: (github.event_name == 'workflow_dispatch' && github.event.inputs.commit_resources == 'true') || (github.event_name == 'push' && inputs.commit_resources == true)
       uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       with:
-        token: ${{ secrets.GITHUB_TOKEN  }}
+        persist-credentials: false
         submodules: recursive
     # use this for overything else (i.e., pull requests) where publication is not needed
     - name: Checkout Latest
@@ -152,11 +154,10 @@ jobs:
       uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847
       if: github.ref_name == 'main' && ((github.event_name == 'push' && inputs.commit_resources == true) || (github.event_name == 'workflow_dispatch' && github.event.inputs.commit_resources == 'true'))
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        personal_token: ${{ secrets.COMMIT_TOKEN }}
         enable_jekyll: false
         publish_dir: ./website/public
         publish_branch: nist-pages
-        commit_user_name: GitHub Actions Bot
-        commit_user_email: metaschema@nist.gov
-        commit_author: GitHub Actions Bot <metaschema@nist.gov>
+        user_name: GitHub Actions Bot
+        user_email: metaschema@nist.gov
         commit_message: Deploying website [ci deploy skip]

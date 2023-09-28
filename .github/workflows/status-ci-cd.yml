@@ -26,3 +26,5 @@ jobs:
     uses: ./.github/workflows/workflow-generate-website.yml
     with:
       commit_resources: true
+    secrets:
+      COMMIT_TOKEN: ${{ secrets.COMMIT_TOKEN }}
