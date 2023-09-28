@@ -11,7 +11,7 @@ menu:
 
 Currently, a Metaschema [module](/specification/glossary/#metaschema-module) is defined using an [XML-based format](https://github.com/usnistgov/metaschema/blob/develop/schema/xml/metaschema.xsd). Alternate formats (e.g., JSON, YAML) are currently being considered.
 
-An [ISO Schematron](https://schematron.com/) ruleset is also [provided](https://github.com/usnistgov/metaschema/blob/master/toolchains/xslt-M4/validate/metaschema-composition-check.sch) to enforce some of the rules described in the Metaschema [specification](/specification/).
+An [ISO Schematron](https://schematron.com/) ruleset is also [provided](https://github.com/usnistgov/metaschema-xslt/blob/develop/src/validate/metaschema-composition-check.sch) to enforce some of the rules described in the Metaschema [specification](/specification/).
 
 A [tutorial](/tutorials/1-getting-started/) covering basic concepts is provided that will walk you through an example of creating a new Metaschema module.
 
@@ -27,3 +27,8 @@ Metaschema modules are used to generate other model-related artifacts based on t
 - Model-aware utilities and mock datasets for generic display, data conversion, reformatting, and testing.
 - XML and JSON model documentation for use on a website (e.g., the [OSCAL website](https://pages.nist.gov/OSCAL/documentation/schema/)).
 - Programming language APIs used for parsing data conformant to a given data model into a set of language-specific objects, and also writing data in language-specific objects out to one of the supported data model formats.
+
+## Related work
+
+- A [Java implementation](https://github.com/usnistgov/metaschema-java) provides Metaschema parsing, data instance validation and parsing, content conversion, Java code generation, and XSD and JSON schema generation capabilities.
+- An [XSLT implementation](https://github.com/usnistgov/metaschema-java) provides data instance validation, content conversion, documentation generation, and XSD and JSON schema generation capabilities.
