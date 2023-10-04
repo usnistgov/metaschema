@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  elementFormDefault="qualified"
-  attributeFormDefault="unqualified"
-  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  attributeFormDefault="unqualified" xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
   targetNamespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
 
   <xs:include schemaLocation="metaschema-prose-module.xsd">
@@ -16,7 +14,7 @@
       <xs:documentation>This datatypes module provides support for all other built-in Metaschema data types.</xs:documentation>
     </xs:annotation>
   </xs:include>
-  
+
   <xs:element name="METASCHEMA">
     <xs:annotation>
       <xs:documentation>Root element of a Metaschema definition. Defines a family of data
@@ -55,18 +53,19 @@
       <xs:attribute name="abstract" type="YesNoType" default="no"/>
     </xs:complexType>
     <xs:unique name="unique-constraint-ids">
-      <xs:selector xpath=".//allowed-values|.//matches|.//index-has-key|.//is-unique|.//has-cardinality|.//expect|.//index"/>
+      <xs:selector
+        xpath=".//allowed-values | .//matches | .//index-has-key | .//is-unique | .//has-cardinality | .//expect | .//index"/>
       <xs:field xpath="@id"/>
     </xs:unique>
     <xs:key name="key-index-constraint">
       <xs:selector xpath=".//index"/>
       <xs:field xpath="@name"/>
     </xs:key>
-<!--    <xs:keyref name="keyref-index-has-key" refer="key-index-constraint">
+    <!--    <xs:keyref name="keyref-index-has-key" refer="key-index-constraint">
       <xs:selector xpath=".//m:index-has-key"/>
       <xs:field xpath="@name"/>
     </xs:keyref>
--->  
+-->
   </xs:element>
 
   <xs:element name="METASCHEMA-CONSTRAINTS">
@@ -79,7 +78,7 @@
           <xs:annotation>
             <xs:documentation>The name of this constraint set.</xs:documentation>
           </xs:annotation>
-        </xs:element>          
+        </xs:element>
         <xs:element name="version" type="VersionType">
           <xs:annotation>
             <xs:documentation>The version of this constraint set.</xs:documentation>
@@ -98,7 +97,7 @@
             </xs:attribute>
           </xs:complexType>
         </xs:element>
-        
+
         <xs:element name="scope" maxOccurs="unbounded">
           <xs:complexType>
             <xs:choice maxOccurs="unbounded">
@@ -150,7 +149,7 @@
       </xs:annotation>
     </xs:attribute>
   </xs:complexType>
-  
+
   <xs:group name="DefinitionMetadataGroup">
     <xs:sequence>
       <xs:element name="formal-name" type="FormalNameType" minOccurs="0"/>
@@ -186,9 +185,10 @@
      -->
     </xs:sequence>
   </xs:group>
-  
+
   <xs:complexType name="PropertyType">
-    <xs:attribute name="namespace" type="URIDatatype" default="http://csrc.nist.gov/ns/oscal/metaschema/1.0"/>
+    <xs:attribute name="namespace" type="URIDatatype"
+      default="http://csrc.nist.gov/ns/oscal/metaschema/1.0"/>
     <xs:attribute name="name" type="TokenDatatype" use="required"/>
     <xs:attribute name="value" type="TokenDatatype" use="required"/>
   </xs:complexType>
@@ -199,14 +199,14 @@
     </xs:annotation>
     <xs:restriction base="TokenDatatype"/>
   </xs:simpleType>
-  
+
   <xs:simpleType name="ModelIndexType">
     <xs:annotation>
       <xs:documentation>The machine-oriented naming type of all definitions and instances for use in binary data.</xs:documentation>
     </xs:annotation>
     <xs:restriction base="IntegerDatatype"/>
   </xs:simpleType>
-  
+
   <xs:attributeGroup name="DefinitionNamingGroup">
     <xs:annotation>
       <xs:documentation>Common definition attributes that support definition naming.</xs:documentation>
@@ -214,7 +214,7 @@
     <xs:attribute name="name" use="required" type="ModelNameType"/>
     <xs:attribute name="index" use="optional" type="ModelIndexType"/>
   </xs:attributeGroup>
-  
+
   <xs:group name="RootDefinitionNamingGroup">
     <xs:annotation>
       <xs:documentation>Common definition attributes that support root definition naming.</xs:documentation>
@@ -224,15 +224,15 @@
         <xs:complexType>
           <xs:simpleContent>
             <xs:extension base="ModelNameType">
-              <xs:attribute name="root-index" use="optional" type="ModelIndexType"/>
+              <xs:attribute name="index" use="optional" type="ModelIndexType"/>
             </xs:extension>
           </xs:simpleContent>
         </xs:complexType>
       </xs:element>
     </xs:sequence>
   </xs:group>
-  
-  
+
+
   <xs:group name="UseNamingGroup">
     <xs:annotation>
       <xs:documentation>Common definition attributes that support instance naming.</xs:documentation>
@@ -242,14 +242,14 @@
         <xs:complexType>
           <xs:simpleContent>
             <xs:extension base="ModelNameType">
-              <xs:attribute name="use-index" use="optional" type="ModelIndexType"/>
+              <xs:attribute name="index" use="optional" type="ModelIndexType"/>
             </xs:extension>
           </xs:simpleContent>
         </xs:complexType>
       </xs:element>
     </xs:sequence>
   </xs:group>
-  
+
   <xs:complexType name="GlobalAssemblyDefinitionType">
     <xs:annotation>
       <xs:documentation>An element with structured element content in XML; in JSON, an object with
@@ -261,8 +261,8 @@
         <xs:group ref="RootDefinitionNamingGroup"/>
         <xs:group ref="UseNamingGroup"/>
       </xs:choice>
-      <xs:element name="json-key" type="JsonKeyType" minOccurs="0" />
-      <xs:choice  minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
           type="InlineFlagDefinitionType"/>
@@ -322,11 +322,12 @@
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
       <xs:group ref="UseNamingGroup"/>
-      <xs:element name="json-key" type="JsonKeyType" minOccurs="0" />
+      <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
       <xs:group ref="JsonValueKeyChoiceGroup"/>
-      <xs:choice  minOccurs="0" maxOccurs="unbounded">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
-        <xs:element name="define-flag" type="InlineFlagDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="define-flag" type="InlineFlagDefinitionType" minOccurs="0"
+          maxOccurs="unbounded"/>
       </xs:choice>
       <xs:element name="constraint" type="DefineFieldConstraintsType" minOccurs="0"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
@@ -367,12 +368,13 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element name="json-key" type="JsonKeyType" minOccurs="0" />
+      <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
       <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
-      <xs:choice  minOccurs="0" maxOccurs="unbounded">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="InlineFlagDefinitionType"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
+          type="InlineFlagDefinitionType"/>
       </xs:choice>
       <xs:element name="model" minOccurs="0" type="AssemblyModelType"/>
       <xs:element minOccurs="0" name="constraint" type="DefineAssemblyConstraintsType"/>
@@ -392,12 +394,13 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element name="json-key" type="JsonKeyType" minOccurs="0" />
+      <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
       <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
-      <xs:choice  minOccurs="0" maxOccurs="unbounded">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag" type="InlineFlagDefinitionType"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
+          type="InlineFlagDefinitionType"/>
       </xs:choice>
       <xs:element minOccurs="0" name="constraint" type="DefineFieldConstraintsType"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
@@ -438,14 +441,14 @@
     </xs:annotation>
     <xs:restriction base="StringDatatype"/>
   </xs:simpleType>
-  
+
   <xs:simpleType name="JsonBaseUriType">
     <xs:annotation>
       <xs:documentation>The JSON Base URI is nominal base URI assigned to a JSON Schema instance expressing the model defined by this metaschema.</xs:documentation>
     </xs:annotation>
     <xs:restriction base="URIDatatype"/>
   </xs:simpleType>
- 
+
   <xs:complexType name="RemarksType">
     <xs:annotation>
       <xs:documentation>Any explanatory or helpful information to be provided in the
@@ -506,7 +509,7 @@
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
-  <xs:complexType  name="FieldReferenceType">
+  <xs:complexType name="FieldReferenceType">
     <xs:annotation>
       <xs:documentation>Referencing a field definition to include a field or fields of a given type in a model.</xs:documentation>
     </xs:annotation>
@@ -688,7 +691,7 @@
     <xs:attribute name="deprecated" type="VersionType">
       <xs:annotation>
         <xs:documentation>The associated construct has been deprecated at the specified version. Its use should be avoided if possible.</xs:documentation>
-      </xs:annotation>    
+      </xs:annotation>
     </xs:attribute>
   </xs:attributeGroup>
 
@@ -765,7 +768,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="DefineFlagConstraintsType">
     <xs:sequence>
       <xs:choice maxOccurs="unbounded">
@@ -869,7 +872,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="ScopedKeyConstraintType">
     <xs:complexContent>
       <xs:extension base="KeyConstraintType">
@@ -934,7 +937,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="ExpectConstraintType">
     <xs:complexContent>
       <xs:extension base="ConstraintType">
@@ -964,7 +967,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-    
+
   <xs:group name="CommonModelConstraintsGroup">
     <xs:choice>
       <xs:element name="allowed-values" type="ScopedAllowedValuesType">
@@ -1021,7 +1024,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:group name="AssemblyConstraintsGroup">
     <xs:choice>
       <xs:element name="index" type="ScopedIndexConstraintType">
@@ -1085,7 +1088,7 @@
         <xs:annotation>
           <xs:documentation>A short description of the example that provides basic documentation about the example's purpose.</xs:documentation>
         </xs:annotation>
-        
+
       </xs:element>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
