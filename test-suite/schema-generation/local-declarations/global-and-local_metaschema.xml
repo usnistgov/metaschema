@@ -12,7 +12,7 @@
       <formal-name>parent</formal-name>
       <description>parent assembly</description>
       <root-name>parent</root-name>
-      <define-flag name="local-flag" as-type="string">
+      <define-flag name="local-flag" as-type="token">
          <formal-name>Flag defined locally</formal-name>
          <description>Has a local definition</description>
       </define-flag>
@@ -38,7 +38,7 @@
          <assembly ref="global-assembly"/>
       </model>
    </define-assembly>   
-   <define-flag name="global-flag" as-type="string">
+   <define-flag name="global-flag" as-type="token">
       <formal-name>Flag defined globally</formal-name>
       <description>Has a global definition</description>
    </define-flag>

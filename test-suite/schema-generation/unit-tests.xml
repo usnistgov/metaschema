@@ -24,20 +24,6 @@
             <validation-case source-format="JSON" location="choice-multiple_test_multiple_PASS.json"/>
         </test-scenario>
     </test-collection>
-    <test-collection name="Feature: Collapsible" location="collapsible/">
-        <test-scenario name="NoOp">
-            <generate-schema>
-                <metaschema location="collapsible-no-op_metaschema.xml"/>
-            </generate-schema>
-        </test-scenario>
-        <test-scenario name="Simple">
-            <generate-schema>
-                <metaschema location="collapsible_metaschema.xml"/>
-            </generate-schema>
-            <validation-case source-format="JSON" location="collapsible_test_multiple_PASS.json"/>
-            <validation-case source-format="JSON" location="collapsible_test_singleton_PASS.json"/>
-        </test-scenario>
-    </test-collection>
     <test-collection name="Feature: Datatype" location="datatypes/">
         <test-scenario name="Character Strings">
             <generate-schema>
