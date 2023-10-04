@@ -195,17 +195,24 @@
 
   <xs:simpleType name="ModelNameType">
     <xs:annotation>
-      <xs:documentation>The type of all definition and instance names.</xs:documentation>
+      <xs:documentation>The human-oriented naming type for all definitions and instances for use in textual data.</xs:documentation>
     </xs:annotation>
     <xs:restriction base="TokenDatatype"/>
   </xs:simpleType>
-
+  
+  <xs:simpleType name="ModelIndexType">
+    <xs:annotation>
+      <xs:documentation>The machine-oriented naming type of all definitions and instances for use in binary data.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="IntegerDatatype"/>
+  </xs:simpleType>
+  
   <xs:attributeGroup name="DefinitionNamingGroup">
     <xs:annotation>
       <xs:documentation>Common definition attributes that support definition naming.</xs:documentation>
     </xs:annotation>
     <xs:attribute name="name" use="required" type="ModelNameType"/>
-    <xs:attribute name="int-tag" use="optional" type="PositiveIntegerDatatype"/>
+    <xs:attribute name="index" use="optional" type="ModelIndexType"/>
   </xs:attributeGroup>
   
   <xs:group name="RootDefinitionNamingGroup">
@@ -217,7 +224,7 @@
         <xs:complexType>
           <xs:simpleContent>
             <xs:extension base="ModelNameType">
-              <xs:attribute name="int-tag" use="optional" type="PositiveIntegerDatatype"/>
+              <xs:attribute name="root-index" use="optional" type="ModelIndexType"/>
             </xs:extension>
           </xs:simpleContent>
         </xs:complexType>
@@ -235,7 +242,7 @@
         <xs:complexType>
           <xs:simpleContent>
             <xs:extension base="ModelNameType">
-              <xs:attribute name="int-tag" use="optional" type="PositiveIntegerDatatype"/>
+              <xs:attribute name="use-index" use="optional" type="ModelIndexType"/>
             </xs:extension>
           </xs:simpleContent>
         </xs:complexType>
