@@ -9,7 +9,7 @@
         "markdown-link-check": "^3.11.2",
         "postcss": "^8.4.23",
         "postcss-cli": "^10.1.0",
-        "sass": "^1.66.1",
+        "sass": "^1.69.0",
         "yaml-convert": "^1.0.x"
     },
     "overrides": {
