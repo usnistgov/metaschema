@@ -641,7 +641,7 @@
             <xs:documentation>The given enumerated value or values are inclusive of other values ('yes') or not ('no', the default)</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="extensible" type="ExtensibleEnumType" default="model">
+        <xs:attribute name="extensible" type="ExtensibleEnumType" default="external">
           <xs:annotation>
             <xs:documentation>Determines if the given enumerated value or values within a namespace may be extended by other allowed value constraints.</xs:documentation>
           </xs:annotation>
