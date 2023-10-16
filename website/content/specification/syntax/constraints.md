@@ -12,6 +12,20 @@ TODO: P3: Address issue https://github.com/usnistgov/metaschema/issues/325
 
 ## Common Constraint Data
 
+Metaschema modules can define different kinds of constraints to support data validation, inter-documenting indices, and intra-document indices. Below are constraint data that modules may include within any of those different constraint types.
+
+### `@id`
+
+A constraint MAY have an OPTIONAL `@id` attribute so Metaschema processors MAY identify use the identifier for processing constraints and/or referencing them in output for later analysis.
+
+### `@level`
+
+A constraint MAY have an OPTIONAL `@level` attribute so Metaschema processors MAY perform conditional processing and/or presentation of constraint violations based on the value of applicable constraints for a document. If defined, a `@level` MUST have a value of either `INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL`.
+
+### `@target`
+
+A constraint MAY have a `@target`. A `@target` value is a valid a Metapath expression. In a document conforming to a Metaschema module, a Metaschema processor MUST process the constraint to any path in that model definition that matches the given Metapath expression. If a `@target` value is not defined, a Metaschema processor must process the value as `target="."`, the current context of that constraint definition in a module, for a [field](#define-field-constraints) or [flag](#define-flag-constraints). For [assemblies](#define-assembly-constraints), a Metaschema processor MUST NOT process any constraint within its `model` with a value of `target="."`.
+
 ## Enumerated values
 
 The `allowed-values` constraint is a kind of Metaschema constraint that restricts field or flag value(s) based on an enumerated set of permitted values.
