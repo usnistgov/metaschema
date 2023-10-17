@@ -16,15 +16,19 @@ Metaschema modules can define different kinds of constraints to support data val
 
 ### `@id`
 
-A constraint MAY have an OPTIONAL `@id` attribute so Metaschema processors MAY identify use the identifier for processing constraints and/or referencing them in output for later analysis.
+A constraint MAY have an OPTIONAL `@id` attribute, which provides an identifier for the constraint. Metaschema processors MAY use the identifier for processing constraints and/or referencing them in output for later analysis.
 
 ### `@level`
 
-A constraint MAY have an OPTIONAL `@level` attribute so Metaschema processors MAY perform conditional processing and/or presentation of constraint violations based on the value of applicable constraints for a document. If defined, a `@level` MUST have a value of either `INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL`.
+A constraint MAY have an OPTIONAL `@level` attribute, which identifies the severity level of a violation of the constraint. If defined, a `@level` MUST have a value of either: `INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL`. Metaschema processors MAY perform conditional processing and/or presentation of constraint violations based on the level value.
 
 ### `@target`
 
 A constraint MAY have a `@target`. A `@target` value is a valid a Metapath expression. In a document conforming to a Metaschema module, a Metaschema processor MUST process the constraint to any path in that model definition that matches the given Metapath expression. If a `@target` value is not defined, a Metaschema processor must process the value as `target="."`, the current context of that constraint definition in a module, for a [field](#define-field-constraints) or [flag](#define-flag-constraints). For [assemblies](#define-assembly-constraints), a Metaschema processor MUST NOT process any constraint within its `model` with a value of `target="."`.
+
+## Constraint Processing
+
+### Fatal versus Non-Fatal Errors
 
 ## Enumerated values
 
