@@ -14,7 +14,7 @@ on:
       markdownLinkCheckConfig:
         description: 'the path to the markdown link check config file'
         required: false
-        default: 'build/config/.markdown-link-check/config.json'
+        default: '.github/workflows/config/.markdown-link-check/config.json'
         type: string
       site_git_ref:
         description: 'git ref, a SHA commit or branch or tag, for the published HTML content'
