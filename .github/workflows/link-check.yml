@@ -37,7 +37,7 @@ jobs:
     if: github.event_name != 'workflow_dispatch'
     with:
       ignorePattern: '^website/'
-      markdownLinkCheckConfig: 'build/config/.markdown-link-check/config.json'
+      markdownLinkCheckConfig: '.github/workflows/config/.markdown-link-check/config.json'
       linkcheck_create_issue: true
   schedule-validate-repo-markdown-links-debug:
     uses: ./.github/workflows/workflow-validate-repo-markdown.yml
