@@ -5,7 +5,7 @@
         "@fullhuman/postcss-purgecss": "^5.0.0",
         "ajv-cli": "^5.0.x",
         "ajv-formats": "^2.1.x",
-        "autoprefixer": "^10.4.14",
+        "autoprefixer": "^10.4.16",
         "markdown-link-check": "^3.11.2",
         "postcss": "^8.4.31",
         "postcss-cli": "^10.1.0",
