@@ -6,4 +6,4 @@ This directory contains supporting files for Metaschema GitHub repository use. T
 * [workflows](workflows): This directory contains GitHub Actions workflows.
 * [PULL_REQUEST_TEMPLATE.md](PULL_REQUEST_TEMPLATE.md): This file contains a template to be filled out for each GitHub pull request by the person submitting it.
 * [CODEOWNERS](CODEOWNERS): This file contains code ownership and review responsibilities.
-* [dependabot.yml](dependabot.yaml): This file contains configuration for dependency updates.
+* [dependabot.yml](dependabot.yml): This file contains configuration for dependency updates.
