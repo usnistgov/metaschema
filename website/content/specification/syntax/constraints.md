@@ -24,34 +24,57 @@ A constraint MAY have an OPTIONAL `@level` attribute, which identifies the sever
 
 ### `@target`
 
-A constraint MAY have a `@target`. A `@target` value is a valid a Metapath expression. In a document conforming to a Metaschema module, a Metaschema processor MUST process the constraint to any path in that model definition that matches the given Metapath expression. If a `@target` value is not defined, a Metaschema processor must process the value as `target="."`, the current context of that constraint definition in a module, for a [field](#define-field-constraints) or [flag](#define-flag-constraints). For [assemblies](#define-assembly-constraints), a Metaschema processor MUST NOT process any constraint within its `model` with a value of `target="."`.
+The *target* of a constraint identifies the content nodes that a constraint applies to.
+
+A *target* can apply to any node(s) in the document instance(s). There is no guarantee the constraint is a child of its respective assembly, field, or flag.
+
+When validating content, any constraint whose target does not match any content node MUST be ignored.
+
+A constraint MAY have a `@target`. A `@target` value is a valid Metapath expression. In a document conforming to a Metaschema module, a Metaschema processor MUST process the constraint to any path in that model definition that matches the given Metapath expression.
+
+If a `@target` value is not defined, a Metaschema processor must process the value as `target="."`, the current context of that constraint definition in a module, for a [field](#define-field-constraints) or [flag](#define-flag-constraints).
 
 ## Constraint Processing
 
-### Fatal versus Non-Fatal Errors
+### Processing Error Handling
+
+Processing errors occur when a defect in the constraint definition causes an unintended error to occur during constraint processing. This differs from a validation error that results from not meeting the requirement of a constraint.
+
+- If a processing error occurs while processing a constraint, which can result from evaluating a Metapath expression, the error SHOULD be reported.
+- If a processing error occurs while processing a constraint, then the document instance being validated MUST NOT be considered valid. This is due to the inability to make a conclusion around validity, since some constraints were not validated due to errors.
 
 ## Enumerated values
 
 The `allowed-values` constraint is a kind of Metaschema constraint that restricts field or flag value(s) based on an enumerated set of permitted values.
 
-Metaschema processors MUST process `allowed-values` enumerations.
-
-The `@target` attribute of an `<allowed-values>` constraint is used to determine the specific content values the constraint applies to. For any given value or node, it is possible to identify the *targeting set* of `<allowed-values>` constraints based on their `@target` attributes. If the value or node among is among those being targeted, the constraint is a member of its targeting set.
-
-The *source* of each allowed `<allowed-values>` constraint in the *target set* is identified as one of the following sources:
+Each `allowed-values` constraint has a *source* that will be either:
 
 - **model:** The constraint is defined *in* a Metaschema module.
 - **external:** The constraint is defined *outside* a Metaschema module, e.g. external constraints.
 
-The *target set* of `<allowed-values>` constraints is verified for correctness using the `@extension` attribute on each set member.
+The `@target` of an `<allowed-values>` constraint specifies the node(s) in a document instance whose value is restricted by the constraint.
 
-Once the *targeting set* of `<allowed-values>` constraints is determined, their respective `@allow-other` attributes are used to determine the *expected value set* for a given content value.
+### Enumerated value processing
+
+Metaschema processors MUST process `<allowed-values>` constraints.
+
+The constraint's `@target` MUST be evaluated as a Metapath expression relative to the node instances of the definition it is enclosed in. These nodes will be the *focus* for Metapath evaluation. Thus, the target is evaluated relative to any node that is an instance of that definition.
+
+The sequence of nodes that result from Metapath evaluation are the constraints *target node(s)*.
+
+The nodes resulting from evaluating an `<allowed-values>` `@target` are intended to be *field* or *flag* nodes, which have a value. If these nodes are an instance of an *assembly*, a Metaschema processor error SHOULD be raised.
+
+Multiple `<allowed-values>` constraints can apply to a given *target node*. Fo a given *target node*, it is necessary to determine which `<allowed-values>` constraints apply to its value. This can be done through a full instance transversal or any other means that is capable of accurately determining the set of `<allowed-values>` constraints that target a given node. This set of  `<allowed-values>` constraints is considered the *applicable set*.
+
+The `<allowed-values>` `@allow-other` attribute determines the *expected value set* for a given content value.
+
+The *target set* of `<allowed-values>` constraints is verified for correctness using the `@extension` attribute on each set member.
 
 The following subsections detail the processing requirements for the `@extension` and `@allow-other` attributes.
 
 ### `@extension`
 
-For each `<allowed-values>` constraint, the `@extension` attribute MUST be one of the following values.
+For each `<allowed-values>` constraints the *applicable set*, the `@extension` attribute MUST be one of the following values.
 
 - **`none`:** There can be no other matching `<allowed-values>` constraint for the same target value. This is the least permissive option.
 
@@ -112,3 +135,6 @@ A Metaschema processor MAY use the text value of the `enum`'s XML element as doc
 ## `define-field` constraints
 
 ## `define-assembly` constraints
+
+## External Constraints
+
