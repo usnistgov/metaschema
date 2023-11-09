@@ -22,6 +22,8 @@ module:
   mounts:
   - source: static
     target: static
+  - source: ../examples
+    target: static/examples
   imports:
   - path: github.com/usnistgov/hugo-uswds-nist
 relativeURLs: true # rewrites URLs to a relative form supporting link offline checking
