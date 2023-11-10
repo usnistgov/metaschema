@@ -129,10 +129,13 @@
         <prop name="identifier-type" value="human-oriented"/>
         
         Multiple instances of "identifier-type" can be used to support both cases.
+
         TODO: Need to update the documentation to clarify that the value set is constrained and what the options are.
+
         The "identifier-scope" must be one of:
         <prop name="identifier-reference-scope" value="instance"/>
         <prop name="identifier-reference-scope" value="cross-instance"/>
+
         Must be one of:
         <prop namespace="http://csrc.nist.gov/ns/oscal" name="identifier-reference-model" value="model-name"/>
      -->       
@@ -193,20 +196,20 @@
     </xs:sequence>
   </xs:group>
 
+  <xs:complexType name="UseNameType">
+    <xs:simpleContent>
+      <xs:extension base="ModelNameType">
+        <xs:attribute name="index" use="optional" type="ModelIndexType"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
   <xs:group name="UseNamingGroup">
     <xs:annotation>
       <xs:documentation>Common definition attributes that support instance naming.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="use-name" minOccurs="0">
-        <xs:complexType>
-          <xs:simpleContent>
-            <xs:extension base="ModelNameType">
-              <xs:attribute name="index" use="optional" type="ModelIndexType"/>
-            </xs:extension>
-          </xs:simpleContent>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="use-name" type="UseNameType" minOccurs="0"/>
     </xs:sequence>
   </xs:group>
 
@@ -224,8 +227,7 @@
       <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" name="define-flag"
-          type="InlineFlagDefinitionType"/>
+        <xs:element name="define-flag" type="InlineFlagDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:element name="model" type="AssemblyModelType" minOccurs="0"/>
       <xs:element name="constraint" type="DefineAssemblyConstraintsType" minOccurs="0"/>
@@ -249,7 +251,6 @@
       <xs:element name="any" type="AnyType" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-
 
   <xs:group name="JsonValueKeyChoiceGroup">
     <xs:sequence>
@@ -474,6 +475,7 @@
           in XML.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+    <xs:attribute name="default" type="StringDatatype"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
@@ -547,6 +549,7 @@
     </xs:sequence>
     <xs:attributeGroup ref="DefinitionReferenceNamingGroup"/>
     <xs:attribute name="required" type="YesNoType" default="no"/>
+    <xs:attribute name="default" type="StringDatatype"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
 
@@ -580,7 +583,7 @@
         <xs:any namespace="##other" processContents="lax"/>
       </xs:choice>
     </xs:sequence>
-    <xs:attribute name="href" type="URIDatatype"/>
+    <xs:attribute name="href" type="URIReferenceDatatype"/>
     <xs:attribute name="path" type="StringDatatype"/>
   </xs:complexType>
 
@@ -588,8 +591,7 @@
     <xs:annotation>
       <xs:documentation>In the XML, produces an attribute with the given name, whose value is used as a key value (aka object property name) in the JSON, enabling objects to be 'lifted' out of arrays when such values are distinct. Implies that siblings will never share values.</xs:documentation>
     </xs:annotation>
-    <xs:attribute name="flag-ref" type="ModelNameType"/>
-    <!-- do not have to flag if required; it always will be <xs:attribute name="required" type="xs:NCName"/>-->
+    <xs:attribute name="flag-ref" type="ModelNameType" use="required"/>
   </xs:complexType>
 
   <xs:complexType name="GroupAsType">
