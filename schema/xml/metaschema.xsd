@@ -1044,8 +1044,27 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="ConstraintLetType">
+    <xs:sequence>
+      <xs:group ref="ConstraintContentsGroup"/>
+    </xs:sequence>
+    <xs:attribute name="var" type="TokenDatatype" use="required"/>
+    <xs:attribute name="expression" type="MetaschemaPathType" use="required"/>
+  </xs:complexType>
+
+  <xs:group name="LetExpressionGroup">
+    <xs:sequence>
+      <xs:element name="let" type="ConstraintLetType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Declares a variable whose name is bound to the result of the Metapath expression. These variables can be used in target and other Metapath expressions used in constrains that are declared in the same context or in constraints declared in a child assembly, field, or flag.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+
   <xs:complexType name="DefineFlagConstraintsType">
     <xs:sequence>
+      <xs:group ref="LetExpressionGroup"/>
       <xs:choice maxOccurs="unbounded">
         <xs:element minOccurs="0" name="allowed-values" type="AllowedValuesType">
           <xs:annotation>
@@ -1119,6 +1138,7 @@
 
   <xs:complexType name="DefineFieldConstraintsType">
     <xs:sequence>
+      <xs:group ref="LetExpressionGroup"/>
       <xs:choice minOccurs="1" maxOccurs="unbounded">
         <xs:group ref="TargetedCommonConstraintsGroup"/>
       </xs:choice>
@@ -1128,6 +1148,7 @@
 
   <xs:complexType name="DefineAssemblyConstraintsType">
     <xs:sequence>
+      <xs:group ref="LetExpressionGroup"/>
       <xs:choice minOccurs="1" maxOccurs="unbounded">
         <xs:group ref="TargetedCommonConstraintsGroup"/>
         <xs:group ref="AssemblyConstraintsGroup"/>
