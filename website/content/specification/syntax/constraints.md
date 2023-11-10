@@ -12,6 +12,18 @@ TODO: P3: Address issue https://github.com/usnistgov/metaschema/issues/325
 
 ## Common Constraint Data
 
+## Let expressions
+
+Using the `let` element, a variable can be defined, which can be used in a Metapath expression in subsequent constraints.
+
+A `let` statement has a REQUIRED `@var` attribute, which defines the variable name.
+
+A `let` statement has a REQUIRED `@expression` attributes, which defines an Metapath expression, whose result is used to define the variable's value in the evaluation context.
+
+During constraint evaluation, each `let` statement MUST be evaluated in encounter order. If a previous variable is bound with the same name in the evaluation context, the new value MUST bound in a sub-context to avoid side effects. This sub-context MUST be made available to any constraints following the `let` statement declaration, and to any constraints defined on child nodes of the current context.
+
+During evaluation, when a variable is bound for a `let` statement, the variables value MUST be set to the result of evaluating the `@expression` using the current node as the Metapath evaluation focus.
+
 ## Enumerated values
 
 Additionally, flags may be constrained to a set of known values listed in advance.
