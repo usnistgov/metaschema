@@ -24,6 +24,37 @@ During constraint evaluation, each `let` statement MUST be evaluated in encounte
 
 During evaluation, when a variable is bound for a `let` statement, the variables value MUST be set to the result of evaluating the `@expression` using the current node as the Metapath evaluation focus.
 
+For example:
+
+Given the following fragment of a Metaschema module.
+
+```xml
+<define-assembly name="sibling">
+  <define-flag name="name" required="yes"/>
+  <constraint>
+    <let var="parent" expression=".."/><!-- stores the parent of the current node -->
+    <let var="sibling-count" expression="count($parent/sibling)"/>
+    <expect target="." test="$sibling-count = 3"/>
+  </constraint>
+</define-assembly>
+```
+
+And the following document.
+
+```xml
+<parent name="p1">
+  <sibling name="a"/>
+  <sibling name="b"/>
+  <sibling name="c"/>
+</parent>
+<parent name="p2">
+  <sibling name="x"/>
+  <sibling name="Y"/>
+</parent1>
+```
+
+The expect constraint would pass for each `sibling` in the `parent` named "p1", and would fail for each `sibling` in the `parent` named "p2".
+
 ## Enumerated values
 
 Additionally, flags may be constrained to a set of known values listed in advance.
