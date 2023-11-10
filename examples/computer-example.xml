@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../schema/xml/metaschema.xsd"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../schema/xml/metaschema.xsd"
  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>Computer Model</schema-name>
     <schema-version>0.0.5</schema-version>
