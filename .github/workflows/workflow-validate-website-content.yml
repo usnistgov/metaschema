@@ -58,7 +58,7 @@ jobs:
           documentation
     - name: Check coverage tolerance
       if: ${{ env.lychee_exit_code != 0 && inputs.linkcheck_fail_on_error }}
-      uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410
+      uses: actions/github-script@e69ef5462fd455e02edcaf4dd7708eda96b9eda0
       with:
         script: |
           core.setFailed('Link checker detected broken or invalid links, read attached report.')
