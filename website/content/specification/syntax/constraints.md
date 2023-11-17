@@ -10,6 +10,40 @@ weight: 50
 
 Metaschema modules can define different kinds of constraints to support data validation within and between document instances.
 
+The types of constraints allowed for a given definition 
+
+## `<define-flag>` constraints
+
+The following constraint types are allowed for `<define-flag>` definitions.
+
+- [`<allowed-values>`](#enumerated-values)
+- `<matches>`
+- `<index-has-key>`
+- `<expect>`
+
+For each of these constraint types, use of the `@target` attribute is prohibited. This is because a flag constraint may only target the flag, since a flag has no child nodes.
+
+## `<define-field>` constraints
+
+The following constraint types are allowed for `<define-field>` definitions.
+
+- [`<allowed-values>`](#enumerated-values)
+- `<matches>`
+- `<index-has-key>`
+- `<expect>`
+
+## `<define-assembly>` constraints
+
+The following constraint types are allowed for `<define-assembly>` definitions.
+
+- [`<allowed-values>`](#enumerated-values)
+- `<matches>`
+- `<index-has-key>`
+- `<expect>`
+- `<index>`
+- `<is-unique>`
+- `<has-cardinality>`
+
 ## Common Constraint Data
 
 Each individual constraint allows the following data.
@@ -179,11 +213,6 @@ A Metaschema processor MAY use the text value of the `enum`'s XML element as doc
 </define-flag>
 ```
 
-## `define-flag` constraints
-
-## `define-field` constraints
-
-## `define-assembly` constraints
-
 ## External Constraints
 
+TBD
