@@ -8,31 +8,39 @@ weight: 50
 
 **Note: This section of the specification is still a work in progress.**
 
+Metaschema modules can define different kinds of constraints to support data validation within and between document instances.
+
 TODO: P3: Address issue https://github.com/usnistgov/metaschema/issues/325
 
 ## Common Constraint Data
 
-Metaschema modules can define different kinds of constraints to support data validation, inter-documenting indices, and intra-document indices. Below are constraint data that modules may include within any of those different constraint types.
+Each individual constraint allows the following data.
 
 ### `@id`
 
-A constraint MAY have an OPTIONAL `@id` attribute, which provides an identifier for the constraint. Metaschema processors MAY use the identifier for processing constraints and/or referencing them in output for later analysis.
+A constraint MAY have an OPTIONAL `@id` attribute, which provides an identifier for the constraint.
+
+Metaschema processors MAY use the identifier for processing constraints and/or referencing them in output for later analysis.
 
 ### `@level`
 
-A constraint MAY have an OPTIONAL `@level` attribute, which identifies the severity level of a violation of the constraint. If defined, a `@level` MUST have a value of either: `INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL`. Metaschema processors MAY perform conditional processing and/or presentation of constraint violations based on the level value.
+A constraint MAY have an OPTIONAL `@level` attribute, which identifies the severity level of a violation of the constraint.
+
+If defined, a `@level` MUST have a value of either: `INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL`.
+
+Metaschema processors MAY perform conditional processing and/or presentation of constraint violations based on the level value.
 
 ### `@target`
 
 The *target* of a constraint identifies the content nodes that a constraint applies to.
 
-A *target* can apply to any node(s) in the document instance(s). There is no guarantee the constraint is a child of its respective assembly, field, or flag.
+Not all constraint types require a `@target`. Each constraint type defines if the `@target` is required, optional, or implicit.
 
-When validating content, any constraint whose target does not match any content node MUST be ignored.
+When provided, the value of a `@target` MUST be a valid Metapath expression.
 
-A constraint MAY have a `@target`. A `@target` value is a valid Metapath expression. In a document conforming to a Metaschema module, a Metaschema processor MUST process the constraint to any path in that model definition that matches the given Metapath expression.
+If a `@target` value is not defined, a Metaschema processor MUST process the value as `target="."`, the current context of that constraint definition in a module, for a [field](#define-field-constraints) or [flag](#define-flag-constraints).
 
-If a `@target` value is not defined, a Metaschema processor must process the value as `target="."`, the current context of that constraint definition in a module, for a [field](#define-field-constraints) or [flag](#define-flag-constraints).
+A *target* can apply to any node(s) in the document instance(s). There is no guarantee the constraint *target* is a child of its respective assembly, field, or flag. Thus, a Metaschema processor MUST resolve the Metapath expression to identify the actual target nodes that the constraint applies to. If no resulting target nodes are identified, then the constraint MUST be ignore.
 
 ## Constraint Processing
 
