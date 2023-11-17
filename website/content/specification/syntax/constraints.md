@@ -10,8 +10,6 @@ weight: 50
 
 Metaschema modules can define different kinds of constraints to support data validation within and between document instances.
 
-TODO: P3: Address issue https://github.com/usnistgov/metaschema/issues/325
-
 ## Common Constraint Data
 
 Each individual constraint allows the following data.
@@ -44,6 +42,43 @@ A *target* can apply to any node(s) in the document instance(s). There is no gua
 
 ## Constraint Processing
 
+In a Metaschema-based document instance, each node in the document instance is associated with a definition in a Metaschema module. Thus, a given content node has one and only one associated definition.
+
+A constraint is defined relative to an assembly, field, or flag [definition](../definitions/) in a Metaschema module.
+
+All constraints associated with a definition MUST be evaluated against all associated content nodes.
+
+Constraints may be declared internally within a definition or as an external set of constraints associated with a definition. To determine the evaluation order, internal and external constraints associated with a definition need to be combined.
+
+Declaration order MUST be determined in the following way.
+
+1. Internal constraints defined directly in the definition are ordered first according to their original order.
+2. External constraints are appended in the order the external constraints were provided to the processor.
+
+Each constraint MUST be evaluated in declaration order.
+
+For example:
+
+Given the Metaschema module definitions below:
+
+```
+Assembly(name="asmA")
+  Field(name="fldX)
+    Flag(name="flgS")
+  Assembly(name="asmB")
+    Flag(name="flgT")
+```
+
+Constraint evaluation would be handled depth-first as follows:
+
+- When document node `asmA` is processed, constraints defined on that node's definition will be evaluated.
+- When document node `fldX` is processed, constraints defined on that node's definition will be evaluated.
+- and so on...
+
+Note: The target of the constraint does not affect this evaluation order, but may affect what resulting node the constraint applies to.
+
+When a constraint is evaluated against the associated content node, this node is considered the constraints *evaluation focus*.
+
 ### Processing Error Handling
 
 Processing errors occur when a defect in the constraint definition causes an unintended error to occur during constraint processing. This differs from a validation error that results from not meeting the requirement of a constraint.
@@ -53,12 +88,12 @@ Processing errors occur when a defect in the constraint definition causes an uni
 
 ## Enumerated values
 
-The `allowed-values` constraint is a kind of Metaschema constraint that restricts field or flag value(s) based on an enumerated set of permitted values.
+The `allowed-values` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on an enumerated set of permitted values.
 
 Each `allowed-values` constraint has a *source* that will be either:
 
-- **model:** The constraint is defined *in* a Metaschema module.
-- **external:** The constraint is defined *outside* a Metaschema module, e.g. external constraints.
+- **model:** The constraint is defined *in* a Metaschema module, i.e. an internal constraint.
+- **external:** The constraint is defined *outside* a Metaschema module, i.e. an external constraint.
 
 The `@target` of an `<allowed-values>` constraint specifies the node(s) in a document instance whose value is restricted by the constraint.
 
@@ -66,21 +101,25 @@ The `@target` of an `<allowed-values>` constraint specifies the node(s) in a doc
 
 Metaschema processors MUST process `<allowed-values>` constraints.
 
-The constraint's `@target` MUST be evaluated as a Metapath expression relative to the node instances of the definition it is enclosed in. These nodes will be the *focus* for Metapath evaluation. Thus, the target is evaluated relative to any node that is an instance of that definition.
+The constraint's `@target` is a Metapath expression that identifies the node values the constraint applies to.
+
+When evaluating the `@target` metapath expression, the Metapath focus MUST be the constraint's *evaluation focus*. Thus, the targets are determined in the context in where the constraint is declared.
 
 The sequence of nodes that result from Metapath evaluation are the constraints *target node(s)*.
 
 The nodes resulting from evaluating an `<allowed-values>` `@target` are intended to be *field* or *flag* nodes, which have a value. If these nodes are an instance of an *assembly*, a Metaschema processor error SHOULD be raised.
 
-Multiple `<allowed-values>` constraints can apply to a given *target node*. Fo a given *target node*, it is necessary to determine which `<allowed-values>` constraints apply to its value. This can be done through a full instance transversal or any other means that is capable of accurately determining the set of `<allowed-values>` constraints that target a given node. This set of  `<allowed-values>` constraints is considered the *applicable set*.
+Multiple `<allowed-values>` constraints can apply to a given *target node*, which may be declared by constraints defined on different content nodes. Implementations will need a means to determine the complete set of `<allowed-values>` constraints that apply to a given *target node*, which is referred to as the *target node's* "*applicable set*".
 
-The `<allowed-values>` `@allow-other` attribute determines the *expected value set* for a given content value.
+This may be handled using a two phased evaluation that first resolves the `<allowed-values>` constraints associated with each *target node* determining the *applicable set*, then, second, evaluates the *applicable set* for each *target node*. Other implementations may be possible and are allowed if they result in the same effective behavior.
 
-The *target set* of `<allowed-values>` constraints is verified for correctness using the `@extension` attribute on each set member.
+The *applicable set* of `<allowed-values>` constraints is verified for correctness using the `@extension` attribute on each set member.
+
+For each `<allowed-values>` in the *applicable set*, the `@allow-other` attribute is used to determine the *expected value set* for a given content value.
 
 The following subsections detail the processing requirements for the `@extension` and `@allow-other` attributes.
 
-### `@extension`
+#### `@extension`
 
 For each `<allowed-values>` constraints the *applicable set*, the `@extension` attribute MUST be one of the following values.
 
@@ -94,14 +133,14 @@ For each `<allowed-values>` constraints the *applicable set*, the `@extension` a
 
     All allowed-values constraints, declared within the model and externally through an extension, that match the same @target can be combined. This is the most permissive option.
 
-One of the following requirements MUST apply when processing a value's *target set* to validate it.
+One of the following requirements MUST apply when processing a value's *applicable set* to validate it.
 
-1. The *target set* MUST contain a single `<allowed-values>` constraint with the `@extension` attribute value `none`.
-1. All `<allowed-values>` constraints in the *target set* MUST have the `@extension` attribute value `model` and originate from a *model* source.
-1. All `<allowed-values>` constraints in the *target set* MUST have the `@extension` attribute value `external` and originate from either a *model* or *extension* source.
-1. An error MUST be raised indicating the *target set* is invalid.
+1. The *applicable set* MUST contain a single `<allowed-values>` constraint with the `@extension` attribute value `none`.
+1. All `<allowed-values>` constraints in the *applicable set* MUST have the `@extension` attribute value `model` and originate from a *model* source.
+1. All `<allowed-values>` constraints in the *applicable set* MUST have the `@extension` attribute value `external` and originate from either a *model* or *extension* source.
+1. An error MUST be raised indicating the *applicable set* is invalid.
 
-### `@allow-other`
+#### `@allow-other`
 
 The *expected value set* can be considered *open* or *closed*.
 
@@ -110,16 +149,18 @@ The *expected value set* can be considered *open* or *closed*.
 
 For each `<allowed-values>` constraint, the `@allow-other` attribute MUST be one of the following values.
 
-- **`yes`:** Identifies the *expected value set* as *open*, as long as no other `<allowed-values>` constraint in the *target set* has `@allow-other="no"` declared explicitly or implicitly.
+- **`yes`:** Identifies the *expected value set* as *open*, as long as no other `<allowed-values>` constraint in the *applicable set* has `@allow-other="no"` declared explicitly or implicitly.
 - **`no`:** (default) Identifies the *expected value set* as *closed*. **This is the implicit default value if no `@allow-other` is provided.**
 
 One of the following requirements MUST apply when processing a value's *targeting set* of `<allowed-values>` constraints to determine the *expected value set*.
 
-1. One `<allowed-values>` constraint in the *target set* MUST have the `@allow-other` attribute value `no`. The *expected value set* is *closed*.
+1. One `<allowed-values>` constraint in the *applicable set* MUST have the `@allow-other` attribute value `no`. The *expected value set* is *closed*.
 
     The actual value MUST match one of the enumerated values declared on any of the `<allowed-values>` constraints in the *targeting set*. An error MUST be produced to indicate that the value doesn't match one of the enumerated values.
-    
-2. All `<allowed-values>` constraints in the *targeting set* MUST have the `@allow-other` attribute value `yes`.  The *expected value set* is *open*.
+
+    It is possible to require a value that does not align with the value node's Metaschema data type. In such cases, this creates a situation where both the data type and a closed value requirement cannot be met. In such cases, the constraint processor MUST report this as an error.
+
+2. All `<allowed-values>` constraints in the *applicable set* MUST have the `@allow-other` attribute value `yes`. The *expected value set* is *open*.
 
     Any type-appropriate actual value MUST be allowed. A warning MAY be produced to indicate that the value doesn't match one of the enumerated values.
 
