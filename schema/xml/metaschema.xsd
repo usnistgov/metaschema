@@ -573,11 +573,7 @@
     <xs:sequence>
       <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
       <xs:element name="group-as" type="GroupAsType"/>
-      <xs:element name="discriminator" minOccurs="0">
-        <xs:complexType>
-          <xs:attribute name="in-json" type="TokenDatatype" default="object-type"/>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="discriminator" minOccurs="0" type="TokenDatatype" default="object-type"/>
       <xs:choice maxOccurs="unbounded">
         <xs:element name="assembly" type="GroupedAssemblyReferenceType"/>
         <xs:element name="field" type="GroupedFieldReferenceType"/>
@@ -620,7 +616,6 @@
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute name="ref" use="required" type="ModelNameType"/>
-    <xs:attribute name="default" type="StringDatatype"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
   
@@ -664,7 +659,7 @@
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attributeGroup ref="FieldValueAttributeGroup"/>
+    <xs:attribute name="as-type" type="FieldDatatypesType" default="string"/>
     <xs:attribute name="collapsible" type="YesNoType" default="no"/>
     <xs:attributeGroup ref="DefinitionNamingGroup"/>
     <xs:attribute name="in-xml" type="InXmlWrappedType" default="WRAPPED">

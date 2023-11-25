@@ -50,7 +50,7 @@
             </define-assembly>
             <choice-group max-occurs="unbounded">
                 <group-as name="definitions" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="global-define-assembly">
                     <discriminator-value>assembly</discriminator-value>
                 </assembly>
@@ -89,7 +89,7 @@
             <assembly ref="json-key"/>
             <choice-group min-occurs="0" max-occurs="unbounded">
                 <group-as name="flags" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="inline-define-flag">
                     <discriminator-value>flag</discriminator-value>
                 </assembly>
@@ -133,16 +133,16 @@
                 <define-field name="json-value-key" as-type="token">
                     <formal-name>Field Value JSON Property Name</formal-name>
                 </define-field>
-                <define-field name="json-value-key-flag" as-type="token">
+                <define-assembly name="json-value-key-flag">
                     <formal-name>Field Value JSON Property Use Flag</formal-name>
                     <define-flag name="flag-ref" as-type="token" required="yes">
                         <formal-name>Flag Reference</formal-name>
                     </define-flag>
-                </define-field>
+                </define-assembly>
             </choice>
             <choice-group min-occurs="0" max-occurs="unbounded">
                 <group-as name="flags" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="inline-define-flag">
                     <discriminator-value>flag</discriminator-value>
                 </assembly>
@@ -210,7 +210,7 @@
             <assembly ref="group-as"/>
             <choice-group min-occurs="0" max-occurs="unbounded">
                 <group-as name="flags" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="inline-define-flag">
                     <discriminator-value>flag</discriminator-value>
                 </assembly>
@@ -255,17 +255,17 @@
                 <define-field name="json-value-key" as-type="token">
                     <formal-name>Field Value JSON Property Name</formal-name>
                 </define-field>
-                <define-field name="json-value-key-flag" as-type="token">
+                <define-assembly name="json-value-key-flag">
                     <formal-name>Field Value JSON Property Use Flag</formal-name>
                     <define-flag name="flag-ref" as-type="token" required="yes">
                         <formal-name>Flag Reference</formal-name>
                     </define-flag>
-                </define-field>
+                </define-assembly>
             </choice>
             <assembly ref="group-as"/>
             <choice-group min-occurs="0" max-occurs="unbounded">
                 <group-as name="flags" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="inline-define-flag">
                     <discriminator-value>flag</discriminator-value>
                 </assembly>
@@ -315,7 +315,7 @@
         <model>
             <choice-group min-occurs="1" max-occurs="unbounded">
                 <group-as name="choices" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="assembly-reference">
                     <discriminator-value>assembly-ref</discriminator-value>
                 </assembly>
@@ -341,15 +341,12 @@
         <model>
             <assembly ref="json-key"/>
             <assembly ref="group-as" min-occurs="1"/>
-            <define-assembly name="discriminator">
-                <formal-name>Discriminator</formal-name>
-                <define-flag name="in-json" as-type="token" default="object-type">
-                    <formal-name>Discriminator JSON Property</formal-name>
-                </define-flag>
-            </define-assembly>
+            <define-field name="discriminator" as-type="token" default="object-type">
+                <formal-name>Discriminator JSON Property</formal-name>
+            </define-field>
             <choice-group min-occurs="1" max-occurs="unbounded">
                 <group-as name="choices" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="grouped-assembly-reference">
                     <discriminator-value>assembly-ref</discriminator-value>
                 </assembly>
@@ -516,7 +513,7 @@
             </assembly>
             <choice-group min-occurs="0" max-occurs="unbounded">
                 <group-as name="flags" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="inline-define-flag">
                     <discriminator-value>flag</discriminator-value>
                 </assembly>
@@ -559,16 +556,16 @@
                 <define-field name="json-value-key" as-type="token">
                     <formal-name>Field Value JSON Property Name</formal-name>
                 </define-field>
-                <define-field name="json-value-key-flag" as-type="token">
+                <define-assembly name="json-value-key-flag">
                     <formal-name>Field Value JSON Property Use Flag</formal-name>
                     <define-flag name="flag-ref" as-type="token" required="yes">
                         <formal-name>Flag Reference</formal-name>
                     </define-flag>
-                </define-field>
+                </define-assembly>
             </choice>
             <choice-group min-occurs="0" max-occurs="unbounded">
                 <group-as name="flags" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="inline-define-flag">
                     <discriminator-value>flag</discriminator-value>
                 </assembly>
@@ -589,7 +586,7 @@
         <model>
             <choice-group min-occurs="0" max-occurs="unbounded">
                 <group-as name="instances" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="assembly-reference">
                     <discriminator-value>assembly-ref</discriminator-value>
                 </assembly>
@@ -764,8 +761,8 @@
         <use-name>min-occurs</use-name>
     </define-flag>
     <define-flag name="cardinality-max-occurs" as-type="string">
-        <formal-name>Minimum Occurrence</formal-name>
-        <use-name>min-occurs</use-name>
+        <formal-name>Maximum Occurrence</formal-name>
+        <use-name>max-occurs</use-name>
         <constraint>
             <matches regex="^[1-9][0-9]*|unbounded$"></matches>
         </constraint>
@@ -810,12 +807,14 @@
     <define-field name="use-name" as-type="token">
         <formal-name>Use Name</formal-name>
         <description>Allows the name of the definition to be overridden.</description>
+        <json-value-key>name</json-value-key>
         <flag ref="alt-name-index"/>
     </define-field>
     
     <define-field name="root-name" as-type="token">
         <formal-name>Root Name</formal-name>
         <description>Provides a root name, for when the definition is used as the root of a node hierarchy.</description>
+        <json-value-key>name</json-value-key>
         <flag ref="alt-name-index"/>
     </define-field>
         
@@ -842,6 +841,7 @@
     <define-field name="remarks" as-type="markup-multiline">
         <formal-name>Remarks</formal-name>
         <description>Any explanatory or helpful information to be provided about the remarks parent.</description>
+        <json-value-key>remark</json-value-key>
         <define-flag name="class" as-type="token" default="ALL">
             <formal-name>Remark Class</formal-name>
             <description>Mark as 'XML' for XML-only or 'JSON' for JSON-only remarks.</description>
@@ -863,7 +863,7 @@
             </assembly>
             <choice-group min-occurs="1" max-occurs="unbounded">
                 <group-as name="rules" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="targeted-allowed-values-constraint"/>
                 <assembly ref="targeted-expect-constraint"/>
                 <assembly ref="targeted-index-has-key-constraint"/>
@@ -883,7 +883,7 @@
             </assembly>
             <choice-group min-occurs="1" max-occurs="unbounded">
                 <group-as name="rules" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="targeted-allowed-values-constraint"/>
                 <assembly ref="targeted-expect-constraint"/>
                 <assembly ref="targeted-index-has-key-constraint"/>
@@ -900,7 +900,7 @@
             </assembly>
             <choice-group min-occurs="1" max-occurs="unbounded">
                 <group-as name="rules" in-json="ARRAY"/>
-                <discriminator in-json="object-type"/>
+                <discriminator>object-type</discriminator>
                 <assembly ref="allowed-values-constraint"/>
                 <assembly ref="expect-constraint"/>
                 <assembly ref="index-has-key-constraint"/>
@@ -1015,6 +1015,7 @@
     <define-field name="constraint-value-enum" as-type="markup-line">
         <formal-name>Allowed Value Enumeration</formal-name>
         <use-name>enum</use-name>
+        <json-value-key>remark</json-value-key>
         <define-flag name="value" required="yes">
             <formal-name>Allowed Value Enumeration Value</formal-name>
         </define-flag>
