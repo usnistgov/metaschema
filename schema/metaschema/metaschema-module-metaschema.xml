@@ -1019,6 +1019,9 @@
         <define-flag name="value" required="yes">
             <formal-name>Allowed Value Enumeration Value</formal-name>
         </define-flag>
+        <define-flag name="deprecated">
+            <formal-name>Allowed Value Deprecation Version</formal-name>
+        </define-flag>
     </define-field>
     
     <define-assembly name="matches-constraint">
