@@ -72,7 +72,7 @@ When provided, the value of a `@target` MUST be a valid Metapath expression.
 
 If a `@target` value is not defined, a Metaschema processor MUST process the value as `target="."`, the current context of that constraint definition in a module, for a [field](#define-field-constraints) or [flag](#define-flag-constraints).
 
-A *target* can apply to any node(s) in the document instance(s). There is no guarantee the constraint *target* is a child of its respective assembly, field, or flag. Thus, a Metaschema processor MUST resolve the Metapath expression to identify the actual target nodes that the constraint applies to. If no resulting target nodes are identified, then the constraint MUST be ignore.
+A *target* can apply to any node(s) in the document instance(s). There is no guarantee the constraint *target* is a child of its respective assembly, field, or flag. Thus, a Metaschema processor MUST resolve the Metapath expression to identify the actual target nodes that the constraint applies to. If no resulting target nodes are identified, then the constraint MUST be ignored.
 
 ## Constraint Processing
 
