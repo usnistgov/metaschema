@@ -47,144 +47,136 @@
                 <formal-name>Module Import</formal-name>
                 <description>Imports a set of Metaschema modules contained in another resource. Imports support the reuse of common information structures.</description>
                 <group-as name="imports" in-json="ARRAY"/>
+                <define-flag name="href" as-type="uri-reference" required="yes">
+                    <formal-name>Import URI Reference</formal-name>
+                    <description>A relative or absolute URI for retrieving an out-of-line Metaschema definition.</description>
+                </define-flag>
             </define-assembly>
             <choice-group max-occurs="unbounded">
                 <group-as name="definitions" in-json="ARRAY"/>
                 <discriminator>object-type</discriminator>
-                <assembly ref="global-define-assembly">
+                <define-assembly name="define-assembly">
+			        <formal-name>Global Assembly Definition</formal-name>
+			        <description>In XML, an element with structured element content. In JSON, an object with properties. Defined globally, an assembly can be assigned to appear in the <code>model</code> of any assembly (another assembly type, or itself), by <code>assembly</code> reference.</description>
                     <discriminator-value>assembly</discriminator-value>
-                </assembly>
-                <assembly ref="global-define-field">
+			        <flag ref="definition-name" required="yes">
+			            <formal-name>Global Assembly Name</formal-name>
+			        </flag>
+			        <flag ref="definition-index">
+			            <formal-name>Global Assembly Binary Name</formal-name>
+			        </flag>
+			        <flag ref="definition-scope"/>
+			        <flag ref="definition-deprecated"/>
+			        <model>
+			            <field ref="formal-name"/>
+			            <field ref="description"/>
+			            <assembly ref="property" max-occurs="unbounded">
+			                <group-as name="props" in-json="ARRAY"/>
+			            </assembly>
+			            <choice>
+			                <field ref="use-name"/>
+			                <define-field name="root-name" as-type="token" min-occurs="1">
+			                    <formal-name>Root Name</formal-name>
+			                    <description>Provides a root name, for when the definition is used as the root of a node hierarchy.</description>
+			                    <json-value-key>name</json-value-key>
+			                    <flag ref="alt-name-index"/>
+			                </define-field>
+			            </choice>
+			            <assembly ref="json-key"/>
+			            <choice-group min-occurs="0" max-occurs="unbounded">
+			                <group-as name="flags" in-json="ARRAY"/>
+			                <discriminator>object-type</discriminator>
+			                <assembly ref="inline-define-flag">
+			                    <discriminator-value>flag</discriminator-value>
+			                </assembly>
+			                <assembly ref="flag-reference">
+			                    <discriminator-value>flag-ref</discriminator-value>
+			                </assembly>
+			            </choice-group>
+			            <assembly ref="assembly-model"/>
+			            <assembly ref="assembly-constraints"/>
+			            <field ref="remarks"/>
+			            <assembly ref="example" max-occurs="unbounded">
+			                <group-as name="examples" in-json="ARRAY"/>
+			            </assembly>
+			        </model>
+			    </define-assembly>
+                <define-assembly name="define-field">
+                    <formal-name>Global Field Definition</formal-name>
                     <discriminator-value>field</discriminator-value>
-                </assembly>
-                <assembly ref="global-define-flag">
-                    <discriminator-value>flag</discriminator-value>
-                </assembly>
-            </choice-group>
-        </model>
-    </define-assembly>
-
-    <define-assembly name="global-define-assembly">
-        <formal-name>Global Assembly Definition</formal-name>
-        <description>In XML, an element with structured element content. In JSON, an object with properties. Defined globally, an assembly can be assigned to appear in the <code>model</code> of any assembly (another assembly type, or itself), by <code>assembly</code> reference.</description>
-        <use-name>define-assembly</use-name>
-        <flag ref="definition-name" required="yes">
-            <formal-name>Global Assembly Name</formal-name>
-        </flag>
-        <flag ref="definition-index">
-            <formal-name>Global Assembly Binary Name</formal-name>
-        </flag>
-        <flag ref="definition-scope"/>
-        <flag ref="definition-deprecated"/>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <choice>
-                <field ref="use-name"/>
-                <field ref="root-name" min-occurs="1"/>
-            </choice>
-            <assembly ref="json-key"/>
-            <choice-group min-occurs="0" max-occurs="unbounded">
-                <group-as name="flags" in-json="ARRAY"/>
-                <discriminator>object-type</discriminator>
-                <assembly ref="inline-define-flag">
-                    <discriminator-value>flag</discriminator-value>
-                </assembly>
-                <assembly ref="flag-reference">
-                    <discriminator-value>flag-ref</discriminator-value>
-                </assembly>
-            </choice-group>
-            <assembly ref="assembly-model"/>
-            <assembly ref="assembly-constraints"/>
-            <field ref="remarks"/>
-            <assembly ref="example" max-occurs="unbounded">
-                <group-as name="examples" in-json="ARRAY"/>
-            </assembly>
-        </model>
-    </define-assembly>
-
-    <define-assembly name="global-define-field">
-        <formal-name>Global Field Definition</formal-name>
-        <use-name>define-field</use-name>
-        <flag ref="definition-name" required="yes">
-            <formal-name>Global Field Name</formal-name>
-        </flag>
-        <flag ref="definition-index">
-            <formal-name>Global Field Binary Name</formal-name>
-        </flag>
-        <flag ref="definition-scope"/>
-        <flag ref="definition-deprecated"/>
-        <flag ref="as-type-field"/>
-        <flag ref="default-value">
-            <formal-name>Default Field Value</formal-name>
-        </flag>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <field ref="use-name"/>
-            <assembly ref="json-key"/>
-            <choice>
-                <define-field name="json-value-key" as-type="token">
-                    <formal-name>Field Value JSON Property Name</formal-name>
-                </define-field>
-                <define-assembly name="json-value-key-flag">
-                    <formal-name>Field Value JSON Property Use Flag</formal-name>
-                    <define-flag name="flag-ref" as-type="token" required="yes">
-                        <formal-name>Flag Reference</formal-name>
-                    </define-flag>
+                    <flag ref="definition-name" required="yes">
+                        <formal-name>Global Field Name</formal-name>
+                    </flag>
+                    <flag ref="definition-index">
+                        <formal-name>Global Field Binary Name</formal-name>
+                    </flag>
+                    <flag ref="definition-scope"/>
+                    <flag ref="definition-deprecated"/>
+                    <flag ref="as-type-field"/>
+                    <flag ref="default-value">
+                        <formal-name>Default Field Value</formal-name>
+                    </flag>
+                    <model>
+                        <field ref="formal-name"/>
+                        <field ref="description"/>
+                        <assembly ref="property" max-occurs="unbounded">
+                            <group-as name="props" in-json="ARRAY"/>
+                        </assembly>
+                        <field ref="use-name"/>
+                        <assembly ref="json-key"/>
+                        <choice>
+                            <define-field name="json-value-key" as-type="token">
+                                <formal-name>Field Value JSON Property Name</formal-name>
+                            </define-field>
+                            <assembly ref="json-value-key-flag"/>
+                        </choice>
+                        <choice-group min-occurs="0" max-occurs="unbounded">
+                            <group-as name="flags" in-json="ARRAY"/>
+                            <discriminator>object-type</discriminator>
+                            <assembly ref="inline-define-flag">
+                                <discriminator-value>flag</discriminator-value>
+                            </assembly>
+                            <assembly ref="flag-reference">
+                                <discriminator-value>flag-ref</discriminator-value>
+                            </assembly>
+                        </choice-group>
+                        <assembly ref="field-constraints"/>
+                        <field ref="remarks"/>
+                        <assembly ref="example" max-occurs="unbounded">
+                            <group-as name="examples" in-json="ARRAY"/>
+                        </assembly>
+                    </model>
                 </define-assembly>
-            </choice>
-            <choice-group min-occurs="0" max-occurs="unbounded">
-                <group-as name="flags" in-json="ARRAY"/>
-                <discriminator>object-type</discriminator>
-                <assembly ref="inline-define-flag">
+                <define-assembly name="define-flag">
+                    <formal-name>Global Flag Definition</formal-name>
                     <discriminator-value>flag</discriminator-value>
-                </assembly>
-                <assembly ref="flag-reference">
-                    <discriminator-value>flag-ref</discriminator-value>
-                </assembly>
+                    <flag ref="definition-name" required="yes">
+                        <formal-name>Global Flag Name</formal-name>
+                    </flag>
+                    <flag ref="definition-index">
+                        <formal-name>Global Flag Binary Name</formal-name>
+                    </flag>
+                    <flag ref="definition-scope"/>
+                    <flag ref="definition-deprecated"/>
+                    <flag ref="as-type-simple" default="string"/>
+                    <flag ref="default-value">
+                        <formal-name>Default Flag Value</formal-name>
+                    </flag>
+                    <model>
+                        <field ref="formal-name"/>
+                        <field ref="description"/>
+                        <assembly ref="property" max-occurs="unbounded">
+                            <group-as name="props" in-json="ARRAY"/>
+                        </assembly>
+                        <field ref="use-name"/>
+                        <assembly ref="flag-constraints"/>
+                        <field ref="remarks"/>
+                        <assembly ref="example" max-occurs="unbounded">
+                            <group-as name="examples" in-json="ARRAY"/>
+                        </assembly>
+                    </model>
+                </define-assembly>
             </choice-group>
-            <assembly ref="field-constraints"/>
-            <field ref="remarks"/>
-            <assembly ref="example" max-occurs="unbounded">
-                <group-as name="examples" in-json="ARRAY"/>
-            </assembly>
-        </model>
-    </define-assembly>
-    
-    <define-assembly name="global-define-flag">
-        <formal-name>Global Flag Definition</formal-name>
-        <use-name>define-flag</use-name>
-        <flag ref="definition-name" required="yes">
-            <formal-name>Global Flag Name</formal-name>
-        </flag>
-        <flag ref="definition-index">
-            <formal-name>Global Flag Binary Name</formal-name>
-        </flag>
-        <flag ref="definition-scope"/>
-        <flag ref="definition-deprecated"/>
-        <flag ref="as-type-simple" default="string"/>
-        <flag ref="default-value">
-            <formal-name>Default Flag Value</formal-name>
-        </flag>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <field ref="use-name"/>
-            <assembly ref="flag-constraints"/>
-            <field ref="remarks"/>
-            <assembly ref="example" max-occurs="unbounded">
-                <group-as name="examples" in-json="ARRAY"/>
-            </assembly>
         </model>
     </define-assembly>
     
@@ -255,12 +247,7 @@
                 <define-field name="json-value-key" as-type="token">
                     <formal-name>Field Value JSON Property Name</formal-name>
                 </define-field>
-                <define-assembly name="json-value-key-flag">
-                    <formal-name>Field Value JSON Property Use Flag</formal-name>
-                    <define-flag name="flag-ref" as-type="token" required="yes">
-                        <formal-name>Flag Reference</formal-name>
-                    </define-flag>
-                </define-assembly>
+                <assembly ref="json-value-key-flag"/>
             </choice>
             <assembly ref="group-as"/>
             <choice-group min-occurs="0" max-occurs="unbounded">
@@ -310,59 +297,7 @@
         </model>
     </define-assembly>
 
-    <define-assembly name="choice">
-        <formal-name>Choice</formal-name>
-        <model>
-            <choice-group min-occurs="1" max-occurs="unbounded">
-                <group-as name="choices" in-json="ARRAY"/>
-                <discriminator>object-type</discriminator>
-                <assembly ref="assembly-reference">
-                    <discriminator-value>assembly-ref</discriminator-value>
-                </assembly>
-                <assembly ref="inline-define-assembly">
-                    <discriminator-value>assembly</discriminator-value>
-                </assembly>
-                <assembly ref="field-reference">
-                    <discriminator-value>field-ref</discriminator-value>
-                </assembly>
-                <assembly ref="inline-define-field">
-                    <discriminator-value>field</discriminator-value>
-                </assembly>
-            </choice-group>
-            <assembly ref="any"/>
-        </model>
-    </define-assembly>
     
-    <define-assembly name="choice-group">
-        <formal-name>Choice Grouping</formal-name>
-        <flag ref="cardinality-min-occurs" default="0"/>
-        <!-- require a max value that is greater than 1 -->
-        <flag ref="cardinality-max-occurs" default="unbounded"/>
-        <model>
-            <assembly ref="json-key"/>
-            <assembly ref="group-as" min-occurs="1"/>
-            <define-field name="discriminator" as-type="token" default="object-type">
-                <formal-name>Discriminator JSON Property</formal-name>
-            </define-field>
-            <choice-group min-occurs="1" max-occurs="unbounded">
-                <group-as name="choices" in-json="ARRAY"/>
-                <discriminator>object-type</discriminator>
-                <assembly ref="grouped-assembly-reference">
-                    <discriminator-value>assembly-ref</discriminator-value>
-                </assembly>
-                <assembly ref="grouped-inline-define-assembly">
-                    <discriminator-value>assembly</discriminator-value>
-                </assembly>
-                <assembly ref="grouped-field-reference">
-                    <discriminator-value>field-ref</discriminator-value>
-                </assembly>
-                <assembly ref="grouped-inline-define-field">
-                    <discriminator-value>field</discriminator-value>
-                </assembly>
-            </choice-group>
-            <field ref="remarks"/>
-        </model>
-    </define-assembly>
 
     <define-assembly name="any">
         <formal-name>Any Additional Content</formal-name>
@@ -447,139 +382,11 @@
     </define-assembly>
     
     
-    <define-assembly name="grouped-assembly-reference">
-        <formal-name>Grouping Assembly Reference</formal-name>
-        <use-name>assembly</use-name>
-        <flag ref="definition-reference" required="yes">
-            <formal-name>Global Assembly Reference</formal-name>
-        </flag>
-        <flag ref="definition-index">
-            <formal-name>Assembly Reference Binary Name</formal-name>
-        </flag>
-        <flag ref="definition-deprecated"/>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <field ref="use-name"/>
-            <field ref="grouped-discriminator-value"/>
-            <field ref="remarks"/>
-        </model>
-    </define-assembly>
+
     
-    <define-assembly name="grouped-field-reference">
-        <formal-name>Grouping Field Reference</formal-name>
-        <use-name>field</use-name>
-        <flag ref="definition-reference" required="yes">
-            <formal-name>Global Field Reference</formal-name>
-        </flag>
-        <flag ref="definition-index">
-            <formal-name>Field Reference Binary Name</formal-name>
-        </flag>
-        <flag ref="definition-deprecated"/>
-        <flag ref="default-value">
-            <formal-name>Default Field Value</formal-name>
-        </flag>
-        <flag ref="field-in-xml"/>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <field ref="use-name"/>
-            <field ref="grouped-discriminator-value"/>
-            <field ref="remarks"/>
-        </model>
-    </define-assembly>
+
     
-    <define-assembly name="grouped-inline-define-assembly">
-        <formal-name>Inline Assembly Definition</formal-name>
-        <use-name>define-assembly</use-name>
-        <flag ref="definition-name" required="yes">
-            <formal-name>Inline Assembly Name</formal-name>
-        </flag>
-        <flag ref="definition-index">
-            <formal-name>Inline Assembly Binary Name</formal-name>
-        </flag>
-        <flag ref="definition-deprecated"/>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <choice-group min-occurs="0" max-occurs="unbounded">
-                <group-as name="flags" in-json="ARRAY"/>
-                <discriminator>object-type</discriminator>
-                <assembly ref="inline-define-flag">
-                    <discriminator-value>flag</discriminator-value>
-                </assembly>
-                <assembly ref="flag-reference">
-                    <discriminator-value>flag-ref</discriminator-value>
-                </assembly>
-            </choice-group>
-            <field ref="grouped-discriminator-value"/>
-            <assembly ref="assembly-model"/>
-            <assembly ref="assembly-constraints"/>
-            <field ref="remarks"/>
-            <assembly ref="example" max-occurs="unbounded">
-                <group-as name="examples" in-json="ARRAY"/>
-            </assembly>
-        </model>
-    </define-assembly>
     
-    <define-assembly name="grouped-inline-define-field">
-        <formal-name>Inline Field Definition</formal-name>
-        <use-name>define-field</use-name>
-        <flag ref="definition-name" required="yes">
-            <formal-name>Inline Field Name</formal-name>
-        </flag>
-        <flag ref="definition-index">
-            <formal-name>Inline Field Binary Name</formal-name>
-        </flag>
-        <flag ref="definition-deprecated"/>
-        <flag ref="as-type-field"/>
-        <flag ref="default-value">
-            <formal-name>Default Field Value</formal-name>
-        </flag>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <field ref="grouped-discriminator-value"/>
-            <choice>
-                <define-field name="json-value-key" as-type="token">
-                    <formal-name>Field Value JSON Property Name</formal-name>
-                </define-field>
-                <define-assembly name="json-value-key-flag">
-                    <formal-name>Field Value JSON Property Use Flag</formal-name>
-                    <define-flag name="flag-ref" as-type="token" required="yes">
-                        <formal-name>Flag Reference</formal-name>
-                    </define-flag>
-                </define-assembly>
-            </choice>
-            <choice-group min-occurs="0" max-occurs="unbounded">
-                <group-as name="flags" in-json="ARRAY"/>
-                <discriminator>object-type</discriminator>
-                <assembly ref="inline-define-flag">
-                    <discriminator-value>flag</discriminator-value>
-                </assembly>
-                <assembly ref="flag-reference">
-                    <discriminator-value>flag-ref</discriminator-value>
-                </assembly>
-            </choice-group>
-            <assembly ref="field-constraints"/>
-            <field ref="remarks"/>
-            <assembly ref="example" max-occurs="unbounded">
-                <group-as name="examples" in-json="ARRAY"/>
-            </assembly>
-        </model>
-    </define-assembly>
     
     <define-assembly name="assembly-model">
         <use-name>model</use-name>
@@ -599,11 +406,182 @@
                 <assembly ref="inline-define-field">
                     <discriminator-value>field</discriminator-value>
                 </assembly>
-                <assembly ref="choice"/>
-                <assembly ref="choice-group"/>
+                <define-assembly name="choice">
+                    <formal-name>Choice</formal-name>
+                    <model>
+                        <choice-group min-occurs="1" max-occurs="unbounded">
+                            <group-as name="choices" in-json="ARRAY"/>
+                            <discriminator>object-type</discriminator>
+                            <assembly ref="assembly-reference">
+                                <discriminator-value>assembly-ref</discriminator-value>
+                            </assembly>
+                            <assembly ref="inline-define-assembly">
+                                <discriminator-value>assembly</discriminator-value>
+                            </assembly>
+                            <assembly ref="field-reference">
+                                <discriminator-value>field-ref</discriminator-value>
+                            </assembly>
+                            <assembly ref="inline-define-field">
+                                <discriminator-value>field</discriminator-value>
+                            </assembly>
+                        </choice-group>
+                        <assembly ref="any"/>
+                    </model>
+                </define-assembly>
+                <define-assembly name="choice-group">
+                    <formal-name>Choice Grouping</formal-name>
+                    <flag ref="cardinality-min-occurs" default="0"/>
+                    <!-- require a max value that is greater than 1 -->
+                    <flag ref="cardinality-max-occurs" default="unbounded"/>
+                    <model>
+                        <assembly ref="json-key"/>
+                        <assembly ref="group-as" min-occurs="1"/>
+                        <define-field name="discriminator" as-type="token" default="object-type">
+                            <formal-name>Discriminator JSON Property</formal-name>
+                        </define-field>
+                        <choice-group min-occurs="1" max-occurs="unbounded">
+                            <group-as name="choices" in-json="ARRAY"/>
+                            <discriminator>object-type</discriminator>
+                            <define-assembly name="assembly">
+                                <formal-name>Grouping Assembly Reference</formal-name>
+                                <discriminator-value>assembly-ref</discriminator-value>
+                                <flag ref="definition-reference" required="yes">
+                                    <formal-name>Global Assembly Reference</formal-name>
+                                </flag>
+                                <flag ref="definition-index">
+                                    <formal-name>Assembly Reference Binary Name</formal-name>
+                                </flag>
+                                <flag ref="definition-deprecated"/>
+                                <model>
+                                    <field ref="formal-name"/>
+                                    <field ref="description"/>
+                                    <assembly ref="property" max-occurs="unbounded">
+                                        <group-as name="props" in-json="ARRAY"/>
+                                    </assembly>
+                                    <field ref="use-name"/>
+                                    <field ref="grouped-discriminator-value"/>
+                                    <field ref="remarks"/>
+                                </model>
+                            </define-assembly>
+                            <define-assembly name="define-assembly">
+                                <formal-name>Inline Assembly Definition</formal-name>
+                                <discriminator-value>assembly</discriminator-value>
+                                <flag ref="definition-name" required="yes">
+                                    <formal-name>Inline Assembly Name</formal-name>
+                                </flag>
+                                <flag ref="definition-index">
+                                    <formal-name>Inline Assembly Binary Name</formal-name>
+                                </flag>
+                                <flag ref="definition-deprecated"/>
+                                <model>
+                                    <field ref="formal-name"/>
+                                    <field ref="description"/>
+                                    <assembly ref="property" max-occurs="unbounded">
+                                        <group-as name="props" in-json="ARRAY"/>
+                                    </assembly>
+                                    <choice-group min-occurs="0" max-occurs="unbounded">
+                                        <group-as name="flags" in-json="ARRAY"/>
+                                        <discriminator>object-type</discriminator>
+                                        <assembly ref="inline-define-flag">
+                                            <discriminator-value>flag</discriminator-value>
+                                        </assembly>
+                                        <assembly ref="flag-reference">
+                                            <discriminator-value>flag-ref</discriminator-value>
+                                        </assembly>
+                                    </choice-group>
+                                    <field ref="grouped-discriminator-value"/>
+                                    <assembly ref="assembly-model"/>
+                                    <assembly ref="assembly-constraints"/>
+                                    <field ref="remarks"/>
+                                    <assembly ref="example" max-occurs="unbounded">
+                                        <group-as name="examples" in-json="ARRAY"/>
+                                    </assembly>
+                                </model>
+                            </define-assembly>
+                            
+                            <define-assembly name="field">
+                                <formal-name>Grouping Field Reference</formal-name>
+                                <discriminator-value>field-ref</discriminator-value>
+                                <flag ref="definition-reference" required="yes">
+                                    <formal-name>Global Field Reference</formal-name>
+                                </flag>
+                                <flag ref="definition-index">
+                                    <formal-name>Field Reference Binary Name</formal-name>
+                                </flag>
+                                <flag ref="definition-deprecated"/>
+                                <flag ref="default-value">
+                                    <formal-name>Default Field Value</formal-name>
+                                </flag>
+                                <flag ref="field-in-xml"/>
+                                <model>
+                                    <field ref="formal-name"/>
+                                    <field ref="description"/>
+                                    <assembly ref="property" max-occurs="unbounded">
+                                        <group-as name="props" in-json="ARRAY"/>
+                                    </assembly>
+                                    <field ref="use-name"/>
+                                    <field ref="grouped-discriminator-value"/>
+                                    <field ref="remarks"/>
+                                </model>
+                            </define-assembly>
+                            <define-assembly name="define-field">
+                                <formal-name>Inline Field Definition</formal-name>
+                                <discriminator-value>field</discriminator-value>
+                                <flag ref="definition-name" required="yes">
+                                    <formal-name>Inline Field Name</formal-name>
+                                </flag>
+                                <flag ref="definition-index">
+                                    <formal-name>Inline Field Binary Name</formal-name>
+                                </flag>
+                                <flag ref="definition-deprecated"/>
+                                <flag ref="as-type-field"/>
+                                <flag ref="default-value">
+                                    <formal-name>Default Field Value</formal-name>
+                                </flag>
+                                <model>
+                                    <field ref="formal-name"/>
+                                    <field ref="description"/>
+                                    <assembly ref="property" max-occurs="unbounded">
+                                        <group-as name="props" in-json="ARRAY"/>
+                                    </assembly>
+                                    <field ref="grouped-discriminator-value"/>
+                                    <choice>
+                                        <define-field name="json-value-key" as-type="token">
+                                            <formal-name>Field Value JSON Property Name</formal-name>
+                                        </define-field>
+                                        <assembly ref="json-value-key-flag"/>
+                                    </choice>
+                                    <choice-group min-occurs="0" max-occurs="unbounded">
+                                        <group-as name="flags" in-json="ARRAY"/>
+                                        <discriminator>object-type</discriminator>
+                                        <assembly ref="inline-define-flag">
+                                            <discriminator-value>flag</discriminator-value>
+                                        </assembly>
+                                        <assembly ref="flag-reference">
+                                            <discriminator-value>flag-ref</discriminator-value>
+                                        </assembly>
+                                    </choice-group>
+                                    <assembly ref="field-constraints"/>
+                                    <field ref="remarks"/>
+                                    <assembly ref="example" max-occurs="unbounded">
+                                        <group-as name="examples" in-json="ARRAY"/>
+                                    </assembly>
+                                </model>
+                            </define-assembly>
+                        </choice-group>
+                        <field ref="remarks"/>
+                    </model>
+                </define-assembly>
             </choice-group>
             <assembly ref="any"/>
         </model>
+    </define-assembly>
+
+    <define-assembly name="json-value-key-flag">
+        <formal-name>Flag Used as the Field Value's JSON Property Name</formal-name>
+        <define-flag name="flag-ref" as-type="token" required="yes">
+            <formal-name>Flag Reference</formal-name>
+        </define-flag>
     </define-assembly>
     
     <define-assembly name="group-as">
@@ -811,13 +789,6 @@
         <flag ref="alt-name-index"/>
     </define-field>
     
-    <define-field name="root-name" as-type="token">
-        <formal-name>Root Name</formal-name>
-        <description>Provides a root name, for when the definition is used as the root of a node hierarchy.</description>
-        <json-value-key>name</json-value-key>
-        <flag ref="alt-name-index"/>
-    </define-field>
-        
     <define-flag name="alt-name-index" as-type="nonNegativeInteger">
         <formal-name>Numeric Index</formal-name>
         <description>Used for binary formats instead of the textual name.</description>
@@ -868,9 +839,61 @@
                 <assembly ref="targeted-expect-constraint"/>
                 <assembly ref="targeted-index-has-key-constraint"/>
                 <assembly ref="targeted-matches-constraint"/>
-                <assembly ref="targeted-unique-constraint"/>
-                <assembly ref="targeted-index-constraint"/>
-                <assembly ref="targeted-cardinality-constraint"/>
+                <define-assembly name="unique">
+                    <formal-name>Targeted Unique Constraint</formal-name>
+                    <flag ref="constraint-identifier"/>
+                    <flag ref="constraint-severity-level"/>
+                    <flag ref="constraint-target" required="yes"/>
+                    <model>
+                        <field ref="formal-name"/>
+                        <field ref="description"/>
+                        <assembly ref="property" max-occurs="unbounded">
+                            <group-as name="props" in-json="ARRAY"/>
+                        </assembly>
+                        <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
+                            <formal-name>Key Constraint Field</formal-name>
+                            <use-name>key-field</use-name>
+                            <group-as name="key-fields" in-json="ARRAY"/>
+                        </assembly>
+                        <field ref="remarks"/>
+                    </model>        
+                </define-assembly>
+                <define-assembly name="index">
+                    <formal-name>Targeted Index Constraint</formal-name>
+                    <flag ref="constraint-identifier"/>
+                    <flag ref="constraint-severity-level"/>
+                    <flag ref="index-name" required="yes"/>
+                    <flag ref="constraint-target" required="yes"/>
+                    <model>
+                        <field ref="formal-name"/>
+                        <field ref="description"/>
+                        <assembly ref="property" max-occurs="unbounded">
+                            <group-as name="props" in-json="ARRAY"/>
+                        </assembly>
+                        <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
+                            <formal-name>Key Constraint Field</formal-name>
+                            <use-name>key-field</use-name>
+                            <group-as name="key-fields" in-json="ARRAY"/>
+                        </assembly>
+                        <field ref="remarks"/>
+                    </model>        
+                </define-assembly>
+                <define-assembly name="has-cardinality">
+                    <formal-name>Targeted Cardinality Constraint</formal-name>
+                    <flag ref="constraint-identifier"/>
+                    <flag ref="constraint-severity-level"/>
+                    <flag ref="cardinality-min-occurs"/>
+                    <flag ref="cardinality-max-occurs"/>
+                    <flag ref="constraint-target" required="yes"/>
+                    <model>
+                        <field ref="formal-name"/>
+                        <field ref="description"/>
+                        <assembly ref="property" max-occurs="unbounded">
+                            <group-as name="props" in-json="ARRAY"/>
+                        </assembly>
+                        <field ref="remarks"/>
+                    </model>        
+                </define-assembly>
             </choice-group>
         </model>
     </define-assembly>
@@ -901,10 +924,79 @@
             <choice-group min-occurs="1" max-occurs="unbounded">
                 <group-as name="rules" in-json="ARRAY"/>
                 <discriminator>object-type</discriminator>
-                <assembly ref="allowed-values-constraint"/>
-                <assembly ref="expect-constraint"/>
-                <assembly ref="index-has-key-constraint"/>
-                <assembly ref="matches-constraint"/>
+                <define-assembly name="allowed-values">
+                    <formal-name>Allowed Values Constraint</formal-name>
+                    <flag ref="constraint-identifier"/>
+                    <flag ref="constraint-severity-level"/>
+                    <flag ref="constraint-allow-other"/>
+                    <flag ref="constraint-extensible"/>
+                    <model>
+                        <field ref="formal-name"/>
+                        <field ref="description"/>
+                        <assembly ref="property" max-occurs="unbounded">
+                            <group-as name="props" in-json="ARRAY"/>
+                        </assembly>
+                        <field ref="constraint-value-enum" min-occurs="1" max-occurs="unbounded">
+                            <group-as name="enums" in-json="ARRAY"/>
+                        </field>
+                        <field ref="remarks"/>
+                    </model>
+                </define-assembly>
+                <define-assembly name="expect">
+                    <formal-name>Expect Condition Constraint</formal-name>
+                    <flag ref="constraint-identifier"/>
+                    <flag ref="constraint-severity-level"/>
+                    <flag ref="constraint-target" required="yes">
+                        <formal-name>Expect Test Condition</formal-name>
+                        <use-name>test</use-name>
+                    </flag>
+                    <model>
+                        <field ref="formal-name"/>
+                        <field ref="description"/>
+                        <assembly ref="property" max-occurs="unbounded">
+                            <group-as name="props" in-json="ARRAY"/>
+                        </assembly>
+                        <field ref="expect-constraint-message"/>
+                        <field ref="remarks"/>
+                    </model>
+                </define-assembly>
+                <define-assembly name="index-has-key">
+                    <formal-name>Index Has Key Constraint</formal-name>
+                    <flag ref="constraint-identifier"/>
+                    <flag ref="constraint-severity-level"/>
+                    <flag ref="index-name" required="yes"/>
+                    <model>
+                        <field ref="formal-name"/>
+                        <field ref="description"/>
+                        <assembly ref="property" max-occurs="unbounded">
+                            <group-as name="props" in-json="ARRAY"/>
+                        </assembly>
+                        <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
+                            <formal-name>Key Constraint Field</formal-name>
+                            <use-name>key-field</use-name>
+                            <group-as name="key-fields" in-json="ARRAY"/>
+                        </assembly>
+                        <field ref="remarks"/>
+                    </model>        
+                </define-assembly>
+                <define-assembly name="matches">
+                    <formal-name>Value Matches Constraint</formal-name>
+                    <flag ref="constraint-identifier"/>
+                    <flag ref="constraint-severity-level"/>
+                    <flag ref="constraint-matches-regex"/>
+                    <flag ref="as-type-simple">
+                        <formal-name>Matches Data Type</formal-name>
+                        <use-name>datatype</use-name>
+                    </flag>
+                    <model>
+                        <field ref="formal-name"/>
+                        <field ref="description"/>
+                        <assembly ref="property" max-occurs="unbounded">
+                            <group-as name="props" in-json="ARRAY"/>
+                        </assembly>
+                        <field ref="remarks"/>
+                    </model>
+                </define-assembly>
             </choice-group>
         </model>
     </define-assembly>
@@ -946,27 +1038,7 @@
         <formal-name>Constraint Target Metapath Expression</formal-name>
         <use-name>target</use-name>
     </define-flag>
-    
-    <define-assembly name="allowed-values-constraint">
-        <formal-name>Allowed Values Constraint</formal-name>
-        <use-name>allowed-values</use-name>
-        <flag ref="constraint-identifier"/>
-        <flag ref="constraint-severity-level"/>
-        <flag ref="constraint-allow-other"/>
-        <flag ref="constraint-extensible"/>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <field ref="constraint-value-enum" min-occurs="1" max-occurs="unbounded">
-                <group-as name="enums" in-json="ARRAY"/>
-            </field>
-            <field ref="remarks"/>
-        </model>
-    </define-assembly>
-    
+
     <define-assembly name="targeted-allowed-values-constraint">
         <formal-name>Allowed Values Constraint</formal-name>
         <use-name>allowed-values</use-name>
@@ -1023,27 +1095,7 @@
             <formal-name>Allowed Value Deprecation Version</formal-name>
         </define-flag>
     </define-field>
-    
-    <define-assembly name="matches-constraint">
-        <formal-name>Value Matches Constraint</formal-name>
-        <use-name>matches</use-name>
-        <flag ref="constraint-identifier"/>
-        <flag ref="constraint-severity-level"/>
-        <flag ref="constraint-matches-regex"/>
-        <flag ref="as-type-simple">
-            <formal-name>Matches Data Type</formal-name>
-            <use-name>datatype</use-name>
-        </flag>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <field ref="remarks"/>
-        </model>
-    </define-assembly>
-    
+
     <define-assembly name="targeted-matches-constraint">
         <formal-name>Value Matches Constraint</formal-name>
         <use-name>matches</use-name>
@@ -1069,27 +1121,7 @@
         <formal-name>Matches Regular Expression</formal-name>
         <use-name>regex</use-name>
     </define-flag>
-    
-    <define-assembly name="expect-constraint">
-        <formal-name>Expect Condition Constraint</formal-name>
-        <use-name>expect</use-name>
-        <flag ref="constraint-identifier"/>
-        <flag ref="constraint-severity-level"/>
-        <flag ref="constraint-target" required="yes">
-            <formal-name>Expect Test Condition</formal-name>
-            <use-name>test</use-name>
-        </flag>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <field ref="expect-constraint-message"/>
-            <field ref="remarks"/>
-        </model>
-    </define-assembly>
-    
+
     <define-assembly name="targeted-expect-constraint">
         <formal-name>Expect Condition Constraint</formal-name>
         <use-name>expect</use-name>
@@ -1115,74 +1147,10 @@
         <formal-name>Expect Condition Violation Message</formal-name>
         <use-name>message</use-name>
     </define-field>
-    
-    <define-assembly name="index-has-key-constraint">
-        <formal-name>Index Has Key Constraint</formal-name>
-        <use-name>index-has-key</use-name>
-        <flag ref="constraint-identifier"/>
-        <flag ref="constraint-severity-level"/>
-        <flag ref="index-name" required="yes"/>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
-                <formal-name>Key Constraint Field</formal-name>
-                <use-name>key-field</use-name>
-                <group-as name="key-fields" in-json="ARRAY"/>
-            </assembly>
-            <field ref="remarks"/>
-        </model>        
-    </define-assembly>
-    
+
     <define-assembly name="targeted-index-has-key-constraint">
         <formal-name>Targeted Index Has Key Constraint</formal-name>
         <use-name>index-has-key</use-name>
-        <flag ref="constraint-identifier"/>
-        <flag ref="constraint-severity-level"/>
-        <flag ref="index-name" required="yes"/>
-        <flag ref="constraint-target" required="yes"/>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
-                <formal-name>Key Constraint Field</formal-name>
-                <use-name>key-field</use-name>
-                <group-as name="key-fields" in-json="ARRAY"/>
-            </assembly>
-            <field ref="remarks"/>
-        </model>        
-    </define-assembly>
-    
-    <define-assembly name="targeted-unique-constraint">
-        <formal-name>Targeted Unique Constraint</formal-name>
-        <use-name>unique</use-name>
-        <flag ref="constraint-identifier"/>
-        <flag ref="constraint-severity-level"/>
-        <flag ref="constraint-target" required="yes"/>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
-                <formal-name>Key Constraint Field</formal-name>
-                <use-name>key-field</use-name>
-                <group-as name="key-fields" in-json="ARRAY"/>
-            </assembly>
-            <field ref="remarks"/>
-        </model>        
-    </define-assembly>
-    
-    <define-assembly name="targeted-index-constraint">
-        <formal-name>Targeted Index Constraint</formal-name>
-        <use-name>index</use-name>
         <flag ref="constraint-identifier"/>
         <flag ref="constraint-severity-level"/>
         <flag ref="index-name" required="yes"/>
@@ -1219,26 +1187,4 @@
         <formal-name>Index Name</formal-name>
         <use-name>name</use-name>
     </define-flag>
-    
-    <define-assembly name="targeted-cardinality-constraint">
-        <formal-name>Targeted Index Constraint</formal-name>
-        <flag ref="constraint-identifier"/>
-        <flag ref="constraint-severity-level"/>
-        <flag ref="cardinality-min-occurs"/>
-        <flag ref="cardinality-max-occurs"/>
-        <flag ref="constraint-target" required="yes"/>
-        <model>
-            <field ref="formal-name"/>
-            <field ref="description"/>
-            <assembly ref="property" max-occurs="unbounded">
-                <group-as name="props" in-json="ARRAY"/>
-            </assembly>
-            <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
-                <formal-name>Key Constraint Field</formal-name>
-                <use-name>key-field</use-name>
-                <group-as name="key-fields" in-json="ARRAY"/>
-            </assembly>
-            <field ref="remarks"/>
-        </model>        
-    </define-assembly>
 </METASCHEMA>
