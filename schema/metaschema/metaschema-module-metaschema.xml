@@ -479,6 +479,7 @@
                                     <assembly ref="property" max-occurs="unbounded">
                                         <group-as name="props" in-json="ARRAY"/>
                                     </assembly>
+                                    <field ref="grouped-discriminator-value"/>
                                     <choice-group min-occurs="0" max-occurs="unbounded">
                                         <group-as name="flags" in-json="ARRAY"/>
                                         <discriminator>object-type</discriminator>
@@ -489,7 +490,6 @@
                                             <discriminator-value>flag-ref</discriminator-value>
                                         </assembly>
                                     </choice-group>
-                                    <field ref="grouped-discriminator-value"/>
                                     <assembly ref="assembly-model"/>
                                     <assembly ref="assembly-constraints"/>
                                     <field ref="remarks"/>
