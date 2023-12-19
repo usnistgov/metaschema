@@ -774,7 +774,7 @@
         <define-flag name="name" as-type="token" required="yes">
             <formal-name>Property Name</formal-name>
         </define-flag>
-        <define-flag name="name" as-type="uri" default="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+        <define-flag name="namespace" as-type="uri" default="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
             <formal-name>Property Namespace</formal-name>
         </define-flag>
         <define-flag name="value" as-type="token" required="yes">
