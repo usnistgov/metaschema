@@ -30,7 +30,7 @@
             <define-field name="schema-version" as-type="string" min-occurs="1" max-occurs="1">
                 <description>A version string used to distinguish between multiple revisions of the same Metaschema module.</description>
             </define-field>
-            <define-field name="short-name" as-type="markup-line" min-occurs="1" max-occurs="1">
+            <define-field name="short-name" as-type="token" min-occurs="1" max-occurs="1">
                 <formal-name>Module Short Name</formal-name>
                 <description>A short (code) name to be used for the Metaschema module. This name may be used as a constituent of names assigned to derived artifacts, such as schemas and conversion utilities.</description>
             </define-field>
