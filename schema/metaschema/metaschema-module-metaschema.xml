@@ -839,7 +839,7 @@
                 <assembly ref="targeted-expect-constraint"/>
                 <assembly ref="targeted-index-has-key-constraint"/>
                 <assembly ref="targeted-matches-constraint"/>
-                <define-assembly name="unique">
+                <define-assembly name="is-unique">
                     <formal-name>Targeted Unique Constraint</formal-name>
                     <flag ref="constraint-identifier"/>
                     <flag ref="constraint-severity-level"/>
