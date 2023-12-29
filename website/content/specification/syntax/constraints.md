@@ -74,6 +74,16 @@ If a `@target` value is not defined, a Metaschema processor MUST process the val
 
 A *target* can apply to any node(s) in the document instance(s). There is no guarantee the constraint *target* is a child of its respective assembly, field, or flag. Thus, a Metaschema processor MUST resolve the Metapath expression to identify the actual target nodes that the constraint applies to. If no resulting target nodes are identified, then the constraint MUST be ignored.
 
+### `message`
+
+The *message* element of a constraint defines documentation to explain how the target node(s) are invalid.
+
+Not all constraint types require a `<message>` and for all applicable constraint types it is optional.
+
+The `<message>` value MUST be a [Metaschema string value](/specification/datatypes#string).
+
+The `<message>` value may contain a Metapath expression template that starts with `{` and ends with `}`. The expression in the template MUST be set to the result of evaluating the `@expression` using the current node as the Metapath [evaluation focus](#constraint-processing).
+
 ## Constraint Processing
 
 In a Metaschema-based document instance, each node in the document instance is associated with a definition in a Metaschema module. Thus, a given content node has one and only one associated definition.
