@@ -120,6 +120,50 @@ Processing errors occur when a defect in the constraint definition causes an uni
 - If a processing error occurs while processing a constraint, which can result from evaluating a Metapath expression, the error SHOULD be reported.
 - If a processing error occurs while processing a constraint, then the document instance being validated MUST NOT be considered valid. This is due to the inability to make a conclusion around validity, since some constraints were not validated due to errors.
 
+## Let expressions
+
+Using the `let` element, a variable can be defined, which can be used in a Metapath expression in subsequent constraints.
+
+A `let` statement has a REQUIRED `@var` attribute, which defines the variable name.
+
+A `let` statement has a REQUIRED `@expression` attributes, which defines an Metapath expression, whose result is used to define the variable's value in the evaluation context.
+
+During constraint evaluation, each `let` statement MUST be evaluated in encounter order. If a previous variable is bound with the same name in the evaluation context, the new value MUST bound in a sub-context to avoid side effects. This sub-context MUST be made available to any constraints following the `let` statement declaration, and to any constraints defined on child nodes of the current context.
+
+During evaluation, when a variable is bound for a `let` statement, the variables value MUST be set to the result of evaluating the `@expression` using the current node as the Metapath evaluation focus.
+
+For example:
+
+Given the following fragment of a Metaschema module.
+
+```xml
+<define-assembly name="sibling">
+  <define-flag name="name" required="yes"/>
+  <constraint>
+    <let var="parent" expression=".."/><!-- stores the parent of the current node -->
+    <let var="sibling-count" expression="count($parent/sibling)"/>
+    <expect target="." test="$sibling-count = 3"/>
+  </constraint>
+</define-assembly>
+```
+
+And the following document.
+
+```xml
+<parent name="p1">
+  <sibling name="a"/>
+  <sibling name="b"/>
+  <sibling name="c"/>
+</parent>
+<parent name="p2">
+  <sibling name="x"/>
+  <sibling name="Y"/>
+</parent1>
+```
+
+The expect constraint would pass for each `sibling` in the `parent` named "p1", and would fail for each `sibling` in the `parent` named "p2".
+
+
 ## Enumerated values
 
 The `allowed-values` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on an enumerated set of permitted values.

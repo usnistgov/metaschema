@@ -3,7 +3,6 @@
   
   <xs:include schemaLocation="metaschema-prose-base.xsd"/>
 
-
   <xs:complexType name="MarkupLineDatatype" mixed="true">
     <xs:complexContent>
       <xs:extension base="inlineMarkupType"/>
