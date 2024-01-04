@@ -146,7 +146,7 @@ jobs:
           documentation
     - name: Fail on link check error
       if: ${{ !cancelled() && env.lychee_exit_code != 0 && (github.event.inputs.linkcheck_fail_on_error == 'true' || inputs.linkcheck_fail_on_error == true) }}
-      uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410
+      uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea
       with:
         script: |
           core.setFailed('Link checker detected broken or invalid links, read attached report.')
