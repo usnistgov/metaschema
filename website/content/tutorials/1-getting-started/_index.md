@@ -239,7 +239,7 @@ With an `assembly`, we can specify a complex named object, not just a simple key
             <formal-name>Motherboard Type</formal-name>
             <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
           </define-field>
-          <define-assembly name="cpu">
+          <define-assembly name="cpu"min-occurs="1">
             <formal-name>Motherboard Central Processing Unit (CPU)</formal-name>
             <description>The model number of the CPU on the motherboard of a computer.</description>
             <model>
@@ -419,7 +419,7 @@ Our Metaschema-enabled tools can parse and generate the different data formats b
 
 We define the data types for different Metaschema fields and flags. Our Metaschema-enabled tools can leverage [pre-compiled schemas](/specification/datatypes/#data-type-schema-representations) or generate their own to enforce field and flag values that are valid for their type. For example, our Metaschema-enabled tools should accept a valid URI for the `website` field of the `vendor` assembly, but not any arbitrary string. This is accomplished using the [`uri`](/specification/datatypes/#uri) data type. For `byte-size`, they should only accept positive integer values greater than 0, not a decimal point number or string, based on the [`positive-integer`](/specification/datatypes/#positive-integer) data type. Metaschema facilitates consistent enforcement of data typing so we developers do not have to.
 
-We also define the minimum and maximum number of elements for the different assemblies, flags, and field with `@min-occurs` and `@max-occurs` declarations. In our example, we have an optional `expansion-card` field in the `motherboard` assembly. Our Metaschema-enabled tools will parse or generate instances as valid with optional fields missing. On the other hand, a `motherboard` assembly missing the `cpu` field should throw errors, as should parsing or generating instances with one that one `cpu` field in the JSON, XML, or YAML formats.
+We also define the minimum and maximum number of elements for the different assemblies, flags, and field with `@min-occurs` and `@max-occurs` declarations. In our example, we have an optional `expansion-card` field in the `motherboard` assembly. Our Metaschema-enabled tools will parse or generate instances as valid with optional fields missing. On the other hand, a `motherboard` assembly missing the `cpu` field should throw errors, as should parsing or generating instances without at least one `cpu` assembly in the JSON, XML, or YAML formats.
 
 ## Refactoring Metaschema Definitions and Deduplicating Code
 
@@ -504,7 +504,7 @@ For now, we can copy-paste the `vendor` assembly into all relevant assemblies, n
             <formal-name>Motherboard Type</formal-name>
             <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
           </define-field>
-          <define-assembly name="cpu">
+          <define-assembly name="cpu" min-occurs="1">
             <formal-name>Motherboard Central Processing Unit (CPU)</formal-name>
             <description>The model number of the CPU on the motherboard of a computer.</description>
             <model>
@@ -898,7 +898,7 @@ At this point we have updated our model to meet stakeholder needs, but the model
             <formal-name>Motherboard Type</formal-name>
             <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
           </define-field>
-          <define-assembly name="cpu">
+          <define-assembly name="cpu" min-occurs="1">
             <formal-name>Motherboard Central Processing Unit (CPU)</formal-name>
             <description>The model number of the CPU on the motherboard of a computer.</description>
             <model>
