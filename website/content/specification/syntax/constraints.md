@@ -207,7 +207,7 @@ The `@name` flag of an `<index>` constraint MUST specify the name of a previousl
 The `index-has-key` constraint has the same flags and assemblies as a [`index`](#index-constraints) constraint.
 =======
 ## `is-unique` constraints
-----
+
 The `is-unique` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on a component not being referenced more than once.
 
 The `id` attribute of an `is-unique` constraint specifies an identifier for the constraint.
@@ -218,7 +218,7 @@ The `key-field` child element of an `is-unique` constraint defines the attribute
 
 An `is-unique` constraint MAY define only one `@key-field`. 
 
-If the evaluation of the Metapath `@target` of the `is-unique` constraint....
+If the evaluation of the Metapath `@target` of the `is-unique` constraint is not referenced more than once within the same capability, its value will result to true.
 
 >>>>>>> 315b3fa (Updated the constraints documentation to add is-unique)
 
