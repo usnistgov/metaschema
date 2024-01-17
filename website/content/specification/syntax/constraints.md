@@ -179,6 +179,7 @@ A constraint may have an OPTIONAL [`@level`](#level) attribute and/or an OPTIONA
 
 If defined, the `<message>` value MUST be a [Metaschema string value](/specification/datatypes#string). It MAY contain a Metapath expression templates that starts with `{`, contains a Metapath expression, and ends with `}`.  When evaluating a template Metapath expression, the context of the Metapath [evaluation focus](#constraint-processing) MUST be the failing value node.
 
+<<<<<<< HEAD
 ## `index` constraints
 
 The `index` constraint is a type of Metaschema constraint that defines an index of document instance nodes addressable by key.
@@ -204,6 +205,22 @@ The `index-has-key` constraint is a type of Metaschema constraint that cross-ref
 The `@name` flag of an `<index>` constraint MUST specify the name of a previously defined `index` constraint.
 
 The `index-has-key` constraint has the same flags and assemblies as a [`index`](#index-constraints) constraint.
+=======
+## `is-unique` constraints
+----
+The `is-unique` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on a component not being referenced more than once.
+
+The `id` attribute of an `is-unique` constraint specifies an identifier for the constraint.
+
+The `@target` attribute of an `<is-unique>` constraint specifies the node in a component definition whose value is distinct. The `is-unique` constraint MUST define a [`@target`](#target) with a Metapath expression.
+
+The `key-field` child element of an `is-unique` constraint defines the attribute or element value that is the key or uuid. **???** The `key-field` element MUST define a [`@target`](#target) attribute with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of the constraint's `@target`.
+
+An `is-unique` constraint MAY define only one `@key-field`. 
+
+If the evaluation of the Metapath `@target` of the `is-unique` constraint....
+
+>>>>>>> 315b3fa (Updated the constraints documentation to add is-unique)
 
 ## `has-cardinality` constraints
 
