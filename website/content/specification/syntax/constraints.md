@@ -214,9 +214,9 @@ The `id` attribute of an `is-unique` constraint specifies an identifier for the 
 
 The `@target` attribute of an `<is-unique>` constraint specifies the node in a component definition whose value is distinct. The `is-unique` constraint MUST define a [`@target`](#target) with a Metapath expression.
 
-The `key-field` child element of an `is-unique` constraint defines the attribute or element value that is the key or uuid. **???** The `key-field` element MUST define a [`@target`](#target) attribute with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of the constraint's `@target`.
+The `key-field` child element of an `<is-unique>` constraint defines the attribute or element value that is the key for each entry in the index. The `<key-field>` element MUST define a [`@target`](#target) attribute with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
 
-An `is-unique` constraint MAY define only one `@key-field`. 
+An `is-unique` constraint MUST define only one `@key-field`. 
 
 If the evaluation of the Metapath `@target` of the `is-unique` constraint is not referenced more than once within the same capability, its value will result to true.
 
