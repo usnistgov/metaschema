@@ -239,7 +239,7 @@ With an `assembly`, we can specify a complex named object, not just a simple key
             <formal-name>Motherboard Type</formal-name>
             <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
           </define-field>
-          <define-assembly name="cpu"min-occurs="1">
+          <define-assembly name="cpu" min-occurs="1">
             <formal-name>Motherboard Central Processing Unit (CPU)</formal-name>
             <description>The model number of the CPU on the motherboard of a computer.</description>
             <model>
