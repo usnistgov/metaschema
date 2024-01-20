@@ -187,11 +187,11 @@ The `@name` attribute of an `<index>` constraint specifies the identity of the i
 
 The `@target` attribute of an `<index>` constraint defines the node(s) in a document instance to index. The index MUST define a [`@target`](#target) with a Metapath expression. The processor MUST index only The document instance node(s) resulting from its evaluation.
 
-The `<key-field>` child element of an `<index>` constraint defines the attribute or element value that is the key for each entry in the index. The `<key-field>` element MUST define a [`@target`](#target) attribute with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
+The `<key-field/>` child element of an `<index>` constraint defines the attribute or element value that is the key for each entry in the index. The `<key-field/>` element MUST define a [`@target`](#target) attribute with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
 
-An `index` constraint MAY define more than one `<key-field>` child element. The composite key for each entry in the index is the combination of values for the `@target` of every `<key-field/>`. The composite values of the key are the discriminator for the uniqueness of the index entry.
+An `index` constraint MAY define more than one `<key-field/>` child element. The composite key for each entry in the index is the combination of values for the `@target` of every `<key-field/>`. The composite values of the key are the discriminator for the uniqueness of the index entry.
 
-An `index` constraint requires the each member entry be unique based upon this composite key.
+An `index` constraint requires that each member entry be unique based upon this composite key.
 
 If the evaluation of the Metapath `@target` of the `<key-field/>` does not result in a value, its value for that key in the index is null.
 
