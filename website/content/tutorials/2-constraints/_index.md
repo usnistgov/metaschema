@@ -330,7 +330,7 @@ To implement such a requirement, we cannot rely on type system alone. We must us
 <?xml-model href="https://raw.githubusercontent.com/usnistgov/metaschema/develop/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
   <schema-name>Computer Model</schema-name>
-  <schema-version>0.0.5</schema-version>
+  <schema-version>0.0.6</schema-version>
   <short-name>computer</short-name>
   <namespace>http://example.com/ns/computer</namespace>
   <json-base-uri>http://example.com/ns/computer</json-base-uri>
@@ -643,14 +643,40 @@ The updated model with approved values for CPU architecture was a success with s
 
 To implement such a requirement, we must use an [`<allowed-values>` constraint](/specification/syntax/constraints#enumerated-values) to make a list of optional, recommended values. For a field like architecture in the model, we can define it inside the field like below where the change is highlighted. The `allow-other="yes"` declaration means a valid, conforming document instance can use a recommended value from the list, or any other as new types emerge. The constraint definition is inside the architecture field so it is the current context for evaluation focus of the [target](/specification/syntax/constraints#target). The declaration `target="."` makes it explicit.
 
-```xml {linenos=table,hl_lines=["143-154"]}
+```xml {linenos=table,hl_lines=["106-119"]}
 <?xml version="1.0" encoding="UTF-8"?>
 <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
   <schema-name>Computer Model</schema-name>
-  <schema-version>0.0.4</schema-version>
-  <short-name>computer</short-name>
+  <schema-version>0.0.7</schema-version>
+    <short-name>computer</short-name>
   <namespace>http://example.com/ns/computer</namespace>
   <json-base-uri>http://example.com/ns/computer</json-base-uri>
+  <define-assembly name="vendor">
+    <formal-name>Vendor Information</formal-name>
+    <description>Information about a vendor of a computer part.</description>
+    <define-flag name="id" as-type="string" required="yes">
+      <formal-name>Vendor Identifier</formal-name>
+      <description>An identifier for classifying a unique computer parts vendor.</description>
+    </define-flag>
+    <model>
+      <define-field name="name" min-occurs="1" max-occurs="1">
+        <formal-name>Vendor Name</formal-name>
+        <description>The registered company name of the vendor.</description>
+      </define-field>
+      <define-field name="address" min-occurs="1" max-occurs="1">
+        <formal-name>Vendor Address</formal-name>
+        <description>The physical address of an office location for the vendor.</description>
+      </define-field>
+      <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
+        <formal-name>Vendor Website</formal-name>
+        <description>A public website made by the vendor documenting their parts as used in the computer.</description>
+      </define-field>
+    </model>
+  </define-assembly>
+  <define-field name="product-name" as-type="string">
+    <formal-name>Product Name</formal-name>
+    <description>The product name from the vendor of the computer part.</description>
+  </define-field>
   <define-assembly name="computer">
     <formal-name>Computer Assembly</formal-name>
     <description>A container object for a computer, its parts, and its sub-parts.</description>
@@ -660,58 +686,11 @@ To implement such a requirement, we must use an [`<allowed-values>` constraint](
         <description>An identifier for classifying a unique make and model of computer.</description>
     </define-flag>
     <model>
-      <define-assembly name="vendor">
-        <formal-name>Vendor Information</formal-name>
-        <description>Information about a vendor of a computer part.</description>
-        <define-flag name="id" as-type="string" required="yes">
-          <formal-name>Vendor Identifier</formal-name>
-          <description>An identifier for classifying a unique computer parts vendor.</description>
-        </define-flag>
-        <model>
-          <define-field name="name" min-occurs="1" max-occurs="1">
-            <formal-name>Vendor Name</formal-name>
-            <description>The registered company name of the vendor.</description>
-          </define-field>
-          <define-field name="address" min-occurs="1" max-occurs="1">
-            <formal-name>Vendor Address</formal-name>
-            <description>The physical address of an office location for the vendor.</description>
-          </define-field>
-          <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
-            <formal-name>Vendor Website</formal-name>
-            <description>A public website made by the vendor documenting their parts as used in the computer.</description>
-          </define-field>
-        </model>
-      </define-assembly>
       <define-assembly name="motherboard">
         <formal-name>Motherboard Assembly</formal-name>
         <description>A container object for a motherboard in a computer and its sub-parts.</description>
         <model>
-          <define-assembly name="vendor">
-            <formal-name>Vendor Information</formal-name>
-            <description>Information about a vendor of a computer part.</description>
-            <define-flag name="id" as-type="string" required="yes">
-              <formal-name>Vendor Identifier</formal-name>
-              <description>An identifier for classifying a unique computer parts vendor.</description>
-            </define-flag>
-            <model>
-              <define-field name="name" min-occurs="1" max-occurs="1">
-                <formal-name>Vendor Name</formal-name>
-                <description>The registered company name of the vendor.</description>
-              </define-field>
-              <define-field name="address" min-occurs="1" max-occurs="1">
-                <formal-name>Vendor Address</formal-name>
-                <description>The physical address of an office location for the vendor.</description>
-              </define-field>
-              <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
-                <formal-name>Vendor Website</formal-name>
-                <description>A public website made by the vendor documenting their parts as used in the computer.</description>
-              </define-field>
-            </model>
-          </define-assembly>
-          <define-field name="product-name" as-type="string" min-occurs="1" max-occurs="1">
-            <formal-name>Product Name</formal-name>
-            <description>The product name from the vendor of the computer part.</description>
-          </define-field>
+          <assembly ref="vendor"/>
           <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
             <formal-name>Motherboard Type</formal-name>
             <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
@@ -720,35 +699,19 @@ To implement such a requirement, we must use an [`<allowed-values>` constraint](
             <formal-name>Motherboard Central Processing Unit (CPU)</formal-name>
             <description>The model number of the CPU on the motherboard of a computer.</description>
             <model>
-              <define-assembly name="vendor">
-                <formal-name>Vendor Information</formal-name>
-                <description>Information about a vendor of a computer part.</description>
-                <define-flag name="id" as-type="string" required="yes">
-                  <formal-name>Vendor Identifier</formal-name>
-                  <description>An identifier for classifying a unique computer parts vendor.</description>
-                </define-flag>
-                <model>
-                  <define-field name="name" min-occurs="1" max-occurs="1">
-                    <formal-name>Vendor Name</formal-name>
-                    <description>The registered company name of the vendor.</description>
-                  </define-field>
-                  <define-field name="address" min-occurs="1" max-occurs="1">
-                    <formal-name>Vendor Address</formal-name>
-                    <description>The physical address of an office location for the vendor.</description>
-                  </define-field>
-                  <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
-                    <formal-name>Vendor Website</formal-name>
-                    <description>A public website made by the vendor documenting their parts as used in the computer.</description>
-                  </define-field>
-                </model>
-              </define-assembly>
-              <define-field name="product-name" as-type="string" min-occurs="1" max-occurs="1">
-                <formal-name>Product Name</formal-name>
-                <description>The product name from the vendor of the computer part.</description>
-              </define-field>
+              <assembly ref="vendor"/>
+              <field ref="product-name" min-occurs="1" max-occurs="1"/>
               <define-field name="architecture" as-type="string" min-occurs="1" max-occurs="1">
                 <formal-name>CPU Architecture</formal-name>
-                <description>The Instruction Set Architecture (ISA) of the processor, <code>x86</code>, <code>x86-64</code>,, <code>arm</code>, or an alternative.</description>
+                <description>The Instruction Set Architecture (ISA) approved by module stakeholders.</description>
+                <constraint>
+                    <allowed-values target="." allow-other="no">
+                        <enum value="amd64">Intel 64-bit systems, also known as x86-64 or em64t</enum>
+                        <enum value="armhf">Arm v7 32-bit systems</enum>
+                        <enum value="arm64">Arm v8 64-bit systems</enum>
+                        <enum value="x86">Intel 32-bit x86 systems, for 686 class or newer</enum>
+                    </allowed-values>
+                </constraint>
               </define-field>
               <define-field name="speed" as-type="string" min-occurs="1" max-occurs="1">
                 <formal-name>CPU Speed</formal-name>
@@ -1066,4 +1029,4 @@ computer:
 
 ## Conclusion
 
-In this tutorial, we examined an example of a real-world information model in a domain and how we would model it with a community of stakeholders. We incrementally improved a Metaschema module to add more precision to values for field and flag elements with the use of constraints.
+In this tutorial, we examined an example of a real-world information model in a domain and how we would model it with a community of stakeholders. We incrementally improved a Metaschema module to add more precision to values for field and flag elements with the use of constraints. We know how to do so with a collection of values with an `<allowed-values/>` enumeration and restrict the set of values with the `allow-other="no"` attribute.
