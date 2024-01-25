@@ -163,6 +163,21 @@ And the following document.
 
 The expect constraint would pass for each `sibling` in the `parent` named "p1", and would fail for each `sibling` in the `parent` named "p2".
 
+## `expect` constraints
+
+The `expect` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on the evaluation of a test Metapath expression.
+
+The `@target` attribute of an `<expect>` constraint specifies the node(s) in a document instance whose value is restricted by the constraint.
+
+The `@test` attribute of an `<expect>` constraint specifies the logical condition to be evaluated against each value node resulting from evaluating the `@target`. This expression MUST evaluate to [a Metaschema boolean value](/specification/datatypes#boolean) `true` or `false`.
+
+When the `@test` expression evaluates to `true` for a target value node, then the target value node MUST be considered valid and passing the constraint.
+
+When the `@test` expression evaluates to `false` for a target value node, then the target value node MUST be considered not valid and failing the constraint.
+
+A constraint may have an OPTIONAL [`@level`](#level) attribute and/or an OPTIONAL child [`<message>`](#message) element to indicate severity and documentation explaining how the target nodes are invalid.
+
+If defined, the `<message>` value MUST be a [Metaschema string value](/specification/datatypes#string). It MAY contain a Metapath expression templates that starts with `{`, contains a Metapath expression, and ends with `}`.  When evaluating a template Metapath expression, the context of the Metapath [evaluation focus](#constraint-processing) MUST be the failing value node.
 
 ## Enumerated values
 
