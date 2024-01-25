@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://raw.githubusercontent.com/usnistgov/metaschema/develop/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>SARIF Metaschema Module</schema-name>
+    <schema-version>0.1.0</schema-version>
+    <short-name>sarif</short-name>
+    <!-- TODO: Do we want to have 1:1 overlap with SARIF? I am not sure. -->
+    <namespace>http://csrc.nist.gov/ns/oscal/metaschema/validation/results/1.0</namespace>
+    <!-- TODO: Ditto here, this is the URL for the official spec release version. -->
+    <json-base-uri>http://csrc.nist.gov/ns/oscal/metaschema/validation/results/1.0</json-base-uri>
+    <define-field name="version">
+        <formal-name>Version</formal-name>
+        <description>The SARIF format version of this log file.</description>
+    </define-field>
+    <define-field name="version">
+        <formal-name>SARIF Model Version</formal-name>
+        <description>The version of the SARIF Model used for conforming instances.</description>
+        <constraint>
+            <allowed-values target="." allow-other="no">
+                <enum value="2.1.0"/>
+            </allowed-values>
+        </constraint>
+    </define-field>
+    <define-assembly name="run">
+        <formal-name>Run</formal-name>
+        <description>Data about the run of a tool.</description>
+    </define-assembly>
+    <define-assembly name="root">
+        <formal-name>Root Placeholder</formal-name>
+        <description>A placeholder assembly to wrap the root of the SARIF instance.</description>
+        <root-name>root</root-name>
+        <model>
+            <field ref="version" min-occurs="1" max-occurs="1"/>
+            <assembly ref="run">
+                <use-name>runs</use-name>
+                <group-as name="runs" in-json="ARRAY" />
+            </assembly>
+        </model>
+        <remarks>
+            <p>Note, this is a workaround because Metaschema does not support anonymous top-level assembly without a key name.</p>
+        </remarks>
+    </define-assembly>
+</METASCHEMA>
