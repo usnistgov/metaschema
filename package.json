@@ -7,7 +7,7 @@
         "ajv-formats": "^2.1.x",
         "autoprefixer": "^10.4.17",
         "markdown-link-check": "^3.11.2",
-        "postcss": "^8.4.31",
+        "postcss": "^8.4.33",
         "postcss-cli": "^10.1.0",
         "sass": "^1.69.5",
         "yaml-convert": "^1.0.x"
