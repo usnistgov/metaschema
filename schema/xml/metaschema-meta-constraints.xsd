@@ -1,0 +1,45 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    targetNamespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <xs:include schemaLocation="metaschema.xsd"/>
+
+    <xs:simpleType name="MetaschemaPathStringType">
+        <xs:restriction base="StringDatatype"/>
+    </xs:simpleType>
+
+    <xs:element name="metaschema-meta-constraints">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="import" type="MetaschemaImportType" maxOccurs="unbounded"/>
+                <xs:element name="context" type="ModelContextType" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="MetaschemaMetapathReferenceType">
+        <xs:attribute name="target" type="MetaschemaPathStringType" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="MetaschemaDefinitionReferenceType">
+        <xs:attribute name="name" type="ModelNameType" use="required"/>
+        <xs:attribute name="namespace" type="URIDatatype" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ModelContextType">
+        <xs:sequence>
+            <!--
+            <xs:choice>
+            -->
+            <xs:element name="metaschema-metapath" type="MetaschemaMetapathReferenceType"
+                maxOccurs="unbounded"/>
+            <!--
+                <xs:element name="metaschema-definition" type="MetaschemaMetapathReferenceType" maxOccurs="unbounded"/>
+            </xs:choice>
+            -->
+            <xs:element name="constraints" type="DefineAssemblyConstraintsType" minOccurs="0"/>
+            <xs:element name="context" type="ModelContextType" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

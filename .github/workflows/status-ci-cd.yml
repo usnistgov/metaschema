@@ -13,6 +13,7 @@ on:
     - "feature-*"
     - "release-*"
   workflow_dispatch:
+  merge_group:
 jobs:
   validate-repo-markdown:
     uses: ./.github/workflows/workflow-validate-repo-markdown.yml
