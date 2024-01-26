@@ -25,12 +25,28 @@
                 </model>
             </define-assembly>
         </model>
-    </define-assembly>    
+    </define-assembly>
+    <define-assembly name="artifact">
+        <formal-name>Artifacts</formal-name>
+        <description>Artifacts analyzed by the tool to yield results.</description>
+         <model/>
+    </define-assembly>
+    <define-assembly name="result">
+        <formal-name>Results</formal-name>
+        <description>Results from the run of a tool.</description>
+         <model/>
+    </define-assembly>        
     <define-assembly name="run">
         <formal-name>Run</formal-name>
         <description>Data about the run of a tool.</description>
         <model>
             <assembly ref="tool"/>
+            <assembly ref="result" min-occurs="0" max-occurs="unbounded">
+                <group-as name="results" in-json="ARRAY" />
+            </assembly>
+            <assembly ref="artifact" min-occurs="0" max-occurs="unbounded">
+                <group-as name="artifacts" in-json="ARRAY" />
+            </assembly>            
         </model>
     </define-assembly>
     <define-assembly name="root">
