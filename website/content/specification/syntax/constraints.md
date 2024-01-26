@@ -18,7 +18,7 @@ The following constraint types are allowed for `<define-flag>` definitions.
 
 - [`<allowed-values>`](#enumerated-values)
 - `<matches>`
-- `<index-has-key>`
+- [`<index-has-key>`](#index-has-key-constraints)
 - `<expect>`
 
 For each of these constraint types, use of the `@target` attribute is prohibited. This is because a flag constraint may only target the flag, since a flag has no child nodes.
@@ -29,7 +29,7 @@ The following constraint types are allowed for `<define-field>` definitions.
 
 - [`<allowed-values>`](#enumerated-values)
 - `<matches>`
-- `<index-has-key>`
+- [`<index-has-key>`](#index-has-key-constraints)
 - `<expect>`
 
 ## `<define-assembly>` constraints
@@ -38,9 +38,9 @@ The following constraint types are allowed for `<define-assembly>` definitions.
 
 - [`<allowed-values>`](#enumerated-values)
 - `<matches>`
-- `<index-has-key>`
+- [`<index-has-key>`](#index-has-key-constraints)
 - `<expect>`
-- `<index>`
+- [`<index>`](#index-constraints)
 - `<is-unique>`
 - `<has-cardinality>`
 
