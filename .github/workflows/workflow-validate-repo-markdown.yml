@@ -63,7 +63,7 @@ jobs:
       id: linkchecker
     - name: Create issue if bad links detected in repo
       if: failure() && inputs.linkcheck_create_issue == true
-      uses: peter-evans/create-issue-from-file@433e51abf769039ee20ba1293a088ca19d573b7f # v3.0.0
+      uses: peter-evans/create-issue-from-file@24452a72d85239eacf1468b0f1982a9f3fec4c94 # v3.0.0
       with:
         title: Scheduled Check of Markdown Documents Found Bad Hyperlinks
         content-filepath: mlc_report.log
