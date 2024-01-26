@@ -183,13 +183,13 @@ If defined, the `<message>` value MUST be a [Metaschema string value](/specifica
 
 The `index` constraint is a type of Metaschema constraint that defines an index of document instance nodes addressable by key.
 
-The `@name` attribute of an `<index>` constraint specifies the identity of the index. The constraint MUST define the name.
+The `@name` flag of an `<index>` constraint specifies the identity of the index. The constraint MUST define the name.
 
-The `@target` attribute of an `<index>` constraint defines the node(s) in a document instance to index. The index MUST define a [`@target`](#target) with a Metapath expression. The processor MUST index only The document instance node(s) resulting from its evaluation.
+The `@target` flag of an `<index>` constraint defines the node(s) in a document instance to index. The index MUST define a [`@target`](#target) with a Metapath expression. The processor MUST index only The document instance node(s) resulting from its evaluation.
 
-The `<key-field/>` child element of an `<index>` constraint defines the attribute or element value that is the key for each entry in the index. The `<key-field/>` element MUST define a [`@target`](#target) attribute with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
+The `<key-field>` assembly of an `<index>` constraint defines the flag or field value that is the key for each entry in the index. The `<key-field>` field MUST define a [`@target`](#target) flag with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
 
-An `index` constraint MAY define more than one `<key-field/>` child element. The composite key for each entry in the index is the combination of values for the `@target` of every `<key-field/>`. The composite values of the key are the discriminator for the uniqueness of the index entry.
+An `index` constraint MAY define more than one `<key-field>` assembly. The composite key for each entry in the index is the combination of values for the `@target` of every `<key-field/>`. The composite values of the key are the discriminator for the uniqueness of the index entry.
 
 An `index` constraint requires that each member entry be unique based upon this composite key.
 
@@ -199,9 +199,9 @@ If the evaluation of the Metapath `@target` of the `<key-field/>` does not resul
 
 The `index-has-key` constraint is a type of Metaschema constraint that cross-references values an existing `index` constraint` with a separate `@target` and `<key-field/>`.
 
-The `@name` attribute of an `<index>` constraint MUST specify the name of a previously defined `index` constraint.
+The `@name` flag of an `<index>` constraint MUST specify the name of a previously defined `index` constraint.
 
-The `index-has-key` constraint has the same attributes and child elements as a [`index`](#index-constraints) constraint.
+The `index-has-key` constraint has the same flags and assemblies as a [`index`](#index-constraints) constraint.
 
 ## Enumerated values
 
