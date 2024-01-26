@@ -17,13 +17,52 @@
             </allowed-values>
         </constraint>
     </define-field>
+    <define-field name="information-uri" as-type="uri"/>
+    <define-assembly name="short-description">
+        <formal-name>Short Description</formal-name>
+        <description>A text-based short-description for a rule.</description>
+        <model>
+            <define-field name="text" as-type="markup-line"/>
+        </model>
+    </define-assembly>
+    <define-field name="help-uri" as-type="uri" />
+    <define-assembly name="property">
+        <formal-name>Properties</formal-name>
+        <description>A collection of named properties or property bag key values (the latter is loosely enforced) for SARIF elements.</description>
+        <model>
+            <any />
+        </model>
+    </define-assembly>
+    <define-assembly name="rule">
+        <formal-name>Rule</formal-name>
+        <description>A declaration of requirements with identifiers and descriptions for the tool generating results from analyzing artifacts.</description>
+        <model>
+            <define-field name="id"/>
+            <field ref="short-description">
+                <use-name>shortDescription</use-name>
+            </field>
+            <field ref="help-uri">
+                <use-name>helpUri</use-name>
+            </field>
+            <assembly ref="property">
+                <use-name>properties</use-name>
+            </assembly>
+        </model>
+    </define-assembly>
+    <define-assembly name="driver">
+        <model>
+            <define-field name="name"/>
+            <field ref="information-uri">
+                <use-name>informationUri</use-name>
+            </field>
+            <assembly ref="rule">
+                <group-as name="rules" in-json="ARRAY" />
+            </assembly>
+        </model>
+    </define-assembly>
     <define-assembly name="tool">
         <model>
-            <define-assembly name="driver">
-                <model>
-                    <define-field name="name"/>
-                </model>
-            </define-assembly>
+            <assembly ref="driver"/>
         </model>
     </define-assembly>
     <define-assembly name="artifact">
