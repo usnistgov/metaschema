@@ -49,7 +49,7 @@ jobs:
       continue-on-error: true
     - name: Create issue if bad links detected
       if: ${{ !cancelled() && env.lychee_exit_code != 0 && inputs.linkcheck_create_issue }}
-      uses: peter-evans/create-issue-from-file@433e51abf769039ee20ba1293a088ca19d573b7f
+      uses: peter-evans/create-issue-from-file@24452a72d85239eacf1468b0f1982a9f3fec4c94
       with:
         title: Scheduled Check of Website Content Found Bad Hyperlinks
         content-filepath: ./lychee/out.md
