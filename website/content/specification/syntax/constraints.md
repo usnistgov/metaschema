@@ -179,6 +179,14 @@ A constraint may have an OPTIONAL [`@level`](#level) attribute and/or an OPTIONA
 
 If defined, the `<message>` value MUST be a [Metaschema string value](/specification/datatypes#string). It MAY contain a Metapath expression templates that starts with `{`, contains a Metapath expression, and ends with `}`.  When evaluating a template Metapath expression, the context of the Metapath [evaluation focus](#constraint-processing) MUST be the failing value node.
 
+##`matches`
+
+The `matches` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on a component matching the target Metapath expression.
+
+The `@target` attribute of an `<matches>` constraint specifies the node in a component definition whose value is equal. The `matches` constraint MUST define a [`target`](#target) with a Metapath expression.
+
+The expression can be be of type @rel represented by what appears to be an URI fragment.
+
 ## Enumerated values
 
 The `allowed-values` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on an enumerated set of permitted values.
