@@ -208,17 +208,17 @@ The `index-has-key` constraint has the same flags and assemblies as a [`index`](
 =======
 ## `is-unique` constraints
 
-The `is-unique` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on a component not being referenced more than once.
+The `is-unique` constraint is a type of Metaschema constraint that checks that a computed key, based on field and flag values, does not occur more than once.
 
-The `id` attribute of an `is-unique` constraint specifies an identifier for the constraint.
+The [`id`](#id) attribute of an `is-unique` constraint specifies an identifier for the constraint.
 
 The `@target` attribute of an `<is-unique>` constraint specifies the node in a component definition whose value is distinct. The `is-unique` constraint MUST define a [`@target`](#target) with a Metapath expression.
 
-The `key-field` child element of an `<is-unique>` constraint defines the attribute or element value that is the key for each entry in the index. The `<key-field>` element MUST define a [`@target`](#target) attribute with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
+The `key-field` attribute of an `<is-unique>` constraint defines the attribute or element value that is the key for each entry in the index. The `<key-field>` element MUST define a [`@target`](#target) attribute with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
 
 An `is-unique` constraint MUST define only one `@key-field`. 
 
-If the evaluation of the Metapath `@target` of the `is-unique` constraint is not referenced more than once within the same capability, its value will result to true.
+If the evaluation of the Metapath `@target` of the `is-unique`, then the computed key does not occur more than once within the same capability, its value will result to true.
 
 >>>>>>> 315b3fa (Updated the constraints documentation to add is-unique)
 
