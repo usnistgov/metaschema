@@ -183,11 +183,11 @@ If defined, the `<message>` value MUST be a [Metaschema string value](/specifica
 
 The `matches` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on a component matching the target Metapath expression. Each one of these are discussed below.
 
-A match can be made by 2 different ways based on `@datatypes` and based on a regular expression. 
+A match can be made by 2 different ways based on `@datatypes` and based on `@regex`. 
 
-The `@target` attribute of an `matches` constraint specifies the node in a component definition whose value is equal. The `matches` constraint MUST define a [`target`](#target) with a Metapath expression. The node MUST also match on `@datatype`. 
+The `@target` attribute of an `matches` constraint specifies the node in a component definition whose value is equal. The `matches` constraint can define a [`target`](#target) with a Metapath expression. The targeted node MUST also match on `@datatype` to return a TRUE. 
 
-The `@target` attribute of a `matches` constraint can be matched based on its value and a regular expression that the node MUST match on.
+The `@target` attribute of a `matches` constraint can be matched based on its value and a regular expression that the node matches on.
 
 ## Enumerated values
 
