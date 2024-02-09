@@ -207,7 +207,7 @@ The `index-has-key` constraint has the same flags and assemblies as a [`index`](
 
 ## `is-unique` constraints
 
-The `is-unique` constraint is a type of Metaschema constraint that checks that a computed key, based on field and flag values, does not occur more than once.
+The `is-unique` constraint is a type of Metaschema constraint that checks that a computed key, based on field and flag values, does not occur more than once. Unlike `index`, an explicit, named index is not created. Therefore, this constraint MUST NOT define a `@name` attribute.
 
 The [`id`](#id) attribute of an `is-unique` constraint specifies an identifier for the constraint.
 
