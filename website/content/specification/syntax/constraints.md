@@ -204,6 +204,7 @@ The `index-has-key` constraint is a type of Metaschema constraint that cross-ref
 The `@name` flag of an `<index>` constraint MUST specify the name of a previously defined `index` constraint.
 
 The `index-has-key` constraint has the same flags and assemblies as a [`index`](#index-constraints) constraint.
+
 ## `is-unique` constraints
 
 The `is-unique` constraint is a type of Metaschema constraint that checks that a computed key, based on field and flag values, does not occur more than once.
