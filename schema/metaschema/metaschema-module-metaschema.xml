@@ -1030,6 +1030,7 @@
                 <enum value="ERROR">A violation of the constraint represents a fault in the content. This may include issues around compatibility, integrity, consistency, etc.</enum>
                 <enum value="WARNING">A violation of the constraint represents a potential issue with the content.</enum>
                 <enum value="INFORMATIONAL">A violation of the constraint represents a point of interest.</enum>
+                <enum value="DEBUG">A violation of the constraint represents a fault in the content that warrants review by a developer when performing model or tool development.</enum>                
             </allowed-values>
         </constraint>
     </define-flag>
