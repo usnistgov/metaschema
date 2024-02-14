@@ -9,7 +9,7 @@ description: ""
 
 In [the previous tutorial](/tutorials/2-constraints/), we refined a computer model and learned how to restrict or recommend preferred values for fields and flags with allowed-values constraints. But what do we if our use case requires values to have a consistent style or structure, but there is no predetermined list of values our stakeholders know upfront? Additionally, what do we do if we have such requirements for field and flag values, but they must also correlate to related field or flag values in the same document instance, or maybe multiple related instances the software processes at the same time?
 
-To precisely control the structure of values and their relationship to one another without a predetermined list of values, a model developer can use `expect` and `matches` constraints, which we will examine the tutorial below.
+To precisely control the structure of values and their relationship to one another without a predetermined list of values, a model developer can use the `expect` and `matches` constraints, which we will examine in this tutorial below.
 
 We will begin where we left off in the previous tutorial, with the model and conforming document instances below.
 
@@ -397,7 +397,12 @@ computer:
 
 ## Logically testing values with `expect`
 
-Given previous success with our recent rollout of new constraints, they provide us a new requirement. It is highly unusual for computer memory, regardless of form factor, to not be an even number divisible by two. Furthermore, per requirements from their computer manufacturing consortium and the information model you help maintain, best practice recommends that memory modules must be increments of 1 megabyte (1024 bytes) and all memory modules should be the same size in bytes if more than one memory module is present. Theoretically, we could amend the model to enumerate all possible numeric bytes values that could meet the first requirement, but the secondary best practice requirements cannot be expressed with `allowed-values`. Even so, we would make a very large model that performs very inefficiently if we considered it for the first requirement. However, We can use an `expect` constraint to meet all these requirements.
+Given previous success with our recent rollout of new constraints, we have a new requirement. It is highly unusual for computer memory, regardless of form factor, to not be an even number divisible by two. Furthermore, per requirements from their computer manufacturing consortium and the information model you help maintain, best practice recommends that:
+
+ - memory modules must be increments of 1 megabyte (1024 bytes), and
+ - all memory modules should be the same size in bytes if more than one memory module is present.
+ 
+Theoretically, we could amend the model to enumerate all possible numeric bytes values that could meet the first requirement, but the second best practice requirement cannot be expressed with `allowed-values`. Even so, we would make a very large model that performs very inefficiently if we considered enumerating all possible values for the first requirement. We can use an `expect` constraint to meet all these requirements in a much more efficient and manageable way.
 
 ```xml {linenos=table,hl_lines=["156-163","203-207"]}
 <?xml version="1.0" encoding="UTF-8"?>
@@ -613,11 +618,11 @@ Given previous success with our recent rollout of new constraints, they provide 
 </METASCHEMA>
 ```
 
-The three new `expect` constraints define one mandatory requirement and two optional best practice requirements without exhaustively defining every possible value. Each constraint has a unique `id` for us tool developers to identify the constraints during tool development and potentially use as inputs and outputs for Metaschema processor software itself. These constraints use the flexibility of Metapath to use different context focuses to make the `test` attribute more concise or intuitive for fellow developers.
+The three new `expect` constraints define one mandatory requirement and two optional best practice requirements without exhaustively defining every possible value. Each constraint has a unique `id` that helps tool developers to identify the constraints during tool development and to potentially use as inputs and outputs for Metaschema processor software performing validation using these constraints. These constraints use the flexibility of Metapath to use different context focuses to make the `test` attribute more concise or intuitive for fellow developers.
 
-The `level` attribute defines the impact and potential processing behavior for Metaschema processors during the analysis of document instances. The `level` of a constraint can be `INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL`. Given the new requirements from the stakeholder, failing the `memory-divisible-two` constraint indicates invalid data and necessarily an error condition, so it is an `ERROR`. The `memory-divisible-megabyte` and `memory-same-byte-size` do not encode mandatory requirements, but rather best practices. Therefore, their `level` is `WARNING`.
+The `level` attribute defines the impact and potential processing behavior for Metaschema processors during the analysis of document instances. The `level` of a constraint can be `INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL`. Given the new requirements we are implementing, failing the `memory-divisible-two` constraint indicates invalid data, requiring an error condition, so we mark the level as an `ERROR`. The `memory-divisible-megabyte` and `memory-same-byte-size` constraints do not encode mandatory requirements, but rather best practices. Therefore, their `level` is `WARNING`.
 
-Our Metaschema processors must evaluate the `test` Metapath against the current context focus from evaluating the `target` (using the `.` operator in Metapath). That result becomes the current context focus in the `test` (the  value of `.` in this expression), and the processor must evaluate the Metapath expression and verify the result is boolean true or false.
+Our Metaschema processors must evaluate the `test` Metapath against the current context focus from evaluating the `target` (consisting of the `.` operator in Metapath, which refers to the current node). The each node result selected when evaluating the `target` becomes the current context focus in the `test`, and the processor must evaluate the Metapath expression and verify the result is boolean true or false for each node result.
 
 The table below identifies the constraints and evaluations of the new constraints in the updated model against the previous sample document instances. Because we are able to control the `target` and `test` context relative to their definitions in the model's assemblies, fields, and flags, we process each result individually for the first two constraints, but process the sequence of all matches for the last constraint all at once. For the latter, we use the more advanced Metapath syntax in the `test` to query each matching assembly of the sequence, filter to only the specific fields' value , and sum them. The data in the table is truncated, but the processor will use process the full `memory` assemblies as the resulting match, and subsequently the `test` Metapath filters on the values of the `byte-size` of each dynamically to compute the sum, then perform the necessary modulo division by the first result (there must always be at least one, never zero, per our module `min-occurs="1"`).
 
