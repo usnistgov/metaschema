@@ -1311,11 +1311,18 @@
         </model>            
     </define-assembly>
 
+	<define-assembly name="metaschema-metapath">
+	    <description>A Metapath expression identifying the model node that the constraints will be applied to.</description>
+	    <use-name>metapath</use-name>
+	    <define-flag name="target" required="yes"/>
+	</define-assembly>
+
     <define-assembly name="metapath-context">
         <model>
-            <define-field name="metapath" as-type="string">
+            <assembly ref="metaschema-metapath" min-occurs="1" max-occurs="unbounded">
                 <description>A Metapath expression identifying the model node that the constraints will be applied to.</description>
-            </define-field>
+                <group-as name="metapaths" in-json="ARRAY"/>
+            </assembly>
             <assembly ref="assembly-constraints">
                 <use-name>constraints</use-name>
             </assembly>

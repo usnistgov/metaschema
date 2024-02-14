@@ -31,8 +31,7 @@
             <!--
             <xs:choice>
             -->
-            <xs:element name="metaschema-metapath" type="MetaschemaMetapathReferenceType"
-                maxOccurs="unbounded"/>
+            <xs:element name="metapath" type="MetaschemaMetapathReferenceType" maxOccurs="unbounded"/>
             <!--
                 <xs:element name="metaschema-definition" type="MetaschemaMetapathReferenceType" maxOccurs="unbounded"/>
             </xs:choice>
