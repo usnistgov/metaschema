@@ -7,9 +7,9 @@ description: ""
 
 ## Introduction
 
-In [the previous tutorial](/tutorials/2-constraints/), we refined a computer model and learned how to restrict or recommend preferred values for fields and flags with allowed-values constraints. But what do we if our use case requires values to have a consistent style or structure, but there is no predetermined list of values our stakeholders know upfront? Additionally, what do we do if we have such requirements for field and flag values, but they must also correlate to related field or flag values in the same document instance, or maybe multiple related instances the software processes at the same time?
+In [the previous tutorial](/tutorials/2-constraints/), we refined a computer model and learned how to restrict or recommend preferred values for fields and flags with allowed-values constraints. But what do we if our use case requires values to have a consistent style or structure, but there is no predetermined list of values our stakeholders know upfront? What do we do if these values must also correlate to related field or flag values in the same or multiple related document instances at the same time? How can we describe their logical relationship with more than allowed values?
 
-To precisely control the structure of values and their relationship to one another without a predetermined list of values, a model developer can use the `expect` and `matches` constraints, which we will examine in this tutorial below.
+To precisely control the structure of values and their relationship to one another without a predetermined list of values, a model developer can use the `expect` constraints, which we will examine in this tutorial below.
 
 We will begin where we left off in the previous tutorial, with the model and conforming document instances below.
 
@@ -397,7 +397,7 @@ computer:
 
 ## Logically testing values with `expect`
 
-Given previous success with our recent rollout of new constraints, we have a new requirement. It is highly unusual for computer memory, regardless of form factor, to not be an even number divisible by two. Furthermore, per requirements from their computer manufacturing consortium and the information model you help maintain, best practice recommends that:
+Given previous success with our recent rollout of new constraints, our stakeholders provide us a new requirement. It is highly unusual for computer memory, regardless of form factor, to not be an even number divisible by two. Furthermore, per requirements from our computer manufacturing consortium and the information model you help maintain, best practice recommends that:
 
  - memory modules must be increments of 1 megabyte (1024 bytes), and
  - all memory modules should be the same size in bytes if more than one memory module is present.
@@ -561,7 +561,7 @@ Theoretically, we could amend the model to enumerate all possible numeric bytes 
               </define-field>
             </model>
             <constraint>
-                <expect id="memory-divisible-two" level="CRITICAL" target="./byte-size" test="(. mod 2) = 0">
+                <expect id="memory-divisible-two" level="ERROR" target="./byte-size" test="(. mod 2) = 0">
                     <message>All memory modules MUST have a byte divisible by two.</message>
                 </expect>
                 <expect id="memory-divisible-megabyte" level="WARNING" target="./byte-size" test="(. mod 1024) = 0">
@@ -620,7 +620,7 @@ Theoretically, we could amend the model to enumerate all possible numeric bytes 
 
 The three new `expect` constraints define one mandatory requirement and two optional best practice requirements without exhaustively defining every possible value. Each constraint has a unique `id` that helps tool developers to identify the constraints during tool development and to potentially use as inputs and outputs for Metaschema processor software performing validation using these constraints. These constraints use the flexibility of Metapath to use different context focuses to make the `test` attribute more concise or intuitive for fellow developers.
 
-The `level` attribute defines the impact and potential processing behavior for Metaschema processors during the analysis of document instances. The `level` of a constraint can be `INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL`. Given the new requirements we are implementing, failing the `memory-divisible-two` constraint indicates invalid data, requiring an error condition, so we mark the level as an `ERROR`. The `memory-divisible-megabyte` and `memory-same-byte-size` constraints do not encode mandatory requirements, but rather best practices. Therefore, their `level` is `WARNING`.
+The `level` attribute defines the impact and potential processing behavior for Metaschema processors during the analysis of document instances. The `level` of a constraint can be `INFORMATIONAL`, `WARNING`, `ERROR`, `CRITICAL`, or `DEBUG`. Given the new requirements we are implementing, failing the `memory-divisible-two` constraint indicates invalid data, requiring an error condition, so we mark the level as an `ERROR`. The `memory-divisible-megabyte` and `memory-same-byte-size` constraints do not encode mandatory requirements, but rather best practices. Therefore, their `level` is `WARNING`.
 
 Our Metaschema processors must evaluate the `test` Metapath against the current context focus from evaluating the `target` (consisting of the `.` operator in Metapath, which refers to the current node). The each node result selected when evaluating the `target` becomes the current context focus in the `test`, and the processor must evaluate the Metapath expression and verify the result is boolean true or false for each node result.
 
@@ -839,7 +839,7 @@ Fortunately for us, this risk is worrisome to the stakeholders, but very relatab
 
 Given these new requirements we will add a new field, `size`. We will amend the model to allow using `bytes-size` like before or the new `size` field. And finally, we will amend the constraints to add a deprecation warning and recommend developers to transition software and existing documents to the new model structure.
 
-```xml {linenos=table,hl_lines=["152-207","210-212","259-263"]}
+```xml {linenos=table,hl_lines=["152-207","216-218","259-263"]}
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="https://raw.githubusercontent.com/usnistgov/metaschema/develop/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
@@ -1049,7 +1049,7 @@ Given these new requirements we will add a new field, `size`. We will amend the 
             </choice>
             </model>
             <constraint>
-              <expect id="memory-divisible-two" level="CRITICAL" target="./byte-size" test="(. mod 2) = 0">
+              <expect id="memory-divisible-two" level="ERROR" target="./byte-size" test="(. mod 2) = 0">
                   <message>All memory modules MUST have a byte divisible by two.</message>
               </expect>
               <expect id="memory-divisible-megabyte" level="WARNING" target="./byte-size" test="(. mod 1024) = 0">
@@ -1099,7 +1099,7 @@ Given these new requirements we will add a new field, `size`. We will amend the 
           </define-assembly>
         </model>
         <constraint>
-          <expect id="memory-same-byte-size" level="CRITICAL" target="." test="if (count(./memory/byte-size) > 0) then (sum(./memory/byte-size) mod ./memory/byte-size[1]) = 0 else (sum(./memory/size) mod ./memory/size[1]) = 0">
+          <expect id="memory-same-byte-size" level="WARNING" target="." test="if (count(./memory/byte-size) > 0) then (sum(./memory/byte-size) mod ./memory/byte-size[1]) = 0 else (sum(./memory/size) mod ./memory/size[1]) = 0">
               <message>All memory modules SHOULD be the same size or byte-size for a computer.</message>
           </expect>
         </constraint>
@@ -1109,11 +1109,13 @@ Given these new requirements we will add a new field, `size`. We will amend the 
 </METASCHEMA>
 ```
 
-With our modifications to the model with the `choice` construct, we enabled our Metaschema-enabled tooling to support a field of `byte-size` or `size` where previously only the former was valid. For `size`, we added important constraints to its flag combinations to identify which unit (bits or bytes), unit prefix, unit system, and base (digital or binary) of the size's count. We add a `deprecated` flag to the `byte-size` and this version of the model that marks the start of the deprecation period and allow us to easily use our developer tools to identify and refactor deprecated assemblies, fields, and flags. With the `byte-size` field, we also add an `expect` constraint with a specific message to only present a warning if developers use this deprecated field in document instances; otherwise, the field can be ignored. Moreover, we refactored the previous size count constraints to check the logical constraint regardless of when the deprecated field or the replacement field is used. We support this with the same logic using an `if` `else` expression.
+With our modifications to the model with the `choice` construct, we enabled our Metaschema-enabled tooling to support a field of `byte-size` or `size` where previously only the former was valid. For `size`, we added important constraints to its flag combinations to identify which unit (bits or bytes), unit prefix, unit system, and base (digital or binary) of the size's count. We add a `deprecated` flag to the `byte-size` and this version of the model that marks the start of the deprecation period. This deprecation label in the module allows us to easily use our developer tools to identify and programmatically refactor deprecated assemblies, fields, and flags.
+
+Within the `byte-size` field, we also add an `expect` constraint, `memory-byte-size-deprecated`, with a specific message to only present a warning if developers use this deprecated field in document instances; otherwise, the field can be ignored. Moreover, we refactored the previous size count constraints to check the logical constraint regardless of when the deprecated field or the replacement field is used. We support this with the same logic using an `if` `else` expression.
 
 With these changes, the example instances from the previous section we used for negative test cases are still invalid and all tools can return the validation messages as before and the new deprecation warning message.
 
-We can use the following examples as new negative test cases that are not using the deprecated `byte-size` field, but `size` instead. All tools can return the same validation messages before without the deprecation warning message.
+We can use the following examples as new negative test cases that are not using the deprecated `byte-size` field, but `size` instead. All tools can return the same validation error messages like before, but without the deprecation warning message.
 
 {{< tabs JSON XML YAML >}}
 {{% tab %}}
@@ -1509,7 +1511,7 @@ computer:
 {{% /tab %}}
 {{< /tabs >}}
 
-With the model, positive test case, and negative case development complete, we are able to present our quick model changes to our stakeholders and later on their consortium partners. All parties are pleased with the flexibility and robustness of the modeling tool, and all parties' developers are able to quickly integrate the changes with this Metaschema tooling.
+With the model, positive test case, and negative case development complete, we are able to present our quick model changes to our stakeholders and later on our consortium partners. All parties are pleased with the flexibility and robustness of the modeling tool, and all parties' developers are able to quickly integrate the changes with this Metaschema tooling.
 
 ## Conclusion
 
