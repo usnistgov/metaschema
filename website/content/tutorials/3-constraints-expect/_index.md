@@ -992,7 +992,7 @@ Given these new requirements we will add a new field, `size`. We will amend the 
                 <description>The product name from the vendor of the computer part.</description>
               </define-field>
               <choice>
-                <define-field name="byte-size" as-type="positive-integer" min-occurs="1" max-occurs="1">
+                <define-field name="byte-size" as-type="positive-integer" min-occurs="1" max-occurs="1" deprecated="0.0.9">
                   <formal-name>Memory Module Size</formal-name>
                   <description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</description>
                 </define-field>                
@@ -1109,7 +1109,7 @@ Given these new requirements we will add a new field, `size`. We will amend the 
 </METASCHEMA>
 ```
 
-With our modifications to the model with the `choice` construct, we enabled our Metaschema-enabled tooling to support a field of `byte-size` or `size` where previously only the former was valid. For `size`, we added important constraints to its flag combinations to identify which unit (bits or bytes), unit prefix, unit system, and base (digital or binary) of the size's count. With the `byte-size` field, we add an `expect` constraint with a specific message to only present a warning if developers use this deprecated field in document instances; otherwise, the field can be ignored. Moreover, we refactored the previous size count constraints to check the logical constraint regardless of when the deprecated field or the replacement field is used. We support this with the same logic using an `if` `else` expression.
+With our modifications to the model with the `choice` construct, we enabled our Metaschema-enabled tooling to support a field of `byte-size` or `size` where previously only the former was valid. For `size`, we added important constraints to its flag combinations to identify which unit (bits or bytes), unit prefix, unit system, and base (digital or binary) of the size's count. We add a `deprecated` flag to the `byte-size` and this version of the model that marks the start of the deprecation period and allow us to easily use our developer tools to identify and refactor deprecated assemblies, fields, and flags. With the `byte-size` field, we also add an `expect` constraint with a specific message to only present a warning if developers use this deprecated field in document instances; otherwise, the field can be ignored. Moreover, we refactored the previous size count constraints to check the logical constraint regardless of when the deprecated field or the replacement field is used. We support this with the same logic using an `if` `else` expression.
 
 With these changes, the example instances from the previous section we used for negative test cases are still invalid and all tools can return the validation messages as before and the new deprecation warning message.
 
