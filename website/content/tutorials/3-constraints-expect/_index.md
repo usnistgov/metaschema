@@ -837,7 +837,7 @@ With our use of the `expect` constraint for logical value testing, our stakehold
 
 Fortunately for us, this risk is worrisome to the stakeholders, but very relatable and easy to change for us Metaschema module developers. The `expect` constraints, paired with model changes with `choice` or other strategies, allow us to change the information model and data formats and standardize deprecation messaging across tools.
 
-Given these new requirements we will add a new assembly, `size`. We will amend the model to allow using `bytes-size` like before or the new `size` assembly. And finally, we will amend the constraints to add a deprecation warning and recommend developers to transition software and existing documents to the new model structure.
+Given these new requirements we will add a new field, `size`. We will amend the model to allow using `bytes-size` like before or the new `size` field. And finally, we will amend the constraints to add a deprecation warning and recommend developers to transition software and existing documents to the new model structure.
 
 ```xml {linenos=table,hl_lines=["152-207","210-212","259-263"]}
 <?xml version="1.0" encoding="UTF-8"?>
