@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../metaschema/schema/xml/metaschema.xsd"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../xml/metaschema.xsd"
  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>Metaschema Model</schema-name>
     <schema-version>1.0.0-M2</schema-version>
@@ -621,6 +621,11 @@
     <define-flag name="definition-name" as-type="token">
         <formal-name>Definition Name</formal-name>
         <use-name>name</use-name>
+        <constraint>
+            <expect level="WARNING" test="not(.=('ancestor', 'ancestor-or-self', 'and', 'as', 'attribute', 'cast', 'castable', 'child', 'comment', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'else', 'empty-sequence', 'eq', 'every', 'except', 'following', 'following-sibling', 'for', 'function', 'ge', 'gt', 'idiv', 'if', 'in', 'instance', 'intersect', 'is', 'item', 'le', 'let', 'lt', 'mod', 'namespace', 'namespace-node', 'ne', 'node', 'of', 'or', 'parent', 'preceding', 'preceding-sibling', 'processing-instruction', 'return', 'satisfies', 'schema-attribute', 'schema-element', 'self', 'some', 'text', 'then', 'to', 'treat', 'union'))">
+                <message>Names cannot be non-delimiting terminal symbols in Metapath syntax.</message>
+            </expect>
+        </constraint>
     </define-flag>
     
     <define-flag name="definition-reference" as-type="token">
@@ -778,6 +783,11 @@
         <description>Allows the name of the definition to be overridden.</description>
         <json-value-key>name</json-value-key>
         <flag ref="alt-name-index"/>
+        <constraint>
+            <expect level="WARNING" target="." test="not(.=('ancestor', 'ancestor-or-self', 'and', 'as', 'attribute', 'cast', 'castable', 'child', 'comment', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'else', 'empty-sequence', 'eq', 'every', 'except', 'following', 'following-sibling', 'for', 'function', 'ge', 'gt', 'idiv', 'if', 'in', 'instance', 'intersect', 'is', 'item', 'le', 'let', 'lt', 'mod', 'namespace', 'namespace-node', 'ne', 'node', 'of', 'or', 'parent', 'preceding', 'preceding-sibling', 'processing-instruction', 'return', 'satisfies', 'schema-attribute', 'schema-element', 'self', 'some', 'text', 'then', 'to', 'treat', 'union'))">
+                <message>Names cannot be non-delimiting terminal symbols in Metapath syntax.</message>
+            </expect>
+        </constraint>
     </define-field>
     
     <define-flag name="alt-name-index" as-type="nonNegativeInteger">
