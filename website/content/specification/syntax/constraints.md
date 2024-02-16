@@ -213,12 +213,11 @@ The [`id`](#id) attribute of an `is-unique` constraint specifies an identifier f
 
 The `@target` attribute of an `<is-unique>` constraint identifies the node(s) in a document instance that are checked for uniqueness based on the computed key. The `is-unique` constraint MUST define a [`@target`](#target) with a Metapath expression.
 
-The `key-field` field of an `<is-unique>` constraint defines the attribute or element value that is the key for each entry in the index. The `<key-field>` element MUST define a [`@target`](#target) attribute with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
+A `<key-field>` field of an `<is-unique>` constraint defines the attribute or element value that is the key for each entry in the index. A `<key-field>` element MUST define at least one [`@target`](#target) attribute with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
 
 An `is-unique` constraint MUST define only one `@key-field`. 
 
-If the evaluation of the Metapath `@target` of the `is-unique`, then the computed key does not occur more than once within the same capability, its value will result to true.
-
+If the evaluation of the Metapath `@target` of the `<key-field>` results in a true result, then `@target` does not occur more than once.
 
 ## `has-cardinality` constraints
 
