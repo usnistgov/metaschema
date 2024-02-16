@@ -879,8 +879,8 @@
       </xs:enumeration>
       <xs:enumeration value="DEBUG">
         <xs:annotation>
-          <xs:documentation>A violation of the constraint represents a fault in the content that
-            warrants review by a developer when performing model or tool development.</xs:documentation>
+          <xs:documentation>A violation of the constraint represents a fault in the content that may
+            warrant review by a developer when performing model or tool development.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>      
     </xs:restriction>
