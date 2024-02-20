@@ -187,7 +187,7 @@ A match can be made by 2 different ways based on `@datatypes` and based on `@reg
 
 The `@target` attribute of an `matches` constraint specifies the node in a component definition whose value is equal. The `matches` constraint can define a [`target`](#target) with a Metapath expression. The targeted node MUST also match on `@datatype` to return a TRUE. 
 
-The `@target` attribute of a `matches` constraint can be matched based on its value and a regular expression that the node matches on.
+The `@target` attribute of a `matches` constraint can be matched based on its value and a `@regex` that the node matches on.
 
 ## Enumerated values
 
