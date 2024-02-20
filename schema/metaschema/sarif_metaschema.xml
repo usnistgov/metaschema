@@ -22,7 +22,10 @@
         <formal-name>Short Description</formal-name>
         <description>A text-based short-description for a rule.</description>
         <model>
-            <define-field name="text" as-type="markup-line"/>
+            <define-field name="text" as-type="markup-line" min-occurs="1" max-occurs="1">
+                <formal-name>Short Description Text</formal-name>
+                <description>The short text of the description.</description>
+            </define-field>
         </model>
     </define-assembly>
     <define-field name="help-uri" as-type="uri" />
@@ -38,9 +41,9 @@
         <description>A declaration of requirements with identifiers and descriptions for the tool generating results from analyzing artifacts.</description>
         <model>
             <define-field name="id"/>
-            <field ref="short-description">
+            <assembly ref="short-description">
                 <use-name>shortDescription</use-name>
-            </field>
+            </assembly>
             <field ref="help-uri">
                 <use-name>helpUri</use-name>
             </field>
@@ -55,7 +58,7 @@
             <field ref="information-uri">
                 <use-name>informationUri</use-name>
             </field>
-            <assembly ref="rule">
+            <assembly ref="rule" min-occurs="1" max-occurs="unbounded">
                 <group-as name="rules" in-json="ARRAY" />
             </assembly>
         </model>
@@ -85,7 +88,7 @@
             </assembly>
             <assembly ref="artifact" min-occurs="0" max-occurs="unbounded">
                 <group-as name="artifacts" in-json="ARRAY" />
-            </assembly>            
+            </assembly>
         </model>
     </define-assembly>
     <define-assembly name="root">
@@ -94,7 +97,7 @@
         <root-name>root</root-name>
         <model>
             <field ref="version" min-occurs="1" max-occurs="1"/>
-            <assembly ref="run" min-occurs="0" max-occurs="unbounded">
+            <assembly ref="run" min-occurs="1" max-occurs="unbounded">
                 <group-as name="runs" in-json="ARRAY" />
             </assembly>
         </model>
