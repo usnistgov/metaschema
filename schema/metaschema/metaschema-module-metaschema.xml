@@ -178,6 +178,9 @@
                 </define-assembly>
             </choice-group>
         </model>
+        <constraint>
+            <let var="keywords" expression="'ancestor', 'ancestor-or-self', 'and', 'as', 'attribute', 'cast', 'castable', 'child', 'comment', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'else', 'empty-sequence', 'eq', 'every', 'except', 'following', 'following-sibling', 'for', 'function', 'ge', 'gt', 'idiv', 'if', 'in', 'instance', 'intersect', 'is', 'item', 'le', 'let', 'lt', 'mod', 'namespace', 'namespace-node', 'ne', 'node', 'of', 'or', 'parent', 'preceding', 'preceding-sibling', 'processing-instruction', 'return', 'satisfies', 'schema-attribute', 'schema-element', 'self', 'some', 'text', 'then', 'to', 'treat', 'union'"/>
+        </constraint>
     </define-assembly>
     
     <define-assembly name="inline-define-assembly">
@@ -622,7 +625,7 @@
         <formal-name>Definition Name</formal-name>
         <use-name>name</use-name>
         <constraint>
-            <expect level="WARNING" test="not(.=('ancestor', 'ancestor-or-self', 'and', 'as', 'attribute', 'cast', 'castable', 'child', 'comment', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'else', 'empty-sequence', 'eq', 'every', 'except', 'following', 'following-sibling', 'for', 'function', 'ge', 'gt', 'idiv', 'if', 'in', 'instance', 'intersect', 'is', 'item', 'le', 'let', 'lt', 'mod', 'namespace', 'namespace-node', 'ne', 'node', 'of', 'or', 'parent', 'preceding', 'preceding-sibling', 'processing-instruction', 'return', 'satisfies', 'schema-attribute', 'schema-element', 'self', 'some', 'text', 'then', 'to', 'treat', 'union'))">
+            <expect level="WARNING" test="not(.=$keywords)">
                 <message>Names cannot be non-delimiting terminal symbols in Metapath syntax.</message>
             </expect>
         </constraint>
@@ -784,7 +787,7 @@
         <json-value-key>name</json-value-key>
         <flag ref="alt-name-index"/>
         <constraint>
-            <expect level="WARNING" target="." test="not(.=('ancestor', 'ancestor-or-self', 'and', 'as', 'attribute', 'cast', 'castable', 'child', 'comment', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'else', 'empty-sequence', 'eq', 'every', 'except', 'following', 'following-sibling', 'for', 'function', 'ge', 'gt', 'idiv', 'if', 'in', 'instance', 'intersect', 'is', 'item', 'le', 'let', 'lt', 'mod', 'namespace', 'namespace-node', 'ne', 'node', 'of', 'or', 'parent', 'preceding', 'preceding-sibling', 'processing-instruction', 'return', 'satisfies', 'schema-attribute', 'schema-element', 'self', 'some', 'text', 'then', 'to', 'treat', 'union'))">
+            <expect level="WARNING" target="." test="not(.=$keywords)">
                 <message>Names cannot be non-delimiting terminal symbols in Metapath syntax.</message>
             </expect>
         </constraint>
