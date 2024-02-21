@@ -1311,11 +1311,11 @@
         </model>            
     </define-assembly>
 
-	<define-assembly name="metaschema-metapath">
-	    <description>A Metapath expression identifying the model node that the constraints will be applied to.</description>
-	    <use-name>metapath</use-name>
-	    <define-flag name="target" required="yes"/>
-	</define-assembly>
+   <define-assembly name="metaschema-metapath">
+      <description>A Metapath expression identifying the model node that the constraints will be applied to.</description>
+      <use-name>metapath</use-name>
+      <define-flag name="target" required="yes"/>
+   </define-assembly>
 
     <define-assembly name="metapath-context">
         <model>
