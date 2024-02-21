@@ -58,7 +58,7 @@ Metaschema processors MAY use the identifier for processing constraints and/or r
 
 A constraint MAY have an OPTIONAL `@level` attribute, which identifies the severity level of a violation of the constraint.
 
-If defined, a `@level` MUST have a value of either: `INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL`.
+If defined, a `@level` MUST have a value of either: `CRITICAL`, `ERROR`, `WARNING`, `INFORMATIONAL`, or `DEBUG`.
 
 Metaschema processors MAY perform conditional processing and/or presentation of constraint violations based on the level value.
 
