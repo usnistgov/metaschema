@@ -195,6 +195,8 @@ An `index` constraint requires that each member entry be unique based upon this 
 
 If the evaluation of the Metapath `@target` of the `<key-field/>` does not result in a value, its value for that key in the index is null.
 
+If two entries have the same key computed from the `<key-field>` `@target`s when generating the index, the processor MUST return a processing error.
+
 ## `index-has-key` constraints
 
 The `index-has-key` constraint is a type of Metaschema constraint that cross-references values an existing `index` constraint` with a separate `@target` and `<key-field/>`.
