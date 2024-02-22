@@ -215,6 +215,8 @@ The `@min-occurs` flag MUST be an integer that defines the minimum number of req
 
 The `@max-occurs` flag MUST be an integer that defines the maximum number of required occurrences for results matching the evaluation of the `@target`.
 
+A constraint passes and document instance(s) valid if the count of results matching the evaluation of the `@target` Metapath is equal or more than the value of `@min-occurs`, if defined, and equal to or less than the value of `@max-occurs`, if defined. If these requirements are not met when defined, the constraint is not passing and the document instance(s) are not valid.
+
 ## Enumerated values
 
 The `allowed-values` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on an enumerated set of permitted values.
