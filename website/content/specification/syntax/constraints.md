@@ -187,7 +187,7 @@ The `@name` flag of an `<index>` constraint specifies the identity of the index.
 
 The `@target` flag of an `<index>` constraint defines the node(s) in a document instance to index. The index MUST define a [`@target`](#target) with a Metapath expression. The processor MUST index only the node(s) resulting from evaluating the `@target`.
 
-The `<key-field>` assembly of an `<index>` constraint defines the flag or field value that is the key for each entry in the index. A `<key-field>` element MUST define at least one [`@target`](#target) flag with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) using each node that matches the constraint's `@target`.
+The `<key-field>` assembly of an `<index>` constraint defines the flag or field value that is the key for each entry in the index. A `<key-field>` assembly MUST define at least one [`@target`](#target) flag with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) using each node that matches the constraint's `@target`.
 
 An `index` constraint MAY define more than one `<key-field>` assembly. The composite key for each entry in the index is the combination of values for the `@target` of every `<key-field/>`. The composite values of the key are the discriminator for the uniqueness of the index entry.
 
