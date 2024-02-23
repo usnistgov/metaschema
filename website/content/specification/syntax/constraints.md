@@ -197,7 +197,7 @@ If the node(s) do not match any of these requirements, then the node(s) MUST be 
 
 ## `index` constraints
 
-The `index` constraint is a type of Metaschema constraint that defines an index of document instance nodes addressable by key.
+The `<index>` constraint is a type of Metaschema constraint that defines an index of document instance nodes addressable by key.
 
 The `@name` flag of an `<index>` constraint specifies the identity of the index. The constraint MUST define the name.
 
