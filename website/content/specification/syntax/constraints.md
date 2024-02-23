@@ -42,7 +42,7 @@ The following constraint types are allowed for `<define-assembly>` definitions.
 - `<expect>`
 - [`<index>`](#index-constraints)
 - `<is-unique>`
-- `<has-cardinality>`
+- [`<has-cardinality>`](#has-cardinality-constraints)
 
 ## Common Constraint Data
 
@@ -202,6 +202,20 @@ The `index-has-key` constraint is a type of Metaschema constraint that cross-ref
 The `@name` flag of an `<index>` constraint MUST specify the name of a previously defined `index` constraint.
 
 The `index-has-key` constraint has the same flags and assemblies as a [`index`](#index-constraints) constraint.
+
+## `has-cardinality` constraints
+
+The `has-cardinality` constraint is a type of Metaschema constraint that defines the cardinality of assemblies, flags, and, fields, i.e. the required minimum count of occurrences, the maximum count of occurrences, or both for applicable document instances.
+
+The `@target` flag of an `<has-cardinality>` constraint defines the node(s) in a document instance to count. The constraint MUST define a [`@target`](#target) with a Metapath expression. The processor MUST only count the document instance node(s) resulting from its evaluation.
+
+A constraint MUST define a value for either the `@min-occurs` or `@max-occurs` flag. It MAY optionally have both flags defined.
+
+The `@min-occurs` flag MUST be an integer that defines the minimum number of required occurrences for results matching the evaluation of the `@target`.
+
+The `@max-occurs` flag MUST be an integer that defines the maximum number of required occurrences for results matching the evaluation of the `@target`.
+
+A constraint passes and document instance(s) valid if the count of results matching the evaluation of the `@target` Metapath is equal or more than the value of `@min-occurs`, if defined, and equal to or less than the value of `@max-occurs`, if defined. If these requirements are not met when defined, the constraint is not passing and the document instance(s) are not valid.
 
 ## Enumerated values
 
