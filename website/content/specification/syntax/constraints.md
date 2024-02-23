@@ -18,7 +18,7 @@ The following constraint types are allowed for `<define-flag>` definitions.
 
 - [`<allowed-values>`](#enumerated-values)
 - `<matches>`
-- `<index-has-key>`
+- [`<index-has-key>`](#index-has-key-constraints)
 - `<expect>`
 
 For each of these constraint types, use of the `@target` attribute is prohibited. This is because a flag constraint may only target the flag, since a flag has no child nodes.
@@ -29,7 +29,7 @@ The following constraint types are allowed for `<define-field>` definitions.
 
 - [`<allowed-values>`](#enumerated-values)
 - `<matches>`
-- `<index-has-key>`
+- [`<index-has-key>`](#index-has-key-constraints)
 - `<expect>`
 
 ## `<define-assembly>` constraints
@@ -38,11 +38,11 @@ The following constraint types are allowed for `<define-assembly>` definitions.
 
 - [`<allowed-values>`](#enumerated-values)
 - `<matches>`
-- `<index-has-key>`
+- [`<index-has-key>`](#index-has-key-constraints)
 - `<expect>`
-- `<index>`
+- [`<index>`](#index-constraints)
 - `<is-unique>`
-- `<has-cardinality>`
+- [`<has-cardinality>`](#has-cardinality-constraints)
 
 ## Common Constraint Data
 
@@ -58,7 +58,7 @@ Metaschema processors MAY use the identifier for processing constraints and/or r
 
 A constraint MAY have an OPTIONAL `@level` attribute, which identifies the severity level of a violation of the constraint.
 
-If defined, a `@level` MUST have a value of either: `INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL`.
+If defined, a `@level` MUST have a value of either: `CRITICAL`, `ERROR`, `WARNING`, `INFORMATIONAL`, or `DEBUG`.
 
 Metaschema processors MAY perform conditional processing and/or presentation of constraint violations based on the level value.
 
@@ -188,6 +188,46 @@ A match can be made by 2 different ways based on `@datatypes` and based on `@reg
 The `@target` attribute of an `matches` constraint specifies the node in a component definition whose value is equal. The `matches` constraint can define a [`target`](#target) with a Metapath expression. The targeted node MUST also match on `@datatype` to return a TRUE. 
 
 The `@target` attribute of a `matches` constraint can be matched based on its value and a `@regex` that the node matches on.
+
+## `index` constraints
+
+The `index` constraint is a type of Metaschema constraint that defines an index of document instance nodes addressable by key.
+
+The `@name` flag of an `<index>` constraint specifies the identity of the index. The constraint MUST define the name.
+
+The `@target` flag of an `<index>` constraint defines the node(s) in a document instance to index. The index MUST define a [`@target`](#target) with a Metapath expression. The processor MUST index only The document instance node(s) resulting from its evaluation.
+
+The `<key-field>` assembly of an `<index>` constraint defines the flag or field value that is the key for each entry in the index. The `<key-field>` field MUST define a [`@target`](#target) flag with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
+
+An `index` constraint MAY define more than one `<key-field>` assembly. The composite key for each entry in the index is the combination of values for the `@target` of every `<key-field/>`. The composite values of the key are the discriminator for the uniqueness of the index entry.
+
+An `index` constraint requires that each member entry be unique based upon this composite key.
+
+If the evaluation of the Metapath `@target` of the `<key-field/>` does not result in a value, its value for that key in the index is null.
+
+If two entries have the same key computed from the `<key-field>` `@target`s when generating the index, the processor MUST return a processing error.
+
+## `index-has-key` constraints
+
+The `index-has-key` constraint is a type of Metaschema constraint that cross-references values an existing `index` constraint` with a separate `@target` and `<key-field/>`.
+
+The `@name` flag of an `<index>` constraint MUST specify the name of a previously defined `index` constraint.
+
+The `index-has-key` constraint has the same flags and assemblies as a [`index`](#index-constraints) constraint.
+
+## `has-cardinality` constraints
+
+The `has-cardinality` constraint is a type of Metaschema constraint that defines the cardinality of assemblies, flags, and, fields, i.e. the required minimum count of occurrences, the maximum count of occurrences, or both for applicable document instances.
+
+The `@target` flag of an `<has-cardinality>` constraint defines the node(s) in a document instance to count. The constraint MUST define a [`@target`](#target) with a Metapath expression. The processor MUST only count the document instance node(s) resulting from its evaluation.
+
+A constraint MUST define a value for either the `@min-occurs` or `@max-occurs` flag. It MAY optionally have both flags defined.
+
+The `@min-occurs` flag MUST be an integer that defines the minimum number of required occurrences for results matching the evaluation of the `@target`.
+
+The `@max-occurs` flag MUST be an integer that defines the maximum number of required occurrences for results matching the evaluation of the `@target`.
+
+A constraint passes and document instance(s) valid if the count of results matching the evaluation of the `@target` Metapath is equal or more than the value of `@min-occurs`, if defined, and equal to or less than the value of `@max-occurs`, if defined. If these requirements are not met when defined, the constraint is not passing and the document instance(s) are not valid.
 
 ## Enumerated values
 

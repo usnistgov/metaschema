@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../../../metaschema/schema/xml/metaschema.xsd"
+ xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../xml/metaschema.xsd"
  xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
     <schema-name>Metaschema Model</schema-name>
     <schema-version>1.0.0-M2</schema-version>
-    <short-name>metaschema</short-name>
+    <short-name>metaschema-model</short-name>
     <namespace>http://csrc.nist.gov/ns/oscal/metaschema/1.0</namespace>
     <json-base-uri>http://csrc.nist.gov/ns/oscal/metaschema/1.0</json-base-uri>
     
@@ -178,6 +178,9 @@
                 </define-assembly>
             </choice-group>
         </model>
+        <constraint>
+            <let var="keywords" expression="'ancestor', 'ancestor-or-self', 'and', 'as', 'attribute', 'cast', 'castable', 'child', 'comment', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'else', 'empty-sequence', 'eq', 'every', 'except', 'following', 'following-sibling', 'for', 'function', 'ge', 'gt', 'idiv', 'if', 'in', 'instance', 'intersect', 'is', 'item', 'le', 'let', 'lt', 'mod', 'namespace', 'namespace-node', 'ne', 'node', 'of', 'or', 'parent', 'preceding', 'preceding-sibling', 'processing-instruction', 'return', 'satisfies', 'schema-attribute', 'schema-element', 'self', 'some', 'text', 'then', 'to', 'treat', 'union'"/>
+        </constraint>
     </define-assembly>
     
     <define-assembly name="inline-define-assembly">
@@ -297,8 +300,6 @@
         </model>
     </define-assembly>
 
-    
-
     <define-assembly name="any">
         <formal-name>Any Additional Content</formal-name>
         <!-- QUESTION: It's wierd this doesn't have a cardinality. The assumption is it is always max many. -->
@@ -380,13 +381,6 @@
             <field ref="remarks"/>
         </model>
     </define-assembly>
-    
-    
-
-    
-
-    
-    
     
     <define-assembly name="assembly-model">
         <use-name>model</use-name>
@@ -630,6 +624,11 @@
     <define-flag name="definition-name" as-type="token">
         <formal-name>Definition Name</formal-name>
         <use-name>name</use-name>
+        <constraint>
+            <expect level="WARNING" test="not(.=$keywords)">
+                <message>Names cannot be non-delimiting terminal symbols in Metapath syntax.</message>
+            </expect>
+        </constraint>
     </define-flag>
     
     <define-flag name="definition-reference" as-type="token">
@@ -787,6 +786,11 @@
         <description>Allows the name of the definition to be overridden.</description>
         <json-value-key>name</json-value-key>
         <flag ref="alt-name-index"/>
+        <constraint>
+            <expect level="WARNING" target="." test="not(.=$keywords)">
+                <message>Names cannot be non-delimiting terminal symbols in Metapath syntax.</message>
+            </expect>
+        </constraint>
     </define-field>
     
     <define-flag name="alt-name-index" as-type="nonNegativeInteger">
@@ -825,7 +829,11 @@
             </constraint>
         </define-flag>
     </define-field>
-    
+
+
+    <!-- ************************** -->
+    <!-- * Metaschema Constraints * -->
+    <!-- ************************** -->
     <define-assembly name="assembly-constraints">
         <use-name>constraint</use-name>
         <model>
@@ -839,61 +847,9 @@
                 <assembly ref="targeted-expect-constraint"/>
                 <assembly ref="targeted-index-has-key-constraint"/>
                 <assembly ref="targeted-matches-constraint"/>
-                <define-assembly name="is-unique">
-                    <formal-name>Targeted Unique Constraint</formal-name>
-                    <flag ref="constraint-identifier"/>
-                    <flag ref="constraint-severity-level"/>
-                    <flag ref="constraint-target" required="yes"/>
-                    <model>
-                        <field ref="formal-name"/>
-                        <field ref="description"/>
-                        <assembly ref="property" max-occurs="unbounded">
-                            <group-as name="props" in-json="ARRAY"/>
-                        </assembly>
-                        <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
-                            <formal-name>Key Constraint Field</formal-name>
-                            <use-name>key-field</use-name>
-                            <group-as name="key-fields" in-json="ARRAY"/>
-                        </assembly>
-                        <field ref="remarks"/>
-                    </model>        
-                </define-assembly>
-                <define-assembly name="index">
-                    <formal-name>Targeted Index Constraint</formal-name>
-                    <flag ref="constraint-identifier"/>
-                    <flag ref="constraint-severity-level"/>
-                    <flag ref="index-name" required="yes"/>
-                    <flag ref="constraint-target" required="yes"/>
-                    <model>
-                        <field ref="formal-name"/>
-                        <field ref="description"/>
-                        <assembly ref="property" max-occurs="unbounded">
-                            <group-as name="props" in-json="ARRAY"/>
-                        </assembly>
-                        <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
-                            <formal-name>Key Constraint Field</formal-name>
-                            <use-name>key-field</use-name>
-                            <group-as name="key-fields" in-json="ARRAY"/>
-                        </assembly>
-                        <field ref="remarks"/>
-                    </model>        
-                </define-assembly>
-                <define-assembly name="has-cardinality">
-                    <formal-name>Targeted Cardinality Constraint</formal-name>
-                    <flag ref="constraint-identifier"/>
-                    <flag ref="constraint-severity-level"/>
-                    <flag ref="cardinality-min-occurs"/>
-                    <flag ref="cardinality-max-occurs"/>
-                    <flag ref="constraint-target" required="yes"/>
-                    <model>
-                        <field ref="formal-name"/>
-                        <field ref="description"/>
-                        <assembly ref="property" max-occurs="unbounded">
-                            <group-as name="props" in-json="ARRAY"/>
-                        </assembly>
-                        <field ref="remarks"/>
-                    </model>        
-                </define-assembly>
+                <assembly ref="targeted-is-unique-constraint"/>
+                <assembly ref="targeted-index-constraint"/>
+                <assembly ref="targeted-has-cardinality-constraint"/>
             </choice-group>
         </model>
     </define-assembly>
@@ -924,83 +880,14 @@
             <choice-group min-occurs="1" max-occurs="unbounded">
                 <group-as name="rules" in-json="ARRAY"/>
                 <discriminator>object-type</discriminator>
-                <define-assembly name="allowed-values">
-                    <formal-name>Allowed Values Constraint</formal-name>
-                    <flag ref="constraint-identifier"/>
-                    <flag ref="constraint-severity-level"/>
-                    <flag ref="constraint-allow-other"/>
-                    <flag ref="constraint-extensible"/>
-                    <model>
-                        <field ref="formal-name"/>
-                        <field ref="description"/>
-                        <assembly ref="property" max-occurs="unbounded">
-                            <group-as name="props" in-json="ARRAY"/>
-                        </assembly>
-                        <field ref="constraint-value-enum" min-occurs="1" max-occurs="unbounded">
-                            <group-as name="enums" in-json="ARRAY"/>
-                        </field>
-                        <field ref="remarks"/>
-                    </model>
-                </define-assembly>
-                <define-assembly name="expect">
-                    <formal-name>Expect Condition Constraint</formal-name>
-                    <flag ref="constraint-identifier"/>
-                    <flag ref="constraint-severity-level"/>
-                    <flag ref="constraint-target" required="yes">
-                        <formal-name>Expect Test Condition</formal-name>
-                        <use-name>test</use-name>
-                    </flag>
-                    <model>
-                        <field ref="formal-name"/>
-                        <field ref="description"/>
-                        <assembly ref="property" max-occurs="unbounded">
-                            <group-as name="props" in-json="ARRAY"/>
-                        </assembly>
-                        <field ref="expect-constraint-message"/>
-                        <field ref="remarks"/>
-                    </model>
-                </define-assembly>
-                <define-assembly name="index-has-key">
-                    <formal-name>Index Has Key Constraint</formal-name>
-                    <flag ref="constraint-identifier"/>
-                    <flag ref="constraint-severity-level"/>
-                    <flag ref="index-name" required="yes"/>
-                    <model>
-                        <field ref="formal-name"/>
-                        <field ref="description"/>
-                        <assembly ref="property" max-occurs="unbounded">
-                            <group-as name="props" in-json="ARRAY"/>
-                        </assembly>
-                        <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
-                            <formal-name>Key Constraint Field</formal-name>
-                            <use-name>key-field</use-name>
-                            <group-as name="key-fields" in-json="ARRAY"/>
-                        </assembly>
-                        <field ref="remarks"/>
-                    </model>        
-                </define-assembly>
-                <define-assembly name="matches">
-                    <formal-name>Value Matches Constraint</formal-name>
-                    <flag ref="constraint-identifier"/>
-                    <flag ref="constraint-severity-level"/>
-                    <flag ref="constraint-matches-regex"/>
-                    <flag ref="as-type-simple">
-                        <formal-name>Matches Data Type</formal-name>
-                        <use-name>datatype</use-name>
-                    </flag>
-                    <model>
-                        <field ref="formal-name"/>
-                        <field ref="description"/>
-                        <assembly ref="property" max-occurs="unbounded">
-                            <group-as name="props" in-json="ARRAY"/>
-                        </assembly>
-                        <field ref="remarks"/>
-                    </model>
-                </define-assembly>
+                <assembly ref="flag-allowed-values"/>
+                <assembly ref="flag-expect"/>
+                <assembly ref="flag-index-has-key"/>
+                <assembly ref="flag-matches"/>
             </choice-group>
         </model>
     </define-assembly>
-    
+
     <define-assembly name="constraint-let-expression">
         <formal-name>Constraint Let Expression</formal-name>
         <use-name>let</use-name>
@@ -1015,7 +902,87 @@
         </model>
     </define-assembly>
 
+    <define-assembly name="flag-allowed-values">
+        <formal-name>Allowed Values Constraint</formal-name>
+        <use-name>allowed-values</use-name>
+        <flag ref="constraint-identifier"/>
+        <flag ref="constraint-severity-level"/>
+        <flag ref="constraint-allow-other"/>
+        <flag ref="constraint-extensible"/>
+        <model>
+            <field ref="formal-name"/>
+            <field ref="description"/>
+            <assembly ref="property" max-occurs="unbounded">
+                <group-as name="props" in-json="ARRAY"/>
+            </assembly>
+            <field ref="constraint-value-enum" min-occurs="1" max-occurs="unbounded">
+                <group-as name="enums" in-json="ARRAY"/>
+            </field>
+            <field ref="remarks"/>
+        </model>
+    </define-assembly>
 
+    <define-assembly name="flag-expect">
+        <formal-name>Expect Condition Constraint</formal-name>
+        <use-name>expect</use-name>
+        <flag ref="constraint-identifier"/>
+        <flag ref="constraint-severity-level"/>
+        <flag ref="constraint-target" required="yes">
+            <formal-name>Expect Test Condition</formal-name>
+            <use-name>test</use-name>
+        </flag>
+        <model>
+            <field ref="formal-name"/>
+            <field ref="description"/>
+            <assembly ref="property" max-occurs="unbounded">
+                <group-as name="props" in-json="ARRAY"/>
+            </assembly>
+            <field ref="expect-constraint-message"/>
+            <field ref="remarks"/>
+        </model>
+    </define-assembly>
+
+    <define-assembly name="flag-index-has-key">
+        <formal-name>Index Has Key Constraint</formal-name>
+        <use-name>index-has-key</use-name>
+        <flag ref="constraint-identifier"/>
+        <flag ref="constraint-severity-level"/>
+        <flag ref="index-name" required="yes"/>
+        <model>
+            <field ref="formal-name"/>
+            <field ref="description"/>
+            <assembly ref="property" max-occurs="unbounded">
+                <group-as name="props" in-json="ARRAY"/>
+            </assembly>
+            <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
+                <formal-name>Key Constraint Field</formal-name>
+                <use-name>key-field</use-name>
+                <group-as name="key-fields" in-json="ARRAY"/>
+            </assembly>
+            <field ref="remarks"/>
+        </model>        
+    </define-assembly>
+
+    <define-assembly name="flag-matches">
+        <formal-name>Value Matches Constraint</formal-name>
+        <use-name>matches</use-name>
+        <flag ref="constraint-identifier"/>
+        <flag ref="constraint-severity-level"/>
+        <flag ref="constraint-matches-regex"/>
+        <flag ref="as-type-simple">
+            <formal-name>Matches Data Type</formal-name>
+            <use-name>datatype</use-name>
+        </flag>
+        <model>
+            <field ref="formal-name"/>
+            <field ref="description"/>
+            <assembly ref="property" max-occurs="unbounded">
+                <group-as name="props" in-json="ARRAY"/>
+            </assembly>
+            <field ref="remarks"/>
+        </model>
+    </define-assembly>
+    
     <define-flag name="constraint-identifier" as-type="token">
         <formal-name>Constraint Identifier</formal-name>
         <use-name>id</use-name>
@@ -1030,6 +997,7 @@
                 <enum value="ERROR">A violation of the constraint represents a fault in the content. This may include issues around compatibility, integrity, consistency, etc.</enum>
                 <enum value="WARNING">A violation of the constraint represents a potential issue with the content.</enum>
                 <enum value="INFORMATIONAL">A violation of the constraint represents a point of interest.</enum>
+                <enum value="DEBUG">A violation of the constraint represents a fault in the content that may warrant review by a developer when performing model or tool development.</enum>                
             </allowed-values>
         </constraint>
     </define-flag>
@@ -1187,4 +1155,195 @@
         <formal-name>Index Name</formal-name>
         <use-name>name</use-name>
     </define-flag>
+    
+    <define-assembly name="targeted-is-unique-constraint">
+        <formal-name>Targeted Unique Constraint</formal-name>
+        <use-name>is-unique</use-name>
+        <flag ref="constraint-identifier"/>
+        <flag ref="constraint-severity-level"/>
+        <flag ref="constraint-target" required="yes"/>
+        <model>
+            <field ref="formal-name"/>
+            <field ref="description"/>
+            <assembly ref="property" max-occurs="unbounded">
+                <group-as name="props" in-json="ARRAY"/>
+            </assembly>
+            <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
+                <formal-name>Key Constraint Field</formal-name>
+                <use-name>key-field</use-name>
+                <group-as name="key-fields" in-json="ARRAY"/>
+            </assembly>
+            <field ref="remarks"/>
+        </model>        
+    </define-assembly>
+
+    <define-assembly name="targeted-index-constraint">
+        <formal-name>Targeted Index Constraint</formal-name>
+        <use-name>index</use-name>
+        <flag ref="constraint-identifier"/>
+        <flag ref="constraint-severity-level"/>
+        <flag ref="index-name" required="yes"/>
+        <flag ref="constraint-target" required="yes"/>
+        <model>
+            <field ref="formal-name"/>
+            <field ref="description"/>
+            <assembly ref="property" max-occurs="unbounded">
+                <group-as name="props" in-json="ARRAY"/>
+            </assembly>
+            <assembly ref="key-constraint-field" min-occurs="1" max-occurs="unbounded">
+                <formal-name>Key Constraint Field</formal-name>
+                <use-name>key-field</use-name>
+                <group-as name="key-fields" in-json="ARRAY"/>
+            </assembly>
+            <field ref="remarks"/>
+        </model>        
+    </define-assembly>
+
+    <define-assembly name="targeted-has-cardinality-constraint">
+        <formal-name>Targeted Cardinality Constraint</formal-name>
+        <use-name>has-cardinality</use-name>
+        <flag ref="constraint-identifier"/>
+        <flag ref="constraint-severity-level"/>
+        <flag ref="cardinality-min-occurs"/>
+        <flag ref="cardinality-max-occurs"/>
+        <flag ref="constraint-target" required="yes"/>
+        <model>
+            <field ref="formal-name"/>
+            <field ref="description"/>
+            <assembly ref="property" max-occurs="unbounded">
+                <group-as name="props" in-json="ARRAY"/>
+            </assembly>
+            <field ref="remarks"/>
+        </model>        
+    </define-assembly>
+    
+    <!-- ******************************************** -->
+    <!-- * Metaschema External Constraints (legacy) * -->
+    <!-- ******************************************** -->
+    <define-assembly name="metaschema-module-constraints" deprecated="1.0.0-M2">
+        <formal-name>External Module Constraints</formal-name>
+        <description>Defines constraint rules to be applied to an existing set of Metaschema module-based models.</description>
+        <root-name>METASCHEMA-CONSTRAINTS</root-name>
+        <model>
+            <define-field name="name" min-occurs="1">
+                <description>The name of this constraint set.</description>
+            </define-field>
+            <define-field name="version" min-occurs="1">
+                <description>The version of this constraint set. A version string used to distinguish between multiple revisions of the same resource.</description>
+            </define-field>
+            <define-assembly name="import" max-occurs="unbounded">
+                <description>Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.</description>
+                <group-as name="imports" in-json="ARRAY"/>
+                <define-flag name="href" as-type="uri-reference" required="yes">
+                    <description>A relative or absolute URI for retrieving an out-of-line Metaschema constraint definition.</description>
+                </define-flag>
+            </define-assembly>
+            <define-assembly name="scope" min-occurs="1" max-occurs="unbounded">
+                <group-as name="scopes" in-json="ARRAY"/>
+                <define-flag name="metaschema-namespace" as-type="uri" required="yes"/>
+                <define-flag name="metaschema-short-name" as-type="token" required="yes"/>
+                <model>
+                    <choice-group min-occurs="1">
+                        <group-as name="constraints" in-json="ARRAY"/>
+                        <define-assembly name="assembly">
+                            <flag ref="constraint-target" required="yes"/>
+                            <model>
+                                <choice-group min-occurs="1" max-occurs="unbounded">
+                                    <group-as name="rules" in-json="ARRAY"/>
+                                    <discriminator>object-type</discriminator>
+                                    <assembly ref="targeted-allowed-values-constraint"/>
+                                    <assembly ref="targeted-expect-constraint"/>
+                                    <assembly ref="targeted-index-has-key-constraint"/>
+                                    <assembly ref="targeted-matches-constraint"/>
+                                    <assembly ref="targeted-is-unique-constraint"/>
+                                    <assembly ref="targeted-index-constraint"/>
+                                    <assembly ref="targeted-has-cardinality-constraint"/>
+                                </choice-group>
+                            </model>
+                        </define-assembly>
+                        <define-assembly name="field">
+                            <flag ref="constraint-target" required="yes"/>
+                            <model>
+                                <choice-group min-occurs="1" max-occurs="unbounded">
+                                    <group-as name="rules" in-json="ARRAY"/>
+                                    <discriminator>object-type</discriminator>
+                                    <assembly ref="targeted-allowed-values-constraint"/>
+                                    <assembly ref="targeted-expect-constraint"/>
+                                    <assembly ref="targeted-index-has-key-constraint"/>
+                                    <assembly ref="targeted-matches-constraint"/>
+                                </choice-group>
+                            </model>
+                        </define-assembly>
+                        <define-assembly name="flag">
+                            <flag ref="constraint-target" required="yes"/>
+                            <model>
+                                <choice-group min-occurs="1" max-occurs="unbounded">
+                                    <group-as name="rules" in-json="ARRAY"/>
+                                    <discriminator>object-type</discriminator>
+                                    <assembly ref="flag-allowed-values"/>
+                                    <assembly ref="flag-expect"/>
+                                    <assembly ref="flag-index-has-key"/>
+                                    <assembly ref="flag-matches"/>
+                                </choice-group>
+                            </model>
+                        </define-assembly>
+                    </choice-group>
+                    <field ref="remarks"/>
+                </model>
+            </define-assembly>
+        </model>
+    </define-assembly>
+
+    <!-- ***************************************** -->
+    <!-- * Metaschema External Constraints (new) * -->
+    <!-- ***************************************** -->
+    <define-assembly name="metaschema-meta-constraints">
+        <formal-name>External Module Constraints</formal-name>
+        <description>Defines constraint rules to be applied to an existing set of Metaschema module-based models.</description>
+        <root-name>metaschema-meta-constraints</root-name>
+        <model>
+            <define-assembly name="import" max-occurs="unbounded">
+                <description>Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.</description>
+                <group-as name="imports" in-json="ARRAY"/>
+                <define-flag name="href" as-type="uri-reference" required="yes">
+                    <description>A relative or absolute URI for retrieving an out-of-line Metaschema constraint definition.</description>
+                </define-flag>
+            </define-assembly>
+            <define-assembly name="definition-context">
+                <define-flag name="name" as-type="token" required="yes"/>
+                <define-flag name="namespace" as-type="uri" required="yes"/>
+                <model>
+                    <assembly ref="assembly-constraints" min-occurs="1">
+                        <use-name>constraints</use-name>
+                    </assembly>
+                    <field ref="remarks"/>
+                </model>
+            </define-assembly>
+            <assembly ref="metapath-context" min-occurs="1" max-occurs="unbounded">
+                <group-as name="metapath-contexts" in-json="ARRAY"/>
+            </assembly>
+        </model>            
+    </define-assembly>
+
+   <define-assembly name="metaschema-metapath">
+      <description>A Metapath expression identifying the model node that the constraints will be applied to.</description>
+      <use-name>metapath</use-name>
+      <define-flag name="target" required="yes"/>
+   </define-assembly>
+
+    <define-assembly name="metapath-context">
+        <model>
+            <assembly ref="metaschema-metapath" min-occurs="1" max-occurs="unbounded">
+                <description>A Metapath expression identifying the model node that the constraints will be applied to.</description>
+                <group-as name="metapaths" in-json="ARRAY"/>
+            </assembly>
+            <assembly ref="assembly-constraints">
+                <use-name>constraints</use-name>
+            </assembly>
+            <assembly ref="metapath-context" max-occurs="unbounded">
+                <group-as name="metapath-contexts" in-json="ARRAY"/>
+            </assembly>
+            <field ref="remarks"/>
+        </model>
+    </define-assembly>
 </METASCHEMA>
