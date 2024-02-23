@@ -181,7 +181,7 @@ If defined, the `<message>` value MUST be a [Metaschema string value](/specifica
 
 ##`matches`
 
-The `matches` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on node(s) matching the target Metapath expression. Each one of these are discussed below.
+The `<matches>` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on node(s) matching the target Metapath expression. Each one of these are discussed below.
 
 A match can be made by 2 different ways based on `@datatype` and/or based on `@regex`. 
 
