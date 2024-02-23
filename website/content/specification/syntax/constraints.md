@@ -165,7 +165,7 @@ The expect constraint would pass for each `sibling` in the `parent` named "p1", 
 
 ## `expect` constraints
 
-The `expect` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on the evaluation of a test Metapath expression.
+The `<expect>` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on the evaluation of a `@test` Metapath expression.
 
 The `@target` attribute of an `<expect>` constraint specifies the node(s) in a document instance whose value is restricted by the constraint.
 
@@ -179,9 +179,25 @@ A constraint may have an OPTIONAL [`@level`](#level) attribute and/or an OPTIONA
 
 If defined, the `<message>` value MUST be a [Metaschema string value](/specification/datatypes#string). It MAY contain a Metapath expression templates that starts with `{`, contains a Metapath expression, and ends with `}`.  When evaluating a template Metapath expression, the context of the Metapath [evaluation focus](#constraint-processing) MUST be the failing value node.
 
+##`matches`
+
+The `<matches>` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on node(s) matching the target Metapath expression. Each one of these are discussed below.
+
+A match can be made by 2 different ways based on `@datatype` and/or based on `@regex`. 
+
+The `@target` flag of an `matches` constraint specifies the node(s) in a document instance whose value matches the `@datatype` and/or the `@regex`. The `matches` constraint MUST define a [`target`](#target) with a Metapath expression. The processor MUST evaluate only the node(s) resulting from evaluating the `@target`. 
+
+If a `@datatype` is provided, each resulting node's value MUST match the syntax of the given `@datatype`.
+
+If a `@regex` is provided, each resulting node's value MUST match the pattern specified by the given `@regex`.
+
+When evaluating node(s) matching the `@target`, the node(s) pass the constraint when matching all requirements of `@datatype`, if defined, and `@regex`, if defined. 
+
+If the node(s) do not match any of these requirements, then the node(s) MUST be considered to not pass the constraint.
+
 ## `index` constraints
 
-The `index` constraint is a type of Metaschema constraint that defines an index of document instance nodes addressable by key.
+The `<index>` constraint is a type of Metaschema constraint that defines an index of document instance nodes addressable by key.
 
 The `@name` flag of an `<index>` constraint specifies the identity of the index. The constraint MUST define the name.
 
