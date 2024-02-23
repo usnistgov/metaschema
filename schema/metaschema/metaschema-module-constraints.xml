@@ -2,7 +2,6 @@
 <metaschema-meta-constraints xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../xml/metaschema-meta-constraints.xsd">
-    <import href="metaschema-module-metaschema.xml"/>
     <context>
         <metapath target="/metaschema-meta-constraints"/>
     </context>
