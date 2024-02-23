@@ -185,9 +185,9 @@ The `index` constraint is a type of Metaschema constraint that defines an index 
 
 The `@name` flag of an `<index>` constraint specifies the identity of the index. The constraint MUST define the name.
 
-The `@target` flag of an `<index>` constraint defines the node(s) in a document instance to index. The index MUST define a [`@target`](#target) with a Metapath expression. The processor MUST index only The document instance node(s) resulting from its evaluation.
+The `@target` flag of an `<index>` constraint defines the node(s) in a document instance to index. The index MUST define a [`@target`](#target) with a Metapath expression. The processor MUST index only the node(s) resulting from evaluating the `@target`.
 
-The `<key-field>` assembly of an `<index>` constraint defines the flag or field value that is the key for each entry in the index. The `<key-field>` field MUST define a [`@target`](#target) flag with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) of each entry of the matches of the constraint's `@target`.
+The `<key-field>` assembly of an `<index>` constraint defines the flag or field value that is the key for each entry in the index. A `<key-field>` assembly MUST define at least one [`@target`](#target) flag with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) using each node that matches the constraint's `@target`.
 
 An `index` constraint MAY define more than one `<key-field>` assembly. The composite key for each entry in the index is the combination of values for the `@target` of every `<key-field/>`. The composite values of the key are the discriminator for the uniqueness of the index entry.
 
@@ -204,6 +204,20 @@ The `index-has-key` constraint is a type of Metaschema constraint that cross-ref
 The `@name` flag of an `<index>` constraint MUST specify the name of a previously defined `index` constraint.
 
 The `index-has-key` constraint has the same flags and assemblies as a [`index`](#index-constraints) constraint.
+
+## `is-unique` constraints
+
+The `<is-unique>` constraint is a type of Metaschema constraint that checks that a computed key, based on field and flag values, does not occur more than once. Unlike `<index>`, an explicit, named index is not created. Therefore, this constraint MUST NOT define a `@name` flag.
+
+The [`id`](#id) flag of an `<is-unique>` constraint specifies an identifier for the constraint.
+
+The `@target` flag of an `<is-unique>` constraint identifies the node(s) in a document instance to check for uniqueness. The `<is-unique>` MUST define a [`@target`](#target) with a Metapath expression. The processor MUST check uniqueness for only the node(s) resulting from evaluating the `@target`.
+
+A `<key-field>` assembly of an `<is-unique>` constraint identifies the flag or field value that is the key used to determine the uniqueness of each entry based on a computed key. A `<key-field>` element MUST define at least one [`@target`](#target) flag with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) using each node that matches the constraint's `@target`.
+
+An `is-unique` constraint MAY define more than one `<key-field>` assembly. The composite key for each entry in the index is the combination of values for the `@target` of every `<key-field/>`. The composite values of the key are the discriminator for the uniqueness of the index entry. 
+
+When evaluating a given key relative to other computed keys for the same constraint, if the given key has the same computed key value as another node matching the same constraint, then the target node MUST be considered to not pass the constraint.
 
 ## `has-cardinality` constraints
 
