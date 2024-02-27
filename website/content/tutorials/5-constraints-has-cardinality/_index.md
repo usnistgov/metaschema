@@ -328,8 +328,8 @@ We will begin where we left off in the previous tutorial, with the model and con
           </expect>
           <has-cardinality id="atx-memory-count-allowed" level="ERROR" target="motherboard[@type='atx']/memory" min-occurs="1" max-occurs="4"/>
           <has-cardinality id="atx-ata-sockets-count-allowed" level="ERROR" target="motherboard[@type='atx']/ata-socket" min-occurs="0" max-occurs="1"/>
-          <has-cardinality id="mini-itx-memory-count-allowed" level="ERROR" target="motherboard[@type='mini-atx']/memory" min-occurs="1" max-occurs="2"/>
-          <has-cardinality id="mini-itx-ata-sockets-count-allowed" level="ERROR" target="motherboard[@type='mini-atx']/ata-socket" min-occurs="0" max-occurs="0"/>
+          <has-cardinality id="mini-itx-memory-count-allowed" level="ERROR" target="motherboard[@type='mini-itx']/memory" min-occurs="1" max-occurs="2"/>
+          <has-cardinality id="mini-itx-ata-sockets-count-allowed" level="ERROR" target="motherboard[@type='mini-itx']/ata-socket" min-occurs="0" max-occurs="0"/>
         </constraint>
       </define-assembly>
     </model>
