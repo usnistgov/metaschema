@@ -7,7 +7,7 @@ description: ""
 
 ## Introduction
 
-In the previous tutorial, we enhanced the computer model and learned how to use constraints to customize specific field and flags' values by subsetting their data types or match certain patterns with regular expressions. In previous tutorials about constraints, we have learned multiple techniques to precisely control the values of fields and flags. But how do we control the minimum and maximum number of occurrences for assemblies, fields, and flags in document instance(s) with logical conditions using their own identifiers and values? How do we do this with related assemblies, fields, and flags co-occurring these document instance(s)?
+In the previous tutorial, we enhanced the computer model and learned how to use constraints to customize specific fields' and flags' values by subsetting their data types or match certain patterns with regular expressions. In previous tutorials about constraints, we have learned multiple techniques to precisely control the values of fields and flags. But how do we control the minimum and maximum number of occurrences for assemblies, fields, and flags in document instance(s) with logical conditions using their own identifiers and values? How do we do this with related assemblies, fields, and flags co-occurring these document instance(s)?
 
 To control the minimum and maximum occurrence of different assemblies, fields, flags and/or their respective values, we can use `has-cardinality` constraints to meet this use case.
 
@@ -573,5 +573,11 @@ computer:
 {{< /highlight >}}
 {{% /tab %}}
 {{< /tabs >}}
+
+## Using has-cardinality constraints with identifiers
+
+## Using has-cardinality constraints with values
+
+## Using complex has-cardinality constraints with both
 
 ## Conclusion
