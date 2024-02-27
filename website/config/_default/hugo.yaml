@@ -1,6 +1,5 @@
 title: "Metaschema"
 baseURL: https://pages.nist.gov/metaschema/
-canonifyURLs: true
 defaultContentLanguage: en
 languageCode: "en-us"
 MetaDataFormat: "yaml"
@@ -25,8 +24,8 @@ module:
   - source: ../examples
     target: static/examples
   imports:
+  - path: github.com/usnistgov/hugo-uswds
   - path: github.com/usnistgov/hugo-uswds-nist
-relativeURLs: true # rewrites URLs to a relative form supporting link offline checking
 enableGitInfo: true # enable to get page modification dates for a site stored in Git
 params:
   header:
