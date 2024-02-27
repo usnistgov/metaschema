@@ -18,7 +18,7 @@ We will begin where we left off in the previous tutorial, with the model and con
 <?xml-model href="https://raw.githubusercontent.com/usnistgov/metaschema/develop/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
   <schema-name>Computer Model</schema-name>
-  <schema-version>0.0.12</schema-version>
+  <schema-version>0.0.11</schema-version>
     <short-name>computer</short-name>
   <namespace>http://example.com/ns/computer</namespace>
   <json-base-uri>http://example.com/ns/computer</json-base-uri>
@@ -326,13 +326,15 @@ We will begin where we left off in the previous tutorial, with the model and con
           <expect id="memory-same-byte-size" level="ERROR" target="." test="if (count(./memory/byte-size) > 0) then (sum(./memory/byte-size) mod ./memory/byte-size[1]) = 0 else (sum(./memory/size) mod ./memory/size[1]) = 0">
               <message>All memory modules SHOULD be the same size or byte-size for a computer.</message>
           </expect>
-          <has-cardinality id="atx-memory-count-allowed" level="ERROR" target="motherboard[@type='atx']/memory" min-occurs="1" max-occurs="4"/>
-          <has-cardinality id="atx-ata-sockets-count-allowed" level="ERROR" target="motherboard[@type='atx']/ata-socket" min-occurs="0" max-occurs="1"/>
-          <has-cardinality id="mini-itx-memory-count-allowed" level="ERROR" target="motherboard[@type='mini-itx']/memory" min-occurs="1" max-occurs="2"/>
-          <has-cardinality id="mini-itx-ata-sockets-count-allowed" level="ERROR" target="motherboard[@type='mini-itx']/ata-socket" min-occurs="0" max-occurs="0"/>
         </constraint>
       </define-assembly>
     </model>
+    <constraint>
+      <has-cardinality id="atx-memory-count-allowed" level="ERROR" target="motherboard[type='atx']/memory" min-occurs="1" max-occurs="4"/>
+      <has-cardinality id="atx-ata-sockets-count-allowed" level="ERROR" target="motherboard[type='atx']/ata-socket" min-occurs="0" max-occurs="1"/>
+      <has-cardinality id="mini-itx-memory-count-allowed" level="ERROR" target="motherboard[type='mini-itx']/memory" min-occurs="1" max-occurs="2"/>
+      <has-cardinality id="mini-itx-ata-sockets-count-allowed" level="ERROR" target="motherboard[type='mini-itx']/ata-socket" min-occurs="0" max-occurs="0"/>
+    </constraint>
   </define-assembly>
 </METASCHEMA>
 ```
