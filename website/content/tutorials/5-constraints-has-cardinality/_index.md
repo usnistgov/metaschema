@@ -576,6 +576,334 @@ computer:
 
 ## Using has-cardinality constraints with identifiers
 
+Given previous successes with our Metaschema model, our stakeholders are eager to consult us and add a new requirement to the model. They want to propose a new requirement to partners in the consortium: the consortium requires that computers of the standard ATX form factor must have between one and four ATA sockets and between one and four memory slots. The consortium also requires that Mini ATX computers have one or two memory modules and no ATA sockets.
+
+Fortunately for us, this business requirement is easy to add to our Metaschema model using the `has-cardinality` constraint. We define Metapath expressions to count these fields and flags based upon their name. We then define the `min-occurs` and `max-occurs` specific to this use case.
+
+```xml {linenos=table,hl_lines=["313-316"]}
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://raw.githubusercontent.com/usnistgov/metaschema/develop/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+  <schema-name>Computer Model</schema-name>
+  <schema-version>0.0.11</schema-version>
+    <short-name>computer</short-name>
+  <namespace>http://example.com/ns/computer</namespace>
+  <json-base-uri>http://example.com/ns/computer</json-base-uri>
+  <define-assembly name="property">
+    <formal-name>Computer Property</formal-name>
+    <description>A property is a key-value pair of metadata about the computer, not its parts.</description>
+    <define-flag name="key" as-type="token" required="yes"/>
+    <define-flag name="value" as-type="string" required="yes"/>
+    <define-flag name="ns" as-type="uri" required="yes" default="http://example-consortium.org"/>
+    <constraint>
+      <allowed-values  target=".[@ns='http://example-consortium.org' and @key='release-status']/@value">
+        <enum value="unknown"/>
+        <enum value="not-applicable"/>
+        <enum value="in-development"/>
+        <enum value="public"/>
+        <enum value="obsolete"/>
+      </allowed-values>
+      <matches target=".[@ns='http://example-consortium.org' and @key='release-date']/@value" datatype="date-with-timezone"/>
+    </constraint>
+  </define-assembly>
+  <define-assembly name="vendor">
+    <formal-name>Vendor Information</formal-name>
+    <description>Information about a vendor of a computer part.</description>
+    <define-flag name="id" as-type="string" required="yes">
+      <formal-name>Vendor Identifier</formal-name>
+      <description>An identifier for classifying a unique computer parts vendor.</description>
+    </define-flag>
+    <model>
+      <define-field name="name" min-occurs="1" max-occurs="1">
+        <formal-name>Vendor Name</formal-name>
+        <description>The registered company name of the vendor.</description>
+      </define-field>
+      <define-field name="address" min-occurs="1" max-occurs="1">
+        <formal-name>Vendor Address</formal-name>
+        <description>The physical address of an office location for the vendor.</description>
+      </define-field>
+      <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
+        <formal-name>Vendor Website</formal-name>
+        <description>A public website made by the vendor documenting their parts as used in the computer.</description>
+      </define-field>
+    </model>
+  </define-assembly>
+  <define-field name="product-name" as-type="string">
+    <formal-name>Product Name</formal-name>
+    <description>The product name from the vendor of the computer part.</description>
+  </define-field>
+  <define-assembly name="firmware">
+    <formal-name>CPU Firmware</formal-name>
+    <description>Information about the firmware for a computer CPU.</description>
+    <model>
+      <define-field name="version" min-occurs="1" max-occurs="1" as-type="string">
+        <formal-name>Firmware Version</formal-name>
+        <description>An identifier that singles </description>
+      </define-field>
+      <define-field name="hash" min-occurs="1" max-occurs="1" as-type="string">
+        <formal-name>Firmware Hash</formal-name>
+        <description>A cryptographic hash with an approved algorithm of the firmware as flashed onto the chip.</description>
+        <json-value-key>value</json-value-key>
+        <define-flag name="algorithm">
+          <formal-name>Hash Algorithm</formal-name>
+          <constraint>
+            <allowed-values>
+              <enum value="sha256">The SHA-256 algorithm.</enum>
+              <enum value="sha512">The SHA-512 algorithm.</enum>
+            </allowed-values>
+          </constraint>
+        </define-flag>
+        <constraint>
+          <matches target=".[@algorithm='sha256']" regex="^[0-9a-fA-F]{64}$"/>
+          <matches target=".[@algorithm='sha512']" regex="^[0-9a-fA-F]{128}$"/>
+        </constraint>
+      </define-field>
+    </model>
+  </define-assembly>
+  <define-assembly name="computer">
+    <formal-name>Computer Assembly</formal-name>
+    <description>A container object for a computer, its parts, and its sub-parts.</description>
+    <root-name>computer</root-name>
+    <define-flag name="id" as-type="string" required="yes">
+        <formal-name>Computer Identifier</formal-name>
+        <description>An identifier for classifying a unique make and model of computer.</description>
+    </define-flag>
+    <model>
+      <assembly ref="property" min-occurs="0" max-occurs="unbounded">
+        <group-as name="properties" in-json="ARRAY" />
+      </assembly>
+      <assembly ref="vendor"/>
+      <define-assembly name="motherboard">
+        <formal-name>Motherboard Assembly</formal-name>
+        <description>A container object for a motherboard in a computer and its sub-parts.</description>
+        <model>
+          <assembly ref="vendor"/>
+          <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
+            <formal-name>Motherboard Type</formal-name>
+            <description>The type motherboard layout, <code>at</code>, <code>atx</code>, <code>mini-itx</code> or an alternative.</description>
+          </define-field>
+          <define-assembly name="cpu">
+            <formal-name>Motherboard Central Processing Unit (CPU)</formal-name>
+            <description>The model number of the CPU on the motherboard of a computer.</description>
+            <model>
+              <assembly ref="vendor"/>
+              <field ref="product-name" min-occurs="1" max-occurs="1"/>
+              <assembly ref="firmware"/>
+              <define-field name="architecture" as-type="string" min-occurs="1" max-occurs="1">
+                <formal-name>CPU Architecture</formal-name>
+                <description>The Instruction Set Architecture (ISA) approved by module stakeholders.</description>
+                <constraint>
+                    <allowed-values target="." allow-other="no">
+                        <enum value="amd64">Intel 64-bit systems, also known as x86-64 or em64t</enum>
+                        <enum value="armhf">Arm v7 32-bit systems</enum>
+                        <enum value="arm64">Arm v8 64-bit systems</enum>
+                        <enum value="x86">Intel 32-bit x86 systems, for 686 class or newer</enum>
+                    </allowed-values>
+                </constraint>
+              </define-field>
+              <define-field name="speed" as-type="string" min-occurs="1" max-occurs="1">
+                <formal-name>CPU Speed</formal-name>
+                <description>The clock speed of the CPU in megahertz or gigahertz.</description>
+              </define-field>
+            </model>
+          </define-assembly>
+          <define-assembly name="ata-socket">
+            <formal-name>Motherboard Advanced Technology Attachment (ATA) Socket</formal-name>
+            <description>The model number of ATA socket on the motherboard of a computer. There will only be one socket on any motherboard.</description>
+            <model>
+              <define-assembly name="vendor">
+                <formal-name>Vendor Information</formal-name>
+                <description>Information about a vendor of a computer part.</description>
+                <define-flag name="id" as-type="string" required="yes">
+                  <formal-name>Vendor Identifier</formal-name>
+                  <description>An identifier for classifying a unique computer parts vendor.</description>
+                </define-flag>
+                <model>
+                  <define-field name="name" min-occurs="1" max-occurs="1">
+                    <formal-name>Vendor Name</formal-name>
+                    <description>The registered company name of the vendor.</description>
+                  </define-field>
+                  <define-field name="address" min-occurs="1" max-occurs="1">
+                    <formal-name>Vendor Address</formal-name>
+                    <description>The physical address of an office location for the vendor.</description>
+                  </define-field>
+                  <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
+                    <formal-name>Vendor Website</formal-name>
+                    <description>A public website made by the vendor documenting their parts as used in the computer.</description>
+                  </define-field>
+                </model>
+              </define-assembly>              
+              <define-field name="product-name" as-type="string" min-occurs="1" max-occurs="1">
+                <formal-name>Product Name</formal-name>
+                <description>The product name from the vendor of the computer part.</description>
+              </define-field>
+              <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
+                <formal-name>ATA Socket Type</formal-name>
+                <description>The type of ATA socket on the motherboard with approved (but optional) values recommended by model stakeholders.</description>
+                <constraint>
+                  <allowed-values target="." allow-other="yes">
+                    <enum value="pata">Parallel ATA buses also known as AT-Attachment and IDE</enum>
+                    <enum value="sata">Serial ATA buses supporting Advanced Host Controller Interface or legacy IDE modes</enum>
+                    <enum value="esata">External Serial ATA buses for pluggable external devices using SATA</enum>
+                    <enum value="esatap">External Serial ATA buses supporting SATA traffic and device power</enum>
+                  </allowed-values>
+                </constraint>
+              </define-field>
+            </model>
+          </define-assembly>
+          <define-assembly name="memory" min-occurs="1" max-occurs="unbounded">
+            <formal-name>Motherboard Random Access Memory (RAM) Module(s)</formal-name>
+            <description>Random access memory hardware installed on the motherboard of a computer.</description>
+            <group-as name="memory-modules" in-json="ARRAY"/>
+            <model>
+              <define-assembly name="vendor">
+                <formal-name>Vendor Information</formal-name>
+                <description>Information about a vendor of a computer part.</description>
+                <define-flag name="id" as-type="string" required="yes">
+                  <formal-name>Vendor Identifier</formal-name>
+                  <description>An identifier for classifying a unique computer parts vendor.</description>
+                </define-flag>
+                <model>
+                  <define-field name="name" min-occurs="1" max-occurs="1">
+                    <formal-name>Vendor Name</formal-name>
+                    <description>The registered company name of the vendor.</description>
+                  </define-field>
+                  <define-field name="address" min-occurs="1" max-occurs="1">
+                    <formal-name>Vendor Address</formal-name>
+                    <description>The physical address of an office location for the vendor.</description>
+                  </define-field>
+                  <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
+                    <formal-name>Vendor Website</formal-name>
+                    <description>A public website made by the vendor documenting their parts as used in the computer.</description>
+                  </define-field>
+                </model>
+              </define-assembly>
+              <define-field name="product-name" as-type="string" min-occurs="1" max-occurs="1">
+                <formal-name>Product Name</formal-name>
+                <description>The product name from the vendor of the computer part.</description>
+              </define-field>
+              <choice>
+                <define-field name="byte-size" as-type="positive-integer" min-occurs="1" max-occurs="1" deprecated="0.0.9">
+                  <formal-name>Memory Module Size</formal-name>
+                  <description>Size of the memory module in binary, not SI base-10 units, meaning a kilobyte is 1024 bytes, not 1000 bytes.</description>
+                </define-field>                
+                <define-field name="size" as-type="positive-integer" min-occurs="1" max-occurs="1">
+                  <formal-name>Memory Module Size</formal-name>
+                  <description>Size of memory module in binary or SI base-10 units, optionally with a size unit. This does not require to be in bits or bytes. If no optional flags are used, it is required to process its value as a size as counted in bits (not bytes) in decimal base-ten form, with no unit prefix.</description>
+                  <json-value-key>count</json-value-key>
+                  <define-flag name="unit" required="no">
+                    <formal-name>Memory Module Size Unit</formal-name>
+                    <description>The unit size for a memory module can either be bytes (B) or bits (b).</description>
+                    <constraint>
+                      <allowed-values allow-other="no">
+                        <enum value="B">bytes</enum>
+                        <enum value="b">bits</enum>
+                      </allowed-values>
+                    </constraint>
+                  </define-flag>
+                  <define-flag name="base" required="no">
+                    <formal-name>Memory Module Size Unit Prefix Base</formal-name>
+                    <description>The prefix type of module size, binary or decimal. This is useful if you will not specify an optional unit or unit base.</description>
+                    <constraint>
+                      <allowed-values allow-other="no">
+                        <enum value="binary"/>
+                        <enum value="decimal"/>
+                      </allowed-values>
+                    </constraint>
+                  </define-flag>
+                  <define-flag name="prefix" required="no">
+                    <formal-name>Memory Module Size Unit Prefix</formal-name>
+                    <description>The optional prefix the of unit from a given system.</description>
+                    <constraint>
+                      <allowed-values allow-other="yes">
+                        <enum value="Gi"/>
+                        <enum value="Ki"/>
+                        <enum value="Mi"/>
+                        <enum value="G"/>
+                        <enum value="k"/>
+                        <enum value="M"/>
+                      </allowed-values>
+                    </constraint>
+                  </define-flag>
+                  <define-flag name="unit-system">
+                    <formal-name>Memory Module Size Unit System</formal-name>
+                    <description>An identifier for the organization associated with the specific usage of the unit with its prefix. If absent, the use of no unit is assumed with and the value is counted in bits.</description>
+                    <constraint>
+                      <allowed-values allow-other="yes">
+                        <enum value="iec">The  International Electrotechnical Commission 60027-2 Amendment 2 Units</enum>
+                        <enum value="jedec">JEDEC Solid State Technology Association Units</enum>
+                        <enum value="si">International System of Units</enum>
+                      </allowed-values>
+                    </constraint>
+                  </define-flag>
+                </define-field>
+            </choice>
+            </model>
+            <constraint>
+              <expect id="memory-divisible-two" level="ERROR" target="./byte-size" test="(. mod 2) = 0">
+                  <message>All memory modules MUST have a byte divisible by two.</message>
+              </expect>
+              <expect id="memory-divisible-megabyte" level="WARNING" target="./byte-size" test="(. mod 1024) = 0">
+                  <message>All memory modules SHOULD have a bite size divisible by one megabyte (1,024 bytes) .</message>
+              </expect>
+              <expect id="memory-byte-size-deprecated" level="WARNING" target="." test="count(./byte-size) = 0">
+                <message>All memory modules SHOULD use size because byte-size is now deprecated and byte-size will be removed.</message>
+              </expect>
+            </constraint>
+          </define-assembly>
+          <define-assembly name="expansion-card" min-occurs="0" max-occurs="unbounded">
+            <formal-name>Motherboard Expansion Card</formal-name>
+            <description>The model number of an expansion card connected to the motherboard of a computer.</description>
+            <group-as name="expansion-cards" in-json="ARRAY"/>
+            <model>
+              <define-assembly name="vendor">
+                <formal-name>Vendor Information</formal-name>
+                <description>Information about a vendor of a computer part.</description>
+                <define-flag name="id" as-type="string" required="yes">
+                  <formal-name>Vendor Identifier</formal-name>
+                  <description>An identifier for classifying a unique computer parts vendor.</description>
+                </define-flag>
+                <model>
+                  <define-field name="name" min-occurs="1" max-occurs="1">
+                    <formal-name>Vendor Name</formal-name>
+                    <description>The registered company name of the vendor.</description>
+                  </define-field>
+                  <define-field name="address" min-occurs="1" max-occurs="1">
+                    <formal-name>Vendor Address</formal-name>
+                    <description>The physical address of an office location for the vendor.</description>
+                  </define-field>
+                  <define-field name="website" as-type="uri" min-occurs="1" max-occurs="1">
+                    <formal-name>Vendor Website</formal-name>
+                    <description>A public website made by the vendor documenting their parts as used in the computer.</description>
+                  </define-field>
+                </model>
+              </define-assembly>
+              <define-field name="product-name" as-type="string" min-occurs="1" max-occurs="1">
+                <formal-name>Product Name</formal-name>
+                <description>The product name from the vendor of the computer part.</description>
+              </define-field>
+              <define-field name="type" as-type="string" min-occurs="1" max-occurs="1">
+                <formal-name>Expansion Card Type</formal-name>
+                <description>The type of expansion card on a motherboard of a computer, such as <code>pci</code> (PCI, e.g. Peripheral Component Interconnect), <code>pcie</code> (PCI Express), or an alternative.</description>
+              </define-field>
+            </model>
+          </define-assembly>
+        </model>
+        <constraint>
+          <expect id="memory-same-byte-size" level="ERROR" target="." test="if (count(./memory/byte-size) > 0) then (sum(./memory/byte-size) mod ./memory/byte-size[1]) = 0 else (sum(./memory/size) mod ./memory/size[1]) = 0">
+              <message>All memory modules SHOULD be the same size or byte-size for a computer.</message>
+          </expect>
+          <has-cardinality id="atx-memory-count-allowed" level="ERROR" target="motherboard[@type='atx']/memory" min-occurs="1" max-occurs="4"/>
+          <has-cardinality id="atx-ata-sockets-count-allowed" level="ERROR" target="motherboard[@type='atx']/ata-socket" min-occurs="1" max-occurs="4"/>
+          <has-cardinality id="mini-itx-memory-count-allowed" level="ERROR" target="motherboard[@type='atx']/memory" min-occurs="1" max-occurs="2"/>
+          <has-cardinality id="mini-itx-ata-sockets-count-allowed" level="ERROR" target="motherboard[@type='atx']/ata-socket" min-occurs="0" max-occurs="0"/>
+        </constraint>
+      </define-assembly>
+    </model>
+  </define-assembly>
+</METASCHEMA>
+```
+
 ## Using has-cardinality constraints with values
 
 ## Using complex has-cardinality constraints with both
