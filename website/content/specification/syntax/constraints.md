@@ -50,10 +50,10 @@ The following constraint types are allowed for `<define-assembly>` definitions.
 All *constraints* share a common syntax composed of the following:
 
 | Data | Data Type | Use      | Default Value |
-|:---       |:---       |:---      |:---           |
+|:--- |:--- |:--- |:--- |
 | [`@id`](#id) | [`token`](/specification/datatypes/#token) | optional | *(no default)* |
 | [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
-| [`@target`](#target) | special | *varies* | `.` |
+| [`@target`](#target) | special | *(varies)* | `.` |
 | [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 | *(no default)* |
 | [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 | *(no default)* |
 | [`<prop>`](#prop) | special | 0 to ∞ | *(no default)* |
@@ -156,8 +156,8 @@ While not required, it is best practice to include a `<description>`.
 
 The optional `<prop>` assembly provides a structure for declaring arbitrary properties, which consist of a `@namespace`, `@name`, and `@value`.
 
-| Attribute | Data Type | Use      | Default Value |
-|:---       |:---       |:---      |:---           |
+| Data | Data Type | Use      | Default Value |
+|:--- |:--- |:--- |:--- |
 | `@namespace` | [`uri`](/specification/datatypes/#uri) | optional | `http://csrc.nist.gov/ns/oscal/metaschema/1.0` |
 | `@name` | [`token`](/specification/datatypes/#token) | required | *(no default)* |
 | `@value` |  [`token`](/specification/datatypes/#token) | required | *(no default)* |
@@ -185,13 +185,20 @@ It supports an optional `@class` flag that can be used to identify format specif
 
 The following describes the supported constraint constructs.
 
-### Let Expressions
+### `let` Expressions
 
-Using the `let` element, a variable can be defined, which can be used in a Metapath expression in subsequent constraints.
+The optional `<let>` assembly provides a structure for variable/expression bindings, which consist of a `@var` and `@expression`.
 
-A `let` statement has a REQUIRED `@var` attribute, which defines the variable name.
+| Data | Data Type | Use      | Default Value |
+|:--- |:--- |:--- |:--- |
+| `@var` | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+| `@expression` | [special](/specification/syntax/metapath) | required | *(no default)* |
 
-A `let` statement has a REQUIRED `@expression` attributes, which defines an Metapath expression, whose result is used to define the variable's value in the evaluation context.
+Using the `let` assembly, a variable can be defined, which can be used by reference in a Metapath expression in subsequent constraints.
+
+A `let` statement has a REQUIRED `@var` flag, which defines the variable name.
+
+A `let` statement has a REQUIRED `@expression` flag, which defines an [Metapath expression](/specification/syntax/metapath), whose result is used to define the variable's value in the evaluation context.
 
 During constraint evaluation, each `let` statement MUST be evaluated in encounter order. If a previous variable is bound with the same name in the evaluation context, the new value MUST bound in a sub-context to avoid side effects. This sub-context MUST be made available to any constraints following the `let` statement declaration, and to any constraints defined on child nodes of the current context.
 
@@ -205,7 +212,8 @@ Given the following fragment of a Metaschema module.
 <define-assembly name="sibling">
   <define-flag name="name" required="yes"/>
   <constraint>
-    <let var="parent" expression=".."/><!-- stores the parent of the current node -->
+    <!-- stores the parent of the current node -->
+    <let var="parent" expression=".."/>
     <let var="sibling-count" expression="count($parent/sibling)"/>
     <expect target="." test="$sibling-count = 3"/>
   </constraint>
@@ -232,20 +240,59 @@ The expect constraint would pass for each `sibling` in the `parent` named "p1", 
 
 The `allowed-values` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on an enumerated set of permitted values.
 
+The syntax of `<allowed-values>` consists of the following:
+
+| Data | Data Type | Use      | Default Value |
+|:--- |:--- |:--- |:--- |
+| [`@allow-other`>](#allow-other) | `yes` or `no` | optional | `no` |
+| [`@extensible`>](#extensible) | `model`, `external`, or `none` | optional | `no` |
+| [`@id`](#id) | [`token`](/specification/datatypes/#token) | optional | *(no default)* |
+| [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
+| [`@target`](#target) | special | *(varies)* | *(no default)* |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 | *(no default)* |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 | *(no default)* |
+| [`<prop>`](#prop) | special | 0 to ∞ | *(no default)* |
+| [`<enum>`](#enum) | special | 1 to ∞ | *(no default)* |
+| [`<remarks>`](#remarks) | special | 0 or 1 | *(no default)* |
+
 Each `allowed-values` constraint has a *source* that will be either:
 
 - **model:** The constraint is defined *in* a Metaschema module, i.e. an internal constraint.
 - **external:** The constraint is defined *outside* a Metaschema module, i.e. an external constraint.
 
-The `@target` of an `<allowed-values>` constraint specifies the node(s) in a document instance whose value is restricted by the constraint.
+The `@target` of an `<allowed-values>` constraint is a [Metapath expression](/specification/syntax/metapath) that specifies the node(s) in a document instance whose value is restricted by the constraint.
+
+#### `@enum`
+
+Within a given `<allowed-values>` constraint, an `<enum>` expresses an individual allowed value, expressed using that field's `@value` flag.
+
+A Metaschema processor MAY use the text value of the `enum`'s XML element as documentation for a given allowed value enumeration. Below is an example.
+
+```xml
+<define-flag name="form-factor">
+  <formal>Computer Form Factor</formal-name>
+    <description>The type of computer in the example application's data
+      model.</description>
+    <constraint>
+      <allowed-values allow-other="yes">
+        <enum value="laptop">this text value documents the domain and
+          information model's meaning of a laptop</enum>
+        <enum value="desktop">this text value documents the domain and
+          information model's meaning of a desktop</enum>
+      </allowed-values>
+    </constraint> ...  
+</define-flag>
+```
 
 #### `allowed-values` Processing
 
 Metaschema processors MUST process `<allowed-values>` constraints.
 
-The constraint's `@target` is a Metapath expression that identifies the node values the constraint applies to.
+The constraint's `@target` is a [Metapath expression](/specification/syntax/metapath) that identifies the node values the constraint applies to.
 
-When evaluating the `@target` metapath expression, the Metapath focus MUST be the constraint's *evaluation focus*. Thus, the targets are determined in the context in where the constraint is declared.
+A `@target` is REQUIRED for allowed value constraints associated with a field and assembly. A `@target` MUST NOT be provided for an allowed value constraint associated with a flag, since such a constraint can only target the flag's value. In flag use cases the `@target` MUST be considered `.`, referring to the flag node.
+
+When evaluating the `@target` Metapath expression, the Metapath focus MUST be the constraint's *evaluation focus*. Thus, the targets are determined in the context in where the constraint is declared.
 
 The sequence of nodes that result from Metapath evaluation are the constraints *target node(s)*.
 
@@ -261,7 +308,7 @@ For each `<allowed-values>` in the *applicable set*, the `@allow-other` attribut
 
 The following subsections detail the processing requirements for the `@extension` and `@allow-other` attributes.
 
-##### `@extension`
+##### `@extensible`
 
 For each `<allowed-values>` constraints the *applicable set*, the `@extension` attribute MUST be one of the following values.
 
@@ -306,26 +353,27 @@ One of the following requirements MUST apply when processing a value's *targetin
 
     Any type-appropriate actual value MUST be allowed. A warning MAY be produced to indicate that the value doesn't match one of the enumerated values.
 
-A Metaschema processor MAY use the text value of the `enum`'s XML element as documentation for a given allowed value enumeration. Below is an example.
-
-```xml
-<define-flag name="form-factor">
-  <formal>Computer Form Factor</formal-name>
-    <description>The type of computer in the example application's data model.</description>
-    <constraint>
-      <allowed-values allow-other="yes">
-        <enum value="laptop">this text value documents the domain and information model's meaning of a laptop</enum>
-        <enum value="desktop">this text value documents the domain and information model's meaning of a desktop</enum>
-      </allowed-values>
-    </constraint> ...  
-</define-flag>
-```
-
 ### `expect` Constraints
 
 The `<expect>` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on the evaluation of a `@test` Metapath expression.
 
-The `@target` attribute of an `<expect>` constraint specifies the node(s) in a document instance whose value is restricted by the constraint.
+The syntax of `<expect>` consists of the following:
+
+| Data | Data Type | Use      | Default Value |
+|:--- |:--- |:--- |:--- |
+| [`@id`](#id) | [`token`](/specification/datatypes/#token) | optional | *(no default)* |
+| [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
+| [`@target`](#target) | special | *(varies)* | *(no default)* |
+| `@test` | special | required | *(no default)* |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 | *(no default)* |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 | *(no default)* |
+| [`<prop>`](#prop) | special | 0 to ∞ | *(no default)* |
+| `<message>` | special | 0 or 1 | *(no default)* |
+| [`<remarks>`](#remarks) | special | 0 or 1 | *(no default)* |
+
+The `@target` attribute of an `<expect>` constraint is a [Metapath expression](/specification/syntax/metapath) that specifies the node(s) in a document instance whose value is restricted by the constraint.
+
+A `@target` is REQUIRED for expect constraints associated with a field and assembly. A `@target` MUST NOT be provided for an expect constraint associated with a flag, since such a constraint can only target the flag's value. In flag use cases the `@target` MUST be considered `.`, referring to the flag node.
 
 The `@test` attribute of an `<expect>` constraint specifies the logical condition to be evaluated against each value node resulting from evaluating the `@target`. This expression MUST evaluate to [a Metaschema boolean value](/specification/datatypes#boolean) `true` or `false`.
 
@@ -333,7 +381,7 @@ When the `@test` expression evaluates to `true` for a target value node, then th
 
 When the `@test` expression evaluates to `false` for a target value node, then the target value node MUST be considered not valid and failing the constraint.
 
-A constraint may have an OPTIONAL [`@level`](#level) attribute and/or an OPTIONAL child [`<message>`](#message) element to indicate severity and documentation explaining how the target nodes are invalid.
+A constraint may have an OPTIONAL [`@level`](#level) attribute and/or an OPTIONAL child `<message>` element to indicate severity and documentation explaining how the target nodes are invalid.
 
 If defined, the `<message>` value MUST be a [Metaschema string value](/specification/datatypes#string). It MAY contain a Metapath expression templates that starts with `{`, contains a Metapath expression, and ends with `}`.  When evaluating a template Metapath expression, the context of the Metapath [evaluation focus](#constraint-processing) MUST be the failing value node.
 
@@ -341,7 +389,23 @@ If defined, the `<message>` value MUST be a [Metaschema string value](/specifica
 
 The `has-cardinality` constraint is a type of Metaschema constraint that defines the cardinality of assemblies, flags, and, fields, i.e. the required minimum count of occurrences, the maximum count of occurrences, or both for applicable document instances.
 
-The `@target` flag of an `<has-cardinality>` constraint defines the node(s) in a document instance to count. The constraint MUST define a [`@target`](#target) with a Metapath expression. The processor MUST only count the document instance node(s) resulting from its evaluation.
+The syntax of `<has-cardinality>` consists of the following:
+
+| Data | Data Type | Use      | Default Value |
+|:--- |:--- |:--- |:--- |
+| [`@id`](#id) | [`token`](/specification/datatypes/#token) | optional | *(no default)* |
+| [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
+| [`@target`](#target) | special | *(varies)* | *(no default)* |
+| `@min-occurs` | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | *(no default)* |
+| `@max-occurs` | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | *(no default)* |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 | *(no default)* |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 | *(no default)* |
+| [`<prop>`](#prop) | special | 0 to ∞ | *(no default)* |
+| [`<remarks>`](#remarks) | special | 0 or 1 | *(no default)* |
+
+The `@target` flag of an `<has-cardinality>` constraint is a [Metapath expression](/specification/syntax/metapath) that defines the node(s) in a document instance to count.
+
+The constraint MUST define a [`@target`](#target) with a Metapath expression. The processor MUST only count the document instance node(s) resulting from its evaluation.
 
 A constraint MUST define a value for either the `@min-occurs` or `@max-occurs` flag. It MAY optionally have both flags defined.
 
@@ -355,15 +419,37 @@ A constraint passes and document instance(s) valid if the count of results match
 
 The `<index>` constraint is a type of Metaschema constraint that defines an index of document instance nodes addressable by key.
 
+The syntax of `<index>` consists of the following:
+
+| Data | Data Type | Use      | Default Value |
+|:--- |:--- |:--- |:--- |
+| [`@id`](#id) | [`token`](/specification/datatypes/#token) | optional | *(no default)* |
+| [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
+| `@name` | [`token`](/specification/datatypes/#token) | required | *(no default)* |
+| [`@target`](#target) | special | required | *(no default)* |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 | *(no default)* |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 | *(no default)* |
+| [`<prop>`](#prop) | special | 0 to ∞ | *(no default)* |
+| `<key-field>` | special | 1 to ∞ | *(no default)* |
+| [`<remarks>`](#remarks) | special | 0 or 1 | *(no default)* |
+
+The syntax of `<key-field>` consists of the following:
+
+| Data | Data Type | Use      | Default Value |
+|:--- |:--- |:--- |:--- |
+| `@target` | special | required | *(no default)* |
+| `@pattern` | regex | optional | *(no default)* |
+| `<remarks>` | special | 0 or 1 | *(no default)* |
+
 The `@name` flag of an `<index>` constraint specifies the identity of the index. The constraint MUST define the name.
 
-The `@target` flag of an `<index>` constraint defines the node(s) in a document instance to index. The index MUST define a [`@target`](#target) with a Metapath expression. The processor MUST index only the node(s) resulting from evaluating the `@target`.
+The `@target` flag of an `<index>` constraint defines the node(s) in a document instance to index. The index MUST define a [`@target`](#target) with a [Metapath expression](/specification/syntax/metapath). The processor MUST index only the node(s) resulting from evaluating the `@target`.
 
 The `<key-field>` assembly of an `<index>` constraint defines the flag or field value that is the key for each entry in the index. A `<key-field>` assembly MUST define at least one [`@target`](#target) flag with a Metapath expression evaluated relative to [the evaluation focus](#constraint-processing) using each node that matches the constraint's `@target`.
 
-An `index` constraint MAY define more than one `<key-field>` assembly. The composite key for each entry in the index is the combination of values for the `@target` of every `<key-field/>`. The composite values of the key are the discriminator for the uniqueness of the index entry.
+An `<index>` constraint MAY define more than one `<key-field>` assembly. The composite key for each entry in the index is the combination of values for the `@target` of every `<key-field/>`. The composite values of the key are the discriminator for the uniqueness of the index entry.
 
-An `index` constraint requires that each member entry be unique based upon this composite key.
+An `<index>` constraint requires that each member entry be unique based upon this composite key.
 
 If the evaluation of the Metapath `@target` of the `<key-field/>` does not result in a value, its value for that key in the index is null.
 
@@ -371,15 +457,21 @@ If two entries have the same key computed from the `<key-field>` `@target`s when
 
 ### `index-has-key` Constraints
 
-The `index-has-key` constraint is a type of Metaschema constraint that cross-references values an existing `index` constraint` with a separate `@target` and `<key-field/>`.
-
-The `@name` flag of an `<index>` constraint MUST specify the name of a previously defined `index` constraint.
+The `<index-has-key>` constraint is a type of Metaschema constraint that checks if a value is a valid cross-reference to values in an existing `index` constraint`.
 
 The `index-has-key` constraint has the same flags and assemblies as a [`index`](#index-constraints) constraint.
+
+The `@target` flag of an `<index-has-key>` constraint defines the node(s) in a document instance to check as a cross-reference. The index MUST define a [`@target`](#target) with a [Metapath expression](/specification/syntax/metapath) to identify the nodes to check. The processor MUST only check the node(s) resulting from evaluating the `@target`.
+
+The similar to an `<index>` constraint, the `<key-field/>` assembly is used to compute the cross-reference's key.
+
+The `@name` flag of an `<index>` constraint MUST specify the name of a previously defined `index` constraint.
 
 ### `is-unique` Constraints
 
 The `<is-unique>` constraint is a type of Metaschema constraint that checks that a computed key, based on field and flag values, does not occur more than once. Unlike `<index>`, an explicit, named index is not created. Therefore, this constraint MUST NOT define a `@name` flag.
+
+The `index-has-key` constraint has the same flags and assemblies as a [`index`](#index-constraints) constraint, except it doesn't have a `@name`.
 
 The [`id`](#id) flag of an `<is-unique>` constraint specifies an identifier for the constraint.
 
@@ -395,9 +487,27 @@ When evaluating a given key relative to other computed keys for the same constra
 
 The `<matches>` constraint is a type of Metaschema constraint that restricts field or flag value(s) based on node(s) matching the target Metapath expression. Each one of these are discussed below.
 
-A match can be made by 2 different ways based on `@datatype` and/or based on `@regex`. 
+The syntax of `<matches>` consists of the following:
 
-The `@target` flag of an `matches` constraint specifies the node(s) in a document instance whose value matches the `@datatype` and/or the `@regex`. The `matches` constraint MUST define a [`target`](#target) with a Metapath expression. The processor MUST evaluate only the node(s) resulting from evaluating the `@target`. 
+| Data | Data Type | Use      | Default Value |
+|:--- |:--- |:--- |:--- |
+| [`@id`](#id) | [`token`](/specification/datatypes/#token) | optional | *(no default)* |
+| [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
+| `@datatype` | special | optional | *(no default)* |
+| `@regex` | special | optional | *(no default)* |
+| [`@target`](#target) | special | *(varies)* | *(no default)* |
+| [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 | *(no default)* |
+| [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 | *(no default)* |
+| [`<prop>`](#prop) | special | 0 to ∞ | *(no default)* |
+| [`<remarks>`](#remarks) | special | 0 or 1 | *(no default)* |
+
+A match can be made by 2 different ways based on `@datatype` and/or based on `@regex`.
+
+The `@target` flag of an `matches` constraint specifies the node(s) in a document instance whose value matches the `@datatype` and/or the `@regex`.
+
+A `@target` is REQUIRED for matches constraints associated with a field and assembly. A `@target` MUST NOT be provided for a matches constraint associated with a flag, since such a constraint can only target the flag's value. In flag use cases the `@target` MUST be considered `.`, referring to the flag node.
+
+The `matches` constraint MUST define a [`target`](#target) with a Metapath expression. The processor MUST evaluate only the node(s) resulting from evaluating the `@target`.
 
 If a `@datatype` is provided, each resulting node's value MUST match the syntax of the given `@datatype`.
 

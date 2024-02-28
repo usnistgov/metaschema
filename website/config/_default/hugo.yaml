@@ -21,6 +21,8 @@ module:
   mounts:
   - source: static
     target: static
+  - source: static/img
+    target: assets/img
   - source: ../examples
     target: static/examples
   imports:

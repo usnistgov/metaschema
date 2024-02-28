@@ -6,7 +6,7 @@ weight: 30
 aliases:
 - /specification/syntax/
 custom_css:
-- /css/element-map.css
+- /metaschema/css/element-map.css
 ---
 
 # Metaschema Syntax
