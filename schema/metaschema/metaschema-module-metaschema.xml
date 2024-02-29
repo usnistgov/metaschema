@@ -793,7 +793,7 @@
         </constraint>
     </define-field>
     
-    <define-flag name="alt-name-index" as-type="nonNegativeInteger">
+    <define-flag name="alt-name-index" as-type="non-negative-integer">
         <formal-name>Numeric Index</formal-name>
         <description>Used for binary formats instead of the textual name.</description>
         <use-name>index</use-name>
