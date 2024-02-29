@@ -791,14 +791,6 @@
       <xs:enumeration value="uri"/>
       <xs:enumeration value="uri-reference"/>
       <xs:enumeration value="uuid"/>
-
-      <!-- deprecated names to remove -->
-      <xs:enumeration value="base64Binary"/>
-      <xs:enumeration value="dateTime"/>
-      <xs:enumeration value="dateTime-with-timezone"/>
-      <xs:enumeration value="email"/>
-      <xs:enumeration value="nonNegativeInteger"/>
-      <xs:enumeration value="positiveInteger"/>
     </xs:restriction>
   </xs:simpleType>
 
