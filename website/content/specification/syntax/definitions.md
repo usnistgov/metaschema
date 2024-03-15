@@ -169,12 +169,15 @@ field:
 
 ### `<remarks>`
 
-The optional `<remarks>` element provides a place to add notes related to the use of the definition. Remarks can be used to clarify the semantics of the definition in specific conditions, or to better describe how the definition may be more fully utilized within a model. 
+The optional `<remarks>` element provides a place to add notes related to the use of the definition. Remarks can be used to clarify the semantics of the definition in specific conditions, or to better describe how the definition may be more fully utilized within a model.
 
 The `<remarks>` element is optional and may occur multiple times.
+
 It supports an optional `@class` attribute that can be used to identify format specific remarks, to be handled appropriately (or ignored when not useful) in a downstream application. Valid values for `@class` are:
+
 - `XML`: The remark applies to the XML format binding.
 - `JSON`: The remark applies to the JSON or YAML format bindings.
+
 ### `<example>`
 
 The optional `<example>` element is used to provide inline examples, which illustrate the use of the information element being defined. Examples are provided in XML, which can then be automatically converted into other formats.
