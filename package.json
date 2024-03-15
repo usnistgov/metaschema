@@ -6,7 +6,7 @@
         "ajv-cli": "^5.0.x",
         "ajv-formats": "^2.1.x",
         "autoprefixer": "^10.4.18",
-        "markdown-link-check": "^3.11.2",
+        "markdown-link-check": "^3.12.1",
         "postcss": "^8.4.35",
         "postcss-cli": "^11.0.0",
         "sass": "^1.72.0",
