@@ -17,11 +17,11 @@
             <formal-name>Integer</formal-name>
             <description>Per W3C</description>
          </define-field>
-         <define-field name="posInt" as-type="positiveInteger" min-occurs="1" max-occurs="1">
+         <define-field name="posInt" as-type="positive-integer" min-occurs="1" max-occurs="1">
             <formal-name>Positive Integer</formal-name>
             <description>1 or more</description>
          </define-field>
-         <define-field name="nonNegInt" as-type="nonNegativeInteger" min-occurs="1" max-occurs="1">
+         <define-field name="nonNegInt" as-type="non-negative-integer" min-occurs="1" max-occurs="1">
             <formal-name>Non-negative Integer</formal-name>
             <description>zero or more</description>
          </define-field>
