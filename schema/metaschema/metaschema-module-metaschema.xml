@@ -837,12 +837,10 @@
     <define-assembly name="assembly-constraints">
         <use-name>constraint</use-name>
         <model>
-            <assembly ref="constraint-let-expression" max-occurs="unbounded">
-                <group-as name="lets" in-json="ARRAY"/>
-            </assembly>
             <choice-group min-occurs="1" max-occurs="unbounded">
                 <group-as name="rules" in-json="ARRAY"/>
                 <discriminator>object-type</discriminator>
+                <assembly ref="constraint-let-expression"/>           
                 <assembly ref="targeted-allowed-values-constraint"/>
                 <assembly ref="targeted-expect-constraint"/>
                 <assembly ref="targeted-index-has-key-constraint"/>
@@ -857,12 +855,10 @@
     <define-assembly name="field-constraints">
         <use-name>constraint</use-name>
         <model>
-            <assembly ref="constraint-let-expression" max-occurs="unbounded">
-                <group-as name="lets" in-json="ARRAY"/>
-            </assembly>
             <choice-group min-occurs="1" max-occurs="unbounded">
                 <group-as name="rules" in-json="ARRAY"/>
                 <discriminator>object-type</discriminator>
+                <assembly ref="constraint-let-expression"/>
                 <assembly ref="targeted-allowed-values-constraint"/>
                 <assembly ref="targeted-expect-constraint"/>
                 <assembly ref="targeted-index-has-key-constraint"/>
@@ -874,12 +870,10 @@
     <define-assembly name="flag-constraints">
         <use-name>constraint</use-name>
         <model>
-            <assembly ref="constraint-let-expression" max-occurs="unbounded">
-                <group-as name="lets" in-json="ARRAY"/>
-            </assembly>
             <choice-group min-occurs="1" max-occurs="unbounded">
                 <group-as name="rules" in-json="ARRAY"/>
                 <discriminator>object-type</discriminator>
+                <assembly ref="constraint-let-expression"/>
                 <assembly ref="flag-allowed-values"/>
                 <assembly ref="flag-expect"/>
                 <assembly ref="flag-index-has-key"/>
