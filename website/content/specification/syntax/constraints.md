@@ -202,6 +202,8 @@ A `let` statement has a REQUIRED `@expression` flag, which defines an [Metapath 
 
 During constraint evaluation, each `let` statement MUST be evaluated in encountered order. If a previous variable is bound with the same name in the evaluation context, the new value MUST bound in a sub-context to avoid side effects. This sub-context MUST be made available to any constraints following the `let` statement declaration, and to any constraints defined on child nodes of the current context.
 
+A `let` statement MAY be defined in a constraint assembly by itself, before, or after other constraint types. One or more `let` statements SHOULD be declared before any other constraint types as a best practice, but it is not required.
+
 During evaluation, when a variable is bound for a `let` statement, the variables value MUST be set to the result of evaluating the `@expression` using the current node as the Metapath evaluation focus.
 
 For example:
