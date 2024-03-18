@@ -43,8 +43,7 @@
     },
     "DecimalDatatype": {
       "description": "A real number expressed using a whole and optional fractional part separated by a period.",
-      "type": "number",
-      "pattern": "^(\\+|-)?([0-9]+(\\.[0-9]*)?|\\.[0-9]+)$"
+      "type": "number"
     },
     "EmailAddressDatatype": {
       "description": "An email address string formatted according to RFC 6531.",
