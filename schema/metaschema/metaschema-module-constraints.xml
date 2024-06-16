@@ -5,7 +5,7 @@
     <context>
         <metapath target="/METASCHEMA"/>
         <constraints>
-            <let var="all-imports" expression="recurse-depth(.,'doc(resolve-uri(import/@href))/METASCHEMA'"/>
+            <let var="all-imports" expression="recurse-depth(.,'doc(resolve-uri(import/@href))/METASCHEMA')"/>
             <index id="metaschema-short-name-unique" target="(.|$all-imports)" name="metaschema-metadata-short-name-index">
                 <formal-name>Unique Module Short Names</formal-name>
                 <description>Ensures that the current and all imported modules have a unique short name.</description>
@@ -35,7 +35,7 @@
                     <description>Ensure each import has a resolvable @href.</description>
                     <message>Unable to access a Metaschema module at '{{ resolve-uri(@href) }}'.</message>
                 </expect>
-                <expect id="metaschema-import-href-is-module" target="." test="exists(doc(resolve-uri(import/@href))/METASCHEMA)">
+                <expect id="metaschema-import-href-is-module" target="." test="doc(resolve-uri(import/@href))/METASCHEMA ! exists(.)">
                     <formal-name>Import is Resolvable</formal-name>
                     <description>Ensure each import is a Metaschema module.</description>
                     <message>Unable the resource at '{{ resolve-uri(@href) }}' is not a Metaschema module.</message>
