@@ -11,12 +11,16 @@
                 <description>Ensures that the current and all imported modules have a unique short name.</description>
                 <key-field target="@short-name"/>
             </index>
-            <expect id="module-top-level-version-required" target=".[not(@abstract) or @abstract='yes']" test="@version">
-                <formal-name>Require Version for Top-Level Modules</formal-name>
-                <description>A top-level module, a module that is not marked as @abstract='yes', must have a version specified.</description>
-                <message>Unless marked as @abstract='yes', a Metaschema module (or an imported module) should have a version.</message>
+            <expect id="module-top-level-version-required" level="WARNING"
+              target=".[not(@abstract) or @abstract='no']"
+              test="schema-version">
+                <formal-name>Require Schema Version for Top-Level Modules</formal-name>
+                <description>A top-level module, a module that is not marked as @abstract='yes', must have a schema version specified.</description>
+                <message>Unless marked as @abstract='yes', a Metaschema module (or an imported module) should have a schema version.</message>
             </expect>
-            <expect id="module-top-level-root-required" target=".[not(@abstract) or @abstract='yes']" test="define-assembly/root-name">
+            <expect id="module-top-level-root-required" level="WARNING"
+              target=".[not(@abstract) or @abstract='no']"
+              test="$all-imports/define-assembly/root-name">
                 <formal-name>Require Root Assembly for Top-Level Modules</formal-name>
                 <description>A top-level module, a module that is not marked as @abstract='yes', must have at least one assembly with a root-name.</description>
                 <message>Unless marked as @abstract='yes', a Metaschema module (or an imported module) should have at least one assembly with a root-name.</message>
@@ -32,22 +36,32 @@
                 <description>Ensures that all declared namespace entries have a unique prefix.</description>
                 <key-field target="@prefix"/>
             </is-unique>
+            <expect id="module-import-href-available" target="import" test="doc-available(resolve-uri(@href))">
+                <formal-name>Import is Resolvable</formal-name>
+                <description>Ensure each import has a resolvable @href.</description>
+                <message>Unable to access a Metaschema module at '{{ resolve-uri(@href) }}'.</message>
+            </expect>
+            <expect id="module-import-href-is-module" target="import" test="doc(resolve-uri(@href))/METASCHEMA ! exists(.)">
+                <formal-name>Import is a Metaschema module</formal-name>
+                <description>Ensure each import is a Metaschema module.</description>
+                <message>Unable the resource at '{{ resolve-uri(@href) }}' is not a Metaschema module.</message>
+            </expect>
         </constraints>
-        <context>
-            <metapath target="import"/>
-            <constraints>
-                <expect id="module-import-href-available" target="." test="document-available(resolve-uri(import/@href))">
-                    <formal-name>Import is Resolvable</formal-name>
-                    <description>Ensure each import has a resolvable @href.</description>
-                    <message>Unable to access a Metaschema module at '{{ resolve-uri(@href) }}'.</message>
-                </expect>
-                <expect id="module-import-href-is-module" target="." test="doc(resolve-uri(import/@href))/METASCHEMA ! exists(.)">
-                    <formal-name>Import is Resolvable</formal-name>
-                    <description>Ensure each import is a Metaschema module.</description>
-                    <message>Unable the resource at '{{ resolve-uri(@href) }}' is not a Metaschema module.</message>
-                </expect>
-            </constraints>
-        </context>
+    </context>
+    <context>
+        <metapath target="/METASCHEMA"/>
+        <metapath target="/metaschema-meta-constraints"/>
+        <metapath target="/metaschema-module-constraints"/>
+        <constraints>
+            <let var="deprecated-type-map" expression="map { 'base64Binary':'base64','dateTime':'date-time','dateTime-with-timezone':'date-time-with-timezone','email':'email-address','nonNegativeInteger':'non-negative-integer','positiveInteger':'positive-integer' }"/>
+            <expect id="metaschema-deprecated-types"
+              target=".//matches/@datatype|.//(define-field|define-flag)/@as-type"
+              test="not(.=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))">
+                <formal-name>Avoid Deprecated Data Type Use</formal-name>
+                <description>Ensure that the data type specified is not one of the legacy Metaschema data types which have been deprecated (i.e. base64Binary, dateTime, dateTime-with-timezone, email, nonNegativeInteger, positiveInteger).</description>
+                <message>Use of the type '{ . }' is deprecated. Use '{ $deprecated-type-map(.)}' instead.</message>
+            </expect>
+        </constraints>
     </context>
     <context>
         <metapath target="/metaschema-meta-constraints"/>

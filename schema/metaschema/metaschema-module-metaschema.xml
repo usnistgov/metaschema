@@ -181,9 +181,6 @@
                 </define-assembly>
             </choice-group>
         </model>
-        <constraint>
-            <let var="keywords" expression="'ancestor', 'ancestor-or-self', 'and', 'as', 'attribute', 'cast', 'castable', 'child', 'comment', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'else', 'empty-sequence', 'eq', 'every', 'except', 'following', 'following-sibling', 'for', 'function', 'ge', 'gt', 'idiv', 'if', 'in', 'instance', 'intersect', 'is', 'item', 'le', 'let', 'lt', 'mod', 'namespace', 'namespace-node', 'ne', 'node', 'of', 'or', 'parent', 'preceding', 'preceding-sibling', 'processing-instruction', 'return', 'satisfies', 'schema-attribute', 'schema-element', 'self', 'some', 'text', 'then', 'to', 'treat', 'union'"/>
-        </constraint>
     </define-assembly>
     
     <define-assembly name="metapath-namespace">
@@ -642,11 +639,6 @@
     <define-flag name="definition-name" as-type="token">
         <formal-name>Definition Name</formal-name>
         <use-name>name</use-name>
-        <constraint>
-            <expect level="WARNING" test="not(.=$keywords)">
-                <message>Names cannot be non-delimiting terminal symbols in Metapath syntax.</message>
-            </expect>
-        </constraint>
     </define-flag>
     
     <define-flag name="definition-reference" as-type="token">
@@ -702,6 +694,12 @@
                 <enum value="uri"/>
                 <enum value="uri-reference"/>
                 <enum value="uuid"/>
+                <enum value="base64Binary" deprecated="1.0.0"/>
+                <enum value="dateTime" deprecated="1.0.0"/>
+                <enum value="dateTime-with-timezone" deprecated="1.0.0"/>
+                <enum value="email" deprecated="1.0.0"/>
+                <enum value="nonNegativeInteger" deprecated="1.0.0"/>
+                <enum value="positiveInteger" deprecated="1.0.0"/>
             </allowed-values>
         </constraint>
     </define-flag>
@@ -731,6 +729,13 @@
                 <enum value="uri"/>
                 <enum value="uri-reference"/>
                 <enum value="uuid"/>
+
+                <enum value="base64Binary" deprecated="1.0.0"/>
+                <enum value="dateTime" deprecated="1.0.0"/>
+                <enum value="dateTime-with-timezone" deprecated="1.0.0"/>
+                <enum value="email" deprecated="1.0.0"/>
+                <enum value="nonNegativeInteger" deprecated="1.0.0"/>
+                <enum value="positiveInteger" deprecated="1.0.0"/>
             </allowed-values>
         </constraint>
     </define-flag>
@@ -804,11 +809,6 @@
         <description>Allows the name of the definition to be overridden.</description>
         <json-value-key>name</json-value-key>
         <flag ref="alt-name-index"/>
-        <constraint>
-            <expect level="WARNING" target="." test="not(.=$keywords)">
-                <message>Names cannot be non-delimiting terminal symbols in Metapath syntax.</message>
-            </expect>
-        </constraint>
     </define-field>
     
     <define-flag name="alt-name-index" as-type="non-negative-integer">
