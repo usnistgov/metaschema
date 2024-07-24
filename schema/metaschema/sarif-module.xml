@@ -212,7 +212,7 @@
             </assembly>
         </model>
         <constraint>
-            <expect target="." test="@ruleIndex &gt;= -1">
+            <expect target="." test="@ruleIndex >= -1">
                 <message>The value '{ . }' is not greater than or equal to '-1'.</message>
             </expect>
             <!-- TODO: unique relatedLocations -->
@@ -264,7 +264,7 @@
             </define-field>
         </model>
         <constraint>
-            <expect target="." test="@id|text">
+            <expect target="." test="exists(@id|text)">
                 <message>At least one id or text must be provided.</message>
             </expect>
         </constraint>
@@ -281,7 +281,7 @@
 				<formal-name>Index</formal-name>
 				<description>The index within the run artifacts array of the artifact object associated with the artifact location.</description>
     		    <constraint>
-                    <expect target="." test="@id &gt;= -1">
+                    <expect target="." test="@id >= -1">
                         <message>The index '{ . }' is not greater than or equal to '-1'.</message>
                     </expect>
                 </constraint>
@@ -315,7 +315,7 @@
             </assembly>
         </model>
         <constraint>
-            <expect target="." test="@id &gt;= -1">
+            <expect target="." test="@id >= -1">
                 <message>The id '{ . }' is not greater than or equal to '-1'.</message>
             </expect>
             <!-- TODO: unique relatedLocations -->
@@ -344,7 +344,7 @@
             </assembly>
         </model>
         <constraint>
-            <expect target="." test="address|artifactLocation">
+            <expect target="." test="exists(address|artifactLocation)">
                 <message>At least one address or artifactLocation must be provided.</message>
             </expect>
         </constraint>
@@ -361,7 +361,7 @@
 				<formal-name>Index</formal-name>
 				<description>The index within the logical locations array.</description>
     		    <constraint>
-                    <expect target="." test="@id &gt;= -1">
+                    <expect target="." test="@id >= -1">
                         <message>The index '{ . }' is not greater than or equal to '-1'.</message>
                     </expect>
                 </constraint>
@@ -378,7 +378,7 @@
             	<formal-name>Parent Index</formal-name>
             	<description>Identifies the index of the immediate parent of the construct in which the result was detected. For example, this property might point to a logical location that represents the namespace that holds a type.</description>
             	<constraint>
-                    <expect target="." test="@id &gt;= -1">
+                    <expect target="." test="@id >= -1">
                         <message>The index '{ . }' is not greater than or equal to '-1'.</message>
                     </expect>
                 </constraint>
@@ -417,7 +417,7 @@
                 <formal-name>Character Offset</formal-name>
                 <description>The zero-based offset from the beginning of the artifact of the first character in the region.</description>
                 <constraint>
-                    <expect target="." test="@id &gt;= -1">
+                    <expect target="." test="@id >= -1">
                         <message>The offset '{ . }' is not greater than or equal to '-1'.</message>
                     </expect>
                 </constraint>
@@ -432,7 +432,7 @@
                 <formal-name>Byte Offset</formal-name>
                 <description>The zero-based offset from the beginning of the artifact of the first byte in the region</description>
                 <constraint>
-                    <expect target="." test="@id &gt;= -1">
+                    <expect target="." test="@id >= -1">
                         <message>The offset '{ . }' is not greater than or equal to '-1'.</message>
                     </expect>
                 </constraint>
@@ -449,7 +449,7 @@
             </assembly>
         </model>
         <constraint>
-            <expect target="." test="startLine|charOffset|byteOffset">
+            <expect target="." test="exists(startLine|charOffset|byteOffset)">
                 <message>At least a startLine, charOffset, or byteOffset must be provided.</message>
             </expect>
         </constraint>

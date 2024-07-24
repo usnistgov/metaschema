@@ -1325,6 +1325,14 @@
         <description>Defines constraint rules to be applied to an existing set of Metaschema module-based models.</description>
         <root-name>metaschema-meta-constraints</root-name>
         <model>
+            <define-assembly name="import" max-occurs="unbounded">
+                <description>Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.</description>
+                <group-as name="imports" in-json="ARRAY"/>
+                <define-flag name="href" as-type="uri-reference" required="yes">
+                    <description>A relative or absolute URI for retrieving an out-of-line Metaschema constraint definition.</description>
+                </define-flag>
+            </define-assembly>
+
             <assembly ref="metapath-namespace" max-occurs="unbounded">
                 <group-as name="namespace-bindings" />
             </assembly>
