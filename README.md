@@ -41,7 +41,7 @@ Metaschema achieves this with:
 
 ## Contact us
 
-Maintainer: [David Waltermire](https://www.nist.gov/people/david-waltermire) - [@david-waltermire](https://github.com/david-waltermire), [NIST](https://www.nist.gov/) [Information Technology Labratory](https://www.nist.gov/itl), [Computer Security Division](https://www.nist.gov/itl/csd), [Security Components and Mechanisms Group](https://www.nist.gov/itl/csd/security-components-and-mechanisms)
+Maintainer: ITL OSCAL Team, [NIST](https://www.nist.gov/) [Information Technology Labratory](https://www.nist.gov/itl), [Computer Security Division](https://www.nist.gov/itl/csd), [Secure Systems and Applications Group](https://www.nist.gov/itl/csd/secure-systems-and-applications)
 
 Email us: [metaschema@nist.gov](mailto:metaschema@nist.gov)
 
