@@ -2,7 +2,7 @@
     "name": "metaschema-website",
     "version": "1.0.0",
     "devDependencies": {
-        "@fullhuman/postcss-purgecss": "^5.0.0",
+        "@fullhuman/postcss-purgecss": "^6.0.0",
         "ajv-cli": "^5.0.x",
         "ajv-formats": "^2.1.x",
         "autoprefixer": "^10.4.20",
