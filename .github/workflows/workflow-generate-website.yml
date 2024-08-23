@@ -70,7 +70,7 @@ jobs:
         . .github/workflows/config/.env
         echo "HUGO_VERSION=${HUGO_VERSION}" >> "${GITHUB_OUTPUT}"
     - name: Setup Hugo
-      uses: peaceiris/actions-hugo@v2
+      uses: peaceiris/actions-hugo@v3
       with:
         hugo-version: '${{ steps.hugo-version.outputs.HUGO_VERSION }}'
         extended: true
