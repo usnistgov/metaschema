@@ -45,6 +45,8 @@
 
         <xs:element name="import" type="MetaschemaImportType" minOccurs="0" maxOccurs="unbounded"/>
 
+		<xs:element name="namespace-binding" type="NamespaceBindingType" minOccurs="0" maxOccurs="unbounded"/> 
+
         <xs:choice minOccurs="0" maxOccurs="unbounded">
           <xs:element name="define-assembly" type="GlobalAssemblyDefinitionType"/>
           <xs:element name="define-field" type="GlobalFieldDefinitionType"/>
@@ -78,6 +80,22 @@
         <xs:documentation>A relative or absolute URI for retrieving an out-of-line Metaschema definition.</xs:documentation>
       </xs:annotation>
     </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="NamespaceBindingType">
+  	<xs:annotation>
+      <xs:documentation>Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.</xs:documentation>
+  	</xs:annotation>
+	<xs:attribute name="prefix" type="TokenDatatype" use="required">
+      <xs:annotation>
+        <xs:documentation>The prefix that is bound to the namespace.</xs:documentation>
+      </xs:annotation>
+	</xs:attribute>
+	<xs:attribute name="uri" type="URIDatatype" use="required">
+      <xs:annotation>
+        <xs:documentation>The namespace URI to bind to the prefix.</xs:documentation>
+      </xs:annotation>
+	</xs:attribute>
   </xs:complexType>
 
   <xs:group name="DefinitionMetadataGroup">
@@ -791,6 +809,14 @@
       <xs:enumeration value="uri"/>
       <xs:enumeration value="uri-reference"/>
       <xs:enumeration value="uuid"/>
+
+      <!-- deprecated names to remove -->
+      <xs:enumeration value="base64Binary"/>
+      <xs:enumeration value="dateTime"/>
+      <xs:enumeration value="dateTime-with-timezone"/>
+      <xs:enumeration value="email"/>
+      <xs:enumeration value="nonNegativeInteger"/>
+      <xs:enumeration value="positiveInteger"/>
     </xs:restriction>
   </xs:simpleType>
 
@@ -1303,6 +1329,7 @@
             </xs:attribute>
           </xs:complexType>
         </xs:element>
+        <xs:element name="namespace-binding" type="NamespaceBindingType" minOccurs="0" maxOccurs="unbounded"/> 
         <xs:element name="scope" maxOccurs="unbounded">
           <xs:complexType>
             <xs:choice maxOccurs="unbounded">

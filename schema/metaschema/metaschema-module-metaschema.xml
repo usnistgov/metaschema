@@ -52,6 +52,9 @@
                     <description>A relative or absolute URI for retrieving an out-of-line Metaschema definition.</description>
                 </define-flag>
             </define-assembly>
+            <assembly ref="metapath-namespace" max-occurs="unbounded">
+                <group-as name="namespace-bindings" />
+            </assembly>
             <choice-group max-occurs="unbounded">
                 <group-as name="definitions" in-json="ARRAY"/>
                 <discriminator>object-type</discriminator>
@@ -178,11 +181,23 @@
                 </define-assembly>
             </choice-group>
         </model>
-        <constraint>
-            <let var="keywords" expression="'ancestor', 'ancestor-or-self', 'and', 'as', 'attribute', 'cast', 'castable', 'child', 'comment', 'descendant', 'descendant-or-self', 'div', 'document-node', 'element', 'else', 'empty-sequence', 'eq', 'every', 'except', 'following', 'following-sibling', 'for', 'function', 'ge', 'gt', 'idiv', 'if', 'in', 'instance', 'intersect', 'is', 'item', 'le', 'let', 'lt', 'mod', 'namespace', 'namespace-node', 'ne', 'node', 'of', 'or', 'parent', 'preceding', 'preceding-sibling', 'processing-instruction', 'return', 'satisfies', 'schema-attribute', 'schema-element', 'self', 'some', 'text', 'then', 'to', 'treat', 'union'"/>
-        </constraint>
     </define-assembly>
     
+    <define-assembly name="metapath-namespace">
+        <formal-name>Metapath Namespace Declaration</formal-name>
+        <description>Assigns a Metapath namespace to a prefix for use in a Metapath expression in a lexical qualified name.</description>
+        <use-name>namespace-binding</use-name>
+        <define-flag name="uri" as-type="uri" required="yes">
+            <formal-name>Metapath Namespace URI</formal-name>
+            <description>The namespace URI to bind to the prefix.</description>
+        </define-flag>
+        <define-flag name="prefix" as-type="token" required="yes">
+            <formal-name>Metapath Namespace Prefix</formal-name>
+            <description>The prefix that is bound to the namespace.</description>
+        </define-flag>
+    </define-assembly>
+
+
     <define-assembly name="inline-define-assembly">
         <formal-name>Inline Assembly Definition</formal-name>
         <use-name>define-assembly</use-name>
@@ -624,11 +639,6 @@
     <define-flag name="definition-name" as-type="token">
         <formal-name>Definition Name</formal-name>
         <use-name>name</use-name>
-        <constraint>
-            <expect level="WARNING" test="not(.=$keywords)">
-                <message>Names cannot be non-delimiting terminal symbols in Metapath syntax.</message>
-            </expect>
-        </constraint>
     </define-flag>
     
     <define-flag name="definition-reference" as-type="token">
@@ -684,6 +694,12 @@
                 <enum value="uri"/>
                 <enum value="uri-reference"/>
                 <enum value="uuid"/>
+                <enum value="base64Binary" deprecated="1.0.0"/>
+                <enum value="dateTime" deprecated="1.0.0"/>
+                <enum value="dateTime-with-timezone" deprecated="1.0.0"/>
+                <enum value="email" deprecated="1.0.0"/>
+                <enum value="nonNegativeInteger" deprecated="1.0.0"/>
+                <enum value="positiveInteger" deprecated="1.0.0"/>
             </allowed-values>
         </constraint>
     </define-flag>
@@ -713,6 +729,13 @@
                 <enum value="uri"/>
                 <enum value="uri-reference"/>
                 <enum value="uuid"/>
+
+                <enum value="base64Binary" deprecated="1.0.0"/>
+                <enum value="dateTime" deprecated="1.0.0"/>
+                <enum value="dateTime-with-timezone" deprecated="1.0.0"/>
+                <enum value="email" deprecated="1.0.0"/>
+                <enum value="nonNegativeInteger" deprecated="1.0.0"/>
+                <enum value="positiveInteger" deprecated="1.0.0"/>
             </allowed-values>
         </constraint>
     </define-flag>
@@ -786,11 +809,6 @@
         <description>Allows the name of the definition to be overridden.</description>
         <json-value-key>name</json-value-key>
         <flag ref="alt-name-index"/>
-        <constraint>
-            <expect level="WARNING" target="." test="not(.=$keywords)">
-                <message>Names cannot be non-delimiting terminal symbols in Metapath syntax.</message>
-            </expect>
-        </constraint>
     </define-field>
     
     <define-flag name="alt-name-index" as-type="non-negative-integer">
@@ -1238,6 +1256,11 @@
                     <description>A relative or absolute URI for retrieving an out-of-line Metaschema constraint definition.</description>
                 </define-flag>
             </define-assembly>
+            
+            <assembly ref="metapath-namespace" max-occurs="unbounded">
+                <group-as name="namespace-bindings" />
+            </assembly>
+            
             <define-assembly name="scope" min-occurs="1" max-occurs="unbounded">
                 <group-as name="scopes" in-json="ARRAY"/>
                 <define-flag name="metaschema-namespace" as-type="uri" required="yes"/>
@@ -1302,6 +1325,18 @@
         <description>Defines constraint rules to be applied to an existing set of Metaschema module-based models.</description>
         <root-name>metaschema-meta-constraints</root-name>
         <model>
+            <define-assembly name="import" max-occurs="unbounded">
+                <description>Declares a set of Metaschema constraints from an out-of-line resource to import, supporting composition of constraint sets.</description>
+                <group-as name="imports" in-json="ARRAY"/>
+                <define-flag name="href" as-type="uri-reference" required="yes">
+                    <description>A relative or absolute URI for retrieving an out-of-line Metaschema constraint definition.</description>
+                </define-flag>
+            </define-assembly>
+
+            <assembly ref="metapath-namespace" max-occurs="unbounded">
+                <group-as name="namespace-bindings" />
+            </assembly>
+
             <define-assembly name="definition-context">
                 <define-flag name="name" as-type="token" required="yes"/>
                 <define-flag name="namespace" as-type="uri" required="yes"/>
@@ -1313,7 +1348,8 @@
                 </model>
             </define-assembly>
             <assembly ref="metapath-context" min-occurs="1" max-occurs="unbounded">
-                <group-as name="metapath-contexts" in-json="ARRAY"/>
+		    	<use-name>context</use-name>
+                <group-as name="contexts" in-json="ARRAY"/>
             </assembly>
         </model>            
     </define-assembly>
@@ -1334,7 +1370,8 @@
                 <use-name>constraints</use-name>
             </assembly>
             <assembly ref="metapath-context" max-occurs="unbounded">
-                <group-as name="metapath-contexts" in-json="ARRAY"/>
+            	<use-name>context</use-name>
+                <group-as name="contexts" in-json="ARRAY"/>
             </assembly>
             <field ref="remarks"/>
         </model>

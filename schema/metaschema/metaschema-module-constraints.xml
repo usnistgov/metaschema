@@ -3,6 +3,80 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../xml/metaschema-meta-constraints.xsd">
     <context>
+        <metapath target="/METASCHEMA"/>
+        <constraints>
+            <let var="all-imports" expression="recurse-depth('for $import in ./import return doc(resolve-uri($import/@href))/METASCHEMA')"/>
+            <index id="module-short-name-unique" target="(.|$all-imports)" name="metaschema-metadata-short-name-index">
+                <formal-name>Index Module Short Names</formal-name>
+                <description>Ensures that the current and all imported modules have a unique short name.</description>
+                <key-field target="@short-name"/>
+            </index>
+            <expect id="module-top-level-version-required" level="WARNING"
+              target=".[not(@abstract) or @abstract='no']"
+              test="schema-version">
+                <formal-name>Require Schema Version for Top-Level Modules</formal-name>
+                <description>A top-level module, a module that is not marked as @abstract='yes', must have a schema version specified.</description>
+                <message>Unless marked as @abstract='yes', a Metaschema module (or an imported module) should have a schema version.</message>
+            </expect>
+            <expect id="module-top-level-root-required" level="WARNING"
+              target=".[not(@abstract) or @abstract='no']"
+              test="exists($all-imports/define-assembly/root-name)">
+                <formal-name>Require Root Assembly for Top-Level Modules</formal-name>
+                <description>A top-level module, a module that is not marked as @abstract='yes', must have at least one assembly with a root-name.</description>
+                <message>Unless marked as @abstract='yes', a Metaschema module (or an imported module) should have at least one assembly with a root-name.</message>
+            </expect>
+            <is-unique id="module-namespace-unique-entry" target="namespace-binding">
+                <formal-name>Require Unique Namespace Entries</formal-name>
+                <description>Ensures that all declared namespace entries are unique.</description>
+                <key-field target="@prefix"/>
+                <key-field target="@uri"/>
+            </is-unique>
+            <is-unique id="module-namespace-unique-prefix" target="namespace-binding">
+                <formal-name>Require Unique Namespace Entry Prefixes</formal-name>
+                <description>Ensures that all declared namespace entries have a unique prefix.</description>
+                <key-field target="@prefix"/>
+            </is-unique>
+            <expect id="module-import-href-available" target="import" test="doc-available(resolve-uri(@href))">
+                <formal-name>Import is Resolvable</formal-name>
+                <description>Ensure each import has a resolvable @href.</description>
+                <message>Unable to access a Metaschema module at '{{ resolve-uri(@href) }}'.</message>
+            </expect>
+            <expect id="module-import-href-is-module" target="import" test="doc(resolve-uri(@href))/METASCHEMA ! exists(.)">
+                <formal-name>Import is a Metaschema module</formal-name>
+                <description>Ensure each import is a Metaschema module.</description>
+                <message>Unable the resource at '{{ resolve-uri(@href) }}' is not a Metaschema module.</message>
+            </expect>
+        </constraints>
+    </context>
+    <context>
+        <metapath target="/METASCHEMA"/>
         <metapath target="/metaschema-meta-constraints"/>
+        <metapath target="/metaschema-module-constraints"/>
+        <constraints>
+            <let var="deprecated-type-map" expression="map { 'base64Binary':'base64','dateTime':'date-time','dateTime-with-timezone':'date-time-with-timezone','email':'email-address','nonNegativeInteger':'non-negative-integer','positiveInteger':'positive-integer' }"/>
+            <expect id="metaschema-deprecated-types" level="WARNING"
+              target=".//matches/@datatype|.//(define-field|define-flag)/@as-type"
+              test="not(.=('base64Binary','dateTime','dateTime-with-timezone','email','nonNegativeInteger','positiveInteger'))">
+                <formal-name>Avoid Deprecated Data Type Use</formal-name>
+                <description>Ensure that the data type specified is not one of the legacy Metaschema data types which have been deprecated (i.e. base64Binary, dateTime, dateTime-with-timezone, email, nonNegativeInteger, positiveInteger).</description>
+                <message>Use of the type '{ . }' is deprecated. Use '{ $deprecated-type-map(.)}' instead.</message>
+            </expect>
+        </constraints>
+    </context>
+    <context>
+        <metapath target="/metaschema-meta-constraints"/>
+        <constraints>
+            <is-unique id="meta-constraints-namespace-unique-entry" target="namespace-binding">
+                <formal-name>Require Unique Namespace Entries</formal-name>
+                <description>Ensures that all declared namespace entries are unique.</description>
+                <key-field target="@prefix"/>
+                <key-field target="@uri"/>
+            </is-unique>
+            <is-unique id="meta-constraints-namespace-unique-prefix" target="namespace-binding">
+                <formal-name>Require Unique Namespace Entry Prefixes</formal-name>
+                <description>Ensures that all declared namespace entries have a unique prefix.</description>
+                <key-field target="@prefix"/>
+            </is-unique>
+        </constraints>
     </context>
 </metaschema-meta-constraints>
