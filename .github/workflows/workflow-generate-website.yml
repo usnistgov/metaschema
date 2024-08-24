@@ -70,7 +70,7 @@ jobs:
         . .github/workflows/config/.env
         echo "HUGO_VERSION=${HUGO_VERSION}" >> "${GITHUB_OUTPUT}"
     - name: Setup Hugo
-      uses: peaceiris/actions-hugo@v2
+      uses: peaceiris/actions-hugo@v3
       with:
         hugo-version: '${{ steps.hugo-version.outputs.HUGO_VERSION }}'
         extended: true
@@ -95,7 +95,7 @@ jobs:
         # Dart-Sass
         sudo snap install dart-sass
     # cache hugo modules
-    - uses: actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319
+    - uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9
       with:
         path: /tmp/hugo_cache
         key: ${{ runner.os }}-hugomod-${{ hashFiles('**/go.sum') }}
@@ -151,7 +151,7 @@ jobs:
         script: |
           core.setFailed('Link checker detected broken or invalid links, read attached report.')
     - name: Deploy Website
-      uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c920827a82a2847
+      uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e
       if: github.ref_name == 'main' && ((github.event_name == 'push' && inputs.commit_resources == true) || (github.event_name == 'workflow_dispatch' && github.event.inputs.commit_resources == 'true'))
       with:
         personal_token: ${{ secrets.COMMIT_TOKEN }}
