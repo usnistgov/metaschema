@@ -56,7 +56,7 @@ jobs:
         # this command will filter out any docs Markdown files, which are checked in a different job
         git ls-files "*.md" -z | \
         grep --null-data -v "${{ inputs.ignorePattern }}" | \
-        xargs -0 markdown-link-check -c "${{ inputs.markdownLinkCheckConfig }}" | \
+        xargs -0n1 markdown-link-check -c "${{ inputs.markdownLinkCheckConfig }}" | \
         tee mlc_report.log
         # Exit code of xargs and markdown-link-check, not git or grep or tee pipe elements
         exit ${PIPESTATUS[2]}
