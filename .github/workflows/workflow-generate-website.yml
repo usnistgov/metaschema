@@ -119,7 +119,7 @@ jobs:
         retention-days: 5
     - id: linkchecker
       name: Link Checker
-      uses: lycheeverse/lychee-action@c053181aa0c3d17606addfe97a9075a32723548a
+      uses: lycheeverse/lychee-action@2b973e86fc7b1f6b36a93795fe2c9c6ae1118621
       with:
         args: --exclude-file .github/workflows/config/.lycheeignore --verbose --no-progress --accept 200,206,429 './website/public/**/*.html' --remap "https://pages.nist.gov/metaschema/ file://${GITHUB_WORKSPACE}/website/public/" --exclude-mail
         format: markdown
