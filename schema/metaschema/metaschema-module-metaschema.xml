@@ -1313,7 +1313,8 @@
                 </model>
             </define-assembly>
             <assembly ref="metapath-context" min-occurs="1" max-occurs="unbounded">
-                <group-as name="metapath-contexts" in-json="ARRAY"/>
+		    	<use-name>context</use-name>
+                <group-as name="contexts" in-json="ARRAY"/>
             </assembly>
         </model>            
     </define-assembly>
@@ -1334,7 +1335,8 @@
                 <use-name>constraints</use-name>
             </assembly>
             <assembly ref="metapath-context" max-occurs="unbounded">
-                <group-as name="metapath-contexts" in-json="ARRAY"/>
+            	<use-name>context</use-name>
+                <group-as name="contexts" in-json="ARRAY"/>
             </assembly>
             <field ref="remarks"/>
         </model>

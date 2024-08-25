@@ -3,6 +3,44 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 ../xml/metaschema-meta-constraints.xsd">
     <context>
-        <metapath target="/metaschema-meta-constraints"/>
+        <metapath target="/METASCHEMA"/>
+        <constraints>
+            <let var="all-imports" expression="recurse-depth(.,'doc(resolve-uri(import/@href))/METASCHEMA')"/>
+            <index id="metaschema-short-name-unique" target="(.|$all-imports)" name="metaschema-metadata-short-name-index">
+                <formal-name>Unique Module Short Names</formal-name>
+                <description>Ensures that the current and all imported modules have a unique short name.</description>
+                <key-field target="@short-name"/>
+            </index>
+        </constraints>
+        <context>
+            <metapath target=".[not(@abstract) or @abstract='yes']"/>
+            <constraints>
+                <expect id="metaschema-top-level-version-required" target="." test="@version">
+                    <formal-name>Require Version for Top-Level Modules</formal-name>
+                    <description>A top-level module, a module that is not marked as @abstract='yes', must have a version specified.</description>
+                    <message>Unless marked as @abstract='yes', a Metaschema module (or an imported module) should have a version.</message>
+                </expect>
+                <expect id="metaschema-top-level-root-required" target="." test="define-assembly/root-name">
+                    <formal-name>Require Root Assembly for Top-Level Modules</formal-name>
+                    <description>A top-level module, a module that is not marked as @abstract='yes', must have at least one assembly with a root-name.</description>
+                    <message>Unless marked as @abstract='yes', a Metaschema module (or an imported module) should have at least one assembly with a root-name.</message>
+                </expect>
+            </constraints>
+        </context>
+        <context>
+            <metapath target="import"/>
+            <constraints>
+                <expect id="metaschema-import-href-available" target="." test="document-available(resolve-uri(import/@href))">
+                    <formal-name>Import is Resolvable</formal-name>
+                    <description>Ensure each import has a resolvable @href.</description>
+                    <message>Unable to access a Metaschema module at '{{ resolve-uri(@href) }}'.</message>
+                </expect>
+                <expect id="metaschema-import-href-is-module" target="." test="doc(resolve-uri(import/@href))/METASCHEMA ! exists(.)">
+                    <formal-name>Import is Resolvable</formal-name>
+                    <description>Ensure each import is a Metaschema module.</description>
+                    <message>Unable the resource at '{{ resolve-uri(@href) }}' is not a Metaschema module.</message>
+                </expect>
+            </constraints>
+        </context>
     </context>
 </metaschema-meta-constraints>
