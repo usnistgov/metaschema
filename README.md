@@ -41,7 +41,7 @@ Metaschema achieves this with:
 
 ## Contact us
 
-Maintainer: ITL OSCAL Team, [NIST](https://www.nist.gov/) [Information Technology Labratory](https://www.nist.gov/itl), [Computer Security Division](https://www.nist.gov/itl/csd), [Secure Systems and Applications Group](https://www.nist.gov/itl/csd/secure-systems-and-applications)
+Maintainer: ITL OSCAL Team, [NIST](https://www.nist.gov/) [Information Technology Laboratory](https://www.nist.gov/itl), [Computer Security Division](https://www.nist.gov/itl/csd), [Secure Systems and Applications Group](https://www.nist.gov/itl/csd/secure-systems-and-applications)
 
 Email us: [metaschema@nist.gov](mailto:metaschema@nist.gov)
 
