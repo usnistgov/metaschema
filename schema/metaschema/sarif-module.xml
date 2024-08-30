@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://raw.githubusercontent.com/usnistgov/metaschema/develop/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>SARIF Metaschema Module</schema-name>
+    <schema-version>0.1.0</schema-version>
+    <short-name>sarif</short-name>
+    <!-- TODO: Do we want to have 1:1 overlap with SARIF? I am not sure. -->
+    <namespace>https://json.schemastore.org/sarif/2.1.0</namespace>
+    <!-- TODO: Ditto here, this is the URL for the official spec release version. -->
+    <json-base-uri>https://json.schemastore.org/sarif-2.1.0.json</json-base-uri>
+    <define-field name="version">
+        <formal-name>SARIF Model Version</formal-name>
+        <description>The version of the SARIF Model used for conforming instances.</description>
+        <constraint>
+            <allowed-values target="." allow-other="no"> 
+                <enum value="2.1.0"/>
+            </allowed-values>
+        </constraint>
+    </define-field>
+    <define-assembly name="propertyBag">
+        <!-- TODO: review -->
+        <formal-name>Property Bag</formal-name>
+        <description>Key/value pairs that provide additional information about the object.</description>
+        <model>
+	        <define-field name="tag" min-occurs="0" max-occurs="unbounded">
+	        	<formal-name>Tag</formal-name>
+	        	<description>A set of distinct strings that provide additional information.</description>
+	        	<group-as name="tags" in-json="ARRAY"/>
+	        </define-field>
+		</model>
+    </define-assembly>
+    <define-assembly name="toolComponent">
+        <define-flag name="guid" as-type="uuid">
+            <formal-name>Tool Component Unique Identifier</formal-name>
+            <description>A stable, unique identifier for the tool component.</description>
+        </define-flag>
+        <model>
+            <define-field name="name">
+                <formal-name>Tool Component Name</formal-name>
+                <description>The name of the tool component.</description>
+            </define-field>
+            <define-field name="organization" min-occurs="0">
+                <formal-name>Tool Component Organization</formal-name>
+                <description>The organization or company that produced the tool component.</description>
+            </define-field>
+            <define-field name="product" min-occurs="0">
+                <formal-name>Tool Component Product</formal-name>
+                <description>A product suite to which the tool component belongs.</description>
+            </define-field>
+            <define-field name="version" min-occurs="0">
+                <formal-name>Tool Component Version</formal-name>
+                <description>The tool component version, in whatever format the component natively provides.</description>
+            </define-field>
+            <define-field name="semanticVersion" min-occurs="0">
+                <formal-name>Tool Component Semantic Version</formal-name>
+                <description>The tool component version in the format specified by Semantic Versioning 2.0.</description>
+            </define-field>
+            <define-field name="informationUri" as-type="uri" min-occurs="0">
+                <formal-name>Tool Component Information URI</formal-name>
+                <description>The absolute URI at which information about this version of the tool component can be found.</description>
+            </define-field>
+            <assembly ref="reportingDescriptor" min-occurs="0" max-occurs="unbounded">
+            	<formal-name>Rule</formal-name>
+            	<description>An array of reportingDescriptor objects relevant to the analysis performed by the tool component.</description>
+            	<use-name>rule</use-name>
+                <group-as name="rules" in-json="ARRAY" />
+            </assembly>
+        </model>
+    </define-assembly>
+    <define-assembly name="reportingDescriptor">
+        <formal-name>Reporting Descriptor</formal-name>
+        <description>Metadata that describes a specific report produced by the tool, as part of the analysis it provides or its runtime reporting.</description>
+        <define-flag name="id" required="yes">
+            <formal-name>Reporting Descriptor Identifier</formal-name>
+            <description>A stable, opaque identifier for the report.</description>
+        </define-flag>
+        <define-flag name="guid" as-type="uuid">
+            <formal-name>Reporting Descriptor Unique Identifier</formal-name>
+            <description>A stable, unique identifier for the reporting descriptor.</description>
+        </define-flag>
+        <model>
+            <define-field name="name" min-occurs="0">
+                <formal-name>Reporting Descriptor Name</formal-name>
+                <description>A report identifier that is understandable to an end user.</description>
+            </define-field>
+            <assembly ref="multiformatMessageString" min-occurs="0">
+                <formal-name>Short Description</formal-name>
+                <description>A concise description of the report. Should be a single sentence that is understandable when visible space is limited to a single line of text.</description>
+                <use-name>shortDescription</use-name>
+            </assembly>
+            <assembly ref="multiformatMessageString" min-occurs="0">
+                <formal-name>Full Description</formal-name>
+                <description>A description of the report. Should, as far as possible, provide details sufficient to enable resolution of any problem indicated by the result.</description>
+                <use-name>fullDescription</use-name>
+            </assembly>
+            <define-field name="helpUri" as-type="uri" min-occurs="0">
+                <formal-name>Help URI</formal-name>
+                <description>A URI where the primary documentation for the report can be found.</description>
+            </define-field>
+        </model>
+    </define-assembly>
+    <define-assembly name="multiformatMessageString">
+    	<formal-name>Multi-format Message String</formal-name>
+    	<description>A message string or message format string rendered in multiple formats.</description>
+    	<model>
+    	    <define-field name="text" min-occurs="0">
+                <formal-name>Text</formal-name>
+                <description>A plain text message string or format string.</description>
+            </define-field>
+            <define-field name="markdown" min-occurs="0">
+                <formal-name>Markdown</formal-name>
+                <description>A Markdown message string or format string.</description>
+            </define-field>
+        </model>
+    </define-assembly>
+    <define-assembly name="tool">
+        <formal-name>Tool</formal-name>
+        <description>The analysis tool used.</description>
+        <model>
+            <assembly ref="toolComponent">
+                <use-name>driver</use-name>
+                <group-as name="driver"  />
+            </assembly>
+        </model>
+    </define-assembly>
+    <define-assembly name="artifact">
+        <formal-name>Artifacts</formal-name>
+        <description>Artifacts analyzed by the tool to yield results.</description>
+        <model>
+            <assembly ref="artifactLocation" min-occurs="0">
+            	<formal-name>Artifact Location</formal-name>
+            	<description>The location of the artifact.</description>
+            	<use-name>location</use-name>
+            </assembly>
+        </model>
+    </define-assembly>
+    <define-assembly name="result">
+        <formal-name>Results</formal-name>
+        <description>Results from the run of a tool.</description>
+        <define-flag name="ruleId">
+            <formal-name>Rule Identifier</formal-name>
+            <description>The stable, unique identifier of the rule, if any, to which this result is relevant.</description>
+        </define-flag>
+        <define-flag name="ruleIndex" as-type="integer" default="-1">
+            <formal-name>Rule Identifier</formal-name>
+            <description>The stable, unique identifier of the rule, if any, to which this result is relevant.</description>
+        </define-flag>
+        <define-flag name="guid" as-type="uuid">
+            <formal-name>Result Unique Identifier</formal-name>
+            <description>A stable, unique identifier for the result.</description>
+        </define-flag>
+        <model>
+            <assembly ref="reportingDescriptorReference" min-occurs="0">
+                <description>A reference used to locate the rule descriptor relevant to this result.</description>
+                <use-name>rule</use-name>
+            </assembly>
+            <define-field name="kind" min-occurs="0" default="fail">
+                <formal-name>Result Kind</formal-name>
+                <description>A value that categorizes results by evaluation state.</description>
+                <constraint>
+                    <allowed-values target=".">
+                        <enum value="notApplicable"/>
+                        <enum value="pass"/>
+                        <enum value="fail"/>
+                        <enum value="review"/>
+                        <enum value="open"/>
+                        <enum value="informational"/>
+                    </allowed-values>
+                </constraint>
+            </define-field>
+            <define-field name="level" min-occurs="0" default="warning">
+                <formal-name>Severity Level</formal-name>
+                <description>A value specifying the severity level of the result.</description>
+                <constraint>
+                    <allowed-values target=".">
+                        <enum value="none"/>
+                        <enum value="note"/>
+                        <enum value="warning"/>
+                        <enum value="error"/>
+                    </allowed-values>
+                </constraint>
+            </define-field>
+            <assembly ref="message">
+                <formal-name>Result Message</formal-name>
+                <description>A message that describes the result. The first sentence of the message only will be displayed when visible space is limited.</description>
+            </assembly>
+            <assembly ref="artifactLocation" min-occurs="0">
+                <formal-name>Scanned Artifact</formal-name>
+                <description>Identifies the artifact that the analysis tool was instructed to scan. This need not be the same as the artifact where the result actually occurred.</description>
+                <use-name>analysisTarget</use-name>
+            </assembly>
+            <assembly ref="location" min-occurs="0" max-occurs="unbounded">
+                <formal-name>Result Location</formal-name>
+                <description>The set of locations where the result was detected. Specify only one location unless the problem indicated by the result can only be corrected by making a change at every specified location.</description>
+				<use-name>location</use-name>
+                <group-as name="locations" in-json="ARRAY" />
+            </assembly>
+            <define-field name="occurenceCount" as-type="positive-integer" min-occurs="0">
+                <formal-name>Occurrence Count</formal-name>
+                <description>A positive integer specifying the number of times this logically unique result was observed in this run.</description>
+            </define-field>
+            <assembly ref="location" min-occurs="0">
+                <formal-name>Result Related Location</formal-name>
+                <description>A set of locations relevant to this result.</description>
+                <use-name>relatedLocation</use-name>
+                <group-as name="relatedLocations" in-json="ARRAY" />
+            </assembly>
+            <assembly ref="resultProvenance" min-occurs="0">
+                <formal-name>Result Provenance</formal-name>
+                <description>Information about how and when the result was detected.</description>
+                <use-name>provenance</use-name>
+            </assembly>
+        </model>
+        <constraint>
+            <expect target="." test="@ruleIndex >= -1">
+                <message>The value '{ . }' is not greater than or equal to '-1'.</message>
+            </expect>
+            <!-- TODO: unique relatedLocations -->
+        </constraint>
+    </define-assembly>
+    <define-assembly name="reportingDescriptorReference">
+        <formal-name>Reporting Descriptor Reference</formal-name>
+        <description>Information about how to locate a relevant reporting descriptor.</description>
+        <define-flag name="id" required="yes">
+            <formal-name>Reporting Descriptor Identifier</formal-name>
+            <description>The id of the descriptor.</description>
+        </define-flag>
+        <define-flag name="guid" as-type="uuid">
+            <formal-name>Reporting Descriptor Unique Identifier</formal-name>
+            <description>A stable, unique identifier for the reporting descriptor.</description>
+        </define-flag>
+        <model>
+            <define-field name="index" as-type="integer" default="-1" min-occurs="0">
+                <formal-name>Index</formal-name>
+                <description>The index into an array of descriptors in toolComponent.ruleDescriptors, toolComponent.notificationDescriptors, or toolComponent.taxonomyDescriptors, depending on context.</description>
+            </define-field>
+        </model>
+        <constraint>
+            <expect target="." test="@id|@guid|index">
+                <message>At least one id, guid, or index must be provided.</message>
+            </expect>
+        </constraint>
+    </define-assembly>
+    <define-assembly name="message">
+        <formal-name>Message</formal-name>
+        <description>Encapsulates a message intended to be read by the end user.</description>
+        <define-flag name="id" required="yes">
+            <formal-name>Message Identifier</formal-name>
+            <description>The id of the message.</description>
+        </define-flag>
+        <model>
+            <define-field name="text" min-occurs="0">
+                <formal-name>Text</formal-name>
+                <description>A plain text message string.</description>
+            </define-field>
+            <define-field name="markdown" min-occurs="0">
+                <formal-name>Markdown</formal-name>
+                <description>A Markdown message string.</description>
+            </define-field>
+            <define-field name="argument" min-occurs="0" max-occurs="unbounded">
+                <formal-name>Argument</formal-name>
+                <description>A sequence of strings to substitute into the message string.</description>
+                <group-as name="arguments" in-json="ARRAY" />
+            </define-field>
+        </model>
+        <constraint>
+            <expect target="." test="exists(@id|text)">
+                <message>At least one id or text must be provided.</message>
+            </expect>
+        </constraint>
+    </define-assembly>
+    <define-assembly name="artifactLocation">
+        <formal-name>Artifact Location</formal-name>
+        <description>Specifies the location of an artifact.</description>
+        <model>
+            <define-field name="uri" as-type="uri-reference" min-occurs="0">
+                <formal-name>URI</formal-name>
+                <description>A valid relative or absolute URI.</description>
+            </define-field>
+            <define-field name="index" as-type="integer"  min-occurs="0" default="-1">
+				<formal-name>Index</formal-name>
+				<description>The index within the run artifacts array of the artifact object associated with the artifact location.</description>
+    		    <constraint>
+                    <expect target="." test="@id >= -1">
+                        <message>The index '{ . }' is not greater than or equal to '-1'.</message>
+                    </expect>
+                </constraint>
+            </define-field>
+            <assembly ref="message" min-occurs="0">
+                <formal-name>Description</formal-name>
+                <description>A short description of the artifact location.</description>
+                <use-name>description</use-name>
+            </assembly>
+        </model>
+    </define-assembly>
+    <define-assembly name="location">
+        <formal-name>Location</formal-name>
+        <description>A location within a programming artifact.</description>
+        <define-flag name="id" as-type="integer" default="-1">
+            <formal-name>Location Identifier</formal-name>
+            <description>A value that distinguishes this location from all other locations within a single result object.</description>
+        </define-flag>
+        <model>
+            <assembly ref="physicalLocation" min-occurs="0">
+                <formal-name>Physical Location</formal-name>
+                <description>A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.</description>
+            </assembly>
+            <assembly ref="logicalLocation">
+                <formal-name>Logical Location</formal-name>
+                <description>The logical locations associated with the result.</description>
+            </assembly>
+            <assembly ref="message">
+                <formal-name>Location Message</formal-name>
+                <description>A message relevant to the location.</description>
+            </assembly>
+        </model>
+        <constraint>
+            <expect target="." test="@id >= -1">
+                <message>The id '{ . }' is not greater than or equal to '-1'.</message>
+            </expect>
+            <!-- TODO: unique relatedLocations -->
+        </constraint>
+    </define-assembly>
+    <define-assembly name="physicalLocation">
+        <formal-name>Physical Location</formal-name>
+        <description>A physical location relevant to a result. Specifies a reference to a programming artifact together with a range of bytes or characters within that artifact.</description>
+        <model>
+            <define-assembly name="address" min-occurs="0">
+                <formal-name>Address</formal-name>
+                <description>A physical or virtual address, or a range of addresses, in an 'addressable region' (memory or a binary file).</description>
+                <!-- TODO -->
+            </define-assembly>
+            <assembly ref="artifactLocation" min-occurs="0">
+                <description>The location of the artifact.</description>
+            </assembly>
+            <assembly ref="region" min-occurs="0">
+                <formal-name>Region</formal-name>
+                <description>Specifies a portion of the artifact.</description>
+            </assembly>
+            <assembly ref="region" min-occurs="0">
+                <formal-name>Context Region</formal-name>
+                <description>Specifies a portion of the artifact that encloses the region. Allows a viewer to display additional context around the region.</description>
+                <use-name>contextRegion</use-name>
+            </assembly>
+        </model>
+        <constraint>
+            <expect target="." test="exists(address|artifactLocation)">
+                <message>At least one address or artifactLocation must be provided.</message>
+            </expect>
+        </constraint>
+    </define-assembly>
+    <define-assembly name="logicalLocation">
+    	<formal-name>Logical Location</formal-name>
+    	<description>A logical location of a construct that produced a result.</description>
+    	<model>
+    		<define-field name="name" min-occurs="0">
+    			<formal-name>Logical Location Name</formal-name>
+    			<description>Identifies the construct in which the result occurred. For example, this property might contain the name of a class or a method.</description>
+    		</define-field>
+    		<define-field name="index" as-type="integer"  min-occurs="0" default="-1">
+				<formal-name>Index</formal-name>
+				<description>The index within the logical locations array.</description>
+    		    <constraint>
+                    <expect target="." test="@id >= -1">
+                        <message>The index '{ . }' is not greater than or equal to '-1'.</message>
+                    </expect>
+                </constraint>
+            </define-field>
+            <define-field name="fullyQualifiedName">
+            	<formal-name>Fully Qualified Name</formal-name>
+            	<description>The human-readable fully qualified name of the logical location.</description>
+            </define-field>
+            <define-field name="decoratedName">
+            	<formal-name>Decorated Name</formal-name>
+            	<description>The machine-readable name for the logical location, such as a mangled function name provided by a C++ compiler that encodes calling convention, return type and other details along with the function name.</description>
+            </define-field>
+            <define-field name="parentIndex" as-type="integer"  min-occurs="0" default="-1">
+            	<formal-name>Parent Index</formal-name>
+            	<description>Identifies the index of the immediate parent of the construct in which the result was detected. For example, this property might point to a logical location that represents the namespace that holds a type.</description>
+            	<constraint>
+                    <expect target="." test="@id >= -1">
+                        <message>The index '{ . }' is not greater than or equal to '-1'.</message>
+                    </expect>
+                </constraint>
+            </define-field>
+            <define-field name="kind">
+            	<formal-name>Kind</formal-name>
+            	<description>The type of construct this logical location component refers to. Should be one of 'function', 'member', 'module', 'namespace', 'parameter', 'resource', 'returnType', 'type', 'variable', 'object', 'array', 'property', 'value', 'element', 'text', 'attribute', 'comment', 'declaration', 'dtd' or 'processingInstruction', if any of those accurately describe the construct.</description>
+            </define-field>
+    	</model>
+    </define-assembly>
+    <define-assembly name="region">
+        <formal-name>Region</formal-name>
+        <description>A region within an artifact where a result was detected.</description>
+        <model>
+            <define-field name="startLine" as-type="positive-integer" min-occurs="0">
+                <formal-name>Start Line</formal-name>
+                <description>The line number of the first character in the region.</description>
+            </define-field>
+      
+            <define-field name="startColumn" as-type="positive-integer" min-occurs="0">
+                <formal-name>Start Column</formal-name>
+                <description>The column number of the first character in the region.</description>
+            </define-field>
+      
+            <define-field name="endLine" as-type="positive-integer" min-occurs="0">
+                <formal-name>End Line</formal-name>
+                <description>The line number of the last character in the region.</description>
+            </define-field>
+      
+            <define-field name="endColumn" as-type="positive-integer" min-occurs="0">
+                <formal-name>End Column</formal-name>
+                <description>The column number of the character following the end of the region.</description>
+            </define-field>
+      
+            <define-field name="charOffset" as-type="integer" default="-1" min-occurs="0">
+                <formal-name>Character Offset</formal-name>
+                <description>The zero-based offset from the beginning of the artifact of the first character in the region.</description>
+                <constraint>
+                    <expect target="." test="@id >= -1">
+                        <message>The offset '{ . }' is not greater than or equal to '-1'.</message>
+                    </expect>
+                </constraint>
+            </define-field>
+      
+            <define-field name="charLength" as-type="non-negative-integer" min-occurs="0">
+                <formal-name>Character Length</formal-name>
+                <description>The length of the region in characters.</description>
+            </define-field>
+      
+            <define-field name="byteOffset" as-type="integer" default="-1" min-occurs="0">
+                <formal-name>Byte Offset</formal-name>
+                <description>The zero-based offset from the beginning of the artifact of the first byte in the region</description>
+                <constraint>
+                    <expect target="." test="@id >= -1">
+                        <message>The offset '{ . }' is not greater than or equal to '-1'.</message>
+                    </expect>
+                </constraint>
+            </define-field>
+      
+            <define-field name="byteLength" as-type="non-negative-integer" min-occurs="0">
+                <formal-name>Byte Length</formal-name>
+                <description>The length of the region in bytes.</description>
+            </define-field>
+      
+            <assembly ref="message">
+                <formal-name>Region Message</formal-name>
+                <description>A message relevant to the region.</description>
+            </assembly>
+        </model>
+        <constraint>
+            <expect target="." test="exists(startLine|charOffset|byteOffset)">
+                <message>At least a startLine, charOffset, or byteOffset must be provided.</message>
+            </expect>
+        </constraint>
+    </define-assembly>
+    <define-assembly name="resultProvenance">
+        <formal-name>Result Provanance</formal-name>
+        <description>Contains information about how and when a result was detected.</description>
+        <model>
+            <define-field name="firstDetectionTimeUtc" as-type="date-time-with-timezone" min-occurs="0">
+                <formal-name>First Detection Time</formal-name>
+                <description>The Coordinated Universal Time (UTC) date and time at which the result was first detected. See \"Date/time properties\" in the SARIF spec for the required format.</description>
+            </define-field>
+
+            <define-field name="lastDetectionTimeUtc" as-type="date-time-with-timezone" min-occurs="0">
+                <formal-name>Last Detection Time</formal-name>
+                <description>The Coordinated Universal Time (UTC) date and time at which the result was most recently detected. See \"Date/time properties\" in the SARIF spec for the required format.</description>
+            </define-field>
+
+            <assembly ref="physicalLocation" min-occurs="0" max-occurs="unbounded">
+                <formal-name>Conversion Source</formal-name>
+                <description>An sequence of physicalLocation objects which specify the portions of an analysis tool's output that a converter transformed into the result.</description>
+                <use-name>conversionSource</use-name>
+                <group-as name="conversionSources" in-json="ARRAY" />
+            </assembly>
+        </model>
+    </define-assembly>
+    <define-assembly name="run">
+        <formal-name>Run</formal-name>
+        <description>Describes a single run of an analysis tool, and contains the reported output of that run.</description>
+        <model>
+            <assembly ref="tool">
+                <formal-name>Tool</formal-name>
+                <description>Information about the tool or tool pipeline that generated the results in this run. A run can only contain results produced by a single tool or tool pipeline. A run can aggregate results from multiple log files, as long as context around the tool run (tool command-line arguments and the like) is identical for all aggregated files.</description>
+            </assembly>
+            <assembly ref="artifact" min-occurs="0" max-occurs="unbounded">
+                <formal-name>Artifact</formal-name>
+                <description>A sequence of artifacts relevant to the run.</description>
+                <group-as name="artifacts" in-json="ARRAY" />
+            </assembly>
+            <assembly ref="result" min-occurs="0" max-occurs="unbounded">
+                <formal-name>Result</formal-name>
+                <description>The set of results contained in an SARIF log. The results array can be omitted when a run is solely exporting rules metadata. It must be present (but may be empty) if a log file represents an actual scan.</description>
+                <group-as name="results" in-json="ARRAY" />
+            </assembly>
+        </model>
+    </define-assembly>
+    <define-assembly name="sarif">
+        <formal-name>Static Analysis Results Interchange Format</formal-name>
+        <description>A standard format for the output of static analysis tools.</description>
+        <root-name>sarif</root-name>
+        <model>
+            <field ref="version" max-occurs="1"/>
+            <assembly ref="run" max-occurs="unbounded">
+                <group-as name="runs" in-json="ARRAY" />
+            </assembly>
+        </model>
+        <remarks>
+            <p>Note, Metaschema does not support an anonymous top-level assembly without a key name in JSON and YAML, which is required for SARIF.</p>
+        </remarks>
+    </define-assembly>
+</METASCHEMA>
