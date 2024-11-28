@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://raw.githubusercontent.com/usnistgov/metaschema/develop/schema/xml/metaschema.xsd" type="application/xml" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<METASCHEMA xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+    <schema-name>SARIF Metaschema Module</schema-name>
+    <schema-version>0.1.0</schema-version>
+    <short-name>sarif</short-name>
+    <!-- TODO: Do we want to have 1:1 overlap with SARIF? I am not sure. -->
+    <namespace>http://csrc.nist.gov/ns/oscal/metaschema/validation/results/1.0</namespace>
+    <!-- TODO: Ditto here, this is the URL for the official spec release version. -->
+    <json-base-uri>http://csrc.nist.gov/ns/oscal/metaschema/validation/results/1.0</json-base-uri>
+    <define-field name="version">
+        <formal-name>SARIF Model Version</formal-name>
+        <description>The version of the SARIF Model used for conforming instances.</description>
+        <constraint>
+            <allowed-values target="." allow-other="no">
+                <enum value="2.1.0"/>
+            </allowed-values>
+        </constraint>
+    </define-field>
+    <define-field name="information-uri" as-type="uri"/>
+    <define-assembly name="short-description">
+        <formal-name>Short Description</formal-name>
+        <description>A text-based short-description for a rule.</description>
+        <model>
+            <define-field name="text" as-type="markup-line" min-occurs="1" max-occurs="1">
+                <formal-name>Short Description Text</formal-name>
+                <description>The short text of the description.</description>
+            </define-field>
+        </model>
+    </define-assembly>
+    <define-field name="help-uri" as-type="uri" />
+    <define-assembly name="property">
+        <formal-name>Properties</formal-name>
+        <description>A collection of named properties or property bag key values (the latter is loosely enforced) for SARIF elements.</description>
+        <model>
+            <any />
+        </model>
+    </define-assembly>
+    <define-assembly name="rule">
+        <formal-name>Rule</formal-name>
+        <description>A declaration of requirements with identifiers and descriptions for the tool generating results from analyzing artifacts.</description>
+        <model>
+            <define-field name="id"/>
+            <assembly ref="short-description">
+                <use-name>shortDescription</use-name>
+            </assembly>
+            <field ref="help-uri">
+                <use-name>helpUri</use-name>
+            </field>
+            <assembly ref="property">
+                <use-name>properties</use-name>
+            </assembly>
+        </model>
+    </define-assembly>
+    <define-assembly name="driver">
+        <model>
+            <define-field name="name"/>
+            <field ref="information-uri">
+                <use-name>informationUri</use-name>
+            </field>
+            <assembly ref="rule" min-occurs="1" max-occurs="unbounded">
+                <group-as name="rules" in-json="ARRAY" />
+            </assembly>
+        </model>
+    </define-assembly>
+    <define-assembly name="tool">
+        <model>
+            <assembly ref="driver"/>
+        </model>
+    </define-assembly>
+    <define-assembly name="artifact">
+        <formal-name>Artifacts</formal-name>
+        <description>Artifacts analyzed by the tool to yield results.</description>
+         <model/>
+    </define-assembly>
+    <define-assembly name="result">
+        <formal-name>Results</formal-name>
+        <description>Results from the run of a tool.</description>
+         <model/>
+    </define-assembly>        
+    <define-assembly name="run">
+        <formal-name>Run</formal-name>
+        <description>Data about the run of a tool.</description>
+        <model>
+            <assembly ref="tool"/>
+            <assembly ref="result" min-occurs="0" max-occurs="unbounded">
+                <group-as name="results" in-json="ARRAY" />
+            </assembly>
+            <assembly ref="artifact" min-occurs="0" max-occurs="unbounded">
+                <group-as name="artifacts" in-json="ARRAY" />
+            </assembly>
+        </model>
+    </define-assembly>
+    <define-assembly name="root">
+        <formal-name>Root Placeholder</formal-name>
+        <description>A placeholder assembly to wrap the root of the SARIF instance.</description>
+        <root-name>root</root-name>
+        <model>
+            <field ref="version" min-occurs="1" max-occurs="1"/>
+            <assembly ref="run" min-occurs="1" max-occurs="unbounded">
+                <group-as name="runs" in-json="ARRAY" />
+            </assembly>
+        </model>
+        <remarks>
+            <p>Note, this is a workaround because Metaschema does not support anonymous top-level assembly without a key name.</p>
+        </remarks>
+    </define-assembly>
+</METASCHEMA>
