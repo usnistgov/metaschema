@@ -43,6 +43,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       BUILD_PATH: ./build
+      HUGO_CACHEDIR: /tmp/hugo_cache
     steps:
     # use this for builds triggered from the UI and from workflows on protected branches
     - id: checkout_latest_workflow
