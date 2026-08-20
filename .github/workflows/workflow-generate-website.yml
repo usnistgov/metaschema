@@ -104,9 +104,19 @@ jobs:
           ${{ runner.os }}-hugomod-        
     - name: Run Hugo
       run: |
-        hugo mod vendor
-        hugo -e production --logLevel debug --minify
-      working-directory: ${{ github.workspace }}/website
+          n=0
+          until [ $n -ge 3 ]; do
+            hugo mod vendor && break
+            n=$((n+1))
+            echo "hugo mod vendor failed (attempt $n/3), retrying in 10s..."
+            sleep 10
+          done
+          if [ $n -ge 3 ]; then
+            echo "hugo mod vendor failed after 3 attempts"
+            exit 1
+          fi
+          hugo -e production --logLevel debug --minify
+        working-directory: ${{ github.workspace }}/website
     - name: Zip Artifacts for Upload
       run: |
         zip ${{ runner.temp }}/metaschema-website.zip -r public/
