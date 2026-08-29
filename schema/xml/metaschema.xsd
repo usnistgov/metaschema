@@ -1167,20 +1167,14 @@
     <xs:attribute name="expression" type="MetaschemaPathType" use="required"/>
   </xs:complexType>
 
-  <xs:group name="LetExpressionGroup">
-    <xs:sequence>
-      <xs:element name="let" type="ConstraintLetType" minOccurs="0" maxOccurs="unbounded">
-        <xs:annotation>
-          <xs:documentation>Declares a variable whose name is bound to the result of the Metapath expression. These variables can be used in target and other Metapath expressions used in constrains that are declared in the same context or in constraints declared in a child assembly, field, or flag.</xs:documentation>
-        </xs:annotation>
-      </xs:element>
-    </xs:sequence>
-  </xs:group>
-
   <xs:complexType name="DefineFlagConstraintsType">
     <xs:sequence>
-      <xs:group ref="LetExpressionGroup"/>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="let" type="ConstraintLetType">
+          <xs:annotation>
+            <xs:documentation>Declares a variable whose name is bound to the result of the Metapath expression. These variables can be used in target and other Metapath expressions used in constrains that are declared in the same context or in constraints declared in a child assembly, field, or flag.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
         <xs:element minOccurs="0" name="allowed-values" type="AllowedValuesType">
           <xs:annotation>
             <xs:documentation>Constrains the allowed values for the flag.</xs:documentation>
@@ -1208,6 +1202,11 @@
   
   <xs:group name="TargetedCommonConstraintsGroup">
     <xs:choice>
+      <xs:element name="let" type="ConstraintLetType">
+        <xs:annotation>
+          <xs:documentation>Declares a variable whose name is bound to the result of the Metapath expression. These variables can be used in target and other Metapath expressions used in constrains that are declared in the same context or in constraints declared in a child assembly, field, or flag.</xs:documentation>
+        </xs:annotation>
+      </xs:element>      
       <xs:element name="allowed-values" type="TargetedAllowedValuesConstraintType">
         <xs:annotation>
           <xs:documentation>Constrains the allowed values for the flag or field referenced by the scope attribute.</xs:documentation>
@@ -1253,8 +1252,7 @@
 
   <xs:complexType name="DefineFieldConstraintsType">
     <xs:sequence>
-      <xs:group ref="LetExpressionGroup"/>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
         <xs:group ref="TargetedCommonConstraintsGroup"/>
       </xs:choice>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
@@ -1263,8 +1261,7 @@
 
   <xs:complexType name="DefineAssemblyConstraintsType">
     <xs:sequence>
-      <xs:group ref="LetExpressionGroup"/>
-      <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:choice minOccurs="1" maxOccurs="unbounded">
         <xs:group ref="TargetedCommonConstraintsGroup"/>
         <xs:group ref="AssemblyConstraintsGroup"/>
       </xs:choice>
