@@ -17,10 +17,6 @@ on:
       COMMIT_TOKEN:
         required: false
   workflow_dispatch:
-    branches:
-    - main
-    - develop
-    - "release-*"
     inputs:
       commit_resources:
         description: 'commit the resources after generating them. Requires a PAT defined as secrets.COMMIT_TOKEN'
