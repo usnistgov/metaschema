@@ -245,7 +245,7 @@ The syntax of `<allowed-values>` consists of the following:
 | Data | Data Type | Use      | Default Value |
 |:--- |:--- |:--- |:--- |
 | [`@allow-other`>](#allow-other) | `yes` or `no` | optional | `no` |
-| [`@extensible`>](#extensible) | `model`, `external`, or `none` | optional | `no` |
+| [`@extensible`>](#extensible) | `model`, `external`, or `none` | optional | `external` |
 | [`@id`](#id) | [`token`](/specification/datatypes/#token) | optional | *(no default)* |
 | [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
 | [`@target`](#target) | special | *(varies)* | *(no default)* |
@@ -302,31 +302,31 @@ Multiple `<allowed-values>` constraints can apply to a given *target node*, whic
 
 This may be handled using a two phased evaluation that first resolves the `<allowed-values>` constraints associated with each *target node* determining the *applicable set*, then, second, evaluates the *applicable set* for each *target node*. Other implementations may be possible and are allowed if they result in the same effective behavior.
 
-The *applicable set* of `<allowed-values>` constraints is verified for correctness using the `@extension` attribute on each set member.
+The *applicable set* of `<allowed-values>` constraints is verified for correctness using the `@extensible` attribute on each set member.
 
 For each `<allowed-values>` in the *applicable set*, the `@allow-other` attribute is used to determine the *expected value set* for a given content value.
 
-The following subsections detail the processing requirements for the `@extension` and `@allow-other` attributes.
+The following subsections detail the processing requirements for the `@extensible` and `@allow-other` attributes.
 
 ##### `@extensible`
 
-For each `<allowed-values>` constraints the *applicable set*, the `@extension` attribute MUST be one of the following values.
+For each `<allowed-values>` constraints the *applicable set*, the `@extensible` attribute MUST be one of the following values.
 
 - **`none`:** There can be no other matching `<allowed-values>` constraint for the same target value. This is the least permissive option.
 
-- **`model`:** (default) Multiple matching `<allowed-values>` constraints are allowed for the same target value as long as the constraints are defined in the same model. Constraints sourced from outside the model are not allowed.
+- **`model`:** Multiple matching `<allowed-values>` constraints are allowed for the same target value as long as the constraints are defined in the same model. Constraints sourced from outside the model are not allowed.
 
-    All allowed-values constraints declared within a Metaschema model matching the same @target can be combined. If a matching constraint within the model has allow-other="no", then constraints declared externally from the model are not allowed. **This is the implicit default value if no `@extension` is provided.**
+    All allowed-values constraints declared within a Metaschema model matching the same @target can be combined. If a matching constraint within the model has allow-other="no", then constraints declared externally from the model are not allowed.
 
-- **`external`:** Multiple matching `<allowed-values>` constraints are allowed for the same target value, which can be sourced from within the model or externally through a set of external constraints.
+- **`external`:** (default) Multiple matching `<allowed-values>` constraints are allowed for the same target value, which can be sourced from within the model or externally through a set of external constraints.
 
     All allowed-values constraints, declared within the model and externally through an extension, that match the same @target can be combined. This is the most permissive option.
 
 One of the following requirements MUST apply when processing a value's *applicable set* to validate it.
 
-1. The *applicable set* MUST contain a single `<allowed-values>` constraint with the `@extension` attribute value `none`.
-1. All `<allowed-values>` constraints in the *applicable set* MUST have the `@extension` attribute value `model` and originate from a *model* source.
-1. All `<allowed-values>` constraints in the *applicable set* MUST have the `@extension` attribute value `external` and originate from either a *model* or *extension* source.
+1. The *applicable set* MUST contain a single `<allowed-values>` constraint with the `@extensible` attribute value `none`.
+1. All `<allowed-values>` constraints in the *applicable set* MUST have the `@extensible` attribute value `model` and originate from a *model* source.
+1. All `<allowed-values>` constraints in the *applicable set* MUST have the `@extensible` attribute value `external` and originate from either a *model* or *extensible* source.
 1. An error MUST be raised indicating the *applicable set* is invalid.
 
 ##### `@allow-other`
