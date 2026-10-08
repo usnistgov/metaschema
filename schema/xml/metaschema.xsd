@@ -1148,11 +1148,11 @@
               corresponding value defined on the target.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="max-occurs" type="NonNegativeIntegerDatatype">
+        <xs:attribute name="max-occurs" type="NaturalNumberOrUnboundedType">
           <xs:annotation>
             <xs:documentation>Maximum occurrence of assemblies or fields within the set of objects
-              identified by the <code>target</code>. This value must be less than the corresponding
-              value defined on the target.</xs:documentation>
+              identified by the <code>target</code>. This value may be a positive integer or
+              "unbounded".</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>

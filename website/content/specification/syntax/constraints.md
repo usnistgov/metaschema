@@ -397,7 +397,7 @@ The syntax of `<has-cardinality>` consists of the following:
 | [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
 | [`@target`](#target) | special | *(varies)* | *(no default)* |
 | `@min-occurs` | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | *(no default)* |
-| `@max-occurs` | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | *(no default)* |
+| `@max-occurs` | [`positive-integer`](/specification/datatypes/#positive-integer) or `unbounded` | optional | *(no default)* |
 | [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 | *(no default)* |
 | [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 | *(no default)* |
 | [`<prop>`](#prop) | special | 0 to ∞ | *(no default)* |
