@@ -39,7 +39,7 @@
       "description": "An amount of time quantified in days, hours, minutes, and seconds.",
       "type": "string",
       "format": "duration",
-      "pattern": "^-?P([0-9]+D(T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\\.[0-9]+)?)S))?)|T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\\.[0-9]+)?)S)$"
+      "pattern": "^-?P(([0-9]+D(T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\\.[0-9]+)?)S))?)|T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\\.[0-9]+)?)S))$"
     },
     "DecimalDatatype": {
       "description": "A real number expressed using a whole and optional fractional part separated by a period.",
@@ -142,7 +142,7 @@
       "description": "An amount of time quantified in years and months based on ISO-8601 durations (see also RFC3339 appendix A).",
       "type": "string",
       "format": "duration",
-      "pattern": "^-?P([0-9]+Y([0-9]+M)?)|[0-9]+M$"
+      "pattern": "^-?P(([0-9]+Y([0-9]+M)?)|[0-9]+M)$"
     }
   }
 }
