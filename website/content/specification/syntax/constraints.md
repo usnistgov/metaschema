@@ -511,7 +511,7 @@ The `matches` constraint MUST define a [`target`](#target) with a Metapath expre
 
 If a `@datatype` is provided, each resulting node's value MUST match the syntax of the given `@datatype`.
 
-If a `@regex` is provided, each resulting node's value MUST match the pattern specified by the given `@regex`. A regular expression subset that conforms to both https://www.w3.org/TR/xmlschema11-2/#regexes and https://www.ecma-international.org/ecma-262/11.0/index.html#sec-patterns. XML Schema patterns are whole-value matched by default. JSON Schema patterns are substring matched by default.
+If a `@regex` is provided, each resulting node's value MUST match the pattern specified by the given `@regex`. A regular expression subset that conforms to both https://www.w3.org/TR/xmlschema11-2/#regexes and https://www.ecma-international.org/ecma-262/11.0/index.html#sec-patterns. XML Schema patterns are whole-value matched by default. JSON Schema patterns are substring matched by default. This is a best effort combination of two regex standards to allow compatibility and interoperability with both XML and JSON, and some inconsistencies are possible.
 
 When evaluating node(s) matching the `@target`, the node(s) pass the constraint when matching all requirements of `@datatype`, if defined, and `@regex`, if defined. 
 
