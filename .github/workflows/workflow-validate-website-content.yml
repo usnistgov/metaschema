@@ -42,7 +42,7 @@ jobs:
       id: linkchecker
       uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8
       with:
-        args: --exclude-file .github/workflows/config/.lycheeignore --verbose --no-progress --accept 200,206,429 './${{ inputs.site_git_ref_path }}/**/*.html' --exclude-mail
+        args: --exclude-file .github/workflows/config/.lycheeignore --verbose --no-progress --accept 200,206,429 './${{ inputs.site_git_ref_path }}/**/*.html' --base-url https://pages.nist.gov/ --remap "https://pages.nist.gov/metaschema/ file://${GITHUB_WORKSPACE}/${{ inputs.site_git_ref_path }}/"
         fail: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
