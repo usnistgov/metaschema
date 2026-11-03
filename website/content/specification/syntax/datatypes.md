@@ -298,7 +298,7 @@ In XML Schema this is defined by [dayTimeDuration](https://www.w3.org/TR/xmlsche
 ```XML
 <xs:simpleType name="DayTimeDurationDatatype">
   <xs:restriction base="xs:duration">
-    <xs:pattern value="-?P([0-9]+D(T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\.[0-9]+)?)S))?)|T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\.[0-9]+)?)S)"/>
+    <xs:pattern value="-?P(([0-9]+D(T(([0-9]+H([0-9]+M)?([0-9]+(\.[0-9]+)?S)?)|([0-9]+M([0-9]+(\.[0-9]+)?S)?)|([0-9]+(\.[0-9]+)?S)))?)|T(([0-9]+H([0-9]+M)?([0-9]+(\.[0-9]+)?S)?)|([0-9]+M([0-9]+(\.[0-9]+)?S)?)|([0-9]+(\.[0-9]+)?S)))"/>
   </xs:restriction>
 </xs:simpleType>
 ```
@@ -309,7 +309,7 @@ In JSON Schema, this is represented as:
 {
   "type": "string",
   "format": "duration",
-  "pattern": "^-?P([0-9]+D(T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\\.[0-9]+)?)S))?)|T(([0-9]+H([0-9]+M)?(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+M(([0-9]+|[0-9]+(\\.[0-9]+)?)S)?)|([0-9]+|[0-9]+(\\.[0-9]+)?)S)$"
+  "pattern": "^-?P(([0-9]+D(T(([0-9]+H([0-9]+M)?([0-9]+(\\.[0-9]+)?S)?)|([0-9]+M([0-9]+(\\.[0-9]+)?S)?)|([0-9]+(\\.[0-9]+)?S)))?)|T(([0-9]+H([0-9]+M)?([0-9]+(\\.[0-9]+)?S)?)|([0-9]+M([0-9]+(\\.[0-9]+)?S)?)|([0-9]+(\\.[0-9]+)?S)))$"
 }
 ```
 
@@ -670,7 +670,7 @@ In XML Schema this is defined by [dayTimeDuration](https://www.w3.org/TR/xmlsche
 ```XML
 <xs:simpleType name="YearMonthDurationDatatype">
   <xs:restriction base="xs:duration">
-    <xs:pattern value="-?P([0-9]+Y([0-9]+M)?)|[0-9]+M"/>
+    <xs:pattern value="-?P(([0-9]+Y([0-9]+M)?)|[0-9]+M)"/>
   </xs:restriction>
 </xs:simpleType>
 ```
@@ -681,7 +681,7 @@ In JSON Schema, this is represented as:
 {
   "type": "string",
   "format": "duration",
-  "pattern": "^-?P([0-9]+Y([0-9]+M)?)|[0-9]+M$"
+  "pattern": "^-?P(([0-9]+Y([0-9]+M)?)|[0-9]+M)$"
 }
 ```
 
