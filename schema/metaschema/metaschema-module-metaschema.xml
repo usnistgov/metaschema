@@ -1039,7 +1039,7 @@
         </constraint>
     </define-flag>
 
-    <define-flag name="constraint-extensible" as-type="token" default="external">
+    <define-flag name="constraint-extensible" as-type="token" default="model">
         <formal-name>Allow Extension?</formal-name>
         <description>Determines if the given enumerated values may be extended by other allowed value constraints.</description>
         <use-name>extensible</use-name>
