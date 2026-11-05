@@ -741,7 +741,7 @@
         <formal-name>Maximum Occurrence</formal-name>
         <use-name>max-occurs</use-name>
         <constraint>
-            <matches regex="^[1-9][0-9]*|unbounded$"></matches>
+            <matches regex="^([1-9][0-9]*|unbounded)$"></matches>
         </constraint>
     </define-flag>
 
