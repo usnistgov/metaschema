@@ -397,7 +397,7 @@ The syntax of `<has-cardinality>` consists of the following:
 | [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
 | [`@target`](#target) | special | *(varies)* | *(no default)* |
 | `@min-occurs` | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | *(no default)* |
-| `@max-occurs` | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | *(no default)* |
+| `@max-occurs` | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | *(no default)* |
 | [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 | *(no default)* |
 | [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 | *(no default)* |
 | [`<prop>`](#prop) | special | 0 to ∞ | *(no default)* |
@@ -411,7 +411,8 @@ A constraint MUST define a value for either the `@min-occurs` or `@max-occurs` f
 
 The `@min-occurs` flag MUST be an integer that defines the minimum number of required occurrences for results matching the evaluation of the `@target`.
 
-The `@max-occurs` flag MUST be an integer that defines the maximum number of required occurrences for results matching the evaluation of the `@target`.
+The `@max-occurs` flag MUST be a non-negative integer that defines the maximum number of allowed occurrences for results matching the evaluation of the `@target`. The value `unbounded` is not allowed. To place no upper bound, omit `@max-occurs`. A value of zero (0) means the target MUST NOT occur.
+
 
 A constraint passes and document instance(s) valid if the count of results matching the evaluation of the `@target` Metapath is equal or more than the value of `@min-occurs`, if defined, and equal to or less than the value of `@max-occurs`, if defined. If these requirements are not met when defined, the constraint is not passing and the document instance(s) are not valid.
 
