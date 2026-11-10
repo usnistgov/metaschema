@@ -737,11 +737,25 @@
         <formal-name>Minimum Occurrence</formal-name>
         <use-name>min-occurs</use-name>
     </define-flag>
+    
+    <!-- NOTE: 
+    `has-cardinality` uses its own flag because its "max-occurs" is a non-negative integer (0..n), while model instances allow 1..n or "unbounded".
+     Since uniqueness of <use-name> applies within one definition, not across the whole module, the proposed flag does not break this rule.
+     The flag "constraint-cardinality-max-occurs" is added to fix cwe-436. The "cardinality-max-occurs" with the other use-name "max-occurs" 
+     is used only on different definitions (`instances` and `choice-group`), so the two never collide under one element. 
+     The definition names themselves (@name) stay unique across the module, which is the scope where uniqueness does apply.
+     -->
+    <define-flag name="constraint-cardinality-max-occurs" as-type="non-negative-integer">
+        <formal-name>Maximum Occurrence</formal-name>
+        <description>The maximum number of occurrences allowed for the nodes matched by the target of a cardinality constraint. Omit this flag to place no upper bound.</description>
+        <use-name>max-occurs</use-name>
+    </define-flag>
+
     <define-flag name="cardinality-max-occurs" as-type="string">
         <formal-name>Maximum Occurrence</formal-name>
         <use-name>max-occurs</use-name>
         <constraint>
-            <matches regex="^[1-9][0-9]*|unbounded$"></matches>
+            <matches regex="^([1-9][0-9]*|unbounded)$"></matches>
         </constraint>
     </define-flag>
 
@@ -1205,7 +1219,7 @@
         <flag ref="constraint-identifier"/>
         <flag ref="constraint-severity-level"/>
         <flag ref="cardinality-min-occurs"/>
-        <flag ref="cardinality-max-occurs"/>
+        <flag ref="constraint-cardinality-max-occurs"/>
         <flag ref="constraint-target" required="yes"/>
         <model>
             <field ref="formal-name"/>
