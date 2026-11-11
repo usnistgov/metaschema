@@ -244,8 +244,8 @@ The syntax of `<allowed-values>` consists of the following:
 
 | Data | Data Type | Use      | Default Value |
 |:--- |:--- |:--- |:--- |
-| [`@allow-other`>](#allow-other) | `yes` or `no` | optional | `no` |
-| [`@extensible`>](#extensible) | `model`, `external`, or `none` | optional | `no` |
+| [`@allow-other`](#allow-other) | `yes` or `no` | optional | `no` |
+| [`@extensible`](#extensible) | `model`, `external`, or `none` | optional | `model` |
 | [`@id`](#id) | [`token`](/specification/datatypes/#token) | optional | *(no default)* |
 | [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
 | [`@target`](#target) | special | *(varies)* | *(no default)* |
@@ -302,31 +302,31 @@ Multiple `<allowed-values>` constraints can apply to a given *target node*, whic
 
 This may be handled using a two phased evaluation that first resolves the `<allowed-values>` constraints associated with each *target node* determining the *applicable set*, then, second, evaluates the *applicable set* for each *target node*. Other implementations may be possible and are allowed if they result in the same effective behavior.
 
-The *applicable set* of `<allowed-values>` constraints is verified for correctness using the `@extension` attribute on each set member.
+The *applicable set* of `<allowed-values>` constraints is verified for correctness using the `@extensible` attribute on each set member.
 
 For each `<allowed-values>` in the *applicable set*, the `@allow-other` attribute is used to determine the *expected value set* for a given content value.
 
-The following subsections detail the processing requirements for the `@extension` and `@allow-other` attributes.
+The following subsections detail the processing requirements for the `@extensible` and `@allow-other` attributes.
 
 ##### `@extensible`
 
-For each `<allowed-values>` constraints the *applicable set*, the `@extension` attribute MUST be one of the following values.
+For each `<allowed-values>` constraints the *applicable set*, the `@extensible` attribute MUST be one of the following values.
 
 - **`none`:** There can be no other matching `<allowed-values>` constraint for the same target value. This is the least permissive option.
 
 - **`model`:** (default) Multiple matching `<allowed-values>` constraints are allowed for the same target value as long as the constraints are defined in the same model. Constraints sourced from outside the model are not allowed.
 
-    All allowed-values constraints declared within a Metaschema model matching the same @target can be combined. If a matching constraint within the model has allow-other="no", then constraints declared externally from the model are not allowed. **This is the implicit default value if no `@extension` is provided.**
+    All `<allowed-values>` constraints declared within a Metaschema model matching the same @target can be combined. If a matching constraint within the model has allow-other="no", then constraints declared externally from the model are not allowed. **This is the implicit default value if no `@extensible` is provided.**
 
-- **`external`:** Multiple matching `<allowed-values>` constraints are allowed for the same target value, which can be sourced from within the model or externally through a set of external constraints.
+- **`external`:** Multiple matching `<allowed-values>` constraints are allowed for the same target value. They can be declared within the model or supplied through an external constraint set. This is the most permissive option.
 
-    All allowed-values constraints, declared within the model and externally through an extension, that match the same @target can be combined. This is the most permissive option.
+    All `<allowed-values>` constraints that match the same `@target`, whether declared within the `model` or in an `external` constraint set, are combined. This value is never implied; it applies only when `@extensible="external"` is declared explicitly. Every constraint in the *applicable set*, including those supplied by an external constraint set, MUST declare `@extensible="external"` (see processing requirement 3 below).
 
 One of the following requirements MUST apply when processing a value's *applicable set* to validate it.
 
-1. The *applicable set* MUST contain a single `<allowed-values>` constraint with the `@extension` attribute value `none`.
-1. All `<allowed-values>` constraints in the *applicable set* MUST have the `@extension` attribute value `model` and originate from a *model* source.
-1. All `<allowed-values>` constraints in the *applicable set* MUST have the `@extension` attribute value `external` and originate from either a *model* or *extension* source.
+1. The *applicable set* MUST contain a single `<allowed-values>` constraint with the `@extensible` attribute value `none`.
+1. All `<allowed-values>` constraints in the *applicable set* MUST have the `@extensible` attribute value `model` and originate from a *model* source.
+1. All `<allowed-values>` constraints in the *applicable set* MUST have the `@extensible` attribute value `external` and originate from either a *model* or *extension* source.
 1. An error MUST be raised indicating the *applicable set* is invalid.
 
 ##### `@allow-other`
@@ -397,7 +397,7 @@ The syntax of `<has-cardinality>` consists of the following:
 | [`@level`](#level) | `DEBUG`,`INFORMATIONAL`, `WARNING`, `ERROR`, or `CRITICAL` | optional | `ERROR` |
 | [`@target`](#target) | special | *(varies)* | *(no default)* |
 | `@min-occurs` | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | *(no default)* |
-| `@max-occurs` | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) or `unbounded` | optional | *(no default)* |
+| `@max-occurs` | [`non-negative-integer`](/specification/datatypes/#non-negative-integer) | optional | *(no default)* |
 | [`<formal-name>`](#formal-name) | [`string`](/specification/datatypes/#string) | 0 or 1 | *(no default)* |
 | [`<description>`](#description) | [`markup-line`](/specification/datatypes/#markup-line) | 0 or 1 | *(no default)* |
 | [`<prop>`](#prop) | special | 0 to ∞ | *(no default)* |
@@ -411,7 +411,8 @@ A constraint MUST define a value for either the `@min-occurs` or `@max-occurs` f
 
 The `@min-occurs` flag MUST be an integer that defines the minimum number of required occurrences for results matching the evaluation of the `@target`.
 
-The `@max-occurs` flag MUST be an integer that defines the maximum number of required occurrences for results matching the evaluation of the `@target`.
+The `@max-occurs` flag MUST be a non-negative integer that defines the maximum number of allowed occurrences for results matching the evaluation of the `@target`. The value `unbounded` is not allowed. To place no upper bound, omit `@max-occurs`. A value of zero (0) means the target MUST NOT occur.
+
 
 A constraint passes and document instance(s) valid if the count of results matching the evaluation of the `@target` Metapath is equal or more than the value of `@min-occurs`, if defined, and equal to or less than the value of `@max-occurs`, if defined. If these requirements are not met when defined, the constraint is not passing and the document instance(s) are not valid.
 
@@ -511,11 +512,28 @@ The `matches` constraint MUST define a [`target`](#target) with a Metapath expre
 
 If a `@datatype` is provided, each resulting node's value MUST match the syntax of the given `@datatype`.
 
-If a `@regex` is provided, each resulting node's value MUST match the pattern specified by the given `@regex`.
+If a `@regex` is provided, the entire value of each resulting node MUST match the pattern specified by the given `@regex`. A processor MUST evaluate the pattern as if anchored at both the start and end of the value. The `^` and `$` characters MUST NOT be used as anchors in a `@regex` value.
 
 When evaluating node(s) matching the `@target`, the node(s) pass the constraint when matching all requirements of `@datatype`, if defined, and `@regex`, if defined. 
 
 If the node(s) do not match any of these requirements, then the node(s) MUST be considered to not pass the constraint.
+
+#### Regular Expressions
+
+A `@regex` value MUST be a valid regular expression as defined by [XQuery 1.0 and XPath 2.0 Functions and Operators, Appendix F](https://www.w3.org/TR/xpath-functions-31/#regex-syntax), which extends the [XML Schema 1.0 regular expression dialect](https://www.w3.org/TR/xmlschema-2/#regexs). A processor MUST evaluate `@regex` values using this dialect.
+
+To ensure a `@regex` value can also be used to generate an equivalent [XML Schema](/specification/syntax/datatypes/#xml-schemas) `xs:pattern` facet, a `@regex` value SHOULD be restricted to the subset of constructs described in [Regular Expressions in Schemas](/specification/syntax/datatypes/#regular-expressions-in-schemas).
+
+The following constructs MUST NOT be used in a `@regex` value, since they are either unsupported by the XML Schema dialect or conflict with whole-value matching:
+
+- The anchors `^` and `$`.
+- Non-capturing groups (`(?:…)`), named groups (`(?<name>…)`), and other extended group syntax beginning with `(?`.
+- Lookahead and lookbehind assertions (`(?=…)`, `(?!…)`, `(?<=…)`, `(?<!…)`).
+- Back-references (`\1`, `\k<name>`).
+- Inline flag settings (e.g., `(?i)`).
+- The word-boundary assertions `\b` and `\B`.
+
+A processor MUST report a [processing error](#processing-error-handling) when a `@regex` value uses a construct excluded above, or is otherwise not a valid regular expression in the dialect identified here.
 
 ## Constraint Processing
 

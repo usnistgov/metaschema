@@ -899,9 +899,9 @@
             <xs:documentation>The given enumerated value or values are inclusive of other values ('yes') or not ('no', the default)</xs:documentation>
           </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="extensible" type="ExtensibleEnumType" default="external">
+        <xs:attribute name="extensible" type="ExtensibleEnumType" default="model">
           <xs:annotation>
-            <xs:documentation>Determines if the given enumerated values may be extended by other allowed value constraints.</xs:documentation>
+            <xs:documentation>Determines if the given enumerated values may be extended by other allowed value constraints. Default value: ('model'). Use value('external') to permit extension by external constraint sets in Metaschema version 1.0.0 and later.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
       </xs:extension>
@@ -1151,7 +1151,7 @@
         <xs:attribute name="max-occurs" type="NonNegativeIntegerDatatype">
           <xs:annotation>
             <xs:documentation>Maximum occurrence of assemblies or fields within the set of objects
-              identified by the <code>target</code>. This value must be less than the corresponding
+              identified by the <code>target</code>. This value cannot be greater than the corresponding
               value defined on the target.</xs:documentation>
           </xs:annotation>
         </xs:attribute>
