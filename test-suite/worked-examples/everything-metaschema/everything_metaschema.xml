@@ -177,7 +177,7 @@ Under 'widget'
         </model>
         <constraint>
             <!--lines must start with non-space characters -->
-            <matches target="line" regex="^\S"/>
+            <matches target="line" regex="\S[\s\S]*"/>
             <matches target=".[@banner-type='date']/@banner" datatype="date"/>
             <allowed-values target=".[@banner-type='color']/@banner">
                 <enum value="red">Red</enum>
