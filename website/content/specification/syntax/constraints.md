@@ -512,11 +512,28 @@ The `matches` constraint MUST define a [`target`](#target) with a Metapath expre
 
 If a `@datatype` is provided, each resulting node's value MUST match the syntax of the given `@datatype`.
 
-If a `@regex` is provided, each resulting node's value MUST match the pattern specified by the given `@regex`.
+If a `@regex` is provided, the entire value of each resulting node MUST match the pattern specified by the given `@regex`. A processor MUST evaluate the pattern as if anchored at both the start and end of the value. The `^` and `$` characters MUST NOT be used as anchors in a `@regex` value.
 
 When evaluating node(s) matching the `@target`, the node(s) pass the constraint when matching all requirements of `@datatype`, if defined, and `@regex`, if defined. 
 
 If the node(s) do not match any of these requirements, then the node(s) MUST be considered to not pass the constraint.
+
+#### Regular Expressions
+
+A `@regex` value MUST be a valid regular expression as defined by [XQuery 1.0 and XPath 2.0 Functions and Operators, Appendix F](https://www.w3.org/TR/xpath-functions-31/#regex-syntax), which extends the [XML Schema 1.0 regular expression dialect](https://www.w3.org/TR/xmlschema-2/#regexs). A processor MUST evaluate `@regex` values using this dialect.
+
+To ensure a `@regex` value can also be used to generate an equivalent [XML Schema](/specification/syntax/datatypes/#xml-schemas) `xs:pattern` facet, a `@regex` value SHOULD be restricted to the subset of constructs described in [Regular Expressions in Schemas](/specification/syntax/datatypes/#regular-expressions-in-schemas).
+
+The following constructs MUST NOT be used in a `@regex` value, since they are either unsupported by the XML Schema dialect or conflict with whole-value matching:
+
+- The anchors `^` and `$`.
+- Non-capturing groups (`(?:…)`), named groups (`(?<name>…)`), and other extended group syntax beginning with `(?`.
+- Lookahead and lookbehind assertions (`(?=…)`, `(?!…)`, `(?<=…)`, `(?<!…)`).
+- Back-references (`\1`, `\k<name>`).
+- Inline flag settings (e.g., `(?i)`).
+- The word-boundary assertions `\b` and `\B`.
+
+A processor MUST report a [processing error](#processing-error-handling) when a `@regex` value uses a construct excluded above, or is otherwise not a valid regular expression in the dialect identified here.
 
 ## Constraint Processing
 
